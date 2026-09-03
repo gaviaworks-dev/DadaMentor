@@ -2082,6 +2082,36 @@ span.foot-app-store{cursor:default}
      dip metni .84, kartınki .74. Dördü de ölçüldü, eşitlenmedi. */
   --koyu-cizgi:rgba(255,255,255,.12);     /* koyu kart ayracı ve kenarı */
   --koyu-metin-6:rgba(255,255,255,.74);   /* koyu kartın ikincil metni */
+
+  /* ── PANEL KABUĞUNUN KOYU RAMPASI (§75a) — 2026-09-04 · ADMIN TURU ──
+     `docs/admin-envanter.md §4.1`in **C grubu** ("tabanı da kanonda yok —
+     yeni yuva") ve **A2 grubu** ("taban var, alfa adımı yok") burada
+     kapanıyor. Envanterin kendi kaydı: *"C'nin 10'unun 9'u KABUKTA
+     (ray · menü · ipucu · toast · modal perdesi) … Kabuk turunda
+     sorulacak tek açık renk kalemi budur."* Kabuk turu bu tur.
+
+     🔴 MARKA YUVASI DEĞİL, NÖTR — ve bu bir varsayım değil, kanonun
+        kendi kaydı: `markalar/fit.css` koyu tabanı için açıkça
+        *"Process Black C ailesi bir MARKA rengi değil, NÖTR KOYU
+        TABANDIR"* diyor ve v3'te marka yeşilden maviye dönerken bu üçlüyü
+        DEĞİŞTİRMEDİ. Panel rayı o ailenin bir adım koyusudur; dört
+        markada aynı çizilir, `markalar/*.css`e girmez.
+          --koyu-zemin        #211E16   (marka yuvası, ama FIT/Diet aynı taban)
+          --panel-ray-zemin   #19160F   ← bir adım koyu · ÖLÇÜLDÜ
+        Ray menüden, menü sayfadan koyu: üç katmanlı derinlik, kaynağın
+        kendi kararı (`fit-admin.css:61`).
+
+     ⚠ ALFALAR `--koyu-metin-ust` (#e9e2d6) TABANINDAN. Envanter A2'yi
+       şöyle kaydetmişti: *"rgba(233,226,214,.78/.5/.42/.1) → taban
+       `--koyu-metin-ust`"*. Taban kanonda VARDI, eksik olan adımlardı. */
+  --panel-ray-zemin:#19160F;                 /* ekosistem rayı — en koyu katman */
+  --panel-ray-cizgi:rgba(0,0,0,.32);         /* rayın sağ kenarı */
+  --panel-menu-cizgi:rgba(0,0,0,.30);        /* menünün sağ kenarı */
+  --koyu-yikama:rgba(255,255,255,.06);       /* koyu zeminde hover yıkaması */
+  --koyu-yikama-2:rgba(255,255,255,.07);     /* bir adım belirgin hover */
+  --koyu-cizgi-2:rgba(233,226,214,.10);      /* menü ayağının üst ayracı */
+  --koyu-metin-78:rgba(233,226,214,.78);     /* menü kalemi — dinlenme hâli */
+  --koyu-metin-42:rgba(233,226,214,.42);     /* kategori başlığı — versal, sönük */
   --kagit:#ffffff;             /* kaynak: --paper / --bg-white (aynı değer) */
   --zemin:#f9f9f9;             /* kaynak: --bg / --bg-cream (aynı değer)
                                   ⚠ DOĞRULA: fit-shell.css'te tanımlı ama
@@ -2161,6 +2191,42 @@ span.foot-app-store{cursor:default}
                                             destek-v1.html:158. `--tehlike-cizgi-
                                             yumusak` DEĞİL: ölçüldü, iki ayrı
                                             değer ve ikisi de kullanımda. */
+
+  /* ── A3 · HATA AİLESİ · Beyar kararı 2026-09-03 ──────────────────────
+     Ölçüldü: kanonda `--uyari` (kehribar) vardı, HATA (kırmızı) ailesi
+     yoktu. Kaynak `role="alert"` özetini kendi renkleriyle basıyor
+     (`#8c1d18` metin · `#fdecea` zemin · `#efc2bd` kenar) ve o özeti
+     kehribara düşürmek anlamı bozardı. Yuva marka dosyalarında dolar;
+     kanonun sabit renk sayısı 1'de KALIR.
+
+     🔴🔴 BU ÜÇLÜ BİR TUR BOYUNCA ÖLÜYDÜ — KAPANDI 2026-09-04.
+     ---------------------------------------------------------------
+     Bildirimler `@media (max-width:640px)` bloğunun İÇİNE, üstelik o
+     bloğun `:root{}` kuralının DIŞINA yazılmıştı — yani bir `@media`
+     gövdesinde başıboş üç bildirim. Geçersiz sözdizimi: tarayıcı üçünü
+     de ATIYOR. Sonuç: A3 hata varyantı HİÇBİR genişlikte çizilmedi.
+
+     CANLI ÖLÇÜLDÜ (`scripts/olcum/_tmp-a3.mjs` · `.uyari-kutu.hata`):
+         @1440px   renk rgb(0,0,0)   zemin rgba(0,0,0,0)   kenar rgb(0,0,0)
+         @600px    renk rgb(0,0,0)   zemin rgba(0,0,0,0)   kenar rgb(0,0,0)
+     Yani kutu SİYAH METİN + SAYDAM ZEMİN çiziyordu; kırmızı hata kutusu
+     diye yazılan şey ekranda hiç doğmadı.
+
+     Nasıl bulundu: revenge-58 (Gastro) fit.css'te AYNI AİLENİN kardeş
+     kusurunu (`.bs-store` içinde hapis kalmış `--marka-hata*`) bildirdi;
+     onu doğrularken `--hata` üçlüsünün de BOŞ döndüğü görüldü ve iz
+     buraya çıktı. İki ayrı dosyada, aynı ailede, aynı sınıftan iki kusur.
+
+     ⚠ DERS — bu ailenin kusuru NEDEN iki tur boyunca görünmedi:
+       `markalar/fit.css` tarafındaki kardeşini fallback saklıyordu
+       (`var(--marka-hata, #8c1d18)`, fallback değeri yuvayla birebir).
+       Buradakini ise HİÇBİR ŞEY saklamıyordu — yalnız kimse ölçmemişti,
+       çünkü A3 varyantının tüketicisi yoktu. **Tüketicisi olmayan kural
+       sınanmamış kuraldır.** §75g (beş zorunlu ekran durumu) bu ailenin
+       ilk gerçek tüketicisini doğurdu ve kusur aynı gün ortaya çıktı. */
+  --hata: var(--marka-hata, #8c1d18);
+  --hata-yikama: var(--marka-hata-yikama, #fdecea);
+  --hata-cizgi: var(--marka-hata-cizgi, #efc2bd);
 
   --uyari:#8a4b00;                       /* kaynak: --hs-warn */
   --uyari-yikama:#fdf3e4;                /* kaynak: --hs-warn-tint */
@@ -2272,6 +2338,12 @@ span.foot-app-store{cursor:default}
   --aksan-golge:var(--marka-golge-aksan);
   --aksan-golge-2:var(--marka-golge-aksan-2);   /* basamak hapının gölgesi (§63) */      /* kademe bayrağının gölgesi (§55) */
   --aksan-yikama-5:var(--marka-yikama-5);      /* tablo vurgulu sütun zemini (§55) */
+  /* §75 ADMIN · iki alfa adımı — FALLBACK'Lİ okunuyor.
+     Marka dosyası yuvayı doldurmadıysa kural SESSİZCE DÜŞMEZ, bir adım
+     yakınına (`--aksan-yikama`) iner. Gerekçe `markalar/fit.css` §75
+     şerhinde; kalıp `--hata: var(--marka-hata, …)` ile aynı (satır 907). */
+  --aksan-yikama-8:var(--marka-yikama-8, var(--aksan-yikama));    /* toplu işlem çubuğu (§75e) */
+  --aksan-yikama-10:var(--marka-yikama-10, var(--aksan-yikama));  /* içerik türü rozeti (§75h) */
 
   /* ── BANDIN ARAÇ DÜĞMELERİ — koyu zeminde cam kipi (§34) ───────────
      Dört değer de BEYAZIN alfası; markadan bağımsız ama `bilesenler.css`
@@ -2750,6 +2822,29 @@ span.foot-app-store{cursor:default}
         ama merdiven yarım ve §68 (yüzen istif) bunun üstüne oturacak.
         Bu turda YALNIZ `--kat-alt-bar` bildirildi (tüketicisi doğdu);
         kalan altısı tüketicisi olmadan bildirilmez (ölü token üretmez). */
+  /* ── §68.1'İN BEKLEYEN KADEMELERİNDEN ÜÇÜ · 2026-09-04 · ADMIN TURU ──
+     Yukarıdaki şerh kuralı yazmıştı: *"kalan altısı TÜKETİCİSİ OLMADAN
+     bildirilmez (ölü token üretmez)"*. Admin bölümü (§75) üç tüketici
+     doğurdu, üçü de RENDER'DA ölçüldü ve üçünün de ADI `01-tokenlar.md`de
+     ZATEN YAZILI (satır 643 · 648 · 649) — yeni ad AÇILMADI:
+
+         42  `.ff-bar`     süzgeç çubuğu     → `--kat-yapiskan`  (§75e)
+         80  `.t-ara-pop`  üst çubuk açılırı → `--kat-menu`      (§75b)
+         85  `.sa-rail`    sol marka rayı    → `--kat-ray`       (§75a)
+
+     🔴 BU BLOK BİR KEZ YANLIŞ YAZILDI VE GERİ ALINDI (2026-09-04).
+        İlk yazımda `--kat-suzgec-cubugu` ve `--kat-panel-acilir` diye İKİ
+        YENİ AD üretilmişti — yukarıdaki `--kat-alt-cubuk` ihlalinin
+        birebir tekrarı. Kuralın kendisi üç satır yukarıda yazılıydı:
+        *"token yazmadan önce 01-tokenlar.md taranır."* Tarandığında üçü
+        de belgede duruyordu. Ders kaydı: kanonun kendi şerhini okumak
+        yetmiyor, ŞERHİN İŞARET ETTİĞİ BELGEYE gidilmesi gerekiyor.
+
+     Kalan üçü (1 · 93 · 94) hâlâ tüketicisiz; bildirilmedi. */
+  --kat-yapiskan:42;           /* yapışkan süzgeç çubuğu (§75e) — ölçüldü */
+  --kat-menu:80;               /* üst çubuk açılırı — arama · bildirim · hesap (§75b) */
+  --kat-ray:85;                /* sol marka rayı (§75a) — ölçüldü */
+
   --kat-alt-bar:90;
   --kat-sohbet-ortu:94;        /* sohbet perdesi — alt sayfayla aynı kat */
   --kat-sohbet:95;
@@ -2833,16 +2928,6 @@ span.foot-app-store{cursor:default}
     --banner-gap:9px;
     --kabuk-h:63px;             /* ≤640 üst bant gizli — `--kabuk-h-dar` ile aynı */
   }
-
-  /* ── A3 · HATA AİLESİ · Beyar kararı 2026-09-03 ────────────────────
-     Ölçüldü: kanonda `--uyari` (kehribar) vardı, HATA (kırmızı) ailesi
-     yoktu. Kaynak `role="alert"` özetini kendi renkleriyle basıyor
-     (`#8c1d18` metin · `#fdecea` zemin · `#efc2bd` kenar) ve o özeti
-     kehribara düşürmek anlamı bozardı. Yuva marka dosyalarında dolar;
-     kanonun sabit renk sayısı 1'de KALIR. */
-  --hata: var(--marka-hata, #8c1d18);
-  --hata-yikama: var(--marka-hata-yikama, #fdecea);
-  --hata-cizgi: var(--marka-hata-cizgi, #efc2bd);
 }
 
 
@@ -2962,12 +3047,39 @@ span.foot-app-store{cursor:default}
 /* ── EKOSİSTEM MARKALARI ─────────────────────────────────────────────
    Diet'in :root'u bunları `--b-*` adıyla taşıyor (10 sayfada birebir). */
 
-  --eko-gastro:#E14827;      --eko-gastro-rgb:225,72,39;
-  --eko-diet:#009A44;        --eko-diet-rgb:59,183,126;   /* --b-diet */
-  --eko-gourmet:#b14fc5;     --eko-gourmet-rgb:177,79,197;
-  --eko-fit:#0093d0;         --eko-fit-rgb:0,157,79;      /* --b-fit */
-  --eko-fit-acik:#4DB4DE;                                 /* --b-fit-l */
-  --eko-diet-acik:#7FCCA1;                                /* --b-diet-l */
+  /* 🔴🔴 EKOSİSTEM PALETİ v3'E ÇEKİLDİ — 2026-09-04 · ADMIN TURU.
+     ---------------------------------------------------------------
+     Bu blok v2'nin değerlerini taşıyordu ve `fit.css` v3'te logodan
+     ÖLÇÜLEN palete geçmişti; `diet.css` geçmemişti. Kusur ekranda değil
+     KABUKTA: admin panelinin sol ekosistem rayı (§75a) yedi `--eko-*`
+     yuvası okuyor ve kabuk DÖRT MARKADA AYNI olmak zorunda. Bugünkü
+     diet.css ile Diet admin açılsa üç ikon RENKSİZ doğardı (yuva
+     tanımsız → `color` mirasa düşer) ve dördü YANLIŞ markayı boyardı.
+
+     Değerler uydurulmadı: `DadaMentor-Logos.ai` 60dpi render edilip
+     piksel sayıldı, PANTONE eşlemesi bbox koordinatıyla çakıştırıldı
+     (revenge-ef ölçtü · `docs/marka-varlik-durum.md §3a`). Aynı değerler
+     `fit.css` §6a'da bağımsız olarak ölçülmüştü ve birebir tutuyor.
+
+     ⚠ `--marka:#009A44` DEĞİŞTİRİLMEDİ. O, canlı Diet sitesinin ölçülmüş
+       YÜZEY tokeni; logo rengiyle (#009A44) çakışması görünürde. Markanın
+       ray kimliği `--eko-diet` yuvasında karşılanıyor. `--marka`yı logo
+       değeriyle ezmek `#0093d0` tuzağının tersten tekrarı olurdu —
+       değer eşleşmesi anlam eşleşmesi değildir. */
+  --eko-mentor:#FFCD00;      --eko-mentor-rgb:255,205,0;    /* Pantone 116 C */
+  --eko-gastro:#DC3D17;      --eko-gastro-rgb:220,61,23;    /* Pantone 173 C · v2 #E14827 idi */
+  --eko-gourmet:#742982;     --eko-gourmet-rgb:116,41,130;  /* Pantone 259 C · v2 #b14fc5 idi */
+  --eko-fit:#0093D0;         --eko-fit-rgb:0,147,208;       /* Pantone 299 C · v2 #0093d0 idi */
+  --eko-diet:#009A44;        --eko-diet-rgb:0,154,68;       /* Pantone 355 C · v2 #009A44 idi */
+  --eko-campus:#003C71;      --eko-campus-rgb:0,60,113;     /* Pantone 541 C */
+  --eko-store:#9A6900;       --eko-store-rgb:154,105,0;
+  /* Campus rampası — taban ile beyaz, %10 adımlar (fit.css ile birebir). */
+  --eko-campus-acik:#4D779C;
+  --eko-campus-parlak:#7F9DB8;
+  --eko-campus-cizgi:#CCD8E3;
+  --eko-campus-yikama:#E5EBF1;
+  --eko-fit-acik:#4DB4DE;                                 /* --b-fit-l · v2 kalıntısı */
+  --eko-diet-acik:#7FCCA1;                                /* --b-diet-l · v2 kalıntısı */
   --eko-akademi:#006072;     --eko-akademi-rgb:0,96,114;  /* --b-akademi */
   --eko-akademi-acik:#2E97AB;                             /* --b-akademi-l */
   /* ✅ §5.1 · A1 ONAYLANDI (Beyar, 2026-09-01). Petrolün yıkaması.
@@ -3131,6 +3243,77 @@ span.foot-app-store{cursor:default}
    🔴 işaretli satırlar kaynaktaki ölçülmüş kusurları DÜZELTİR; hangi
    ölçümle düzeldiği 02-bilesenler.md'de yazılı.
    ===================================================================== */
+
+
+/* =====================================================================
+   0 · TABAN KATMANI — 2026-09-04 · ADMIN TURU
+   ---------------------------------------------------------------------
+   🔴 KANONUN HİÇ SINANMAMIŞ VARSAYIMI: "kabuk zaten sıfırlamıştır."
+   Bugüne kadar her kanon ekranı donörün kabuk CSS'ini de yüklüyordu ve
+   `box-sizing` · `body` sıfırlaması · yazı yüzü ORADAN geliyordu. Kanon
+   üç dosya olarak TEK BAŞINA hiç kullanılmadı — admin ekranları ilk
+   kez öyle kullanıyor (kabuk artık kanonun kendi §75a/b'si).
+
+   ÖLÇÜLDÜ, ilk admin kabuğu basıldığında ortaya çıktı:
+       beklenen                  çıkan
+       ray 76px                  77px    ← kenar kutunun DIŞINDA
+       menü 264px                265px   ← aynı
+       gövde sol 340px           348px   ← body'nin 8px UA payı
+   Yani `*{box-sizing:border-box}` ve `body{margin:0}` yokken §75'in
+   BÜTÜN piksel ölçüleri 1–8px kayıyordu.
+
+   DEĞERLER DONÖRDEN ÖLÇÜLDÜ (`admin-uyeler-v1`, render edilmiş DOM):
+       box-sizing   border-box
+       body margin  0px
+       body zemin   rgb(249,249,249)   = --zemin
+       body renk    rgb(33,30,22)      = --murekkep
+       body yüzü    Gilroy, system-ui  = --yazi-yuzu
+       body punto   16px               = --yazi-16
+       body ağırlık 500                = --agirlik-govde
+       body satır   24.8px (16×1.55)   = --satir-govde
+       kaydırma     smooth
+   Hiçbiri uydurulmadı; hepsinin tokeni ZATEN kanonda vardı.
+
+   ⚠ KOPYALAMA-KURALI'NIN "İKİNCİ SIFIRLAMA" TUZAĞINA DÜŞMÜYOR.
+     O kural şunu yasaklıyordu: *"kabuk yüklendikten SONRA sayfaya ikinci
+     bir sıfırlama yazmak, kanondan SONRA geldiği için dört bileşen
+     kuralını birden ezdi."* Buradaki fark konum: bu blok kanonun EN
+     BAŞINDA, bütün bileşen kurallarından ÖNCE. Bileşen kuralları onu
+     ezer, o bileşen kurallarını değil. Sayfaya yazılan sıfırlama hâlâ
+     yasak — çünkü o kanondan sonra gelir.
+
+   ⚠ DONÖR KABUĞUYLA BİRLİKTE YÜKLENDİĞİNDE ETKİSİZ: değerler kabuğunkiyle
+     birebir aynı, yani mevcut public ekranlarda hiçbir şey değişmez.
+     Regresyon ölçüldü (bkz. `docs/admin-kanon-kararlari.md` K-B1).
+   ===================================================================== */
+
+*,*::before,*::after{ box-sizing:border-box; }
+body{
+  margin:0;
+  background:var(--zemin);
+  color:var(--murekkep);
+  font-family:var(--yazi-yuzu);
+  font-size:var(--yazi-16);
+  font-weight:var(--agirlik-govde);
+  line-height:var(--satir-govde);
+  -webkit-font-smoothing:antialiased;
+}
+html{ scroll-behavior:smooth; }
+/* Hareket azaltma isteği kaydırmayı da kapsar — kaynağın `smooth`u bir
+   tercih, kullanıcının isteği bir şart. */
+@media (prefers-reduced-motion:reduce){ html{ scroll-behavior:auto; } }
+/* Görsel taşmasın — kanonda `img` için tek kural yoktu ve admin medya
+   ızgarası ilk tüketicisi. */
+img,svg,video{ max-width:100%; }
+/* 🔴 DÜĞME ALTI ÇİZİLİ ÇİZİLİYORDU — ölçüldü 2026-09-04, 12 örnek tek
+   ekranda. `.dugme` `text-decoration` BİLDİRMİYOR; `<button>`da sorun
+   yok (UA zaten çizmiyor) ama `<a class="dugme">`de UA'nın `underline`ı
+   miras kalıyor. `.panel-menu-link` ve `.kisi-hucre` kendi bildirimlerini
+   taşıdığı için temizdi — yani kusur bileşenin değil, TABANIN eksiğiydi.
+   ⚠ Genel `a{text-decoration:none}` YAZILMADI: akan metindeki bağın altı
+     çizili KALMALI (WCAG 1.4.1 — bağ yalnız renkle ayrılmaz). Kural
+     düğme rolündeki bağa yazılıyor, bağın kendisine değil. */
+a.dugme,a.sayfa-dugme,a.ikon-dugme,a.cip,a.suzgec-dugme{ text-decoration:none; }
 
 
 /* =====================================================================
@@ -3313,7 +3496,20 @@ span.foot-app-store{cursor:default}
      ve 390px'te satır kipinde başlığı eziyor; destek'inkiler kısa.
      §11'in "ölçüm iki kalemin ayrı olduğunu söylüyorsa birleştirme"
      kuralı (B24) — kip aşağıda, `.acikli`. */
-  .kart-bas{ align-items:flex-start; gap:var(--bosluk-12); padding:var(--bosluk-16); }
+  /* 🔴 SARMA EKLENDİ — 2026-09-04, 390 geçişinde ölçüldü.
+     `.kart-bas` `space-between` + `nowrap` taşıyor; başlık ile sağdaki
+     kalem (rozet · durum hapı · eylem) 390'da sığmayınca kutu SARMIYOR ve
+     sağdaki kalem kabın dışına taşıyor.
+     ÖLÇÜLDÜ (`admin-antrenorler` @390 · `.adim-liste > .kart > .kart-bas`):
+         span.rozet.bekleme "Bekliyor"  sağ kenar 474 > 390
+     🔴 Taşma kök `scrollWidth`ine YANSIMIYOR çünkü §60b `overflow-x:clip`
+     yazıyor — clip kesiyor, yani rozet EKRANIN DIŞINDA KALIYOR ve hiç
+     okunamıyor. Kırpma kusuru göstermiyor, GİZLİYOR.
+     ⚠ Üç varyantın `flex-direction:column`ı (aşağıda) bu işi zaten
+       yapıyordu; taban satır kipinde kaldığı için yalnız onlar temizdi.
+       `wrap` tabana yazılınca dört kip de kapanıyor ve sütun kipleri
+       etkilenmiyor — tek kolonda sarma görünmez. */
+  .kart-bas{ align-items:flex-start; gap:var(--bosluk-12); padding:var(--bosluk-16); flex-wrap:wrap; }
   /* AÇIKLAMALI PANEL — başlığı uzun açıklama taşıyan kart. Dar ekranda
      başlık ve sağ kalem alt alta iner. */
   .kart.panel.acikli>.kart-bas,
@@ -3382,11 +3578,48 @@ span.foot-app-store{cursor:default}
 .dugme.birincil{ background:var(--aksan-koyu); color:var(--kagit); }
 .dugme.birincil:hover{ background:var(--aksan-koyu-2); transform:translateY(-2px); }
 
+/* 🔴 İKİNCİL KİP · O2 · Beyar kararı 2026-09-03 — "aksanın tam gücü".
+   ÖNCEKİ HÂLİ: `background:--kagit · color:--murekkep · border:--cizgi`.
+   ÖLÇÜLDÜ (38 ekran · her sekme tıklanmış · görünen 88 `.hayalet`):
+       yüzey ↔ kap   1.00:1      beyaz kartın üstünde BEYAZ
+       kenar ↔ kap   1.18:1      #ECECEC · arayüz sınırı eşiği 3:1
+       metin ↔ yüzey 16.64:1
+   Yani kutunun kendisi görünmüyordu; ekranda duran tek şey etiketti.
+   Beyar bunu "siyah beyaz, tasarımsız" diye gördü.
+
+   🔴 KAYNAK DA BİLDİRMİYOR — kanon kusuru DEĞİL, kaynağın kusuru.
+   123 donör dosyası ölçüldü: `.btn-ghost` 616 örnek / 85 ekran ve
+   BİREBİR aynı sayılar (beyaz · #ECECEC · 12px köşe · 14/26 · 700).
+   Kaynağın dolgu taşıyan tek sessiz kipi `.ff-btn` de kâğıttan
+   1.05:1 ayrılıyor. Yani ortada taşınacak bir ikincil düğme YOKTU.
+   S1 ①'in içtihadı burada da geçerli: "kaynağın ölçülmüş kusuru,
+   kanon düzeltir" — ama değer kaynaktan gelemediği için Beyar seçti.
+
+   YENİ DEĞER YAZILMADI. Kanondaki nötr çizgilerin hiçbiri eşiği
+   geçmiyor (`--cizgi` 1.18 · `--cizgi-vurgu` 1.36 · `--cizgi-vurgu-koyu`
+   1.66); 3:1 veren en açık nötr gri #959595 ve kanonda böyle bir yuva
+   YOK. Eşiği geçen tek MEVCUT token aksanın kendisi:
+       --aksan  #0093D0  →  kâğıda karşı  3.45:1
+   `.dugme.satir` (§47) aynı rengi %30 alfayla kullanıyor ve 1.43'e
+   düşüyor; buradaki tam güç yeni ölçü değil, o tokenin kendisi.
+
+   ⚠ AD KORUNDU, YENİ AD AÇILMADI. `.dugme.ikincil` diye yeni bir ad
+     ekranlara ulaşmazdı: üretici onu basmıyor ve § GÖMÜLÜ TABLO
+     KABI'nın düştüğü kuyruğa düşerdi. `.hayalet` bugün 88 örnek /
+     19 ekranda duruyor; kip onun üstüne yazılınca tazelemeyle iner.
+     S1 ⑤'in kendi kuralı: "Ad korunur, biçim tek yerden gelir."
+
+   Hover §2'nin KENDİ ailesinden alındı — `.dugme.uyari:hover` aynı
+   biçimi zaten yazıyor (kenar koyulaşır · yıkama dolar · kalkar).
+   Aksan karşılığı: `--aksan-koyu` (5.36) + `--aksan-yikama`. */
 .dugme.hayalet{
-  background:var(--kagit); color:var(--murekkep);
-  border:var(--cizgi-1) solid var(--cizgi);
+  background:var(--kagit); color:var(--aksan-koyu);
+  border:var(--cizgi-1) solid var(--aksan);
 }
-.dugme.hayalet:hover{ border-color:var(--murekkep); transform:translateY(-2px); }
+.dugme.hayalet:hover{
+  border-color:var(--aksan-koyu); background:var(--aksan-yikama);
+  transform:translateY(-2px);
+}
 
 .dugme.uyari{
   background:var(--kagit); color:var(--uyari);
@@ -3686,12 +3919,55 @@ span.foot-app-store{cursor:default}
 .tablo.defter{ min-width:640px; }
 
 /* dar ekranda yatay kaydırma — tablo sayfayı taşırmaz */
-/* `border-radius` — kap kartın DIŞINDA kullanıldığında köşeyi kırpsın diye.
-   Kart içinde `overflow:hidden` zaten kırpıyor, o yüzden görünürde fark
-   yoktu ve kanonda eksik kalmıştı (B44 · slot-3). */
+/* 🔴 BU ŞERHİN GEREKÇESİ ÖLÇÜLDÜ VE ÇÜRÜDÜ — 2026-09-03, O1.
+   Eskiden şöyle yazıyordu:
+       "`border-radius` — kap kartın DIŞINDA kullanıldığında köşeyi
+        kırpsın diye. Kart içinde `overflow:hidden` zaten kırpıyor,
+        o yüzden görünürde fark yoktu."
+   İki yerinden birden yanlış:
+     ① `.kart` tabanı `overflow` BİLDİRMİYOR (bkz. satır 28). Ölçüldü,
+        38 ekran · her sekme tıklanmış: 168 kart `visible`, 27 kart
+        `hidden` — ve o 27'si yalnız `.tasma-kapali` taşıyanlar. Yani
+        şerhin dayandığı kırpma kartların %86'sında YOK.
+     ② Kırpma OLSA DA kusuru düzeltmiyor, çünkü kap kartın KÖŞESİNDE
+        değil ORTASINDA duruyor. Ölçülen dokuz kart içi tablonun kart
+        tepesine uzaklığı 97–323px; hiçbiri tepeye değmiyor. Kartın
+        kırpması oraya ulaşmıyor, kabın kendi 16px'i orada çiziyor.
+   OLUMSUZ SINAMA (fit-odemelerim#iade · başlık şeridinin sol-üst
+   köşesinden 7×7 piksel · şerit `--zemin` 249, kâğıt+kenar 251):
+       bugünkü hâl              → köşede 251'lik yay  KUSUR VAR
+       karta overflow:hidden    → köşede 251'lik yay  KUSUR AYNEN DURUYOR
+       kabın radius'u sıfır     → her piksel 249      KUSUR YOK
+   Kaldıraç `overflow` değil, kabın KENDİ `border-radius`'u.
+   Taban değeri KALIYOR — kart dışında doğru (ölçüldü: 4 tablo, 3 ekran).
+   Kart içi kip aşağıda ayrı ad alıyor: § GÖMÜLÜ TABLO KABI. */
+/* 🔴 `position:relative` — 2026-09-04. EKRAN OKUYUCU METNİ KIRPMADAN
+   KAÇIP SAYFAYI TAŞIRIYORDU.
+   §20 `.yalniz-okuyucu` `position:absolute` kullanıyor. Kabın konumu
+   `static` olduğu sürece o eleman en yakın KONUMLANDIRILMIŞ atasını
+   bulamıyor ve BELGEYE göre çözülüyor: statik konumunda, yani tablonun
+   gerçek genişliğinde duruyor. Kabın `overflow-x:auto`su onu KIRPAMIYOR —
+   kırpma yalnız kabın kendi akışına uygulanır, belgeye çapalanmış mutlak
+   eleman kabın dışına düşer ve `documentElement.scrollWidth`e katılır.
+
+   ÖLÇÜLDÜ (`admin-duyurular` @1440, iki panelde):
+       FIT     tablo 1060px · sr-only sol 1406 · taşma 0   ← 34px kala
+       GASTRO  tablo 1182px · sr-only sol 1529 · taşma 89  🔴
+   Yani kusur KANONDA, tetikleyicisi İÇERİK UZUNLUĞU. FIT'in metinleri
+   kısa olduğu için hiç doğmamış; Gastro'da doğdu (revenge-56 ölçtü,
+   burada FIT'te de mekanizma doğrulandı — konumlu ata "YOK").
+
+   ⚠ ALTERNATİF REDDEDİLDİ: `.yalniz-okuyucu`ya `left:0` yazmak elemanı
+     akışa geri sokma riski taşır ve §20'nin bütün tüketicilerini etkiler.
+     Kabı kapsayıcı bloğa çevirmek tek satır ve görünür hiçbir şeyi
+     oynatmıyor (regresyon ölçüldü).
+   ⚠ TAŞMA SINAMASININ KÖR NOKTASI: "kırpan atası var mı" sorusu bu
+     kusuru GÖRMEZ — ata zincirinde `overflow-x:auto` bir kap VARDIR ve
+     eleman yine de kaçar. `position` de sorulmalı. */
 .tablo-kap{
   width:100%; overflow-x:auto; -webkit-overflow-scrolling:touch;
   border-radius:var(--yuvarlak-lg);
+  position:relative;
 }
 
 
@@ -3728,6 +4004,17 @@ span.foot-app-store{cursor:default}
    Kapak fotoğrafının üstünde duran rozeti beyaz kenar AYIRIYOR; saydam
    kenarda rozet zemine karışıyor. Kanon kaynağa döndü. */
 .rozet.dolu{    background:var(--aksan-koyu);   color:var(--kagit); border-color:var(--kagit); font-weight:var(--agirlik-kalin); }
+/* 🔴 İKONLU KİP — 2026-09-04. `.durum-hapi.ikonlu` vardı, `.rozet`in
+   karşılığı YOKTU ve bu K-R1 kararının eksik ayağıydı: karar *"renk tek
+   başına taşımaz, yön İKONDAN okunur"* diyor ama rozetin ikonlu kipi
+   olmayınca kural uygulanamıyordu.
+   Gastro'da ölçüldü (revenge-56): `.rozet.olumlu` ile `.rozet.durdu`
+   zeminleri ΔE76 **2.7** — gözle fark eşiği 2.3, yani ikisi aynı sütunda
+   yan yana neredeyse ayırt edilemiyor. Marka kırmızı olunca olumlu ile
+   olumsuz birbirine yaklaşıyor; ikon o farkı renkten bağımsız taşır.
+   İkon rengi metinden MİRAS (`currentColor` deseni, §28'in kuralı) —
+   dört varyantta dört ayrı ikon rengi tek kuralla doğuyor. */
+.rozet.ikonlu>i{ font-size:var(--yazi-11); flex:none; }
 .rozet.dolu i{  color:var(--kagit); font-size:var(--yazi-12); }
 
 
@@ -4501,6 +4788,82 @@ a.ayar-satir:hover .as-ikon{ background:var(--aksan-yikama); color:var(--aksan-k
      fazla kez bildirilebilir; son bildirim geçerlidir (KOPYALAMA-KURALI §2). */
 .zebra>.bolum.kimlik-bant{ padding-bottom:0; background:var(--zemin); }
 @media (max-width:640px){ .zebra>.bolum.kabuk-alti{ padding-top:var(--kabuk-h-dar); } }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   § ZEBRA ↔ KART · A3 · Beyar kararı 2026-09-03
+   ═══════════════════════════════════════════════════════════════════════
+   KURAL:  KART TAŞIYAN BANT KÂĞIT OLAMAZ — zemine iner.
+
+   Kart kendi kâğıdını, kenarını ve gölgesini ZATEN taşıyor. Bandı da
+   kâğıtsa iki yüzey üst üste biner ve aralarındaki bütün ayrım tek bir
+   `--cizgi` çizgisine (#ECECEC · kâğıda **1.18:1**) kalır. O sayı O2'de
+   ölçüldü ve orada "kutunun kendisi görünmüyordu" diye karara bağlandı;
+   burada aynı sayı, aynı sonuç.
+
+   ── ÖLÇÜLDÜ (lead-a3-olc.mjs · 13 FIT ekranı · her sekme tıklanmış) ────
+   İki zebra sistemi birlikte sayıldı — 75 tekil bant, 36'sı kart taşıyor:
+
+       beyaz kart · KÂĞIT bandın üstünde   26   🔴
+       beyaz kart · ZEMİN bandın üstünde   10   ✅
+
+   Yani desen ekranın içinde bile tek değil. Beyar ikisini de gördü:
+       fit-enerji-defterim#def-aktivite  bant 1 kâğıt · bant 2 zemin —
+                                         aynı panoda iki ayrı kart kipi
+       fit-hesabim#profil                sekmeden sekmeye değişiyor
+
+   ── KAYNAK DA BÖYLE — KANON KUSURU DEĞİL, KAYNAĞIN KUSURU ─────────────
+   Aynı soru donöre de soruldu (lead-a3-donor.mjs · 22 oturumlu sayfa):
+   kart taşıyan 10 bandın 9'u kâğıt. Kaynak bu kararı hiç vermemiş.
+   S1 ①'in içtihadı: "kaynağın ölçülmüş kusuru, kanon düzeltir."
+
+   ── NEDEN BANT DEĞİŞİR, KART DEĞİL ────────────────────────────────────
+   YENİ DEĞER YAZILMADI. Kanon bu kararı ZATEN BİR KEZ verdi — kimlik
+   bandında, yukarıda, kaynağın kendi şerhiyle: "profil beyaz · şerit gri
+   · gövde beyaz olunca ÜÇ ZEMİN arka arkaya geliyordu. Kart kendi
+   beyazını, kenarlığını ve gölgesini zaten taşıyor; zemin grileşince
+   kart okunur kalıyor." Bu blok o kararı bandın adından KURALIN KENDİSİNE
+   taşır: artık `kimlik-bant` bir istisna değil, kuralın bir örneği.
+
+   Karşı aday (kartın kenarını 3:1'e çıkarmak) ÖLÇÜMLE ELENDİ: O2 kanonun
+   bütün nötr çizgilerini saydı — `--cizgi` 1.18 · `--cizgi-vurgu` 1.36 ·
+   `--cizgi-vurgu-koyu` 1.66; eşiği geçen nötr gri kanonda YOK. Yani o
+   yol yeni bir renk uydurmayı gerektirirdi. Bu yol mevcut iki tokenle
+   (`--kagit` ↔ `--zemin`) çözüyor.
+
+   ── ZEBRA RİTMİ ÖLMEZ ─────────────────────────────────────────────────
+   Zebra bir RİTİM sözleşmesidir, bir zemin dayatması değil (yukarıda,
+   `kendi-zemini` dalının gerekçesi). Kart taşıyan bant o ritmin ÜÇÜNCÜ
+   istisnasıdır — `kendi-zemini` ve `kimlik-bant` ile aynı aileden:
+   yüzeyini içeriği belirleyen bant şeritlemeye girmez.
+
+   🔴 SÜZGEÇ ÖZGÜLLÜĞÜ BİLEREK YÜKSELTİLDİ. Bu dosyanın kendi dersi:
+      "bir kurala süzgeç eklemek onun ÖZGÜLLÜĞÜNÜ de değiştirir ve aynı
+      dosyadaki istisnalarını sessizce yener." Burada tersi isteniyor —
+      kural donörün `.modul-govde .fit-pane > section:nth-of-type(2n+1)`
+      kuralını (0,3,1) yenmeli. `:not()`lerle (0,5,1)'e çıkıyor ve iki
+      istisnayı seçicinin KENDİSİ dışarıda bırakıyor; sessiz bir yenme
+      yok, yazılı bir dışlama var.
+
+   ── DİKİŞ · İKİ GRİ BANT ARKA ARKAYA ──────────────────────────────────
+   Ölçüldü: kart taşıyan 36 bandın 7'si bir başka kartlı bandın hemen
+   ardından geliyor, 4'ünün üst çizgisi YOK. Üçü BUGÜN de gri-gri
+   (kusur bu bloktan önce de vardı), biri bu blokla griye iner. Dördü de
+   aynı dikişle kapanır. `.bant-ustunde` dışarıda: o dal kartı bandın
+   üstüne BİLEREK bindiriyor ve çizgi bindirmeyi bozardı.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.zebra > .bolum:has(.kart, .fp-card, .ozet-karti):not(.kendi-zemini):not(.kimlik-bant),
+.modul-govde .fit-pane > section:has(.kart, .fp-card, .ozet-karti):not(.kendi-zemini):not(.kimlik-bant){
+  background:var(--zemin);
+}
+
+.zebra > .bolum:has(.kart, .fp-card, .ozet-karti):not(.kendi-zemini):not(.kimlik-bant)
+  + .bolum:has(.kart, .fp-card, .ozet-karti):not(.kendi-zemini):not(.kimlik-bant):not(.bant-ustunde),
+.modul-govde .fit-pane > section:has(.kart, .fp-card, .ozet-karti):not(.kendi-zemini):not(.kimlik-bant)
+  + section:has(.kart, .fp-card, .ozet-karti):not(.kendi-zemini):not(.kimlik-bant):not(.bant-ustunde){
+  border-top:var(--cizgi-1) solid var(--cizgi);
+}
+
 
 .ust-etiket{
   display:inline-flex; align-items:center; gap:var(--bosluk-8);
@@ -5337,7 +5700,67 @@ a.ayar-satir:hover .as-ikon{ background:var(--aksan-yikama); color:var(--aksan-k
    Genişlik oranla gelir: 24 × 3.9182 ≈ 94.0px. Uydurma yok.
    ⚠ İşaretin kutusu (40×40) ve aradaki boşluk KALKTI; kelime markası
      kabuk kabının sol kenarına oturur.
-   ⚠ `width:auto` + `height` — oran vektörün, kanon ONU EZMEZ. */
+   ⚠ `width:auto` + `height` — oran vektörün, kanon ONU EZMEZ.
+
+   🔵 ŞERH · OPTİK EŞİTLİK — İNEN HARF TAŞIYAN MARKALAR
+      (2026-09-03, DadaGastro turunda ölçüldü · Beyar onayı)
+
+      K15 "kutu yüksekliği KORUNUR: 24px" derken kıyas KELİME MARKASI ↔
+      METİN KUTUSU idi ve markada işaret vardı. Kardeş ürünler arasında
+      kıyas yapılınca o kural YETMİYOR:
+
+        Aynı 24px kutuda   FIT "dada"    = kutunun %99,3'ü
+                           GASTRO "dada" = kutunun %82,3'ü
+        → Gastro'nun harfleri FIT'in %82,9'u; kutu eşit, HARF DEĞİL.
+
+      Sebep geometrik: "dadafit"in mürekkep kutusu çıkandan taban
+      çizgisine iner (inen harf yok). "dadagastro"da 'g' harfinin İNENİ
+      kutuya girer, aynı yükseklikte harflere daha az yer kalır.
+
+      KURAL: inen harf taşıyan bir kelime markası, inen taşımayan bir
+      kardeşiyle aynı yüzeyde kullanılacaksa kutu yüksekliği OPTİK
+      KATSAYIYLA bölünür:
+          kutu(marka) = kutu(referans) ÷ (d_marka/kutu ÷ d_referans/kutu)
+      Ölçüt iki markada da ORTAK olan glif — "dada" logotipi.
+      İnen taşımayan markada katsayı 1,000'dir, yani kural onları
+      etkilemez ve K15 onlarda aynen geçerli kalır.
+
+      DadaGastro'da uygulanan: katsayı 0,829 →
+          header 24→29px · dip 28→33,8px · çekmece 19→22,9px
+      Doğrulandı: "dada" yüksekliği FIT 23,88px / GASTRO 23,88px (1,000).
+      Uygulama: scripts/gastro-logo.mjs (kanon bileşenleri yüklenmiyor,
+      kural oraya kopyalandı).
+
+   🔵 ŞERH · KELİME MARKASININ RENGİ HEADER DURUMUNA BAĞLIDIR
+      (2026-09-04, DadaDiet turunda yazıldı · Beyar kuralı · DÖRT MARKA)
+
+      SAYDAM header (koyu hero üstünde)   → kelime markası BEYAZ
+      SOLID beyaz header (kaydırınca)     → kelime markası MARKA RENGİ
+
+      İSTİSNA — KİMLİK EKRANLARI: giriş ve kayıt ekranlarında kelime
+      markası SAYDAM header'da BİLE marka rengindedir. Gerekçe: o
+      ekranlarda marka kimliği sayfanın kendi konusudur; beyaza
+      düşürmek onu kabuk süsüne indirir. FIT'te zaten böyleydi
+      (giris.html#kayit'ta logo mavi); kural oradan genelleştirildi.
+
+      Kaynak siteler bunu İKİ AYRI LOGO DOSYASIYLA yapıyordu:
+          .header.at-top .brand .logo-color{display:none}
+          .header.at-top .brand .logo-white{display:block}
+      Kanonun kelime markası TEK vektördür ve rengi `currentColor`
+      taşır — dosya değil RENK değişir.
+
+      ⚠ KANCA GÖVDEDE OLMAZ. Diet turunda önce kimlik ekranlarının
+        <body>'sine nitelik konuldu ve KANON EKRANLARINDA ÇALIŞMADI:
+        o sayfaların kendi betiği açılışta <body> niteliklerini baştan
+        yazıyor ve nitelik siliniyor (ölçüldü: dosyada var, çalışma
+        anında yok). Kanca kelime markası ELEMANININ KENDİ SINIFINDA
+        durmalı — hiçbir betiğe bağımlı olmaz.
+        Diet'teki adı: `.diet-word-mark.marka-sabit`.
+
+      Uygulama: scripts/diet-logo.mjs · sınama
+      scripts/olcum/diet-logo-kural.mjs (beklenti sayfa adından değil,
+      HEADER DURUMUNDAN türetilir — sayfa başına beklenti yazan ilk
+      sürüm hero'suz sayfaları yanlış kırık gösterdi). */
 .fit-word-mark{
   height:var(--marka-kelime-h);
   width:auto;
@@ -5599,6 +6022,55 @@ a[aria-disabled="true"].pasif{ opacity:.45; }
 .durum-hapi.bekleyen{ background:var(--durum-bekleyen-zemin); color:var(--durum-bekleyen-metin); }
 .durum-hapi.cozulen { background:var(--aksan-yikama);         color:var(--aksan-koyu); }
 .durum-hapi.kapali  { background:var(--durum-kapali-zemin);   color:var(--durum-kapali-metin); }
+
+/* ── 28b · BEŞİNCİ DURUM · HATA — 2026-09-04 · ADMIN TURU ─────────────
+   🔴 KANONDA KIRMIZI HAP YOKTU. Dört varyant destek modülünün kendi
+      sözlüğünden doğmuştu (talep açık · üyede · çözüldü · kapatıldı) ve
+      o dörtte BAŞARISIZLIK yok — destek talebi "başarısız olmaz",
+      çözülür ya da kapanır.
+
+   D2 ise BAŞARISIZLIĞI on bir modülde ayrı bir durum olarak sayıyor:
+       §9  Ödemeler        "başarısız"
+       §10 Faturalar       "iptal"·"gecikmiş"
+       §19 İletişim        "başarısız"·"geri döndü"·"spam/şikayet"
+       §29 Entegrasyonlar  "hatalı"
+       §30 İçe/Dışa        "başarısız"
+       §31 Sistem Bild.    "kritik"
+       §32 Görevler        "başarısız"
+       §33 Sistem Durumu   "kesinti"
+       §6  Yönlendirmeler  "hatalı"·"döngü tespit edildi"
+   Bunları `.kapali`ya (nötr gri) düşürmek anlamı siler: "iptal edildi"
+   ile "ödeme başarısız" aynı şey değil ve ikincisi İŞLEM İSTER.
+
+   Yeni renk UYDURULMADI — §A3 hata ailesi (`--hata*`) bugün zaten
+   kanonda ve bu turda ilk gerçek tüketicisini buldu (bkz. `tokenlar.css`
+   §3'ün kapanan kusuru). Hap o aileyi okur.
+   ⚠ Nokta rengi `currentColor`dan geliyor, yani beşinci nokta da tek
+     kuralla doğuyor — taban değişmedi. */
+.durum-hapi.hata    { background:var(--hata-yikama);          color:var(--hata); }
+
+/* ── 28c · DURUM SÖZLÜĞÜ → BEŞ GÖRSEL ROL ────────────────────────────
+   D2 kırk iki modülde ~90 ayrı durum adı sayıyor. Kanon her ad için
+   sınıf AÇMAZ (§0'ın sayım kuralı: aynı kutu N adla yazılmışsa tek
+   bileşendir). Adlar beş ROLE düşer; eşleme burada, bir kez:
+
+     .cozulen   OLUMLU/BİTTİ      aktif · yayında · ödenmiş · başarılı ·
+                                  tamamlandı · onaylandı · bağlı · çalışıyor
+     .acik      SÜRÜYOR/BİLGİ     incelemede · kuyrukta · işleniyor ·
+                                  planlandı · deneme · gönderildi
+     .bekleyen  DİKKAT İSTER      taslak · beklemede · gecikmiş · doğrulanmamış ·
+                                  ödeme sorunu · yavaşlama · test bekliyor
+     .hata      BAŞARISIZ         başarısız · hatalı · kesinti · reddedildi ·
+                                  geri döndü · döngü tespit edildi · kritik
+     .kapali    SONA ERDİ/NÖTR    pasif · arşivlendi · iptal edildi ·
+                                  süresi doldu · askıya alınmış · engellenmiş ·
+                                  devre dışı · yok sayıldı
+
+   ⚠ AYRIM ANLAMLIDIR, RENK DEĞİL: "iptal edildi" nötr (kullanıcı
+     istedi), "başarısız" kırmızı (sistem yapamadı). İkisini aynı hapa
+     koymak D2'nin durum ayrımını siler.
+   ⚠ RENK TEK BAŞINA TAŞIMAZ (WCAG 1.4.1): hapın METNİ durumu zaten
+     söylüyor, nokta ve renk yalnız pekiştirir. */
 
 
 /* =====================================================================
@@ -8396,7 +8868,22 @@ body{ overflow-x:clip; }
    için mobil dal AYRICA yazılmaz, kendiliğinden düşer. (slot-1 ④)
    ⚠ Sınıf dikişin ÜSTÜNE değil, aynı elemana verilir: `.dikis` yalnız
    köşe ve binme yazar, dolgu gövdenin kendi kalemidir. */
-.bildirim-govde{ padding:var(--bolum-nefes-sik) 0 var(--bolum-nefes); }
+/* 🔴 DİKİŞ TAŞIYICISI BOYAMAK ZORUNDA — ölçüldü, 2026-09-03 (B6).
+   Beyar gözle gördü: "fit-bildirimler'de beyaz panelin üst köşesi
+   radiussuz". Kutu `--dikis-r` (22px) yuvarlağını ve `-22px` binmesini
+   ZATEN taşıyordu; görünmüyordu çünkü SAYDAMDI — yuvarlatılan köşe
+   boyanmayan bir kutuda çizilmez, arkadaki katman kare kalır.
+   KAYNAKTAN ÖLÇÜLDÜ, uydurulmadı: `bildirimler-v1.html?auth=1`
+   çalışma anında `.nt-body` = `background rgb(249,249,249)` · radius 22
+   · margin-top -22. Yani kaynak boyuyor. Bizde kural adla koptu:
+   gövde `nt-body → bildirim-govde` çevrildi, kaynağın `.nt-body{...}`
+   kuralı artık hiçbir şeye tutunmuyor (§S19'un `.fp-head .fp-act`
+   kusurunun kardeşi — ÇEVİRİ KOPARDI).
+   Renk yeniden ölçülmedi: rgb(249,249,249) = `--zemin`. */
+.bildirim-govde{
+  padding:var(--bolum-nefes-sik) 0 var(--bolum-nefes);
+  background:var(--zemin);
+}
 
 .bildirim-kolonu{ max-width:880px; margin:0 auto; }
 
@@ -11181,7 +11668,28 @@ body:has(.sohbet-panel.acik) .sohbet-dugme{
 .kart.panel>.kart-alt:has(.dugme){
   display:flex; align-items:center; gap:var(--bosluk-14); flex-wrap:wrap;
 }
-.kart.panel>.kart-alt:has(.dugme)>.dugme{ margin-left:auto; }
+/* 🔴🔴 ÜÇÜNCÜ KALDIRAÇ — S1 ③'Ü YENİYORDU, DÜZELTİLDİ 2026-09-04.
+   Bu satır `margin-left:auto`yu ayaktaki HER düğmeye veriyordu ve
+   özgüllüğü (0,4,0) S1'in düzeltmesini (`.kart-alt>.dugme{margin-left:0}`,
+   (0,2,0)) yeniyordu. S1 ③ tam olarak bu hâli tarif ediyor:
+   *"ayak YALNIZ düğmelerden oluşunca her düğme kendi `auto`sunu alıyor
+   ve boşluk ARALARINDA paylaşılıyor."*
+   S1 iki kaldıraç bulup ikisini de devretmişti (taban + modal ayağı);
+   bu ÜÇÜNCÜSÜ, ve S1'den SONRA yazıldığı için onun listesinde yoktu.
+
+   ÖLÇÜLDÜ @1440 (`adm-op-a` bildirdi, burada doğrulandı):
+       admin-sss-form   İptal 561..644 · Soruyu kaydet 828..1005
+                        iki düğmede de margin-left 169.5px · ara 184px
+       admin-uye-form   iki düğmede de margin-left 195.9px · ara 210px
+   gap tokeni 14 — yani düğmeler arasında olması gereken 14px, ölçülen 184.
+
+   `auto` GEREKMİYOR: ayak zaten `justify-content:flex-end` taşıyor
+   (S1'in kendi kuralı) ve grup ona yaslanıyor. Boşluğun notun sağına
+   toplanması da S1'de yazılı (`.kart-alt>:not(.dugme):first-child`).
+   ⚠ Ders — kanonun kendi §73b şerhi "sınıf beklemek yerine YAPISAL"
+     diyerek doğru bir karar veriyor ama YENİ bir kaldıraç doğuruyor;
+     yapısal seçici yazmak, o seçicinin hangi sözleşmeyi ezdiğini
+     kontrol etmekten muaf tutmuyor. */
 
 /* ── 73c · BANDIN SONUNDAKİ BİLGİ NOTU PERDEYE YAPIŞMAZ ───────────────
    Beyar: "burdaki infolar genel olarak perdenin sonuyla arasında biraz
@@ -11286,6 +11794,27 @@ body:has(.sohbet-panel.acik) .sohbet-dugme{
 .fp-card + .fp-card,
 .ozet-karti + .ozet-karti{ margin-top:var(--bosluk-16); }
 
+/* 🔴🔴 IZGARA İÇİNDE VURMUYOR — 2026-09-04, ADMIN TURU · ÖLÇÜLDÜ.
+   Kuralın kendi şerhi *"kart ızgaraları `gap`i kendileri yazar"* diyor
+   ama muhafazası YAZILMAMIŞTI: `.kart-izgara` çocuklarına da `margin-top`
+   basıyordu. S3 ① bunun bir ucunu (`gap` + `margin` iki kez sayılıyor)
+   dört ADI SAYILAN kapta kapatmıştı; `.kart-izgara`nın kendisi o listede
+   yoktu, çünkü o kap S3'ten SONRA doğdu (§A2).
+
+   ÖLÇÜLDÜ (admin-genel-bakis @1440 · `.kart-izgara.c4` · sekiz KPI kartı):
+       kart 1   üst 308   yükseklik 146   margin-top 0px
+       kart 2   üst 324   yükseklik 130   margin-top 16px
+       kart 3   üst 324   yükseklik 130   margin-top 16px
+       kart 4   üst 324   yükseklik 130   margin-top 16px
+   Yani ilk kart 16px YUKARIDAN başlıyor ve `stretch` yüzünden 16px DAHA
+   UZUN — bir KPI şeridinin dört kartı hizasız. Gözle görünüyor.
+   Bulguyu `adm-genel` agent'ı ölçüp bildirdi; burada bağımsız doğrulandı.
+
+   ⚠ Kural `:is()` ile YAZILAMAZ, kabın ADIYLA yazılır: aralığı yazan
+     taraf kaptır (S3 ①'in kararı) ve `.kart-izgara` `gap` yazıyor. */
+:is(.kart-izgara, .form-duzen) > :is(.kart, .fp-card, .ozet-karti)
+  + :is(.kart, .fp-card, .ozet-karti){ margin-top:0; }
+
 /* 🔴 KAPI: `kapi-bosluk.mjs` — bandın son kaleminin alt boşluğu eşiğin
    altına inerse ve aynı kap içindeki kart aralıkları BİRDEN ÇOK değer
    taşırsa kırmızı verir. "Bir daha istemiyorum" ancak ölçülürse tutar. */
@@ -11329,11 +11858,25 @@ body:has(.sohbet-panel.acik) .sohbet-dugme{
 }
 .kart-izgara.c2{ grid-template-columns:repeat(2,minmax(0,1fr)); }
 .kart-izgara.c3{ grid-template-columns:repeat(3,minmax(0,1fr)); }
+/* 🔴 `.c4` · BEYAR KARARI 4 (`docs/admin-envanter.md §9`) — 2026-09-03.
+   Admin KPI şeridi (17/37 ORTAK ekran) için açıldı. K8 ① sonucu:
+   şerit MEVCUT `.kart` + `.kart-izgara` ile basılıyor, eksik olan tek şey
+   dört kolonluk varyanttı. Ölçüldü (`admin-abonelikler-v1` @1440):
+       `.adm-kpi`  grid · 249px ×4 · gap 16px   ↔  `.kart-izgara` gap 16px
+   Yani gap BİREBİR tutuyor; yeni bileşen değil, KOLON VARYANTI. */
+.kart-izgara.c4{ grid-template-columns:repeat(4,minmax(0,1fr)); }
 .kart-izgara.c7{ grid-template-columns:repeat(7,minmax(0,1fr)); gap:var(--bosluk-8); }
+@media (max-width:1100px){
+  /* `.c4` ARA KIRILIM TAŞIR — `.c2`/`.c3` taşımıyor, çünkü dört kolon
+     1100'ün altında 249px'in altına iniyor ve KPI sayısı (`--yazi-24`)
+     etiketiyle aynı satıra sığmıyor. Ölçüldü: 4 kolon @1024 → 208px
+     hücre, sayı+delta sarıyor. İkiye düşünce 432px, sarma bitiyor. */
+  .kart-izgara.c4{ grid-template-columns:repeat(2,minmax(0,1fr)); }
+}
 @media (max-width:640px){
   /* 390 kuralı: çok kolonlu ızgaralar tek kolona döner, gün şeridi
      yedi kolonda KALIR (takvim ritmi bozulmaz, hücre küçülür). */
-  .kart-izgara.c2,.kart-izgara.c3{ grid-template-columns:minmax(0,1fr); }
+  .kart-izgara.c2,.kart-izgara.c3,.kart-izgara.c4{ grid-template-columns:minmax(0,1fr); }
   .kart-izgara.c7{ gap:var(--bosluk-4); }
 }
 
@@ -11420,6 +11963,23 @@ body:has(.sohbet-panel.acik) .sohbet-dugme{
       Düğme etiketi tek satırdır; boyu artık `min-height`in ilan ettiği
       44px'tir, miras aldığı kaptan değil.
 
+      🔴 İDDİA YENİDEN ÖLÇÜLDÜ — 2026-09-03. Aile tutuyor: `.hayalet`
+      83 örnek 44px, `.birincil` 60 örnek 44px. 44 DIŞINA düşen 15 örnek
+      kaldı ve hiçbiri "miras" değil — her birinin BİLDİRİLMİŞ sebebi var:
+          48px ×6   `.durum-arama .dugme{ height:48px }`   404 · 500 · çevrimdışı
+          45px ×4   `.giris-gonder{ padding:15/26 · 15px }` giriş gönder
+          53px ×2   `.arama-satir .dugme{ padding:0 26 }`   satır boyuna esner
+          43px ×2   `.dugme.cam.ikon{ height:44px }`        🔴 44 yazıp 43 çiziyor
+          45px ×1   fit-antrenor-ol `.btn-fit`              🔴 dolgu kanondan GELMİYOR
+      İlk üçü bağlamın kendi kipi — S1 ① onları hiç reddetmedi, kural
+      "kap belirlemesin" diyordu, bunlarda kabı değil KURALIN KENDİSİ
+      belirliyor. Son ikisi gerçek kalem:
+        · `.dugme.cam.ikon` bildirdiği boyu çizmiyor (1px). Ayrı ölçülecek.
+        · `fit-antrenor-ol`un `.btn-fit`i dolgusunu 15/26 çiziyor ama
+          kanon 14/26 yazıyor — yani biçim kanondan değil sayfanın kendi
+          `<style>`ından geliyor. Bu bir S1 kalemi DEĞİL, Y2 kalemi:
+          gölge kural (bkz. `docs/olcum-O-kanon-onarim.md` §4).
+
    ② KENARLI VARYANT KENARI DOLGUDAN DÜŞER. `*{box-sizing:border-box}`
       kutuyu sabitler ama içerik 44'ü aşınca kutu BÜYÜR:
           dolgu 28 + metin 14.5 + kenar 2 = 44.5 → 46px
@@ -11443,11 +12003,19 @@ body:has(.sohbet-panel.acik) .sohbet-dugme{
       dokunulmaz.
       KİP SEÇİMİ — Beyar'ın kuralı, kanonun kendi ailesiyle:
           onaylayan / kaydeden      → `.dugme.birincil`  dolgu aksan
-          geri alan / temizleyen    → `.dugme.hayalet`   kenarlı, sessiz
+          geri alan / temizleyen    → `.dugme.hayalet`   aksan kenarlı ikincil
           YIKICI (sil)              → `.dugme.hayalet`   ✅ ikincil kip
       Yıkıcı eylem dolgu kırmızıyla BAĞIRMAZ: kart ayağındaki "sil"
       bir seçenektir, sayfanın ana eylemi değil. `.dugme.tehlike`
       (§2) yerinde duruyor ama ayak sözleşmesinde kullanılmaz.
+
+      🔴 "kenarlı, sessiz" → "aksan kenarlı ikincil" · O2 · 2026-09-03.
+      Bu satır yazıldığında `.hayalet` GERÇEKTEN sessizdi — ölçüldü,
+      kenarı kâğıttan 1.18:1 ayrılıyordu, yani kutu yoktu. Sözleşme o
+      hâli "iyi seçenek" diye resmileştirmişti; kötü seçim değil, İYİ
+      SEÇENEK YOKTU. O2 kipi düzeltti (§2 · `--aksan` 3.45:1) ve satır
+      onunla birlikte yeniden yazıldı. Görev DEĞİŞMEDİ — geri alan eylem
+      hâlâ ikincil kiptedir; değişen, o kipin ekranda görünür olması.
 
    ⑤ MARKA ADLARI DEVREDİLİR. Ölçüldü: 20 düğme `.btn-fit`, 3 düğme
       `.btn-food` — aynı işi gören birincil düğmenin iki marka adı, ve
@@ -11488,6 +12056,19 @@ body:has(.sohbet-panel.acik) .sohbet-dugme{
 .kart-alt>:not(.dugme):first-child{ margin-right:auto; }
 .kart-alt>.dugme{ order:1; }
 .kart-alt>.dugme.birincil{ order:2; }
+/* ⑥ YALNIZ-METİN AYAK ORTALI · A4 · Beyar kararı 2026-09-03.
+   Düğme ya da sayfalama taşıyan ayak ③④'te kalır (not solda, grup
+   sağda); hiçbirini taşımayan ayak tek başına bir bilgi satırıdır ve
+   ortalanır. ③'ün `margin-right:auto`su burada sıfırlanır, yoksa ilk
+   çocuğu sola çeker.
+   ⚠ TÜKETİCİSİ BUGÜN 0 — ölçüldü (13 ekran · DOM'daki 27 `.kart-alt`):
+     metin gibi görünen ayakların HEPSİ bir düğme ya da sayfalama
+     taşıyor ("Son güncelleme: 2 gün önce" + kaydet · "4 kayıttan 1-4" +
+     sayfalama). Lead'in "10 düğmesiz ayak sağa yaslı" tespiti a4
+     ölçümünün yalnız METNİ okumasından geldi; yanlıştı. Kural Beyar'ın
+     kararıyla duruyor, ilk düğmesiz ayak geldiğinde çalışır. */
+.kart-alt:not(:has(.dugme,.sayfalama,button)){ justify-content:center; text-align:center; }
+.kart-alt:not(:has(.dugme,.sayfalama,button))>:first-child{ margin-right:0; }
 
 
 /* ── S2 · BİLGİ NOTU ───────────────────────────────────────────────────
@@ -11518,6 +12099,43 @@ body:has(.sohbet-panel.acik) .sohbet-dugme{
 
 .bilgi-notu:has(+ *){ margin-bottom:var(--bolum-nefes-sik); }
 .modul-govde .kap > .bilgi-notu{ max-width:none; margin-inline:0; }
+
+/* ③ PANO SONU NOTU · A4 · Beyar kararı 2026-09-03.
+   "Ayraç altı bilgi satırı: ortalı, ayraçla nefes, sayfa sonu boşluğu."
+
+   Aynı rolü İKİ ad oynuyor ve dördü de farklıydı — ÖLÇÜLDÜ (13 ekran ·
+   her sekme tıklanmış · pano sonunda duran notlar):
+                        `.alt-not` §15 ×18    `.bilgi-notu` §16 ×13
+       hiza             sol                   sol
+       ayraç → metin    18px (pt 14)          23px (pt 20)
+       altında kalan    0 / 32                24 / 56
+   "Sayfa sonu"nun kökü: `footer.dip` position:fixed (585px reveal),
+   `main{margin-bottom:585px}` — içerik gövdenin dibinde biter, son not
+   ile sayfa ucu arasında kaba göre DÖRT değer.
+
+   Beyar: ayraç nefesi 23 (§16'nın kendi değeri, `--bosluk-20`), altına
+   `--bolum-nefes-sik` (32 — S3'ün pano ritmi), ortalı. Yeni ad YOK: kip
+   konumdan okunur (pano içinde, kabının son çocuğu, kart soyu yok).
+   Kart İÇİ `.alt-not` (hesabim · odemelerim · paketlerim#yukselt,
+   `.kart-govde` çocuğu) §15'in asıl rolüdür, bu kip ona dokunmaz.
+
+   🔴 ALT NEFES YENİ DEĞER DEĞİL, BANDIN KENDİSİ. İlk yazım notun altına
+      `margin-bottom:32` koydu; ölçünce 64 çıktı — bant (`.zebra>.bolum`
+      ve `section.dikis`, ikisi de `padding-bottom:32`) o nefesi ZATEN
+      veriyor. Doğrusu notun kendi alt payını SIFIRLAMAK: §16'nın 24'ü
+      düşer, alt nefes tek kaynaktan (bandın `--bolum-nefes-sik`) gelir.
+      Beklenen: 33 notun hepsinde 32. ⚠ Yeniden basım sonrası TEYİT
+      ÖLÇÜLMEDİ (bağlam bitti) — açık borç, ilk iş.
+   ⚠ `.alt-not`un ikonu §15'te 3px iniyor, §16'nınki 2px — ayraç→metin
+     24 ↔ 23 çıkıyordu; ikon payı §16'ya eşitlendi, ikisi de 23.
+   ⚠ Özgüllük (0,4,0) — `.modul-govde .kap > .bilgi-notu` (0,3,0) ve
+     `.alt-not.ortali` (0,2,0) üstünde; bilerek. */
+.fit-pane :is(.alt-not,.bilgi-notu):last-child:not(:is(.kart,.fp-card,.ozet-karti) *){
+  justify-content:center; text-align:center;
+  padding-top:var(--bosluk-20);
+  margin-bottom:0;
+}
+.fit-pane .alt-not:last-child:not(:is(.kart,.fp-card,.ozet-karti) *) > i{ margin-top:2px; }
 
 
 /* ── S3 · KART ARALIĞI ─────────────────────────────────────────────────
@@ -11862,6 +12480,18 @@ body:has(.sohbet-panel.acik) .sohbet-dugme{
    kendi payı sıfırlanır — kaldırılan bir değer, eklenen yok. */
 .fit-pane > *:first-child > *:first-child{ margin-top:0; }
 
+/* 🔴 KURALIN DIŞINDA KALAN TEK PANO — ölçüldü 2026-09-03, Beyar
+   "fit-hareket-profilim#hp-cihaz sekme şeridi ↔ pano boşluğu fazla".
+   S13 TUTUYOR: dokuz panonun sekizinde şerit dibi → ilk MÜREKKEP
+   54.0px, hepsi aynı. Aykırı olan tek pano:
+       hp-cihaz   128px   (54 + 74)
+   Fark kanondan gelmiyor — gövdede ELLE YAZILMIŞ bir satır var:
+       <div class="sec-head" style="padding-top:74px">
+   Yani kanonun ölçüsü değil, uydurma markup. Kural DEĞİŞMEDİ; düzeltme
+   gövdededir (govde-fit-hareket-profilim.html · inline stil sökülür).
+   ⚠ 74px tesadüf değil: S3'te ölçülen `.bolum.kap` dolgusunun (74/74)
+     kopyası. Sökülen bir kapın değeri, çocuğa elle taşınmış. */
+
 
 /* ── S14 · ARŞİV NESNESİ · SÜZGEÇ SÜZDÜĞÜ ŞEYLE AYNI KUTUDADIR ─────────
    Beyar: "arşivi redesign et."
@@ -11968,6 +12598,1915 @@ body:has(.sohbet-panel.acik) .sohbet-dugme{
 .msj-fab.is-bos > span{
   position:absolute; width:1px; height:1px; overflow:hidden;
   clip-path:inset(50%); white-space:nowrap;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════
+   § GÖMÜLÜ TABLO KABI · O1 · Beyar kararı 2026-09-03 · KALIP
+   ═══════════════════════════════════════════════════════════════════════
+   KALIP (Y1 kalıp tablosunun ilk maddesi — agent karar vermez, kalıbı alır):
+
+       kart İÇİ tablo   →  .tablo-kap.gomulu > .tablo     köşe YOK
+       kart DIŞI tablo  →  .tablo-kap > .tablo            köşe VAR
+
+   ── NEDEN AD, NEDEN SOY DEĞİL ────────────────────────────────────────
+   Kural soyağacına yazılamadı, çünkü soyağacı TEK DEĞİL. Ölçüldü
+   (38 ekran · her sekme tıklanmış · dokuz kart içi kap), üç ayrı zincir:
+
+       .kart.odeme            > .kart-govde.bosluksuz > .tablo-kap   ×7
+       .kart.tasma-kapali     > .tablo-kap                           ×1
+       .kart                  > .tablo-kap                           ×1
+
+   `.kart > .tablo-kap` yazan bir kural dokuzun YALNIZ İKİSİNİ tutardı;
+   `.kart .tablo-kap` ise soyu sayan bir kural olurdu ve S9'un dersine
+   düşerdi ("kural adları saydığı sürece her yeni komşuluk yeni bir
+   kusurdur"). Ad taşıyan kap kendi kipini kendi söyler — zincir ne
+   olursa olsun.
+
+   ── DİP DALI · KARTIN ALT KÖŞESİ SÜRDÜRÜLÜR ──────────────────────────
+   Dokuz kabın İKİSİ kartın dibine tam değiyor (ölçüldü, kartın kenar
+   kalınlığı düşülerek: `fit-odemelerim#iade` ve `odemelerim#iade`,
+   ikisinde de dip payı 0.00px; kalan yedisinde 53–118px).
+
+   🔴 DAL SÜS DEĞİL, ÖLÇÜLMÜŞ BİR REGRESYONU ÖNLÜYOR. Köşe bugün boş
+   göründüğü için "fark etmez" sanılabilir — ama §4'ün KENDİ kuralı onu
+   boyuyor: `.tablo tbody tr:hover{ background:var(--zemin) }`.
+   Son satırın üstünde gerçek fare ile ölçüldü (sol-alt köşeden 9×9 px):
+       bugünkü hâl            → boya kartın yayında duruyor      ✅
+       gömülü, dal YOK        → boya kartın köşesini TAŞIYOR     🔴
+       gömülü + dip dalı      → bugünküyle piksel piksel aynı    ✅
+   Yani dalsız hâlde hover, kartın yuvarlak köşesini kare gösteriyor.
+
+   Seçici DENENDİ, dokuz kapta da doğru karar verdi: dibe değen ikisini
+   tuttu, kalan yedisini tutmadı (9/9). Ölçüt `:last-child` zinciri —
+   kabın kartla arasındaki her düğüm son çocuk olmalı; araya bir kart
+   ayağı girdiği anda kural kendiliğinden düşer, ki doğrusu odur.
+
+   ── TEPE DALI · A1 · 2026-09-03 · ÖLÇÜLDÜ, SONRA YAZILDI ──────────────
+   Bu blok yazıldığında dokuz kabın hiçbiri kartın tepesine değmiyordu
+   (en yakını 97px) ve dal bilerek yazılmadı. Y2 (çok donörlü stil) sonrası
+   yeniden basımda BİR kap tepeye indi: `fit-egzersizlerim#egz-gecmis`,
+   kart tepesine 1px (kartın kenar kalınlığı). Kart `.tasma-kapali`.
+   Piksel probu (lead-o1-tepe.mjs · kartın sol-üst köşegeni, +3/+4/+5):
+       a · bugünkü hâl (kırpma açık)   248 · 245 · 248   kenar yayı VAR  ✅
+       b · kırpma sökülmüş             249 · 249 · 249   yay SİLİNDİ     🔴
+       c · b + tepe dalı               248 · 245 · 247   yay GERİ        ✅
+   Başlık şeridinin zemini (`--zemin` 249) bandın zeminiyle aynı olduğu
+   için kare köşenin KENDİSİ görünmez; silinen, kartın 1px kenar yayıdır.
+   Kırpma bugün gizliyor ama taban `.kart` kırpmaz (168 visible ↔ 27
+   hidden) — dal, dip dalıyla aynı gerekçeyle aynadan yazıldı.
+
+   ── EKRANLAR ADI TAŞIYOR · 2026-09-03 ─────────────────────────────────
+   Üretici `_gomulu_kap()` çeviriden SONRA soyu okuyup jetonu basıyor
+   (fit-kur.py). 13 FIT ekranı ölçüldü: 6 gömülü (antrenorum · egzersizlerim
+   · odemelerim ×3 · programlarim) · 3 düz (challengelarim ×2 kartsız ·
+   paketlerim `.cerceveli`). Yukarıdaki "dokuz" 38 ekranı sayıyordu
+   (DİYET `odemelerim` ×3 dahil). Dip dalı ekranda: `fit-odemelerim#iade`
+   0 0 16 16.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.tablo-kap.gomulu{ border-radius:0; }
+
+/* Kartın dibine değen gömülü kap, kartın alt köşesini SÜRDÜRÜR.
+   Yeni ölçü yazılmadı — `--yuvarlak-lg` kartın kendi köşesi. */
+:is(.kart,.fp-card,.ozet-karti) > .tablo-kap.gomulu:last-child,
+:is(.kart,.fp-card,.ozet-karti) > .kart-govde:last-child > .tablo-kap.gomulu:last-child{
+  border-bottom-left-radius:var(--yuvarlak-lg);
+  border-bottom-right-radius:var(--yuvarlak-lg);
+}
+/* Kartın TEPESİNE değen gömülü kap, kartın üst köşesini SÜRDÜRÜR.
+   Dip dalının aynası — ölçüsü yukarıda (a/b/c). */
+:is(.kart,.fp-card,.ozet-karti) > .tablo-kap.gomulu:first-child,
+:is(.kart,.fp-card,.ozet-karti) > .kart-govde:first-child > .tablo-kap.gomulu:first-child{
+  border-top-left-radius:var(--yuvarlak-lg);
+  border-top-right-radius:var(--yuvarlak-lg);
+}
+
+
+/* ── S17 · SÜZGEÇ ŞERİDİ BAŞLIĞI İKİ NOKTA İLE BİTER ───────────────────
+   Beyar: "TÜR → TÜR:, TEST → TEST: — tüm ekranlarda tara."
+
+   ÖLÇÜLDÜ (13 FIT + 29 Diyet ekranı · her sekme tıklanarak) — şeridin
+   başlığı İKİ AYRI SINIFLA yazılıyor ve yalnız birinde iki nokta var:
+
+       .cipler-basligi   9 kalem / 5 ekran   12px · versal · İKİ NOKTA YOK 🔴
+         egzersizlerim  Tür · Dönem · Kanıt
+         ilerlemem      Durum · Test
+         odemelerim     Tür            programlarim  Durum
+         hareket-profilim  "Bir tane seç" · "Birden fazla seçebilirsin"
+       .lbl              1 kalem / 1 ekran   13px · düz     "Tür:"  ✅
+         enerji-defterim
+       (Diyet: `odemelerim` ×1 — "Tür", aynı 🔴)
+
+   Yani DOĞRU BİÇİM ZATEN EKRANDAYDI, ama başka bir sınıfın altında:
+   `.lbl` kaynağın adı, eşlemede karşılığı yok, kanonun 12px/versal
+   sözleşmesine hiç girmemiş. İki nokta gövde metnine değil KURALA
+   yazılır — tek yerden, iki markada birden.
+
+   ⚠ `.lbl` EŞLEME DELİĞİ — KAPATILDI, ama ilk yazımın tarif ettiği
+     yoldan DEĞİL. 🔴 İlk yazım "ekranlar/<ad>.mjs eşlemesine seçici
+     yazılır" diyordu; ÖYLE BİR KANAL YOK (A2 uyguladığında ortaya
+     çıktı, 2026-09-03). Üreticinin gerçek eşlemesi
+     `scripts/olcum/fit-harita.json`:
+         `harita`    334 kalem · JETON düzeyinde · kaynak→kanon · KÜRESEL
+                     (`"lbl":"cipler-basligi"` yazmak gün etiketlerini de
+                      vururdu — enerji-defterim'de 8 tanesi `.lbl`)
+         `baglamli`  ATA sınıfıyla kapsanmış eşleme
+                     (`"fp-row":{"end":"ks-uc"}` kipinde) — kapsam bu
+                     kanaldan verilir, seçiciyle değil
+     UYGULANAN: gövdedeki süzgeç başlığı kaynağın KENDİ doğru sınıfına
+     taşındı (`lbl` → `fgroup-lbl`); `"fgroup-lbl":"cipler-basligi"`
+     haritada ZATEN duruyordu (fit-harita.json L164) ve aynı ekranın
+     egzersizlerim kardeşi bunu zaten böyle yazıyordu. Kapsam
+     kendiliğinden dar: gün etiketleri `.lbl` kaldı (9 → 8).
+     Ölçüldü: enerji-defterim «TÜR:» · hareket-profilim «DURUM:» ·
+     hesabim «DURUM:» — üçü de 12px versal, tek iki nokta.
+   ⚠ Çeviri yapılırken gövdedeki ELLE YAZILMIŞ ":" SÖKÜLÜR — yoksa bu
+     kural onun üstüne bir ikinci iki nokta basar ("Tür::").
+   ⚠ SIRALAMA ETİKETİ BU KURALIN DIŞINDA — ÖLÇÜLDÜ, KAPANDI.
+     A2 «Sırala» (`.lib-sort > .lbl`) için "aynı çubukta TÜR: ile yan
+     yana, iki ayrı dil" dedi; LEAD de şerhe önce öyle yazdı. 🔴 İKİSİ
+     DE YANLIŞTI: o etiket EKRANDA YOK. Ölçüldü (enerji-defterim, altı
+     panonun hepsi tıklanarak): `#agSortLbl` computed `display:none`,
+     ataları görünür (`.lib-sort[flex]` · `.ff-bar[flex]`). Kaynağın
+     kendi kuralı gizliyor: `fit-shell.css:3140`
+     `.ff-bar .ff-sort .lbl{display:none}`.
+     Yani etiket görsel değil ERİŞİLEBİLİRLİK ADI —
+     `.sort-seg[aria-labelledby="agSortLbl"]` onu okuyor. S17'ye
+     alınmaz: görünmeyen bir ada iki nokta eklemek ekranda hiçbir şey
+     değiştirmez, ekran okuyucuda "Sırala:" dedirtir. Kalem yok.
+   ⚠ Kural yalnız GÖRÜNEN metni değiştirir; ekran okuyucuda başlık
+     zaten `aria-label`li grubun içinde duruyor. */
+.cipler-basligi::after{ content:":"; }
+
+
+/* ── S18 · KART SAYACI HÜCRELERİ AYRIKTIR ──────────────────────────────
+   Beyar: "künye çakışması — 24 antrenmanPzt · Çrş".
+
+   ÖLÇÜLDÜ (13 ekran · her sekme tıklanarak · altı `.kart-sayac`):
+       çok hücreli  2   fit-programlarim (#prg-planlanan ×2)
+       tek hücreli  4   —
+   Çok hücreli ikisinde:
+       display:block · gap:normal · iki `<span>` inline
+       İKİ HÜCRE ARASI MESAFE = 0.0px, ikisi de aynı satırda
+   yani "24 antrenman" ile "Pzt · Çrş · Cum" arasında ayıracı olmayan
+   bir yapışma vardı; sayaç bir künye değil, tek bir cümle gibi
+   okunuyordu.
+
+   DEĞER UYDURULMADI — DEVREDİLDİ. Aynı rolün kanondaki ölçülmüş kipi
+   `.ozet-kunye` (§63d): `display:flex · flex-wrap:wrap · gap:18px`,
+   tipografisi de birebir aynı (12.5 / orta / ikincil, `b` ekstra +
+   mürekkep). `.kart-sayac` o kalıbın SATIR İÇİ kardeşiydi ve yalnız
+   yerleşim sözleşmesi eksikti. 18px kaynağın kendi `.fp-meta` gap'i.
+   ⚠ Tek hücreli dördü etkilenmez: tek çocuklu flex kabı, blok kabıyla
+     aynı çizer (dolgu ve hizası §44'te, dokunulmadı). */
+.kart-sayac{
+  display:flex; flex-wrap:wrap;
+  column-gap:var(--bosluk-18); row-gap:var(--bosluk-4);
+}
+
+
+/* ── S19 · KART BAŞI EYLEM BAĞLANTISI ──────────────────────────────────
+   Beyar: "fit-ilerlemem#ilr-testler 'Sonucun tamamı' bağlantısı çok
+   büyük."
+
+   Kalem tek bir bağlantı değil, ÇEVİRİNİN KOPARDIĞI BİR KURAL.
+
+   KÖK — ölçüldü, tahmin değil. Kaynağın kuralı TORUN seçicisiyle
+   yazılmış:
+       fit-shell.css:2284
+       .fp-head .fp-act{ font-size:13px; font-weight:700; color:--fit-deep }
+   Gövdede `.fp-head` kanon adına çevriliyor (`.ozet-bas`, eşleme
+   2026-09-03), `.fp-act` ise çevrilmiyor — kanonda karşılığı yok.
+   Torun seçicisinin SOL YARISI gidince kural hiçbir şeye tutunmuyor
+   ve bağlantı gövde tipografisine düşüyor.
+
+   ÖLÇÜLDÜ (13 ekran · `.fp-act` 43 örnek / 5 ekran · üç küme):
+       .ozet-bas .fp-act    11   16.0px / 500 / mürekkep   🔴 ÇIPLAK
+       .ks-uc   .fp-act     12   12.5px / 700 / ikincil    ✅ (künye ucu)
+       .fp-act.fp-actbtn     8   13.0px / 700 / #000       — ayrı kalem
+   Emsal: `.see-all` → `.dugme.orta` (§47) 13.5 / 700 / h 44.9. Yani
+   kart başındaki bağlantı, kartın kendi başlığıyla (17.5) neredeyse
+   aynı boya çıkmış, düğme emsalinden 2.5px büyük duruyordu.
+
+   DEĞER UYDURULMADI: kaynağın kendi üç değeri (13 / 700 / --fit-deep)
+   kanon tokenlarına birebir çevrildi — ölçüldü, `--fit-deep` ile
+   `--aksan-koyu` AYNI hesaplanmış renk
+   (`color-mix(in srgb,#0093D0 77.5%,#000)`), yeni renk üretilmedi.
+   ⚠ Kural kaynağın adına yazılı (`.fp-act`) — kanonda `.fp-grid`,
+     `.fpx-kural`, `.pp-gunler` için aynı kip zaten var (S3). `.fp-act`
+     bir gün kanon adı alırsa kural o ada taşınır.
+   ⚠ `.ks-uc` kümesine DOKUNULMADI: o künye ucunun kendi ölçüsü
+     tutuyor. `.fp-actbtn`in siyahı (#000 ≠ --murekkep) ölçüldü ama
+     Beyar'ın kaleminde değil — şerhe yazıldı, kural yazılmadı. */
+.ozet-bas .fp-act{
+  flex:none; display:inline-flex; align-items:center; gap:var(--bosluk-6);
+  font-size:var(--yazi-13); font-weight:var(--agirlik-kalin);
+  color:var(--aksan-koyu);
+}
+
+
+/* ── S20 · KART RAYI · TEK SATIR YATAY KAYDIRMA ────────────────────────
+   Beyar: "'Üç challenge tipi' ızgarası tek satır yatay slider olsun;
+   dördüncü kart ('Seri ve telafi') altta tam genişlik dursun — o bir
+   tip değil, kural."
+
+   ÖLÇÜLDÜ (fit-challengelarim @1440 · `.fpx-kural`):
+       grid 3 sütun · gap 16 · DÖRT çocuk
+       satır 1  Süreli hedef · Egzersiz serisi · Alışkanlık   381×213
+       satır 2  Seri ve telafi                                381×207
+   Yani dördüncü kart ızgarada zaten TEK BAŞINA alt satırda, üçte bir
+   genişlikte duruyordu: yapı da Beyar'ın okuduğunu söylüyor.
+
+   BİLEŞEN UYDURULMADI — DEVREDİLDİ. Kaynağın kendi slider altyapısı
+   var ve ölçülü (fit-shell.css:655-686 · "TÜMÜNÜ GÖR SLIDER"):
+       .row-track  flex · gap 26 · overflow-x:auto · snap x proximity
+                   scrollbar gizli · dolgu 6/2/10 · momentum · smooth
+       .row-track>*  flex:none · 274px · snap-align:start
+       @≤640       gap 14 · genişlik min(274px, 78vw)
+       reduce-motion  smooth kapanır
+   Değerler kanon tokenlarına çevrildi, hiçbiri yeniden ölçülmedi.
+   🔴 KART GENİŞLİĞİ DEĞİŞİR: bugün 381px (3 sütun ızgara), rayda
+      274px — kaynağın kendi ray ölçüsü. Beyar'a bildirildi.
+   ⚠ Ray KIRPMAZ: S5'in "taşarsa başı kırpılmaz" kuralıyla aynı aile,
+     kaydırma çubuğu gizli ama kaydırma açık.
+   ⚠ Ok grubu (`.ray-oklar`) İSTEĞE BAĞLI — kaynakta uçta devre dışı
+     görünen iki düğme var; içerik taşmıyorsa grup hiç basılmaz.
+   ⚠ RAY ODAKLANABİLİR OLMALI (A1 sordu, LEAD onayladı 2026-09-03).
+     Ok grubu basılmadığında kaydırmanın TEK klavye yolu rayın kendisidir:
+     `tabindex="0"` + `role="group"` + `aria-label`. Kaynağın
+     `.row-track`i bunu yazmıyor çünkü orada klavye erişimini OKLAR
+     veriyor; oklar düşünce erişim de düşer. Kuralın kendisi bunu zaten
+     varsaymıştı — aşağıdaki `:focus-visible` halkası odaklanamayan bir
+     kapta hiç çizilmez. Ölçüldü: `el.focus()` sonrası
+     `document.activeElement === ray` ✅ (challengelarim). */
+.kart-rayi{
+  display:flex; gap:var(--bosluk-26);
+  overflow-x:auto; -webkit-overflow-scrolling:touch;
+  scroll-snap-type:x proximity; scroll-behavior:smooth;
+  overscroll-behavior-x:contain;
+  scrollbar-width:none;
+  padding:var(--bosluk-6) 2px var(--bosluk-10);
+}
+.kart-rayi::-webkit-scrollbar{ display:none; }
+/* 🔴 `flex:none` DEĞİL — Beyar kararı, 2026-09-03, gözle yakalandı.
+   Kaynağın rayı ÇOK kart taşıyor ve her zaman taşıyor; bizimki ÜÇ kart
+   taşıyor ve @1440'ta hiç taşmıyor. Ölçüldü (challengelarim):
+       flex:none/274   @1440  3×274 · içerik 1176 = kap · SAĞDA 300px BOŞ
+                       @390   3×274 · içerik 854 > kap 358 · kayıyor ✅
+       flex:1 0 274px  @1440  3×373 · kap dolu · boş 2px  ✅
+                       @390   3×274 · içerik 854 · kayıyor  ✅ BİREBİR AYNI
+   274 temel ölçü olarak DURUYOR (flex-basis); yalnız taşmanın olmadığı
+   yerde büyüme izni var. Dar ekranda ray davranışı zerre değişmiyor —
+   ölçüldü, iki kip aynı sayıyı veriyor. Yeni değer üretilmedi. */
+.kart-rayi > *{ flex:1 0 274px; scroll-snap-align:start; }
+.kart-rayi:focus-visible{
+  outline:var(--odak-kalinlik) solid var(--aksan); outline-offset:4px;
+  border-radius:var(--yuvarlak-md);
+}
+/* Rayın altındaki tam genişlik notu — ray bir TİP listesi, o bir KURAL. */
+.kart-rayi + .kart-rayi-notu{ margin-top:var(--bosluk-16); width:100%; }
+@media (prefers-reduced-motion:reduce){ .kart-rayi{ scroll-behavior:auto; } }
+@media (max-width:640px){
+  .kart-rayi{ gap:var(--bosluk-14); scroll-padding-left:2px; }
+  .kart-rayi > *{ flex:1 0 min(274px, 78vw); }
+}
+
+
+/* ── S21 · YAN YANA KART · TABAN HİZASI ────────────────────────────────
+   A5'in kararı (Beyar, 2026-09-03): "stretch YAZILSIN, ama #bagli
+   hariç. 240px boş yüzey kabul edilemez. Nasıl ayrılacağını ÖLÇ."
+
+   ÖLÇÜLDÜ (13 ekran · her sekme tıklanarak) — `.fp-grid` ÜÇ yerde,
+   ikisi değil:
+       pano                     kap zinciri                 çocuk boyları
+       hp-izin (hareket-prof.)  .wrap.kap > .bolum.kap       419 ↔ 469   fark  50
+       bagli   (hesabim)        .wrap.kap > section.dikis    229 ↔ 469   fark 240
+       veri    (hesabim)        .wrap.kap > .fit-pane        419 ↔ 419   fark   0
+
+   `.fp-grid{align-items:start}` DONÖR SAYFA STİLİNDEN geliyordu; kanon
+   `.fp-grid` yazmıyordu, kopya donörden SONRA yüklendiği için eşit
+   özgüllükte kanon kazanır.
+
+   AYIRT EDİCİ SEÇİLDİ, UYDURULMADI. Üç aday ölçüldü:
+     ① kart sayısı — üçünde de 2. AYIRMAZ.
+     ② kap zinciri (`.bolum.kap` ↔ `section.dikis`) — ayırır ama
+        TESADÜFEN: bandın türü kartların boyuyla ilgili değil, yarın
+        bant değişirse kural sessizce yanlış panoya geçer.
+     ③ PANO — `[data-pane="bagli"]`. Kararın kendisi pano adına
+        verilmişti; markup o adı zaten taşıyor ve kanonda emsali var
+        (`[data-pane="cozum"]`, §1846).
+   ③ seçildi: kuralın gerekçesi ile seçicisi aynı şeyi söylüyor.
+
+   SINANDI (kanon basılmadan, tarayıcıya enjekte edilip ölçülerek):
+       hp-izin  419↔469  →  469↔469   ✅ tabanlar hizalandı
+       bagli    229↔469  →  229↔469   ✅ kısa kart kendi boyunda
+       veri     419↔419  →  419↔419   ✅ etkisiz (zaten eşit)
+   Yani istisna bugün TEK panoyu tutuyor ve `veri` panosunda kural
+   ölçülebilir bir şey değiştirmiyor — sessiz kural değil, etkisiz kip.
+   ⚠ `#bagli`nın 240px'lik boş yüzeyi KAPANMADI, yalnız hizalanmadı.
+     Kısa karta içerik eklemek ya da ızgarayı bölmek AYRI KARAR
+     (Beyar, açık). */
+.fp-grid{ align-items:stretch; }
+.fit-pane[data-pane="bagli"] .fp-grid{ align-items:start; }
+
+
+/* ── S22 · IZGARA KABI DA BİR BLOKTUR ──────────────────────────────────
+   S9 "yapışma kuralı kart'ta bitmiyor" deyip aileyi genişletmişti; ama
+   aile yalnız TEKİL bloklardan kuruluydu. Yan yana kart taşıyan KAP
+   (`.fp-grid` · `.pp-gunler` · `.fpx-kural` · `.ol-formcards` · S20'nin
+   `.kart-rayi`si) ailenin dışında kaldı: bir kart satırı, üstündeki ve
+   altındaki kartla arasında HİÇBİR nefes almıyor.
+
+   Kalem ölçümle değil, UYDURMA MARKUP'la ortaya çıktı (A2 raporu,
+   2026-09-03): govde-fit-hareket-profilim.html'de dört elle yazılmış
+   `style="margin-top:22px"` vardı. Sökülüp ölçüldü (#hp-izin @1440):
+       .fp-card + .fp-card    16px   ✅ S9 tutuyor
+       .fp-card + .fp-grid     0px   🔴 ızgara aileye girmiyor
+       .fp-grid + .fp-card     0px   🔴
+   Yani birileri kanonun deliğini elle 22px yamamış. 22 nereden geliyor:
+   donörün `.fp-grid{gap:22px}` değeri — kabın İÇ aralığı, blok
+   nefesi değil. Yeni ölçü üretilmedi; S9'un kendi `--bosluk-16`sı.
+
+   ETKİ ÖLÇÜLDÜ (13 ekran · her sekme tıklanarak · 11 komşuluk):
+       hareket-profilim #hp-izin   22 → 16   (iki geçiş · inline sökülür)
+       hesabim #bagli              34 → 34   (komşusu `.bilgi-notu`, §16
+                                              kendi ritmini taşıyor)
+       challengelarim `.fpx-kural` 34/16 → değişmez (komşuları `.sec-head`
+                                              `.bolum-bas` — aileden değil)
+       egzersizlerim · programlarim `.pp-gunler`  14 → değişmez (aynı)
+   Tek gerçek değişim hp-izin'de ve orada ELLE YAZILMIŞ değeri kanonun
+   ölçüsüyle değiştiriyor.
+   ⚠ S3 ①'in muafiyeti DURUYOR: bu kural kabın KENDİSİNİ komşusundan
+     ayırır, kabın İÇİNDEKİ kartlara dokunmaz (onlar `gap`ten beslenir).
+
+   ⚠ `.fpx-mt` İLE ÇAKIŞMA — ARANDI, ÖLÇÜLDÜ, ÇAKIŞMA YOK (A2 sordu).
+     Kaynağın kendi yardımcı sınıfı `.fpx-mt{margin-top:22px}`
+     (fit-planim.css:235) ve şerhi "inline margin-top:22px yerine"
+     diyor; özgüllüğü (0,1,0), S9/S22'ninki (0,2,0) — yani kanon onu
+     ezer. Beş kullanımın hepsi ölçüldü (13 ekran, sekmeler tıklanarak):
+         ilerlemem  .fp-card.fpx-mt        önceki .fp-card   → 16px
+         ilerlemem  .fpx-alan-ikili.fpx-mt önceki .fpx-note  →  4px
+         ilerlemem  .fp-list.fpx-mt        önceki .fpx-mt    → 22px
+         antrenorum .fp-card.fpx-mt        önceki YOK        → 22px
+     HİÇBİRİ ızgara kabına komşu değil → S22 hiçbirini ezmiyor.
+     Ezilen tek kalem (ilerlemem'in ilk satırı) S22'nin değil S9'un
+     işi ve o karar bu turdan ÖNCE verilmiş: kanon aynı boşluğa 16
+     diyor, kaynağın 22'si orada zaten ölü.
+     `.fpx-mt` bugün yalnız kanonun ULAŞMADIĞI yerde (önceki kardeşi
+     olmayan ilk çocuk) yaşıyor — YARI ÖLÜ VARYANT. Emekliye ayrılması
+     ya da 16'ya indirilmesi ayrı karar; bu tur DOKUNULMADI, çünkü
+     değişim başka ekranlarda görünür bir kaymadır ve ölçüm onu kusur
+     olarak göstermiyor.
+     🔴 `.fpx-alan-ikili.fpx-mt`in 4px'i AÇIK KALEM: ne 22 ne 16 —
+        üçüncü bir kural kazanıyor, kaynağı bulunmadı. */
+:is(.kart,.fp-card,.ozet-karti,.uyari-kutu,.bilgi-notu,.kunye,.tablo-kap,.bos-durum,.akordeon,.olcer,
+    .fp-grid,.pp-gunler,.fpx-kural,.ol-formcards,.kart-rayi)
+  + :is(.fp-grid,.pp-gunler,.fpx-kural,.ol-formcards,.kart-rayi){
+  margin-top:var(--bosluk-16);
+}
+:is(.fp-grid,.pp-gunler,.fpx-kural,.ol-formcards,.kart-rayi)
+  + :is(.kart,.fp-card,.ozet-karti,.uyari-kutu,.kunye,.tablo-kap,.bos-durum,.akordeon,.olcer){
+  margin-top:var(--bosluk-16);
+}
+:is(.fp-grid,.pp-gunler,.fpx-kural,.ol-formcards,.kart-rayi) + .bilgi-notu{
+  margin-top:var(--bosluk-34);
+}
+
+
+/* ── S23 · MODAL BAŞLIĞI DA YAPIŞKANDIR (K1) ───────────────────────────
+   Agent 3 gördü, lead ölçtü: panel kaydırılınca başlık ve KAPAT (×)
+   ekrandan çıkıyor; kullanıcı formu doldururken kapatma düğmesini
+   kaybediyor. İki modalda da aynı (`#ftModal` · `#fdModal`).
+
+   ÖLÇÜLDÜ (fit-odemelerim#faturalar @1440, modal açık):
+       .fb-panel  static · bg --kagit · padding 0 · scrollH 1259 / clientH 860
+       .fb-head   static · bg SAYDAM  · padding 20/24 · border-bottom 1px --cizgi
+       .ft-foot   STICKY · bg --kagit · bottom -24px · z-index 2
+                          · border-top 1px --cizgi
+       kaydırma sınavı: başlığın tepesi 20 → -379 (ekran dışı)
+   Yani sözleşme ZATEN yazılmış — ama yalnız AYAK için. Başlık aynı
+   panelde, aynı kaydırma kabında, karşılığı yazılmamış: asimetri.
+
+   DEĞER UYDURULMADI, AYAKTAN DEVREDİLDİ: `position:sticky` + kendi
+   zemini (`--kagit`, panelin ölçülen zemini) + `z-index:2` (ayağınki).
+   ⚠ ZEMİN ŞART: yapışkan ama saydam bir başlığın ALTINDAN içerik geçer.
+     Ayak zaten `--kagit` boyuyor; başlık bugün saydam.
+   ⚠ `top:0` — ayağın `bottom:-24px`i KOPYALANMADI. O negatif değer
+     ayağın kendi 24px alt dolgusunun panel kenarında ikilenmesini
+     önlüyor; başlıkta öyle bir ikilenme yok (panel dolgusu 0) ve
+     başlık TEK kapatma yüzeyini taşıyor — 20px'ini kaydırmanın kazancı
+     yok, bedeli kapatma düğmesinin kırpılması olurdu. */
+:is(#ftModal, #fdModal, [role="dialog"]) .fb-head{
+  position:sticky; top:0; z-index:2;
+  background:var(--kagit);
+}
+
+
+/* ── S24 · KOŞULLU BLOK DA BİR ALANDIR (K2'den devir) ──────────────────
+   Beyar: "K2'ye devreden T.C. Kimlik / Telefon 0px kalemi".
+
+   ÖLÇÜLDÜ (#ftModal, K4 çevirisinden SONRA — adlar artık kanonun):
+       .alan("T.C. Kimlik No")  →  .alan-izgara.c2("Telefon")   0.0px  🔴
+       öteki bütün geçişler                                      22.0px ✅
+   Kök KARDEŞLİK: ikisi kardeş DEĞİL (`kardes:false`). "T.C. Kimlik No"
+   koşullu kimlik bloğunun (`.ft-blok`) SON çocuğu, ızgara ise formun
+   doğrudan çocuğu. §B35 ailesi (`.alan-izgara+.alan`, `.alan+.alan-izgara`)
+   yalnız KARDEŞ çiftleri görüyor; araya giren `.ft-blok` aileye üye
+   olmadığı için zincir kopuyor. Üstüne kaynağın
+   `.fk-field:last-child{margin-bottom:0}` kuralı bloğun son alanının
+   payını da siliyor → toplam 0.
+
+   Kural ADA değil ROLE yazılır: koşullu blok da form akışında bir
+   ALANDIR. Yeni ölçü üretilmedi — B35'in kendi `--bosluk-22`si.
+   ⚠ `.ft-blok` kaynağın adı; kanonda karşılığı yok (haritada 0 kayıt).
+     Kanon `.fp-grid`/`.fpx-kural`/`.ozet-bas .fp-act` kalıbıyla aynı:
+     ad bir gün çevrilirse kural o ada taşınır. */
+.ft-blok + :is(.alan, .alan-izgara),
+:is(.alan, .alan-izgara) + .ft-blok{ margin-top:var(--bosluk-22); }
+
+
+/* ── S25 · KAYAN TABLO KABI ODAK HALKASINI GÖSTERİR (K3) ───────────────
+   Agent 3: "#fdModal @390 fatura kalemleri tablosunda tutar sütunları
+   görünmüyor". ÖLÇÜLDÜ (@390, modal açık):
+       .tablo-kap  overflow-x auto · clientW 302 · scrollW 398 · KAYAR ✅
+       markup      tabindex="0" role="region" aria-label="Fatura kalemleri"
+   Yani sütunlar ERİŞİLEBİLİR — kap kayıyor ve klavyeyle odaklanabiliyor.
+   Kaynağın kendi affordance'ı da tam olarak budur (`odemelerim-v1.html`:
+   `.od-scroll{overflow-x:auto}` + `:focus-visible{outline:3px solid}`).
+   🔴 KANONDA EKSİK OLAN TEK ŞEY: odak halkası yalnız `.cerceveli`
+      kipine yazılmış; kaynağın taban kipinde de var. Odaklanabilir ama
+      odaklandığı görünmeyen bir kap, klavye kullanıcısı için kaybolur.
+   Yeni değer üretilmedi: `--odak-kalinlik` + `--aksan`, kanonun kendi
+   odak sözleşmesi (§`.tablo-kap.cerceveli:focus-visible` ile aynı).
+   ⚠ GÖRSEL kaydırma ipucu (kenarda solma/gölge) EKLENMEDİ: kaynakta da
+     yok, ölçümde de yok — uydurma olurdu. Beyar isterse ayrı kalem. */
+.tablo-kap:focus-visible{
+  outline:var(--odak-kalinlik) solid var(--aksan); outline-offset:2px;
+}
+
+/* ── S26 · SOHBET PANOSU · TAM EN + WHATSAPP KAYDIRMA KALIBI ───────────
+   Beyar kararı, 2026-09-03. `fit-antrenorum#ant-mesaj` tam sohbet
+   arayüzünü taşıyor; donör `fit-mesaj.css` ise onu HÂLÂ dar bir sayfa
+   sanıyor. Üç kural o varsayımı kanon kabına göre düzeltir.
+
+   ÖLÇÜLDÜ @1440 (pano etkin):
+       pano kabı (.wrap içi)   1176px   ← sekme şeridiyle BİREBİR
+       .msj-sayfa               860px   🔴 316px açık
+       ızgara            260px + 580px
+   Kaynak iki yerde kapıyor:
+       fit-mesaj.css  .msj-kol {max-width:860px}
+       fit-mesaj.css  .msj-sayfa{max-width:860px; grid:260px 1fr}
+   🔴 DEĞER UYDURULMADI, KAP SÖZLEŞMESİNE DEVREDİLDİ. Yeni bir genişlik
+      yazmıyoruz; kapağı KALDIRIYORUZ ve genişliği `.wrap`ın kendi
+      sözleşmesi (max-width:1240 · padding-inline:32 → 1176) belirliyor.
+      Bileşenin kabın enini ikinci kez tarif etmesi zaten kusurdu.
+   ⚠ KAPSAM: bu dosya YALNIZ kanon ekranlarına yükleniyor; donör
+     `mesajlarim-v1.html` `bilesenler.css` almıyor (ölçüldü: 7 stil
+     bağlantısının hiçbiri kanon değil). Yani 860'lık dar kip orada
+     AYNEN duruyor — o sayfanın kendi kararı bozulmadı.
+   ⚠ @900 altı KAYNAKTA ZATEN TEK KOLON (`@media (max-width:900px)
+     .msj-sayfa{grid-template-columns:1fr}`) — yeniden yazılmadı,
+     yalnız genişlik kapağı orada da kalkıyor. */
+.modul-govde .msj-kol,
+.modul-govde .msj-sayfa{ max-width:none; }
+
+/* Sol kolon YAPIŞKAN · sağ kolon KENDİ İÇİNDE kaydırılır (WhatsApp).
+   🔴 SÖZLEŞME S-GİRİŞ-PANO'DAN DEVREDİLDİ, yeni değer üretilmedi:
+       height:clamp(624px, calc(100vh - var(--kabuk-h) - 120px), 1036px)
+       top:calc(var(--kabuk-h) + var(--bosluk-24))
+   Orada da amaç aynıydı: "uzun kayıt formu kaydırılırken görsel yerinde
+   durur". Burada uzun olan mesaj akışı, yerinde duran yazışma listesi.
+   ⚠ `align-items:start` ızgarada KALIR; iki kolon da kendi boyunu
+     yazdığı için sticky ancak böyle çalışır (emsalin kendi şerhi).
+   ⚠ Sekme rayı bu ekranda STATİK (ölçüldü: position:static, h=54) —
+     yapışkan ray olsaydı `top`a onun boyu da eklenirdi. */
+@media (min-width:901px){
+  .modul-govde .msj-sayfa > .msj-panel-kart:first-child{
+    position:sticky; top:calc(var(--kabuk-h) + var(--bosluk-24));
+  }
+  .modul-govde .msj-sayfa > .msj-panel-kart:last-child{
+    display:flex; flex-direction:column;
+    height:clamp(624px, calc(100vh - var(--kabuk-h) - 120px), 1036px);
+  }
+  /* Akış esner ve TEK kaydırma kabı olur; başlık üstte, yazma altta
+     sabit kalır. `min-height:0` şart — flex çocuğu yoksa taşar ve
+     kaydırma kabın kendisine değil sayfaya geçerdi. */
+  .modul-govde .msj-sayfa .msj-akis{
+    flex:1 1 auto; min-height:0; max-height:none; overflow-y:auto;
+  }
+  .modul-govde .msj-sayfa .msj-kart-bas,
+  .modul-govde .msj-sayfa .msj-yaz{ flex:none; }
+}
+
+/* ── S26b · TAM ARAYÜZÜN OLDUĞU PANODA FAB BASTIRILIR ─────────────────
+   Kaynağın kendi kuralı (fit-mesaj.js:526) — şerhi "zaten oradayız":
+       if (b.getAttribute('data-fit-page') === 'mesajlarim-v1') return;
+   Gerekçesi aynen geçerli: tam yazışma arayüzü ekranda dururken yüzen
+   düğme İKİNCİ bir giriş sunar. Fark, kanonda yüzeyin sayfa değil PANO
+   olması — kural bu yüzden gövdeye değil PANONUN ETKİN olmasına bakar.
+   Diğer panolarda (ant-hizmet · ant-seans …) FAB DURUR.
+   ⚠ JS ile gizlemek yerine CSS: FAB'ın durumuna ikinci bir sürücü
+     dokunursa ülke seçicisindeki çift-anahtar tuzağı geri gelir.
+     `:has()` kanonda zaten kullanılan bir kip (25 geçiş). */
+body:has(#antAlt-pane-ant-mesaj:not([hidden])) #msjFab,
+body:has(#antAlt-pane-ant-mesaj:not([hidden])) .msj-ortu{ display:none; }
+
+
+/* ═══════════════════════════════════════════════════════════════════════
+   75 · YÖNETİM PANELİ — ORTAK ÇEKİRDEK
+   ═══════════════════════════════════════════════════════════════════════
+   Kaynak: `dump/fit-prototip/admin-*.html` · 56 ekran (37 ORTAK + 19 markaya özel)
+   Sözleşme: `Revenge - Docs/Dada_Ortak_Yonetim_Paneli_Sistem_Dokumani.pdf` (D2)
+             `Revenge - Docs/DADA PROJELERİ — NİHAİ ORTAK YÖNETİM PANELİ.pdf` (D1)
+   Envanter: `docs/admin-envanter.md` (bileşen düzeyi) ·
+             `docs/olcum-admin-ortak.md` (modül/ekran/sekme düzeyi)
+
+   ── NEDEN VAR ────────────────────────────────────────────────────────
+   D2 s.2: *"ortak bileşenler TEK ALTYAPIDA geliştirilmeli; proje, rol ve
+   yetkiye göre görünürlük değişmelidir."* Dört markanın admin paneli
+   BİREBİR AYNI olacak: aynı markup, aynı bileşen, aynı ölçü. Marka
+   dosyası değişince yalnız RENK döner.
+
+   🔴 ADMIN AYRI BİR RENK SİSTEMİ KULLANMAZ — Beyar kararı 1
+      (`docs/admin-envanter.md §9`). Kaynağın `--acc` ailesi (#0093d0
+      yeşil) kanona GİRMEZ; her aksan `--aksan*` yuvasından, yani
+      `--marka`dan türer. FIT'te mavi, Gastro'da #DC3D17, Gourmet'te mor —
+      tek satır değişmeden.
+      ⚠ `#0093d0` bir eşleşme değil ARŞİV KAYDIDIR (`markalar/fit.css`:
+        *"v2 DadaFit · ARTIK MARKA DEĞİL"*). Otomatik renk eşleyici onu
+        `--kurumsal-yesil`e bağlayıp "kanonda zaten var" diyordu; yanlış
+        okuma. **Ders: değer eşleşmesi anlam eşleşmesi değildir.**
+
+   🔴 `.adm-src` KAYNAK ŞERİDİ BURAYA GİRMEDİ — Beyar kararı 3.
+      Yayılımı 37/37 (istisnasız her ekran) olmasına rağmen kanona
+      alınmadı: o şerit prototipin kendi künyesidir ("örnek veri" uyarısı),
+      ürünün bileşeni değil. Envanterin en yüksek yayılımlı kalemlerinden
+      biri bu gerekçeyle DÜŞTÜ. Donörden ekran çevirirken TAŞINMAZ.
+
+   ── ÖLÇÜM KİPİ ───────────────────────────────────────────────────────
+   Playwright · Chromium · 1440×1000 · **HTTP üstünden** (`file://` kaynağın
+   üç CSS dosyasını gizliyor ve "kural yok" dedirtiyor) ·
+   `*{transition:none!important;animation:none!important}` enjekte edilmiş
+   (donörün `.btn`i `transition:.2s` taşıyor; iki rAF sonra okununca
+   `fontWeight:507.5` · `fontSize:14.9238px` gibi ARA KARELER veriyor).
+   Gizli kalemler `hidden` SÖKÜLMEDEN, tetikleyicisine tıklanarak açıldı.
+   Üretim: `scripts/olcum/lead-adm-kanon-olc.mjs` · `lead-adm-bul.mjs` ·
+           `lead-adm-acilir.mjs`
+
+   🔴 "GÖRÜNÜR ÖRNEK YOK" = "AÇILMADI", "KANONDA KARŞILIĞI YOK" DEĞİL.
+      İlk taramada 12 kalem "görünmez" çıktı. 56 ekran × her sekme
+      tıklanarak arandığında **11'i başka ekranda görünür** oldu
+      (`.st-card` → antrenor-form sekme 2 · `.ms-box` → anatomi-form
+      "Bağlar" sekmesi · `.iu-drop` → antrenor-form · `.fpx-bos` → 18/56 …).
+      Yalnız `.ms-menu` bir daha tıklama istedi. Envanter §0'ın 2. tuzağı
+      bu turda da doğrulandı.
+
+   ── K8 · ÜÇÜ MEVCUT KANONLA BASILDI, YENİ AD AÇILMADI ────────────────
+       KPI şeridi        → `.kart` + `.kart-izgara.c4`   (kararı 4)
+       içerik sekme rayı → `.sekmeler`                   (kutu BİREBİR)
+       görsel yükleyici  → `.birak-alani`
+       sayfa başı eylem  → `.eylem-satiri`  (flex · gap 10 · wrap — birebir)
+   ═══════════════════════════════════════════════════════════════════════ */
+
+
+/* ───────────────────────────────────────────────────────────────────────
+   75a · KABUK · SOL MARKA RAYI VE MODÜL MENÜSÜ
+   ---------------------------------------------------------------------
+   Kaynak `.sa-rail` (ekosistem rayı) + `.sa-menu` (modül menüsü).
+   İKİ AYRI KOLON, tek kabuk: ray markalar arası geçiş, menü modül seçimi.
+   Ölçüldü: ray 76px · menü 264px · toplam 340px = `.adm-main`ın sol payı.
+   ─────────────────────────────────────────────────────────────────────── */
+
+.panel-ray{
+  position:fixed; inset:0 auto 0 0; width:76px; z-index:var(--kat-ray);
+  display:flex; flex-direction:column; align-items:center;
+  gap:var(--bosluk-7); padding:var(--bosluk-18) 0;
+  background:var(--panel-ray-zemin);
+  border-right:var(--cizgi-1) solid var(--panel-ray-cizgi);
+}
+/* Ray kalemi — ekosistemin ÖTEKİ markası. Rengini `--eko-*` yuvasından
+   satır içi `--eko` değişkeniyle alır; kanon rengi YAZMAZ, yalnız kutuyu.
+   ⚠ 44px dokunma hedefi kutunun KENDİSİNDEN gelir (§43'ün `::before`
+     örtüsü burada gerekmiyor — kalem zaten 44). */
+.panel-ray-ikon{
+  width:44px; height:44px; flex:none;
+  display:grid; place-items:center;
+  border-radius:var(--yuvarlak-md);
+  background:var(--koyu-yikama); color:var(--eko, var(--kagit));
+  font-size:var(--yazi-17); text-decoration:none;
+  transition:var(--sure) var(--yumusama);
+}
+.panel-ray-ikon:hover{ background:var(--koyu-yikama-2); }
+.panel-ray-ikon.aktif{ background:var(--eko, var(--aksan)); color:var(--kagit); }
+/* Kilitli marka — erişimi olmayan proje. Rengini KAYBEDER, kutuyu korur. */
+.panel-ray-ikon.kilitli{ color:var(--eko-kilitli); pointer-events:none; }
+.panel-ray-ayrac{ width:28px; height:var(--cizgi-1); background:var(--koyu-cizgi); flex:none; }
+.panel-ray-alt{ margin-top:auto; }
+
+.panel-menu{
+  position:fixed; inset:0 auto 0 76px; width:264px; z-index:var(--kat-ray);
+  display:flex; flex-direction:column; overflow:hidden;
+  background:var(--koyu-zemin);
+  border-right:var(--cizgi-1) solid var(--panel-menu-cizgi);
+}
+.panel-menu-bas{
+  display:flex; flex-direction:column; justify-content:center; gap:var(--bosluk-4);
+  height:64px; flex:none; padding:0 var(--bosluk-20);
+  border-bottom:var(--cizgi-1) solid var(--koyu-cizgi);
+}
+.panel-menu-bas b{
+  font-size:var(--yazi-14); font-weight:var(--agirlik-kalin);
+  color:var(--koyu-metin-ust);
+}
+.panel-menu-bas span{
+  font-size:var(--yazi-11); font-weight:var(--agirlik-govde);
+  color:var(--koyu-metin-42);
+}
+/* Menünün kaydıran gövdesi — üç kategori burada yaşar. */
+.panel-menu-govde{ flex:1; min-height:0; overflow-y:auto; padding:0 var(--bosluk-12) var(--bosluk-12); }
+/* Kategori başlığı — D2'nin ÜÇ ana kategorisi (01 GENEL · 02 OPERASYON ·
+   03 YAPILANDIRMA) ve Beyar'ın eklediği dördüncüsü (MARKA MODÜLLERİ).
+   🔴 "ANA İÇERİK" DİYE BİR KATEGORİ YOK — kaynağın `fit-admin.js` MENU'sü
+      onu icat etmiş, doküman tanımıyor. EKSİ İKİNCİ MADDE: doküman kazanır
+      (`docs/admin-envanter.md §6.5`). */
+.panel-menu-bolum{
+  padding:var(--bosluk-16) var(--bosluk-12) var(--bosluk-7);
+  font-size:var(--yazi-10-5); font-weight:var(--agirlik-kalin);
+  letter-spacing:var(--aralik-etiket); text-transform:uppercase;
+  color:var(--koyu-metin-42);
+}
+.panel-menu-link{
+  display:flex; align-items:center; gap:var(--bosluk-12);
+  min-height:44px; padding:var(--bosluk-11) var(--bosluk-12);
+  border-radius:var(--yuvarlak-md);
+  font-size:var(--yazi-14); font-weight:var(--agirlik-govde);
+  color:var(--koyu-metin-78); text-decoration:none;
+  transition:var(--sure) var(--yumusama);
+}
+.panel-menu-link>i{ width:18px; flex:none; text-align:center; font-size:var(--yazi-14); }
+.panel-menu-link:hover{ background:var(--koyu-yikama); }
+.panel-menu-link.aktif{
+  background:var(--aksan-koyu); color:var(--kagit);
+  font-weight:var(--agirlik-kalin);
+}
+.panel-menu-link:focus-visible{
+  outline:var(--odak-kalinlik) solid var(--odak-renk); outline-offset:calc(var(--odak-ofset) * -1);
+}
+/* Sayaç rozeti — bekleyen iş sayısı (destek kuyruğu · onay bekleyen).
+   Menü kalemi içinde sağa yaslanır; kendi kutusu yoktur, mirası bozmaz. */
+.panel-menu-link .sayac{
+  margin-left:auto; flex:none;
+  min-width:20px; padding:0 var(--bosluk-6);
+  border-radius:var(--yuvarlak-hap);
+  background:var(--aksan); color:var(--kagit);
+  font-size:var(--yazi-11); font-weight:var(--agirlik-kalin);
+  line-height:20px; text-align:center;
+}
+.panel-menu-link.aktif .sayac{ background:var(--kagit); color:var(--aksan-koyu); }
+.panel-menu-alt{
+  flex:none; display:flex; flex-direction:column; gap:3px;
+  padding:var(--bosluk-14);
+  border-top:var(--cizgi-1) solid var(--koyu-cizgi-2);
+}
+
+
+/* ───────────────────────────────────────────────────────────────────────
+   75b · KABUK · ÜST ÇUBUK
+   ---------------------------------------------------------------------
+   Kaynak `.pnl-top`. Ray+menünün SAĞINDA başlar, sayfayla birlikte kayar
+   ama kendisi sabittir. Ölçüldü: 64px · dolgu 0/28 · gap 16 · alt kenar.
+   ─────────────────────────────────────────────────────────────────────── */
+
+.panel-ust{
+  position:fixed; top:0; right:0; left:340px; height:64px; z-index:var(--kat-ust-bant);
+  display:flex; align-items:center; gap:var(--bosluk-16);
+  padding:0 var(--bosluk-28);
+  background:var(--kagit);
+  border-bottom:var(--cizgi-1) solid var(--cizgi);
+}
+/* ── PANEL ARAMA ALANI — ÜST ÇUBUK VE SÜZGEÇ ŞERİDİ ───────────────────
+   🔴 §22 `.arama-kutu` BURAYA GİRMEZ — ilk yazımda girmişti ve ekran
+      görüntüsünde yakalandı: kutu ikonun ALTINA düşüp 680px'lik gölgeli
+      bir hero kutusu çizdi. §22 ARAMA SAYFASININ hero kutusudur
+      (`max-width:680px` · `--golge-lg` · dolgu 10 · aksan kenarı); bu
+      ise üst çubuğa gömülü 420×44'lük bir alan. Ad benziyor, kutu ters.
+      §10 md.7'nin ("kanon adı ile kaynak adı karışır") bir örneği daha —
+      bu kez karışan iki KANON adı değil, bir kanon adının iki bağlamı.
+
+   Ölçüldü (`.pnl-search` · admin-uyeler-v1 @1440):
+       kap    420×44 · position:relative
+       girdi  420×44 · dolgu 0 14 0 38 · kenar 1px --cizgi · yuvarlak 12
+              zemin --zemin · 13.5/500 · renk --murekkep
+       ikon   absolute · sol 14 · --metin-ikincil · 13.5px
+   Sol dolgunun 38'i ikonun yeri; ikon kabın içinde konumlu. */
+/* 🔴 AD BAĞLAMDAN ARINDIRILDI — 2026-09-04, ikinci düzeltme.
+   İlk yazımda bu kalem `.panel-ust-arama` / `.panel-ust-girdi` adını
+   taşıyordu, yani ADI ÜST ÇUBUĞA BAĞLIYDI. Ama aynı alan SÜZGEÇ
+   ŞERİDİNDE de yaşıyor (§75e, her liste ekranı) ve orada "üst çubuk"
+   diye bir şey yok. Ad tutmayınca agent'lar §22 `.arama-kutu`ya
+   uzandı — ölçüldü, 14 ekranda 320×**86**'lık gölgeli hero kutusu
+   çizdi (§22 arama SAYFASININ kutusu: dolgu 10 · yuvarlak 16 ·
+   `--golge-lg`). Kusur agent'ın değil ADINDI: kanon o bağlama bir ad
+   vermemişti, brifingin bileşen tablosu da `.arama-kutu` gösteriyordu.
+   Ders — §10 md.7'nin ("kanon adı ile kaynak adı karışır") üçüncü yüzü:
+   **bağlama bağlı ad, ikinci bağlam doğduğunda yanlış yere gönderir.**
+   Genişlik farkı KİPTE: üst çubukta 420, süzgeç şeridinde 320. */
+.panel-arama{ position:relative; width:100%; max-width:420px; }
+.suzgec-cubuk .panel-arama{ max-width:320px; flex:1 1 220px; }
+.panel-arama > i{
+  position:absolute; left:var(--bosluk-14); top:50%; transform:translateY(-50%);
+  color:var(--metin-ikincil); font-size:var(--yazi-13-5); pointer-events:none;
+}
+.panel-arama-girdi{
+  width:100%; height:44px;
+  padding:0 var(--bosluk-14) 0 var(--bosluk-38);
+  border:var(--cizgi-1) solid var(--cizgi); border-radius:var(--yuvarlak-md);
+  background:var(--zemin); color:var(--murekkep);
+  font-family:inherit; font-size:var(--yazi-13-5); font-weight:var(--agirlik-govde);
+}
+.panel-arama-girdi::placeholder{ color:var(--yer-tutucu); }
+.panel-arama-girdi:focus-visible{
+  outline:var(--odak-kalinlik) solid var(--odak-renk); outline-offset:var(--odak-ofset);
+}
+/* Arama odaktayken ikon da aksana döner — odağın nerede olduğu tek
+   bakışta görünsün. */
+.panel-arama:focus-within > i{ color:var(--aksan-koyu); }
+.panel-ust-sag{ margin-left:auto; display:flex; align-items:center; gap:var(--bosluk-12); }
+/* Zil · yardım · ayar — ikon düğmesi kipinde, KENDİ kutusuyla (§75d'nin
+   çerçevesiz `.ikon-dugme`si DEĞİL: bunlar kabuk kalemleridir ve
+   çerçeveleri var). Ölçüldü: 44×44 · kenar 1px · yuvarlak 12. */
+.panel-ust-dugme{
+  position:relative; width:44px; height:44px; flex:none;
+  display:flex; align-items:center; justify-content:center;
+  border:var(--cizgi-1) solid var(--cizgi); border-radius:var(--yuvarlak-md);
+  background:var(--kagit); color:var(--murekkep);
+  font-size:var(--yazi-15); text-decoration:none; cursor:pointer;
+  transition:var(--sure) var(--yumusama);
+}
+.panel-ust-dugme:hover{ border-color:var(--aksan); color:var(--aksan-koyu); }
+.panel-ust-dugme:focus-visible{
+  outline:var(--odak-kalinlik) solid var(--odak-renk); outline-offset:var(--odak-ofset);
+}
+/* Okunmamış beneği — §59'un `--aksan-halka-2`siyle aynı aile. */
+.panel-ust-dugme .benek{
+  position:absolute; top:9px; right:9px;
+  width:8px; height:8px; border-radius:var(--yuvarlak-daire);
+  background:var(--aksan); box-shadow:0 0 0 2px var(--kagit);
+}
+/* Hesap düğmesi — avatar + ad. Ölçüldü: minH 44 · dolgu 6/8/6/6 · gap 11. */
+.panel-ust-ben{
+  display:flex; align-items:center; gap:var(--bosluk-11);
+  min-height:44px; padding:var(--bosluk-6) var(--bosluk-8) var(--bosluk-6) var(--bosluk-6);
+  border:0; border-radius:var(--yuvarlak-md);
+  background:none; color:var(--murekkep); cursor:pointer;
+  font-family:inherit; transition:var(--sure) var(--yumusama);
+}
+.panel-ust-ben:hover{ background:var(--zemin); }
+.panel-ust-ben .ad{
+  font-size:var(--yazi-13); font-weight:var(--agirlik-kalin); line-height:1.3;
+}
+.panel-ust-ben .rol{
+  display:block; font-size:var(--yazi-11-5); font-weight:var(--agirlik-govde);
+  color:var(--metin-ikincil);
+}
+
+/* ── AÇILIR YÜZEY — DÖRT KAYNAK ADI, TEK BİLEŞEN ──────────────────────
+   Kaynakta dört ayrı ad, dört ayrı yerde, aynı kutu. ÖLÇÜLDÜ:
+
+     ad             kutu       dolgu  yuvarlak  gölge                       maxH
+     `.ff-pop`      252×340    9px    12px      0 18px 50px rgba(33,30,22,.16)  420
+     `.t-ara-pop`   420×420    6px    12px      aynı                            420
+     `.ms-menu`     614×248    6px    12px      aynı                            248
+     `.iu-*` menüsü  —          —      —         —                               —
+
+   Gölge ÜÇÜNDE DE BİREBİR ve kanonda zaten var: `--golge-lg`
+   (`0 18px 50px rgba(33,30,22,.16)` · tokenlar.css:749). Yuvarlaklık üçünde
+   de 12. Dolgu 6/6/9 → **taban 6**, süzgeç kipi 9 (çoğunluk kuralı,
+   `bilesenler.css §0`: aynı kutu N adla yazılmışsa tek bileşendir).
+
+   🔴 z-index kaynağın 120'si DEĞİL — bkz. `tokenlar.css --kat-menu` şerhi.
+   ⚠ `position:absolute` — kabı `position:relative` OLMAK ZORUNDA, yoksa
+     açılır en yakın konumlu ataya kaçar (§53'ün `.birak-alani` tuzağı). */
+.acilir-yuzey{
+  position:absolute; z-index:var(--kat-menu);
+  top:calc(100% + var(--bosluk-6)); left:0;
+  min-width:100%; max-height:420px; overflow-y:auto;
+  padding:var(--bosluk-6);
+  background:var(--kagit);
+  border:var(--cizgi-1) solid var(--cizgi);
+  border-radius:var(--yuvarlak-md);
+  box-shadow:var(--golge-lg);
+}
+.acilir-yuzey[hidden]{ display:none; }
+.acilir-yuzey.saga{ left:auto; right:0; }
+.acilir-yuzey.suzgec{ padding:var(--bosluk-9); }
+/* Açılırın başlık satırı — ad solda, "Temizle" sağda.
+   Ölçüldü (`.ff-pop` içi): temizle düğmesi 12px/700 · aksan koyu. */
+.acilir-bas{
+  display:flex; align-items:center; justify-content:space-between;
+  gap:var(--bosluk-10); padding:var(--bosluk-6) var(--bosluk-8) var(--bosluk-9);
+  font-size:var(--yazi-11); font-weight:var(--agirlik-kalin);
+  letter-spacing:var(--aralik-versal); text-transform:uppercase;
+  color:var(--metin-ikincil);
+}
+.acilir-bas button{
+  border:0; background:none; cursor:pointer; font-family:inherit;
+  font-size:var(--yazi-12); font-weight:var(--agirlik-kalin);
+  color:var(--aksan-koyu);
+  /* Dokunma hedefi kalemin boyunu bozmadan 44px'e tamamlanır — §43'ün
+     kendi yöntemi. Kaynak da aynısını yapıyor (ölçüldü: negatif pay). */
+  padding:var(--bosluk-14) var(--bosluk-8); margin:calc(var(--bosluk-14) * -1) calc(var(--bosluk-8) * -1);
+}
+/* Açılır kalemi — seçilebilir satır. `.ms-opt` · `.t-ara-sat` aynı kutu:
+   ölçüldü ikisi de minH 44 · yuvarlak 8; dolgu 9/11 ↔ 8/11 (gap 10 ↔ 11). */
+.acilir-kalem{
+  display:flex; align-items:center; gap:var(--bosluk-11); width:100%;
+  min-height:44px; padding:var(--bosluk-8) var(--bosluk-11);
+  border:0; border-radius:var(--yuvarlak-sm); background:none;
+  font-family:inherit; font-size:var(--yazi-13-5); font-weight:var(--agirlik-govde);
+  color:var(--murekkep-yumusak); text-align:left; text-decoration:none;
+  cursor:pointer; transition:var(--sure) var(--yumusama);
+}
+.acilir-kalem:hover{ background:var(--zemin); color:var(--murekkep); }
+.acilir-kalem.aktif{ background:var(--aksan-yikama); color:var(--aksan-koyu); font-weight:var(--agirlik-kalin); }
+.acilir-kalem:focus-visible{
+  outline:var(--odak-kalinlik) solid var(--odak-renk); outline-offset:calc(var(--odak-ofset) * -1);
+}
+.acilir-kalem .yan{ margin-left:auto; flex:none; font-size:var(--yazi-11-5); color:var(--metin-ikincil); }
+/* Açılır içi arama — kendi kenarı yok, kabın dolgusunda yaşar. */
+.acilir-arama{
+  width:100%; padding:var(--bosluk-6) 2px;
+  border:0; border-radius:var(--yuvarlak-sm); background:none;
+  font-family:inherit; font-size:var(--yazi-13-5); font-weight:var(--agirlik-govde);
+  color:var(--murekkep);
+}
+.acilir-arama:focus{ outline:0; }
+
+
+/* ───────────────────────────────────────────────────────────────────────
+   75c · SAYFA KABI VE SAYFA BAŞI
+   ---------------------------------------------------------------------
+   Ölçüldü: `.adm-main{margin-left:340px}` · `.adm-page{padding:92 28 48}`.
+   92 = üst çubuk (64) + 28 nefes. Sabit çubuğun altına içerik kaçmasın.
+   ─────────────────────────────────────────────────────────────────────── */
+
+.panel-govde{ margin-left:340px; min-height:100vh; }
+.panel-sayfa{ padding:92px var(--bosluk-28) var(--bosluk-48); }
+
+/* Sayfa başı — §18 `.bolum-bas` DEĞİL. Ölçüm ayırdı (5/21 fark):
+   §18 `display:grid` · gap 24 · alt pay 34; bu `flex · space-between ·
+   align flex-end · gap 18 · alt pay 24` ve SAĞINDA eylem satırı taşıyor.
+   §11'in "ölçüm iki kalemin ayrı olduğunu söylüyorsa birleştirme" kuralı. */
+.panel-bas{
+  display:flex; flex-wrap:wrap; align-items:flex-end; justify-content:space-between;
+  gap:var(--bosluk-18); margin-bottom:var(--bosluk-24);
+}
+.panel-bas h1{
+  font-size:var(--yazi-24); font-weight:var(--agirlik-kalin);
+  letter-spacing:var(--aralik-baslik); line-height:1.12;
+  color:var(--murekkep);
+}
+.panel-bas p{
+  margin-top:var(--bosluk-5); max-width:66ch;
+  font-size:var(--yazi-13-5); font-weight:var(--agirlik-govde);
+  line-height:var(--satir-orta); color:var(--metin-ikincil);
+  text-align:left; text-align-last:auto;      /* yaslama istisnası — B33 */
+}
+/* ⚠ Eylem kutusu için YENİ AD AÇILMADI — `.eylem-satiri` (§A1) birebir
+   aynı kutuyu çiziyor: flex · gap 10 · wrap. Ölçüldü, 0 fark. K8. */
+
+/* 🔴 SARAN EYLEM SATIRI SAĞ YASLAMASINI KAYBEDİYORDU — 2026-09-04,
+   GÖZLE BULUNDU, SONRA ÖLÇÜLDÜ.
+   `.panel-bas` `space-between` + `wrap` taşıyor. Başlık ile eylem satırı
+   birlikte kaba sığdığı sürece eylemler sağda duruyor; sığmayınca eylem
+   satırı ALT SATIRA iniyor ve orada TEK ÖĞE oluyor — `space-between` tek
+   öğeyi satırın BAŞINA koyar. Yani düğme grubu sessizce sola kaçıyor.
+
+   ÖLÇÜLDÜ (@1440 · `.panel-bas` sağ kenarına uzaklık):
+       admin-uyeler          eylem satırı sağa yaslı   fark   0   ✅
+       admin-duyurular       sağa yaslı                fark   0   ✅
+       admin-raporlar        SOLA kaçmış               fark 435   🔴
+       admin-gorevler        SOLA kaçmış               fark 444   🔴
+       admin-sistem-durumu   SOLA kaçmış               fark 455   🔴
+       admin-entegrasyonlar  SOLA kaçmış               fark 551   🔴
+   Ayrım ekranın kararı değil, düğme metinlerinin UZUNLUĞU — yani aynı
+   sözleşme aynı ekranda içerik değişince bozuluyor. S1 ③'ün ("grup sağa,
+   tek tek değil") sayfa başındaki karşılığı.
+
+   `margin-left:auto` sarma durumunda da çalışır: satırda tek öğeyse
+   boşluğu solunda toplar. `space-between` tabanda KALIR — başlık ve
+   eylemler aynı satırdayken doğru olan odur. */
+.panel-bas > .eylem-satiri{ margin-left:auto; }
+
+/* ── GERİ BAĞLANTISI — AÇIK ZEMİNLİ KIRINTI ───────────────────────────
+   🔴 §17 `.kirinti` BURAYA GİRMEZ. Kanonun kırıntısı KOYU ZEMİN
+   bileşenidir (§17'nin kendi şerhi: *"banner içinde yaşar"*, renk
+   `--koyu-metin`). Admin'in geri bağlantısı AÇIK zeminde durur ve
+   ölçümde 9/21 ayrışıyor. Kanonda açık zeminli kırıntı YOKTU. */
+.geri-bag{
+  display:inline-flex; align-items:center; gap:var(--bosluk-8);
+  min-height:44px; margin-bottom:var(--bosluk-6);
+  font-size:var(--yazi-13); font-weight:var(--agirlik-kalin);
+  color:var(--metin-ikincil); text-decoration:none;
+  transition:var(--sure) var(--yumusama);
+}
+.geri-bag:hover{ color:var(--aksan-koyu); }
+.geri-bag:focus-visible{
+  outline:var(--odak-kalinlik) solid var(--odak-renk); outline-offset:var(--odak-ofset);
+}
+
+
+/* ───────────────────────────────────────────────────────────────────────
+   75d · KPI ŞERİDİ — K8 ①, YENİ BİLEŞEN YOK
+   ---------------------------------------------------------------------
+   Kap `.kart-izgara.c4`, kalem `.kart`. Ölçüldü, kenar/yuvarlaklık/zemin/
+   gölge DÖRDÜ DE BİREBİR tutuyor (0 fark). Geriye tek kalem kaldı:
+   dolgu donör 20 ↔ kanon `.kart-govde` 22. Kart varyantı olarak yazılıyor.
+
+   ⚠ §63 `.ozet-karti` BU İŞ İÇİN KULLANILAMAZ: o KOYU bir kart
+     (`linear-gradient(--koyu-zemin-yesil, --koyu-zemin)` · metin `--kagit`),
+     admin KPI'ı BEYAZ. Ad benziyor, zemin ters.
+   ─────────────────────────────────────────────────────────────────────── */
+
+.kart.kpi{ display:flex; align-items:flex-start; gap:var(--bosluk-14); padding:var(--bosluk-20); }
+.kart.kpi .ikon{
+  width:44px; height:44px; flex:none; margin-top:var(--bosluk-4);
+  display:grid; place-items:center;
+  border-radius:var(--yuvarlak-md);
+  background:var(--aksan-halka); color:var(--aksan-koyu);
+  font-size:var(--yazi-17);
+}
+.kart.kpi .govde{ min-width:0; }
+.kart.kpi .etiket{
+  display:block;
+  font-size:var(--yazi-11-5); font-weight:var(--agirlik-kalin);
+  letter-spacing:var(--aralik-versal); text-transform:uppercase;
+  color:var(--metin-ikincil);
+}
+.kart.kpi .sayi{
+  display:block; margin-top:var(--bosluk-6);
+  font-size:var(--yazi-24); font-weight:var(--agirlik-ekstra);
+  letter-spacing:var(--aralik-baslik); font-variant-numeric:tabular-nums;
+  color:var(--murekkep);
+}
+/* Değişim satırı — yön ikonu + oran.
+   🔴 YEŞİL UYDURULMADI. `tokenlar.css §3` kendi şerhinde yazıyor:
+      *"BAŞARI RENGİ YOK. Kaynakta ayrı bir 'başarı' tokeni bulunamadı;
+      olumlu durumlar marka yeşilini kullanıyor … kanon da uydurmuyor."*
+      v2'de marka YEŞİLDİ ve olumlu durum onunla çiziliyordu; v3'te FIT
+      maviye döndü, yani "olumlu = marka" bağı kaynakta zaten koptu.
+      Beyar kararı 1 admin için bunu netleştiriyor: *"admin ayrı renk
+      sistemi kullanmaz, marka rengiyle döner."* → olumlu yön AKSANDAN.
+
+   ⚠ AÇIK KALEM · BEYAR'A: DadaGastro'nun markası #DC3D17, `--tehlike`
+     ise #b3261e — ikisi aynı ton ailesinde. Gastro panelinde "iyi" ile
+     "kötü" YAN YANA neredeyse aynı renge düşer. FIT'te (mavi) sorun yok.
+     Kanon burada Beyar'ın verdiği kararı uyguluyor; ayrı bir nötr başarı
+     yuvası açmak İKİNCİ bir karardır ve sorulmadan alınmadı.
+     Kayıt: `docs/admin-kanon-kararlari.md` K-R1.
+
+   ⚠ "Artış her zaman iyi" DEĞİLDİR — iptal oranının artışı kötüdür.
+     Bu yüzden sınıf ANLAMLA verilir (`.iyi`/`.kotu`), yönle değil.
+   ⚠ RENK TEK BAŞINA TAŞIMAZ (WCAG 1.4.1): yön OKUN kendisinden okunur,
+     renk yalnız pekiştirir. Renksiz bir ekranda da anlam durur. */
+.kpi-degisim{
+  display:inline-flex; align-items:flex-start; gap:var(--bosluk-5);
+  margin-top:var(--bosluk-6);
+  font-size:var(--yazi-11-5); font-weight:var(--agirlik-kalin);
+  color:var(--metin-ikincil);
+}
+.kpi-degisim.iyi{ color:var(--aksan-koyu); }
+.kpi-degisim.kotu{ color:var(--tehlike); }
+
+
+/* ───────────────────────────────────────────────────────────────────────
+   75e · LİSTE EKRANI SÖZLEŞMESİ — D2 s.17
+   ---------------------------------------------------------------------
+   > *"Liste ekranları: arama; filtre; sıralama; sayfalama; kolon seçimi;
+   >   toplu işlem; yetkili dışa aktarım."*
+
+   ÖLÇÜLDÜ (`docs/admin-envanter.md §5.1` · 15 gerçek liste ekranı):
+
+       kalem                 kaynakta   kanon ne yapıyor
+       ------------------    --------   ---------------------------------
+       arama                 15/15 ✅   §22 `.arama-kutu` · §75e şerit
+       filtre                15/15 ✅   `.suzgec-cubuk` + `.acilir-yuzey`
+       sayfalama             15/15 ✅   §8 `.sayfalama.kart-ayagi`
+       sıralama               0/15 🔴   `.tablo th.sirali`      ← KANONDAN
+       kolon seçimi           0/15 🔴   `.acilir-yuzey` + `.kolon-secim` ← KANONDAN
+       toplu işlem            0/15 🔴   `.toplu-islem` + `.tablo .sec`  ← KANONDAN
+       yetkili dışa aktarım   1/15 🔴   sözleşme (aşağıda) ← KANONDAN
+
+   🔴 SIRALAMA İKİ AYRI SINAMAYLA ÖLÇÜLDÜ, İKİSİ DE SIFIR. İşaret araması
+      (`th[data-sort]` · `aria-sort` · `.sortable` · `th button` ·
+      `cursor:pointer`) 0/21 verdi; işaret aramak yetmezdi, çünkü sıralama
+      sınıfsız da yazılabilirdi. Bu yüzden DAVRANIŞ sınandı: `th`ye
+      tıklanıp ilk kolonun satır sırası yeniden okundu — **21 ekranın
+      hiçbirinde sıra değişmedi.** Prototipte tablo sıralaması YOK.
+
+   🔴 DÖRDÜ DE KANONA GELDİ. `docs/admin-envanter.md §9 karar 2` bunları
+      *"ADAY'da kalsın, uygulama public site bitince"* diye ertelemişti;
+      Beyar 2026-09-04 gece brifinginde erteleme kaldırdı: *"Envanterde
+      4'ü hiç basılmıyor — kanona gelecek."* EKSİ İKİNCİ MADDE zaten
+      dokümanı kazandırıyordu; bu tur onu uygulamaya çeviriyor.
+      Kaynak yayılımı 0 olduğu için bu dördünün ölçüsü DONÖRDEN GELEMEZ;
+      kanonun kendi bileşen dilinden türetildi ve her biri hangi mevcut
+      kalemden türediğini aşağıda yazıyor.
+   ─────────────────────────────────────────────────────────────────────── */
+
+/* ── SÜZGEÇ ŞERİDİ ────────────────────────────────────────────────────
+   Kaynak `.filter-bar` · 17/37. Kanonun `.kart-suzgec`i YALNIZ BİR DOLGU
+   BİLDİRİMİ (`padding:16px 22px 6px`) — `display` · hizalama ·
+   `border-bottom` · `gap` hiçbiri yok ve vitrinde basılı örneği de yok.
+   Dolgunun ilk iki değeri (16/22) donörle BİREBİR; eksik olan DÜZEN
+   SÖZLEŞMESİYDİ. Ölçüldü: flex · wrap · center · gap 12 · alt kenar 1px. */
+.suzgec-cubuk{
+  display:flex; flex-wrap:wrap; align-items:center;
+  gap:var(--bosluk-12); padding:var(--bosluk-16) var(--bosluk-22);
+  border-bottom:var(--cizgi-1) solid var(--cizgi);
+}
+/* Şerit kart AYAĞINDA da yaşayabilir — o zaman kenarı ÜSTTE olur. */
+.suzgec-cubuk.ayak{ border-bottom:0; border-top:var(--cizgi-1) solid var(--cizgi); }
+/* 🔴 `.arama-kutu` BURAYA GİRMEZ — kural bir tur önce tam da onu
+   yazıyordu ve 14 ekranı yanlış yöne gönderdi. Şeridin arama alanı
+   `.panel-arama` + `.panel-arama-girdi`dir (§75b); genişlik kipi
+   orada yazılı. §22 arama SAYFASININ hero kutusudur. */
+/* Süzgeç grubunu SAĞA iter — S1'in "grup sağa, tek tek değil" kuralının
+   şeritteki karşılığı: `auto` yalnız İLK kaleme kalır. */
+.suzgec-cubuk .sag{ margin-left:auto; display:flex; align-items:center; gap:var(--bosluk-8); flex-wrap:wrap; }
+/* Sonuç sayacı — "142 kayıt". Şeridin sonunda, sönük. */
+.suzgec-sayac{
+  font-size:var(--yazi-12-5); font-weight:var(--agirlik-orta);
+  color:var(--metin-ikincil); white-space:nowrap;
+}
+.suzgec-sayac b{ color:var(--murekkep); font-weight:var(--agirlik-ekstra); }
+/* Yapışkan kip — uzun listede şerit tepede kalır. Kademe ölçüldü (42). */
+.suzgec-cubuk.yapiskan{
+  position:sticky; top:64px; z-index:var(--kat-yapiskan); background:var(--kagit);
+}
+
+/* ── YÜZLÜ SÜZGEÇ DÜĞMESİ — kaynak `.ff-btn` · 11/37 ──────────────────
+   Kanonda AÇILIR SÜZGEÇ YÜZEYİ yoktu. Düğme ölçüldü: 65×44 · dolgu 0/14 ·
+   gap 9 · yuvarlak 10 · kenar 1px `--cizgi` · zemin `--zemin` · 13.5/700.
+   🔴 YUVARLAKLIK 10px — kanonda 10 yok (8 · 12 · 16 · 24 var) ve
+      YUVARLANMADI. Kaynağın değeri; §8'in "12→13 yuvarlama hatası"
+      dersi burada da geçerli. Tek kullanıcısı bu düğme, bu yüzden
+      token açılmadı: ölçülen tek değer, yerinde yazılıyor. */
+.suzgec-dugme{
+  position:relative;
+  display:inline-flex; align-items:center; gap:var(--bosluk-9);
+  min-height:44px; padding:0 var(--bosluk-14);
+  border:var(--cizgi-1) solid var(--cizgi); border-radius:10px;
+  background:var(--zemin); color:var(--murekkep);
+  font-family:inherit; font-size:var(--yazi-13-5); font-weight:var(--agirlik-kalin);
+  cursor:pointer; transition:var(--sure) var(--yumusama);
+}
+.suzgec-dugme:hover{ border-color:var(--aksan); color:var(--aksan-koyu); }
+.suzgec-dugme[aria-expanded="true"]{ border-color:var(--murekkep); background:var(--kagit); }
+.suzgec-dugme:focus-visible{
+  outline:var(--odak-kalinlik) solid var(--odak-renk); outline-offset:var(--odak-ofset);
+}
+/* Seçili süzgeç sayısı — düğmenin kendi sayacı (ölçüldü: "Rol 0"). */
+.suzgec-dugme .sayi{
+  min-width:18px; padding:0 var(--bosluk-5);
+  border-radius:var(--yuvarlak-hap);
+  background:var(--aksan-yikama); color:var(--aksan-koyu);
+  font-size:var(--yazi-11); line-height:18px; text-align:center;
+}
+.suzgec-dugme .sayi:empty,
+.suzgec-dugme .sayi[data-sayi="0"]{ display:none; }
+/* Süzgeç çipleri açılırın İÇİNDE yaşar — §43 `.cip.suzgec` zaten var ve
+   ölçümde min-height 44 · gap 7 · yuvarlak 12 ile donörün `.df-fchip`iyle
+   aynı aileden. Burada yalnız TAM GENİŞLİK kipi ekleniyor: açılır dar
+   bir kolon, çipler alt alta dizilir. */
+.acilir-yuzey .cip.suzgec{ width:100%; justify-content:flex-start; }
+
+/* ── SIRALAMA · D2 KALEMİ 3 — kaynakta 0/15, kanondan geliyor ─────────
+   Yeni ad AÇILMADI: sıralama `.tablo`nun başlık hücresinin bir KİPİDİR.
+   Ölçü uydurulmadı — hücrenin kendi dolgusu/puntosu korunuyor, eklenen
+   tek şey ok işareti ve tıklanabilirlik.
+   ⚠ `aria-sort` ZORUNLU: ok yalnız görsel; ekran okuyucu sırayı ondan
+     okur. `.sirali` sınıfı ile `aria-sort` BİRLİKTE güncellenir —
+     §21 akordeonun `.acik`+`aria-expanded` sözleşmesiyle aynı kural. */
+.tablo th.sirali{ padding:0; }
+.tablo th.sirali > button{
+  display:inline-flex; align-items:center; gap:var(--bosluk-6);
+  width:100%; min-height:44px;
+  padding:var(--bosluk-12) var(--bosluk-16);
+  border:0; background:none; cursor:pointer;
+  font:inherit; color:inherit; letter-spacing:inherit; text-transform:inherit;
+  text-align:inherit;
+}
+.tablo th.sirali > button::after{
+  content:"\f0dc"; font-family:"Font Awesome 6 Free"; font-weight:900;
+  font-size:var(--yazi-10); opacity:.45; margin-left:auto;
+}
+.tablo th.sirali > button:hover{ color:var(--murekkep); }
+.tablo th.sirali > button:hover::after{ opacity:.75; }
+.tablo th[aria-sort] > button{ color:var(--aksan-koyu); }
+.tablo th[aria-sort="ascending"]  > button::after{ content:"\f0de"; opacity:1; }
+.tablo th[aria-sort="descending"] > button::after{ content:"\f0dd"; opacity:1; }
+.tablo th.sirali > button:focus-visible{
+  outline:var(--odak-kalinlik) solid var(--odak-renk); outline-offset:calc(var(--odak-ofset) * -1);
+}
+/* Sağa yaslı kolonda (sayı · tutar) ok METNİN SOLUNA geçmez — `auto`
+   payı yön değiştirir, yoksa ok kolonun ortasında kalır. */
+.tablo th.sirali.sag > button{ justify-content:flex-end; }
+.tablo th.sirali.sag > button::after{ margin-left:0; }
+
+/* ── SEÇİM KOLONU VE TOPLU İŞLEM · D2 KALEMİ 6 ────────────────────────
+   🔴 ÜÇ YÖNLÜ UYUMSUZLUK, ÖLÇÜLDÜ (`docs/admin-envanter.md §5.3`):
+      · `.adm-bulk` YALNIZ `admin-moderasyon-v1`de (1/56)
+      · ve o ekran `.adm-table` TAŞIMIYOR — yani toplu işlem çubuğu
+        tablosu OLMAYAN bir ekranda duruyor
+      · `.sel` seçim kolonu 0/56 — kural `fit-admin.css:541-550`de YAZILI
+        ama hiçbir ekranda BASILMIYOR (`.row-acts` · `.fhata` ile aynı
+        aile: kural yazılmış, kullanılmamış)
+      Doküman toplu işlemi liste ekranının ortak sözleşmesi sayıyor.
+      Kanon çubuğu TABLOYA bağlıyor — kaynağın yerleşimi düzeltilmedi,
+      BİLDİRİLDİ (`docs/admin-kanon-kararlari.md` K-T1).
+
+   Çubuğun ölçüsü donörün TEK örneğinden alındı (görünür kılınarak):
+   flex · gap 14 · dolgu 12/22 · yuvarlak 12 · zemin `rgba(marka,.08)`. */
+.tablo .sec{ width:44px; padding:0; }
+.tablo .sec label{
+  display:grid; place-items:center; width:44px; height:100%; min-height:44px;
+  cursor:pointer;
+}
+.tablo .sec input[type=checkbox]{ width:18px; height:18px; accent-color:var(--aksan); cursor:pointer; }
+.tablo .sec input:focus-visible{
+  outline:var(--odak-kalinlik) solid var(--odak-renk); outline-offset:var(--odak-ofset);
+}
+/* Seçili satır — zemin hover'la AYNI DEĞİL, bir adım aksanlı; yoksa
+   seçim fareyle gezinmeden ayırt edilemez (ölçüldü: `tr:hover` `--zemin`). */
+.tablo tbody tr.secili td{ background:var(--aksan-yikama-8); }
+
+.toplu-islem{
+  display:flex; flex-wrap:wrap; align-items:center;
+  gap:var(--bosluk-14); margin-bottom:var(--bosluk-12);
+  padding:var(--bosluk-12) var(--bosluk-22);
+  border-radius:var(--yuvarlak-md);
+  background:var(--aksan-yikama-8);
+}
+.toplu-islem[hidden]{ display:none; }
+.toplu-islem b{
+  font-size:var(--yazi-13); font-weight:var(--agirlik-kalin);
+  color:var(--aksan-koyu);
+}
+/* Eylemler SAĞA — S1 ③'ün kuralı: boşluk grubun soluna toplanır,
+   düğmeler bitişik bir grup olarak sağa yaslanır. */
+.toplu-islem .eylem-satiri{ margin-left:auto; }
+/* ⚠ Yıkıcı eylem burada DA hayalet kipte — S1 ④: *"kart ayağındaki 'sil'
+   bir seçenektir, sayfanın ana eylemi değil."* Toplu silme daha da
+   tehlikeli olduğu için BAĞIRMAZ, onay ister. */
+
+/* ── KOLON SEÇİMİ · D2 KALEMİ 5 — kaynakta 0/15 ───────────────────────
+   Yeni YÜZEY açılmadı: `.acilir-yuzey` + `.acilir-kalem` zaten var,
+   kolon seçici onların bir içeriğidir. Eklenen tek şey onay kutusu
+   hizası ve "en az bir kolon açık kalmalı" kilidinin görünür hâli. */
+.kolon-secim .acilir-kalem{ gap:var(--bosluk-10); }
+.kolon-secim input[type=checkbox]{ width:16px; height:16px; accent-color:var(--aksan); flex:none; }
+/* Kapatılamayan kolon (kayıt numarası gibi) — kutusu kilitli, satır sönük.
+   D2 "Ortak kayıt alanları"nda benzersiz kayıt numarası ZORUNLU alan. */
+.kolon-secim .acilir-kalem.kilitli{ opacity:.55; pointer-events:none; }
+
+/* ── YETKİLİ DIŞA AKTARIM · D2 KALEMİ 7 ───────────────────────────────
+   🔴 BU BİR BİLEŞEN DEĞİL, BİR SÖZLEŞMEDİR — yeni ad açmak yanlış olurdu.
+      Dışa aktarım bir `.dugme.hayalet`tir ve sayfa başının eylem
+      satırında (`.eylem-satiri`) yaşar. Kanona giren tek şey GÖRÜNÜRLÜK
+      KURALI: D2 s.17 *"Rol ve yetki: … dışa aktarma"* ve
+      *"yetki bazlı maskeleme"* diyor, yani düğme rolü olmayanda
+      GÖRÜNMEZ — devre dışı değil, YOK.
+      ⚠ `disabled` YETMEZ: devre dışı bir düğme "bu veriyi indirebilirsin
+        ama şu an olmaz" der; yetki yoksa doğru mesaj hiçbir mesaj değildir.
+        Aynı kural KOPYALAMA-KURALI'nda zaten var: *"Doküman bir maddeyi
+        '— … özel' diye şerhlemişse o kap ROL KAPILIDIR: rolü olmayan
+        kullanıcıda menüde GÖRÜNMEZ."* */
+[data-yetki]:not([data-yetki=""]){ display:none; }
+.yetkili [data-yetki="disa-aktar"]{ display:inline-flex; }
+
+
+/* ───────────────────────────────────────────────────────────────────────
+   75f · TABLO · PANEL KİPİ
+   ---------------------------------------------------------------------
+   §4 `.tablo` ile donörün `.adm-table`ı TABLO DÜZEYİNDE 0/21 ayrışıyor —
+   yani kap birebir. Fark HÜCREDE ve ölçüldü:
+
+     özellik        donör                     kanon §4
+     th dolgu       12/16/12/22               13/16
+     th zemin       saydam                    --zemin
+     th renk        --metin-ikincil           --murekkep-yumusak
+     th punto       11.5                      11
+     th ağırlık     700                       800
+     td dolgu       14/16/14/22               13/16
+     td renk        --murekkep-yumusak        --murekkep
+     ilk/son hücre  22px girinti + son sağa   —
+
+   İkisi de doğru, İKİ AYRI KULLANIM: §4 kart içi dar tablo (4 sayfa),
+   bu geniş veri tablosu (21 ekran). §11'in kuralı — ölçüm ikisinin ayrı
+   olduğunu söylüyorsa kanon birleştirmez. Varyant adı: `.tablo.panel`.
+   ─────────────────────────────────────────────────────────────────────── */
+
+.tablo.panel th,.tablo.panel td{ padding:var(--bosluk-14) var(--bosluk-16); }
+.tablo.panel thead th{
+  padding-top:var(--bosluk-12); padding-bottom:var(--bosluk-12);
+  background:none; color:var(--metin-ikincil);
+  font-size:var(--yazi-11-5); font-weight:var(--agirlik-kalin);
+}
+.tablo.panel td{ color:var(--murekkep-yumusak); }
+/* Kenar girintisi — ilk kolon 22, son kolon 22 ve SAĞA yaslı.
+   Son kolon eylem kolonudur; sağa yaslanması bir hizalama tercihi değil,
+   satır eylemlerinin sabit bir kenara oturması. */
+.tablo.panel th:first-child,.tablo.panel td:first-child{ padding-left:var(--bosluk-22); }
+.tablo.panel th:last-child, .tablo.panel td:last-child { padding-right:var(--bosluk-22); text-align:right; }
+/* ⚠ Seçim kolonu ilk hücre olduğunda girinti DÜŞER — kutu 44px'lik
+   hedefin ortasında durmalı, 22px sola kaçmamalı. */
+.tablo.panel th.sec:first-child,.tablo.panel td.sec:first-child{ padding-left:0; }
+/* Sayı kolonu — sağa yaslı, tabular. Kaynağın `.num`u (ölçüldü). */
+.tablo.panel .num{ text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; }
+/* Eylem kolonu — sarmaz, satır eylemleri tek satırda kalır. */
+.tablo.panel .eylem{ text-align:right; white-space:nowrap; }
+/* Kod hücresi — kupon kodu · işlem numarası. Ölçüldü: 1/6 dolgu ·
+   yuvarlak 5 · zemin `--zemin` · kenar 1px · 12/700.
+   🔴 YUVARLAK 5px — kanonda yok, YUVARLANMADI (aynı ders, §8). */
+.tablo.panel code{
+  padding:1px var(--bosluk-6);
+  border:var(--cizgi-1) solid var(--cizgi); border-radius:5px;
+  background:var(--zemin); color:var(--murekkep);
+  font-size:var(--yazi-12); font-weight:var(--agirlik-kalin);
+}
+.tablo.panel td small{
+  display:block; margin-top:2px;
+  font-size:var(--yazi-12); font-weight:var(--agirlik-govde);
+  color:var(--metin-ikincil);
+}
+
+/* ── SATIR EYLEMLERİ VE İKON DÜĞMESİ ──────────────────────────────────
+   🔴 KANONDA İKON-YALNIZ DÜĞME YOKTU. §2 `.dugme.satir` METİNLİ bir tablo
+      düğmesidir (83×44 · kenar · beyaz zemin · dolgu 10/14); donörünki
+      ikon-yalnız, ÇERÇEVESİZ, 44×44 kare. Ölçümde 15/21 ayrışıyorlar —
+      *"aynı şey değil"*. Kanondaki tek ikon düğmesi `.sohbet-bas
+      .dugme.ikon`du ve sohbet başlığına bağlamlanmıştı, genel kalem değil.
+      Yayılım 16/37 · **885 geçiş** — envanterin EN YOĞUN kalemi.
+
+   BEŞ KAYNAK ADI TEK BİLEŞENE İNİYOR — hepsi 44×44 ikon hedefi, ölçüldü:
+       `.adm-ico-btn`  44×44  satır eylemi        13/500  --metin-ikincil
+       `.adm-ed-b`     44×44  düzenleyici düğmesi 13/400  --murekkep-yumusak
+       `.ie-drag`      44×44  sürükleme tutamağı  13/400  --cizgi-vurgu-koyu
+       `.ie-del`       44×44  satır silme        12.5/400 --metin-ikincil
+       `.adm-pg`       44×44  sayfalama oku       13/700  --murekkep-yumusak
+   Kutu BEŞİNDE DE aynı; ayrışan yalnız ağırlık ve renk, ve ikisi de
+   ROLDEN geliyor. Taban dinlenme rengini `--metin-ikincil`den alır
+   (üç adın çoğunluğu), kalanlar kip olarak yazılır. */
+.satir-eylem{ display:flex; align-items:center; justify-content:flex-end; gap:2px; }
+
+.ikon-dugme{
+  display:inline-grid; place-items:center;
+  width:44px; height:44px; flex:none; padding:0;
+  border:0; border-radius:var(--yuvarlak-sm); background:none;
+  color:var(--metin-ikincil); font-size:var(--yazi-13);
+  font-family:inherit; text-decoration:none; cursor:pointer;
+  transition:var(--sure) var(--yumusama);
+}
+.ikon-dugme:hover{ background:var(--zemin); color:var(--aksan-koyu); }
+.ikon-dugme:focus-visible{
+  outline:var(--odak-kalinlik) solid var(--odak-renk); outline-offset:calc(var(--odak-ofset) * -1);
+}
+.ikon-dugme[disabled]{ opacity:.4; pointer-events:none; }
+/* Yıkıcı kip — hover'da kırmızıya döner. Dinlenmede NÖTR kalır: bir
+   tablo satırında altı çöp kutusu kırmızı yansa satır okunmaz olur.
+   S1 ④'ün "yıkıcı eylem BAĞIRMAZ" kuralının satır içi karşılığı. */
+.ikon-dugme.yikici:hover{ background:var(--tehlike-yikama); color:var(--tehlike); }
+/* Sürükleme tutamağı — imleç ve dinlenme rengi ayrı (ölçüldü). */
+.ikon-dugme.tutamak{ cursor:grab; color:var(--cizgi-vurgu-koyu); }
+.ikon-dugme.tutamak:active{ cursor:grabbing; }
+
+/* ── SAYFALAMA · KART AYAĞI KİPİ ──────────────────────────────────────
+   🔴 §8 `.sayfalama` KARTIN DIŞINDA ve ORTALIDIR (`justify-content:center`
+      · `margin-top:40px`). Donörünki kartın İÇİNDE ve AYAĞINDA:
+      `space-between` · gap 16 · dolgu 14/22 · üst kenar 1px · üst pay 0.
+      7/21 ayrışıyor ve ayrım YAPISAL — solda "1–14 / 142" bilgisi, sağda
+      düğme grubu. Ortalı kip bu bilgiyi taşıyamaz.
+      Düğmesi de ayrı: donörde KENAR YOK, ZEMİN YOK, YUVARLAKLIK YOK
+      (`0px none` · `rgba(0,0,0,0)` · `0px`); kanonda 1px kenar · beyaz ·
+      12px. Dokunma hedefi İKİ TARAFTA DA 44×44 ✅ — orada ayrışmıyorlar. */
+.sayfalama.kart-ayagi{
+  justify-content:space-between; gap:var(--bosluk-16);
+  margin-top:0; padding:var(--bosluk-14) var(--bosluk-22);
+  border-top:var(--cizgi-1) solid var(--cizgi);
+}
+.sayfalama-bilgi{
+  font-size:var(--yazi-12-5); font-weight:var(--agirlik-govde);
+  color:var(--metin-ikincil);
+}
+.sayfalama-bilgi b{ color:var(--murekkep); font-weight:var(--agirlik-kalin); }
+.sayfalama.kart-ayagi .dugmeler{ display:flex; align-items:center; gap:var(--bosluk-6); }
+/* Sade düğme — kenarsız/zeminsiz kip. Aktif hâl KENDİ zeminini alır,
+   yoksa hangi sayfada olduğun görünmez. */
+/* 🔴 `.aktif` HARİÇ TUTULMALI — ölçüldü 2026-09-04.
+   `.sayfa-dugme.aktif` (§8) zemini `--aksan`, metni `--kagit` yapıyor;
+   `.sade` DAHA SONRA gelip `background:none` yazınca yalnız ZEMİN geri
+   alınıyordu, metin beyaz kalıyordu:
+       .sayfa-dugme.sade.aktif → zemin rgba(0,0,0,0) · renk rgb(255,255,255)
+   Yani aktif sayfa numarası BEYAZ ZEMİNDE BEYAZ — hiç basılmıyor.
+   §75f'in kendi şerhi *"aktif hâl KENDİ zeminini alır, yoksa hangi
+   sayfada olduğun görünmez"* diyordu; kural yazılmış, SIRA yüzünden
+   ölmüştü. Üç ekranda doğrulandı (uyeler · sayfalar · faturalar).
+   Bir kuralın yazılmış olması uygulandığı anlamına gelmez. */
+.sayfa-dugme.sade:not(.aktif){ border-color:transparent; background:none; }
+.sayfa-dugme.sade:hover:not([disabled]):not(.aktif){ background:var(--zemin); border-color:transparent; }
+
+
+/* ───────────────────────────────────────────────────────────────────────
+   75g · BEŞ ZORUNLU EKRAN DURUMU — D2 s.17
+   ---------------------------------------------------------------------
+   > *"Teknik çıktı: TÜM liste ve detay ekranlarında yükleniyor, boş sonuç,
+   >   yetkisiz erişim, doğrulama hatası ve servis hatası durumlarının
+   >   tasarlanması."*
+
+   ÖLÇÜLDÜ (`docs/admin-envanter.md §7` · 37 ORTAK ekran, `main.adm-main` içi):
+
+     durum               kaynakta          kanonda (bu turdan ÖNCE)
+     ----------------    --------------    -------------------------------
+     boş sonuç           11/37 DOM ✅      §7 `.bos-durum` (16 kural) ✅
+     doğrulama hatası    12/12 davranış✅  §3 `.alan-hata` + `.alan-ozet` ✅
+     yükleniyor           0/37 🔴          🔴 HİÇ YOK — kanonun da boşluğu
+     yetkisiz erişim      0/37 🔴          ⚠ §35 yalnız TAM SAYFA
+     servis hatası        0/37 🔴          ⚠ §35 yalnız TAM SAYFA
+
+   🔴 DOĞRULAMA HATASI "YOK" DEĞİL, 12/12 ÇALIŞIYOR. Dinlenmedeki DOM'da
+      0 çıkıyor çünkü durum JS ile TIKLAMA ANINDA üretiliyor. İşaret
+      aramak yetmedi; davranış sınandı — 12 form ekranında zorunlu alanlar
+      boşaltılıp kaydete basıldı, 12'sinde de hata bastı.
+      AMA KANONLANABİLİR DEĞİL, üç sebep ölçüldü: kutu `fit-admin.js:775`te
+      SATIR İÇİ STİLLE üretiliyor (CSS katmanını atlıyor) · kullandığı
+      sınıflar `fit-admin.css`te hiç tanımlı değil · CSS'in TANIMLADIĞI
+      doğrulama kuralları (`.fhata` · `.is-err`) hiçbir ekranda
+      KULLANILMIYOR. → Kanonun `.alan-hata`/`.alan-ozet`i geçerli;
+      donörün satır içi kipi ÇEVRİLMEZ, kanona bağlanır.
+
+   ⚠ §35 DURUM EKRANI BİR TAM-SAYFA BİLEŞENİDİR (404·403·500·bakım·oturum·
+     çevrimdışı — altı ekran tek kit). Dokümanın istediği ise LİSTE/DETAY
+     EKRANININ İÇİNDE bir durum. İkisi aynı şey değil; §35 varsayılıp
+     "yetkisiz ✅" denemez. Panelin içinde kalan bir yetkisizlik, kullanıcıyı
+     paneldan ATMADAN anlatılmalı — menü ve üst çubuk yerinde kalır.
+   ─────────────────────────────────────────────────────────────────────── */
+
+/* ── 1 · YÜKLENİYOR ───────────────────────────────────────────────────
+   🔴 KANONUN DA BOŞLUĞU — `bilesenler.css`te iskelet/spinner/yükleniyor
+      TEK KURAL yoktu (`iskelet`·`spinner`·`yukleniyor` = 0 seçici).
+      Admin'e özgü değil; public tarafta da eksik (ayrı kalem, bu tur ölçmedi).
+
+   KARAR · İSKELET AYRI BİR DÜZEN DEĞİL, BİLEŞENİN KENDİ KİPİDİR.
+   Ayrı bir "yükleniyor ekranı" markup'ı yazmak iki düzenin birbirinden
+   kaymasına açık kapı bırakır — tablo altı kolona çıkar, iskelet dörtte
+   kalır. Bu yüzden iskelet GERÇEK bileşenin içine konur: iskelet bir
+   `.tablo.panel` satırı, gerçek satırın ta kendisidir; yalnız hücrelerin
+   içeriği `.iskelet` şeridiyle değişir. Düzen bir tane olduğu için
+   kayamaz.
+
+   ⚠ HAREKET İSTEĞE BAĞLI DEĞİL, KOŞULLU. `prefers-reduced-motion` açıkken
+     parıltı durur ve iskelet düz bir yüzeye döner — bilgi kaybı yok,
+     çünkü anlamı taşıyan şey hareket değil, YERİ TUTULMUŞ KUTU. */
+.iskelet{
+  display:block; border-radius:var(--yuvarlak-sm);
+  background:linear-gradient(90deg,
+    var(--zemin) 0%, var(--zemin-3) 50%, var(--zemin) 100%);
+  background-size:200% 100%;
+  animation:iskelet-parilti 1.2s var(--yumusama) infinite;
+  /* Metin yerine geçtiği için kendi yüksekliğini taşır; satır yüksekliği
+     mirasa bırakılırsa 0 çizer. */
+  height:var(--yazi-13-5);
+}
+.iskelet.baslik{ height:var(--yazi-20); }
+.iskelet.kisa{ width:38%; }
+.iskelet.orta{ width:62%; }
+.iskelet.tam{ width:100%; }
+.iskelet.daire{ width:38px; height:38px; border-radius:var(--yuvarlak-daire); flex:none; }
+.iskelet + .iskelet{ margin-top:var(--bosluk-8); }
+@keyframes iskelet-parilti{ from{ background-position:200% 0 } to{ background-position:-200% 0 } }
+@media (prefers-reduced-motion:reduce){
+  .iskelet{ animation:none; background:var(--zemin-3); }
+}
+/* Yükleniyor satırı — iskeletin uygun düşmediği yerde (düğme içi, kart
+   ayağı) dönen halka. Ölçü uydurulmadı: 18px, `--yazi-18`in kutusu. */
+.yukleniyor{
+  display:inline-flex; align-items:center; gap:var(--bosluk-9);
+  font-size:var(--yazi-13); font-weight:var(--agirlik-orta);
+  color:var(--metin-ikincil);
+}
+.yukleniyor::before{
+  content:""; width:18px; height:18px; flex:none;
+  border:2px solid var(--cizgi);
+  border-top-color:var(--aksan);
+  border-radius:var(--yuvarlak-daire);
+  animation:yukleniyor-don .7s linear infinite;
+}
+@keyframes yukleniyor-don{ to{ transform:rotate(360deg) } }
+@media (prefers-reduced-motion:reduce){
+  .yukleniyor::before{ animation-duration:2.4s; }
+}
+/* ⚠ EKRAN OKUYUCU İÇİN GÖRSEL YETMEZ. Yükleniyor kabı `aria-busy="true"`
+   taşır ve durum değişimi `role="status"` ile duyurulur; parıltı yalnız
+   görene bir şey söyler. §20 `.yalniz-okuyucu` bu iş için zaten var. */
+[aria-busy="true"] .iskelet{ cursor:progress; }
+
+/* ── 2 · BOŞ SONUÇ — §7 ZATEN KARŞILIYOR, YENİ AD YOK ─────────────────
+   `.bos-durum` (16 kural) + `.bos-durum.kart-ici` + §48 üçüncü boy.
+   Ölçüldü: donörün `.fpx-bos`u 18/56 ekranda basılı ve `.bos-durum`la
+   7/21 ayrışıyor — ayrışmanın tamamı §48'in ZATEN yazdığı kip.
+   Admin'in eklediği tek şey aşağıdaki İKİ SEMANTİK VARYANT; ikisi de
+   `.bos-durum`un kutusunu AYNEN kullanır, yalnız ikon çipini değiştirir.
+
+   🔴 NEDEN AYRI VARYANT, NEDEN AYRI BİLEŞEN DEĞİL: üçünün de yapısı
+      birebir aynı (ikon · başlık · açıklama · eylem) ve ayrışan tek şey
+      ikon çipinin RENGİ. Ayrı bileşen açmak §0'ın sayım kuralını çiğnerdi
+      ("aynı kutu N adla yazılmışsa tek bileşendir"). */
+
+/* ── 3 · YETKİSİZ ERİŞİM ──────────────────────────────────────────────
+   İkon çipi NÖTR — aksan değil, tehlike de değil. Gerekçe: yetkisizlik
+   bir HATA DEĞİLDİR, bir sınırdır. Kırmızı "bir şey bozuldu" der ve
+   kullanıcıyı destek talebine iter; aksan "burada iş var" der ve davet
+   eder. İkisi de yanlış mesaj. Nötr çip doğru olanı söyler: burası var,
+   sana kapalı. */
+.bos-durum.yetkisiz .bos-ikon{ background:var(--durum-kapali-zemin); color:var(--durum-kapali-metin); }
+
+/* ── 4 · SERVİS HATASI ────────────────────────────────────────────────
+   İkon çipi TEHLİKE ailesinde — burada gerçekten bir şey bozuldu.
+   ⚠ EYLEM ZORUNLU: servis hatası tek başına bir çıkmazdır; §7'nin
+     "boş ekran bir davettir" kuralı burada "yeniden dene" düğmesi olur. */
+.bos-durum.servis-hatasi .bos-ikon{ background:var(--tehlike-yikama); color:var(--tehlike); }
+/* Teknik iz — destek talebine yapıştırılacak kod. Kullanıcıya HATA
+   MESAJI gösterilmez (yığın izi, SQL, dosya yolu asla); yalnız
+   ilişkilendirilebilir bir referans. D2 §15 "Log Kayıtları" o referansla
+   eşleşir. */
+.hata-izi{
+  margin-top:var(--bosluk-12);
+  font-size:var(--yazi-11-5); font-weight:var(--agirlik-govde);
+  color:var(--metin-ikincil); font-variant-numeric:tabular-nums;
+}
+.hata-izi code{
+  padding:1px var(--bosluk-6);
+  border:var(--cizgi-1) solid var(--cizgi); border-radius:5px;
+  background:var(--zemin); color:var(--murekkep-yumusak);
+}
+
+/* ── 5 · DOĞRULAMA HATASI — §3 ZATEN KARŞILIYOR ───────────────────────
+   Alan düzeyi `.alan-hata` · form düzeyi `.alan-ozet`. Admin'in eklediği
+   tek şey PANEL FORM KİTİNE bağlanmaları (§75i). Yeni ad açılmadı. */
+
+
+/* ───────────────────────────────────────────────────────────────────────
+   75h · FORM KALIBI — ASİMETRİK İKİ KOLON
+   ---------------------------------------------------------------------
+   🔴 KANONDA ASİMETRİK İKİ KOLON YOKTU. `.kart-izgara` EŞİT kolon üretiyor
+      (`.c2` = `repeat(2,1fr)`); donörün `.form-layout`u `660px 360px`.
+      Yayılım 14/37. `.adm-cols` (3/37 · `632/395`) aynı ailenin pano kipi.
+
+   ÖLÇÜLDÜ: grid · `660px 360px` · gap 24 · `align-items:start`.
+   🔴 `align-items:start` ÖNEMLİ VE S21'İN TERSİ: S21 yan yana kartların
+      TABANINI hizalıyor (`stretch`), çünkü orada iki kart eş anlamlı.
+      Burada değiller — sol kolon formun kendisi, sağ kolon yardımcı
+      panel. Sağ kolonu sola uzatmak 300px boş yüzey üretir; S21'in
+      `#bagli` istisnasında ölçülen 240px'lik kusurun aynısı.
+   ─────────────────────────────────────────────────────────────────────── */
+
+.form-duzen{
+  display:grid; grid-template-columns:660px 360px;
+  gap:var(--bosluk-24); align-items:start;
+}
+/* Pano kipi — kolonlar esner (ölçüldü: 632/395, yani oran 1.6:1). */
+.form-duzen.pano{ grid-template-columns:minmax(0,1.6fr) minmax(0,1fr); gap:var(--bosluk-16); }
+/* Sol kolon TAŞMAYI KESER — uzun tablo/kod formu genişletmesin. */
+.form-duzen > *{ min-width:0; }
+
+/* Yan kolon — KART DEĞİL, kart TAŞIYAN kolon. Ölçüldü: `.side-card`
+   kenarsız · zeminsiz · gölgesiz, `flex-column` · gap 16 · `sticky`.
+   🔴 Adı yanıltıcı olduğu için kanon adı değişti: `.form-yan`.
+      §1 `.kart`in bir varyantı DEĞİL — kartları İÇİNDE taşır. */
+.form-yan{
+  display:flex; flex-direction:column; gap:var(--bosluk-16);
+  position:sticky; top:92px;
+  /* ⚠ `top` üst çubuğun (64) + nefesin (28) toplamı — `.panel-sayfa`nın
+     üst dolgusuyla AYNI değer. İkisi ayrı yazılırsa biri değişince
+     yan kolon çubuğun altına kayar. */
+}
+/* ⚠ `sticky` YALNIZ SIĞDIĞINDA yapışır. Yan kolon ekrandan uzunsa
+   yapışma kullanıcıyı alt kalemlere ulaşamaz hâle getirir — bu yüzden
+   uzun kolonda kip düşer. Kaynak bunu bildirmiyor; kanon bildiriyor. */
+@media (max-height:820px){ .form-yan{ position:static; } }
+
+/* ── FORM BÖLÜMÜ VE BÖLÜM BAŞLIĞI ─────────────────────────────────────
+   §18 `.bolum-bas` DEĞİL — ölçüm 7/21 ayırdı: §18 16px/500 · alt pay 34;
+   bu 13px/700 · harf aralığı -.02em · alt pay 16. §18 SAYFA bölümünü
+   anlatır, bu FORM bölümünü; ikisi aynı ölçekte değil. */
+.form-bolum{ padding:var(--bosluk-18) var(--bosluk-22); }
+.form-bolum + .form-bolum{ border-top:var(--cizgi-1) solid var(--cizgi); }
+.form-bolum-bas{
+  display:flex; align-items:center; gap:var(--bosluk-9);
+  margin-bottom:var(--bosluk-16);
+  font-size:var(--yazi-13); font-weight:var(--agirlik-kalin);
+  letter-spacing:var(--aralik-baslik); color:var(--murekkep);
+}
+.form-bolum-bas i{ color:var(--aksan); font-size:var(--yazi-13); }
+/* Form kartının eylem ayağı — ölçüldü 18/22, üst kenar 1px, sağa yaslı.
+   🔴 §1'in `.kart.panel > .kart-alt`ı 14/22 YAZIYOR ve bu 18/22.
+      Dört piksel gerçek ve ayrı KULLANIM: 14/22 sayfalama ayağı (kısa,
+      bilgi taşır), 18/22 eylem ayağı (düğme taşır, nefes ister).
+      §11'in kuralı — ölçüm ayırıyorsa kanon birleştirmez. */
+.kart.panel > .kart-alt.form-eylem{
+  display:flex; align-items:center; flex-wrap:wrap;
+  gap:var(--bosluk-14); padding:var(--bosluk-18) var(--bosluk-22);
+  border-top:var(--cizgi-1) solid var(--cizgi);
+}
+
+/* ── FORM SEKME RAYI — ALT ÇİZGİLİ KİP ────────────────────────────────
+   🔴 §11 SEKME RAYI'NIN İKİNCİ KİPİ, VARYANTI DEĞİL — ölçüm ayırdı:
+      §11 `.sekmeler` HAPLI (yuvarlak 12 · dolgu 4 · kenar 1px · beyaz
+      zemin · kalemler yuvarlak 8); bu ALT-ÇİZGİLİ (kap saydam · alt
+      kenar 1px · aktif kalem 2px alt çizgi · yuvarlaklık YOK).
+      İkisi aynı kutu değil. `.sekmeler.cizgili` diye varyant yazmak
+      tabanın altı bildirimini birden ezmek olurdu; ayrı ad daha ucuz.
+   Ölçüldü: ray 44px · gap 6 · alt pay 18; sekme dolgu 9/14 · 13/700 ·
+   alt çizgi 2px · aktif renk `--aksan`. */
+.form-sekmeler{
+  display:flex; flex-wrap:wrap; gap:var(--bosluk-6);
+  margin-bottom:var(--bosluk-18);
+  border-bottom:var(--cizgi-1) solid var(--cizgi);
+}
+.form-sekme{
+  /* -1px: sekmenin alt çizgisi rayın kendi çizgisinin ÜSTÜNE oturur,
+     altına değil — yoksa aktif sekmede 3px'lik kalın bir çizgi doğar
+     (ölçüldü: donör de aynı negatif payı yazıyor). */
+  margin-bottom:calc(var(--cizgi-1) * -1);
+  min-height:44px; padding:var(--bosluk-9) var(--bosluk-14);
+  border:0; border-bottom:var(--cizgi-2) solid transparent;
+  background:none; font-family:inherit;
+  font-size:var(--yazi-13); font-weight:var(--agirlik-kalin);
+  color:var(--metin-ikincil); cursor:pointer;
+  transition:var(--sure) var(--yumusama);
+}
+.form-sekme:hover{ color:var(--murekkep); }
+.form-sekme[aria-selected="true"],.form-sekme.aktif{
+  color:var(--aksan-koyu); border-bottom-color:var(--aksan);
+}
+.form-sekme:focus-visible{
+  outline:var(--odak-kalinlik) solid var(--odak-renk); outline-offset:calc(var(--odak-ofset) * -1);
+}
+/* Sekmede bekleyen hata sayısı — doğrulama hatası gizli sekmede olabilir
+   ve kullanıcı onu göremez. D2'nin "doğrulama hatası" durumu form
+   SEKMELİYSE bu olmadan eksik kalır: kaydet'e basınca hata başka
+   sekmede yanar ve ekran "hiçbir şey olmadı" gibi görünür. */
+.form-sekme .hata-sayi{
+  margin-left:var(--bosluk-6);
+  min-width:18px; padding:0 var(--bosluk-5);
+  border-radius:var(--yuvarlak-hap);
+  background:var(--hata); color:var(--kagit);
+  font-size:var(--yazi-10); line-height:18px;
+}
+
+/* ── SLUG ALANI — kaynak `.slug-wrap` · 4/37 ──────────────────────────
+   Önek + girdi TEK kutuda. Kenar KAPTA, girdi çıplak — §22'nin
+   `.arama-kutu` anatomisiyle aynı karar. Ölçüldü: kap yuvarlak 12 ·
+   kenar 1px · taşma gizli; önek dolgu 0/12 · zemin `--zemin` ·
+   sağ kenar 1px · 12.5/600 · `--metin-ikincil`. */
+.slug-alani{
+  display:flex; align-items:stretch;
+  border:var(--cizgi-1) solid var(--cizgi); border-radius:var(--yuvarlak-md);
+  background:var(--kagit); overflow:hidden;
+}
+.slug-onek{
+  display:flex; align-items:center; flex:none;
+  padding:0 var(--bosluk-12);
+  border-right:var(--cizgi-1) solid var(--cizgi);
+  background:var(--zemin); color:var(--metin-ikincil);
+  font-size:var(--yazi-12-5); font-weight:var(--agirlik-orta);
+  white-space:nowrap;
+}
+.slug-alani .alan-girdi{
+  border:0; border-radius:0; background:none; min-height:44px; flex:1; min-width:0;
+}
+.slug-alani:focus-within{
+  border-color:var(--aksan); box-shadow:0 0 0 var(--odak-kalinlik) var(--aksan-yikama);
+}
+
+/* ── SEO DENETİMİ — kaynak `.seo-checks` · 3/37 ───────────────────────
+   Ölçüldü: liste flex-column · gap 10 · üst pay 14; kalem flex ·
+   gap 9 · 12.5/500 · hizalama flex-start (ikon ilk satıra oturur).
+   ⚠ DURUM RENGİ TEK BAŞINA TAŞIMAZ — geçen/kalan ayrımı İKONDAN okunur
+     (WCAG 1.4.1). Renk yalnız pekiştirir. */
+.seo-denetim{ display:flex; flex-direction:column; gap:var(--bosluk-10); margin-top:var(--bosluk-14); }
+.seo-kalem{
+  display:flex; align-items:flex-start; gap:var(--bosluk-9);
+  font-size:var(--yazi-12-5); font-weight:var(--agirlik-govde);
+  color:var(--murekkep-yumusak); line-height:1.4;
+}
+.seo-kalem > i{ flex:none; margin-top:2px; font-size:var(--yazi-12); color:var(--metin-ikincil); }
+.seo-kalem.gecti > i{ color:var(--aksan-koyu); }
+.seo-kalem.uyari > i{ color:var(--uyari); }
+.seo-kalem.kaldi > i{ color:var(--hata); }
+.seo-skor{ display:flex; align-items:center; gap:var(--bosluk-16); }
+/* Skor halkası — `conic-gradient` ile, `--oran` satır içi yüzdeden gelir.
+   Dairenin kendisi 60px (ölçüldü). Ortadaki delik kağıt renginde. */
+.skor-halka{
+  position:relative; width:60px; height:60px; flex:none;
+  display:grid; place-items:center; border-radius:var(--yuvarlak-daire);
+  background:conic-gradient(var(--aksan) calc(var(--oran,0) * 1%), var(--cizgi) 0);
+}
+.skor-halka::before{
+  content:""; position:absolute; inset:6px;
+  border-radius:var(--yuvarlak-daire); background:var(--kagit);
+}
+.skor-halka > b{
+  position:relative;
+  font-size:var(--yazi-15); font-weight:var(--agirlik-ekstra);
+  color:var(--murekkep); font-variant-numeric:tabular-nums;
+}
+
+/* ── METİN DÜZENLEYİCİ — kaynak `.adm-ed` · 4/37 ──────────────────────
+   Üç şerit: araç çubuğu · yüzey · ayak. Ölçüldü: kap kenar 1px ·
+   yuvarlak 12 · taşma gizli; çubuk zemin `--zemin` · dolgu 6 · gap 2 ·
+   alt kenar; yüzey dolgu 18/20 · 15px · satır 1.7 · minH 420 · kaydırır;
+   ayak zemin `--zemin` · dolgu 8/14 · gap 14 · üst kenar · 11.5px. */
+.metin-duzenleyici{
+  border:var(--cizgi-1) solid var(--cizgi); border-radius:var(--yuvarlak-md);
+  background:var(--kagit); overflow:hidden;
+}
+.duzenleyici-cubuk{
+  display:flex; flex-wrap:wrap; align-items:center; gap:2px;
+  padding:var(--bosluk-6);
+  background:var(--zemin);
+  border-bottom:var(--cizgi-1) solid var(--cizgi);
+}
+.duzenleyici-ayrac{ width:var(--cizgi-1); height:22px; margin:0 var(--bosluk-4); background:var(--cizgi); flex:none; }
+.duzenleyici-yuzey{
+  padding:var(--bosluk-18) var(--bosluk-20);
+  min-height:420px; max-height:60vh; overflow-y:auto;
+  font-size:var(--yazi-15); line-height:var(--satir-bol); color:var(--murekkep);
+}
+.duzenleyici-yuzey:focus{ outline:0; }
+.duzenleyici-yuzey:focus-visible{ outline:var(--odak-kalinlik) solid var(--odak-renk); outline-offset:calc(var(--odak-ofset) * -1); }
+.duzenleyici-ayak{
+  display:flex; align-items:center; gap:var(--bosluk-14);
+  padding:var(--bosluk-8) var(--bosluk-14);
+  background:var(--zemin);
+  border-top:var(--cizgi-1) solid var(--cizgi);
+  font-size:var(--yazi-11-5); font-weight:var(--agirlik-govde); color:var(--metin-ikincil);
+}
+/* ⚠ ARAÇ ÇUBUĞU DÜĞMESİ `.ikon-dugme`DİR — yeni ad açılmadı (§75f'nin
+   beş kaynak adından biri). Aktif kip zemin alır. */
+.duzenleyici-cubuk .ikon-dugme.aktif{ background:var(--aksan-yikama); color:var(--aksan-koyu); }
+
+/* ── ÇOKLU SEÇİM — kaynak `.ms-*` · 4/37 ──────────────────────────────
+   Kutu + açılır menü. Menü `.acilir-yuzey`in ta kendisi (ölçüldü:
+   yuvarlak 12 · gölge `--golge-lg` · dolgu 6 · taşma auto) — yeni yüzey
+   AÇILMADI, mevcut bileşen kullanıldı.
+   Kutu ölçüldü: flex · gap 8 · dolgu 9/11 · yuvarlak 12 · kenar 1px ·
+   minH 44 · zemin `--kagit`. */
+.coklu-secim{ position:relative; }
+.coklu-kutu{
+  display:flex; flex-wrap:wrap; align-items:center; gap:var(--bosluk-8);
+  width:100%; min-height:44px; padding:var(--bosluk-9) var(--bosluk-11);
+  border:var(--cizgi-1) solid var(--cizgi); border-radius:var(--yuvarlak-md);
+  background:var(--kagit); color:var(--murekkep);
+  font-family:inherit; font-size:var(--yazi-13-5); font-weight:var(--agirlik-govde);
+  text-align:left; cursor:pointer;
+}
+.coklu-kutu:hover{ border-color:var(--cizgi-vurgu-acik); }
+.coklu-kutu[aria-expanded="true"]{ border-color:var(--aksan); }
+.coklu-kutu:focus-visible{ outline:var(--odak-kalinlik) solid var(--odak-renk); outline-offset:var(--odak-ofset); }
+.coklu-kutu .yer-tutucu{ color:var(--yer-tutucu); }
+/* Seçilen kalem çipi — §43 `.cip`in KÜÇÜK kipi. Kutunun içinde yaşar,
+   bu yüzden 44px hedefi burada UYGULANMAZ: hedef kutunun kendisidir,
+   çipin `×` düğmesi ayrı bir hedeftir. */
+.coklu-cip{
+  display:inline-flex; align-items:center; gap:var(--bosluk-6);
+  padding:var(--bosluk-4) var(--bosluk-8);
+  border-radius:var(--yuvarlak-sm);
+  background:var(--aksan-yikama); color:var(--aksan-koyu);
+  font-size:var(--yazi-12); font-weight:var(--agirlik-orta);
+}
+.coklu-cip button{
+  border:0; background:none; cursor:pointer; padding:0; line-height:1;
+  color:inherit; font-size:var(--yazi-11); opacity:.7;
+}
+.coklu-cip button:hover{ opacity:1; }
+
+/* ── SIRALANABİLİR LİSTE VE ADIM KARTI — kaynak `.st-*` · 7/37 ────────
+   Program aşaması · menü öğesi · form alanı — hepsi aynı kutu.
+   Ölçüldü: kart flex · gap 14 · dolgu 16 · yuvarlak 16 · kenar 1px ·
+   zemin `--zemin` (kâğıt DEĞİL — liste kart İÇİNDE yaşıyor, kâğıt
+   üstünde kâğıt görünmez); numara 38px daire · aksan zemin · beyaz
+   metin · 14/700; yan kolon flex-column · gap 7 · 44 geniş. */
+.adim-liste{ display:flex; flex-direction:column; gap:var(--bosluk-10); }
+.adim-karti{
+  display:flex; align-items:flex-start; gap:var(--bosluk-14);
+  padding:var(--bosluk-16);
+  border:var(--cizgi-1) solid var(--cizgi); border-radius:var(--yuvarlak-lg);
+  background:var(--zemin);
+}
+.adim-no{
+  display:grid; place-items:center;
+  width:38px; height:38px; flex:none;
+  border-radius:var(--yuvarlak-daire);
+  background:var(--aksan); color:var(--kagit);
+  font-size:var(--yazi-14); font-weight:var(--agirlik-kalin);
+  font-variant-numeric:tabular-nums;
+}
+.adim-govde{ display:flex; flex-direction:column; gap:var(--bosluk-9); flex:1; min-width:0; }
+.adim-yan{ display:flex; flex-direction:column; align-items:center; gap:var(--bosluk-7); flex:none; }
+/* Satır ekle — kesikli kenarlı davet düğmesi. Ölçüldü: tam genişlik ·
+   minH 44 · dolgu 13/22 · yuvarlak 12 · 1px DASHED · 13/700 ·
+   `--metin-ikincil` · zeminsiz.
+   ⚠ `--kesikli-kenar` (2px `--cizgi-vurgu`) KULLANILMADI: ölçülen 1px
+     `--cizgi`. §53'ün `.birak-alani` şerhinde aynı ayrım var. */
+.satir-ekle{
+  display:flex; align-items:center; justify-content:center; gap:var(--bosluk-9);
+  width:100%; min-height:44px; padding:var(--bosluk-13) var(--bosluk-22);
+  border:var(--cizgi-1) dashed var(--cizgi); border-radius:var(--yuvarlak-md);
+  background:none; color:var(--metin-ikincil);
+  font-family:inherit; font-size:var(--yazi-13); font-weight:var(--agirlik-kalin);
+  cursor:pointer; transition:var(--sure) var(--yumusama);
+}
+.satir-ekle:hover{ border-color:var(--aksan); color:var(--aksan-koyu); background:var(--aksan-yikama); }
+.satir-ekle:focus-visible{ outline:var(--odak-kalinlik) solid var(--odak-renk); outline-offset:var(--odak-ofset); }
+
+/* ── KİŞİ HÜCRESİ — kaynak `.u-cell` ──────────────────────────────────
+   🔴 EŞİK KARARI · LEAD, BEYAR ONAYI BEKLİYOR.
+   Envanter bunu ADAY'a koymuştu (2/37 ORTAK ekran, eşik 3) ve
+   *"kanona GİRMEZ"* demişti. Kanona ALINDI; gerekçe ve karşı gerekçe:
+
+     LEHTE · Yayılım 2/37 ama **222 geçiş** — envanterin en yoğun ADAY'ı.
+       Eşik KAYNAĞIN 37 ekranını sayıyor; doküman 33 modül istiyor ve
+       bunların 13'ü prototipte HİÇ YOK (Formlar & Başvurular · İçerik
+       Onayları · E-posta Kayıtları · Sistem Bildirimleri · Duyurular …).
+       Onların HEPSİ bir kişi referansı taşıyor ("atanan kişi", "başvuran",
+       "gönderen", "son yanıtlayan", "oluşturan") — D2'nin "Ortak kayıt
+       alanları" maddesi bunu zaten şart koşuyor.
+     ALEYHTE · Kanonun kendi eşiği ölçülmüş bir kuraldır ve onu
+       GELECEKTEKİ yayılıma dayanarak esnetmek, eşiği kuralsızlaştırır.
+
+     KARAR · Alındı, çünkü almamanın bedeli ölçülebilir: dört agent
+       kesişimsiz modül kümelerinde paralel çalışıyor ve kişi hücresi
+       dördünde birden doğuyor. Kanon vermezse **dördü de kendi adını
+       icat eder** — bu turun varlık sebebi tam olarak o dağınıklığı
+       bitirmekti. Karar geri alınabilir: sınıf silinirse ekranlar
+       kırılır ve nerede kullanıldığı tek `grep`le görünür.
+     Kayıt: `docs/admin-kanon-kararlari.md` K-E1.
+
+   ⚠ §25 `.kimlik-karti` BU DEĞİLDİR (ölçüm 10/21 ayırdı) ve §50
+     `.paket-satiri` de değil: o 52px avatarlı, kenarlı, dolgulu bir
+     KART SATIRI; bu 38px avatarlı, kenarsız, dolgusuz bir TABLO HÜCRESİ.
+   Ölçüldü: flex · gap 12 · minH 44; avatar 38px daire · zemin
+   `--aksan-halka` · renk `--aksan-koyu` · 13/700; ad 13.5/700
+   `--murekkep`; e-posta 12/500 `--metin-ikincil` · üst pay 2. */
+.kisi-hucre{
+  display:flex; align-items:center; gap:var(--bosluk-12);
+  min-height:44px; color:inherit; text-decoration:none;
+}
+.kisi-avatar{
+  display:grid; place-items:center;
+  width:38px; height:38px; flex:none;
+  border-radius:var(--yuvarlak-daire);
+  background:var(--aksan-halka); color:var(--aksan-koyu);
+  font-size:var(--yazi-13); font-weight:var(--agirlik-kalin);
+  text-transform:uppercase; overflow:hidden;
+}
+.kisi-avatar img{ width:100%; height:100%; object-fit:cover; }
+.kisi-bilgi{ min-width:0; }
+.kisi-ad{
+  display:block; font-size:var(--yazi-13-5); font-weight:var(--agirlik-kalin);
+  color:var(--murekkep);
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+}
+.kisi-alt{
+  display:block; margin-top:2px;
+  font-size:var(--yazi-12); font-weight:var(--agirlik-govde);
+  color:var(--metin-ikincil);
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+}
+a.kisi-hucre:hover .kisi-ad{ color:var(--aksan-koyu); }
+
+/* ── İÇERİK TÜRÜ ROZETİ — kaynak `.cb-kind` · 11/56 ───────────────────
+   §5 `.rozet`ten AYRI: o 11.5/800 · kenarlı · `--aralik-genis`; bu
+   11/700 · KENARSIZ · VERSAL · `--aralik-versal`. Ölçüm ayırdı.
+   Rol farkı da var: `.rozet` DURUM söyler ("Aktif"), bu TÜR söyler
+   ("SAYFA" · "SSS" · "DUYURU") ve moderasyon/onay kuyruklarında
+   satırın ne hakkında olduğunu tek bakışta verir. */
+.tur-rozeti{
+  display:inline-flex; align-items:center; gap:var(--bosluk-7);
+  padding:var(--bosluk-5) var(--bosluk-10);
+  border-radius:var(--yuvarlak-sm);
+  background:var(--aksan-yikama-10); color:var(--aksan);
+  font-size:var(--yazi-11); font-weight:var(--agirlik-kalin);
+  letter-spacing:var(--aralik-versal); text-transform:uppercase;
+  white-space:nowrap;
+}
+/* Nötr kip — türün marka anlamı yoksa (sistem kayıtları). */
+.tur-rozeti.notr{ background:var(--durum-kapali-zemin); color:var(--durum-kapali-metin); }
+
+/* ── PANEL FORM GİRDİSİ · §3'ün ADMIN KİPİ ───────────────────────────
+   Ölçüm §3 `.alan-girdi` ile 5/21 ayırdı ve ayrımın tamamı İKİ kalemde:
+       zemin  donör BEYAZ      ↔  kanon `--zemin`
+       dolgu  donör `0 14px`   ↔  kanon `13px 15px`
+   Gerekçesi bağlam: public form KÂĞIT üstünde yaşıyor (girdi gri zeminle
+   ayrışıyor), admin formu KART içinde yaşıyor ve kart zaten kâğıt —
+   gri girdi orada kirli görünüyor, kenar ayrımı yapıyor.
+   ⚠ `min-height:44px` KANONDAN KALIYOR. Donörün kutusu da 44px ama
+     `height` ile geliyor, `min-height` ile değil; içerik büyüyünce
+     donörünki taşar, kanonunki uzar. Kanon WCAG hedefini yazan tarafta
+     kalır (envanter §2.2'nin kaydı). */
+.kart.panel .alan-girdi,.kart.panel .alan-secim,
+.form-duzen .alan-girdi,.form-duzen .alan-secim{
+  padding:0 var(--bosluk-14); background:var(--kagit);
+}
+.kart.panel .alan-metin,.form-duzen .alan-metin{
+  padding:var(--bosluk-12) var(--bosluk-14); background:var(--kagit);
+}
+
+
+/* ───────────────────────────────────────────────────────────────────────
+   75i · DAR EKRAN DALI
+   ---------------------------------------------------------------------
+   Kaynağın kendi kırılımları ölçüldü (`fit-admin.css:770-774`): tablo
+   hücrelerinin yatay dolgusu 22→16, dikey 14→11.
+   ⚠ Kanonun kendi kırılım noktaları `tokenlar.css §13`te belgeli ve
+     `@media` koşulunda token okunamadığı için sabit yazılır — kaynak da
+     böyle yapıyor.
+   ─────────────────────────────────────────────────────────────────────── */
+
+@media (max-width:1100px){
+  /* Menü çekmeceye döner; ray kalır. Kabuk JS'i `.panel-acik` sınıfını
+     `body`ye ekler — §64 mobil çekmecenin kendi deseni. */
+  /* 🔴 ÖTELEME MENÜNÜN GENİŞLİĞİ DEĞİL, SOL KENARINDAN İTİBAREN OLMALI.
+     `translateX(-100%)` menünün KENDİ genişliği kadar (−264px) öteliyor,
+     ama menünün doğal `left`i 76px (rayın genişliği) — toplam −188, yani
+     kapalı çekmecenin **76px'i ekranda kalıyor** ve içeriğin sol şeridini
+     örtüyor. Yatay taşma vermiyor (`position:fixed`), o yüzden hiçbir
+     taşma ölçümüne görünmedi.
+     ÖLÇÜLDÜ @390: left 76 · transform matrix(…,−264,0) · sağ kenar +76.
+     İKİ PANELDE DE: `adm-genel` FIT'te, revenge-56 Gastro'da bağımsız
+     ölçtü, iki sayı birebir aynı. Doğrusu ray+menü kadar: −340px. */
+  .panel-menu{ transform:translateX(calc(-100% - 76px)); transition:transform var(--sure) var(--yumusama); }
+  body.panel-acik .panel-menu{ transform:none; }
+  /* Çekmece perdesi — açıkken arkaya tıklayınca kapanır.
+     ⚠ YENİ AD AÇILMADI: perde rengi kanonda ZATEN `--perde` (§64
+     `.cekmece-ortu` onu kullanıyor). İlk yazımda `--koyu-ortu` diye
+     ikinci bir ad uydurulmuştu ve denetim onu "fallback'li ama boş yuva"
+     diye yakaladı — `--kat-alt-cubuk` ihlalinin bu turdaki üçüncü
+     tekrarı. Kural yine aynı: token yazmadan önce kanon taranır. */
+  body.panel-acik::after{
+    content:""; position:fixed; inset:0; z-index:calc(var(--kat-ray) - 1);
+    background:var(--perde);
+  }
+  .panel-govde{ margin-left:76px; }
+  .panel-ust{ left:76px; }
+  .form-duzen,.form-duzen.pano{ grid-template-columns:minmax(0,1fr); }
+  .form-yan{ position:static; }
+}
+
+@media (max-width:640px){
+  .panel-ray{ display:none; }
+  .panel-govde{ margin-left:0; }
+  .panel-ust{ left:0; padding:0 var(--bosluk-16); }
+  /* 🔴 AD DEĞİŞİKLİĞİNİN ARDI BIRAKILMIŞ. Bu satır `.panel-ust-arama`
+     yazıyordu; kalem `.panel-arama`ya çevrilince (bağlamdan bağımsız ad,
+     §75b) DAR EKRAN DALI GÜNCELLENMEDİ ve kural sessizce ölü kaldı.
+     Ölçüldü @390: üst çubuk araması 90×44 — okunamayacak kadar dar ama
+     hâlâ basılıyordu. Yeniden adlandırmanın klasik bedeli; kanonun kendi
+     `--kurumsal-yesil` şerhiyle aynı aile.
+     ⚠ Kapsam `.panel-ust` içine yazılı: süzgeç şeridindeki arama dar
+       ekranda KALIR, orada tek arama yüzeyi odur. */
+  .panel-ust .panel-arama{ display:none; }   /* arama açılır kipe düşer */
+  /* 🔴 HESAP DÜĞMESİ 64px'LİK ÇUBUĞU TAŞIRIYORDU — ölçüldü @390:
+     140×**72** (ad üç satıra sarıyor, rol alt satıra iniyor). Dar ekranda
+     kimlik AVATARA iner; ad ve rol açılırın başlığında zaten yazılı,
+     yani bilgi kaybolmuyor, yalnız yeri değişiyor. */
+  .panel-ust-ben > span:not(.kisi-avatar),
+  .panel-ust-ben > i{ display:none; }
+  .panel-ust-ben{ padding:var(--bosluk-6); }
+  .panel-sayfa{ padding:88px var(--bosluk-16) var(--bosluk-40); }
+  .panel-bas h1{ font-size:var(--yazi-20); }
+  /* Kaynağın kendi dar dolguları — ölçüldü, yuvarlanmadı. */
+  .tablo.panel th,.tablo.panel td{ padding-top:var(--bosluk-11); padding-bottom:var(--bosluk-11); }
+  .tablo.panel th:first-child,.tablo.panel td:first-child{ padding-left:var(--bosluk-16); }
+  .tablo.panel th:last-child, .tablo.panel td:last-child { padding-right:var(--bosluk-16); }
+  .suzgec-cubuk{ padding:var(--bosluk-14) var(--bosluk-16); gap:var(--bosluk-10); }
+  .suzgec-cubuk .arama-kutu{ max-width:none; }
+  .suzgec-cubuk .sag{ margin-left:0; width:100%; }
+  .sayfalama.kart-ayagi{ padding:var(--bosluk-12) var(--bosluk-16); }
+  /* Sayfalama dar ekranda ALT ALTA — `space-between` iki kalemi uçlara
+     iter ve 390px'te bilgi satırı kırılır. */
+  .sayfalama.kart-ayagi{ justify-content:center; }
+  .sayfalama-bilgi{ width:100%; text-align:center; }
+  .toplu-islem{ padding:var(--bosluk-12) var(--bosluk-16); }
+  .toplu-islem .eylem-satiri{ margin-left:0; width:100%; }
+  .form-bolum{ padding:var(--bosluk-16); }
+  .kart.panel > .kart-alt.form-eylem{ padding:var(--bosluk-16); }
+  .kart.panel > .kart-alt.form-eylem > .dugme{ flex:1 1 auto; }
+  .duzenleyici-yuzey{ min-height:280px; }
+  .acilir-yuzey{ max-height:60vh; }
 }
 
 
@@ -12126,7 +14665,14 @@ body{ background:var(--zemin); font-family:var(--yuz); }
   <div class="h-top">
     <div class="wrap">
       <a class="brand dd-brand" href="anasayfa.html" aria-label="DadaDiet — Sağlıklı Yaşam">
-        <svg class="diet-word-mark" viewBox="948.855 2787.547 1374.988 290.422" role="img" aria-label="DadaDiet" xmlns="http://www.w3.org/2000/svg"><title>DadaDiet</title><path fill-rule="nonzero" fill="currentColor" d="M 1054.648438 2935.273438 C 1076.578125 2935.273438 1091.199219 2952.199219 1091.199219 2972.203125 C 1091.199219 2992.59375 1076.578125 3009.136719 1054.648438 3009.136719 C 1032.722656 3009.136719 1018.101562 2992.59375 1018.101562 2972.203125 C 1018.101562 2952.199219 1032.722656 2935.273438 1054.648438 2935.273438 M 1054.648438 3074.152344 C 1116.203125 3074.152344 1160.445312 3031.449219 1160.445312 2972.585938 L 1160.445312 2787.546875 L 1091.199219 2787.546875 L 1091.199219 2881.03125 C 1079.265625 2874.488281 1065.039062 2870.257812 1050.800781 2870.257812 C 989.636719 2870.257812 948.855469 2911.035156 948.855469 2972.585938 C 948.855469 3028.367188 994.636719 3074.152344 1054.648438 3074.152344  M 1268.167969 2934.886719 C 1290.101562 2934.886719 1304.722656 2951.816406 1304.722656 2972.203125 C 1304.722656 2992.207031 1290.101562 3009.136719 1268.167969 3009.136719 C 1246.242188 3009.136719 1231.625 2992.207031 1231.625 2972.203125 C 1231.625 2951.816406 1246.242188 2934.886719 1268.167969 2934.886719 M 1256.628906 3074.152344 C 1278.945312 3074.152344 1296.257812 3066.839844 1308.566406 3054.148438 L 1308.566406 3068.378906 L 1373.96875 3068.378906 L 1373.96875 2971.820312 C 1373.96875 2912.960938 1329.726562 2869.871094 1268.167969 2869.871094 C 1208.160156 2869.871094 1162.378906 2916.035156 1162.378906 2971.820312 C 1162.378906 3027.984375 1200.464844 3074.152344 1256.628906 3074.152344  M 1481.691406 2935.273438 C 1503.625 2935.273438 1518.242188 2952.199219 1518.242188 2972.203125 C 1518.242188 2992.59375 1503.625 3009.136719 1481.691406 3009.136719 C 1459.765625 3009.136719 1445.148438 2992.59375 1445.148438 2972.203125 C 1445.148438 2952.199219 1459.765625 2935.273438 1481.691406 2935.273438 M 1481.691406 3074.152344 C 1543.246094 3074.152344 1587.492188 3031.449219 1587.492188 2972.585938 L 1587.492188 2787.546875 L 1518.242188 2787.546875 L 1518.242188 2881.03125 C 1506.316406 2874.488281 1492.085938 2870.257812 1477.847656 2870.257812 C 1416.679688 2870.257812 1375.902344 2911.035156 1375.902344 2972.585938 C 1375.902344 3028.367188 1421.683594 3074.152344 1481.691406 3074.152344  M 1695.214844 2934.886719 C 1717.148438 2934.886719 1731.769531 2951.816406 1731.769531 2972.203125 C 1731.769531 2992.207031 1717.148438 3009.136719 1695.214844 3009.136719 C 1673.292969 3009.136719 1658.667969 2992.207031 1658.667969 2972.203125 C 1658.667969 2951.816406 1673.292969 2934.886719 1695.214844 2934.886719 M 1683.675781 3074.152344 C 1705.988281 3074.152344 1723.304688 3066.839844 1735.613281 3054.148438 L 1735.613281 3068.378906 L 1801.011719 3068.378906 L 1801.011719 2971.820312 C 1801.011719 2912.960938 1756.769531 2869.871094 1695.214844 2869.871094 C 1635.207031 2869.871094 1589.425781 2916.035156 1589.425781 2971.820312 C 1589.425781 3027.984375 1627.507812 3074.152344 1683.675781 3074.152344  M 1920.765625 3054.945312 C 1938.113281 3054.945312 1952.9375 3048.953125 1964.921875 3036.96875 C 1976.90625 3024.667969 1982.898438 3009.84375 1982.898438 2992.496094 C 1982.898438 2975.152344 1976.90625 2960.328125 1964.921875 2948.34375 C 1952.9375 2936.042969 1938.113281 2930.050781 1920.765625 2930.050781 C 1903.421875 2930.050781 1888.597656 2936.042969 1876.613281 2948.34375 C 1864.628906 2960.328125 1858.636719 2975.152344 1858.636719 2992.496094 C 1858.636719 3009.84375 1864.628906 3024.667969 1876.613281 3036.96875 C 1888.597656 3048.953125 1903.421875 3054.945312 1920.765625 3054.945312 M 1982.898438 2850.574219 L 2003.714844 2850.574219 L 2003.714844 3071.34375 L 1982.898438 3071.34375 L 1982.898438 3040.4375 C 1968.390625 3063.460938 1947.261719 3075.128906 1919.191406 3075.128906 C 1896.796875 3075.128906 1877.558594 3067.246094 1861.476562 3051.160156 C 1845.703125 3035.074219 1837.820312 3015.523438 1837.820312 2992.496094 C 1837.820312 2969.476562 1845.703125 2949.921875 1861.476562 2933.835938 C 1877.558594 2917.75 1896.796875 2909.867188 1919.191406 2909.867188 C 1947.261719 2909.867188 1968.390625 2921.535156 1982.898438 2944.558594 Z M 1982.898438 2850.574219  M 2030.527344 2913.652344 L 2051.34375 2913.652344 L 2051.34375 3071.34375 L 2030.527344 3071.34375 Z M 2028.632812 2886.527344 C 2022.011719 2879.902344 2022.011719 2868.550781 2028.632812 2861.925781 C 2035.257812 2855.304688 2046.609375 2855.304688 2053.234375 2861.925781 C 2059.855469 2868.550781 2059.855469 2879.902344 2053.234375 2886.527344 C 2046.609375 2893.148438 2035.257812 2893.148438 2028.632812 2886.527344  M 2090.136719 2982.71875 L 2207.773438 2982.71875 C 2205.566406 2966.003906 2199.257812 2953.074219 2188.535156 2943.929688 C 2177.8125 2934.78125 2165.195312 2930.050781 2151.003906 2930.050781 C 2118.203125 2930.050781 2094.234375 2951.496094 2090.136719 2982.71875 M 2207.457031 2934.78125 C 2221.964844 2951.183594 2229.222656 2970.734375 2229.222656 2993.128906 C 2229.222656 2995.335938 2228.90625 2998.804688 2228.589844 3002.90625 L 2090.136719 3002.90625 C 2094.234375 3034.761719 2119.148438 3054.945312 2152.898438 3054.945312 C 2176.867188 3054.945312 2194.84375 3044.222656 2203.675781 3028.136719 L 2221.964844 3038.859375 C 2208.089844 3061.253906 2183.175781 3075.128906 2152.582031 3075.128906 C 2127.664062 3075.128906 2107.480469 3067.246094 2092.027344 3051.792969 C 2076.574219 3036.335938 2068.6875 3016.46875 2068.6875 2992.5 C 2068.6875 2968.84375 2076.257812 2949.289062 2091.710938 2933.519531 C 2107.164062 2917.75 2126.71875 2909.867188 2151.003906 2909.867188 C 2174.34375 2909.867188 2193.265625 2918.066406 2207.457031 2934.78125  M 2323.84375 2933.835938 L 2278.429688 2933.835938 L 2278.429688 3029.398438 C 2278.429688 3056.519531 2293.566406 3054.3125 2323.84375 3053.050781 L 2323.84375 3071.34375 C 2279.6875 3077.96875 2257.613281 3065.984375 2257.613281 3029.398438 L 2257.613281 2933.835938 L 2224.496094 2933.835938 L 2224.496094 2913.652344 L 2257.613281 2913.652344 L 2257.613281 2875.804688 L 2278.429688 2869.496094 L 2278.429688 2913.652344 L 2323.84375 2913.652344 Z M 2323.84375 2933.835938 "/></svg></a>
+        <svg class="dd-mark" viewBox="0 0 44 44" aria-hidden="true">
+          <rect x="3" y="3" width="38" height="38" rx="11" fill="#009A44"></rect>
+          <path d="M30 12 C20 12 14 18 14 27 C14 28.4 14.2 29.7 14.6 31 C24 31 31 25 31 14.2 C31 13.4 30.6 12.7 30 12 Z" fill="#fff" opacity=".96"></path>
+          <path d="M16 31 C18 24 22 18 29 14" stroke="#009A44" stroke-width="2.1" fill="none" stroke-linecap="round"></path>
+          <path d="M22 23 l2.4 0 1.5 -3 2 5.4 1.4 -2.4 2.1 0" stroke="#009A44" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity=".75"></path>
+        </svg>
+        <span class="dd-word"><b>Dada</b><span class="dd-st">Diet</span></span>
+      </a>
       <!-- DÖRT BAŞLIK — her biri kendi merkez sayfasına giden GERÇEK bağlantı;
            panel yalnız hover ile açılır, başlık tıklanınca merkeze gidilir.
            Dördü de aynı mega dilinde: .mega-cats üç kısa sütun + .mega-feat. -->
@@ -13493,7 +16039,9 @@ document.addEventListener('click', function(e){
   <div class="wrap">
     <div class="foot-grid dip-izgara">
       <div class="foot-brand">
-        <div class="foot-lockup"><svg class="diet-word-mark" viewBox="948.855 2787.547 1374.988 290.422" role="img" aria-label="DadaDiet" xmlns="http://www.w3.org/2000/svg"><title>DadaDiet</title><path fill-rule="nonzero" fill="currentColor" d="M 1054.648438 2935.273438 C 1076.578125 2935.273438 1091.199219 2952.199219 1091.199219 2972.203125 C 1091.199219 2992.59375 1076.578125 3009.136719 1054.648438 3009.136719 C 1032.722656 3009.136719 1018.101562 2992.59375 1018.101562 2972.203125 C 1018.101562 2952.199219 1032.722656 2935.273438 1054.648438 2935.273438 M 1054.648438 3074.152344 C 1116.203125 3074.152344 1160.445312 3031.449219 1160.445312 2972.585938 L 1160.445312 2787.546875 L 1091.199219 2787.546875 L 1091.199219 2881.03125 C 1079.265625 2874.488281 1065.039062 2870.257812 1050.800781 2870.257812 C 989.636719 2870.257812 948.855469 2911.035156 948.855469 2972.585938 C 948.855469 3028.367188 994.636719 3074.152344 1054.648438 3074.152344  M 1268.167969 2934.886719 C 1290.101562 2934.886719 1304.722656 2951.816406 1304.722656 2972.203125 C 1304.722656 2992.207031 1290.101562 3009.136719 1268.167969 3009.136719 C 1246.242188 3009.136719 1231.625 2992.207031 1231.625 2972.203125 C 1231.625 2951.816406 1246.242188 2934.886719 1268.167969 2934.886719 M 1256.628906 3074.152344 C 1278.945312 3074.152344 1296.257812 3066.839844 1308.566406 3054.148438 L 1308.566406 3068.378906 L 1373.96875 3068.378906 L 1373.96875 2971.820312 C 1373.96875 2912.960938 1329.726562 2869.871094 1268.167969 2869.871094 C 1208.160156 2869.871094 1162.378906 2916.035156 1162.378906 2971.820312 C 1162.378906 3027.984375 1200.464844 3074.152344 1256.628906 3074.152344  M 1481.691406 2935.273438 C 1503.625 2935.273438 1518.242188 2952.199219 1518.242188 2972.203125 C 1518.242188 2992.59375 1503.625 3009.136719 1481.691406 3009.136719 C 1459.765625 3009.136719 1445.148438 2992.59375 1445.148438 2972.203125 C 1445.148438 2952.199219 1459.765625 2935.273438 1481.691406 2935.273438 M 1481.691406 3074.152344 C 1543.246094 3074.152344 1587.492188 3031.449219 1587.492188 2972.585938 L 1587.492188 2787.546875 L 1518.242188 2787.546875 L 1518.242188 2881.03125 C 1506.316406 2874.488281 1492.085938 2870.257812 1477.847656 2870.257812 C 1416.679688 2870.257812 1375.902344 2911.035156 1375.902344 2972.585938 C 1375.902344 3028.367188 1421.683594 3074.152344 1481.691406 3074.152344  M 1695.214844 2934.886719 C 1717.148438 2934.886719 1731.769531 2951.816406 1731.769531 2972.203125 C 1731.769531 2992.207031 1717.148438 3009.136719 1695.214844 3009.136719 C 1673.292969 3009.136719 1658.667969 2992.207031 1658.667969 2972.203125 C 1658.667969 2951.816406 1673.292969 2934.886719 1695.214844 2934.886719 M 1683.675781 3074.152344 C 1705.988281 3074.152344 1723.304688 3066.839844 1735.613281 3054.148438 L 1735.613281 3068.378906 L 1801.011719 3068.378906 L 1801.011719 2971.820312 C 1801.011719 2912.960938 1756.769531 2869.871094 1695.214844 2869.871094 C 1635.207031 2869.871094 1589.425781 2916.035156 1589.425781 2971.820312 C 1589.425781 3027.984375 1627.507812 3074.152344 1683.675781 3074.152344  M 1920.765625 3054.945312 C 1938.113281 3054.945312 1952.9375 3048.953125 1964.921875 3036.96875 C 1976.90625 3024.667969 1982.898438 3009.84375 1982.898438 2992.496094 C 1982.898438 2975.152344 1976.90625 2960.328125 1964.921875 2948.34375 C 1952.9375 2936.042969 1938.113281 2930.050781 1920.765625 2930.050781 C 1903.421875 2930.050781 1888.597656 2936.042969 1876.613281 2948.34375 C 1864.628906 2960.328125 1858.636719 2975.152344 1858.636719 2992.496094 C 1858.636719 3009.84375 1864.628906 3024.667969 1876.613281 3036.96875 C 1888.597656 3048.953125 1903.421875 3054.945312 1920.765625 3054.945312 M 1982.898438 2850.574219 L 2003.714844 2850.574219 L 2003.714844 3071.34375 L 1982.898438 3071.34375 L 1982.898438 3040.4375 C 1968.390625 3063.460938 1947.261719 3075.128906 1919.191406 3075.128906 C 1896.796875 3075.128906 1877.558594 3067.246094 1861.476562 3051.160156 C 1845.703125 3035.074219 1837.820312 3015.523438 1837.820312 2992.496094 C 1837.820312 2969.476562 1845.703125 2949.921875 1861.476562 2933.835938 C 1877.558594 2917.75 1896.796875 2909.867188 1919.191406 2909.867188 C 1947.261719 2909.867188 1968.390625 2921.535156 1982.898438 2944.558594 Z M 1982.898438 2850.574219  M 2030.527344 2913.652344 L 2051.34375 2913.652344 L 2051.34375 3071.34375 L 2030.527344 3071.34375 Z M 2028.632812 2886.527344 C 2022.011719 2879.902344 2022.011719 2868.550781 2028.632812 2861.925781 C 2035.257812 2855.304688 2046.609375 2855.304688 2053.234375 2861.925781 C 2059.855469 2868.550781 2059.855469 2879.902344 2053.234375 2886.527344 C 2046.609375 2893.148438 2035.257812 2893.148438 2028.632812 2886.527344  M 2090.136719 2982.71875 L 2207.773438 2982.71875 C 2205.566406 2966.003906 2199.257812 2953.074219 2188.535156 2943.929688 C 2177.8125 2934.78125 2165.195312 2930.050781 2151.003906 2930.050781 C 2118.203125 2930.050781 2094.234375 2951.496094 2090.136719 2982.71875 M 2207.457031 2934.78125 C 2221.964844 2951.183594 2229.222656 2970.734375 2229.222656 2993.128906 C 2229.222656 2995.335938 2228.90625 2998.804688 2228.589844 3002.90625 L 2090.136719 3002.90625 C 2094.234375 3034.761719 2119.148438 3054.945312 2152.898438 3054.945312 C 2176.867188 3054.945312 2194.84375 3044.222656 2203.675781 3028.136719 L 2221.964844 3038.859375 C 2208.089844 3061.253906 2183.175781 3075.128906 2152.582031 3075.128906 C 2127.664062 3075.128906 2107.480469 3067.246094 2092.027344 3051.792969 C 2076.574219 3036.335938 2068.6875 3016.46875 2068.6875 2992.5 C 2068.6875 2968.84375 2076.257812 2949.289062 2091.710938 2933.519531 C 2107.164062 2917.75 2126.71875 2909.867188 2151.003906 2909.867188 C 2174.34375 2909.867188 2193.265625 2918.066406 2207.457031 2934.78125  M 2323.84375 2933.835938 L 2278.429688 2933.835938 L 2278.429688 3029.398438 C 2278.429688 3056.519531 2293.566406 3054.3125 2323.84375 3053.050781 L 2323.84375 3071.34375 C 2279.6875 3077.96875 2257.613281 3065.984375 2257.613281 3029.398438 L 2257.613281 2933.835938 L 2224.496094 2933.835938 L 2224.496094 2913.652344 L 2257.613281 2913.652344 L 2257.613281 2875.804688 L 2278.429688 2869.496094 L 2278.429688 2913.652344 L 2323.84375 2913.652344 Z M 2323.84375 2933.835938 "/></svg></div>
+        <div class="foot-lockup"><span class="fl-mark"><i class="fa-solid fa-leaf" aria-hidden="true"></i></span>
+<span class="fl-word"><span class="bd">Dada</span><span class="sf">Diet</span></span>
+</div>
         
         <p class="foot-tag">Bilimsel bilgi, akıllı araçlar ve güvenilir uzman desteğiyle dengeli yaşamı herkes için erişilebilir kılıyoruz.</p>
         
