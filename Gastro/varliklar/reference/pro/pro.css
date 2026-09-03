@@ -1,0 +1,162 @@
+/* Pro planları (abonelik.planlar) — kaynak-transfer: pro-v1.html §hero (T-B) +
+   §pro-intro/§pro-tiers/§pro-compare/§pro-faq/§pro-cta VERBATIM'e yakın.
+   rd-crumb taban shell'de zaten var; tb-top deseni rozetler.css ile aynı.
+
+   Kasıtlı sapmalar (ödeme yüzeyi — gerçek veri/gerçek özellik zorunluluğu):
+     - .pro-card / .pro-grid / .ivl-toggle / .ent-list BURADA YENİDEN
+       TANIMLANMAZ — tokens.css'te zaten var ve /pro'nun GERÇEK aylık/yıllık
+       toggle'ı (resources/js/ui.js bindIntervalToggle, [data-interval-toggle]/
+       [data-interval-btn]/[data-price]/[data-plan-cta]) bu kurallara bağlı;
+       ref'te bu toggle hiç yok (tek fiyat gösteriyordu) ama site'de çalışan
+       gerçek bir özellik olduğu için KORUNDU. Bu dosya yalnız ref'in YENİ
+       getirdiği alt-parçaları (.pro-tier/.pro-desc/.pro-price/.pro-feats/
+       .pro-flag) ve tokens.css'te karşılığı olmayan bölümleri (§compare/§faq/
+       §cta/§intro) tanımlar.
+     - ivl-toggle ref'te YOK (ref'te tek aylık fiyat) — koyu tb-top hero
+       içine, mevcut .ivl-toggle'ın (yarı saydam beyaz, koyu zemin için
+       tasarlı) görünürlüğünü bozmayacak şekilde yerleştirildi.
+     - .pro-card.t0/.t1/.t2/.t3 (ref'in sabit kademe sınıfları) yerine gerçek
+       $plan->is_featured zaten bağlı .pro-card--featured (tokens.css) + yeni
+       .pro-card--free (yalnız Ücretsiz kart için, tokens.css'te karşılığı yok)
+       kullanılır — gerçek plan sayısı 3 (Pro/Pro+/Pro Max), ref'in sabit
+       2 kademeli (Pro+/Pro Max) yapısı değil.
+
+   FB9 revizyonu (Beyar 2026-07-14, önceki W10-A dalgasının sapmalarını
+   yeniden karara bağladı — kararlar.md §4.4):
+     - (a) .price-flag REFERANSA DÖNDÜ — fiyatlar hâlâ temsilî (B1 şerhi,
+       §6 Yasin Bey onayı bekliyor); Ücretsiz (₺0, hep böyle kalacak) HARİÇ
+       her ücretli plan kartında + karşılaştırma tablosu fiyat satırında.
+     - (b) .pro-demo GERİ KONDU — .creator-sub/.pg-* artık tokens.css'te
+       PAYLAŞILAN bileşen (video modülüyle ortak, bkz tokens.css F1 notu);
+       demo GERÇEK veriyle çalışır (gerçek creator + gerçek kilitli video). */
+
+/* ===== HERO (T-B deseni, rozetler.css ile aynı) ===== */
+.tb-top{position:relative;padding-top:128px;padding-bottom:46px;overflow:hidden;background:#3a352c}
+.tb-top .tb-hero-img{position:absolute;inset:0;z-index:0;background:#3a352c center/cover no-repeat;
+  background-image:url("../../_dis/images.unsplash.com/photo-1556910103-1c02745aae4d.avif")}
+.tb-top::after{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,rgba(28,25,18,.82),rgba(33,30,22,.46))}
+.tb-top .wrap{position:relative;z-index:2}
+.tb-top .rd-crumb,.tb-top .rd-crumb a{color:#c9c3b8}
+.tb-top .rd-crumb a:hover{color:#fff}
+.tb-top .rd-crumb i{color:rgba(255,255,255,.4)}
+.tb-top .rd-crumb b{color:#fff}
+.tb-hero-main{max-width:760px}
+.tb-top .eyebrow{color:#f2b9ab}
+.tb-top h1{color:#fff;font-size:42px;margin:6px 0 12px;text-shadow:0 2px 24px rgba(0,0,0,.25)}
+.tb-top .lead{color:#e9e2d6;font-size:16.5px;font-weight:500;max-width:600px;text-shadow:0 1px 14px rgba(0,0,0,.3)}
+.tb-top .ivl-toggle{margin-top:22px}
+.tb-already{display:inline-flex;align-items:center;gap:9px;margin-top:20px;padding:11px 18px;border:1px solid rgba(255,255,255,.34);border-radius:var(--radius-pill);background:rgba(255,255,255,.08);color:#fff;font-size:13.5px;font-weight:700;transition:.2s var(--ease)}
+.tb-already:hover{background:rgba(255,255,255,.16);border-color:rgba(255,255,255,.55)}
+.tb-already i:last-child{font-size:11px}
+@media (max-width:1024px){.tb-top h1{font-size:34px}}
+@media (max-width:640px){.tb-top{padding-top:74px;padding-bottom:34px}.tb-top h1{font-size:27px}.tb-top .lead{font-size:15px}.tb-already{width:100%;justify-content:center}}
+
+/* ===== pro-intro — değer önizleme bandı ===== */
+.pro-intro{padding:48px 0 8px;background:var(--bg-white)}
+.pro-intro .lead-wrap{max-width:720px}
+.pro-intro p{font-size:17px;color:var(--slate-2);font-weight:500;line-height:1.7;margin-bottom:14px}
+.pro-intro p:first-of-type{font-size:18px;color:var(--slate)}
+.pro-perks{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:30px}
+.pro-perk{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);padding:20px 22px;box-shadow:var(--sh-sm)}
+.pro-perk .pp-ico{width:44px;height:44px;border-radius:var(--radius-md);background:var(--tomato-tint);color:var(--tomato);display:grid;place-items:center;font-size:18px;margin-bottom:13px}
+.pro-perk b{display:block;font-size:15px;color:var(--slate);margin-bottom:5px}
+.pro-perk p{font-size:13.5px;color:var(--muted);font-weight:500;line-height:1.6;margin:0}
+@media (max-width:1024px){.pro-perks{grid-template-columns:1fr}}
+
+/* ===== pro-tiers — kart içi anatomi (dış kutu .pro-card zaten tokens.css'te) ===== */
+.pro-tiers{padding:48px 0 56px;background:var(--bg-white)}
+.pro-tiers .sec-head{max-width:640px;margin-bottom:6px}
+.pro-tiers .sec-head .lead{font-size:15px;color:var(--muted);font-weight:500;margin-top:6px}
+.pro-card--free{background:#fafafa;border-color:#e4e4e4 !important}
+.pro-flag{position:absolute;top:0;right:22px;transform:translateY(-50%);background:var(--tomato);color:#fff;font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:6px 12px;border-radius:var(--radius-sm);box-shadow:0 6px 16px rgba(220,61,23,.35)}
+.pro-tier{display:flex;align-items:center;gap:11px;margin-bottom:6px}
+.pro-tier i{width:44px;height:44px;border-radius:var(--radius-md);display:grid;place-items:center;font-size:18px;background:var(--tomato-tint);color:var(--tomato)}
+.pro-card--free .pro-tier i{background:#ebebeb;color:#8a8a8a}
+.pro-tier b{font-size:21px;color:var(--slate);letter-spacing:-.01em}
+.pro-card--free .pro-tier b{color:#6b6b6b}
+.pro-desc{font-size:13.5px;color:var(--muted);font-weight:500;line-height:1.55;margin:4px 0 0}
+.pro-price{padding:16px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-top:16px;display:flex;align-items:baseline;gap:6px;flex-wrap:wrap}
+.pro-price b{font-size:30px;color:var(--slate);letter-spacing:-.02em}
+.pro-price span{font-size:13px;color:var(--muted);font-weight:500}
+.pro-price .pp-yearly-note{flex-basis:100%;font-size:12px;color:var(--muted);margin-top:-2px}
+/* Fiyat tek-kaynak bekleyen uyarı — FB9(a), ref §801-802 birebir */
+.price-flag{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:var(--tomato);background:rgba(220,61,23,.09);border:1px solid rgba(220,61,23,.25);border-radius:4px;padding:2px 7px;margin-left:6px;vertical-align:middle;letter-spacing:.01em}
+.price-flag i{font-size:10px}
+.pro-feats{list-style:none;display:flex;flex-direction:column;gap:11px;padding:18px 0;flex:1}
+.pro-feats li{display:flex;gap:10px;font-size:13.5px;font-weight:500;color:var(--slate-2);line-height:1.45}
+.pro-feats li i{flex:none;margin-top:3px;font-size:12px;color:var(--green-deep)}
+.pro-feats li.no{color:#b9b9b9}
+.pro-feats li.no i{color:#d5d5d5}
+.pro-feats li b{color:var(--slate);font-weight:700}
+.pro-feats-extra{display:none;flex-direction:column;gap:11px}
+.pro-card.expanded .pro-feats-extra{display:flex}
+.pro-soon-tag{margin-left:auto;flex:none;font-size:10px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);background:var(--paper);border:1px solid var(--line);padding:2px 8px;border-radius:999px}
+.pro-expand-btn{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:700;color:var(--muted);background:none;border:none;cursor:pointer;padding:6px 0;margin-top:4px;transition:color .2s var(--ease);font-family:inherit}
+.pro-expand-btn i{font-size:11px;transition:transform .25s var(--ease)}
+.pro-card.expanded .pro-expand-btn i{transform:rotate(180deg)}
+.pro-expand-btn:hover{color:var(--tomato)}
+.pro-card .btn{width:100%;margin-top:auto}
+
+/* ===== pro-compare — karşılaştırma tablosu (gerçek entitlements'tan dinamik) ===== */
+.pro-compare{padding:50px 0 56px;background:var(--bg-cream);border-top:1px solid var(--line)}
+.cmp-wrap{margin-top:26px;border-radius:var(--radius-lg);overflow:hidden;border:1px solid var(--line);box-shadow:var(--sh-sm);overflow-x:auto}
+.cmp-table{width:100%;border-collapse:collapse;background:var(--paper);min-width:560px}
+.cmp-table th,.cmp-table td{padding:14px 18px;font-size:13.5px;border-bottom:1px solid var(--line)}
+.cmp-table thead th{font-size:12px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;color:var(--muted);background:#fafbf9;text-align:center}
+.cmp-table thead th:first-child{text-align:left}
+.cmp-table thead th.col-pop{color:var(--tomato)}
+.cmp-table tbody td{text-align:center;color:var(--slate-2);font-weight:600}
+.cmp-table tbody td:first-child{text-align:left;font-weight:500;color:var(--slate)}
+.cmp-table tbody tr:last-child td{border-bottom:0}
+.cmp-table .yes{color:var(--green-deep)}
+.cmp-table .nope{color:#cdcdcd}
+.cmp-table td.col-pop{background:rgba(220,61,23,.04)}
+.cmp-table .soon{display:inline-flex;align-items:center;gap:4px;font-size:10.5px;font-weight:700;color:var(--muted)}
+.cmp-pricerow td{font-weight:800;color:var(--slate);font-size:15px}
+
+/* ===== pro-demo — "İki ayrı katman" (FB9-b) — .creator-sub/.pg-* tokens.css'te
+   paylaşılan bileşen; bu blok yalnız demo kartlarının anatomisi (ref §835-857
+   birebir). Gerçek veri: bir creator (follow.toggle) + bir kilitli video
+   (data-pro-gate). ===== */
+.pro-demo{padding:52px 0 58px;background:var(--bg-white)}
+.demo-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:26px}
+.demo-card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);padding:22px;box-shadow:var(--sh-sm)}
+.dc-tag{display:inline-flex;align-items:center;gap:7px;font-size:11.5px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;padding:5px 11px;border-radius:999px;margin-bottom:14px}
+.dc-tag.free{background:#e8f6ef;color:var(--green-deep)}
+.dc-tag.paid{background:var(--tomato-tint);color:var(--tomato)}
+.demo-card h3{font-size:17px;color:var(--slate);margin-bottom:6px}
+.demo-card>p{font-size:13.5px;color:var(--muted);font-weight:500;line-height:1.6;margin-bottom:18px}
+.demo-note{font-size:12px;color:var(--muted);font-weight:500;line-height:1.55;margin-top:13px;display:flex;gap:8px}
+.demo-note i{margin-top:2px;flex:none;color:var(--green)}
+/* creator mini kart (ÜCRETSİZ takip) */
+.creator-row{display:flex;align-items:center;gap:13px;padding:14px;border:1px solid var(--line);border-radius:var(--radius-md);background:#fff}
+.creator-av{flex:none;width:48px;height:48px;border-radius:var(--radius-circle);background-size:cover;background-position:center}
+.creator-meta{flex:1;min-width:0}
+.creator-meta b{display:block;font-size:14.5px;color:var(--slate)}
+.creator-meta span{display:block;font-size:12px;color:var(--muted);font-weight:500;margin-top:1px}
+/* premium kilitli içerik kartı (ÜCRETLİ) */
+.locked-row{display:flex;align-items:center;gap:14px;padding:16px;border:1px dashed #d8cfc6;border-radius:var(--radius-md);background:linear-gradient(180deg,#fff,#fdf8f5);cursor:pointer;transition:.2s var(--ease);width:100%;text-align:left;font:inherit}
+.locked-row:hover{border-color:var(--tomato);box-shadow:var(--sh-sm)}
+.locked-ico{flex:none;width:48px;height:48px;border-radius:var(--radius-md);background:var(--tomato-tint);color:var(--tomato);display:grid;place-items:center;font-size:19px}
+.locked-body{flex:1;min-width:0}
+.locked-body b{display:block;font-size:14.5px;color:var(--slate)}
+.locked-body span{display:block;font-size:12px;color:var(--muted);font-weight:500;margin-top:1px}
+.locked-row .pro-pill{flex:none;display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:700;color:var(--tomato);background:var(--tomato-tint);padding:6px 11px;border-radius:999px}
+@media (max-width:1024px){.demo-grid{grid-template-columns:1fr}}
+
+/* ===== pro-faq — SSS akordeonu ===== */
+.pro-faq{padding:50px 0 30px;background:var(--bg-white)}
+.faq-list{max-width:760px;margin:26px auto 0}
+.faq-item{border:1px solid var(--line);border-radius:var(--radius-md);background:var(--paper);margin-bottom:12px;overflow:hidden}
+.faq-q{width:100%;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:17px 20px;font-size:14.5px;font-weight:700;color:var(--slate);background:none;border:0;cursor:pointer;text-align:left;font-family:inherit}
+.faq-q i{transition:.25s var(--ease);color:var(--muted);flex:none}
+.faq-item.open .faq-q i{transform:rotate(180deg)}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .3s var(--ease)}
+.faq-a p{padding:0 20px 18px;font-size:13.5px;color:var(--slate-2);font-weight:500;line-height:1.65;margin:0}
+
+/* ===== pro-cta — alt CTA bandı ===== */
+.pro-cta{padding:56px 0 70px;background:var(--bg-cream);border-top:1px solid var(--line);text-align:center}
+.pro-cta h2{font-size:28px;color:var(--slate);margin-bottom:10px}
+.pro-cta p{font-size:15.5px;color:var(--muted);font-weight:500;max-width:520px;margin:0 auto 22px;line-height:1.6}
+
+@media (max-width:640px){.pro-cta h2{font-size:23px}}

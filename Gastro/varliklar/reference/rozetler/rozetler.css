@@ -1,0 +1,166 @@
+/* Rozetler (badges.index) — kaynak-transfer: rozetler-v1.html §hero + §Rozet &
+   Şef Kademe (Foundation F2) VERBATIM. rd-crumb/chip taban shell'de zaten var.
+
+   Kasıtlı sapmalar (gerçek veri modeliyle uyum için):
+     - .ladder ref'te sabit 8 kademeye göre (repeat(8,1fr)) tasarlanmış; gerçek
+       veri modeli 14 kademe (CommunityTierSeeder) — grid auto-fill'e çevrildi,
+       kademe sayısı değişse de kırılmaz.
+     - "kademeye tıkla → o kademenin rozetlerini filtrele" etkileşimi (rs-pick/
+       bgal-filter/.filtering) ref'te badge→kademe eşleşmesine (data-rank)
+       dayanıyordu; veri modelinde rozetin hangi kademede açıldığına dair bir
+       alan YOK (Badge sadece category+trigger taşır, CommunityTier'a bağlı
+       değil). Sahte eşleşme uydurmak yerine bu etkileşim taşınmadı — ladder
+       salt bilgilendirici (done/current/locked gerçek puan karşılaştırması). */
+
+/* §2f H1 koyu-overlay hero — GÖRSEL PENDING (data-img-pending, tarif-detay ile aynı desen) */
+.tb-top{position:relative;padding-top:128px;padding-bottom:46px;overflow:hidden;background:#3a352c}
+.tb-top .tb-hero-img{position:absolute;inset:0;z-index:0;background:#c9c4ba center/cover no-repeat;
+  background-image:url("../../_dis/images.unsplash.com/photo-1556909212-d5b604d0c90d.avif")}
+.tb-top::after{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,rgba(28,25,18,.93),rgba(33,30,22,.72))}
+.tb-top .wrap{position:relative;z-index:2}
+.tb-top .rd-crumb,.tb-top .rd-crumb a{color:#c9c3b8}
+.tb-top .rd-crumb a:hover{color:#fff}
+.tb-top .rd-crumb i{color:rgba(255,255,255,.4)}
+.tb-top .rd-crumb b{color:#fff}
+.tb-hero-main{max-width:760px}
+.tb-top .eyebrow{color:#f2b9ab}
+.tb-top h1{color:#fff;font-size:42px;margin:6px 0 12px;text-shadow:0 2px 24px rgba(0,0,0,.25)}
+.tb-top .lead{color:#e9e2d6;font-size:16.5px;font-weight:500;max-width:600px;text-shadow:0 1px 14px rgba(0,0,0,.3)}
+@media (max-width:1024px){.tb-top h1{font-size:34px}}
+@media (max-width:640px){.tb-top{padding-top:74px;padding-bottom:34px}.tb-top h1{font-size:27px}.tb-top .lead{font-size:15px}}
+
+/* ŞEF KADEME — mevcut rütbe paneli + kademe merdiveni (CS:GO insignia + progress) */
+/* ZEBRA (Beyar şıklı kararı 2026-08-23): üst etiket + başlık + içerik
+   üçlüsü BİR section sayılır ve zeminler dönüşümlü gider —
+   beyaz → gri → beyaz → gri. Bölümler eşit ritme (74/74) bağlandı;
+   önce 44/14 ve 34/64 gibi ayrı ayrı değerlerdi ve iki bölüm blade'de
+   satır içi `padding-top:0` ile birbirine yapıştırılmıştı. */
+.ladder-sec{padding:74px 0;background:var(--bg-white)}
+.rank-now{display:grid;grid-template-columns:auto 1fr;gap:24px;align-items:center;background:linear-gradient(135deg,#2b2820,#211E16 60%,#3a2317);color:#fff;border:none;border-radius:var(--radius-lg);padding:28px 30px;box-shadow:var(--sh-md);position:relative;overflow:hidden}
+.rank-now::after{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.05) 1px,transparent 1px);background-size:6px 6px;opacity:.45;pointer-events:none}
+.rn-insignia{position:relative;z-index:1;flex:none;width:96px;height:96px;border-radius:var(--radius-circle);background:radial-gradient(circle at 35% 30%,#ffd9a0,#e8a13c 60%,#b8801f);color:#3a2510;display:grid;place-items:center;font-size:42px;box-shadow:0 8px 22px rgba(184,128,31,.45),inset 0 2px 6px rgba(255,255,255,.4)}
+.rn-body{position:relative;z-index:1;min-width:0}
+.rn-eyebrow{font-size:11.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#ffd9a0;margin-bottom:5px}
+.rn-name{font-size:28px;font-weight:800;letter-spacing:-.01em;margin-bottom:4px}
+.rn-name small{font-size:13px;font-weight:600;color:rgba(255,255,255,.6);letter-spacing:0}
+.rn-next{font-size:13.5px;color:#e7ddcd;font-weight:500;margin-bottom:14px}
+.rn-next b{color:#fff;font-weight:700}
+.rn-bar{height:9px;border-radius:999px;background:rgba(255,255,255,.16);overflow:hidden;max-width:520px}
+.rn-bar span{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#ffd9a0,#e8a13c)}
+.rn-bar-meta{display:flex;justify-content:space-between;max-width:520px;margin-top:7px;font-size:11.5px;font-weight:600;color:rgba(255,255,255,.65)}
+.rn-points{position:relative;z-index:1;align-self:flex-start;flex:none;text-align:right}
+.rn-points b{display:block;font-size:22px;font-weight:800;color:#fff;letter-spacing:-.01em}
+.rn-points span{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.55)}
+
+/* kademe merdiveni — 14 kademe, auto-fill (sabit 8 kolon değil) */
+/* Segment aralığı daraltıldı (Beyar 2026-08-23): merdiven 8 segmente
+   bölünüyor ve her segment `ladder-hint (20px üst) + ladder (12px üst)` ile
+   32px'lik bir boşluk açıyordu — sekiz kez tekrarlanınca sayfa uzayıp
+   rütbeler birbirinden kopuyordu. 14 + 8 = 22px. */
+.ladder-hint{display:inline-flex;align-items:center;gap:8px;margin-top:14px;font-size:12.5px;font-weight:600;color:var(--slate-2)}
+.ladder-hint i{color:var(--tomato);font-size:12px}
+.ladder{display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:10px;margin-top:8px}
+/* Kart içeriği dikeyde MERKEZLİ (Beyar 2026-08-23): ızgara kartları eşit
+   yükseklikte uzuyor ama içerik tepeye yaslıydı — `rs-cnt` satırı olan ve
+   olmayan kartlar aynı satırda hizasız duruyordu. Dolgu da 26/24 → 18/16:
+   sekiz segment yan yana gelince kazanılan yükseklik ciddi. */
+.rank-step{position:relative;text-align:center;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-md);padding:18px 8px 16px;display:flex;flex-direction:column;justify-content:center}
+.rs-ico{width:46px;height:46px;margin:0 auto 9px;border-radius:var(--radius-circle);background:var(--bg);color:#bdbdbd;display:grid;place-items:center;font-size:18px;border:1.5px solid var(--line)}
+.rank-step b{display:block;font-size:12.5px;font-weight:700;color:var(--slate);line-height:1.2}
+.rank-step span{display:block;font-size:10.5px;color:var(--muted);font-weight:600;margin-top:3px}
+/* ulaşılmış kademe */
+.rank-step.done .rs-ico{background:var(--tomato-tint);color:var(--tomato);border-color:rgba(220,61,23,.3)}
+/* mevcut kademe — vurgulu */
+.rank-step.current{border-color:var(--tomato);box-shadow:0 6px 18px rgba(220,61,23,.16);background:#fff}
+.rank-step.current .rs-ico{background:radial-gradient(circle at 35% 30%,#ffd9a0,#e8a13c 65%,#b8801f);color:#3a2510;border-color:#e8a13c;box-shadow:0 5px 14px rgba(184,128,31,.4)}
+.rank-step .rs-now{position:absolute;top:7px;left:50%;transform:translateX(-50%);z-index:2;margin:0;font-size:9px;line-height:1;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:#fff;background:var(--tomato);padding:4px 10px;border-radius:999px;white-space:nowrap;box-shadow:0 2px 6px rgba(220,61,23,.28)}
+/* kilitli (gelecek) kademe */
+.rank-step.locked{border-style:dashed;background:transparent}
+.rank-step.locked .rs-lock{position:absolute;top:8px;right:9px;font-size:9px;color:#c8c8c8}
+.rank-step .rs-cnt{display:block;font-size:9.5px;font-weight:700;color:#bdb6a8;margin-top:4px;letter-spacing:.02em}
+.rank-step.done .rs-cnt,.rank-step.current .rs-cnt{color:var(--green-deep)}
+
+/* ROZET GALERİSİ */
+.badge-sec{padding:74px 0;background:var(--bg-white)}
+.rz-band--cream{background:var(--bg-cream)}
+.bgal-stat{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 28px}
+.bgal-pill{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--slate-2);background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:8px 15px}
+.bgal-pill i{font-size:12px}
+.bgal-pill .pill-earn{color:var(--green-deep)}
+.bgal-pill .pill-lock{color:#c2a06f}
+.bgal-pill b{color:var(--slate);font-weight:800}
+.badge-cat{margin-top:30px}
+.badge-cat:first-of-type{margin-top:0}
+.badge-head{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.badge-head h3{font-size:17px;display:inline-flex;align-items:center;gap:9px}
+.badge-head h3 i{color:var(--tomato);font-size:14px}
+.badge-head .bh-cnt{font-size:12.5px;color:var(--muted);font-weight:600;margin-left:auto}
+.badge-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(216px,1fr));gap:12px}
+.badge-card{position:relative;display:flex;flex-wrap:wrap;align-items:center;gap:13px;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-md);padding:14px 16px;text-align:left;outline:none}
+.badge-card:hover{border-color:#dcdcdc;transform:translateY(-2px);box-shadow:var(--sh-sm)}
+.badge-card>div{flex:1;min-width:0}
+.badge-ico{flex:none;width:42px;height:42px;border-radius:var(--radius-md);background:var(--tomato-tint);color:var(--tomato);display:grid;place-items:center;font-size:17px}
+.badge-card b{display:block;font-size:13.5px;font-weight:700;color:var(--slate);line-height:1.2}
+.badge-card span:not(.badge-ico){display:block;font-size:11.5px;color:var(--muted);font-weight:500;margin-top:3px}
+.badge-card .b-rare{position:absolute;top:9px;right:11px;font-size:9px;color:#e8a13c}
+.badge-card.locked{border-style:dashed;border-color:#ddd;background:transparent}
+.badge-card.locked:hover{border-color:#c9c9c9;transform:none;box-shadow:none}
+.badge-card.locked .badge-ico{background:var(--bg);color:#c2c2c2}
+.badge-card.locked b{color:var(--muted)}
+.badge-lock{position:absolute;top:9px;right:11px;font-size:10px;color:#c2c2c2}
+
+/* rozet durum notu (kart altı) — earned "kazanıldı" / locked ilerleme çubuğu+kalan */
+.b-note{flex-basis:100%;display:flex;align-items:center;gap:7px;margin-top:10px;font-size:10.5px;font-weight:700;letter-spacing:.01em}
+.b-note.earned{color:var(--green-deep)}
+.b-note.earned i{font-size:10px}
+.b-note.locked{color:#b07f3a;flex-wrap:wrap}
+.b-prog{flex:1;min-width:60px;height:5px;border-radius:999px;background:#ececec;overflow:hidden;order:2}
+.b-prog span{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#f0b15a,#e8902f)}
+.b-note.locked .b-left{order:3;flex-basis:100%;color:#a07433;font-weight:600;font-size:10px;margin-top:1px}
+.b-note.locked > i{order:1;font-size:10px}
+
+/* hover tooltip — rozet açıklaması */
+.badge-tip{
+  position:absolute;left:50%;bottom:calc(100% + 10px);transform:translateX(-50%) translateY(6px);
+  width:max(210px,100%);background:var(--slate);color:#f3ede1;border-radius:var(--radius-md);
+  padding:12px 14px;box-shadow:var(--sh-lg);z-index:30;
+  opacity:0;visibility:hidden;pointer-events:none;transition:opacity .18s var(--ease),transform .18s var(--ease),visibility .18s;
+}
+.badge-card:hover .badge-tip,.badge-card:focus-within .badge-tip,.badge-card.tip-open .badge-tip{opacity:1;visibility:visible;transform:translateX(-50%) translateY(0)}
+.badge-tip::after{content:"";position:absolute;top:100%;left:50%;transform:translateX(-50%) rotate(45deg) translateY(-5px);width:11px;height:11px;background:var(--slate)}
+.badge-card .badge-tip b{display:block;font-size:12.5px;font-weight:800;color:#fff;margin-bottom:4px;letter-spacing:0}
+.badge-card .badge-tip span,.badge-card .badge-tip p{font-size:11.5px;font-weight:500;line-height:1.5;color:#cfc6b6;margin-top:0}
+.badge-tip .tip-how{display:flex;align-items:flex-start;gap:7px;margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,.12);font-size:11px;font-weight:600;color:#ffd9a0}
+.badge-tip .tip-how i{font-size:10px;margin-top:2px;flex:none}
+
+/* alt köprü */
+/* Zebranın son halkası: bir önceki bölüm gri olduğu için bu BEYAZ olmalı
+   (Beyar 2026-08-23). Üstündeki ayraç çizgisi korundu. */
+.bz-next{padding:74px 0;background:var(--bg-white);border-top:1px solid var(--line)}
+.bz-next-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.bz-next-card{display:flex;align-items:center;gap:13px;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);padding:16px 18px;transition:.2s var(--ease)}
+.bz-next-card:hover{border-color:var(--tomato);transform:translateY(-3px);box-shadow:var(--sh-md)}
+.bz-next-card .nx-ico{flex:none;width:42px;height:42px;border-radius:var(--radius-md);background:var(--tomato-tint);color:var(--tomato);display:grid;place-items:center;font-size:16px}
+.bz-next-card b{display:block;font-size:14px;color:var(--slate)}
+.bz-next-card span{display:block;font-size:12px;color:var(--muted);font-weight:500;margin-top:1px}
+
+@media (max-width:1024px){
+  .rank-now{grid-template-columns:auto 1fr;gap:18px;padding:22px}
+  .rn-points{display:none}
+  .ladder{grid-template-columns:repeat(auto-fill,minmax(84px,1fr))}
+  .bz-next-grid{grid-template-columns:1fr}
+}
+@media (max-width:640px){
+  .rank-now{grid-template-columns:1fr;text-align:center;gap:14px}
+  .rn-insignia{margin:0 auto}
+  .rn-bar,.rn-bar-meta{max-width:none}
+  .ladder{grid-template-columns:repeat(3,1fr)}
+  .badge-grid{grid-template-columns:1fr}
+  /* mobilde tooltip kartın altında açılır (üstte taşma riski) */
+  .badge-tip{bottom:auto;top:calc(100% + 10px);transform:translateX(-50%) translateY(-6px)}
+  .badge-card:hover .badge-tip,.badge-card:focus-within .badge-tip,.badge-card.tip-open .badge-tip{transform:translateX(-50%) translateY(0)}
+  .badge-tip::after{top:auto;bottom:100%;transform:translateX(-50%) rotate(45deg) translateY(5px)}
+}
+@media (prefers-reduced-motion:reduce){
+  .badge-tip{transition:opacity .01s}
+}

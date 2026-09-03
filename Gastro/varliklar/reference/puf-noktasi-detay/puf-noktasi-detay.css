@@ -1,0 +1,513 @@
+/* Püf Noktası detayı (puf.show) — ref reference/topluluk/puf-noktasi-detay-v1.html
+   <style> bloğundan (satır 14-1041) kaynak-transfer.
+
+   QA PUNCH (2026-07-15, B2-1 dilim kapanışı) — bu dosya İLK teslimde eksik
+   çıkmıştı: aşağıdaki bloklar (puf-mod/mod-share/ms-btn, ptr ailesi, rev- .
+   c- . rf- . rs- . rl- yorum ailesi, actbar/ab-) show.blade.php'nin GERÇEKTEN
+   render ettiği markup'a rağmen hiç taşınmamıştı; TAMAMI referanstan birebir
+   taşındı.
+
+   İSKELET RESTORASYONU (2026-07-19, Beyar 3/3 şıklı karar — builder-puf-detay-restore):
+   bir önceki "İŞ D" turu bu dosyadaki .puf-mod/.mod-share'i FİİLEN SÖKMÜŞ,
+   yerine kendi ürettiği .puf-sec/.sec-head/.sec-share desenini koymuştu —
+   bu değişim hiçbir zaman kararlar.md'ye bağlı bir Beyar onayı almamıştı.
+   Beyar'ın 3 kararıyla: (1) 6-ikonlu dikey .mod-share rayı REFERANS BİREBİR
+   geri geldi, .puf-sec/.sec-head/.sec-share KALKTI; (2) .art-quote (imzalı
+   alıntı) + .art-tip (uyarı kutusu) artık admin'den üretilebiliyor, referans
+   tanımlarıyla BİREBİR eklendi; (3) bölüm başlığı (h2) tekrar mod-body akışının
+   parçası (ayrı .sec-head kutusu yok). .lightbox BİLİNÇLİ dışarıda kaldı (ayrı
+   takip maddesi, bu turun kapsamı değil).
+   .rf-photo/.rf-chips/.rf-ph reference'ta YOK (puf-noktasi-detay-v1.html'in
+   kendi yorum formu fotoğraf yüklemesi desteklemiyor) — tarifler/_reviews.blade.php'den
+   BİREBİR taşınan yorum formu fotoğraf ekleme UI'ı için public/reference/
+   tarif-detay/tarif-detay.css'teki KANONİK tanımından (aynı dosya, aynı
+   .rf-* aile) alındı, satırlar not düşüldü. */
+
+.rd-crumb{display:flex;align-items:center;flex-wrap:wrap;gap:9px;padding:18px 0 14px;font-size:13px;font-weight:500;color:var(--muted)}
+.rd-crumb a{color:var(--muted);transition:.18s}
+.rd-crumb a:hover{color:var(--tomato)}
+.rd-crumb i{font-size:9px;color:#c7c7c7}
+.rd-crumb b{color:var(--slate);font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:360px}
+
+.art-wrap{background:var(--bg-white)}
+/* M17 (2026-07-25, breadcrumb→başlık dikey boşluk düzeltmesi): tokens.css'in
+   AYRI/ölü "Hero H2a editoryal detay" bileşeni (satır ~744, .art-hero__* BEM
+   ailesiyle — grep: hiçbir Blade/JS .art-hero__* kullanmıyor) aynı ".art-hero"
+   sınıf adını taşıyor ve "padding-bottom:var(--sp-6)" (32px) kuralı bu sayfaya
+   SIZIYORDU — 42-50. satırdaki .rd-crumb rengi/margin sızıntısıyla AYNI kök
+   (2026-07-19 PARİTE DÜZELTMESİ notu). Etki: .art-hero .wrap{flex:1} 32px eksik
+   büyüyor, alttan-hizalı .art-hero-main (breadcrumb→h1 arası boşluk) 32px dar
+   kalıyordu (ölçüm: referans GAP≈168px@1440/123px@390, canlı GAP≈131px/91px —
+   fark tam 32px, --sp-6 değeriyle birebir örtüşüyor). tokens.css'e DOKUNULMADI
+   (2026-07-19 emsaliyle aynı gerekçe: sayfa-CSS eşit specificity + sonradan
+   yüklenmeyle override eder); burada CSS'in kendi default'una (padding-bottom:0)
+   dönülüyor, yeni token icat edilmedi. NOT: tokens.css'teki blok bu turda grep
+   ile TAM ÖLÜ doğrulandı (hiçbir view .art-hero__* kullanmıyor) — kalıcı temizlik
+   ayrı bir tokens.css dilimi olarak lead'e bırakıldı, bu tur yalnız sızıntıyı
+   nötrledi (kapsam: global token dosyasına dokunmama sınırı). */
+/* HERO DİKEY NEFES (2026-07-28, Beyar talebi — bu sayfa şablonunu kullanan TÜM
+   püf detaylarında geçerli): hero dikeyde sıkışıktı. Ölçüm (900px yüksek
+   görünüm): 1440'ta 423px yüksekliğin 112px'i sabit başlık altında kalıyor,
+   geriye 311px görünür bant düşüyordu; meta satırı alt kenara 42px kalıyordu.
+   Üç kaldıraç, hepsi mevcut ölçü dilinden: (1) min-height taban/vh/tavan
+   yükseltildi, (2) wrap alt/üst nefesi artırıldı, (3) alta hizalı başlık bloğu
+   ile breadcrumb satırı arasına asgari ayrım kondu (kısa görünümde çakışmasın).
+   Yeni token/renk/gölge TANIMLANMADI. */
+.art-hero{position:relative;flex-direction:column;justify-content:flex-start;display:flex;min-height:clamp(480px,56vh,620px);height:auto;padding-top:112px;padding-bottom:0;background-size:cover;background-position:center;background-color:var(--slate)}
+/* Karartma tarif LİSTE banner'ının formülüne hizalandı (Beyar 2026-08-11:
+   "breadcrumb okunmuyor, tarif liste bannerına göre güncelle").
+   Eski sürüm YALNIZ dikeydi ve tepede .12 ile başlıyordu; breadcrumb tam
+   orada duruyor ve açık zeminli görsellerde (çilek fotoğrafı) kayboluyordu.
+   Yatay geçiş tarif-liste.css:8'den bayt olarak alındı
+   (90deg, rgba(28,25,18,.93) → rgba(33,30,22,.72)); metin sütununun durduğu
+   sol tarafı o koyultur. Dikey geçiş içerik dibindeki yumuşama için korunur,
+   yalnız tepe değeri .12→.34'e çekildi. Yeni renk icat edilmedi. */
+.art-hero::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(28,25,18,.93),rgba(33,30,22,.72) 62%,rgba(33,30,22,.34)),linear-gradient(180deg,rgba(20,18,12,.34) 0%,rgba(20,18,12,.34) 48%,rgba(15,13,9,.82) 100%)}
+.art-hero .wrap{position:relative;z-index:2;display:flex;flex-direction:column;flex:1;width:100%;padding-top:24px;padding-bottom:56px}
+.art-hero-top{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.art-hero-crumb{display:flex;align-items:center;flex-wrap:wrap;gap:9px;font-size:13px;font-weight:500;color:#e3d9cd;padding:0;text-shadow:0 1px 8px rgba(0,0,0,.4)}
+.art-hero-crumb a{color:#e3d9cd;transition:.18s}
+.art-hero-crumb a:hover{color:#fff}
+.art-hero-crumb i{font-size:9px;color:rgba(255,255,255,.55)}
+.art-hero-crumb b{color:#fff;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:280px}
+/* PARİTE DÜZELTMESİ (2026-07-19, builder-puf-parite): markup <nav class="rd-crumb
+   art-hero-crumb"> iki class taşıyor (referansla birebir, satır 1558). Paylaşılan
+   kanon tokens.css'te ".art-hero .rd-crumb{color:rgba(255,255,255,.8)}" +
+   ".rd-crumb{margin-bottom:var(--sp-3)}" kuralları (0,2,0 / 0,1,0 specificity)
+   bu sayfanın kendi .art-hero-crumb rengini (#e3d9cd) ve referansın margin:0
+   davranışını eziyordu — .art-hero .rd-crumb başka bir modülün (editoryal
+   detay) kanon bileşeni, bu sayfaya SIZIYORDU. tokens.css'e DOKUNULMADI (o
+   kuralın kendi sahibi var); burada sayfa-CSS eşit specificity + sonradan
+   yüklenme ile override edildi (otorite: canlı CSSOM referans render'ı). */
+.art-hero-crumb.rd-crumb,.art-hero-crumb.rd-crumb a,.art-hero-crumb.rd-crumb b{color:#e3d9cd;margin-bottom:0}
+.art-hero-crumb.rd-crumb a:hover{color:#fff}
+.art-hero-main{margin-top:auto;padding-top:36px}
+.art-hero .art-cat{display:inline-flex;align-items:center;gap:8px;font-size:11.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#f1b1a2;margin-bottom:18px}
+.art-hero .art-cat::before{content:"";width:26px;height:2px;background:var(--tomato);border-radius:var(--radius-sm)}
+.art-hero h1{color:#fff;font-size:clamp(30px,3.5vw,44px);line-height:1.08;letter-spacing:-.03em;max-width:880px;text-shadow:0 2px 28px rgba(0,0,0,.32)}
+.art-hmeta{display:flex;align-items:center;gap:16px;row-gap:12px;margin-top:28px;flex-wrap:wrap}
+/* Blok panelsiz kalır (Beyar 2026-08-11: "böyle değil, geri al"). Solid
+   olacak olan AVATARIN kendisi — aşağıdaki .av-ini kuralı. */
+.art-hauthor{display:flex;align-items:center;gap:11px}
+/* Beyar 2026-08-11 — üç düzeltme, hepsi bu blokta:
+   (a) görseli olmayan yazarda baş harf: `.av` grid'e çevrilir ve `.av-ini`
+       ortalanır (tarif detayının şef kartındaki emsalin görsel karşılığı).
+   (b) ad ile unvan dikeyde yakınlaşır: ikisi de kendi satır yüksekliğini
+       taşıyordu (22.5px + 19.4px), kimlik bloğu flex kolona alınıp 1px
+       aralıkla sıkıştırıldı, punto/renk DEĞİŞMEDİ.
+   (c) yanındaki bilgi sütunuyla hiza: `.art-hmeta` kutuyu ortalıyor ama
+       kimlik bloğu iki satır olduğunda tarih ikisinin ORTASINA düşüyordu
+       (ölçüldü: ad merkezi 417.5, tarih merkezi 427). Kimlik bloğu artık
+       ilk satırını `.av`'nin merkezine hizalıyor, tarih de aynı çizgiye
+       oturuyor. */
+.art-hauthor .av{width:42px;height:42px;border-radius:var(--radius-circle);background-size:cover;background-position:center;border:2px solid rgba(255,255,255,.5);display:grid;place-items:center;flex:none}
+/* Baş harfin arkası SOLID krem — tarif detayının şef kartındaki "G"
+   avatarının birebir aynısı (portal.css:1133 kanonu: inset:0 + border-radius
+   inherit + background var(--cream) + color var(--tomato-deep)). Yeni renk
+   tanımlanmadı, aynı iki token okunuyor. */
+.art-hauthor .av-ini{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;border-radius:inherit;background:var(--cream);color:var(--tomato-deep);font-size:17px;font-weight:800;line-height:1;letter-spacing:.01em}
+.art-hauthor .av{position:relative}
+.art-hauthor .ah-id{display:flex;flex-direction:column;justify-content:center;gap:1px;min-width:0}
+.art-hauthor b{display:block;color:#fff;font-size:14.5px;font-weight:700;line-height:1.25}
+/* M2 yazar banner'ı — unvan satırı, gurme-lezzetler.css .art-hauthor span BİREBİR (satır 284) */
+.art-hauthor .ah-id span{display:block;color:#d7cfc4;font-size:12.5px;font-weight:500;line-height:1.25}
+.art-hsep{width:1px;height:30px;background:rgba(255,255,255,.28)}
+.art-hstat{display:inline-flex;align-items:center;gap:7px;color:#e9e2d6;font-size:13px;font-weight:600}
+.art-hstat i{color:#f2b9ab;font-size:12px}
+
+.art-body{padding:50px 0 30px}
+.art-col{max-width:880px;margin:0 auto}
+.art-lead{font-size:20px;line-height:1.7;color:var(--slate);font-weight:700;letter-spacing:-.01em;margin-bottom:30px}
+.art-col p{font-size:17px;line-height:1.85;color:var(--slate-2);font-weight:500;margin-bottom:24px;text-align:justify;-webkit-hyphens:auto;hyphens:auto;overflow-wrap:break-word}
+.art-col h2{font-size:27px;letter-spacing:-.02em;margin:42px 0 16px}
+.art-col h3{font-size:20px;margin:32px 0 12px}
+.art-col p a,.art-col a.inline,.mod-body a,.art-intro a{color:var(--tomato-deep);font-weight:700;text-decoration:underline;text-underline-offset:3px}
+.art-col strong{color:var(--slate);font-weight:700}
+/* Maddeli anlatım (standart §11) — İŞ 2 genişletmesi; token-tabanlı, referans
+   gövde tipografisiyle (17px/1.85 slate-2) uyumlu.
+   Kaynaklar kutusu (.art-sources, eski §8) 2026-07-19 Beyar ACİL talimatıyla
+   KALDIRILDI (referansta hiç yoktu) — kural seti de yetim kalmasın diye
+   silindi (show.blade.php artık bu class'ı basmıyor). */
+.art-col ul.art-list{margin:0 0 24px;padding-left:22px;list-style:disc}
+.art-col ul.art-list li{font-size:17px;line-height:1.85;color:var(--slate-2);font-weight:500;margin-bottom:10px}
+.art-col ul.art-list li::marker{color:var(--tomato)}
+
+/* ---- GİRİŞ / AÇIKLAMA (İŞ D — yeni içerik modeli üst bölümü): üstte akıcı
+   zengin metin, paylaş ikonu YOK. intro_html (puf_intro sanitize) prose olarak
+   .art-col tipografisiyle akar.
+   PARİTE DÜZELTMESİ (2026-07-19, builder-puf-parite): önceki tur burada
+   .art-intro>p:first-child{font-size:20px;font-weight:700;...} + kendi h2/h3
+   margin değerleriyle "bold lead" görünümü İCAT ETMİŞTİ. Canlı referansta
+   (puf-noktasi-detay-v1.html, CSSOM otorite) .art-lead{font-size:20px;
+   font-weight:700} kuralı, DAHA YÜKSEK specificity'li .art-col p{font-size:
+   17px;font-weight:500} tarafından HER ZAMAN eziliyor (0,1,1 > 0,1,0) — yani
+   referansta ilk paragraf da dahil TÜM paragraflar görsel olarak DÜZ gövde
+   metni olarak render oluyor, bold/büyük "lead" hiç görünmüyor. Build'deki
+   .art-intro>p:first-child ise (0,2,1 specificity) .art-col p'yi EZİYORDU —
+   referansta hiç görünmeyen bir stili build'de görünür kılıyordu. Fix: bu
+   override'lar kaldırıldı; .art-intro zaten .art-col içinde nested olduğu
+   için .art-col p/h2/h3 kuralları TÜM .art-intro paragraf/başlıklarına aynı
+   şekilde (birebir referans specificity zinciriyle) uygulanır. Tek istisna:
+   letter-spacing — .art-col p bu özelliği hiç tanımlamıyor, dolayısıyla
+   referansta .art-lead'in -.01em değeri çakışmasız hayatta kalıyor (CSSOM'da
+   ölçüldü: -0.17px @17px). Aynı inceliği korumak için ilk paragrafa dar
+   kapsamlı tek satır eklendi (font-size/weight/color/margin'e DOKUNMUYOR). */
+.art-intro{margin-bottom:6px}
+.art-intro>p:first-child{letter-spacing:-.01em}
+.art-intro ul,.art-intro ol{margin:0 0 24px;padding-left:22px}
+.art-intro ul{list-style:disc}
+.art-intro ol{list-style:decimal}
+.art-intro li{font-size:17px;line-height:1.85;color:var(--slate-2);font-weight:500;margin-bottom:10px}
+.art-intro li::marker{color:var(--tomato)}
+.art-intro blockquote{margin:24px 0;padding:4px 0 4px 20px;border-left:3px solid var(--tomato);color:var(--slate);font-weight:600;font-style:italic}
+
+/* ---- ALINTI + UYARI KUTUSU (referans satır 782-788 — Beyar karar 2:
+   admin bölüm editörüne eklendi, BİREBİR taşındı). ---- */
+.art-quote{margin:38px 0;padding:8px 0 8px 28px;border-left:3px solid var(--tomato)}
+.art-quote p{font-size:23px;line-height:1.5;color:var(--slate);font-weight:700;letter-spacing:-.01em;margin:0}
+.art-quote cite{display:block;margin-top:14px;font-size:13.5px;color:var(--muted);font-weight:600;font-style:normal}
+.art-tip{display:flex;gap:16px;background:var(--tomato-tint);border:1px solid rgba(220,61,23,.22);border-radius:var(--radius-lg);padding:22px 24px;margin:36px 0}
+.art-tip .at-ico{flex:none;width:44px;height:44px;border-radius:var(--radius-md);background:var(--paper);color:var(--tomato);display:grid;place-items:center;font-size:18px}
+.art-tip h4{font-size:16px;margin-bottom:6px}
+.art-tip p{font-size:14px;line-height:1.65;color:var(--slate-2);font-weight:500;margin:0}
+
+/* ---- MARKALI KAPAK PLACEHOLDER (İŞ D — kapaksız püf; token renkleri, saf
+   CSS/SVG data-URI kase+buhar motifi). Kart boş-durumu + detay hero. ---- */
+.puf-fig.puf-fig--empty{background:
+  radial-gradient(120% 100% at 20% 14%,rgba(220,61,23,.16),transparent 55%),
+  linear-gradient(135deg,var(--cream) 0%,var(--paper) 100%)}
+.puf-fig.puf-fig--empty::after{content:"";position:absolute;left:34px;top:50%;transform:translateY(-50%);width:44px;height:44px;opacity:.42;background:center/contain no-repeat url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%20fill%3D%22none%22%20stroke%3D%22%23dc3d1714022%22%20stroke-width%3D%222.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M9%2033h46a23%2023%200%200%201-46%200z%22%2F%3E%3Cpath%20d%3D%22M5%2033h54%22%2F%3E%3Cpath%20d%3D%22M25%2021c-3-4%203-6%200-10%22%2F%3E%3Cpath%20d%3D%22M32%2019c-3-4%203-6%200-10%22%2F%3E%3Cpath%20d%3D%22M39%2021c-3-4%203-6%200-10%22%2F%3E%3C%2Fsvg%3E")}
+
+.art-hero--ph{background-image:
+  radial-gradient(70% 55% at 50% 30%,rgba(220,61,23,.22),transparent 62%),
+  url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%20fill%3D%22none%22%20stroke%3D%22%23dc3d1714661%22%20stroke-width%3D%222.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M9%2033h46a23%2023%200%200%201-46%200z%22%2F%3E%3Cpath%20d%3D%22M5%2033h54%22%2F%3E%3Cpath%20d%3D%22M25%2021c-3-4%203-6%200-10%22%2F%3E%3Cpath%20d%3D%22M32%2019c-3-4%203-6%200-10%22%2F%3E%3Cpath%20d%3D%22M39%2021c-3-4%203-6%200-10%22%2F%3E%3C%2Fsvg%3E");
+  background-size:cover,150px;background-position:center,center 34%;background-repeat:no-repeat,no-repeat;background-color:#241f1a}
+/* Kapak rozeti kural seti (art-hero-cover-tag) 2026-07-28'de SİLİNDİ — markup'ı
+   kalkınca yetim kaldı (rozet marka kuralıyla kaldırıldı, bkz. show.blade). */
+
+/* ---- İÇERİK MODÜLÜ + BLOK-BAŞI DİKEY PAYLAŞ RAYI (ref satır 802-816 —
+   BİREBİR, aktif model; Beyar karar 1). Her bölüm .puf-mod: sol/üst .mod-share
+   (6 ikon, her zaman görünür) + .mod-body (başlık+html+figür+alıntı/uyarı+video). ---- */
+.puf-mod{display:flex;gap:24px;margin:34px 0}
+.puf-mod:first-of-type{margin-top:28px}
+.mod-share{flex:none;width:44px;display:flex;flex-direction:column;align-items:center;gap:8px;position:sticky;top:128px;align-self:flex-start}
+.mod-share .ms-lbl{font-size:9.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:1px;text-align:center}
+.ms-btn{width:38px;height:38px;border-radius:var(--radius-circle);border:1px solid var(--line);background:var(--paper);color:var(--slate-2);display:grid;place-items:center;font-size:13px;cursor:pointer;transition:.2s var(--ease);font-family:inherit}
+.ms-btn:hover{transform:translateY(-2px);color:#fff}
+.ms-btn.fb:hover{background:#1877F2;border-color:#1877F2}
+.ms-btn.xx:hover{background:#111;border-color:#111}
+.ms-btn.wa:hover{background:#25D366;border-color:#25D366}
+.ms-btn.tg:hover{background:#2AABEE;border-color:#2AABEE}
+.ms-btn.pin:hover{background:#E60023;border-color:#E60023}
+.ms-btn.ml:hover{background:var(--tomato);border-color:var(--tomato)}
+
+/* ---- ⋯ DAHA FAZLA (rev-sweep MADDE 2, 2026-07-20): ilk 3 ağ (fb/x/wa) her
+   zaman görünür, kalan 3 (tg/pin/mail) bu popover'a alındı — ptr-share/psh-pop
+   tıkla-aç/kapat desenini birebir izler, yalnız rayın altına açılır.
+   B2/M10 (2026-07-24) flex-direction:row denemesi kesişimi küçültmüş ama
+   SIFIRLAMAMIŞTI (1440'da 1682px², 390'da 6900px² ölçülü kesişim — A3, 2026-07-25).
+   Beyar kararı: satır-düzeni yerine DİKEY, kendi içinde kaydırılabilir mini
+   liste. .ms-more-pop artık yalnız sabit kabuk (kenarlık/gölge/ok); ikonlar
+   içteki .ms-more-list'te — max-height+overflow-y:auto ile ~2 ikon + 3.'nün
+   kısmi bir dilimi kadar sabit yükseklikte kalıyor (hiçbir zaman komşu gövde
+   metnine taşmıyor), kalan ikona dokunmatik/tekerlek kaydırmayla erişiliyor.
+   Ok (::before) kabukta kaldığı için scroll'dan etkilenmiyor/kırpılmıyor.
+   Scrollbar ince, gizli DEĞİL — kaydırılabilir olduğu görünsün diye
+   bilinçli. Çubuğun kendi biçimi buradan KALKTI: ince/minimal kanon
+   tokens.css'te tek yerde tanımlı (Beyar 2026-08-23). İkon sırası/işlevi
+   (tg/pin/mail) ve tıkla-aç/kapat davranışı DEĞİŞMEDİ.
+   Bu blok yalnız ≥641px (masaüstü/tablet yan-sütun geometrisi) içindir — bu
+   hal 1440'da kesişim=0 verip KAPANDI, DOKUNULMADI. ≤640px'te .mod-share
+   satıra dönüp mod-body'nin HEMEN ÜSTÜNE geçtiği için (yalnız 12px boşluk)
+   bu aynı taşan-popover deseni 390'da hâlâ 6264px² kesişim veriyordu — kök
+   neden "liste yüksekliği" değil, mobildeki farklı yerleşim geometrisiydi.
+   Beyar kararı (A3, 2026-07-25, Seçenek A): mobilde popover artık AKIŞA
+   giriyor ve açılınca gövdeyi gerçekten aşağı itiyor (reflow) — aşağıdaki
+   @media (max-width:640px) bloğunda. ---- */
+.ms-more{position:relative}
+.ms-btn.more{color:var(--slate-2)}
+.ms-btn.more:hover,.ms-more.open .ms-btn.more{background:var(--slate);border-color:var(--slate);color:#fff}
+.ms-more-pop{position:absolute;top:calc(100% + 8px);left:50%;transform:translateX(-50%) translateY(8px);background:#fff;border:1px solid var(--line);border-radius:var(--radius-md);box-shadow:var(--sh-lg);padding:9px;opacity:0;visibility:hidden;transition:.2s var(--ease);z-index:20}
+.ms-more-pop::before{content:"";position:absolute;top:-6px;left:50%;transform:translateX(-50%) rotate(45deg);width:12px;height:12px;background:#fff;border-left:1px solid var(--line);border-top:1px solid var(--line)}
+.ms-more.open .ms-more-pop{opacity:1;visibility:visible;transform:translateX(-50%) translateY(0)}
+.ms-more-list{display:flex;flex-direction:column;gap:8px;max-height:100px;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch}
+.ms-more-list .ms-btn{flex:none}
+/* Kaydırma çubuğu bildirimi KALKTI — ince/minimal kanon tokens.css'te tek yerde (Beyar 2026-08-23). */
+.ms-more.open .ms-more-pop{opacity:1;visibility:visible;transform:translateX(-50%) translateY(0)}
+.mod-body{flex:1;min-width:0}
+.mod-body>h2:first-child,.mod-body>h3:first-child{margin-top:0}
+.mod-body .art-fig{margin:26px 0 0}
+
+/* ---- GÖRSEL BLOK (art-fig, ref satır 778-781 — yalnız img content_block) ---- */
+.art-fig{margin:36px 0}
+.art-fig .bg{width:100%;aspect-ratio:16/9;border-radius:var(--radius-lg);background-size:cover;background-position:center;box-shadow:var(--sh-sm)}
+.art-fig figcaption{font-size:12.5px;color:var(--muted);font-weight:500;margin-top:12px;text-align:center;display:flex;align-items:center;justify-content:center;gap:8px}
+.art-fig figcaption i{color:var(--tomato);font-size:11px}
+
+/* ---- ETİKET RAYI + PAYLAŞ (ref satır 819-845 — .row-track/.row-nav taban
+   tanımı resources/css/portal.css'te zaten var, burada yalnız .ptr içi override) ---- */
+.ptr{display:flex;align-items:center;gap:16px;margin:40px 0 0;padding-top:26px;border-top:1px solid var(--line)}
+.ptr-lbl{flex:none;font-size:13px;font-weight:700;color:var(--slate);display:inline-flex;align-items:center;gap:7px}
+.ptr-lbl i{color:var(--tomato);font-size:12px}
+.ptr-rail{flex:1;min-width:0;display:flex;align-items:center;gap:8px}
+.ptr .row-track{display:flex;gap:8px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;padding:2px 0;flex:1;min-width:0}
+.ptr .row-track::-webkit-scrollbar{display:none}
+.ptr .row-track>*{flex:none;width:auto;scroll-snap-align:start;white-space:nowrap}
+.ptr .row-track .chip{display:inline-flex;align-items:center;gap:6px}
+.ptr .row-track .chip i{color:var(--tomato);font-size:10.5px}
+.ptr .row-nav{display:flex;gap:6px;flex:none}
+.ptr .row-nav button{width:34px;height:34px;font-size:11px;border-radius:var(--radius-sm);border:1px solid var(--line);background:var(--paper);color:var(--slate);cursor:pointer;transition:.2s var(--ease)}
+.ptr .row-nav button:hover{background:var(--tomato);border-color:var(--tomato);color:#fff}
+.ptr-share{position:relative;flex:none}
+.psh-btn{display:inline-flex;align-items:center;gap:9px;height:42px;padding:0 18px;border-radius:var(--radius-md);border:1px solid var(--line);background:var(--paper);color:var(--slate);font-family:inherit;font-weight:700;font-size:13.5px;cursor:pointer;transition:.2s var(--ease)}
+.psh-btn i{font-size:14px;color:var(--tomato);transition:color .2s var(--ease)}
+.ptr-share:hover .psh-btn,.ptr-share.open .psh-btn{background:var(--tomato);border-color:var(--tomato);color:#fff}
+.ptr-share:hover .psh-btn i,.ptr-share.open .psh-btn i{color:#fff}
+.psh-pop{position:absolute;right:0;bottom:calc(100% + 10px);display:flex;gap:8px;background:#fff;border:1px solid var(--line);border-radius:var(--radius-md);box-shadow:var(--sh-lg);padding:9px;opacity:0;visibility:hidden;transform:translateY(8px);transition:.2s var(--ease);z-index:20}
+.psh-pop::after{content:"";position:absolute;right:20px;bottom:-6px;width:12px;height:12px;background:#fff;border-right:1px solid var(--line);border-bottom:1px solid var(--line);transform:rotate(45deg)}
+.ptr-share:hover .psh-pop,.ptr-share.open .psh-pop{opacity:1;visibility:visible;transform:translateY(0)}
+.psh-pop a,.psh-pop button.cp{width:40px;height:40px;border-radius:var(--radius-circle);border:1px solid var(--line);display:grid;place-items:center;font-size:15px;color:var(--slate-2);background:var(--paper);transition:.2s var(--ease);cursor:pointer;font-family:inherit}
+.psh-pop a.xx:hover{background:#111;border-color:#111;color:#fff;transform:translateY(-2px)}
+.psh-pop a.wa:hover{background:#25D366;border-color:#25D366;color:#fff;transform:translateY(-2px)}
+.psh-pop a.ml:hover{background:var(--tomato);border-color:var(--tomato);color:#fff;transform:translateY(-2px)}
+.psh-pop button.cp:hover{background:var(--slate);border-color:var(--slate);color:#fff;transform:translateY(-2px)}
+.psh-pop button.cp.ok,.psh-pop button.cp.ok:hover{background:var(--green);border-color:var(--green);color:#fff}
+
+/* paylaşım satırı — ref'in aynı dosya ailesindeki (liste-view) .art-share
+   tanımı; popover'lı .ptr-share yerine basit gerçek sosyal paylaşım linkleri.
+   NOT: show.blade.php artık .ptr-share popover'ını GERÇEK olarak kullanıyor
+   (QA punch) — bu blok geriye dönük uyumluluk için kalır, aktif kullanımda
+   değil. */
+.art-share{display:flex;align-items:center;gap:10px;margin-top:38px;padding-top:26px;border-top:1px solid var(--line)}
+.art-share span{font-size:13px;font-weight:700;color:var(--slate)}
+.art-share a{width:40px;height:40px;border-radius:var(--radius-md);border:1px solid var(--line);background:var(--paper);display:grid;place-items:center;color:var(--slate);font-size:15px;transition:.2s var(--ease)}
+.art-share a:hover{border-color:var(--tomato);color:var(--tomato);transform:translateY(-2px)}
+
+/* ---- YORUMLAR (ref satır 853-937 — .rev- . .rs- . .rf- . .c- . .rl- aileleri) ---- */
+.rev-summary{display:grid;grid-template-columns:210px 1fr;gap:24px;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);padding:16px 22px;box-shadow:var(--sh-sm)}
+.rs-avg{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:5px;border-right:1px solid var(--line);padding-right:24px}
+.rs-avg>b{font-size:40px;font-weight:700;color:var(--slate);letter-spacing:-.03em;line-height:1}
+.rs-avg .stars{color:var(--yellow);font-size:14px;letter-spacing:2px}
+.rs-avg>span{font-size:12.5px;color:var(--muted);font-weight:500}
+.rs-rec{margin-top:5px;font-size:11.5px;font-weight:700;color:var(--green-deep);background:#EAF7F0;padding:4px 10px;border-radius:var(--radius-sm);display:inline-flex;align-items:center;gap:6px}
+.rs-bars{display:flex;flex-direction:column;gap:7px;justify-content:center;min-width:0}
+.rs-bar{display:flex;align-items:center;gap:11px;font-size:12.5px;font-weight:500;color:var(--slate-2)}
+.rs-bar .lbl{flex:none;width:32px;display:inline-flex;align-items:center;gap:4px;font-weight:700;color:var(--slate)}
+.rs-bar .lbl i{font-size:10px;color:var(--yellow)}
+.rs-bar .track{flex:1;height:8px;background:var(--bg);border:1px solid var(--line);border-radius:var(--radius-pill);overflow:hidden}
+.rs-bar .track i{display:block;height:100%;background:var(--yellow);border-radius:inherit}
+.rs-bar .cnt{flex:none;width:46px;text-align:right;color:var(--muted);font-size:12px}
+.rev-form{display:flex;gap:14px;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);padding:16px 18px;margin-top:12px;box-shadow:var(--sh-sm)}
+.rev-form:not(.open):not(.sent) .rf-foot,.rev-form:not(.open) .rf-disc{display:none}
+.rev-form:not(.open) .rf-text{min-height:46px;height:46px;resize:none;overflow:hidden}
+.rev-form .av,.rev-form .av-init{flex:none;width:44px;height:44px;border-radius:var(--radius-circle);background-size:cover;background-position:center}
+.av-init{display:grid;place-items:center;font-weight:700;font-size:15px;color:var(--tomato);background:var(--tomato-tint)}
+.rf-body{flex:1;min-width:0}
+.rf-top{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:10px}
+.rf-top .t{font-size:14.5px;font-weight:700;color:var(--slate)}
+.rf-stars{display:inline-flex;gap:3px}
+.rf-stars button{background:none;border:none;cursor:pointer;font-size:21px;color:#E2DED6;padding:1px 2px;transition:.15s var(--ease)}
+.rf-stars button.on{color:var(--yellow)}
+.rf-stars button:hover{transform:scale(1.12)}
+.rf-stars.shake{animation:rfshake .4s}
+.rf-hint{font-size:12px;color:var(--muted);font-weight:500}
+.rf-hint.ok{color:var(--green-deep);font-weight:700}
+.rf-hint.err{color:var(--tomato);font-weight:700}
+.rf-text{width:100%;min-height:92px;border:1px solid var(--line);border-radius:var(--radius-md);padding:12px 14px;font-family:inherit;font-size:14px;font-weight:500;color:var(--ink);resize:vertical;transition:border-color .2s}
+.rf-text:focus{outline:none;border-color:var(--tomato)}
+.rf-foot{display:flex;align-items:center;justify-content:flex-end;gap:12px;flex-wrap:wrap;margin-top:12px}
+.rf-disc{margin-top:11px;font-size:11.5px;color:var(--muted);font-weight:500;line-height:1.5}
+.rf-success{display:flex;align-items:center;gap:12px;font-size:14px;font-weight:700;color:var(--green-deep);background:#EAF7F0;border:1px solid rgba(59,183,126,.3);border-radius:var(--radius-md);padding:16px 18px}
+.rf-success i{font-size:18px}
+.rev-form.sent .rf-top,.rev-form.sent .rf-text,.rev-form.sent .rf-chips,.rev-form.sent .rf-foot,.rev-form.sent .rf-disc{display:none}
+/* .rf-chips/.rf-ph/.rf-photo — reference'ta YOK, tarif-detay.css KANONİK
+   tanımından taşındı (satır 945-952, aynı .rf-* aile — tarifler/_reviews.blade.php
+   fotoğraf yükleme UI'ı bu sayfada da BİREBİR kullanılıyor). */
+.rf-chips{display:flex;gap:10px;margin-top:12px}
+.rf-chips:empty{display:none}
+.rf-ph{position:relative;width:56px;height:56px;border-radius:var(--radius-sm);background-size:cover;background-position:center;border:1px solid var(--line)}
+.rf-ph button{position:absolute;top:-7px;right:-7px;width:20px;height:20px;border-radius:var(--radius-circle);border:none;background:var(--slate);color:#fff;font-size:10px;cursor:pointer;display:grid;place-items:center}
+.rf-photo{display:inline-flex;align-items:center;gap:9px;font-size:13px;font-weight:700;color:var(--slate);background:var(--bg);border:1px solid var(--line);border-radius:var(--radius-md);padding:10px 15px;cursor:pointer;font-family:inherit;transition:.2s var(--ease)}
+.rf-photo:hover{border-color:var(--tomato);color:var(--tomato)}
+.rf-photo small{font-weight:500;color:var(--muted)}
+.rev-login{display:flex;align-items:center;gap:16px;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);padding:18px 20px;margin-top:12px;box-shadow:var(--sh-sm)}
+.rl-ico{flex:none;width:46px;height:46px;border-radius:var(--radius-md);background:var(--tomato-tint);color:var(--tomato);display:grid;place-items:center;font-size:18px}
+.rl-body{flex:1;min-width:0}
+.rl-body b{display:block;font-size:15.5px;color:var(--slate)}
+.rl-body p{font-size:13px;color:var(--muted);font-weight:500;margin-top:3px;line-height:1.5;max-width:520px}
+.rl-acts{display:flex;gap:10px;margin-top:13px}
+.rl-acts .btn{padding:11px 18px;font-size:13.5px}
+.rev-empty-first{display:flex;align-items:center;justify-content:center;gap:10px;text-align:center;background:var(--paper);border:1px dashed #d8d4cc;border-radius:var(--radius-md);padding:20px 24px;margin-top:12px}
+.rev-empty-first i{font-size:15px;color:var(--muted)}
+.rev-empty-first p{margin:0;font-size:13px;font-weight:500;color:var(--muted)}
+.rf-success[hidden],.rev-empty[hidden],.c-reply-form[hidden]{display:none}
+.rev-filter{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 2px}
+.rev-filter .chip{font-family:inherit;font-size:12.5px;padding:7px 13px}
+.rev-filter .chip i{font-size:11px;margin-right:4px}
+.rev-filter .chip.on{background:var(--slate);border-color:var(--slate);color:#fff}
+.rev-empty{display:flex;align-items:center;justify-content:center;gap:10px;background:var(--paper);border:1px dashed #d8d4cc;border-radius:var(--radius-md);padding:16px 20px;margin-top:12px;font-size:13px;font-weight:500;color:var(--muted);text-align:center}
+.rev-list{margin-top:8px}
+.c-item{display:flex;gap:13px;padding:14px 0;border-top:1px solid var(--line)}
+.rev-list>.c-item:first-child{border-top:none}
+.c-item .av,.c-item .av-init{flex:none;width:44px;height:44px;border-radius:var(--radius-circle);background-size:cover;background-position:center}
+.c-main{flex:1;min-width:0}
+.c-head{display:flex;align-items:center;gap:9px;flex-wrap:wrap;font-size:13px}
+.c-head>b{font-size:14px;color:var(--slate)}
+.c-deg{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--tomato);background:var(--tomato-tint);padding:2px 8px;border-radius:var(--radius-sm)}
+.c-deg.owner{color:#fff;background:var(--tomato)}
+.c-self{font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--slate-2);background:var(--bg);border:1px solid var(--line);padding:2px 8px;border-radius:var(--radius-sm)}
+.c-stars{color:var(--yellow);font-size:11px;letter-spacing:1.5px}
+.c-date{font-size:12px;color:var(--muted);font-weight:500}
+.c-text{margin-top:7px;font-size:14px;color:var(--slate-2);font-weight:500;line-height:1.6}
+.c-text b{color:var(--slate)}
+.c-photos{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.c-ph{width:64px;height:64px;border-radius:var(--radius-sm);background-size:cover;background-position:center;border:1px solid var(--line)}
+.c-acts{display:flex;align-items:center;gap:18px;margin-top:9px}
+.c-acts button{display:inline-flex;align-items:center;gap:7px;background:none;border:none;cursor:pointer;font-family:inherit;font-size:12.5px;font-weight:700;color:var(--muted);padding:0;transition:color .2s}
+.c-acts button:hover{color:var(--slate)}
+.c-acts .c-like.on{color:var(--tomato)}
+.c-acts .c-report.done{color:var(--green-deep);cursor:default}
+.c-replies{margin-top:10px;padding-left:16px;border-left:2px solid var(--line)}
+.c-replies .c-item{padding:9px 0;border-top:none}
+.c-replies .av,.c-replies .av-init{width:34px;height:34px}
+.c-reply-form{display:flex;gap:9px;margin-top:12px;align-items:flex-start}
+.c-reply-form textarea{flex:1;min-height:44px;border:1px solid var(--line);border-radius:var(--radius-md);padding:10px 13px;font-family:inherit;font-size:13px;font-weight:500;color:var(--ink);resize:vertical}
+.c-reply-form textarea:focus{outline:none;border-color:var(--tomato)}
+.c-reply-form .btn{padding:10px 15px;font-size:12.5px}
+.rev-more{display:flex;justify-content:center;margin-top:4px;padding-top:14px;border-top:1px solid var(--line)}
+.rev-more .btn small{font-weight:500;color:var(--muted);font-size:12px}
+
+.rd-sec-head{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-bottom:22px}
+.rd-sec-head h2{font-size:26px}
+.rd-sec-head .eyebrow{margin-bottom:10px}
+
+/* ---- İLGİLİ TARİFLER (r-card v3a VERBATIM) ---- */
+.art-recipes{background:var(--bg-cream);padding:60px 0}
+.rel-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:26px}
+.r-card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);overflow:hidden;transition:.3s var(--ease);cursor:pointer;display:flex;flex-direction:column}
+.r-card:hover{transform:translateY(-6px);border-color:#dcdcdc}
+.r-media-wrap{overflow:hidden}
+.r-media{position:relative;height:200px;background-size:cover;background-position:center;transition:.5s var(--ease)}
+.r-card:hover .r-media{transform:scale(1.04)}
+.r-chip{position:absolute;top:13px;left:13px;background:rgba(255,255,255,.94);color:var(--slate);font-size:11.5px;font-weight:700;padding:6px 12px;border-radius:var(--radius-sm);letter-spacing:.02em}
+.r-save{position:absolute;top:11px;right:11px;width:38px;height:38px;border-radius:var(--radius-circle);background:rgba(255,255,255,.94);border:none;color:var(--slate);cursor:pointer;display:grid;place-items:center;font-size:15px;transition:.2s var(--ease)}
+.r-save:hover{background:#fff;color:var(--tomato)}
+.r-save.saved{background:var(--tomato);color:#fff}
+.r-body{padding:17px 18px 19px;display:flex;flex-direction:column;flex:1}
+.r-body h4{font-size:18px;margin-bottom:11px;letter-spacing:-.01em;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:2.4em}
+.r-card:hover .r-body h4{color:var(--tomato)}
+.r-facts{display:flex;align-items:center;font-size:12.5px;color:var(--muted);font-weight:500;margin-bottom:13px}
+.r-facts span{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.r-facts i{font-size:12px;color:var(--tomato)}
+.r-facts span+span{border-left:1px solid var(--line);padding-left:12px;margin-left:12px}
+.r-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:auto;padding-top:13px;border-top:1px solid var(--line)}
+.r-author{display:flex;align-items:center;gap:9px;min-width:0}
+.r-author .av{width:28px;height:28px;border-radius:var(--radius-circle);background-size:cover;background-position:center;flex:none}
+.r-author span{font-size:12.5px;color:var(--muted);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.r-author b{color:var(--slate);font-weight:700}
+.r-stats{display:flex;align-items:center;gap:12px;flex:none}
+.r-rate{display:inline-flex;align-items:center;gap:5px;font-size:13px;color:var(--slate);font-weight:700}
+.r-rate i{color:var(--yellow)}
+
+/* ---- İLGİLİ PÜFLER (puf-card mutfak-defteri VERBATIM) ---- */
+/* Zebra: bir önceki bölüm beyaz, bu GRİ (Beyar 2026-08-23). */
+.art-morepuf{background:var(--bg-cream);padding:60px 0 70px}
+.pufl-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.puf-card{position:relative;display:block;padding:0;overflow:hidden;min-height:118px;border-radius:var(--radius-lg);background:var(--paper);border:1px solid var(--line);box-shadow:var(--sh-sm);cursor:pointer;transition:transform .25s var(--ease),box-shadow .25s var(--ease)}
+.puf-card:hover{transform:translateY(-3px);box-shadow:var(--sh-md)}
+.puf-fig{position:absolute;left:0;top:0;bottom:0;width:166px;background-size:cover;background-position:center;transition:transform .4s var(--ease);-webkit-mask-image:linear-gradient(90deg,#000 34%,rgba(0,0,0,.5) 66%,rgba(0,0,0,0) 100%);mask-image:linear-gradient(90deg,#000 34%,rgba(0,0,0,.5) 66%,rgba(0,0,0,0) 100%)}
+.puf-fig::after{content:"";position:absolute;inset:0;background:linear-gradient(120deg,rgba(33,30,22,.24),transparent 58%)}
+.puf-card:hover .puf-fig{transform:scale(1.05)}
+.puf-fig.puf-fig--empty{background:var(--cream)}
+.puf-ico{position:absolute;left:13px;bottom:13px;z-index:3;width:34px;height:34px;border-radius:var(--radius-md);background:var(--tomato);color:#fff;display:grid;place-items:center;font-size:15px;box-shadow:0 4px 12px rgba(20,18,12,.4)}
+.puf-body{position:relative;z-index:2;padding:20px 24px 20px 180px;min-height:118px;display:flex;flex-direction:column;justify-content:center}
+.puf-body h4{font-size:16.5px;margin-bottom:5px}
+.puf-body p{font-size:13.5px;color:var(--muted);font-weight:500}
+.puf-tag{display:inline-block;margin-top:9px;font-size:11px;font-weight:700;color:var(--tomato);letter-spacing:.02em;text-transform:none}
+
+/* ---- STICKY AKSİYON BARI (ref satır 981-991, TD actbar VERBATIM) ---- */
+.actbar{position:fixed;left:50%;bottom:22px;z-index:88;transform:translateX(-50%) translateY(130%);display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.72);-webkit-backdrop-filter:blur(28px) saturate(180%);backdrop-filter:blur(28px) saturate(180%);border:1px solid rgba(255,255,255,.65);border-radius:var(--radius-lg);box-shadow:0 14px 40px rgba(33,30,22,.18),0 2px 8px rgba(33,30,22,.08);padding:8px 10px;opacity:0;visibility:hidden;transition:transform .35s var(--ease),opacity .3s var(--ease),visibility .35s}
+.actbar.show{transform:translateX(-50%) translateY(0);opacity:1;visibility:visible}
+.actbar .ab-name{display:flex;align-items:center;gap:10px;padding:0 14px 0 6px;max-width:280px;border-right:1px solid rgba(33,30,22,.12);margin-right:4px}
+.actbar .ab-name .th{flex:none;width:38px;height:38px;border-radius:var(--radius-md);background-size:cover;background-position:center}
+.actbar .ab-name b{font-size:13px;font-weight:700;color:var(--slate);line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.actbar .ab-act{display:inline-flex;align-items:center;gap:8px;font-family:inherit;font-size:12.5px;font-weight:700;color:var(--slate);background:transparent;border:none;border-radius:var(--radius-md);padding:11px 14px;cursor:pointer;white-space:nowrap;transition:.2s var(--ease)}
+.actbar .ab-act i{font-size:14px}
+.actbar .ab-act:hover{background:rgba(220,61,23,.1);color:var(--tomato)}
+.actbar .ab-act.on{color:var(--tomato)}
+.actbar .ab-act.on i{font-weight:900}
+
+/* ===================== TABLET (≤1024px) ===================== */
+@media (max-width:1024px){
+  .rel-grid{grid-template-columns:1fr 1fr}
+}
+/* ===================== MOBİL (≤640px) ===================== */
+@media (max-width:640px){
+  .art-hero{padding-top:62px;min-height:clamp(430px,68vh,540px)}
+  .art-hero .wrap{padding-top:16px;padding-bottom:36px}
+  .art-hero-main{padding-top:24px}
+  .art-hero-top{gap:10px}
+  .puf-mod{flex-direction:column;gap:12px;margin:26px 0}
+  .mod-share{flex-direction:row;width:auto;position:static;top:auto;gap:7px;flex-wrap:wrap;align-items:center}
+  .mod-share .ms-lbl{margin-bottom:0;margin-right:2px}
+  .ms-btn{width:34px;height:34px}
+  /* ---- A3 MOBİL REFLOW (Beyar kararı, Seçenek A, 2026-07-25): masaüstünde
+     .mod-share mod-body'nin YANINDA/sticky iken, ≤640px'te satıra dönüp
+     mod-body'nin ÜSTÜNE geçiyor (yalnız 12px .puf-mod gap) — bu geometride
+     aşağı açılan HERHANGİ bir overlay (yükseklik kısıtlı olsa da) gövdeye
+     biniyordu (6264px² ölçülü kesişim). Çözüm: popover'ı akışa sok
+     (position:static) — .ms-more açıkken flex:0 0 100% ile kendi tam-genişlik
+     satırına düşer (flex-wrap sayesinde), popover altında normal blok
+     akışıyla durur ve büyüdükçe .mod-body'yi GERÇEKTEN aşağı iter (reflow,
+     örtme değil). Kapalıyken grid-template-rows:0fr + .ms-more-list'te
+     overflow:hidden/min-height:0 ile yükseklik TAM SIFIR — opacity/visibility
+     aksine yer KAPLAMAZ. grid-template-rows geçişi native "height:auto"
+     animasyonu sağlıyor, ekstra JS gerekmedi. Masaüstündeki dikey kaydırma
+     kısıtı (.ms-more-list max-height/overflow-y) burada GEREKSİZ — akışa
+     girince taşma riski yok, sadeleştirildi (max-height:none, overflow:hidden
+     yalnız collapse-trick için). Görsel kimlik (kenarlık/gölge/ikon
+     sırası/tıklama davranışı) .ms-more-list'e taşındı, korunuyor; yalnız
+     bağlantı oku (::before) akışta anlamsız kaldığı için gizlendi. ---- */
+  .ms-more.open{flex:0 0 100%}
+  .ms-more-pop{position:static;top:auto;left:auto;transform:none;display:grid;grid-template-rows:0fr;transition:grid-template-rows .25s var(--ease);width:fit-content;background:none;border:0;border-radius:0;box-shadow:none;padding:0;opacity:1;visibility:visible;z-index:auto}
+  .ms-more-pop::before{display:none}
+  .ms-more.open .ms-more-pop{grid-template-rows:1fr;transform:none}
+  .ms-more-list{min-height:0;overflow:hidden;max-height:none;padding:0;border:0 solid var(--line);border-radius:var(--radius-md);background:#fff;box-shadow:none;margin-top:0;transition:padding .2s var(--ease),border-width .2s var(--ease),box-shadow .2s var(--ease),margin-top .2s var(--ease)}
+  .ms-more.open .ms-more-list{padding:9px;border-width:1px;box-shadow:var(--sh-lg);margin-top:8px}
+  .rd-crumb{padding:14px 0 10px;font-size:12px}
+  .art-hmeta .art-hsep{display:none}
+  .art-body{padding:34px 0 20px}
+  .art-lead{font-size:17px}
+  .art-col p{font-size:16px;line-height:1.8}
+  .art-col h2{font-size:23px}
+  .art-quote p{font-size:19px}
+  .ptr{flex-wrap:wrap;gap:12px}
+  .ptr-rail{flex:1 1 100%;order:2}
+  .ptr-lbl{order:1}
+  .ptr-share{order:1;margin-left:auto}
+  .psh-pop{right:0}
+  .art-recipes,.art-morepuf{padding:40px 0}
+  .rel-grid{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;padding-bottom:6px}
+  .rel-grid::-webkit-scrollbar{display:none}
+  .rel-grid>*{flex:none;width:80vw;max-width:310px;scroll-snap-align:start}
+  .pufl-grid{grid-template-columns:1fr}
+  .rev-summary{grid-template-columns:1fr;gap:14px}
+  .rs-avg{border-right:none;border-bottom:1px solid var(--line);padding-right:0;padding-bottom:14px}
+  .actbar{left:12px;right:12px;transform:translateY(160%);width:auto;bottom:calc(78px + env(safe-area-inset-bottom,0px));justify-content:space-around;padding:6px 8px}
+  .actbar.show{transform:translateY(0)}
+  .actbar .ab-name{display:none}
+  .actbar .ab-act{padding:10px 9px;font-size:11.5px;flex-direction:column;gap:4px}
+  .actbar .ab-act i{font-size:16px}
+}
+
+/* A3 mobil reflow erişilebilirlik (2026-07-25): grid-template-rows'un
+   height:auto geçişi hareket-azaltma tercihine saygı göstersin. */
+@media (prefers-reduced-motion:reduce){
+  .ms-more-pop,.ms-more-list{transition:none}
+}
+
+/* Yorumdaki ad artık profile gider (Beyar 2026-08-11). Bağlantı GÖRSEL olarak
+   düz metin kalır — şef kartındaki `.sc-top` emsali: anchor sarar, rengi/alt
+   çizgiyi devralmaz, ilgi hover'da verilir (.disc-card:hover h3 ile aynı dil). */
+.c-who{color:inherit;text-decoration:none}
+.c-who:hover b{color:var(--tomato)}

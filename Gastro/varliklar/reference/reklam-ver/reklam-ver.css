@@ -1,0 +1,409 @@
+/* ============ B2B Sponsorluk Paketleri (reklam-ver) — A#6, 2026-07-31 ============
+   Referanssız yeni sayfa — bu markada bir "reklam-ver-v1.html" hiç var olmadı.
+   Vizüel dil İCAT EDİLMEDİ: hero deseni tarif-liste.css/.lst-top ve iletisim.css/
+   .con-top ile BİREBİR (koyu fotoğraf + gradient + beyaz metin, padding-top:128px);
+   paket kartları hakkimizda.css/.val-card + .bridge-card ile AYNI dil (paper zemin,
+   line kenarlık, radius-lg, tomato-tint ikon dairesi). Token sistemi dışında
+   renk/radius/gölge YOK — hepsi tokens.css'ten.
+
+   2026-08-10 TASARIM TURU (Beyar'ın kusur listesi). Yeni renk/radius/gölge yine
+   İCAT EDİLMEDİ; kalite tipografi ölçeği, boşluk ritmi ve kompozisyonla yükseldi. */
+
+/* ---- TEK TİPOGRAFİ ÖLÇEĞİ -------------------------------------------------
+   Ölçülen kusur: diyalog içi yazı sayfanın geri kalanıyla aynı sistemde
+   değildi. İki KÖK NEDEN vardı ve ikisi de ölçüldü:
+
+   1) `<code>` öğeleri tarayıcı varsayılanıyla MONOSPACE basılıyordu (portal.css
+      hiçbir yerde `code` tanımlamıyor). Alan rayındaki ve paket diyaloğundaki
+      slot kodları gerçekten BAŞKA BİR FONTTU.
+   2) Diyalog 11px'lik büyük-harf mikro etiket denizinden ibaretti (dt, .rv-sub,
+      .rv-spec-t, .rv-chip hepsi 11–11.5px); sayfanın 13.5–15.5px'lik ölçeğiyle
+      hiyerarşi kurmuyordu.
+
+   Beyar'ın hipotezi — "portal ile stil kalıtımı kopuyor" — ÖLÇÜLDÜ VE DOĞRU
+   ÇIKMADI: diyalog gerçekten `document.body` altına taşınıyor (`dlgParent ===
+   BODY`) ve gövde fontunu (Gilroy 500) sorunsuz devralıyor. Sorun kalıtım
+   değil, ölçeğin kendisiydi.
+
+   Ölçek tek yerde tanımlanır; hem sayfa hem diyalog aynısını kullanır. --- */
+.pg-reklam-ver,
+.rv-dlg{
+  --rv-micro:12px;    /* büyük-harf bölüm etiketi */
+  --rv-small:13.5px;  /* ikincil metin, çip, düğme */
+  --rv-base:15px;     /* değer ve gövde metni */
+  --rv-lead:15.5px;   /* bölüm açıklaması */
+  --rv-h4:18px;       /* alan başlığı */
+  --rv-h3:22px;       /* diyalog başlığı */
+}
+/* Slot kodu bir KİMLİKTİR, kod parçası değil — sayfanın fontuyla basılır. */
+.pg-reklam-ver code,
+.rv-dlg code{font-family:var(--font);font-variant-numeric:tabular-nums}
+
+/* ---- hero: koyu fotoğraf + breadcrumb/eyebrow/h1/lead beyaz metin ---- */
+.rv-hero{
+  position:relative;padding:128px 0 56px;
+  background-image:linear-gradient(90deg,rgba(28,25,18,.93),rgba(33,30,22,.72)),
+    url("../../_dis/images.unsplash.com/photo-1556909212-d5b604d0c90d.avif");
+  background-size:cover;background-position:center;
+}
+.rv-hero .wrap{position:relative}
+.rv-hero .rd-crumb,.rv-hero .rd-crumb a{color:#c9c3b8}
+.rv-hero .rd-crumb a:hover{color:#ea8b74}
+.rv-hero .rd-crumb i{color:rgba(255,255,255,.4)}
+.rv-hero .rd-crumb b{color:#fff}
+.rv-hero .eyebrow{color:#f1b1a2;margin-top:10px}
+.rv-hero h1{color:#fff;font-size:clamp(30px,3.5vw,42px);letter-spacing:-.03em;line-height:1.12;max-width:760px;margin:14px 0 16px;text-shadow:0 2px 24px rgba(0,0,0,.25)}
+.rv-hero .lead{color:#e7edf1;font-weight:500;font-size:var(--rv-lead);max-width:640px;line-height:1.65;text-shadow:0 1px 14px rgba(0,0,0,.3);margin-bottom:26px}
+.rv-hero-cta{display:inline-flex}
+
+/* ---- bölüm zemin ritmi: beyaz ↔ krem, kesintisiz alternasyon ----
+   Ölçüldü: envanter ve süreç bölümleri ARKA ARKAYA krem'di, aralarındaki sınır
+   kayboluyordu ve sayfa tek bir gri blok gibi okunuyordu. */
+.rv-packages{background:var(--bg-white)}
+.rv-inv{background:var(--bg-cream)}
+.rv-how{background:var(--bg-white)}
+.rv-faq{background:var(--bg-cream)}
+.rv-cta{background:var(--bg-white)}
+
+/* ---- paket kartları (val-card/bridge-card dilinin AYNISI) ----
+   IZGARA `auto-fill`, `auto-fit` DEĞİL. Ölçüldü: `auto-fit` boş rayları
+   çöktürüyor ve TEK paket kartı 1176px'e geriliyordu — içi boşluk, dışı
+   dev bir kutu. `auto-fill` rayları ayakta tutar; tek kart da 3'lü ızgaranın
+   ilk hücresi kadar (≈370px) kalır. */
+.rv-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:20px;margin-top:30px;align-items:start}
+.rv-card{
+  position:relative;background:var(--paper);border:1px solid var(--line);
+  border-radius:var(--radius-lg);padding:24px;display:flex;flex-direction:column;gap:10px;
+  transition:.25s var(--ease);
+}
+.rv-card:hover{transform:translateY(-4px);box-shadow:var(--sh-md);border-color:var(--tomato)}
+.rv-ico{width:46px;height:46px;border-radius:var(--radius-md);background:var(--tomato-tint);color:var(--tomato);display:grid;place-items:center;font-size:19px}
+.rv-card h3{font-size:19px;color:var(--slate);margin:4px 0 0;line-height:1.2}
+.rv-target{display:inline-flex;align-items:center;gap:7px;font-size:var(--rv-micro);font-weight:800;color:var(--tomato);text-transform:uppercase;letter-spacing:.05em;line-height:1.35}
+.rv-target i{font-size:11px;flex:none}
+.rv-scope{font-size:var(--rv-small);color:var(--slate-2);font-weight:500;line-height:1.6;margin:0}
+.rv-facts{display:flex;flex-direction:column;gap:9px;margin-top:auto;padding-top:16px;border-top:1px solid var(--line)}
+.rv-fact{display:flex;align-items:baseline;justify-content:space-between;gap:12px;font-size:var(--rv-small)}
+.rv-fact span{color:var(--muted);font-weight:600;flex:none}
+.rv-fact b{color:var(--slate);font-weight:700;text-align:right}
+/* Not: --green/--green-deep tokens.css'te "YALNIZ sağlık bloğu" diye ayrılmış
+   (tokens.css satır 44-45) — bu rozet sağlıkla ilgisiz, bu yüzden tbadge.t-editor
+   ile AYNI tomato-tint dilini kullanır (Editör Onaylı rozetiyle BİREBİR desen).
+
+   2026-08-09: .rv-ready ARTIK BASILMIYOR (açık karar AK-1 — "Uygulamaya hazır"
+   iç mühendislik notudur, markaya gösterilmez). Kural KASITLI olarak duruyor:
+   AK-1 geri alınabilir bir karardır ve geri alma yolu "tek Blade satırı" diye
+   kayıtlıdır; kuralı silmek o sözü bozar ve geri alma iki dosyalık iş olurdu. */
+.rv-ready{display:inline-flex;align-items:center;gap:6px;align-self:start;margin-top:2px;font-size:12px;font-weight:700;color:var(--tomato);background:var(--tomato-tint);border:1px solid rgba(220,61,23,.25);border-radius:var(--radius-sm);padding:5px 10px}
+.rv-open{
+  margin-top:14px;align-self:stretch;justify-content:center;background:var(--tomato-tint);border:0;cursor:pointer;font:inherit;
+  font-size:var(--rv-small);font-weight:800;color:var(--tomato);display:inline-flex;align-items:center;gap:8px;
+  padding:12px 16px;border-radius:var(--radius-md);transition:.2s var(--ease);
+}
+.rv-open i{transition:transform .2s var(--ease)}
+.rv-card:hover .rv-open{background:var(--tomato);color:#fff}
+.rv-card:hover .rv-open i{transform:translateX(3px)}
+
+/* ---- envanter: iki kart grubu (Reklam Alanları / Özel Formatlar) ----
+   Düz liste SÖKÜLDÜ: 189 satırlık tablo satış sayfası değil veri dökümüydü.
+   Kart dili paket kartlarının AYNISI; yeni renk/radius/gölge YOK. */
+.rv-gh{font-size:var(--rv-micro);font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--slate-2);margin:30px 0 14px}
+.rv-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;align-items:start}
+.rv-gcard{
+  display:flex;flex-direction:column;align-items:flex-start;gap:9px;text-align:left;
+  background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);
+  padding:22px;cursor:pointer;font:inherit;transition:.25s var(--ease);
+}
+.rv-gcard:hover{transform:translateY(-3px);box-shadow:var(--sh-md);border-color:var(--tomato)}
+.rv-gico{width:42px;height:42px;border-radius:var(--radius-md);background:var(--tomato-tint);color:var(--tomato);display:grid;place-items:center;font-size:17px}
+.rv-gname{font-size:17px;font-weight:800;color:var(--slate);line-height:1.25}
+.rv-gcount{font-size:var(--rv-micro);font-weight:800;color:var(--tomato);background:var(--tomato-tint);border-radius:var(--radius-sm);padding:3px 9px}
+.rv-gcta{margin-top:6px;font-size:var(--rv-small);font-weight:800;color:var(--tomato);display:inline-flex;align-items:center;gap:7px}
+.rv-gcard:hover .rv-gcta{gap:10px}
+
+/* ---- diyalog bandı ----------------------------------------------------
+   Bunlar REKLAM YÜZEYİ DEĞİL, arayüz diyaloğudur. "Reklam 60'a çıkmaz"
+   kuralı reklam yüzeyleri içindir; diyalog başlığın (65) ve çerez bandının
+   (80) ALTINDA kalırsa kapatılamaz hâle gelir — ölçüldü, öyle oldu.
+   Bu yüzden kendi bandında, hepsinin üstünde durur. */
+.rv-dlg{position:fixed;inset:0;z-index:120;display:flex;align-items:center;justify-content:center;padding:var(--sp-4);background:color-mix(in srgb, var(--ink) 62%, transparent)}
+.rv-dlg[hidden]{display:none}
+.rv-dlg-box{position:relative;width:min(720px,100%);max-height:92vh;display:flex;flex-direction:column;background:var(--paper);border-radius:var(--radius-lg);box-shadow:var(--sh-lg);overflow:hidden}
+.rv-dlg-box--wide{width:min(1080px,100%)}
+.rv-dlg-head{flex:none;display:flex;align-items:flex-start;justify-content:space-between;gap:var(--sp-4);padding:18px 22px;border-bottom:1px solid var(--line);background:var(--paper)}
+.rv-dlg-head h3{font-size:var(--rv-h3);color:var(--slate);margin:0 0 4px;line-height:1.18}
+.rv-dlg-head p{font-size:var(--rv-small);color:var(--muted);font-weight:600;margin:0}
+/* Kapatma her zaman görünür: başlık şeridi sabit, düğme 44px dokunma hedefi. */
+.rv-dlg-x{flex:none;width:44px;height:44px;display:grid;place-items:center;border:1px solid var(--line);background:var(--bg-white);border-radius:var(--radius-md);cursor:pointer;font-size:17px;color:var(--slate-2)}
+.rv-dlg-x:hover{color:var(--tomato);border-color:var(--tomato);background:var(--tomato-tint)}
+/* SABİT ALTLIK — paket diyaloğunun eylem çağrısı buradadır. Eskiden gövdenin
+   en altındaydı ve 19 alanlık listenin ARDINDA kalıyordu; artık kaydırmadan
+   bağımsız, her zaman görünür. Notu fiyatlandırmayı SINIF olarak tekrarlar
+   (sabit paket / performans bazlı / komisyon bazlı / hibrit) — rakam yok. */
+.rv-dlg-foot{
+  flex:none;display:flex;align-items:center;justify-content:space-between;gap:var(--sp-5);
+  padding:14px 22px;border-top:1px solid var(--line);background:var(--bg-cream);
+}
+.rv-foot-note{margin:0;font-size:var(--rv-small);color:var(--muted);font-weight:500;line-height:1.5;max-width:56ch}
+.rv-dlg-foot .btn{flex:none}
+
+/* ---- iki bölme: solda alan rayı, sağda görüntüleyici ---- */
+.rv-split{flex:1;min-height:0;display:grid;grid-template-columns:290px minmax(0,1fr)}
+.rv-rail{display:flex;flex-direction:column;min-height:0;border-right:1px solid var(--line);background:var(--bg-cream)}
+.rv-search{flex:none;display:flex;align-items:center;gap:9px;margin:14px;padding:9px 12px;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-md);color:var(--muted)}
+.rv-search input{flex:1;min-width:0;border:0;background:transparent;font:inherit;font-size:var(--rv-small);color:var(--slate);outline:none}
+.rv-rail-scroll{flex:1;min-height:0;overflow-y:auto;padding:0 10px 14px}
+.rv-rail-h{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:11.5px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin:12px 6px 6px}
+.rv-rail-h span{font-weight:800;color:var(--tomato);background:var(--tomato-tint);border-radius:var(--radius-sm);padding:1px 7px;letter-spacing:0}
+.rv-rail-b{width:100%;display:flex;flex-direction:column;align-items:flex-start;gap:1px;text-align:left;border:0;background:transparent;cursor:pointer;font:inherit;padding:9px 11px;border-radius:var(--radius-sm);color:var(--slate-2)}
+.rv-rail-b span{font-size:var(--rv-small);font-weight:600;line-height:1.35}
+.rv-rail-b code{font-size:11.5px;font-weight:700;color:var(--muted);letter-spacing:.03em}
+.rv-rail-b:hover{background:var(--paper);color:var(--slate)}
+.rv-rail-b.is-on{background:var(--tomato-tint);color:var(--tomato)}
+.rv-rail-b.is-on code{color:var(--tomato)}
+/* Klavye gezinmesi görünür olmalı: ok tuşuyla ilerleyen odak, `is-on`
+   zeminiyle karışmasın diye kendi halkasını taşır. */
+.rv-rail-b:focus-visible{outline:2px solid var(--tomato);outline-offset:-2px}
+/* Künye rayın İLK kalemidir ve bir alan değildir — kendi ayracıyla ayrılır. */
+.rv-rail-b--spec{border-bottom:1px solid var(--line);border-radius:var(--radius-sm) var(--radius-sm) 0 0;margin-bottom:4px;padding-top:12px;padding-bottom:12px}
+.rv-rail-b--spec span{display:inline-flex;align-items:center;gap:8px;font-weight:800}
+.rv-rail-b--spec i{font-size:12px;color:var(--muted)}
+.rv-rail-b--spec.is-on i{color:var(--tomato)}
+.rv-rail-empty{font-size:var(--rv-small);color:var(--muted);padding:14px 8px;margin:0}
+.rv-detail{min-height:0;overflow-y:auto;padding:22px}
+/* Görüntüleyici okunur bir bantta durur ve ORTALANIR: geniş diyalogda sola
+   yaslı kalınca sağında kocaman bir boşluk açılıyordu (ölçüldü). */
+.rv-view{max-width:720px;margin-inline:auto}
+.rv-detail--solo{padding:22px}
+.rv-pane{display:none}
+.rv-pane.is-on{display:block}
+
+/* ---- görüntüleyici: bu sayfanın imza öğesi ---- */
+.rv-view-head h4{font-size:var(--rv-h4);color:var(--slate);margin:0 0 9px;line-height:1.25}
+.rv-chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.rv-chip{font-size:12px;font-weight:700;color:var(--slate-2);background:var(--bg-cream);border:1px solid var(--line);border-radius:var(--radius-sm);padding:3px 9px}
+.rv-chip--code{color:var(--tomato);background:var(--tomato-tint);border-color:transparent;letter-spacing:.04em;font-weight:800}
+.rv-lede{font-size:var(--rv-small);color:var(--slate-2);font-weight:500;line-height:1.6;margin:0 0 14px}
+.rv-stage{margin-top:4px}
+.rv-stage-bar{display:flex;align-items:center;justify-content:space-between;gap:var(--sp-3);margin-bottom:10px}
+.rv-seg{display:inline-flex;background:var(--bg-cream);border:1px solid var(--line);border-radius:var(--radius-md);padding:3px}
+.rv-seg-b{border:0;background:transparent;cursor:pointer;font:inherit;font-size:var(--rv-small);font-weight:700;color:var(--muted);padding:6px 16px;border-radius:var(--radius-sm)}
+.rv-seg-b.is-on{background:var(--paper);color:var(--tomato);box-shadow:var(--sh-sm)}
+.rv-zoom{border:1px solid var(--line);background:var(--paper);cursor:pointer;font:inherit;font-size:var(--rv-small);font-weight:700;color:var(--slate-2);padding:7px 12px;border-radius:var(--radius-md);display:inline-flex;align-items:center;gap:7px}
+.rv-zoom:hover{color:var(--tomato);border-color:var(--tomato)}
+/* Alanın TAM adı burada; kutunun üstündeki etiket yalnız kodu taşır. */
+.rv-stage-cap{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:var(--rv-small);font-weight:600;color:var(--muted);margin:0 0 10px}
+.rv-stage-cap b{color:var(--slate);font-weight:800}
+.rv-stage-key{flex:none;width:13px;height:13px;border-radius:3px;border:2.5px solid var(--tomato)}
+.rv-frame{display:none}
+.rv-frame.is-on{display:block}
+.rv-scroll{position:relative;height:430px;overflow:hidden auto;border:1px solid var(--line);border-radius:var(--radius-md);background:var(--bg-white);scroll-behavior:smooth}
+.rv-frame.is-phone .rv-scroll{max-width:360px;margin-inline:auto}
+/* "BÜYÜT" GERÇEKTEN BÜYÜTÜR — ölçülmüş kusurun düzeltmesi (2026-08-10).
+
+   ÖNCEKİ HÂL: sınıf `.rv-stage`e konuyordu ve TEK yaptığı `.rv-scroll`un
+   yüksekliğini büyütmekti. Ama o kutunun kabı `.rv-detail` SABİT yükseklikte
+   ve `overflow-y:auto` — yani büyüyen kutu kırpılıyordu. Ölçüldü:
+     1440px · kap 661px · kutu 430→648px  → görünür alan ARTMADI
+      768px · kap 470px · kutu 340→648px  → kutu kabı taşırdı
+      390px · kap 450px · kutu 340→648px  → kutu kabı taşırdı
+   Dar ekranda düğme durumu KÖTÜLEŞTİRİYORDU: kullanıcı büyüyen kutuyu
+   görebilmek için bir de kabın içinde kaydırmak zorunda kalıyordu.
+
+   Sabit yükseklikli, kırpan bir kabın İÇİNDEKİ çocuğu büyütmek görünür alan
+   üretemez — yalnız iç kaydırma üretir. Bu yüzden sınıf artık DİYALOĞUN
+   KENDİSİNE konur ve alan gerçekten açılır: kutu tüm görünüme yayılır (dar
+   ekran için bu dosyada zaten var olan tam-sayfa deseninin aynısı), ray ve
+   künye çekilir, görüntüleyici kalan alanın TAMAMINI kaplar.
+
+   Sabit piksel yükseklik YOK: `flex:1` kalanı alır, yani 13" ekranda da
+   27" ekranda da doğru davranır. */
+.rv-dlg.is-zoom{padding:0;align-items:stretch}
+.rv-dlg.is-zoom .rv-dlg-box,
+.rv-dlg.is-zoom .rv-dlg-box--wide{width:100%;height:100dvh;max-height:100dvh;border-radius:0}
+/* Ray çekilir: büyütmenin amacı alanı görmek, listeyi taramak değil.
+   Tek sütuna inince açık `grid-template-rows` da sıfırlanır — dar ekranda
+   `auto minmax(0,1fr)` kalırsa ilk satır (çekilmiş ray) yer tutardı. */
+.rv-dlg.is-zoom .rv-rail{display:none}
+.rv-dlg.is-zoom .rv-split{grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr)}
+/* Kap artık kaydırmaz, dağıtır. */
+.rv-dlg.is-zoom .rv-detail{overflow:hidden;display:flex;flex-direction:column;min-height:0}
+.rv-dlg.is-zoom .rv-pane.is-on{display:flex;flex-direction:column;min-height:0;flex:1}
+.rv-dlg.is-zoom .rv-view{max-width:none;display:flex;flex-direction:column;min-height:0;flex:1}
+/* Künye ve ölçü listesi büyütmede çekilir — ikisi de küçük hâlde okunuyor ve
+   burada yalnız yerleşimin kendisi isteniyor. Diyalog başlığı ve "Vurgulanan
+   alan" şeridi KALIR: hangi alana baktığın her zaman yazılı olmalı. */
+.rv-dlg.is-zoom .rv-view-head,
+.rv-dlg.is-zoom .rv-spec{display:none}
+.rv-dlg.is-zoom .rv-stage{display:flex;flex-direction:column;min-height:0;flex:1;margin-top:0}
+.rv-dlg.is-zoom .rv-frame.is-on{display:flex;flex-direction:column;min-height:0;flex:1}
+.rv-dlg.is-zoom .rv-scroll{height:auto;flex:1;min-height:0}
+.rv-dlg.is-zoom .rv-frame.is-phone .rv-scroll{max-width:460px;width:100%}
+.rv-canvas{position:relative}
+.rv-canvas img{display:block;width:100%;height:auto}
+/* TEK VURGU, İKİ PARÇA.
+   (a) Dev yayılımlı gölge karenin GERİ KALANINI hafifçe geri çeker — sayfa
+       görünür kalır, seçili alan öne çıkar. Kaydırma kabı `overflow` ile
+       kırptığı için gölge dışarı taşmaz.
+   (b) Çerçeve 3px net tomato + içeride 1px kâğıt hattı: koyu bir kreatifin
+       üstünde de, açık bir zeminde de kenar kaybolmaz.
+   İç dolgu YOK: alanın gerçek görüntüsü boyanmaz. */
+/* ==YER-TUTUCU-BAS== — BU BLOK TEK KAYNAKTIR, İKİ YERDEN OKUNUR.
+   1) Vitrin ve görüntüleyici: karenin ÜSTÜNE çizilen vurgu (`.rv-spot`).
+   2) `scripts/kare-hatti.mjs`: kare alınırken sayfaya GERÇEKTEN eklenen yer
+      tutucu. Script bu dosyayı okur, bu iki işaret arasını keser ve sınıf
+      adını değiştirip sayfaya enjekte eder — görünüm ikinci kez YAZILMAZ.
+   Blok değiştirilirse her iki yüzey birlikte değişir; ayrışma imkânsızdır. */
+.rv-spot{
+  position:absolute;border:3px solid var(--tomato);border-radius:var(--radius-sm);
+  box-shadow:inset 0 0 0 1px var(--paper),0 0 0 9999px color-mix(in srgb, var(--ink) 46%, transparent);
+  pointer-events:none;
+  /* DOLU YER TUTUCU (Beyar, 2026-08-11): kutu artık altındaki sayfayı ÖRTER.
+     Boş çerçeve, içerik olmayan alanlarda delik gibi okunuyordu — marka
+     reklamı değil boşluğu görüyordu. Zemin NÖTR: marka rengi değil, sayfayla
+     kavga etmeyen kâğıt dolgusu. GEÇİCİDİR — reklam katmanı yazılıp gerçek
+     kreatif basılmaya başlayınca bu dolgu kalkar, kutu yeniden yalnız konum
+     işaretine döner. */
+  background:var(--paper);
+  display:flex;align-items:center;justify-content:center;overflow:hidden;
+  container-type:size;
+}
+.rv-spot-in{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:3px;text-align:center;padding:6px 10px;max-width:100%;
+}
+.rv-spot-code{
+  font-size:11.5px;font-weight:800;letter-spacing:.05em;color:#fff;background:var(--tomato);
+  border-radius:var(--radius-sm);padding:3px 9px;white-space:nowrap;
+}
+.rv-spot-name{
+  font-size:var(--rv-small);font-weight:700;color:var(--slate);line-height:1.25;
+  max-width:34ch;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;
+  -webkit-line-clamp:2;-webkit-box-orient:vertical;
+}
+.rv-spot-size{font-size:12px;font-weight:800;color:var(--slate-2);font-variant-numeric:tabular-nums}
+.rv-spot-tag{
+  font-size:var(--rv-micro);font-weight:800;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--muted);
+}
+/* Küçük kutuda dört satır okunmaz — kademeli olarak sadeleşir.
+   Sınıf sunucuda, kutunun GERÇEK piksel yüksekliğinden hesaplanır. */
+/* SADELEŞME KAPSAYICI SORGUSUYLA, SUNUCU TAHMİNİYLE DEĞİL.
+   ÖLÇÜLDÜ: sınıfı slotun KAYNAK piksel yüksekliğinden seçmek yanlıştı —
+   kare kabına sığdırmak için ölçekleniyor ve kutu küçülüyor. TD-BYLINE
+   kaynakta 160px, görüntüleyicide 95px render oluyordu; "tam" sınıfını alıp
+   içeriği 19px taşırıyordu. Kutunun GERÇEK render yüksekliğini yalnız
+   kapsayıcı sorgusu bilir, bu yüzden karar oraya taşındı ve her ölçekte
+   doğru davranır. */
+@container (max-height: 118px){
+  .rv-spot-in{flex-direction:row;gap:9px;padding:4px 10px;flex-wrap:nowrap}
+  .rv-spot-tag{display:none}
+  .rv-spot-name{-webkit-line-clamp:1;max-width:28ch}
+}
+@container (max-height: 68px){
+  .rv-spot-in{gap:7px;padding:2px 8px}
+  .rv-spot-name{display:none}
+  .rv-spot-code{font-size:10.5px;padding:2px 7px}
+  .rv-spot-size{font-size:11px}
+}
+/* Son çare: 22px altında iki kalem yan yana bile okunmaz, yalnız kod kalır. */
+@container (max-height: 22px){
+  .rv-spot-size{display:none}
+  .rv-spot-code{font-size:9.5px;padding:1px 6px}
+}
+/* Alan sayfanın en üstündeyse kod rozeti dışarı taşıp kırpılırdı — artık
+   rozet kutunun İÇİNDE olduğu için bu varyant yalnız hizayı korur. */
+.rv-spot--low .rv-spot-in{justify-content:flex-start}
+/* ==YER-TUTUCU-SON== */
+
+/* YER TUTUCU SAYFAYA GİRDİYSE VURGU YALNIZ IŞILDAKTIR (Beyar, 2026-08-11).
+   Yeni kare hattı yer tutucuyu sayfaya GERÇEKTEN ekliyor: kutu artık karenin
+   içinde basılı ve sayfa akışında yer kaplıyor. Vurgunun aynı içeriği bir kez
+   daha, farklı ölçekte çizmesi ÇİFT GÖRÜNTÜ üretirdi (kare kabına sığdırmak
+   için ölçekleniyor, üstteki katman ölçeklenmiyor). Bu yüzden enjeksiyonlu
+   karede vurgu ilk hâline döner: dolgu yok, içerik yok — yalnız çerçeve ve
+   ışıldak. Dolgulu varyant, hattı henüz geçmemiş ESKİ kareler için durur ve
+   hepsi yeniden üretilince bu ayrım kendiliğinden kapanır. */
+.rv-spot--live{background:none;container-type:normal}
+.rv-spot--live .rv-spot-in{display:none}
+.rv-note{font-size:12.5px;color:var(--muted);font-weight:500;line-height:1.55;margin:10px 0 0}
+.rv-note--solo{margin:2px 0 0;padding:14px 16px;background:var(--bg-cream);border-radius:var(--radius-md)}
+
+/* ---- ölçü / kural künyesi ---- */
+.rv-spec{margin-top:16px;padding-top:16px;border-top:1px solid var(--line)}
+.rv-spec-t{display:block;font-size:var(--rv-micro);font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--slate-2);margin-bottom:9px}
+.rv-spec-list{display:flex;flex-wrap:wrap;gap:8px}
+.rv-spec-i{display:inline-flex;align-items:baseline;gap:8px;background:var(--bg-cream);border:1px solid var(--line);border-radius:var(--radius-md);padding:7px 12px}
+.rv-spec-i em{font-style:normal;font-size:12px;font-weight:700;color:var(--muted)}
+.rv-spec-i b{font-size:var(--rv-base);font-weight:800;color:var(--slate)}
+
+/* Künye listesi İKİ SÜTUNLU. Ölçülen kusur: tek sütunlu `grid;gap:12px`
+   etiketle DEĞERİ arasına, iki blok ARASINDAKİYLE aynı boşluğu koyuyordu —
+   etiket kendi değerine değil, ortada duruyordu ve içerik seyrek görünüyordu.
+   Şimdi etiket solda dar sütunda, değeri hemen sağında; satır arası 12px. */
+.rv-rules{margin:0;display:grid;grid-template-columns:164px minmax(0,1fr);column-gap:20px;row-gap:12px;align-items:baseline}
+.rv-rules dt{font-size:var(--rv-micro);font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--slate-2);margin:0;grid-column:1}
+.rv-rules dd{margin:0;font-size:var(--rv-base);color:var(--slate-2);font-weight:500;line-height:1.5;grid-column:2;max-width:62ch}
+/* SÖKÜLDÜ (2026-08-10): `.rv-sub` · `.rv-slotlist` · `.rv-slotbtn` ·
+   `.rv-block` · `.rv-dlg-body` · `.rv-dlg-cta`. Paket diyaloğu iki panelli
+   yapıya geçince düz çip ızgarası ve tek sütunlu gövde ortadan kalktı; hiçbir
+   Blade artık bu sınıfları basmıyor (ölçüldü). Ölü kural bırakmak, sonraki
+   turda "bu desen hâlâ var" sanılmasına yol açardı. */
+
+@media (max-width:900px){
+  .rv-split{grid-template-columns:1fr;grid-template-rows:auto minmax(0,1fr)}
+  .rv-rail{border-right:0;border-bottom:1px solid var(--line);max-height:230px}
+  .rv-detail{padding:18px}
+  /* Dar ekranda diyalog TAM SAYFA açılır: ortada duran bir kutu, altından
+     ve üstünden sayfa görünürken "kapanmamış" hissi veriyordu. */
+  .rv-dlg{padding:0;align-items:stretch}
+  .rv-dlg-box,.rv-dlg-box--wide{width:100%;height:100dvh;max-height:100dvh;border-radius:0}
+  .rv-scroll{height:340px}
+  /* İki sütunlu künye dar ekranda üst üste iner; etiket değerine yapışık kalır. */
+  .rv-rules{grid-template-columns:minmax(0,1fr);row-gap:3px}
+  .rv-rules dt{grid-column:1;margin-top:11px}
+  .rv-rules dd{grid-column:1}
+  .rv-rules dt:first-child{margin-top:0}
+  /* SABİT ALTLIK dar ekranda altalta iner ve eylem çağrısı tam genişlik alır;
+     yan yana kalsaydı 390px'te düğme metni kırılıyordu. Notu gizlemek yerine
+     üste alıyoruz — fiyatlandırma sınıfı mobilde de görünmeli. */
+  .rv-dlg-foot{flex-direction:column;align-items:stretch;gap:var(--sp-3);padding:14px 18px}
+  .rv-dlg-foot .btn{justify-content:center}
+  .rv-foot-note{max-width:none}
+}
+
+/* ---- sık sorulanlar: mevcut fk-collapse kiti, yeni bileşen yok ----
+   Ölçüldü: sol kenar hizası bozuk DEĞİLDİ (üç genişlikte de bölümlerle aynı
+   132/24/16px), ama liste 820px'de kesiliyordu; komşu bölümler 1176px'e
+   yayılırken SAĞ kenar yarı yolda bitiyor ve bölüm ızgaradan kaymış gibi
+   duruyordu. Liste artık içerik ızgarasının tamamını, iki sütun hâlinde
+   kullanır — her iki kenar da diğer bölümlerle hizalı. */
+.rv-faq-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:26px;align-items:start}
+.rv-faq-list .fk-collapse{background:var(--paper)}
+.rv-faq-list .fk-collapse>summary{font-size:var(--rv-base);padding:16px 18px}
+.rv-faq-list .rv-lede{margin:0;max-width:62ch;font-size:var(--rv-small)}
+
+/* ---- süreç adımları ---- */
+.rv-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:30px}
+.rv-step{background:var(--bg-cream);border:1px solid var(--line);border-radius:var(--radius-lg);padding:24px}
+.rv-step-no{display:grid;place-items:center;width:34px;height:34px;border-radius:var(--radius-circle);background:var(--tomato);color:#fff;font-weight:800;font-size:14px;margin-bottom:14px}
+.rv-step h3{font-size:17px;color:var(--slate);margin-bottom:6px}
+.rv-step p{font-size:var(--rv-small);color:var(--slate-2);font-weight:500;line-height:1.6;margin:0}
+
+/* ---- kapanış CTA'sı (pro-cta ile AYNI dil) ---- */
+.rv-cta{padding:60px 0 74px;border-top:1px solid var(--line);text-align:center}
+.rv-cta h2{font-size:28px;color:var(--slate);margin-bottom:10px}
+.rv-cta p{font-size:var(--rv-lead);color:var(--muted);font-weight:500;max-width:520px;margin:0 auto 22px;line-height:1.6}
+
+@media (max-width:1024px){
+  .rv-steps{grid-template-columns:1fr 1fr}
+}
+@media (max-width:760px){
+  .rv-faq-list{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:640px){
+  .rv-hero{padding:96px 0 40px}
+  .rv-grid{grid-template-columns:minmax(0,1fr)}
+  .rv-steps{grid-template-columns:1fr}
+  .rv-cards{grid-template-columns:minmax(0,1fr)}
+}

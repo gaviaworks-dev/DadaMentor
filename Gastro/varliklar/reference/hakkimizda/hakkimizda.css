@@ -1,0 +1,245 @@
+/* Hakkımızda (about.index) — kaynak-transfer: ref hakkimizda-v1.html
+   "SAYFA CSS" bloğu (satır 739-935) VERBATIM taşındı; yalnız aşağıdaki
+   noktalarda gerçek-veri düşüşüne uyum için kasıtlı sapma (Beyar raporunda
+   işaretli — redraw DEĞİL, blok çıkarma):
+   - team-sec/.chef-* taşınmadı (ekip fabrike persona verisiydi, drop edildi
+     → CSS'e gerek kalmadı).
+   - kunye-grid/.kunye-card/.kunye-row(s)/.kunye-note taşınmadı (Ticari
+     Ünvan/adres/telefon/UETS fabrikeydi, drop edildi) — yalnız kunye-sec
+     zemin rengi + legal-block/grid/card kaldı ("Yasal Metinler" tek içerik).
+   - .sb-grid: 5 sütun → 3 sütun (yalnız 3 gerçek HeroStats sayacı kaldı:
+     denenmiş tarif, kayıtlı üye, doğrulanmış diyetisyen — "aylık ziyaret" ve
+     "video tarif" gerçek karşılığı yok, drop edildi).
+   - .bridge-grid: 3 sütun → 2 sütun (yalnız 2 gerçek hedef kaldı: Tarif Ekle
+     + Şefler — "Diyetisyen Ol" ve "Reklam Ver" rotası yok, drop edildi). */
+
+/* ---- breadcrumb + liste hero (görselli koyu-overlay ATA) — kaynak: seo-landing-v1/tarif-liste-v1 VERBATIM
+   GÖRSEL BAĞLAMA (2026-08-05, lead raporu — statband turunda gözden kaçan 2. hotlink):
+   SABİT Unsplash hotlink KALDIRILDI — arka plan admin'den (pagedef.hakkimizda.lst_top.bg)
+   yönetilir, resources/views/hakkimizda/show.blade.php inline override eder. Foto yokken
+   bu düz koyu gradient TEK BAŞINA zemin olarak kalır (bozulma yok). ---- */
+.lst-top{
+  position:relative;padding-top:128px;
+  background-image:linear-gradient(90deg,rgba(28,25,18,.93),rgba(33,30,22,.72));
+  background-size:cover;background-position:center;
+}
+.lst-top .wrap{position:relative}
+.lst-top .rd-crumb{color:#c9c3b8}
+.lst-top .rd-crumb a{color:#c9c3b8}
+.lst-top .rd-crumb a:hover{color:#ea8b74}
+.lst-top .rd-crumb i{color:rgba(255,255,255,.4)}
+.lst-top .rd-crumb b{color:#fff}
+.lst-hero .eyebrow{color:#f1b1a2}
+.lst-hero .eyebrow::before{background:var(--tomato)}
+.lst-hero{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:44px;align-items:end;padding:10px 0 42px}
+.lst-hero .lh-main{min-width:0}
+.lst-hero h1{color:#fff;font-size:44px;margin:14px 0 12px;letter-spacing:-.03em;text-shadow:0 2px 24px rgba(0,0,0,.25)}
+.lst-hero h1 .accent{color:#e87f66;white-space:nowrap}
+.lst-hero .lead{color:#e7edf1;font-weight:500;font-size:15.5px;max-width:600px;text-shadow:0 1px 14px rgba(0,0,0,.3)}
+/* rev-sweep MADDE 7 (2026-07-20): admin gövdesi (.lead içindeki gerçek <p>)
+   akan metin — global .lead kısayolu (tokens.css) DOKUNULMADI, yalnız bu
+   sayfadaki gövde-uzunluğundaki içerik justify. */
+.lst-hero .lead p{text-align:justify;-webkit-hyphens:auto;hyphens:auto;overflow-wrap:break-word}
+.lh-chips{margin-top:20px}
+.lh-chips .lbl{color:#cdd8e0}
+.lh-chips .chip{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.22);color:#fff;backdrop-filter:blur(4px)}
+.lh-chips .chip:hover{background:var(--tomato);border-color:var(--tomato);color:#fff}
+.lst-stats{display:flex;flex-direction:column;gap:16px;padding-left:38px;border-left:1px solid rgba(255,255,255,.18)}
+.lst-stats .st b{display:block;font-size:29px;font-weight:700;color:#fff;letter-spacing:-.02em;line-height:1.1}
+.lst-stats .st span{font-size:12.5px;color:#aebcc6;font-weight:500}
+@media (max-width:1024px){
+  .lst-hero{grid-template-columns:1fr;align-items:start;gap:22px;padding-bottom:32px}
+  .lst-stats{flex-direction:row;gap:34px;padding-left:0;border-left:none;padding-top:18px;border-top:1px solid rgba(255,255,255,.18)}
+}
+@media (max-width:640px){
+  .lst-top{padding-top:74px}
+  .lst-hero{padding:2px 0 26px}
+  .lst-hero h1{font-size:28px}
+  .lst-hero .lead{font-size:14.5px}
+  .lst-stats{gap:10px}
+  .lst-stats .st{flex:1}
+  .lst-stats .st b{font-size:20px}
+  .lh-chips{margin-top:16px;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;padding-bottom:4px}
+  .lh-chips::-webkit-scrollbar{display:none}
+  .lh-chips .chip{flex:none;white-space:nowrap}
+}
+
+/* ============ HAKKIMIZDA — marka hikâyesi + künye ============ */
+
+/* ---- hikâye bloğu — seo-intro/seo-prose dilinden (kaynak: seo-landing-v1) ---- */
+.about-sec{background:var(--bg-white)}
+.about-grid{display:grid;grid-template-columns:minmax(0,1fr) 420px;gap:54px;align-items:start}
+.seo-prose h2{font-size:26px;margin-bottom:14px}
+.seo-prose h3{font-size:18px;margin:26px 0 10px}
+.seo-prose p{font-size:15px;color:var(--slate-2);font-weight:500;line-height:1.7;margin-bottom:12px}
+.seo-prose p:last-child{margin-bottom:0}
+.seo-prose strong{color:var(--slate);font-weight:700}
+.seo-prose a.inline{color:var(--tomato-deep);font-weight:700;text-decoration:underline;text-underline-offset:2px}
+.about-quote{margin:20px 0;padding:18px 22px;border-left:3px solid var(--tomato);background:var(--tomato-tint);border-radius:0 var(--radius-md) var(--radius-md) 0;font-size:15.5px;font-weight:700;color:var(--slate);line-height:1.55}
+/* Hikâye artık blok-içerik (QA 2026-07-15, Beyar kararı) —
+   resources/views/partials/_body-blocks.blade.php'nin ürettiği .art-quote/
+   .art-tip sınıfları (puf-noktasi-detay.css'in --tomato varyantıyla AYNI
+   yapı — bu sayfanın paletine uyarlandı, kopya değil aynı desen). */
+.seo-prose .art-quote{margin:20px 0;padding:8px 0 8px 22px;border-left:3px solid var(--tomato)}
+.seo-prose .art-quote p{font-size:19px;line-height:1.5;color:var(--slate);font-weight:700;letter-spacing:-.01em;margin:0}
+.seo-prose .art-quote cite{display:block;margin-top:10px;font-size:13px;color:var(--muted);font-weight:600;font-style:normal}
+.seo-prose .art-tip{display:flex;gap:14px;background:var(--tomato-tint);border:1px solid rgba(220,61,23,.22);border-radius:var(--radius-lg);padding:18px 20px;margin:24px 0}
+.seo-prose .art-tip .at-ico{flex:none;width:38px;height:38px;border-radius:var(--radius-md);background:var(--paper);color:var(--tomato);display:grid;place-items:center;font-size:15px}
+.seo-prose .art-tip h4{font-size:14.5px;margin-bottom:5px}
+.seo-prose .art-tip p{font-size:13.5px;line-height:1.6;color:var(--slate-2);font-weight:500;margin:0}
+/* görsel sütunu: büyük kare + iki küçük (div+bg cover, Kerem Bey pattern'ı) */
+.about-figs{display:grid;grid-template-columns:1fr 1fr;gap:14px;position:sticky;top:130px}
+.about-figs .fig{border-radius:var(--radius-lg);background-size:cover;background-position:center;aspect-ratio:1/1}
+.about-figs .fig.tall{grid-column:1/-1;aspect-ratio:16/10}
+.about-badge{grid-column:1/-1;display:flex;align-items:center;gap:13px;background:var(--bg-cream);border:1px solid var(--line);border-radius:var(--radius-md);padding:13px 16px}
+.about-badge i{flex:none;width:40px;height:40px;border-radius:var(--radius-md);background:var(--tomato-tint);color:var(--tomato);display:grid;place-items:center;font-size:16px}
+.about-badge b{display:block;font-size:13.5px;color:var(--slate)}
+.about-badge span{font-size:12px;color:var(--muted);font-weight:500}
+
+/* ---- misyon/değerler kart şeridi — boş durum ikon-kutu dili (kılavuz §3) ---- */
+.values-sec{background:var(--bg-cream)}
+.val-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.val-card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);padding:26px;transition:.25s var(--ease)}
+.val-card:hover{transform:translateY(-4px);box-shadow:var(--sh-md)}
+.val-card .vi{width:50px;height:50px;border-radius:var(--radius-md);background:var(--tomato-tint);color:var(--tomato);display:grid;place-items:center;font-size:20px;margin-bottom:16px}
+.val-card h3{font-size:18px;margin-bottom:9px}
+.val-card p{font-size:14px;color:var(--slate-2);font-weight:500;line-height:1.65}
+
+/* ---- sayılarla DadaGastro — koyu sabit-bg band (appband dilinden türetildi, kaynak: v3a) ----
+   sb-grid: sütun sayısı sabit DEĞİL, kart sayısına uyar (bkz. kuralın yorumu).
+   GÖRSEL BAĞLAMA (2026-08-04, envanter kalem #8): SABİT Unsplash hotlink KALDIRILDI
+   (dış siteye bağımlılık) — arka plan admin'den (pagedef.hakkimizda.statband.bg)
+   yönetilir, resources/views/hakkimizda/show.blade.php inline override eder. Foto
+   yokken bu düz koyu gradient TEK BAŞINA zemin olarak kalır (bozulma yok). */
+.statband{
+  background-image:linear-gradient(90deg,rgba(28,25,18,.92),rgba(33,30,22,.82));
+  background-size:cover;background-position:center;background-attachment:fixed;
+  padding:56px 0;
+}
+.statband .sb-head{text-align:center;margin-bottom:34px}
+.statband .sb-head .eyebrow{color:#f1b1a2;justify-content:center}
+.statband .sb-head .eyebrow::before{background:var(--tomato)}
+.statband .sb-head h2{color:#fff;font-size:30px;margin-top:12px}
+/* sb-grid: KART SAYISINDAN BAĞIMSIZ tek satır. Sabit `repeat(3,1fr)` idi ve
+   Blade 4 kart basınca 3+1 kırılıyordu (dördüncü kart tek başına alta düşüyordu).
+   grid-auto-flow:column + grid-auto-columns:minmax(0,1fr) → kaç kart olursa
+   olsun masaüstünde hepsi tek satırda, eşit genişlikte; minmax(0,…) uzun
+   içerikte taşmayı keser. Dar ekranda sıkışmasın diye tablette 2, mobilde
+   1 sütuna iner (aşağıdaki medya sorguları). */
+.statband .sb-grid{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:18px;text-align:center}
+.statband .st{padding:18px 8px;border-radius:var(--radius-md);background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12)}
+.statband .st b{display:block;font-size:32px;font-weight:700;color:#fff;letter-spacing:-.02em;line-height:1.1}
+.statband .st b small{font-size:18px;font-weight:700;color:#f1b2a3}
+.statband .st span{display:block;margin-top:6px;font-size:12.5px;color:#b8b1a5;font-weight:500}
+
+/* ---- ekip / topluluk bandı — chef-card (RESTORE K1, ref hakkimizda-v1.html VERBATIM) ---- */
+.team-sec{background:var(--bg-white)}
+.chef-row{display:grid;grid-template-columns:repeat(6,1fr);gap:18px;align-items:stretch}
+.chef-card{display:flex;flex-direction:column;align-items:center;text-align:center;cursor:pointer}
+.chef-av{
+  width:96px;height:96px;border-radius:var(--radius-circle);background-size:cover;background-position:center;
+  border:3px solid #fff;box-shadow:var(--sh-sm);transition:.25s var(--ease);
+}
+.chef-card:hover .chef-av{border-color:var(--tomato);transform:translateY(-4px)}
+.chef-card b{font-size:15.5px;font-weight:700;color:var(--slate);margin-top:13px;line-height:1.2}
+.chef-card>span{font-size:12.5px;color:var(--muted);font-weight:500;margin-top:3px}
+.chef-cta{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center;
+  border:2px dashed #d9d9d9;border-radius:var(--radius-lg);padding:18px 12px;cursor:pointer;transition:.25s var(--ease);
+}
+.chef-cta i{font-size:30px;color:var(--tomato)}
+.chef-cta b{font-size:14.5px;font-weight:700;color:var(--slate)}
+.chef-cta span{font-size:12px;color:var(--muted);font-weight:500}
+.chef-cta:hover{border-color:var(--tomato);background:var(--tomato-tint);transform:translateY(-3px)}
+
+/* ---- KÜNYE bloğu — kunye-card (RESTORE K2, ref hakkimizda-v1.html VERBATIM) + Yasal Metinler ---- */
+.kunye-sec{background:var(--bg-cream)}
+.kunye-grid{display:grid;grid-template-columns:1fr;gap:30px;align-items:start;margin-bottom:34px}
+.kunye-card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);box-shadow:var(--sh-sm);overflow:hidden}
+.kunye-rows{display:grid;grid-template-columns:1fr 1fr}
+.kunye-row{display:flex;align-items:flex-start;gap:13px;padding:18px 24px;border-bottom:1px solid var(--line)}
+.kunye-row:nth-child(odd){border-right:1px solid var(--line)}
+.kunye-row:nth-last-child(-n+2){border-bottom:none}
+.kunye-row i{flex:none;width:34px;height:34px;border-radius:var(--radius-sm);background:var(--tomato-tint);color:var(--tomato);display:grid;place-items:center;font-size:13px;margin-top:2px}
+.kunye-row .kl{min-width:0}
+.kunye-row .kl span{display:block;font-size:11.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+.kunye-row .kl b{display:block;font-size:14px;color:var(--slate);font-weight:700;margin-top:3px;line-height:1.45;overflow-wrap:anywhere}
+.kunye-note{display:flex;align-items:flex-start;gap:9px;font-size:12.5px;color:var(--muted);font-weight:500;line-height:1.55;padding:16px 24px;background:var(--bg)}
+.kunye-note i{color:var(--tomato);margin-top:2px}
+/* Yasal Metinler — kart grid (Cila-2 Faz 3 #5 dilinden) */
+.legal-block{margin-top:6px}
+.legal-head{display:flex;align-items:center;gap:13px;margin-bottom:20px}
+.legal-head .lh-ico{flex:none;width:42px;height:42px;border-radius:var(--radius-md);background:var(--tomato-tint);color:var(--tomato);display:grid;place-items:center;font-size:17px}
+.legal-head h3{font-size:20px;color:var(--slate);letter-spacing:-.01em;line-height:1.2}
+.legal-head p{font-size:13px;color:var(--muted);font-weight:500;margin-top:3px;line-height:1.4}
+.legal-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.legal-card{display:flex;align-items:flex-start;gap:13px;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-md);box-shadow:var(--sh-sm);padding:16px 17px;transition:transform .2s var(--ease),box-shadow .2s var(--ease),border-color .2s var(--ease)}
+.legal-card:hover{transform:translateY(-3px);box-shadow:var(--sh-md);border-color:rgba(220,61,23,.35)}
+.legal-card .lc-ico{flex:none;width:36px;height:36px;border-radius:var(--radius-sm);background:var(--tomato-tint);color:var(--tomato);display:grid;place-items:center;font-size:14px;margin-top:1px}
+.legal-card .lc-body{flex:1;min-width:0;display:block}
+.legal-card .lc-body b{display:block;font-size:14px;font-weight:700;color:var(--slate);line-height:1.35}
+.legal-card .lc-body span{display:block;font-size:12px;color:var(--muted);font-weight:500;margin-top:3px;line-height:1.45}
+.legal-card .lc-arr{flex:none;color:var(--muted);font-size:12px;margin-top:3px;transition:transform .2s var(--ease),color .2s var(--ease)}
+.legal-card:hover .lc-arr{color:var(--tomato);transform:translateX(3px)}
+.legal-card.is-report .lc-ico{background:rgba(220,61,23,.14);color:var(--tomato)}
+.legal-note{display:flex;align-items:flex-start;gap:9px;font-size:12.5px;color:var(--muted);font-weight:500;line-height:1.55;margin-top:18px}
+.legal-note i{color:var(--tomato);margin-top:2px}
+
+/* ---- CTA köprü kartları — disc/boş-durum CTA dilinden türetildi
+   bridge-grid 2 sütun: yalnız 2 gerçek hedef kaldı (drop notu üstte). ---- */
+.bridge-sec{background:var(--bg-white)}
+.bridge-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:22px}
+.bridge-card{
+  position:relative;display:flex;flex-direction:column;gap:13px;background:var(--paper);
+  border:1px solid var(--line);border-radius:var(--radius-lg);padding:28px;overflow:hidden;
+  transition:.25s var(--ease);
+}
+.bridge-card:hover{transform:translateY(-5px);box-shadow:var(--sh-md);border-color:rgba(220,61,23,.35)}
+.bridge-card .bi{width:52px;height:52px;border-radius:var(--radius-md);background:var(--tomato-tint);color:var(--tomato);display:grid;place-items:center;font-size:21px}
+.bridge-card.green .bi{background:rgba(59,183,126,.13);color:var(--green-deep)}
+.bridge-card h3{font-size:19px}
+.bridge-card p{font-size:13.5px;color:var(--slate-2);font-weight:500;line-height:1.6;flex:1}
+.bridge-card .bgo{display:inline-flex;align-items:center;gap:9px;font-size:13.5px;font-weight:700;color:var(--tomato)}
+.bridge-card .bgo i{transition:transform .2s var(--ease)}
+.bridge-card:hover .bgo i{transform:translateX(4px)}
+.bridge-card.green .bgo{color:var(--green-deep)}
+
+/* ===== TABLET (≤1024px) ===== */
+@media (max-width:1024px){
+  .about-grid{grid-template-columns:1fr;gap:34px}
+  .about-figs{position:static;grid-template-columns:1fr 1fr}
+  .val-grid{grid-template-columns:1fr 1fr}
+  .statband{background-attachment:scroll}
+  /* okunurluk önce: tablette kartlar 2'şerli satıra iner, kaç tane olursa olsun */
+  .statband .sb-grid{grid-auto-flow:row;grid-template-columns:repeat(2,minmax(0,1fr))}
+  .chef-row{grid-template-columns:repeat(3,1fr);gap:22px 14px}
+  .kunye-grid{grid-template-columns:1fr}
+  .legal-grid{grid-template-columns:repeat(2,1fr)}
+  .bridge-grid{grid-template-columns:1fr}
+}
+/* ===== MOBİL (≤640px) ===== */
+@media (max-width:640px){
+  .val-grid{grid-template-columns:1fr}
+  .statband{padding:40px 0}
+  .statband .sb-head h2{font-size:23px}
+  .statband .sb-grid{gap:10px;grid-template-columns:minmax(0,1fr)}
+  .statband .st b{font-size:22px}
+  .chef-row{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;padding:6px 2px 10px}
+  .chef-row::-webkit-scrollbar{display:none}
+  .chef-row>*{flex:none;width:158px;scroll-snap-align:start}
+  .kunye-rows{grid-template-columns:1fr}
+  .kunye-row{padding:15px 18px}
+  .kunye-row:nth-child(odd){border-right:none}
+  .kunye-row:nth-last-child(-n+2){border-bottom:1px solid var(--line)}
+  .kunye-row:last-child{border-bottom:none}
+  .legal-grid{grid-template-columns:1fr}
+}
+
+
+/* ── Hikâye bölümü (Beyar 2026-08-23) ───────────────────────────────────────
+   Üst etiket ile başlık dipdibeydi (.eyebrow'un kendi alt marjı yok, h2 de
+   üstten boşluk almıyordu) ve gövde sola yaslıydı. Etikete nefes payı,
+   gövdeye iki yana yaslama. `hyphens:auto` yaslamanın açtığı "nehir"leri
+   bastırır — ders sayfasındaki (ders.css) aynı karar. */
+.seo-prose .eyebrow { margin-bottom: 14px; }
+.seo-prose p { text-align: justify; hyphens: auto; overflow-wrap: break-word; }

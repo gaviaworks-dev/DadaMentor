@@ -1,0 +1,44 @@
+/* ============ KÜNYE (5651) — sayfa-yerel ============
+   KAYNAK-TRANSFER (CLAUDE.md "Modül İnşa Protokolü" §2). `.kunye-*` bloğunun
+   TAMAMI `public/reference/hakkimizda/hakkimizda.css:155-168`ten BİREBİR
+   kopyadır (o dosyanın kendi notu: "RESTORE K2, ref hakkimizda-v1.html
+   VERBATIM"); duyarlı kırılımlar aynı dosyanın 216 ve 230-233. satırlarından.
+   Tek bir değer bile değiştirilmedi, yeni class uydurulmadı.
+
+   NEDEN AYRI DOSYA: `/kunye` artık kendi sayfası (doküman §3 grup D, üç
+   markada da) ve İKİ FARKLI kabukta yaşıyor — `layouts.app` (Gastro, tokens.css)
+   ve `layouts.gourmet` (gourmet.css). `hakkimizda.css`in tamamını asmak
+   `.about-*`/`.sb-grid`/`.chef-row`/`.legal-grid` gibi bu sayfada karşılığı
+   olmayan onlarca kuralı da beraberinde getirirdi. Bu blok yalnız İKİ kabukta
+   da tanımlı token'ları kullanır (--paper --line --radius-lg --sh-sm
+   --radius-sm --tomato-tint --tomato --muted --slate --bg --bg-cream; ölçüldü).
+
+   Sayfa çerçevesi (.lg-top/.lg-sec/.lg-layout/.lg-main) yasal sayfanın kendi
+   CSS'inden gelir — bu dosya onun YANINA yüklenir, onu tekrar etmez. */
+
+.kunye-sec{background:var(--bg-cream)}
+.kunye-grid{display:grid;grid-template-columns:1fr;gap:30px;align-items:start;margin-bottom:34px}
+.kunye-card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);box-shadow:var(--sh-sm);overflow:hidden}
+.kunye-rows{display:grid;grid-template-columns:1fr 1fr}
+.kunye-row{display:flex;align-items:flex-start;gap:13px;padding:18px 24px;border-bottom:1px solid var(--line)}
+.kunye-row:nth-child(odd){border-right:1px solid var(--line)}
+.kunye-row:nth-last-child(-n+2){border-bottom:none}
+.kunye-row i{flex:none;width:34px;height:34px;border-radius:var(--radius-sm);background:var(--tomato-tint);color:var(--tomato);display:grid;place-items:center;font-size:13px;margin-top:2px}
+.kunye-row .kl{min-width:0}
+.kunye-row .kl span{display:block;font-size:11.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+.kunye-row .kl b{display:block;font-size:14px;color:var(--slate);font-weight:700;margin-top:3px;line-height:1.45;overflow-wrap:anywhere}
+.kunye-note{display:flex;align-items:flex-start;gap:9px;font-size:12.5px;color:var(--muted);font-weight:500;line-height:1.55;padding:16px 24px;background:var(--bg)}
+.kunye-note i{color:var(--tomato);margin-top:2px}
+
+/* ===== TABLET (≤1024px) — hakkimizda.css:216 ===== */
+@media (max-width:1024px){
+  .kunye-grid{grid-template-columns:1fr}
+}
+/* ===== MOBİL (≤640px) — hakkimizda.css:230-233 ===== */
+@media (max-width:640px){
+  .kunye-rows{grid-template-columns:1fr}
+  .kunye-row{padding:15px 18px}
+  .kunye-row:nth-child(odd){border-right:none}
+  .kunye-row:nth-last-child(-n+2){border-bottom:1px solid var(--line)}
+  .kunye-row:last-child{border-bottom:none}
+}

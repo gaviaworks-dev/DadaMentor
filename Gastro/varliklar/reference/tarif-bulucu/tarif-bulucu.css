@@ -1,0 +1,519 @@
+/* ============ TARİF BULUCU (F4/m17) — FB37-a REFERANSA DÖNÜŞ (2026-07-15) ============
+   reference/tarif-uzantilari/tarif-bulucu-v1.html "SAYFA CSS" bloğu (satır 739-1136)
+   TAM/BLOKSUZ extract (lessons.md "blok atlama yasak" kuralı) — önceki dalganın
+   sadeleştirilmiş sürümü Beyar kararıyla İPTAL edildi (kararlar.md FB37-a).
+
+   LARAVEL ADAPTASYONU (kod yazılmadı, yalnız DAVRANIŞ notu — sınıflar AYNEN kalır):
+   - .mz-sponsor / .mz-spon: CSS KORUNUR (blok atlanmadı) ama backend'de gerçek
+     sponsorlu ürün kavramı YOK (bu proje kapsamında DadaStore/reklam ortaklığı
+     kurulmadı) — render'da hiç kullanılmaz, ölü-ama-zararsız kural.
+   - .mz.has-photo / .mz-img background-image: gerçek malzeme fotoğrafı YOK
+     (SAHTE GÖRSEL YASAK, component-token.md §6) — tüm kartlar .mz-img'in KENDİ
+     ikon-fallback yoluna düşer (has-photo class'ı hiç eklenmez), CSS'in zaten
+     tasarladığı ikinci görünüm kullanılır, yeni kural icat edilmedi.
+   - .ie-sugg (otomatik-tamamlama kutusu): backend kanonik Ingredient id
+     kontratı serbest-metin kabul etmediği için otomatik-tamamlama yerine
+     .pan-search GERÇEK bir canlı filtre olarak çalışır (görünen .mz kartlarını
+     ada göre daraltır) — aynı input alanı, davranış canonical id kısıtına uyarlandı.
+*/
+
+/* ============ TARİF BULUCU (F4 / m17) — EVİNDEKİ MALZEMEYLE PİŞİR ============
+   Miras: tarif-liste-v1 .lst-layout sticky panel + .r-card grid + boş durum ·
+   tarif-ekle-v1 .ie-sugg autocomplete · shell .chip. Yeni: .pan-* dolap kiti +
+   .krange kalori aralığı slider'ı. */
+
+/* breadcrumb — VERBATIM */
+.rd-crumb{display:flex;align-items:center;flex-wrap:wrap;gap:9px;padding:18px 0 14px;font-size:13px;font-weight:500;color:var(--muted)}
+.rd-crumb a{color:var(--muted);transition:.18s}
+.rd-crumb a:hover{color:var(--tomato)}
+.rd-crumb i{font-size:9px;color:#c7c7c7}
+.rd-crumb b{color:var(--slate);font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:340px}
+
+/* üst band — H1 koyu-overlay görselli hero (§2f override, patron kararı; akademi/mutfaga-giris dili) */
+.tb-top{
+  position:relative;padding-top:128px;
+  background-image:linear-gradient(90deg,rgba(28,25,18,.93),rgba(33,30,22,.72)),
+    url('../../_dis/images.unsplash.com/photo-1522184216316-3c25379f9760.jpg');
+  background-size:cover;background-position:center;
+}
+.tb-top .wrap{position:relative}
+.tb-top .rd-crumb{color:#c9c3b8}
+.tb-top .rd-crumb a{color:#c9c3b8}
+.tb-top .rd-crumb a:hover{color:#ea8b74}
+.tb-top .rd-crumb i{color:rgba(255,255,255,.4)}
+.tb-top .rd-crumb b{color:#fff}
+.tb-head{padding:22px 0 56px}
+.tb-head .eyebrow{color:#ea8b74;margin-bottom:14px}
+/* başlık satırı: h1 solda + israf notu sağda (koyu hero cam dili) */
+.tb-head-row{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap}
+.tb-head h1{color:#fff;font-size:42px;letter-spacing:-.03em;text-shadow:0 2px 24px rgba(0,0,0,.25);max-width:560px}
+.tb-head h1 .accent{color:#ea8b74}
+.tb-head .lead{color:#e7edf1;font-weight:500;font-size:15.5px;margin-top:12px;max-width:560px;text-shadow:0 1px 14px rgba(0,0,0,.3)}
+/* israf vurgusu şeridi (m17) — koyu hero üstü cam-rozet */
+.waste-note{display:inline-flex;align-items:center;gap:10px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);border-radius:var(--radius-md);padding:9px 14px;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.waste-note i{color:#ea8b74;font-size:14px;flex:none}
+.waste-note b{font-size:13px;color:#fff;font-weight:700}
+.waste-note span{font-size:12.5px;color:#e0e7eb;font-weight:500}
+@media (max-width:640px){.tb-head h1{font-size:27px}.waste-note{padding:8px 12px}}
+
+/* ===== DOLAP DENEYİMİ — GÖRSELLİ MALZEME · İKİ MOD (Beyar revize: Yasin Bey) =====
+   Yeni yön (nefisyemektarifleri benzeri): üstte tam-genişlik malzeme tezgahı.
+   İKİ EŞİT MOD sekmesi (Elimdekiler ↔ İstemediklerim) tüm tezgahı kendi rengine
+   boyar (yeşil ↔ tomato) → hangi listede olduğun belirsizliği SIFIR. Her mod
+   içinde: sticky kategori atla-çubuğu + yığılı BAŞLIKLI kategori blokları, her
+   malzeme = GERÇEK FOTO (TheMealDB) div+background-image (cover+center) görselli
+   kart. Foto yoksa kategori-renkli zemin + FA ikon fallback (.mz-noimg). Gerçek
+   görsel gelince aynı .mz-img background-image ile swap edilir (.has-photo deseni).
+   Seçilenler şeridi iki renkli grup (elimde yeşil · istemediğim tomato) hep görünür.
+   Altta CANLI tarif sayacı + sonuç grid'i. FLAT — skeuomorfizm yok. */
+.tb-sec{padding:30px 0 74px;background:var(--bg-cream)}
+.tb-layout{display:block}            /* tek kolon: üst geniş tezgah + altta sonuç */
+
+/* mod renk token'ı — aktif moda göre panel boyanır (have=yeşil, no=tomato) */
+.dolap{--mode:var(--green);--mode-deep:var(--green-deep);--mode-tint:#EAF7F0}
+.dolap[data-main="exclude"]{--mode:var(--tomato);--mode-deep:var(--tomato-dark);--mode-tint:var(--tomato-tint)}
+
+/* ===== ÜST TEZGAH — tam genişlik ferah malzeme alanı ===== */
+.dolap{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);box-shadow:var(--sh-sm);overflow:hidden;margin-bottom:26px}
+.dolap-head{display:flex;align-items:center;gap:13px;padding:18px 26px;border-bottom:1px solid var(--line)}
+.dlp-count{display:flex;align-items:center;gap:13px;min-width:0;flex:1}
+.dlp-count .dc-ico{flex:none;width:44px;height:44px;border-radius:var(--radius-md);background:var(--mode-tint);color:var(--mode);display:grid;place-items:center;font-size:19px;transition:background .25s var(--ease),color .25s var(--ease)}
+.dlp-count .dc-txt{min-width:0}
+.dlp-count .dc-txt b{display:block;font-size:17px;color:var(--slate);font-weight:700;line-height:1.2;letter-spacing:-.01em}
+.dlp-count .dc-txt b .n{color:var(--mode);transition:color .25s var(--ease)}
+.dolap-clear{flex:none;background:none;border:none;font-family:inherit;font-size:12.5px;font-weight:700;color:var(--muted);cursor:pointer;transition:.18s;white-space:nowrap;display:inline-flex;align-items:center;gap:7px}
+.dolap-clear::before{content:"\f2ed";font-family:"Font Awesome 6 Free";font-weight:900;font-size:11px}
+.dolap-clear:hover{color:var(--tomato)}
+.dolap-clear[hidden]{display:none}
+.dolap-body{padding:22px 26px 24px}
+
+/* ARAMA — birincil giriş, ferah ve geniş */
+.pan-search{position:relative;max-width:640px}
+.pan-search>i{position:absolute;left:17px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:15px;pointer-events:none}
+.pan-search input{width:100%;font-family:inherit;font-size:15.5px;font-weight:500;color:var(--slate);background:var(--bg);border:1.5px solid var(--line);border-radius:var(--radius-md);padding:15px 44px 15px 46px;outline:none;transition:border-color .2s var(--ease),box-shadow .2s var(--ease)}
+.pan-search input::placeholder{color:#a7a7a7}
+.pan-search input:focus{border-color:var(--mode);box-shadow:0 0 0 3px color-mix(in srgb,var(--mode) 14%,transparent)}
+/* Sesli malzeme girişi (M4/RV-PUBLIC-3) — [data-voice-input] mic butonu; JS
+   (bindVoiceInput, ui.js) API varsa `hidden`'ı kaldırır. `input` sağ pad'i
+   yukarıda hep ayrılmış (44px) — buton gizliyken de hizada boşluk kalır,
+   tarayıcılar arası sıçrama olmaz. voicePulse keyframe portal.css'te global. */
+.pan-search .voice-btn{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:32px;height:32px;border:none;border-radius:var(--radius-circle);background:transparent;color:var(--muted);cursor:pointer;display:grid;place-items:center;font-size:14px;transition:.2s var(--ease)}
+.pan-search .voice-btn:hover{background:var(--tomato-tint);color:var(--tomato)}
+.pan-search .voice-btn.is-listening{background:var(--tomato);color:#fff;animation:voicePulse 1.4s var(--ease) infinite}
+
+/* ===== SEÇİLENLER ŞERİDİ — iki renkli grup (elimde yeşil · istemediğim tomato) ===== */
+.dlp-strip{display:flex;flex-direction:column;gap:11px;padding:16px 0 0;margin-top:16px;border-top:1px solid var(--line)}
+.dlp-strip .ds-empty{font-size:13px;color:var(--muted);font-weight:500;line-height:1.5;display:flex;gap:8px;align-items:center}
+.dlp-strip .ds-empty i{color:var(--green);flex:none}
+.dlp-strip.has-any .ds-empty{display:none}
+.ds-group{display:flex;align-items:center;flex-wrap:wrap;gap:8px}
+.ds-group[hidden]{display:none}
+.ds-lbl{display:inline-flex;align-items:center;gap:7px;font-size:11px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;margin-right:2px}
+.ds-lbl i{font-size:11px}
+.ds-group.g-have .ds-lbl{color:var(--green-deep)}
+.ds-group.g-no .ds-lbl{color:var(--tomato-dark)}
+.pan-chip{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:700;padding:7px 9px 7px 12px;border-radius:var(--radius-sm);cursor:default;animation:fadeUp .2s var(--ease)}
+.pan-chip.have{color:var(--green-deep);background:#EAF7F0;border:1px solid rgba(59,183,126,.3)}
+.pan-chip.no{color:var(--tomato-dark);background:var(--tomato-tint);border:1px solid rgba(220,61,23,.28)}
+.pan-chip i.lead{font-size:10px;opacity:.9}
+.pan-chip .x{display:grid;place-items:center;width:17px;height:17px;border-radius:var(--radius-circle);font-size:9px;cursor:pointer;transition:.15s;border:none;background:none;color:inherit}
+.pan-chip.have .x:hover{background:var(--green);color:#fff}
+.pan-chip.no .x:hover{background:var(--tomato);color:#fff}
+
+/* ===== İKİ MOD SEKMESİ — eşit ağırlık segmented (THE headline change) ===== */
+.mode-tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:20px;padding-top:18px;border-top:1px solid var(--line)}
+.mode-tab{display:flex;align-items:center;justify-content:center;gap:10px;background:var(--bg);border:1.5px solid var(--line);border-radius:var(--radius-md);padding:14px 16px;font-family:inherit;font-size:15px;font-weight:700;color:var(--slate-2);cursor:pointer;transition:border-color .18s var(--ease),background .18s var(--ease),color .18s var(--ease)}
+.mode-tab .mt-ic{font-size:15px;transition:color .18s var(--ease)}
+.mode-tab .mt-dot{min-width:21px;height:21px;padding:0 6px;border-radius:var(--radius-pill);font-size:11px;font-weight:800;line-height:1;display:none;align-items:center;justify-content:center;background:#fff}
+.mode-tab.has .mt-dot{display:inline-flex}
+.mode-tab[data-main="have"] .mt-ic{color:var(--green)}
+.mode-tab[data-main="have"]:hover{border-color:rgba(59,183,126,.5);color:var(--green-deep)}
+.mode-tab[data-main="have"].active{background:var(--green);border-color:var(--green);color:#fff}
+.mode-tab[data-main="have"].active .mt-ic{color:#fff}
+.mode-tab[data-main="have"] .mt-dot{color:var(--green-deep)}
+.mode-tab[data-main="have"].active .mt-dot{background:#fff;color:var(--green-deep)}
+.mode-tab[data-main="exclude"] .mt-ic{color:var(--tomato)}
+.mode-tab[data-main="exclude"]:hover{border-color:rgba(220,61,23,.5);color:var(--tomato-dark)}
+.mode-tab[data-main="exclude"].active{background:var(--tomato);border-color:var(--tomato);color:#fff}
+.mode-tab[data-main="exclude"].active .mt-ic{color:#fff}
+.mode-tab[data-main="exclude"] .mt-dot{color:var(--tomato-dark)}
+.mode-tab[data-main="exclude"].active .mt-dot{background:#fff;color:var(--tomato-dark)}
+
+/* mod açıklaması — aktif moda göre tek satır yönerge.
+   Beyar mikro-fix (2026-07-19): referans prototipte (tarif-bulucu-v1.html)
+   .mode-note .dolap-top'un EN SONUNDAKİ eleman (yalnız margin-top:14px
+   yeterliydi, altında başka öğe yoktu). Bu revizyonda .pan-search .mode-note
+   sonrasına taşındı (yeni iki-kademeli tab yapısı için) — .mode-note'un
+   ALTINDA da (Dolaptakiler tab'ında doğrudan, Hariç Tuttuklarım'da
+   #exModeTabs üzerinden) bir eleman var artık, o yüzden AYNI 14px değeri
+   simetrik olarak margin-bottom'a da uygulanır (referansın kendi margin-top
+   token'ı — yeni px icat edilmedi, #exModeTabs'a önceki mikro-fix'te
+   uygulanan DEĞERLE de tutarlı). */
+.mode-note{display:none;align-items:center;gap:9px;margin-top:14px;margin-bottom:14px;font-size:13px;font-weight:500;color:var(--slate-2);line-height:1.5}
+.mode-note.show{display:flex;animation:fadeUp .22s var(--ease)}
+.mode-note .mn-ic{flex:none;width:30px;height:30px;border-radius:var(--radius-sm);background:var(--mode-tint);color:var(--mode);display:grid;place-items:center;font-size:13px}
+.mode-note b{color:var(--slate);font-weight:700}
+
+/* ===== MOD PANELLERİ — yalnız aktif görünür ===== */
+.mode-pane{display:none}
+.mode-pane.active{display:block;animation:fadeUp .22s var(--ease)}
+
+/* sık hariç tutulanlar — İstemediklerim modu üstü hızlı alerjen satırı */
+.nope-quick{background:var(--slate);border-radius:var(--radius-lg);padding:16px 18px;margin:14px 0 6px}
+.nq-head{display:flex;align-items:center;gap:10px;margin-bottom:13px}
+.nq-head .nq-ic{flex:none;width:32px;height:32px;border-radius:var(--radius-sm);background:rgba(255,255,255,.12);color:#fff;display:grid;place-items:center;font-size:14px}
+.nq-head b{color:#fff;font-size:14px;font-weight:700}
+.nq-head small{color:rgba(255,255,255,.6);font-size:12px;font-weight:500}
+.nq-row{display:flex;flex-wrap:wrap;gap:8px}
+.nq-chip{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.16);border-radius:var(--radius-md);padding:8px 14px;font-family:inherit;font-size:13px;font-weight:700;color:rgba(255,255,255,.92);cursor:pointer;transition:.16s var(--ease)}
+.nq-chip i{font-size:12px;color:rgba(255,255,255,.6);transition:color .16s var(--ease)}
+.nq-chip:hover{background:rgba(255,255,255,.13);border-color:rgba(255,255,255,.4)}
+.nq-chip.sel{background:var(--tomato);border-color:var(--tomato);color:#fff}
+.nq-chip.sel i{color:#fff}
+/* [disabled] kuralı KALDIRILDI (2026-07-19, Beyar direktifi) — hiçbir
+   preset chip disabled OLMAZ artık, hepsi her zaman aynı görsel ağırlıkta
+   ve tıklanabilir (bkz. RecipeFinderController sınıf başı not). */
+
+/* ===== REVİZYON 2026-07-19 — Hariç Tuttuklarım alt-mod sekmesi (Sevmiyorum/
+   Tüketmiyorum/Alerjim Var/Hassasiyetim Var). AYNI .mode-tabs iskeleti, 4
+   sütuna genişler; renk ailesi hep tomato (hepsi "hariç tutma" davranışı). */
+.mode-tabs.sub{grid-template-columns:repeat(4,1fr);gap:7px;margin-top:14px;padding-top:14px;margin-bottom:14px}
+/* Beyar mikro-fix (2026-07-19): alt-mod ray'ı ile hemen altındaki arama
+   inputu (.pan-search) arasında boşluk yoktu (0px — kesişiyormuş gibi
+   okunuyordu). Aynı 14px değeri kullanıldı (bu ray'ın kendi margin-top'u ve
+   .mode-note'un margin-top'uyla AYNI token — yeni değer icat edilmedi,
+   mevcut dikey ritimle tutarlı). Genel .pan-search'e DEĞİL, yalnız
+   .mode-tabs.sub'a eklendi — "Dolaptakiler" tab'ında (sub ray gizli) ve
+   sonuç arama kutusunda (.tb-rsearch) etkisiz kalır, kapsam dışına
+   sızmaz. */
+/* [hidden] UA kuralı, .mode-tabs{display:grid} yazar kuralıyla AYNI özgüllükte
+   ama author-CSS UA-CSS'i geçer — açık ezme şart (aksi halde alt-mod sekmesi
+   ana tab "Dolaptakiler"deyken de görünür kalır). */
+.mode-tabs[hidden]{display:none}
+.ex-tab{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;background:var(--bg);border:1.5px solid var(--line);border-radius:var(--radius-md);padding:11px 8px;font-family:inherit;font-size:12.5px;font-weight:700;color:var(--slate-2);cursor:pointer;transition:border-color .18s var(--ease),background .18s var(--ease),color .18s var(--ease)}
+/* Beyar madde 3c (2026-07-20) — çıplak <i> glif ağırlığı ikondan ikona
+   değişiyordu (fa-face-frown dolu daire vs. fa-triangle-exclamation/
+   fa-shield-heart ince çizgi), 4 buton farklı görsel hizada duruyordu.
+   Sabit boyutlu rozet kutusu (.et-ico) AYNI dosyadaki .dc-ico/.mn-ic/
+   .ex-desc i deseninin tekrarı — yeni token icat edilmedi. */
+.ex-tab .et-ico{flex:none;width:26px;height:26px;border-radius:var(--radius-sm);background:var(--tomato-tint);color:var(--tomato);display:grid;place-items:center;font-size:13px;transition:background .18s var(--ease),color .18s var(--ease)}
+.ex-tab:hover{border-color:rgba(220,61,23,.5);color:var(--tomato-dark)}
+.ex-tab.active{background:var(--tomato);border-color:var(--tomato);color:#fff}
+.ex-tab.active .et-ico{background:rgba(255,255,255,.22);color:#fff}
+.ex-tab .mt-dot{min-width:19px;height:19px;padding:0 5px;border-radius:var(--radius-pill);font-size:10px;font-weight:800;line-height:1;display:none;align-items:center;justify-content:center;background:#fff;color:var(--tomato-dark)}
+.ex-tab.has .mt-dot{display:inline-flex}
+.ex-tab.active .mt-dot{background:#fff;color:var(--tomato-dark)}
+
+/* alt-mod açıklama satırı (ex-desc, brief madde "Alan açıklaması") */
+.ex-desc{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:500;color:var(--slate-2);line-height:1.5;margin:16px 0 4px}
+.ex-desc i{flex:none;width:26px;height:26px;border-radius:var(--radius-sm);background:var(--tomato-tint);color:var(--tomato);display:grid;place-items:center;font-size:12px}
+
+/* Hassasiyetim Var — preset chip'in altında beliren kesin/uyar mini-toggle */
+.nq-pref-wrap{display:flex;flex-direction:column;gap:6px}
+.nq-pref{display:flex;gap:6px;padding-left:2px}
+.nq-pref[hidden]{display:none}
+.pref-btn{font-family:inherit;font-size:11px;font-weight:700;color:rgba(255,255,255,.7);background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.18);border-radius:var(--radius-pill);padding:5px 11px;cursor:pointer;transition:.16s var(--ease)}
+.pref-btn:hover{background:rgba(255,255,255,.13)}
+.pref-btn.active{background:#fff;border-color:#fff;color:var(--tomato-dark)}
+
+/* "Diğer — tek tek malzeme ekle" disclosure */
+.ex-more{display:inline-flex;align-items:center;gap:8px;margin:14px 0 4px;background:none;border:1.5px dashed var(--line);border-radius:var(--radius-md);padding:10px 15px;font-family:inherit;font-size:13px;font-weight:700;color:var(--slate-2);cursor:pointer;transition:.16s var(--ease)}
+.ex-more:hover,.ex-more.open{border-color:var(--tomato);color:var(--tomato-dark);border-style:solid}
+.ex-more i{font-size:11px;color:var(--tomato)}
+.ex-custom-cats[hidden]{display:none}
+.ex-custom-cats{margin-top:8px;padding-top:8px;border-top:1px dashed var(--line)}
+
+/* seçilenler şeridinde neden etiketi ("Mantar — Sevmiyorum") */
+.pan-chip-reason{font-weight:600;opacity:.75;font-size:12px}
+.ds-group.g-exclude .ds-lbl{color:var(--tomato-dark)}
+
+/* sonuç kartı — esnek "çıkarılabilir" notu + hassasiyet uyarısı */
+.r-note{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:500;line-height:1.4;padding:8px 10px;border-radius:var(--radius-sm);margin-top:8px}
+.r-note i{flex:none;font-size:11px}
+.r-note.soft{background:#EAF7F0;color:var(--green-deep)}
+.r-note.soft i{color:var(--green)}
+.r-note.warn{background:var(--tomato-tint);color:var(--tomato-dark)}
+.r-note.warn i{color:var(--tomato)}
+
+/* ===== BAŞLIKLI KATEGORİ — ÇOKLU-AÇIK ACCORDION ===== */
+.mz-cat{scroll-margin-top:150px;border-top:1px solid var(--line);min-width:0}
+.mz-cat:first-child{border-top:none}
+.mz-cat-h{display:flex;align-items:center;gap:11px;width:100%;background:none;border:none;font-family:inherit;text-align:left;cursor:pointer;padding:15px 2px}
+.mz-cat-h .mh-ic{flex:none;width:32px;height:32px;border-radius:var(--radius-sm);background:color-mix(in srgb,var(--cat) 14%,#fff);color:var(--cat);display:grid;place-items:center;font-size:14px}
+.mz-cat-h h4{font-size:15.5px;letter-spacing:-.01em;margin:0}
+.mz-cat-h .mh-n{font-size:12px;color:var(--muted);font-weight:600}
+.mz-cat-h .mh-sp{flex:1}
+.mz-cat-h .mh-sel{min-width:20px;height:20px;padding:0 6px;border-radius:var(--radius-pill);background:var(--mode);color:#fff;font-size:11px;font-weight:800;line-height:1;display:none;align-items:center;justify-content:center}
+.mz-cat-h .mh-sel.show{display:inline-flex}
+.mz-cat-h .mh-chev{margin-left:12px;font-size:13px;color:var(--muted);transition:transform .25s var(--ease)}
+.mz-cat.open .mh-chev{transform:rotate(180deg);color:var(--mode)}
+.mz-cat-h:hover h4{color:var(--mode-deep)}
+.mz-cat:not(.open) .mz-grid{display:none}
+
+/* görselli malzeme ızgarası — TEK SATIR yatay slider (her kategori kendi slider'ı).
+   Okunabilir kartlar nowrap dizilir; ~5 kart görünür, gerisi overflow-x:auto ile kayar.
+   column-flow YOK (zigzag yapan grid-auto-flow:column kaldırıldı). Çift-açma değişmez.
+
+   UI/UX revize turu (2026-07-19, Beyar bulgusu — "kesişen kartlar görmek
+   istemiyorum"): eski davranış son kartı panel kenarında SERT keser, hiçbir
+   kaydırma ipucu yoktu. Düzeltme İKİ parça: (1) native scrollbar tamamen
+   gizlenir (kartlara/etiketlere binen çizgi kaynağı — sürükleme/tekerlek/
+   otomatik-kayan animasyon zaten çalışıyor, görsel scrollbar gereksiz);
+   (2) tarif-bulucu.js taşma VARSA kenarları yumuşak mask-image ile söndürür
+   (.has-overflow + .at-start/.at-end, aşağıda) — kart artık keskin
+   kesilmiyor, "daha var" ipucu şeffaflaşarak veriliyor (Apple/Netflix
+   carousel emsali). Taşma YOKSA (kategori az malzemeli) mask hiç uygulanmaz. */
+.mz-grid{display:flex;flex-wrap:nowrap;gap:10px;width:100%;min-width:0;max-width:100%;overflow-x:auto;overscroll-behavior-x:contain;padding-top:4px;padding-bottom:6px;scrollbar-width:none;-ms-overflow-style:none}
+.mz-grid::-webkit-scrollbar{display:none;height:0}
+.mz-grid.has-overflow:not(.at-start):not(.at-end){-webkit-mask-image:linear-gradient(to right,transparent,#000 28px,#000 calc(100% - 28px),transparent);mask-image:linear-gradient(to right,transparent,#000 28px,#000 calc(100% - 28px),transparent)}
+.mz-grid.has-overflow.at-start:not(.at-end){-webkit-mask-image:linear-gradient(to right,#000 calc(100% - 28px),transparent);mask-image:linear-gradient(to right,#000 calc(100% - 28px),transparent)}
+.mz-grid.has-overflow.at-end:not(.at-start){-webkit-mask-image:linear-gradient(to left,#000 calc(100% - 28px),transparent);mask-image:linear-gradient(to left,#000 calc(100% - 28px),transparent)}
+.mz-grid>.mz{flex:0 0 98px}
+/* UF#1: 15+ malzemeli kategori → 2 SATIR yatay track (grid column-flow: yukarıdan aşağı
+   2 satır dolar, sonra sağa kayar). Yatay scroll korunur; ≤15 kategori tek-satır kalır. */
+.mz-grid.two-row{display:grid;grid-auto-flow:column;grid-template-rows:repeat(2,auto);grid-auto-columns:98px;align-items:start}
+.mz-grid.two-row>.mz{flex:none;width:98px}
+/* 3-satır cap "daha fazla"yı kapsar → buton gizli, tüm malzeme (xtra dahil) slider'da */
+.mz-more{display:none}
+.mz.xtra{display:flex}
+
+/* ===== GÖRSELLİ MALZEME KARTI ===== */
+.mz{position:relative;display:flex;flex-direction:column;align-items:stretch;gap:0;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-md);padding:0;cursor:pointer;font-family:inherit;overflow:hidden;transition:transform .12s var(--ease),border-color .18s var(--ease),box-shadow .18s var(--ease)}
+.mz-img{position:relative;aspect-ratio:1;background-color:color-mix(in srgb,var(--cat,var(--muted)) 9%,#fff);background-size:cover;background-position:center;display:grid;place-items:center}
+.mz-img i{font-size:26px;color:color-mix(in srgb,var(--cat,var(--muted)) 78%,#000)}
+/* Revize M2: fotolu kartta görsel zemini kart zeminiyle aynı (tint kutusu yok) →
+   slider kenarında yarım kalan ürünlerde keskin kesik kutu görünmez. Fotosuz
+   FA-fallback kartlarda hafif tint kalır (çıplak ikon boş beyaza düşmesin). */
+.mz.has-photo .mz-img{background-size:88%;background-repeat:no-repeat;background-color:transparent}
+.mz.has-photo .mz-img i{display:none}
+.mz-name{display:block;padding:6px 6px 8px;font-size:11.5px;font-weight:600;color:var(--slate);text-align:center;line-height:1.2;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mz-ck{position:absolute;top:6px;right:6px;width:19px;height:19px;border-radius:var(--radius-circle);background:var(--mode);color:#fff;font-size:9px;display:none;place-items:center;box-shadow:0 2px 8px rgba(33,30,22,.25)}
+.mz:hover{border-color:var(--mode);transform:translateY(-1px);box-shadow:var(--sh-sm)}
+.mz:active{transform:scale(.97)}
+.mz.sel{border-color:var(--mode)}
+.mz.sel .mz-name{color:var(--mode-deep)}
+.mz.sel .mz-ck{display:grid}
+.mz.sel .mz-img::after{content:"";position:absolute;inset:0;background:color-mix(in srgb,var(--mode) 12%,transparent)}
+.mz.pop{animation:ingpop .32s var(--ease)}
+@keyframes ingpop{0%{transform:scale(1)}38%{transform:scale(1.05)}100%{transform:scale(1)}}
+.ex-note{font-size:13.5px;color:var(--muted);font-weight:500}
+.ex-note b{color:var(--slate);font-weight:700}
+.r-card.ex-hidden{display:none}
+
+/* ===== FİLTRELER — senaryo grupları (Revize M5/6/7): başlıksız, derde göre iki panel.
+   "Sağlık hedefin" (kalori+protein) DadaDiet mint kimliği taşır — bilinçli modül
+   ayrımı, yalnız vurgu dokunuşları (ikon/slider/aktif chip); blok boyama yok.
+   "Ne kadar vaktin var?" Gastro domates dilinde kalır. Sıfırla: grupların altında sağda. ===== */
+.dolap-filters{margin-top:18px;padding-top:16px;border-top:1px solid var(--line)}
+.flt-reset{margin-left:auto;display:inline-flex;align-items:center;gap:7px;background:none;border:none;font-family:inherit;font-size:12px;font-weight:700;color:var(--muted);cursor:pointer;transition:.16s var(--ease)}
+.flt-reset:hover{color:var(--tomato)}
+.flt-reset i{font-size:11px}
+.flt-reset[hidden]{display:none}
+.flt-foot{display:flex;justify-content:flex-end;margin-top:10px}
+.flt-body{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.flt-group{background:var(--bg);border:1px solid var(--line);border-radius:var(--radius-md);padding:15px 17px 14px}
+.fg-head{display:flex;align-items:center;gap:9px;font-size:13px;font-weight:800;color:var(--slate);letter-spacing:-.01em;margin-bottom:13px}
+.fg-head i{font-size:13px}
+.fg-health .fg-head i{color:var(--green)}
+.fg-time .fg-head i{color:var(--tomato)}
+.fg-tag{font-size:9px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--green-deep);background:rgba(59,183,126,.13);border-radius:var(--radius-sm);padding:2px 7px}
+/* .fg-tag-brand — rozet artik <span> degil <a> (kardes markaya dis bag,
+   Beyar karari 2026-08-20). Rozet gorunumu BIREBIR korunur: yeni renk/radius
+   ICAT EDILMEZ, .fg-tag'in kendi degerleri devralinir; tek eklenen bagin
+   varsayilan alti-cizgisini kaldirmak ve tiklanabilir oldugunu belli eden
+   hafif bir hover. */
+a.fg-tag-brand{text-decoration:none;cursor:pointer}
+a.fg-tag-brand:hover,a.fg-tag-brand:focus-visible{background:rgba(59,183,126,.22)}
+.df-block+.df-block{margin-top:16px}
+/* alt etiketler — grup başlığının bir kademe altı: 14px + 26px ikon çipi (Revize: "aşırı küçük" düzeltmesi) */
+.df-block .dfl{display:flex;align-items:center;gap:10px;font-size:14px;font-weight:700;color:var(--slate);letter-spacing:-.01em;margin-bottom:12px}
+.df-block .dfl i{flex:none;width:26px;height:26px;border-radius:var(--radius-sm);background:var(--tomato-tint);color:var(--tomato);display:grid;place-items:center;font-size:12.5px}
+.df-block .dfl .dfl-val{margin-left:auto;font-size:12px;font-weight:700;color:var(--tomato);background:var(--tomato-tint);border-radius:var(--radius-sm);padding:3px 10px}
+.df-sure .chips,.df-protein .chips,.df-zorluk .chips{gap:8px;flex-wrap:wrap}
+.df-sure .chip,.df-protein .chip,.df-zorluk .chip{font-size:12.5px;padding:8px 13px}
+.df-sure .chip.active,.df-zorluk .chip.active{border-color:var(--tomato);background:var(--tomato-tint);color:var(--tomato);font-weight:700}
+/* sağlık grubu — Diet mint dokunuşları (--green = sayfadaki --b-diet ile aynı sağlık aksanı) */
+.fg-health .dfl i{background:rgba(59,183,126,.13);color:var(--green)}
+.fg-health .dfl .dfl-val{color:var(--green-deep);background:rgba(59,183,126,.13)}
+.fg-health .kr-fill{background:var(--green)}
+.fg-health .kr-track input[type=range]::-webkit-slider-thumb{border-color:var(--green)}
+.fg-health .kr-track input[type=range]::-moz-range-thumb{border-color:var(--green)}
+.df-protein .chip:hover{border-color:var(--green);color:var(--green-deep);background:rgba(59,183,126,.08)}
+.df-protein .chip.active{border-color:var(--green);background:rgba(59,183,126,.13);color:var(--green-deep);font-weight:700}
+.df-protein .ch-tag{font-size:9.5px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:var(--green-deep);background:rgba(59,183,126,.13);border-radius:var(--radius-sm);padding:1px 5px;margin-left:5px}
+.df-protein .chip.active .ch-tag{background:rgba(255,255,255,.7)}
+.krange{padding-top:2px}
+.kr-track{position:relative;height:5px;background:var(--line);border-radius:var(--radius-sm);margin:8px 9px 12px}
+.kr-fill{position:absolute;top:0;height:100%;background:var(--tomato);border-radius:var(--radius-sm)}
+.kr-track input[type=range]{position:absolute;left:-9px;right:-9px;width:calc(100% + 18px);top:50%;transform:translateY(-50%);-webkit-appearance:none;appearance:none;background:none;pointer-events:none;margin:0;height:0}
+.kr-track input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;pointer-events:auto;width:19px;height:19px;border-radius:var(--radius-circle);background:#fff;border:2px solid var(--tomato);box-shadow:0 2px 6px rgba(33,30,22,.18);cursor:grab}
+.kr-track input[type=range]::-webkit-slider-thumb:active{cursor:grabbing;transform:scale(1.1)}
+.kr-track input[type=range]::-moz-range-thumb{pointer-events:auto;width:19px;height:19px;border-radius:50%;background:#fff;border:2px solid var(--tomato);box-shadow:0 2px 6px rgba(33,30,22,.18);cursor:grab}
+.kr-ends{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);font-weight:500}
+
+/* ===== SONUÇ ARAÇ ÇUBUĞU (Revize T3) — düz satır, kart kabuğu YOK.
+   Tarif sayısı solda; malzeme bağlamı arama alanının SAĞINDA düz muted metin —
+   iki sayı görsel olarak ayrık. ===== */
+.tb-toolbar{display:flex;align-items:center;gap:18px;margin-bottom:12px;padding-top:4px}
+.tbt-count{display:flex;align-items:baseline;gap:9px;flex:none;min-width:0}
+.tbt-count>b{font-size:28px;font-weight:700;color:var(--tomato);letter-spacing:-.02em;line-height:1}
+.tbt-count>b.zero{color:var(--muted)}
+.tbt-txt{font-size:14px;font-weight:700;color:var(--slate);white-space:nowrap}
+.tbt-meta{flex:none;display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:500;color:var(--muted);white-space:nowrap}
+.tbt-meta>i{color:var(--tomato);font-size:12px}
+.tbt-meta b{color:var(--slate);font-weight:700}
+.tbt-meta .ex-note{font-size:12.5px}
+.tb-sort{flex:none;display:inline-flex;align-items:center;gap:9px;font-family:inherit;font-weight:700;font-size:13.5px;color:var(--slate);padding:11px 16px;border:1px solid var(--line);border-radius:var(--radius-md);background:var(--paper);cursor:pointer;transition:.2s var(--ease);white-space:nowrap}
+.tb-sort i.lead{color:var(--tomato)}
+.tb-sort:hover{border-color:var(--tomato);color:var(--tomato)}
+.tb-rsearch{flex:1;max-width:none;--mode:var(--tomato)}
+.tb-rsearch input{padding:12px 15px 12px 44px;font-size:14px;background:var(--paper);border-width:1px}
+.r-card.q-hidden{display:none}
+.tb-qempty{display:flex;align-items:center;gap:10px;background:var(--paper);border:1px dashed var(--line);border-radius:var(--radius-md);padding:14px 18px;margin-top:16px;font-size:13.5px;color:var(--muted);font-weight:500}
+.tb-qempty[hidden]{display:none}
+.tb-qempty i{color:var(--tomato);font-size:13px}
+
+/* sonuç grid — tam genişlik 3 kolon */
+.tb-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:20px}
+.r-card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);overflow:hidden;transition:.3s var(--ease);cursor:pointer;display:flex;flex-direction:column}
+.r-card:hover{transform:translateY(-6px);border-color:#dcdcdc;box-shadow:var(--sh-md)}
+.r-media-wrap{overflow:hidden}
+.r-media{position:relative;height:194px;background-size:cover;background-position:center;transition:.5s var(--ease)}
+.r-card:hover .r-media{transform:scale(1.04)}
+.r-media .r-chip{position:absolute;top:13px;left:13px}
+.r-save{position:absolute;top:11px;right:11px;width:38px;height:38px;border-radius:var(--radius-circle);background:rgba(255,255,255,.94);border:none;color:var(--slate);cursor:pointer;display:grid;place-items:center;font-size:15px;transition:.2s var(--ease)}
+.r-save:hover{background:#fff;color:var(--tomato)}
+.r-save.saved{background:var(--tomato);color:#fff}
+.r-match{position:absolute;bottom:13px;left:13px;display:inline-flex;align-items:center;gap:6px;color:#fff;font-size:11px;font-weight:700;padding:6px 11px;border-radius:var(--radius-sm)}
+.r-match.full{background:var(--tomato);box-shadow:0 4px 12px rgba(220,61,23,.4)}
+.r-match.miss{background:rgba(20,18,12,.78);backdrop-filter:blur(4px)}
+.r-match.miss i{color:var(--yellow)}
+.m-types{position:absolute;bottom:13px;right:13px;display:flex;gap:6px}
+.mt{display:inline-flex;align-items:center;gap:5px;background:rgba(20,18,12,.72);color:#fff;font-size:11px;font-weight:700;padding:6px 10px;border-radius:var(--radius-sm);backdrop-filter:blur(4px)}
+.r-body{padding:17px 18px 19px;display:flex;flex-direction:column;flex:1}
+.r-body h4{font-size:18px;margin-bottom:11px;letter-spacing:-.01em;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:2.4em}
+.r-card:hover .r-body h4{color:var(--tomato)}
+.r-ing{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:13px}
+.r-ing .ing{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:500;color:var(--slate-2);background:var(--bg);border:1px solid var(--line);padding:5px 9px;border-radius:var(--radius-sm)}
+.r-ing .ing.have{color:var(--tomato);background:var(--tomato-tint);border-color:rgba(220,61,23,.22);font-weight:700}
+.r-ing .ing.have i{font-size:9px}
+.r-ing .ing.miss{color:var(--slate-2);border-style:dashed}
+.r-ing .ing.miss i{font-size:9px;color:var(--muted)}
+.r-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:auto;padding-top:13px;border-top:1px solid var(--line)}
+.r-author{display:flex;align-items:center;gap:9px;min-width:0}
+.r-author .av{width:28px;height:28px;border-radius:var(--radius-circle);background-size:cover;background-position:center;flex:none}
+.r-author span{font-size:12.5px;color:var(--muted);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.r-author b{color:var(--slate);font-weight:700}
+.r-stats{display:flex;align-items:center;gap:12px;flex:none}
+.r-rate{color:var(--slate);font-weight:700;display:inline-flex;align-items:center;gap:5px;font-size:13px}
+.r-rate i{color:var(--yellow)}
+.r-views{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);font-weight:500}
+.r-views i{font-size:12px;color:var(--muted)}
+
+/* boş durum */
+.tb-empty{text-align:center;background:var(--paper);border:1px dashed var(--line);border-radius:var(--radius-lg);padding:64px 30px;margin-top:20px}
+.tb-empty.hide{display:none}
+.te-ico{width:76px;height:76px;border-radius:var(--radius-lg);background:var(--tomato-tint);color:var(--tomato);display:grid;place-items:center;font-size:30px;margin:0 auto 20px}
+.tb-empty h3{font-size:22px;margin-bottom:9px}
+.tb-empty p{font-size:14.5px;color:var(--muted);font-weight:500;max-width:420px;margin:0 auto;line-height:1.6}
+
+/* ie-sugg autocomplete — VERBATIM */
+.ie-sugg{position:fixed;z-index:90;background:#fff;border:1px solid var(--line);border-radius:var(--radius-md);box-shadow:var(--sh-md);padding:6px;display:none;max-height:240px;overflow-y:auto}
+.ie-sugg.show{display:block}
+.ie-sugg button{display:flex;align-items:center;gap:9px;width:100%;text-align:left;font-family:inherit;font-size:13.5px;font-weight:500;color:var(--slate);background:none;border:none;border-radius:var(--radius-sm);padding:9px 11px;cursor:pointer;transition:.16s var(--ease)}
+.ie-sugg button i{width:16px;text-align:center;color:var(--muted);font-size:12px}
+.ie-sugg button:hover{background:var(--tomato-tint);color:var(--tomato)}
+.ie-sugg button:hover i{color:var(--tomato)}
+.ie-sugg .sg-new{color:var(--tomato);font-weight:700;border-top:1px dashed var(--line);margin-top:4px;padding-top:10px}
+.ie-sugg .sg-new i{color:var(--tomato)}
+
+/* sheet/mobil-özet parçaları artık KULLANILMIYOR (tek-kolon ferah yerleşim) — gizle */
+.dlp-sheet-head,.dlp-sheet-foot,.dlp-sheet-close,.dlp-bar,.sheet-overlay{display:none !important}
+
+/* ===================================================================
+   REVİZE (patron Yasin Bey · WhatsApp) — 3 düzeltme:
+   1) Kategoriler 2 KOLON (yan yana) → sayfa ~yarıya iner
+   2) Kategori akışına nötr REKLAM SLOTU (idari yerleşim)
+   3) Üst panel ORTALI (başlık + arama + boş-durum + sekmeler)
+   =================================================================== */
+
+/* 1 · İKİ KOLON KATEGORİ AKIŞI — çoklu-açık accordion blokları yan yana dizilir.
+   align-items:start → bir blok açıldığında komşu blok yukarı yaslı kalır; açık
+   kategorinin malzeme ızgarası (mz-grid auto-fill) bozulmaz, yarım kolonda daha
+   az sütunla akar. Sık Kullanılan tam genişlik featured satır (varsayılan açık →
+   üst boşluk dengesi, "Sebzeler | Meyveler" gerçek çiftler altta yan yana). */
+.cat-cols{display:grid;grid-template-columns:1fr 1fr;column-gap:36px;align-items:start;margin-top:4px}
+/* tüm kategoriler tek pattern: yarım-kolon kompakt 3-satır slider (Sık Kullanılan da artık featured tam-genişlik DEĞİL → tutarlı) */
+
+/* 2 · SPONSORLU ÜRÜN KARTI — malzeme grid'i İÇİNE gömülü, normal kart boyutunda
+   (kategoriyle alakalı marka+ürün). Köşede koyu "Sponsorlu" rozeti ile ayrışır;
+   seçim durumu YOK (malzeme değil → seçilemez). Görsel idarelik placeholder —
+   gerçek ürün görseli .mz-img background-image ile sonra swap edilir. */
+.mz-sponsor{text-decoration:none;border-color:rgba(220,61,23,.32);background:linear-gradient(180deg,#fff,#fff7f4)}
+.mz-sponsor:hover{border-color:var(--tomato);transform:translateY(-1px);box-shadow:var(--sh-sm)}
+.mz-sponsor .mz-img{background-color:transparent}
+.mz-sponsor .mz-img i{color:color-mix(in srgb,var(--tomato) 72%,#000);font-size:22px}
+.mz-sponsor .mz-name{white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;color:var(--slate);font-weight:700;font-size:10px;line-height:1.2;padding:5px 6px 7px}
+.mz-spon{position:absolute;top:5px;left:5px;z-index:2;display:inline-flex;align-items:center;gap:3px;
+  background:var(--slate);color:#fff;font-size:8px;font-weight:800;letter-spacing:.03em;text-transform:uppercase;
+  padding:2px 6px;border-radius:var(--radius-sm);line-height:1;box-shadow:0 2px 7px rgba(33,30,22,.28)}
+.mz-spon i{font-size:7px;opacity:.9}
+
+/* 3 · ÜST PANEL ORTALI — kontrol bloğu dar max-width sütunda ortalanır;
+   alttaki kategori ızgarası (cat-cols) tam genişlikte kalır. */
+.dolap-top{max-width:680px;margin:0 auto}
+.dolap-top .pan-search{max-width:none}
+.dolap-top .dlp-strip{align-items:center}
+.dolap-top .dlp-strip .ds-empty{justify-content:center;text-align:center}
+.dolap-top .ds-group{justify-content:center}
+.dolap-top .mode-note{justify-content:center}
+@media (min-width:641px){
+  .dolap-head{justify-content:center;position:relative}
+  .dolap-head .dlp-count{flex:0 1 auto}
+  .dolap-head .dolap-clear{position:absolute;right:26px;top:50%;transform:translateY(-50%)}
+}
+
+/* ===================== TABLET (≤1024px) ===================== */
+@media (max-width:1024px){
+  .tb-head h1{font-size:32px}
+  .dolap-body{padding:20px 20px 22px}
+  .dolap-head{padding:16px 20px}
+  .tb-grid{grid-template-columns:1fr 1fr}
+  .flt-body{grid-template-columns:1fr;gap:12px}
+}
+/* ===================== MOBİL (≤640px) ===================== */
+@media (max-width:640px){
+  .rd-crumb{padding:14px 0 10px;font-size:12px}
+  .tb-top{padding-top:74px}
+  .tb-head{padding:10px 0 30px}
+  .tb-head h1{font-size:27px}
+  .tb-head .lead{font-size:14.5px}
+  .waste-note{align-items:flex-start}
+  .tb-sec{padding:22px 0 50px}
+  .dolap-head{padding:15px 16px}
+  .dolap-body{padding:18px 16px 20px}
+  .dlp-count .dc-txt b{font-size:15px}
+  .pan-search input{font-size:15px;padding:14px 40px 14px 42px}
+  .pan-search .voice-btn{width:28px;height:28px;right:6px;font-size:13px}
+  .mode-tab{font-size:13.5px;padding:13px 10px;gap:7px}
+  .mz-grid{gap:8px}
+  .mz-grid>.mz{flex-basis:88px}
+  .mz-name{font-size:11px;padding:6px 4px 8px}
+  .mz-img i{font-size:22px}
+  .mz-cat-h{padding:14px 2px}
+  /* Revize 1 — 390'da tek kolon (yan yana akış kalkar) */
+  .cat-cols{grid-template-columns:1fr;column-gap:0}
+  .tb-toolbar{flex-wrap:wrap;gap:12px}
+  .tbt-count{flex:1}
+  .tb-rsearch{flex-basis:100%;order:3}
+  .tbt-meta{order:4}
+  .tb-grid{grid-template-columns:1fr;gap:13px}
+  .tb-grid .r-card{flex-direction:row}
+  .tb-grid .r-media-wrap{width:40%;flex:none}
+  .tb-grid .r-media{height:100%;min-height:150px}
+  .tb-grid .r-body{padding:12px 14px;min-width:0}
+  .tb-grid .r-body h4{font-size:14.5px;margin-bottom:7px;min-height:0}
+  .tb-grid .r-ing{margin-bottom:9px;gap:5px}
+  .tb-grid .r-ing .ing{font-size:10.5px;padding:4px 7px}
+  .tb-grid .r-foot .r-views{display:none}
+}

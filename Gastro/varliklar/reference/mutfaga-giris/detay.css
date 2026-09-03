@@ -1,0 +1,195 @@
+/* Mutfağa Giriş ders detayı (content.lesson.show) — ref mutfaga-giris-detay-v1.html
+   "SAYFA CSS" bloğundan kaynak-transfer (tarif-detay anatomisi VERBATIM:
+   rd-top/rd-crumb/rd-gallery tek-sahne + kunye-col/kc-card).
+
+   GÜNCELLEME (FB18, Beyar bağlayıcı 2026-07-15) — bu dosyanın önceki başlığı
+   BAYAT (10 Tem ön-keşif izi, "Content'te karşılığı yok" tespiti şema
+   genişlemesiyle geçersiz oldu). Şu an TAM KURULU:
+   - Yorumlar (rev-/rf-/c-/.cmts-wrap) — tarif-detay.css'ten (kanonik kaynak,
+     ayrıca yüklü) devralınır, burada yeniden tanımlanmaz.
+   - kc-chips — Content.tags (tarif-detay.css'te tanımlı).
+   - .actbar/.ab-* (sticky Kaydet/Yorumlar/Paylaş barı) — AŞAĞIDA, referanstan
+     BİREBİR (SavedItem polimorfik Kaydet, Beyar kararı 2026-07-15).
+   - .rd-stars — gerçek rating_avg/rating_count; rd-stage .m-types "N Görsel"
+     rozeti body_blocks img sayımından CANLI türer (AŞAĞIDA), sıfırsa basılmaz.
+   - .tutor-card .av + .rd-follow — gerçek User (lesson_instructor_id) + Follow
+     mekanizması AŞAĞIDA; bağlı değilse yalnız isim (fallback) gösterilir.
+   - .lightbox — ansiklopedi-detay.js sözleşmesiyle KURULU.
+   - Gövde: partials._body-blocks (heading/quote/tip/para/img/video) — "Ders
+     İçeriği" (chap-list) bölüm/bölüm gezinme hâlâ YOK (Content'te chapter
+     modeli yok), sağ kolon yalnız tutor-card taşır.
+
+   Kalanlar (rd-top/rd-crumb/rd-gallery/rd-stage/kunye-col/kc-card/rdf/
+   rd-badges/tbadge/rd-rateline/ld-body/ld-cols/chap-card/chap-list/
+   tutor-card/rel-grid köprüsü/next-sec) ref'ten BİREBİR. */
+
+.rd-crumb{display:flex;align-items:center;flex-wrap:wrap;gap:9px;padding:18px 0 14px;font-size:13px;font-weight:500;color:var(--muted)}
+.rd-crumb a{color:var(--muted);transition:.18s}
+.rd-crumb a:hover{color:var(--tomato)}
+.rd-crumb i{font-size:9px;color:#c7c7c7}
+.rd-crumb b{color:var(--slate);font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:340px}
+
+.rd-top{padding-top:112px;background:var(--bg-white)}
+
+/* galeri: tek sahne + sağ künye kolonu (tarif-detay CİLA-2 düzeni VERBATIM) */
+.rd-gallery{display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:14px;padding-bottom:18px}
+.rd-stage{position:relative;grid-column:1;height:440px;border-radius:var(--radius-xl);background-size:cover;background-position:center;overflow:hidden;box-shadow:var(--sh-md)}
+.rd-stage::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,18,12,0) 42%,rgba(20,18,12,.28) 64%,rgba(15,13,9,.78))}
+.rd-stage .r-chip{position:absolute;top:16px;left:16px;z-index:2}
+.rd-vbtn{position:absolute;top:14px;right:14px;z-index:3;display:inline-flex;align-items:center;gap:8px;height:42px;padding:0 16px;border:none;border-radius:var(--radius-md);cursor:pointer;background:rgba(20,18,12,.62);color:#fff;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);font-family:inherit;font-weight:700;font-size:13px;box-shadow:0 4px 14px rgba(20,18,12,.3);transition:.2s var(--ease);text-decoration:none}
+.rd-vbtn i{color:var(--tomato);font-size:13px;transition:color .2s var(--ease)}
+.rd-vbtn:hover{background:var(--tomato)}
+.rd-vbtn:hover i{color:#fff}
+.rd-stage-info{position:absolute;left:28px;right:28px;bottom:24px;z-index:2}
+.rd-stage-info .rd-badges{margin-bottom:13px}
+.rd-badges{display:flex;flex-wrap:wrap;gap:8px}
+.tbadge{display:inline-flex;align-items:center;gap:7px;font-size:11.5px;font-weight:700;letter-spacing:.02em;padding:7px 13px;border-radius:var(--radius-sm)}
+.tbadge i{font-size:11.5px}
+.tbadge.t-dada{background:var(--tomato);color:#fff;box-shadow:0 4px 12px rgba(220,61,23,.32)}
+.tbadge.t-editor{background:var(--tomato-tint);color:var(--tomato);border:1px solid rgba(220,61,23,.25)}
+.rd-stage-info h1{color:#fff;font-size:38px;letter-spacing:-.03em;line-height:1.1;max-width:760px;margin-bottom:13px;text-shadow:0 2px 20px rgba(15,13,9,.4)}
+.rd-rateline{display:flex;flex-wrap:wrap;align-items:center;gap:10px 20px}
+.rd-rateline .r-views{font-size:13px;color:rgba(255,255,255,.8)}
+.rd-rateline .rd-made{display:inline-flex;align-items:center;gap:7px;font-size:13px;color:rgba(255,255,255,.8);font-weight:500}
+.rd-rateline .rd-made i{color:var(--tomato);font-size:13px}
+.rd-rateline .rd-made b{color:#fff}
+
+/* künye kolonu (tarif-detay kc-card VERBATIM) */
+.kunye-col{grid-column:2;grid-row:1;display:flex;flex-direction:column;min-width:0}
+.kc-card{flex:1;display:flex;flex-direction:column;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg)}
+.kc-card .rdf{flex:1;display:flex;align-items:center;gap:11px;padding:13px 15px;min-width:0}
+.kc-card .rdf+.rdf{border-top:1px solid var(--line)}
+.kc-card .rdf i{flex:none;width:38px;height:38px;border-radius:var(--radius-md);background:var(--tomato-tint);color:var(--tomato);display:grid;place-items:center;font-size:15px}
+.kc-card .rdf div{min-width:0}
+.kc-card .rdf span{display:block;font-size:11px;color:var(--muted);font-weight:500;letter-spacing:.02em}
+.kc-card .rdf b{display:block;font-size:14.5px;font-weight:700;color:var(--slate);white-space:nowrap}
+
+.rd-head{padding-bottom:24px;border-bottom:1px solid var(--line)}
+.rd-head .rd-sub{font-size:15px;color:var(--slate-2);font-weight:500;max-width:860px;margin:0;line-height:1.7}
+
+/* ---- iki kolon ders gövdesi (tarif-detay iki kolon ritmi) ---- */
+.ld-body{padding:46px 0 20px;background:var(--bg-white)}
+.ld-cols{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:48px;align-items:start}
+.ld-main{min-width:0;display:grid;gap:var(--sp-7)}
+/* rev-sweep MADDE 7 (2026-07-20): ders gövdesi (_body-blocks 'para' çıktısı)
+   akan metin — justify, dar sütunda river'ı önlemek için hyphens/wrap. */
+.ld-main>p{text-align:justify;-webkit-hyphens:auto;hyphens:auto;overflow-wrap:break-word}
+.ld-aside{position:sticky;top:128px;display:flex;flex-direction:column;gap:18px}
+.chap-card{background:var(--bg-cream);border:1px solid var(--line);border-radius:var(--radius-lg);padding:20px 22px}
+.chap-card h4{font-size:13px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);margin-bottom:14px}
+.chap-list{display:flex;flex-direction:column;counter-reset:chap}
+.chap-list a{display:flex;align-items:flex-start;gap:12px;padding:11px 0;border-bottom:1px solid var(--line);font-size:13.5px;font-weight:600;color:var(--slate-2);transition:.18s var(--ease)}
+.chap-list a:last-child{border-bottom:none}
+.chap-list a::before{counter-increment:chap;content:counter(chap);flex:none;width:24px;height:24px;border-radius:var(--radius-sm);background:var(--tomato-tint);color:var(--tomato);font-size:12px;font-weight:700;display:grid;place-items:center}
+.chap-list a:hover{color:var(--tomato)}
+.chap-list a:hover::before{background:var(--tomato);color:#fff}
+.chap-list a span{display:block}
+.chap-list a small{display:block;font-size:11.5px;color:var(--muted);font-weight:500;margin-top:1px}
+.chap-list a.is-done{color:var(--green-deep)}
+.chap-list a.is-done::before{content:"\f00c";font-family:"Font Awesome 6 Free";font-weight:900;background:var(--green);color:#fff}
+.tutor-card{display:flex;align-items:center;gap:13px;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);padding:18px}
+.tutor-card .av{flex:none;width:52px;height:52px;border-radius:var(--radius-circle);background-size:cover;background-position:center;border:2px solid #fff;box-shadow:var(--sh-sm)}
+.tutor-card .av.av-ico{width:44px;height:44px;background:var(--tomato-tint);color:var(--tomato);display:grid;place-items:center;font-size:17px;border:none;box-shadow:none}
+.tutor-card b{display:block;font-size:14.5px;font-weight:700;color:var(--slate)}
+.tutor-card span{display:block;font-size:12px;color:var(--muted);font-weight:500;margin-top:2px}
+.tutor-card .rd-follow{margin-top:9px;font-family:inherit;font-size:12px;font-weight:700;color:var(--slate);background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-sm);padding:7px 13px;cursor:pointer;transition:.2s var(--ease)}
+.tutor-card .rd-follow:hover{border-color:var(--tomato);color:var(--tomato);background:var(--tomato-tint)}
+.tutor-card .rd-follow.following{border-color:var(--tomato);color:var(--tomato);background:var(--tomato-tint)}
+
+/* rd-stage "N Görsel" rozeti — body_blocks img sayımından canlı (FB18 ek karar) */
+.m-types{position:absolute;top:66px;right:14px;z-index:2;display:flex;gap:6px}
+.m-types .mt{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:700;color:#fff;background:rgba(20,18,12,.55);backdrop-filter:blur(6px);padding:6px 11px;border-radius:var(--radius-sm)}
+
+/* sticky aksiyon barı (ref mutfaga-giris-detay-v1.html satır 981-990 BİREBİR —
+   Beyar kararı 2026-07-15, polimorfik SavedItem/Kaydet) */
+.actbar{position:fixed;left:50%;bottom:22px;z-index:88;transform:translateX(-50%) translateY(130%);display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.72);-webkit-backdrop-filter:blur(28px) saturate(180%);backdrop-filter:blur(28px) saturate(180%);border:1px solid rgba(255,255,255,.65);border-radius:var(--radius-lg);box-shadow:0 14px 40px rgba(33,30,22,.18),0 2px 8px rgba(33,30,22,.08);padding:8px 10px;opacity:0;visibility:hidden;transition:transform .35s var(--ease),opacity .3s var(--ease),visibility .35s}
+.actbar.show{transform:translateX(-50%) translateY(0);opacity:1;visibility:visible}
+.actbar .ab-name{display:flex;align-items:center;gap:10px;padding:0 14px 0 6px;max-width:280px;border-right:1px solid rgba(33,30,22,.12);margin-right:4px}
+.actbar .ab-name .th{flex:none;width:38px;height:38px;border-radius:var(--radius-md);background-size:cover;background-position:center}
+.actbar .ab-name b{font-size:13px;font-weight:700;color:var(--slate);line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.actbar .ab-act{display:inline-flex;align-items:center;gap:8px;font-family:inherit;font-size:12.5px;font-weight:700;color:var(--slate);background:transparent;border:none;border-radius:var(--radius-md);padding:11px 14px;cursor:pointer;white-space:nowrap;transition:.2s var(--ease)}
+.actbar .ab-act i{font-size:14px}
+.actbar .ab-act:hover{background:rgba(220,61,23,.1);color:var(--tomato)}
+.actbar .ab-act.on{color:var(--tomato)}
+.actbar .ab-act.on i{font-weight:900}
+
+/* rd-sec-head tipografisi (tarif-detay VERBATIM) */
+.rd-sec-head{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-bottom:22px}
+.rd-sec-head h2{font-size:26px}
+.rd-sec-head .eyebrow{margin-bottom:10px}
+
+/* ---- ilgili tarifler (r-card v3a VERBATIM — r-card ailesi portal.css'te kanonik) ---- */
+.ld-recipes{background:var(--bg-cream);padding:58px 0}
+
+/* ---- sıradaki adım köprüsü ---- */
+.next-sec{background:var(--bg-white);padding:54px 0 64px}
+.next-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+.next-card{display:flex;align-items:center;gap:14px;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);padding:20px 22px;transition:.25s var(--ease)}
+.next-card:hover{transform:translateY(-3px);border-color:var(--tomato);box-shadow:var(--sh-sm)}
+.next-card .nx-ico{flex:none;width:44px;height:44px;border-radius:var(--radius-md);background:var(--tomato-tint);color:var(--tomato);display:grid;place-items:center;font-size:18px}
+.next-card b{display:block;font-size:15.5px;font-weight:700;color:var(--slate)}
+.next-card span{display:block;font-size:12.5px;color:var(--muted);font-weight:500;margin-top:2px}
+.next-card .nx-go{margin-left:auto;color:var(--muted);font-size:13px;transition:.2s var(--ease)}
+.next-card:hover .nx-go{color:var(--tomato);transform:translateX(3px)}
+
+/* ===================== TABLET (<=1024px) ===================== */
+@media (max-width:1024px){
+  .rd-gallery{grid-template-columns:1fr;gap:14px}
+  .rd-stage{grid-column:1;height:380px}
+  .kunye-col{grid-column:1}
+  .kc-card{flex-direction:row;flex-wrap:wrap}
+  .kc-card .rdf{flex:1 1 45%;border-top:none}
+  .ld-cols{grid-template-columns:1fr;gap:30px}
+  .ld-aside{position:static;top:auto;order:-1}
+}
+/* ===================== MOBİL (<=640px) ===================== */
+@media (max-width:640px){
+  .rd-top{padding-top:62px}
+  .rd-crumb{padding:14px 0 10px;font-size:12px}
+  .rd-stage{height:300px;border-radius:var(--radius-lg)}
+  .rd-stage-info{left:16px;right:16px;bottom:14px}
+  .rd-stage-info h1{font-size:23px}
+  .rd-stage-info .r-views,.rd-stage-info .rd-made{display:none}
+  .rd-vbtn .vb-lbl{display:none}
+  .rd-vbtn{padding:0 12px}
+  .ld-body{padding:32px 0 16px}
+  .ld-recipes{padding:40px 0}
+  .next-grid{grid-template-columns:1fr}
+  .actbar{left:12px;right:12px;transform:translateY(160%);width:auto;bottom:calc(78px + env(safe-area-inset-bottom,0px));justify-content:space-around;padding:6px 8px}
+  .actbar.show{transform:translateY(0)}
+  .actbar .ab-name{display:none}
+  .actbar .ab-act{padding:10px 9px;font-size:11.5px;flex-direction:column;gap:4px}
+  .actbar .ab-act i{font-size:16px}
+}
+
+/* G-1 TAMAMLAMA EKİ: gövde-sonu etiket bloğu — ref <style> 846-848 BİREBİR. */
+.art-tags{display:flex;flex-wrap:wrap;align-items:center;gap:9px;margin:38px 0 0;padding-top:28px;border-top:1px solid var(--line)}
+.art-tags .tg-lbl{font-size:13px;font-weight:700;color:var(--slate);margin-right:3px}
+.art-tags .tg-lbl i{color:var(--tomato);font-size:12px}
+
+/* ---- SABİT ALT ŞERİT ÖNCELİĞİ — ders sayfası (2026-08-08) ----
+
+   component-token.md §6 bağlayıcı kuralı: "aynı anda en fazla 1 sabit alt
+   şerit", sıra çerez(1) > sayfa aksiyon şeridi(2) > {bottom-nav, DadaMentor
+   mini-baloncuğu}(3).
+
+   Bu merdivenin 3. basamağı 2026-07-27'de (Beyar kararı r1) kuruldu ama
+   YALNIZ tarif detayına ve YALNIZ ≤640px'e:
+       public/reference/tarif-detay/tarif-detay.css:50-53
+       @media (max-width:640px){ body:has(.rd-actbar.show) .mentor-panel{display:none} }
+   Ders sayfasının şeridi `.rd-actbar` değil `.actbar`, ve kusur mobilde değil
+   MASAÜSTÜNDE — o yüzden bu sayfa merdivenin dışında kaldı.
+
+   ÖLÇÜM (2026-08-08, 1440×900, çerez kararı verilmiş):
+     scrollY 560-600 aralığında "Sıradaki adımlar" başlığı (L=132..318,
+     T=818..847) ile Mentor mini baloncuğu (L=24..172, T=820..876) 40×27 px
+     ÇAKIŞIYOR; başlığın sol kenarında elementFromPoint `#mpMiniOv` döndürüyor
+     — yani başlık gerçekten baloncuğun ARKASINDA kalıyor. Aynı anda üç sabit
+     yüzey (actbar 819-878, Mentor 820-876, yukarı-ok 754-808) alt banda
+     yığılıyor; §6'nın "en fazla 1" kuralı ihlal.
+
+   ÇÖZÜM: z-index yarıştırma YOK (Beyar bunu 2026-07-27'de zaten elemiş) —
+   aynı görünürlük koordinasyonu idiomu, bu sayfanın kendi şeridi için ve TÜM
+   genişliklerde. portal.css'e DOKUNULMADI: kural sayfa-yerel dosyada durur,
+   `.mentor-panel`in kendi tanımı değişmez, actbar kapanınca Mentor geri gelir. */
+body:has(.actbar.show) .mentor-panel { display: none; }

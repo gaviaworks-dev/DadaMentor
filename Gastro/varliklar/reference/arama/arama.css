@@ -1,0 +1,321 @@
+/* ============ F13 — GLOBAL ARAMA SONUCU ============
+   L1 NOTU: eski sitede arama SONUÇ sayfası yok — header'daki "Ne Aramıştınız?"
+   modalı (search-style-2) tarifler.html liste diline akar → "eski karşılık yok".
+   Üst kutu: v3a searchcard .search-row/.search-input VERBATIM (tab'sız geniş hâl);
+   sekme barı: mutfak-defteri .pf-tabbar VERBATIM (?tab= paramına bağlı);
+   kartlar: r-card / vid-card / chef-card / p-card / disc-card VERBATIM;
+   boş durum: tarif-liste .lst-empty VERBATIM (+ "şunu mu demek istedin"). */
+
+/* ---- üst bölge: breadcrumb + büyük arama kutusu (beyaz zemin) ----
+   Foto artık pagedef.arama.hero.banner_path'ten (Ayarlar > Sayfa Tanımları) inline style
+   ile geliyor (arama/index.blade.php) — SABİT Unsplash hotlink kaldırıldı (2026-08-09,
+   dış siteye bağımlılık). Boşken bu düz gradient aynen kalır (hakkimizda.css emsali). */
+.srch-top{position:relative;padding-top:128px;background-image:linear-gradient(90deg,rgba(28,25,18,.93),rgba(33,30,22,.72));background-size:cover;background-position:center}
+.rd-crumb{display:flex;align-items:center;flex-wrap:wrap;gap:9px;padding:18px 0 14px;font-size:13px;font-weight:500;color:var(--muted)}
+.rd-crumb a{color:var(--muted);transition:.18s}
+.rd-crumb a:hover{color:var(--tomato)}
+.rd-crumb i{font-size:9px;color:#c7c7c7}
+.rd-crumb b{color:var(--slate);font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:340px}
+.srch-head{padding:6px 0 32px;max-width:780px}
+.srch-head h1{font-size:32px;margin:10px 0 18px;letter-spacing:-.02em}
+.srch-head h1 .q{color:var(--tomato)}
+/* arama kutusu — v3a searchcard dili */
+.srch-box{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);box-shadow:var(--sh-md);padding:10px;max-width:680px}
+/* .srch-box global tokens.css'te (resources/css/tokens.css:1645) FARKLI bir
+   arama kutusu bileşeni için AYNI class adıyla display:flex + align-items +
+   gap + margin-top tanımlıyor — üstteki satır bu üçünü hiç tanımlamadığından
+   global kural sızıyor, .search-row (flex:0 1 auto) tam genişliğe uzamak
+   yerine içerik genişliğine küçülüyordu (Beyar canlı parity bulgusu, Playwright
+   getComputedStyle ölçümüyle doğrulandı). Yalnız BU SAYFAYA özel sıfırlama —
+   tokens.css'e DOKUNULMADI (o kuralı kullanan başka bileşenler etkilenmesin). */
+.srch-box{display:block;margin-top:0;gap:normal;align-items:normal}
+.search-row{display:flex;gap:8px;padding:6px}
+.search-input{flex:1;display:flex;align-items:center;gap:12px;background:var(--bg);border:1px solid var(--line);border-radius:var(--radius-md);padding:0 18px}
+.search-input i{color:var(--muted)}
+.search-input input{flex:1;min-width:0;border:none;background:transparent;font-family:inherit;font-weight:500;font-size:15.5px;color:var(--slate);padding:16px 0;outline:none}
+.search-input input::placeholder{color:#a7a7a7;font-weight:500}
+.search-row .btn{flex:none;padding:0 26px}
+.srch-sum{margin-top:16px;font-size:14.5px;color:var(--muted);font-weight:500}
+.srch-sum b{color:var(--slate);font-weight:700}
+.srch-sum .q{color:var(--tomato);font-weight:700}
+
+/* ---- AUTOCOMPLETE dropdown (combobox) — arama kutusu dili ---- */
+.srch-box{position:relative}                         /* panel için referans */
+.sr-ac{
+  position:absolute;left:6px;right:6px;top:calc(100% - 4px);z-index:60;
+  background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-md);
+  box-shadow:var(--sh-lg);padding:8px;max-height:min(440px,72vh);overflow-y:auto;
+  opacity:0;visibility:hidden;transform:translateY(-6px);
+  transition:opacity .18s var(--ease),transform .18s var(--ease),visibility .18s;
+  /* Kaydırma çubuğu bildirimi KALKTI — ince/minimal kanon tokens.css'te tek yerde (Beyar 2026-08-23). */
+}
+.srch-box.ac-open .sr-ac{opacity:1;visibility:visible;transform:translateY(0)}
+/* grup başlığı */
+.sr-ac .ac-grp{display:flex;align-items:center;gap:8px;padding:11px 12px 6px;font-size:11.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+.sr-ac .ac-grp i{font-size:11px;color:var(--tomato)}
+.sr-ac .ac-grp .ac-clear{margin-left:auto;font-size:11px;font-weight:600;letter-spacing:0;text-transform:none;color:var(--muted);cursor:pointer;border:none;background:none;font-family:inherit;padding:2px 4px;border-radius:var(--radius-sm)}
+.sr-ac .ac-grp .ac-clear:hover{color:var(--tomato)}
+/* öneri satırı (role=option) */
+.sr-ac .ac-opt{display:flex;align-items:center;gap:13px;padding:10px 12px;border-radius:var(--radius-md);cursor:pointer;transition:background .14s var(--ease)}
+.sr-ac .ac-opt .ac-ico{flex:none;width:38px;height:38px;border-radius:var(--radius-sm);background:var(--bg);border:1px solid var(--line);display:grid;place-items:center;color:var(--slate-2);font-size:15px;background-size:cover;background-position:center;overflow:hidden}
+.sr-ac .ac-opt .ac-main{min-width:0;flex:1}
+.sr-ac .ac-opt .ac-ttl{display:block;font-size:14.5px;font-weight:600;color:var(--slate);line-height:1.25;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sr-ac .ac-opt .ac-ttl mark{background:none;color:var(--tomato);font-weight:700;padding:0}
+.sr-ac .ac-opt .ac-sub{display:block;margin-top:1px;font-size:12px;font-weight:500;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* tür rozeti */
+.sr-ac .ac-opt .ac-badge{flex:none;display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;padding:4px 9px;border-radius:var(--radius-pill);background:var(--bg);color:var(--slate-2);border:1px solid var(--line)}
+.sr-ac .ac-opt .ac-badge i{font-size:9.5px}
+.sr-ac .ac-opt[data-type="tarif"] .ac-badge{background:var(--tomato-tint);color:var(--tomato);border-color:rgba(220,61,23,.2)}
+.sr-ac .ac-opt[data-type="tarif"] .ac-badge i,.sr-ac .ac-opt[data-type="tarif"] .ac-ico{color:var(--tomato)}
+.sr-ac .ac-opt[data-type="video"] .ac-badge,.sr-ac .ac-opt[data-type="sef"] .ac-badge,.sr-ac .ac-opt[data-type="urun"] .ac-badge,.sr-ac .ac-opt[data-type="yazi"] .ac-badge{color:var(--slate-2)}
+/* aktif (klavye) + hover state — TEK görsel */
+.sr-ac .ac-opt:hover,.sr-ac .ac-opt.is-active{background:var(--tomato-tint)}
+.sr-ac .ac-opt.is-active .ac-ttl,.sr-ac .ac-opt:hover .ac-ttl{color:var(--tomato)}
+/* "ara" sorgu satırı (en üst) */
+.sr-ac .ac-query .ac-ico{background:var(--tomato);border-color:var(--tomato);color:#fff}
+.sr-ac .ac-query .ac-sub{color:var(--muted)}
+/* boş eşleşme */
+.sr-ac .ac-none{padding:18px 14px;text-align:center;font-size:13.5px;color:var(--muted);font-weight:500}
+.sr-ac .ac-div{height:1px;background:var(--line);margin:6px 8px}
+@media (max-width:640px){
+  .sr-ac{max-height:min(56vh,360px)}
+  .sr-ac .ac-opt .ac-badge{display:none}
+  .sr-ac .ac-opt .ac-ico{width:34px;height:34px}
+}
+
+/* ---- sekme barı — mutfak-defteri .pf-tabbar VERBATIM ---- */
+.pf-tabbar{position:sticky;top:112px;z-index:40;background:rgba(255,255,255,.93);-webkit-backdrop-filter:blur(10px) saturate(150%);backdrop-filter:blur(10px) saturate(150%);padding:12px 0}
+.pf-tabs{display:flex;gap:4px;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-md);padding:4px;overflow-x:auto;scrollbar-width:none}
+.pf-tabs::-webkit-scrollbar{display:none}
+.pf-tabs .dt{font-family:inherit;font-weight:700;font-size:13px;color:var(--muted);background:transparent;border:none;border-radius:var(--radius-sm);padding:9px 16px;cursor:pointer;display:inline-flex;align-items:center;gap:7px;transition:.2s var(--ease);white-space:nowrap;flex:none}
+.pf-tabs .dt:hover{color:var(--tomato)}
+.pf-tabs .dt.active{background:var(--tomato);color:#fff}
+.pf-tabs .dt .cnt{font-size:11px;font-weight:700;opacity:.6}
+.pf-pane{animation:fadeUp .35s var(--ease)}
+.pf-pane[hidden]{display:none}
+
+/* ---- sonuç bölgesi (gri zemin) ---- */
+.sr-sec{padding:8px 0 64px;background:var(--bg-cream)}
+/* karma bölüm başlığı — koleksiyon .coldex-head dili (kompakt h2 + Tamamını Gör) */
+.srb-head{display:flex;align-items:center;justify-content:space-between;gap:14px;margin:38px 0 18px}
+.srb-head h2{font-size:20px;display:inline-flex;align-items:center;gap:10px}
+.srb-head h2 i{color:var(--tomato);font-size:15px}
+.srb-head h2 .cnt{font-size:13px;color:var(--muted);font-weight:500}
+.srb-head a{font-size:13px;font-weight:700;color:var(--tomato);display:inline-flex;align-items:center;gap:7px;white-space:nowrap}
+.srb-head a i{font-size:11px;transition:transform .2s var(--ease)}
+.srb-head a:hover i{transform:translateX(3px)}
+.sr-block:first-child .srb-head{margin-top:30px}
+.sr-block .grid-4,.pf-pane>.grid-4{margin-top:0}
+
+/* ---- r-card sistemi (v3a 289–312 + anatomi 770–807 VERBATIM) ---- */
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:26px;margin-top:26px}
+.r-card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);overflow:hidden;transition:.3s var(--ease);cursor:pointer;display:flex;flex-direction:column}
+.r-card:hover{transform:translateY(-6px);border-color:#dcdcdc}
+.r-media{position:relative;height:200px;background-size:cover;background-position:center;transition:.5s var(--ease)}
+.r-card:hover .r-media{transform:scale(1.04)}
+.r-media-wrap{overflow:hidden}
+.r-media .r-chip{position:absolute;top:13px;left:13px}
+.r-save,.p-fav{position:absolute;top:11px;right:11px;width:38px;height:38px;border-radius:var(--radius-circle);background:rgba(255,255,255,.94);border:none;color:var(--slate);cursor:pointer;display:grid;place-items:center;font-size:15px;transition:.2s var(--ease)}
+.r-save:hover,.p-fav:hover{background:#fff;color:var(--tomato)}
+.r-save.saved,.p-fav.saved{background:var(--tomato);color:#fff}
+.r-tried{position:absolute;bottom:13px;left:13px;display:inline-flex;align-items:center;gap:6px;background:var(--tomato);color:#fff;font-size:11px;font-weight:700;padding:6px 11px;border-radius:var(--radius-sm);box-shadow:0 4px 12px rgba(220,61,23,.4)}
+.r-body{padding:17px 18px 19px;display:flex;flex-direction:column;flex:1}
+.r-body h4{font-size:18px;margin-bottom:11px;letter-spacing:-.01em;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:2.4em}
+.r-card:hover .r-body h4{color:var(--tomato)}
+.r-author{display:flex;align-items:center;gap:9px;margin-top:14px;padding-top:14px;border-top:1px solid var(--line)}
+.r-author .av{width:28px;height:28px;border-radius:var(--radius-circle);background-size:cover;background-position:center;flex:none}
+.r-author span{font-size:12.5px;color:var(--muted);font-weight:500}
+.r-author b{color:var(--slate);font-weight:700}
+.r-rate{color:var(--slate);font-weight:700}
+.r-rate i{color:var(--yellow)}
+.m-types{position:absolute;bottom:13px;right:13px;display:flex;gap:6px}
+.mt{display:inline-flex;align-items:center;gap:5px;background:rgba(20,18,12,.72);color:#fff;font-size:11px;font-weight:700;padding:6px 10px;border-radius:var(--radius-sm);backdrop-filter:blur(4px)}
+.r-facts{display:flex;align-items:center;font-size:12.5px;color:var(--muted);font-weight:500;margin-bottom:13px}
+.r-facts span{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.r-facts i{font-size:12px;color:var(--tomato)}
+.r-facts span+span{border-left:1px solid var(--line);padding-left:12px;margin-left:12px}
+.r-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:auto;padding-top:13px;border-top:1px solid var(--line)}
+.r-foot .r-author{margin-top:0;padding-top:0;border-top:none;min-width:0}
+.r-foot .r-author span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.r-stats{display:flex;align-items:center;gap:12px;flex:none}
+.r-stats .r-rate{display:inline-flex;align-items:center;gap:5px;font-size:13px}
+.r-views{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);font-weight:500}
+.r-views i{font-size:12px;color:var(--muted)}
+
+/* ---- vid-card (v3a 401–416 VERBATIM) ---- */
+.vid-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
+.vid-card{cursor:pointer}
+.vid-thumb{position:relative;height:230px;border-radius:var(--radius-lg);overflow:hidden;background-size:cover;background-position:center;box-shadow:var(--sh-sm)}
+.vid-thumb::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(33,30,22,0) 50%,rgba(20,18,12,.72))}
+.vid-thumb .play{position:absolute;inset:0;margin:auto;width:60px;height:60px;border-radius:var(--radius-circle);background:rgba(255,255,255,.92);color:var(--tomato);display:grid;place-items:center;font-size:19px;z-index:2;transition:.25s var(--ease);box-shadow:var(--sh-md)}
+.vid-card:hover .play{transform:scale(1.12);background:var(--tomato);color:#fff}
+.vid-thumb .vcat{position:absolute;top:12px;left:12px;background:rgba(255,255,255,.94);color:var(--slate);font-size:11px;font-weight:700;padding:5px 11px;border-radius:var(--radius-sm);z-index:2}
+.vid-thumb .m-types{z-index:2}
+.vid-card h4{font-size:16px;margin:15px 0 7px}
+.vid-card:hover h4{color:var(--tomato)}
+.vid-card .vmeta{display:flex;align-items:center;font-size:12.5px;color:var(--muted);font-weight:500;margin-top:13px;padding-top:12px;border-top:1px solid var(--line)}
+.vid-card .vmeta .r-views{margin-left:auto}
+.vid-card .vmeta .r-author{margin-top:0;padding-top:0;border-top:none;min-width:0}
+
+/* ---- chef-card (v3a 714–738 VERBATIM) ---- */
+.chef-row{display:grid;grid-template-columns:repeat(7,1fr);gap:18px;align-items:stretch}
+.chef-card{display:flex;flex-direction:column;align-items:center;text-align:center;cursor:pointer}
+.chef-av{width:96px;height:96px;border-radius:var(--radius-circle);background-size:cover;background-position:center;border:3px solid #fff;box-shadow:var(--sh-sm);transition:.25s var(--ease)}
+.chef-card:hover .chef-av{border-color:var(--tomato);transform:translateY(-4px)}
+.chef-card b{font-size:15.5px;font-weight:700;color:var(--slate);margin-top:13px;line-height:1.2}
+.chef-card>span{font-size:12.5px;color:var(--muted);font-weight:500;margin-top:3px}
+.chef-follow{margin-top:11px;font-family:inherit;font-size:12px;font-weight:700;color:var(--slate);background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-sm);padding:7px 14px;cursor:pointer;transition:.2s var(--ease)}
+.chef-follow:hover{border-color:var(--tomato);color:var(--tomato);background:var(--tomato-tint)}
+.chef-cta{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center;border:2px dashed #d9d9d9;border-radius:var(--radius-lg);padding:18px 12px;cursor:pointer;transition:.25s var(--ease)}
+.chef-cta i{font-size:30px;color:var(--tomato)}
+.chef-cta b{font-size:14.5px;font-weight:700;color:var(--slate)}
+.chef-cta span{font-size:12px;color:var(--muted);font-weight:500}
+.chef-cta:hover{border-color:var(--tomato);background:var(--tomato-tint);transform:translateY(-3px)}
+
+/* ---- p-card (v3a 449–465 VERBATIM) ---- */
+.p-card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);overflow:hidden;transition:.3s var(--ease);cursor:pointer;position:relative}
+.p-card:hover{transform:translateY(-6px);border-color:#dcdcdc}
+.p-media{height:230px;background-size:cover;background-position:center;position:relative}
+.p-disc{position:absolute;top:13px;left:13px;background:var(--green);color:#fff;font-size:12px;font-weight:700;padding:6px 12px;border-radius:var(--radius-sm)}
+.p-body{padding:18px}
+.p-cat{font-size:11.5px;font-weight:700;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
+.p-body h4{font-size:17px;margin:8px 0 6px}
+.p-body .p-desc{font-size:13px;color:var(--muted);font-weight:500;margin-bottom:15px}
+.p-foot{display:flex;align-items:center;justify-content:space-between;margin-top:auto}
+.p-price{display:flex;align-items:baseline;gap:9px}
+.p-price b{font-size:22px;font-weight:700;color:var(--tomato);letter-spacing:-.02em}
+.p-price s{font-size:14px;color:#b6b6b6;font-weight:500}
+.p-add{width:46px;height:46px;border-radius:var(--radius-md);background:var(--tomato);color:#fff;border:none;cursor:pointer;font-size:16px;transition:.2s var(--ease)}
+.p-add:hover{background:var(--tomato-dark);transform:scale(1.06)}
+
+/* ---- disc-card (v3a 672–712 VERBATIM — yazı varyantı) ---- */
+.disc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:26px}
+.disc-card{cursor:pointer}
+.disc-fig{position:relative;aspect-ratio:16/10;border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--sh-sm)}
+.disc-fig .m-types{z-index:2}
+.disc-fig .bg{width:100%;height:100%;background-size:cover;background-position:center;transition:.5s var(--ease)}
+.disc-card:hover .disc-fig .bg{transform:scale(1.05)}
+.disc-cat{display:inline-block;margin:16px 0 7px;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--tomato)}
+.disc-card h3{font-size:18px;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:8px;transition:color .2s var(--ease)}
+.disc-card:hover h3{color:var(--tomato)}
+.disc-card p{font-size:13.5px;color:var(--muted);font-weight:500;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.disc-meta{display:flex;align-items:center;gap:16px;font-size:12.5px;color:var(--muted);font-weight:500;margin-top:13px;padding-top:12px;border-top:1px solid var(--line)}
+.disc-meta span{display:inline-flex;align-items:center;gap:6px}
+.disc-meta i{font-size:12px}
+.disc-meta .disc-stats{margin-left:auto;display:inline-flex;align-items:center;gap:12px;flex:none}
+
+/* ---- boş durum (tarif-liste .lst-empty VERBATIM + öneriler) ---- */
+.lst-empty{display:none;text-align:center;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);padding:78px 30px;margin-top:30px}
+.lst-empty.show{display:block;animation:fadeUp .35s var(--ease)}
+.le-ico{width:76px;height:76px;border-radius:var(--radius-lg);background:var(--tomato-tint);color:var(--tomato);display:grid;place-items:center;font-size:30px;margin:0 auto 20px}
+.lst-empty h3{font-size:23px;margin-bottom:9px}
+.lst-empty p{font-size:14.5px;color:var(--muted);font-weight:500;max-width:420px;margin:0 auto 24px;line-height:1.6}
+.sr-didyou{font-size:15px;color:var(--slate-2);font-weight:500;margin:-8px 0 24px}
+.sr-didyou a{color:var(--tomato);font-weight:700;text-decoration:underline;text-underline-offset:3px}
+.lst-empty .chips{justify-content:center;margin-top:0}
+
+/* ---- sayfalama (tarif-liste .pagi VERBATIM) ---- */
+.pagi{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:40px;flex-wrap:wrap}
+.pg{min-width:44px;height:44px;padding:0 13px;display:inline-flex;align-items:center;justify-content:center;font-family:inherit;font-size:14px;font-weight:700;color:var(--slate);background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-md);cursor:pointer;transition:.2s var(--ease)}
+.pg:hover{border-color:var(--tomato);color:var(--tomato)}
+.pg.active{background:var(--tomato);border-color:var(--tomato);color:#fff;cursor:default}
+.pg.arrow i{font-size:12px}
+.pg[disabled]{opacity:.4;pointer-events:none}
+.pg-dots{color:var(--muted);font-weight:700;padding:0 2px;font-size:14px}
+.pagi-note{width:100%;text-align:center;font-size:12.5px;color:var(--muted);font-weight:500;margin-top:12px}
+
+/* ---- popüler & son aramalar (beyaz zemin) ---- */
+.sr-pop{padding:54px 0 70px;background:var(--bg-white)}
+.sr-pop-grid{display:grid;grid-template-columns:1.25fr 1fr;gap:48px;align-items:start}
+.sr-pop h3{font-size:19px;display:inline-flex;align-items:center;gap:10px;margin-bottom:18px}
+.sr-pop h3 i{color:var(--tomato);font-size:15px}
+.sr-pop .chips{margin-top:0}
+.sr-recent{display:flex;flex-direction:column}
+.sr-rrow{display:flex;align-items:center;gap:12px;padding:12px 4px;border-bottom:1px solid var(--line);font-size:14px;font-weight:500;color:var(--slate-2);cursor:pointer;transition:.18s var(--ease)}
+.sr-rrow:last-child{border-bottom:none}
+.sr-rrow>i:first-child{color:var(--muted);font-size:13px;flex:none;width:18px;text-align:center}
+.sr-rrow .term{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sr-rrow .cnt{margin-left:auto;flex:none;font-size:12px;color:var(--muted)}
+.sr-rrow .go{flex:none;font-size:11px;color:#c7c7c7;transition:.18s var(--ease)}
+.sr-rrow:hover{color:var(--tomato)}
+.sr-rrow:hover .go{color:var(--tomato);transform:translateX(3px)}
+
+/* gizleme yardımcıları */
+.is-off{display:none!important}
+.sr-vh{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+/* ===================== TABLET (≤1024px) — F13 ===================== */
+@media (max-width:1024px){
+  .grid-4{grid-template-columns:1fr 1fr}
+  .vid-grid{grid-template-columns:1fr 1fr}
+  .disc-grid{gap:18px}
+  .chef-row{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;padding:6px 2px 10px}
+  .chef-row::-webkit-scrollbar{display:none}
+  .chef-row>*{flex:none;width:158px;scroll-snap-align:start}
+  .sr-pop-grid{grid-template-columns:1fr;gap:36px}
+}
+
+/* ===================== MOBİL (≤640px) — F13 (v3a snap pattern'ı) ===================== */
+@media (max-width:640px){
+  .pf-tabbar{top:62px;padding:10px 0}
+  .pf-tabs .dt{padding:9px 13px}
+  .srch-head{padding-bottom:26px}
+  .srch-head h1{font-size:24px}
+  .search-input input{font-size:14.5px}
+  .search-row .btn{padding:0 18px}
+  .srb-head{margin:30px 0 14px}
+  .srb-head h2{font-size:17.5px}
+  /* kare kartlar → yatay scroll (snap) — v3a 1131–1147 VERBATIM */
+  .grid-4{display:flex;gap:14px;margin-top:0;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;padding-bottom:6px}
+  .grid-4::-webkit-scrollbar{display:none}
+  .grid-4>*{flex:none;width:80vw;max-width:310px;scroll-snap-align:start}
+  .vid-grid{display:flex;gap:14px;margin:0;padding:2px 0 8px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none}
+  .vid-grid::-webkit-scrollbar{display:none}
+  .vid-card{flex:none;width:80vw;max-width:300px;scroll-snap-align:start}
+  .vid-thumb{height:188px}
+  .disc-grid{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;padding:2px 0 8px}
+  .disc-grid::-webkit-scrollbar{display:none}
+  .disc-card{flex:none;width:80vw;max-width:300px;scroll-snap-align:start;display:flex;flex-direction:column}
+  .disc-card .disc-meta{margin-top:auto;padding-top:12px}
+  .chef-row>*{width:146px}
+  .grid-4 .f-serv{display:none}
+  .lst-empty{padding:54px 20px}
+  .lst-empty h3{font-size:19px}
+  .sr-pop{padding:40px 0 52px}
+}
+/* HERO ZENGINLESTIRME (hero-zengin ADIM2) */
+.srch-top .wrap{position:relative}
+.srch-top .rd-crumb,.srch-top .rd-crumb a{color:#c9c3b8}
+.srch-top .rd-crumb a:hover{color:#ea8b74}
+.srch-top .rd-crumb i{color:rgba(255,255,255,.4)}
+.srch-top .rd-crumb b{color:#fff}
+.srch-top .eyebrow{color:#f1b1a2}
+.srch-top h1{color:#fff;text-shadow:0 2px 24px rgba(0,0,0,.25)}
+.srch-top h1 .accent{color:#e87f66}
+.srch-top .lead{color:#e7edf1;text-shadow:0 1px 14px rgba(0,0,0,.3)}
+.srch-top .srch-sum{color:#cdd8e0}
+.srch-top .srch-sum b{color:#fff}
+@media (max-width:640px){.srch-top{padding-top:74px}}
+
+/* ---- LARAVEL ADAPTASYONU (B2-2 tarif-uzantıları) ----
+   "Ürünler" sekmesi DadaStore yoksa YAKINDA-pasif (X1/FB28-a emsali) +
+   GlossaryTerm'in kapaksız disc-card'ı için nötr ikon kutusu (referansta
+   her .disc-card gerçek fotoğraflıydı; sözlük terimlerinin kapağı yok). */
+.dt.is-soon{opacity:.45;cursor:not-allowed}
+.disc-fig--ph{display:grid;place-items:center;background:var(--bg-cream);color:var(--muted);font-size:26px}
+
+/* saglik-dropdown: scoped health chrome */
+/* diğer dropdown/mega aktif-item (turuncu kanon, underline gizli) */
+.dropdown:not(.dropdown-health) a.active{background:var(--tomato-tint)}
+.dropdown a.active::after,.mega-cats a.active::after{display:none}
+.mega-cats a.active{background:var(--tomato-tint)}
+.d-sub-health a i{color:var(--green)}
+.d-sub-health a:hover{color:var(--green);background:rgba(59,183,126,.10)}
+.nav a[href="saglik-hub-v1.html"]:hover{color:var(--green);background:rgba(59,183,126,.10)}
+.header.at-top .nav>.nav-item>a[href="saglik-hub-v1.html"]:hover{color:#fff;background:rgba(255,255,255,.14)}
+.dropdown-health a i{color:var(--green)}
+.dropdown-health a:hover{background:rgba(59,183,126,.12);color:var(--green)}
+.dropdown-health a.active{background:rgba(59,183,126,.12);color:var(--green)}
+.dropdown-health a.active i{color:var(--green)}
+.dropdown-health a.active::after{display:none}
+

@@ -1,0 +1,165 @@
+/* Püf Noktaları listesi (content.puf.index) — ref puf-noktalari-v1.html
+   "SAYFA CSS" bloğundan (F11) kaynak-transfer, salt LİSTE bölümü.
+
+   DIŞARIDA BIRAKILANLAR (bilinçli):
+   - ref'in aynı dosyadaki "UZUN-FORM DETAY (?detay=1)" bölümü (.art-*,
+     .puf-grid-view/.puf-detail-view, .rel-grid, .r-card, .art-recipes,
+     .art-morepuf) — bu artık ayrı bir sayfa (puf-noktasi-detay-v1.html →
+     icerik/puf/detay.blade.php); ref'in kendi dosyasında JS ile aynı sayfada
+     iki görünüm arasında geçiş yapıyordu, biz gerçek route ayrımı kullanıyoruz.
+   Kalanlar (.rd-crumb, .lst-top/.lst-hero/.lst-stats, .disc-tabs/.dt,
+   .pufl-*, .puf-card, .pagi) ref'ten BİREBİR.
+   NOT (FB51 Grup C): .disc-tabs/.dt kuralları önceki dalgada "sort yok"
+   gerekçesiyle dışarıda bırakılmıştı; sekmeler f32581a'da markup'a girince
+   .dt.active portal.css'in anasayfa-Keşfet kuralına (GOURMET MOR) düşüyordu.
+   Ref'in kendi .disc-tabs/.dt bloğu (tomato) buraya kaynak-transferle geri
+   eklendi — @stack('styles') portal.css'ten SONRA yüklendiği için kaynak
+   sırası doğru rengi kazandırır (sofra-duzeni.css çakışma notu emsali). */
+
+.rd-crumb{display:flex;align-items:center;flex-wrap:wrap;gap:9px;padding:18px 0 14px;font-size:13px;font-weight:500;color:var(--muted)}
+.rd-crumb a{color:var(--muted);transition:.18s}
+.rd-crumb a:hover{color:var(--tomato)}
+.rd-crumb i{font-size:9px;color:#c7c7c7}
+.rd-crumb b{color:var(--slate);font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:360px}
+
+/* ---- liste hero: lst-top koyu-overlay (tarif-liste VERBATIM) ---- */
+.lst-top{
+  position:relative;padding-top:128px;
+  background-image:linear-gradient(90deg,rgba(28,25,18,.93),rgba(33,30,22,.72)),
+    url('../../_dis/images.unsplash.com/photo-1556909114-44e3e70034e2.jpg');
+  background-size:cover;background-position:center;
+}
+.lst-top .wrap{position:relative}
+.lst-top .rd-crumb{color:#c9c3b8}
+.lst-top .rd-crumb a{color:#c9c3b8}
+.lst-top .rd-crumb a:hover{color:#ea8b74}
+.lst-top .rd-crumb i{color:rgba(255,255,255,.4)}
+.lst-top .rd-crumb b{color:#fff}
+.lst-hero .eyebrow{color:#f1b1a2}
+.lst-hero .eyebrow::before{background:var(--tomato)}
+.lst-hero{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:44px;align-items:end;padding:10px 0 42px}
+.lst-hero h1{color:#fff;font-size:44px;margin:14px 0 12px;letter-spacing:-.03em;text-shadow:0 2px 24px rgba(0,0,0,.25)}
+.lst-hero h1 .accent{color:#e87f66;white-space:nowrap}
+.lst-hero .lead{color:#e7edf1;font-weight:500;font-size:15.5px;max-width:560px;text-shadow:0 1px 14px rgba(0,0,0,.3)}
+.lst-hero .lh-main{min-width:0}
+.lst-stats{display:flex;flex-direction:column;gap:16px;padding-left:38px;border-left:1px solid rgba(255,255,255,.18)}
+.lst-stats .st b{display:block;font-size:29px;font-weight:700;color:#fff;letter-spacing:-.02em;line-height:1.1}
+.lst-stats .st span{font-size:12.5px;color:#aebcc6;font-weight:500}
+
+/* ---- liste bölümü ---- */
+.pufl-sec{padding:38px 0 74px;background:var(--bg-cream)}
+.pufl-bar{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:22px}
+/* Slider devamlılık ayarı (Beyar önerisi, madde 4 — 2026-07-18): chip arası
+   boşluk 9→7px (hafif sıkılaştırma, sağdaki chip sınırının kap kenarıyla tam
+   hizalanıp "tam okunur son chip" bırakma olasılığını düşürür) + kf-more
+   maskesi 38→60px genişletilip iki-duraklı yapıldı (kırpılan son chip artık
+   belirgin biçimde fade'lenir = devam ipucu). Token dışı renk/radius/gölge
+   YOK; yalnız davranış/maske katmanı. */
+.ke-filter{display:flex;align-items:center;gap:7px;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;flex:1;min-width:0;cursor:grab;-webkit-overflow-scrolling:touch}
+.ke-filter::-webkit-scrollbar{display:none}
+.ke-filter:focus{outline:none}
+.ke-filter.kf-more,.pufl-cats.kf-more{-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 60px),rgba(0,0,0,.35) calc(100% - 18px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 60px),rgba(0,0,0,.35) calc(100% - 18px),transparent)}
+.ke-filter .chip{white-space:nowrap;flex:none}
+.ke-filter .chip.active,.ke-filter .chip.is-active{border-color:var(--tomato);background:var(--tomato-tint);color:var(--tomato);font-weight:700}
+.disc-tabs{flex:none;display:flex;gap:4px;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-md);padding:4px}
+.dt{font-family:inherit;font-weight:700;font-size:13px;color:var(--muted);background:transparent;border:none;border-radius:var(--radius-sm);padding:9px 16px;cursor:pointer;display:inline-flex;align-items:center;gap:7px;transition:.2s var(--ease)}
+.dt:hover{color:var(--tomato)}
+.dt.active{background:var(--tomato);color:#fff}
+/* Kategori şeridi — DadaDiet emsali (Beyar şıklı kararı 2026-08-23).
+   Sekmeler TEK beyaz kutu içinde: kutu kenarlık+radius taşır, sekmeler kendi
+   kenarlığını taşımaz. `#pufFilter` id'si KORUNDU — puf-noktalari.js'in
+   sürükle-kaydır ve `kf-more` taşma maskesi davranışı ona bağlı. */
+.pufl-cats{display:flex;align-items:center;gap:4px;flex:1;min-width:0;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-md);padding:5px;cursor:grab}
+.pufl-cats::-webkit-scrollbar{display:none}
+.pufl-cats:focus{outline:none}
+.pufc{flex:none;display:inline-flex;align-items:center;gap:8px;white-space:nowrap;padding:9px 14px;border-radius:var(--radius-sm);font-size:13px;font-weight:700;color:var(--slate-2);transition:.18s var(--ease)}
+.pufc i{font-size:12px;color:var(--tomato)}
+.pufc em{font-style:normal;font-size:12px;font-weight:600;color:var(--muted);letter-spacing:-.01em}
+.pufc:hover{background:var(--bg-cream);color:var(--tomato)}
+.pufc.active{background:var(--tomato);color:#fff}
+.pufc.active i{color:#fff}
+.pufc.active em{color:#fff;opacity:.72}
+
+/* Başlık satırı: üst etiket + solda başlık, sağda sayaç. */
+.pufl-head{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;flex-wrap:wrap;margin-bottom:18px}
+.pufl-head__t{min-width:0}
+/* Üst etiket ile başlık arası bir tık açıldı (Beyar 2026-08-24): 8 → 14px. */
+.pufl-head__t h2{margin-top:14px;font-size:26px;letter-spacing:-.02em}
+.pufl-sum{font-size:13px;color:var(--muted);font-weight:500;margin:0 0 3px}
+.pufl-sum b{color:var(--slate);font-weight:700}
+
+/* ---- PÜF KARTI (mutfak-defteri AÇIK ZEMİN VERBATIM) ---- */
+.pufl-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+/* portal.css'in anasayfa .puf-card kuralı margin-bottom:16px taşıyor ve yalnız
+   .puf-grid içinde sıfırlıyor (line: `.puf-grid .puf-card{margin-bottom:0}`).
+   Liste sayfası .pufl-grid kullandığından o margin sızıyor: grid satır izini
+   16px şişiriyor, kartlar izi doldurmuyor → aynı satırdaki kartlar farklı
+   yükseklikte görünüyor (VAKA 4). Referans (standalone) margin taşımaz; ref
+   fidelity'yi geri getirmek için .pufl-grid içinde de sıfırlanır (grid stretch
+   → satır-eşit kartlar). Sayfa CSS'i portal.css'ten SONRA yüklenir (.dt.active
+   emsali, yukarı bkz.). */
+.pufl-grid .puf-card{margin-bottom:0}
+.puf-card{position:relative;display:block;padding:0;overflow:hidden;min-height:118px;border-radius:var(--radius-lg);
+  background:var(--paper);border:1px solid var(--line);box-shadow:var(--sh-sm);
+  cursor:pointer;transition:transform .25s var(--ease),box-shadow .25s var(--ease)}
+.puf-card:hover{transform:translateY(-3px);box-shadow:var(--sh-md)}
+.puf-fig{position:absolute;left:0;top:0;bottom:0;width:166px;background-size:cover;background-position:center;
+  transition:transform .4s var(--ease);
+  -webkit-mask-image:linear-gradient(90deg,#000 34%,rgba(0,0,0,.5) 66%,rgba(0,0,0,0) 100%);
+          mask-image:linear-gradient(90deg,#000 34%,rgba(0,0,0,.5) 66%,rgba(0,0,0,0) 100%)}
+.puf-fig::after{content:"";position:absolute;inset:0;background:linear-gradient(120deg,rgba(33,30,22,.24),transparent 58%)}
+.puf-card:hover .puf-fig{transform:scale(1.05)}
+/* Markalı kapak placeholder (İŞ D — kapaksız püf; token renkleri, SVG motif). */
+.puf-fig.puf-fig--empty{background:
+  radial-gradient(120% 100% at 20% 14%,rgba(220,61,23,.16),transparent 55%),
+  linear-gradient(135deg,var(--cream) 0%,var(--paper) 100%)}
+.puf-fig.puf-fig--empty::after{content:"";position:absolute;left:34px;top:50%;transform:translateY(-50%);width:44px;height:44px;opacity:.42;background:center/contain no-repeat url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%20fill%3D%22none%22%20stroke%3D%22%23dc3d178517%22%20stroke-width%3D%222.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M9%2033h46a23%2023%200%200%201-46%200z%22%2F%3E%3Cpath%20d%3D%22M5%2033h54%22%2F%3E%3Cpath%20d%3D%22M25%2021c-3-4%203-6%200-10%22%2F%3E%3Cpath%20d%3D%22M32%2019c-3-4%203-6%200-10%22%2F%3E%3Cpath%20d%3D%22M39%2021c-3-4%203-6%200-10%22%2F%3E%3C%2Fsvg%3E")}
+.puf-ico{position:absolute;left:13px;bottom:13px;z-index:3;width:34px;height:34px;border-radius:var(--radius-md);background:var(--tomato);color:#fff;display:grid;place-items:center;font-size:15px;box-shadow:0 4px 12px rgba(20,18,12,.4)}
+.puf-body{position:relative;z-index:2;padding:20px 24px 20px 180px;min-height:118px;display:flex;flex-direction:column;justify-content:center}
+.puf-body h4{font-size:16.5px;margin-bottom:5px}
+.puf-body p{font-size:13.5px;color:var(--muted);font-weight:500}
+.puf-tag{display:inline-block;margin-top:9px;font-size:11px;font-weight:700;color:var(--tomato);letter-spacing:.02em;text-transform:none}
+.puf-reads{display:inline-flex;align-items:center;gap:6px;margin-top:9px;margin-left:14px;font-size:11.5px;color:var(--muted);font-weight:500}
+.puf-reads i{font-size:11px}
+
+/* boş durum (kılavuz §3 deseni) */
+.pufl-empty{text-align:center;padding:60px 20px}
+.pufl-empty .pe-ico{width:64px;height:64px;border-radius:var(--radius-circle);background:var(--tomato-tint);color:var(--tomato);display:grid;place-items:center;font-size:26px;margin:0 auto 18px}
+.pufl-empty h3{font-size:19px;margin-bottom:8px}
+.pufl-empty p{font-size:14px;color:var(--muted);font-weight:500;max-width:360px;margin:0 auto 18px}
+
+/* ---- sayfalama (tarif-liste VERBATIM) ---- */
+.pagi{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:40px;flex-wrap:wrap}
+.pg{min-width:44px;height:44px;padding:0 13px;display:inline-flex;align-items:center;justify-content:center;font-family:inherit;font-size:14px;font-weight:700;color:var(--slate);background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-md);cursor:pointer;transition:.2s var(--ease)}
+.pg:hover{border-color:var(--tomato);color:var(--tomato)}
+.pg.active{background:var(--tomato);border-color:var(--tomato);color:#fff;cursor:default}
+.pg.arrow i{font-size:12px}
+.pg[disabled]{opacity:.4;pointer-events:none}
+.pg-dots{color:var(--muted);font-weight:700;padding:0 2px;font-size:14px}
+.pagi-note{width:100%;text-align:center;font-size:12.5px;color:var(--muted);font-weight:500;margin-top:12px}
+
+/* ===================== TABLET (≤1024px) ===================== */
+@media (max-width:1024px){
+  .lst-hero{grid-template-columns:1fr;align-items:start;gap:22px;padding-bottom:32px}
+  .lst-stats{flex-direction:row;gap:34px;padding-left:0;border-left:none;padding-top:18px;border-top:1px solid rgba(255,255,255,.18)}
+  .pufl-grid{grid-template-columns:1fr}
+}
+/* ===================== MOBİL (≤640px) ===================== */
+@media (max-width:640px){
+  .rd-crumb{padding:14px 0 10px;font-size:12px}
+  .lst-top{padding-top:74px}
+  .lst-hero{padding:2px 0 26px}
+  .lst-hero h1{font-size:29px}
+  .lst-hero .lead{font-size:14.5px}
+  .lst-stats{gap:10px}
+  .lst-stats .st{flex:1}
+  .pufl-sec{padding:26px 0 50px}
+  .pufl-bar{gap:10px}
+  .ke-filter{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;padding-bottom:4px}
+  .ke-filter::-webkit-scrollbar{display:none}
+  .ke-filter .chip{flex:none}
+  .puf-fig{width:112px}
+  .puf-body{padding:15px 16px 15px 126px;min-height:140px}
+  .puf-body h4{font-size:15.5px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .puf-body p{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+}

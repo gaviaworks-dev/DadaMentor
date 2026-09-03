@@ -1,0 +1,249 @@
+/* ============================================================================
+   KİMLİK BANDI — ORTAK (revize turu 2026-08-21, R2)
+
+   Bu dosya YENİ KURAL İÇERMEZ: kurallar `public/reference/mutfak-defteri/
+   mutfak-defteri.css`ten TAŞINDI (kopyalanmadı — orada artık yoklar). Sebep:
+   Mutfak Defteri başlığı ile Hesap Ayarları başlığı ARTIK AYNI bileşenden
+   doğuyor (`resources/views/components/profile/identity-band.blade.php`);
+   iki kopya CSS yazmak proje doktrinine aykırı.
+
+   Yükleme: bileşenin kendi `@once @push('styles')` bloğu bağlar — hangi sayfa
+   çağırırsa çağırsın stil gelir (emsal: `components/account/avatar-cover-row`).
+   Sayfa-yerel referans CSS'ten SONRA yüklenir; bu dosyadaki hiçbir seçici
+   `hesabim.css` (199 seçici) ile çakışmıyor — lead ölçümü: iki dosyanın ORTAK
+   seçicileri yalnız sekme ailesi (.pf-tabbar/.pf-tabs/.dt/.pf-pane) ve o aile
+   BU DOSYAYA ALINMADI, sayfalarının kendi dosyalarında kaldı.
+
+   TAŞINAN BLOKLAR (eski mutfak-defteri.css satırları):
+     20-25   .pf-top / .pf-crumb ailesi
+     28-31   .pf-banner / .pf-mark
+     33-42   .pf-head / .pf-ava / .pf-id / .pf-handle / .pf-bio / .pf-meta / .pf-actions
+     59-64   .pf-edit-btn         (Hesap Ayarları'nın iki bağı da bu dili kullanır)
+     69-88   own-mode düzenleme affordance'ları (.pf-cover-edit / .pf-ava-edit / …)
+     240-242 .tbadge (seviye rozeti)
+     245-254 .pf-stats / .pfs (yalnız defter kullanır — stats slot'u)
+     580-586 @media 1024 · .pf-head / .pf-stats
+     590-611 @media 640 · bant satırları
+   DEFTERDE KALANLAR (bilerek taşınmadı): .pf-follow, .pf-act-public,
+   body.pf-public mod anahtarları (defterin own↔public modu), .pf-crumb-own/
+   -public, .pf-share-wrap/.pf-sharepop. Bunlar Hesap Ayarları'nda YOK.
+   ============================================================================ */
+
+/* ---- breadcrumb (TD .rd-crumb dili — class kopya) ---- */
+/* 🔴 BANDIN ZEMİNİ SAYFA ZEMİNİDİR (Beyar, 2026-08-22 · madde 1).
+   Eskiden `--bg-white`tı ve bant bölgesi tam genişlikte BEYAZ bir levha
+   basıyordu; hemen altındaki gövde (`/hesabim` `.hs-body`, defter `.sec`,
+   `/hesabim/destek` `.hs-body`) `--bg`ye dönüyordu. Üç sayfanın üçünde de
+   band ile gövde arasında görünür bir DİKİŞ vardı (ölçüldü: `.pf-top`
+   rgb(255,255,255) → sonraki bölüm rgb(249,249,249)).
+   Kardeş marka emsali de böyle DEĞİL: orada bant, sayfanın kendi zemininin
+   üstünde durur ve beyaz olan yalnız KARTLARDIR (`.pf-head` · `.pf-tabs` ·
+   form kartları). Beyaz levha kaldırıldı; ada olarak kalan kartlar aynen
+   duruyor — `.pf-head` hâlâ `--paper`.
+   ⚠ `--bg-white` token'ı SİLİNMEDİ, burada KULLANILMIYOR: `.sec--white`
+   gri↔beyaz bölüm ritmi başka sayfalarda ayakta. */
+/* 🔴 `display:flow-root` — ZEMİN TEKLEŞMESİ (Beyar, 2026-08-24 · tur 2).
+   Kusur: `.pf-stats`in alt marjı (24/22/20px) bandın DIŞINA taşıyordu. Marj
+   çöküşü `.wrap`ten geçip `.pf-top`u da aşıyor, çünkü ikisinin de alt dolgusu/
+   çerçevesi yok. O yüzden kartın altında bandın beyazı ile `#defter`in beyazı
+   arasında sayfa zemininin grisi (`.page-main`, #F9F9F9) tam genişlikte bir
+   ŞERİT olarak görünüyordu — beyaz · gri · beyaz, gereksiz üçüncü katman.
+   ÖLÇÜLDÜ (canlı 031c82c0, piksel taraması + kutu modeli, iki yöntem aynı):
+     1440 → y608-631 rgb(249,249,249) 24px · 1024/768 → 22px · 390 → 20px
+   `flow-root` bandı kendi blok biçimlendirme bağlamı yapar; marj artık dışarı
+   çıkamaz, bandın İÇİNDE kalır ve bandın kendi zeminiyle boyanır. GEOMETRİ
+   DEĞİŞMEZ — boşluk aynı 24/22/20px, yalnız rengi tekleşir. Kart kenarı
+   (1px `--line`) olduğu gibi durur, kart zeminden yine ayrılır.
+   ⚠ Stats slot'u BOŞ olan çağrılarda (`/hesabim`, `/hesabim/destek`) bandın son
+   çocuğu `.pf-head`tir ve onun alt marjı 0'dır (bkz. `.pf-head{margin:-78px 28px 0}`)
+   — çökecek marj yok, o iki sayfada ölçü değişmez. Ölçülerek doğrulandı. */
+.pf-top{padding-top:112px;background:var(--bg);display:flow-root}
+.pf-crumb{display:flex;align-items:center;flex-wrap:wrap;gap:9px;padding:18px 0 14px;font-size:13px;font-weight:500;color:var(--muted)}
+.pf-crumb a{color:var(--muted);transition:.18s}
+.pf-crumb a:hover{color:var(--tomato)}
+.pf-crumb i{font-size:9px;color:#c7c7c7}
+.pf-crumb b{color:var(--slate);font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:340px}
+
+/* ---- kimlik hero: banner + üstüne binen kimlik kartı ---- */
+/* K2 (ikinci revize turu 2026-08-21) — KAPAK KURALI: kullanıcının kapağı VARSA
+   o basılır, YOKSA sabit marka görseli. Kapağı olan kullanıcıda bandın
+   `style="background-image:url(...)"` INLINE'ı bu kuralı ezer (satır içi stil >
+   stylesheet), yani burada yalnız FALLBACK tanımlanır — Blade'de "kapak var mı"
+   diye YENİ BİR DAL açılmadı.
+   🔴 ÖLÇÜLDÜ, iki görsel ÜST ÜSTE BİNMİYOR: `background-image` tekil bir
+   özelliktir, inline bildirim onu tamamen DEĞİŞTİRİR, katman EKLEMEZ. Kapaklı
+   hesapta computed değer tek url (`url(".../hero-poster.jpg")`), kapaksızda tek
+   url (`url(".../dayband-fallback.jpg")`) ve `inline: (yok)`. Üç sayfa × üç
+   genişlik × iki hesap = 18 ölçümün hepsinde "url katmanı: 1".
+
+   NEDEN CSS, NEDEN BİLEŞEN DEĞİL:
+     · Kuralın kendisi zaten burada; "kapak yoksa boş" davranışı da burada bir
+       BOŞLUK olarak dokümanlıydı (bileşenin eski şerhi: "Referansta banner-yok
+       fallback tanımlı değil"). Boşluğun kapandığı yer, tarif edildiği yer olmalı.
+     · Bileşende TEK satır değişti ve o da bu kuralın ÖNKOŞULU: `$bandHasBanner`
+       artık `$bannerUrl` de ister. `banner_path` dolu ama çözülemiyorsa eskiden
+       `url('')` basılıyordu ve o BOŞ inline aşağıdaki marka görselini eziyordu.
+     · Deponun EMSALİ bu: marka fallback görselleri kök-mutlak `/img/...` yoluyla
+       CSS'te ilan ediliyor — `resources/css/portal.css:1070-1074` `.dayband`,
+       `public/reference/mutfaga-giris/hub.css` `.guide`, `liste.css`.
+     · Bileşene koymak `asset()` çağrısını ve sabit bir dosya adını PAYLAŞILAN
+       bir bileşenin içine gömerdi; bileşen bugün üç sayfaya basılıyor.
+
+   GÖRSEL — `/img/dayband-fallback.jpg` (LEAD KARARI, 2026-08-21). Gerekçesi
+   `portal.css:1070`ta yazılı: bu dosya bu depoda ZATEN "bandın görseli yoksa
+   basılan yerel marka görseli" rolünü oynuyor ve oraya bir DIŞ Unsplash
+   bağımlılığının yerine konmuş. Aynı turda `/hesabim`dan aynı gerekçeyle bir
+   hotlink kaldırıldı. Yeni varlık ÜRETİLMEDİ, Gourmet görseli KULLANILMADI,
+   dış URL KULLANILMADI (ölçüm: üç sayfada da 0 dış ağ isteği).
+
+   ⚠ KIRPIM — `background-position:center` BİLEREK DOKUNULMADI, iki sebeple:
+     1. Değer kullanıcının KENDİ kapağıyla paylaşımlı; burada değiştirmek her
+        üyenin yüklediği kapağın kadrajını da kaydırırdı.
+     2. Bandı `resources/js/parallax.js` devralıyor (`.px-band` + `.px-clip` +
+        `.px-media`). `.px-media` `position:fixed; width/height:100%` — yani
+        görsel BANDIN değil VIEWPORT'un kutusuna `cover` ile ölçekleniyor ve
+        bant kutusuna `clip-path` ile kırpılıyor. Kadrajı yakın görünmesinin
+        sebebi budur ve bu, kapağı OLAN bantlara da bugüne kadar aynen
+        uygulanıyordu — bu kuralın getirdiği bir şey değil.
+   Fallback'e ÖZEL kadraj gerekirse kaldıraç ölçüldü ve ÇALIŞIYOR:
+   `.pf-banner:not([style]){background-position:50% 22%}` — `style` attribute'u
+   yalnız kapağı OLAN bantta basıldığı için bu seçici tam olarak fallback'i
+   seçer (ölçüldü: `notStyleEslesti:true`, `--px-y` 22%'ye geçti). `parallax.js`
+   değeri YÜKLEME ANINDA okuyup `--px-x/--px-y`ye kopyaladığı için kural
+   stylesheet'te olmak zorundadır; sonradan JS ile set etmek etkisizdir.
+   Bu turda uygulanmadı: denenen `22%` kadrajı daha karanlık ve konusuz çıktı,
+   `center` daha iyi. Karar Beyar'da.
+
+   `background-color` `#211E16`: `hub.css`in marka görseliyle kullandığı koyu
+   zeminin birebir kopyası — yeni renk icat edilmedi. Görsel yüklenene kadar
+   beyaz parlama yerine bandın kendi koyu zeminini verir.
+   ⚠ Bu kural bandı basan ÜÇ sayfanın hepsinde geçerlidir: `/hesabim`,
+   `/sefler/{kullanıcı}`, `/hesabim/destek`. Beyar'ın kuralı sayfa ayrımı
+   yapmadığı için üçünde de basması DOĞRU davranıştır. */
+.pf-banner{position:relative;height:280px;border-radius:var(--radius-xl);overflow:hidden;background-color:#211E16;background-image:url("../../img/dayband-fallback.jpg");background-size:cover;background-position:center;box-shadow:var(--sh-md)}
+.pf-banner::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(33,30,22,.14),rgba(20,18,12,.38))} /* overlay .3-.4 kuralı */
+.pf-mark{position:absolute;top:18px;left:20px;z-index:2;display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.93);color:var(--slate);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:8px 14px;border-radius:var(--radius-sm)}
+.pf-mark i{color:var(--tomato);font-size:12px}
+
+.pf-head{position:relative;z-index:3;display:flex;gap:26px;align-items:flex-start;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);box-shadow:var(--sh-md);padding:26px 30px 28px;margin:-78px 28px 0}
+.pf-ava{flex:none;width:128px;height:128px;border-radius:var(--radius-circle);background-size:cover;background-position:center;border:4px solid #fff;box-shadow:var(--sh-md);margin-top:-70px}
+.pf-id{flex:1;min-width:0}
+.pf-id h1{font-size:30px;letter-spacing:-.02em;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.pf-handle{display:block;font-size:14px;color:var(--muted);font-weight:500;margin-top:3px}
+.pf-bio{font-size:14.5px;color:var(--slate-2);font-weight:500;line-height:1.6;max-width:560px;margin-top:12px;text-align:justify;-webkit-hyphens:auto;hyphens:auto;overflow-wrap:break-word}
+.pf-meta{display:flex;flex-wrap:wrap;gap:7px 20px;margin-top:13px;font-size:13px;color:var(--muted);font-weight:500}
+.pf-meta span{display:inline-flex;align-items:center;gap:7px}
+.pf-meta i{font-size:12px;color:var(--tomato)}
+.pf-actions{flex:none;display:flex;gap:9px;align-items:center}
+
+/* ikincil bant bağı — TD outline dili. Defterde "Profili Düzenle",
+   Hesap Ayarları'nda "Bildirimlerim" + "Defterime Git". */
+.pf-edit-btn{
+  display:inline-flex;align-items:center;gap:9px;font-family:inherit;font-size:13.5px;font-weight:700;
+  color:var(--slate);background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-md);
+  padding:12px 22px;cursor:pointer;transition:.2s var(--ease);white-space:nowrap;
+}
+.pf-edit-btn:hover{border-color:var(--tomato);color:var(--tomato);background:var(--tomato-tint)}
+
+/* banner / avatar düzenle ikonları — yalnız :editable (pf-edit-aff) */
+.pf-ava{position:relative}
+.pf-cover-edit{
+  position:absolute;top:18px;right:20px;z-index:2;display:inline-flex;align-items:center;gap:8px;
+  font-family:inherit;font-size:12px;font-weight:700;color:var(--slate);background:rgba(255,255,255,.93);
+  border:none;border-radius:var(--radius-sm);padding:9px 14px;cursor:pointer;transition:.2s var(--ease);
+}
+.pf-cover-edit:hover{background:#fff;color:var(--tomato)}
+.pf-ava-edit{
+  position:absolute;right:2px;bottom:2px;width:34px;height:34px;border-radius:var(--radius-circle);
+  background:var(--tomato);color:#fff;border:2px solid #fff;display:grid;place-items:center;
+  font-size:13px;cursor:pointer;transition:.2s var(--ease);
+}
+.pf-ava-edit:hover{background:var(--tomato-dark)}
+/* kapak: değiştir + kaldır yan yana; .pf-cover-edit tekil kullanımda kendi
+   absolute konumunu korur, .pf-cover-actions içindeyken static'e döner */
+.pf-cover-actions{position:absolute;top:18px;right:20px;z-index:2;display:flex;gap:8px}
+.pf-cover-actions .pf-cover-edit{position:static}
+/* avatar kaldır: aynı .pf-ava-edit, karşı köşeye (left) + tomato-deep */
+.pf-ava-edit--remove{right:auto;left:2px;background:var(--tomato-deep)}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   K2b (2026-08-22) — DÜZENLEME BANDIN ÜSTÜNDE: dokunma hedefi ve ipucu kutusu
+
+   🔴 DOKUNMA HEDEFİ ≥44×44. Ölçüldü: kamera rozeti 34×34, kapak düğmeleri
+   133×37 basıyordu — ikisi de eşiğin altında.
+   · Kapak düğmeleri METİNLİ düğme; 44'e BÜYÜTÜLÜR (`min-height`), 37→44 bir
+     düğme için normal ölçü, şişkinlik yapmaz.
+   · Kamera rozeti YUVARLAK ve avatarın üstünde durur; 44'e büyütmek bandı
+     ağırlaştırırdı. Hedef `::after` ile GÖRÜNMEZ genişletilir: rozet 34×34
+     çizilir, dokunma alanı her yönde 5px taşarak 44×44 olur. Taşma avatarın
+     kenarını yalnız 3px geçer; en yakın denetim (`.pf-id` başlığı) 26px
+     uzakta — `elementFromPoint` ile ölçüldü, hiçbir hedef bir başkasını
+     örtmüyor. Aynı çözüm bu turda çip seçicide de kullanıldı. */
+.pf-ava-edit{position:absolute}
+/* ⚠ `-7px`, `-5px` DEĞİL — ölçüldü. Mutlak konumlu `::after`ın kapsayan bloğu
+   düğmenin DOLGU kutusudur; rozetin `border:2px` çerçevesi düşünce 34 değil 30
+   kalıyor ve `-5px` 44 değil 40 üretiyordu. 30 + 7 + 7 = 44.
+   `z-index:1` de ölçümden geldi: avatarın harf `<span>`i konumlandırılmamış
+   olduğu hâlde isabet testinde ÜSTTE çıkıyordu; şeffaf pay onun altında
+   kalırsa hedef büyümüş SAYILMAZ. */
+.pf-ava-edit::after{content:"";position:absolute;inset:-7px;border-radius:var(--radius-circle);z-index:1}
+.pf-cover-edit{min-height:44px}
+
+/* Tür/ölçü ipucu ve yükleme hatası. Bant `hidden` doğar: metin ancak yükleme
+   açılınca ya da sunucu hata dönünce görünür, bandı kalabalıklaştırmaz.
+   Yeni sınıf üretilmedi — içindeki `.fk-help` / `.fk-err` bu deponun kendi
+   ipucu-hata dili. */
+.pf-medya-not{display:flex;flex-wrap:wrap;align-items:center;gap:6px 16px;margin-top:10px}
+.pf-medya-not[hidden]{display:none}
+
+body.pf-public .pf-edit-aff{display:none}
+
+/* seviye rozeti — TD rozet dili (kopya) */
+.tbadge{display:inline-flex;align-items:center;gap:7px;font-size:11.5px;font-weight:700;letter-spacing:.02em;padding:7px 13px;border-radius:var(--radius-sm)}
+.tbadge i{font-size:11.5px}
+.tbadge.t-dada{background:var(--tomato);color:#fff;box-shadow:0 4px 12px rgba(220,61,23,.32)}
+
+/* ---- sayaç şeridi (stats slot'u — yalnız Mutfak Defteri doldurur) ---- */
+/* Alt boşluk EKLENDİ (Beyar 2026-08-23): şerit bandın dibine yapışıyordu —
+   üç kırılımın hiçbirinde alt marjı yoktu, üstte 20/18/16 vardı. Alt değer
+   üstle aynı ailede tutuldu ki şerit iki yandan eşit nefes alsın. */
+.pf-stats{display:flex;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);margin:20px 28px 24px;overflow:hidden}
+.pfs{flex:1;display:flex;align-items:center;gap:12px;padding:15px 20px;min-width:0;background:none;border:none;font-family:inherit;text-align:left}
+.pfs+.pfs{border-left:1px solid var(--line)}
+.pfs i{flex:none;width:38px;height:38px;border-radius:var(--radius-md);background:var(--tomato-tint);color:var(--tomato);display:grid;place-items:center;font-size:15px}
+.pfs div{min-width:0}
+.pfs span{display:block;font-size:11px;color:var(--muted);font-weight:500;letter-spacing:.02em}
+.pfs b{display:block;font-size:16.5px;font-weight:700;color:var(--slate);white-space:nowrap}
+.pfs.is-link{cursor:pointer;transition:background .2s var(--ease)}
+.pfs.is-link:hover{background:var(--bg)}
+.pfs.score i{background:#FDF3DC;color:#D99A1B} /* sarı yalnız puan */
+
+/* ===================== TABLET (≤1024px) ===================== */
+@media (max-width:1024px){
+  .pf-head{margin:-70px 16px 0;padding:22px 22px 24px}
+  .pf-stats{margin:18px 16px 22px}
+}
+
+/* ===================== MOBİL (≤640px) ===================== */
+@media (max-width:640px){
+  .pf-top{padding-top:62px}
+  .pf-crumb{padding:14px 0 12px;font-size:12px}
+  .pf-crumb b{max-width:170px}
+  .pf-banner{height:170px;border-radius:var(--radius-lg)}
+  .pf-mark{top:12px;left:12px;padding:7px 11px;font-size:10px}
+  .pf-head{flex-direction:column;align-items:center;text-align:center;gap:14px;margin:-52px 4px 0;padding:20px 18px 22px}
+  .pf-ava{width:104px;height:104px;margin-top:-66px}
+  .pf-id{width:100%} /* column+center: shrink-to-fit engeli — meta satırı sarabilsin */
+  .pf-id h1{font-size:23px;justify-content:center}
+  .pf-bio{font-size:13.5px}
+  .pf-meta{justify-content:center;gap:6px 16px;font-size:12.5px}
+  .pf-actions{width:100%}
+  /* sayaç şeridi: 2 sütun grid, puan tam satır */
+  .pf-stats{display:grid;grid-template-columns:1fr 1fr;margin:16px 0 20px}
+  .pfs{padding:13px 14px}
+  .pfs+.pfs{border-left:none}
+  .pfs:nth-child(even){border-left:1px solid var(--line)}
+  .pfs:nth-child(n+3){border-top:1px solid var(--line)}
+  .pfs.score{grid-column:1/-1;border-left:none}
+  .pfs b{font-size:15px}
+}

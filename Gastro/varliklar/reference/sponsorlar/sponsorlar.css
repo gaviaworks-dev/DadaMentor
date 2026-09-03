@@ -1,0 +1,90 @@
+/* ============ Sponsorlar ve Partnerler — FOOTER-REVIZE §4, 2026-08-17 ============
+   Referanssız yeni sayfa (bu markada bir "sponsorlar-v1.html" hiç var olmadı).
+   VİZÜEL DİL İCAT EDİLMEDİ, tamamı mevcut sistemden türetildi:
+     · hero  → reklam-ver.css/.rv-hero ile AYNI iskelet (koyu zemin + gradient +
+       beyaz metin + padding-top:128px, breadcrumb/eyebrow/h1/lead renkleri birebir)
+     · kart  → hakkimizda.css/.val-card + reklam-ver.css/.rv-card dili (paper zemin,
+       line kenarlık, radius-lg, tomato-tint ikon dairesi, aynı hover)
+     · ızgara → reklam-ver.css/.rv-grid'in `auto-fill` kararı AYNEN alındı (auto-fit
+       tek kartı sayfa genişliğine geriyordu — orada ölçülmüş, burada tekrarlanmadı)
+     · bölüm zemin ritmi → beyaz ↔ krem alternasyonu (reklam-ver'in ölçülmüş kuralı)
+   Token sistemi dışında renk/radius/gölge YOK — hepsi tokens.css'ten.
+
+   ⛔ DIŞ GÖRSEL HOTLINK YOK: reklam-ver'in hero'sunda duran sabit Unsplash adresi
+   hakkimizda'da 2026-08-04'te "dış siteye bağımlılık" gerekçesiyle sökülmüştü.
+   Bu sayfa hiç kurmadı — hero düz koyu gradient'tir, tek başına zemin olarak
+   ayakta durur. */
+
+/* ---- hero: koyu zemin + beyaz metin (rv-hero iskeleti, fotoğrafsız) ---- */
+.sp-hero{
+  position:relative;padding:128px 0 56px;
+  background-image:linear-gradient(120deg,rgba(28,25,18,.97),rgba(45,41,31,.9));
+}
+.sp-hero .wrap{position:relative}
+.sp-hero .rd-crumb{display:flex;align-items:center;flex-wrap:wrap;gap:9px;padding:18px 0 14px;font-size:13px;font-weight:500}
+.sp-hero .rd-crumb,.sp-hero .rd-crumb a{color:#c9c3b8}
+.sp-hero .rd-crumb a:hover{color:#ea8b74}
+.sp-hero .rd-crumb i{color:rgba(255,255,255,.4)}
+.sp-hero .rd-crumb b{color:#fff}
+.sp-hero .eyebrow{color:#f1b1a2;margin-top:10px}
+.sp-hero h1{color:#fff;font-size:clamp(30px,3.5vw,42px);letter-spacing:-.03em;line-height:1.12;max-width:760px;margin:14px 0 16px}
+.sp-hero .lead{color:#e7edf1;font-weight:500;font-size:15.5px;max-width:640px;line-height:1.65;margin-bottom:26px}
+.sp-hero-cta{display:inline-flex}
+
+/* ---- bölüm zemin ritmi: beyaz ↔ krem, kesintisiz ---- */
+.sp-live{background:var(--bg-white)}
+.sp-kinds{background:var(--bg-cream)}
+.sp-how{background:var(--bg-white)}
+
+/* ---- canlı sponsor ızgarası (yalnız Sponsor::live() doluyken basılır) ----
+   Logo bir MARKA KİMLİĞİdir: `contain` ile basılır, `cover` kırpardı. Kare
+   oranlı alan <img> değil div+background-image (CLAUDE.md görsel kuralı);
+   admin/sponsorlar/form.blade.php'deki önizleme deseninin aynısı. */
+/* `align-items` BİLEREK verilmedi (grid varsayılanı stretch): marka adı bir
+   satır, sektör etiketi ve site linki opsiyonel olduğu için kart içerikleri
+   farklı uzunlukta. `start` ile ölçüldü — kartlar tırtıklı bir alt kenar
+   üretiyordu; stretch hepsini satırın en uzununa eşitler. */
+.sp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:18px;margin-top:30px}
+.sp-card{
+  background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);
+  padding:22px;display:flex;flex-direction:column;align-items:center;gap:13px;
+  text-align:center;transition:.25s var(--ease);
+}
+.sp-card:hover{transform:translateY(-4px);box-shadow:var(--sh-md);border-color:var(--tomato)}
+.sp-logo{width:100%;height:64px;background-size:contain;background-position:center;background-repeat:no-repeat}
+/* Logosu yüklenmemiş marka — baş harf rozeti. Ad HER ZAMAN basılır, marka
+   logosuz da olsa satırı boş kalmaz (yer tutucu/"yakında" değil, gerçek kayıt). */
+.sp-logo-fb{width:56px;height:56px;border-radius:var(--radius-md);background:var(--tomato-tint);color:var(--tomato);display:grid;place-items:center;font-size:22px;font-weight:800}
+.sp-card h3{font-size:15.5px;font-weight:700;color:var(--ink);line-height:1.3}
+.sp-sector{font-size:12.5px;font-weight:600;color:var(--muted)}
+.sp-card a.sp-site{font-size:13px;font-weight:600;color:var(--tomato)}
+.sp-card a.sp-site:hover{text-decoration:underline}
+
+/* ---- iş birliği türleri (val-card dili) ----
+   minmax TABANI 250px: dört kart 1440px'te TEK satıra sığar. 280px'te
+   ölçüldü — 3+1 kırılıyordu ve dördüncü kart alt satırda tek başına kalıyordu
+   (yetim kart). 250px tabanla 1180px'lik wrap dörde bölünür (4×250=1000). */
+.sp-kind-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:20px;margin-top:30px;align-items:start}
+.sp-kind{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);padding:26px;transition:.25s var(--ease)}
+.sp-kind:hover{transform:translateY(-4px);box-shadow:var(--sh-md)}
+.sp-kind .ki{width:50px;height:50px;border-radius:var(--radius-md);background:var(--tomato-tint);color:var(--tomato);display:grid;place-items:center;font-size:20px;margin-bottom:16px}
+.sp-kind h3{font-size:18px;margin-bottom:9px;color:var(--ink)}
+.sp-kind p{font-size:14px;color:var(--slate-2);font-weight:500;line-height:1.65}
+
+/* ---- başvuru adımları ---- */
+.sp-steps{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:20px;margin-top:30px;counter-reset:sp-step}
+.sp-step{position:relative;padding-left:52px}
+.sp-step::before{
+  counter-increment:sp-step;content:counter(sp-step);
+  position:absolute;left:0;top:0;width:38px;height:38px;border-radius:var(--radius-md);
+  background:var(--tomato);color:#fff;display:grid;place-items:center;font-size:16px;font-weight:800;
+}
+.sp-step h3{font-size:16.5px;margin-bottom:7px;color:var(--ink)}
+.sp-step p{font-size:14px;color:var(--slate-2);font-weight:500;line-height:1.65}
+.sp-how-cta{margin-top:34px;display:flex;justify-content:center}
+
+@media (max-width:640px){
+  .sp-hero{padding:96px 0 44px}
+  .sp-grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px}
+  .sp-kind-grid,.sp-steps{grid-template-columns:1fr}
+}

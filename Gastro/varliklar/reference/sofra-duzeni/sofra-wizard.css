@@ -1,0 +1,109 @@
+/* Sofra Kurulum Sihirbazı — kaynak-transfer (reference/rehber/sofra-duzeni-v1.html
+   satır 872-956) taşındıktan sonra REV 2026-07-20 (Beyar madde 8) ile yeniden
+   tasarlandı: bu bölüm için kaynak-transfer kuralı Beyar talebiyle askıya
+   alındı. FB18 hibrit karar hâlâ geçerli — adım tag/title/paragraph/checklist/
+   tip metinleri admin'den (table_setting_steps) gelir, SVG kuver diyagram
+   şeması (PARCA/SEMA/svgKuver, sofra-wizard.js) hardcoded kalır; yalnız SUNUM
+   değişti. Tasarım kararları:
+   - .cm-stage merkez-hizalıdan ÜST-hizalıya döndü: eski place-items:center
+     kısa adımlarda (şemasız) devasa boş alan, uzun adımlarda (şemalı) aşırı
+     scroll üretiyordu (BEFORE SS'lerinde doğrulandı) — top-align + tutarlı
+     padding ile adımlar arası ritim öngörülebilir hale geldi.
+   - Şeması olan adımlarda .cm-inner iki kolona bölünür (metin + görsel yan
+     yana, "görsel-metin dengesi"); şemasız adımlarda tek ortalanmış kolon —
+     dikey metin-altı-boşluk yerine yatay alan kullanılır.
+   - Tek ince .bar yerine segmentli .cm-rail: her adım kendi segmenti, dolu/
+     aktif/boş durumla ilerleme daha güçlü okunuyor; ray segmentleri aynı
+     zamanda tıkla-atla taşır (eski ayrı cm-dots satırı gereksiz oldu, kaldırıldı). */
+.cookmode{position:fixed;inset:0;z-index:120;background:var(--bg-white);display:flex;flex-direction:column;opacity:0;visibility:hidden;transform:translateY(18px);transition:opacity .3s var(--ease),transform .3s var(--ease),visibility .3s}
+.cookmode.open{opacity:1;visibility:visible;transform:translateY(0)}
+.cm-top{flex:none;display:flex;align-items:center;gap:18px;padding:16px 28px;border-bottom:1px solid var(--line)}
+.cm-top .cm-name{display:flex;align-items:center;gap:11px;min-width:0}
+.cm-top .cm-name .th{flex:none;width:38px;height:38px;border-radius:var(--radius-md);background:var(--tomato-tint);color:var(--tomato);display:grid;place-items:center;font-size:15px}
+.cm-top .cm-name b{font-size:14px;font-weight:700;color:var(--slate);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cm-prog{flex:1;display:flex;align-items:center;gap:14px;min-width:0}
+.cm-prog .cm-count{flex:none;font-size:12.5px;font-weight:800;color:var(--tomato);white-space:nowrap}
+.cm-rail{flex:1;display:flex;align-items:center;gap:5px;min-width:0}
+.cm-rail .seg{flex:1;height:6px;min-width:10px;border-radius:var(--radius-pill);background:var(--bg);overflow:hidden;position:relative;cursor:pointer;transition:transform .15s var(--ease)}
+.cm-rail .seg::after{content:"";position:absolute;inset:0;background:var(--tomato);border-radius:var(--radius-pill);transform:scaleX(0);transform-origin:left;transition:transform .35s var(--ease)}
+.cm-rail .seg.done::after{transform:scaleX(1)}
+.cm-rail .seg.on::after{transform:scaleX(1)}
+.cm-rail .seg.on{transform:scaleY(1.5)}
+.cm-rail .seg:hover{transform:scaleY(1.5)}
+.cm-close{flex:none;width:42px;height:42px;border-radius:var(--radius-md);border:1px solid var(--line);background:var(--paper);color:var(--slate);font-size:17px;cursor:pointer;display:grid;place-items:center;transition:.2s var(--ease)}
+.cm-close:hover{border-color:var(--tomato);color:var(--tomato)}
+.cm-stage{flex:1;min-height:0;overflow-y:auto;display:flex;padding:44px 28px 40px}
+.cm-inner{width:100%;margin:0 auto;animation:fadeUp .3s var(--ease)}
+.cm-inner.no-fig{max-width:680px}
+.cm-inner.has-fig{max-width:1120px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:44px;align-items:start}
+.cm-col--visual{position:sticky;top:0}
+.cm-num{display:inline-flex;align-items:center;gap:13px;margin-bottom:20px}
+.cm-num .n{width:56px;height:56px;border-radius:var(--radius-md);background:var(--tomato-tint);color:var(--tomato);border:1px solid rgba(220,61,23,.22);display:grid;place-items:center;font-size:22px;font-weight:800}
+.cm-num .cm-tag{font-size:11.5px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+.cm-inner h2{font-size:32px;margin-bottom:14px;letter-spacing:-.02em}
+.cm-inner p{font-size:18px;line-height:1.7;color:var(--slate-2);font-weight:500;text-align:justify;-webkit-hyphens:auto;hyphens:auto;overflow-wrap:break-word}
+.cm-inner p b{color:var(--slate)}
+.cm-inner.no-fig h2,.cm-inner.no-fig p{max-width:640px}
+.swz-tip{display:flex;align-items:flex-start;gap:10px;margin-top:20px;padding:13px 16px;border-radius:var(--radius-md);background:var(--tomato-tint);font-size:14px;font-weight:600;color:var(--slate)}
+.swz-tip i{color:var(--tomato);font-size:13px;margin-top:3px}
+.swz-list{list-style:none;margin:18px 0 0;padding:0;display:grid;gap:10px}
+.swz-list li{display:flex;align-items:flex-start;gap:10px;font-size:15.5px;font-weight:600;color:var(--slate-2)}
+.swz-list li i{flex:none;width:19px;height:19px;border-radius:var(--radius-circle);background:color-mix(in srgb,var(--green) 16%,var(--paper));color:var(--green);font-size:10px;display:grid;place-items:center;margin-top:1px}
+.swz-sema{background:var(--cream-2);border:1px solid var(--line);border-radius:var(--radius-lg);padding:18px 20px 6px;box-shadow:var(--sh-sm)}
+.swz-sema svg{display:block;width:100%;height:auto}
+.swz-sema .pc{fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.swz-sema .pc-o{stroke:#cbc1ac}
+.swz-sema .pc-o .fl{fill:#f4eee0}
+.swz-sema .pc-t{stroke:#6f6753}
+.swz-sema .pc-t .fl{fill:var(--paper)}
+.swz-sema .pc-y{stroke:var(--tomato)}
+.swz-sema .pc-y .fl{fill:var(--tomato-tint)}
+/* .shn — porselen/cam/metal parlaklık katmanı (svgKuver defs'teki gradientlere
+   bağlı, sofra-wizard.js REV 2026-08-04); saf ışık overlay'i, tıklanamaz. */
+.swz-sema .shn{pointer-events:none}
+.swz-sema text{font-family:inherit}
+/* Etiket halo'su (paint-order): parça sözcüğü artık dolu masa/desen üstünde
+   de okunur — kutu ölçmeye gerek kalmadan text'in kendi konturunda hafif
+   krem hale. Ağırlık 700→800: "yeni eklenen" vurgusu daha net görülsün. */
+.swz-sema .pl{font-size:12.5px;font-weight:800;fill:var(--tomato-deep);letter-spacing:.02em;paint-order:stroke;stroke:var(--paper);stroke-width:5px;stroke-linejoin:round}
+.swz-sema .mk{stroke-width:2;stroke-dasharray:3 8;stroke-linecap:round}
+.swz-sema .mkt{stroke:#c9bfa6;stroke-width:1.5;stroke-linecap:round}
+.swz-sema .mkl{font-size:10px;font-weight:800;letter-spacing:.17em;fill:#8f8570;paint-order:stroke;stroke:var(--cream-2);stroke-width:4px;stroke-linejoin:round}
+.swz-sema-leg{display:flex;flex-wrap:wrap;gap:6px 20px;align-items:center;padding:12px 4px 10px;font-size:12px;font-weight:600;color:var(--muted)}
+.swz-sema-leg span{display:inline-flex;align-items:center;gap:7px}
+.swz-sema-leg i{width:12px;height:12px;border-radius:4px;flex:none;box-shadow:0 1px 2px rgba(33,30,22,.14)}
+.swz-sema-leg .ly i{background:var(--tomato-tint);border:2px solid var(--tomato)}
+.swz-sema-leg .lo i{background:#f4eee0;border:2px solid #cbc1ac}
+.swz-sema-leg .lt i{background:var(--paper);border:2px solid #6f6753}
+.swz-pick{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:22px}
+.swz-pick button{display:flex;flex-direction:column;align-items:flex-start;gap:10px;padding:18px 16px;border:1px solid var(--line);border-radius:var(--radius-lg);background:var(--paper);cursor:pointer;text-align:left;font-family:inherit;transition:.2s var(--ease)}
+.swz-pick button:hover{border-color:var(--tomato);transform:translateY(-2px);box-shadow:var(--sh-sm)}
+.swz-pick .pk-ico{width:40px;height:40px;border-radius:var(--radius-md);background:var(--tomato-tint);color:var(--tomato);display:grid;place-items:center;font-size:16px}
+.swz-pick b{font-size:14.5px;font-weight:700;color:var(--slate);line-height:1.3}
+.swz-pick span{font-size:12px;font-weight:600;color:var(--muted)}
+.cookmode.picking .cm-rail,.cookmode.picking .cm-nav{visibility:hidden}
+.cm-bottom{flex:none;display:flex;align-items:center;justify-content:flex-end;gap:16px;padding:16px 28px;border-top:1px solid var(--line)}
+.cm-nav{display:flex;gap:10px}
+.cm-nav .btn{padding:13px 24px;font-size:14px}
+.cm-nav .btn:disabled{opacity:.4;cursor:default;transform:none}
+/* Tablet (641-1024): iki kolon dar sütuna sıkışmadan tek kolona iner, görsel
+   metnin altına — sticky de burada kapanır (üst-üste kaydırma karışmasın). */
+@media (max-width:1024px){
+  .cm-inner.has-fig{grid-template-columns:minmax(0,1fr);gap:26px;max-width:680px}
+  .cm-col--visual{position:static}
+}
+@media (max-width:640px){
+  .cm-top{padding:13px 16px;gap:12px}
+  .cm-top .cm-name{display:none}
+  .cm-stage{padding:26px 18px 30px}
+  .cm-num{margin-bottom:16px}
+  .cm-num .n{width:46px;height:46px;font-size:18px}
+  .cm-inner h2{font-size:24px}
+  .cm-inner p{font-size:16.5px}
+  .swz-sema{padding:14px 14px 4px}
+  .swz-pick{grid-template-columns:repeat(2,1fr);gap:10px}
+  .swz-pick button{padding:14px 13px}
+  .cm-bottom{padding:12px 16px}
+  .cm-nav{flex:1}
+  .cm-nav .btn{flex:1;padding:12px 10px;font-size:13px}
+}

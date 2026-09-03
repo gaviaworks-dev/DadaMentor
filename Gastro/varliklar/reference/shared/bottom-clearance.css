@@ -1,0 +1,25 @@
+/* Sabit alt-köşe öğe çakışması — ORTAK yerleşim (R5 madde 4, kapanış turu
+   2026-08-08). Beyar kararı (bağlayıcı): mekân/tarif sayfasının sabit
+   aksiyon barı (.vd-actbar/.rd-actbar) görünürken Mentor paneli VE Dada
+   Route FAB'ı (.yg-fab) DE görünür ve tıklanabilir kalacak — z-index
+   yarıştırma YOK, `display:none` YOK. Bu turdan önceki çözüm ikisini de
+   koşulsuz gizliyordu (mekan-detay.css `body:has(.vd-actbar.show)
+   .mentor-panel/.yg-fab{display:none}`); o kural KALKTI, yerine bu dosya +
+   bottom-clearance.js geldi.
+
+   Mekanizma: obstacle öğesine (Mentor/FAB) `data-bc-clear` eklenir, bara
+   `data-bc-bar` eklenir. JS ikisinin GERÇEK `getBoundingClientRect()`'ini
+   karşılaştırır (sabit piksel eşiği YOK — bar genişliği mekân/tarif adına
+   göre değiştiğinden, 390px'te bar tek/iki satıra bölündüğünden bir eşik
+   iki sayfayı birden kurtarmazdı, ölçüldü); GERÇEKTEN kesişiyorsa öğenin
+   KENDİ `--bc-lift` custom property'sini yazar. Bu dosya o değeri hiçbir
+   yeni renk/boşluk icat etmeden ilgili öğenin KENDİ `bottom` hesaplamasına
+   EKLER — taban `bottom` değerleri (24px/26px/88px+safe-area) TEK KAYNAK
+   olarak resources/css/portal.css + gourmet.css'te kalır, burada
+   yeniden tanımlanmaz.
+
+   `--bc-lift` varsayılanı burada, düşük özgüllükle: kesişme yoksa (çoğu
+   durum) her tüketici dosyada `var(--bc-lift,0px)` fallback'i zaten 0
+   veriyor, bu satır yalnız ilk boyamadan önce bir sıçrama olmasın diye
+   erken tanımlar. */
+[data-bc-clear]{--bc-lift:0px}

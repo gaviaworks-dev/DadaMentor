@@ -1,0 +1,263 @@
+/* Kaynak-transfer: giris-v1.html satır 734-949 (F6 GİRİŞ/KAYIT/ŞİFRE sayfa CSS
+   bloğu) BİREBİR. .au-top/.au-layout/.au-visual/.au-stats/.au-perks seçicileri
+   (+ tablet/mobil override'ları) FB28/FB34'ten beri AKTİF render ediliyor:
+   auth/index.blade.php $authWide=true ile layouts/guest.blade.php'nin
+   .authwrap/.authcard (max-width:460px) sarmalayıcısını atlayıp tam site-chrome
+   içinde tam-genişlik iki-kolon hero'yu basıyor (bkz. view başındaki not). */
+
+/* ============ F6 — GİRİŞ / KAYIT / ŞİFREMİ UNUTTUM (tek dosya, ?tab=) ============
+   Miras: TD .rd-crumb VERBATIM · tarif-ekle .fk-* kiti VERBATIM · shell .fb-kvkk
+   + .fb-success · mutfak-defteri .pf-tabs sekme dili (statik hal) · tarif-liste
+   lst-hero koyu-overlay görsel dili (kart varyantı) · diyetisyen-ol .ol-consents
+   + .captcha-note VERBATIM · tarif-ekle .sbanner (hata izi).
+   Yeni (son çare, raporda gerekçeli): .au-* auth yerleşimi, .soc-btn sosyal
+   login, .fk-pass/.fk-eye şifre göster-gizle. */
+
+/* breadcrumb — tarif-detay-v1 .rd-crumb VERBATIM */
+.rd-crumb{display:flex;align-items:center;flex-wrap:wrap;gap:9px;padding:18px 0 14px;font-size:13px;font-weight:500;color:var(--muted)}
+.rd-crumb a{color:var(--muted);transition:.18s}
+.rd-crumb a:hover{color:var(--tomato)}
+.rd-crumb i{font-size:9px;color:#c7c7c7}
+.rd-crumb b{color:var(--slate);font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:340px}
+
+/* ---- sayfa üst bölgesi ---- */
+.au-top{position:relative;padding-top:128px;padding-bottom:74px;background-image:linear-gradient(90deg,rgba(28,25,18,.93),rgba(33,30,22,.72)),url("../../_dis/images.unsplash.com/photo-1556909212-d5b604d0c90d.avif");background-size:cover;background-position:center}
+/* hero kartı + form butonları header overlay (z:80–97) ÜSTÜNDE (latent z-index guard) */
+.au-top .wrap{position:relative;z-index:5}
+.au-top .au-card{position:relative;z-index:6}
+.au-top .rd-crumb,.au-top .rd-crumb a{color:#c9c3b8}
+.au-top .rd-crumb a:hover{color:#ea8b74}
+.au-top .rd-crumb i{color:rgba(255,255,255,.4)}
+.au-top .rd-crumb b{color:#fff}
+@media (max-width:640px){.au-top{padding-top:74px}}
+/* RV3 madde 3 (Beyar bulgusu, 2026-07-26): align-items:stretch KALDIRILDI —
+   hero (.au-visual) form kartının (.au-card) doğal yüksekliğine stretch
+   ediyordu; kayıt formu giriş formundan uzun olduğu için hero iki sekmede
+   FARKLI boyda render oluyordu. align-items:start + .au-visual'ın kendi sabit
+   yüksekliği (aşağıda) hero'yu form uzunluğundan bağımsızlaştırıp iki sekmede
+   AYNI boyda tutar. */
+.au-layout{display:grid;grid-template-columns:minmax(0,1fr) 520px;gap:28px;align-items:start;margin-top:6px}
+
+/* ---- görsel yarı — lst-hero koyu-overlay dilinin KART varyantı ---- */
+.au-visual{
+  /* RV3 madde 3: sticky, tokens.css'in .lst-side/.ed-progress/.plan-sum'da
+     KULLANDIĞI aynı kalıp (header-offset'ten sonra yapışır) — uzun kayıt
+     formu viewport'tan taştığında hero kaybolmaz, form kartının bittiği yere
+     kadar sayfayla birlikte kayar. */
+  position:sticky;top:calc(var(--header-offset) + var(--sp-3));display:flex;flex-direction:column;justify-content:flex-end;
+  /* RV3 madde 3: min-height→height SABİT (624px) — hero artık form kartının
+     içerik uzunluğuna göre büyümüyor, iki sekmede birebir aynı boy. */
+  height:624px;border-radius:var(--radius-xl);overflow:hidden;box-shadow:var(--sh-md);
+  background-image:linear-gradient(180deg,rgba(28,25,18,.30) 0%,rgba(28,25,18,.55) 55%,rgba(20,18,12,.86) 100%),
+    url("../../_dis/images.unsplash.com/photo-1556910103-1c02745aae4d.avif");
+  background-size:cover;background-position:center;
+  padding:38px 40px;
+}
+.au-visual .eyebrow{color:#f1b1a2}
+.au-visual .eyebrow::before{background:var(--tomato)}
+.au-visual h2{color:#fff;font-size:36px;letter-spacing:-.03em;margin:14px 0 10px;max-width:420px;text-shadow:0 2px 24px rgba(0,0,0,.25)}
+.au-visual h2 .accent{color:#e87f66}
+.au-visual .lead{color:#e7edf1;font-weight:500;font-size:15px;max-width:420px;text-shadow:0 1px 14px rgba(0,0,0,.3);line-height:1.6}
+/* üyelik vaatleri — check satırları */
+.au-perks{display:flex;flex-direction:column;gap:11px;margin-top:22px}
+.au-perks span{display:inline-flex;align-items:center;gap:11px;font-size:13.5px;font-weight:600;color:#f3efe8}
+.au-perks i{flex:none;width:26px;height:26px;border-radius:var(--radius-circle);background:rgba(220,61,23,.9);color:#fff;display:grid;place-items:center;font-size:11px}
+/* istatistik şeridi — tarif-liste .lst-stats dilinin yatay hali */
+.au-stats{display:flex;gap:34px;margin-top:26px;padding-top:22px;border-top:1px solid rgba(255,255,255,.18)}
+.au-stats .st b{display:block;font-size:25px;font-weight:700;color:#fff;letter-spacing:-.02em;line-height:1.1}
+.au-stats .st span{font-size:12px;color:#aebcc6;font-weight:500}
+
+/* ---- form yarı ---- */
+.au-card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-xl);box-shadow:var(--sh-sm);padding:34px 38px 36px;display:flex;flex-direction:column}
+.au-head{margin-bottom:20px}
+.au-head h1{font-size:25px;letter-spacing:-.02em}
+.au-head p{font-size:13.5px;color:var(--muted);font-weight:500;margin-top:5px}
+
+/* sekme barı — mutfak-defteri .pf-tabs/.dt dili VERBATIM (statik, sticky değil) */
+.pf-tabs{display:flex;gap:4px;background:var(--bg);border:1px solid var(--line);border-radius:var(--radius-md);padding:4px;overflow-x:auto;scrollbar-width:none}
+.pf-tabs::-webkit-scrollbar{display:none}
+.pf-tabs .dt{font-family:inherit;font-weight:700;font-size:13px;color:var(--muted);background:transparent;border:none;border-radius:var(--radius-sm);padding:9px 16px;cursor:pointer;display:inline-flex;align-items:center;gap:7px;transition:.2s var(--ease);white-space:nowrap;flex:none}
+.pf-tabs .dt:hover{color:var(--tomato)}
+.pf-tabs .dt.active{background:var(--tomato);color:#fff}
+.au-card .pf-tabs{margin-bottom:24px}
+.au-card .pf-tabs .dt{flex:1;justify-content:center}
+/* Beyar bulgusu (2026-07-27, bulgu 4) — sekme barının ÜSTÜNDE koşullu basılan
+   .flash (ör. "doğrulamayı tamamlamak için giriş yap…") aradaki boşluk
+   tanımlı olmadığı için sekmelere yapışıyordu. .au-head{margin-bottom:20px}
+   ile aynı ritimde bir boşluk eklendi — yeni bir ölçü icat edilmedi. */
+.au-card .flash{margin-bottom:20px}
+
+/* pane geçişi — pf-pane dili */
+.au-pane{animation:fadeUp .35s var(--ease)}
+.au-pane[hidden]{display:none}
+
+/* sosyal login — yeni (eski site Facebook/Google butonlarının token diline çevirisi) */
+.soc-col{display:flex;flex-direction:column;gap:10px}
+.soc-btn{display:flex;align-items:center;justify-content:center;gap:11px;width:100%;font-family:inherit;font-size:14px;font-weight:700;color:var(--slate);background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-md);padding:13px 16px;cursor:pointer;transition:.2s var(--ease)}
+.soc-btn i{font-size:17px}
+.soc-btn:hover{border-color:var(--slate);transform:translateY(-1px);box-shadow:var(--sh-sm)}
+/* soon-maskeli soc-btn (I3: web sosyal login backend'i henüz yok) — kesfet .is-soon deseni */
+.soc-btn.is-soon{cursor:not-allowed;opacity:.6}
+.soc-btn.is-soon:hover{transform:none;box-shadow:none;border-color:var(--line)}
+/* FB28-a: sosyal buton + Telefon sekmesi "Yakında" rozeti (global portal .soon,
+   "Dada Store Yakında" teaser emsaliyle aynı sınıf) flex konteynerinde stabil
+   inline pill kalsın — dar genişlikte (390px) etikete binmesin/taşmasın. */
+.soc-btn .soon,.au-seg-btn .soon{flex:none;white-space:nowrap}
+/* ayraç */
+.au-div{display:flex;align-items:center;gap:14px;margin:20px 0;font-size:12px;font-weight:600;color:var(--muted);letter-spacing:.03em}
+.au-div::before,.au-div::after{content:"";flex:1;height:1px;background:var(--line)}
+
+/* FK ALAN KİTİ — tarif-ekle-v1 VERBATIM (çekirdek alt küme). NOT: bu app'in
+   kanonik fk-* kiti (resources/views/components/form/*) .fk-err/.fk-cbx
+   render eder — ref'in .fk-error DEĞİL (CLAUDE.md: fk-* kiti kanonik,
+   çelişkide fk-* kazanır). .fk-error o yüzden bu app'te YETİM'dir — literal
+   transfer olarak kalır, gerçek hata görünümü tokens.css'teki .fk-err'den
+   gelir. .fb-kvkk İSTİSNADIR: RV-PUBLIC-5'te (Beyar 2026-07-24) kayıt onay
+   satırları .fk-agree'nin bej kutulu görünümünden bu ref sınıfına
+   DÖNDÜRÜLDÜ — aşağıdaki temel kural AKTİF kullanımdadır (auth/index.blade.php
+   kayıt paneli #ol-consents). */
+.fb-kvkk{display:flex;align-items:flex-start;gap:9px;font-size:12.5px;font-weight:500;color:var(--muted);line-height:1.5;margin:14px 0 16px;cursor:pointer}
+.fb-kvkk input{margin-top:3px;accent-color:var(--tomato);flex:none}
+.fb-kvkk a{color:var(--tomato);font-weight:700;text-decoration:underline;text-underline-offset:2px}
+/* GİRİŞGAP (2026-07-25, Beyar canlı bulgusu — /giris?tab=kayit alan aralıkları
+   referanstan fazlaydı): tokens.css'in kanonik ".fk-form{display:grid;gap:
+   var(--sp-4)}" (16px) ve ".fk-field{display:grid;gap:var(--sp-2)}" (8px)
+   kuralları, bu sayfanın KENDİ margin-tabanlı alan aralığı sistemine (aşağıdaki
+   .fk-field/.fk-label/.fk-help/.fk-grid+.fk-field kuralları, referanstan
+   birebir taşınmıştı) EK OLARAK sızıyordu — bu dosya .fk-form/.fk-field'in
+   `display`ini hiç ele almadığı için kit'in grid+gap'i UNCONTESTED kalıp
+   margin'lerin ÜSTÜNE biniyordu (çift sayım). Ölçülen etki (@1440, ardışık
+   alan grupları arası gerçek boşluk): 16→32px, 8→24px, 20→36px, 22→38px vb.
+   — referanstan ~1.6-2.5x fazla. tokens.css'e DOKUNULMADI (kit 11 farklı
+   view'da kullanılıyor — iletisim/uretici/admin login/2FA/parola formları
+   spacing'i TAMAMEN bu grid-gap'ten alıyor, kaldırılırsa onlar spacing'siz
+   kalır; M17/.art-hero emsaliyle AYNI yöntem: sayfa-CSS eşit specificity +
+   sonradan yüklenmeyle override). Yalnız BU sayfanın .au-card kapsamında
+   (grep: başka hiçbir view .au-card kullanmıyor) display block'a döndürülüyor
+   — kendi margin sistemi TEK spacing kaynağı olsun diye. .fk-err için
+   margin-top:8px eklendi (kit'in grid-gap'i düşünce hata mesajı öncesi boşluk
+   kaybolmasın — referansın kendi .fk-error'ı da margin-top:8px kullanıyor,
+   satır 121 — aynı değer, uydurma değil). */
+.au-card .fk-form,.au-card .fk-field{display:block}
+.au-card .fk-err{margin-top:8px}
+.fk-field{margin-bottom:22px}
+.fk-field:last-child{margin-bottom:0}
+.fk-label{display:flex;align-items:baseline;gap:7px;font-size:14px;font-weight:700;color:var(--slate);margin-bottom:9px}
+.fk-label .req{color:var(--tomato);font-weight:700}
+.fk-label .opt{font-size:11.5px;color:var(--muted);font-weight:500}
+.fk-input,.fk-select,.fk-textarea{
+  width:100%;font-family:inherit;font-size:14px;font-weight:500;color:var(--slate);
+  background:var(--bg);border:1px solid var(--line);border-radius:var(--radius-md);
+  padding:13px 15px;outline:none;transition:border-color .2s var(--ease),box-shadow .2s var(--ease);
+}
+.fk-input::placeholder,.fk-textarea::placeholder{color:#a7a7a7}
+.fk-input:focus,.fk-select:focus,.fk-textarea:focus{border-color:var(--tomato);box-shadow:0 0 0 3px rgba(220,61,23,.10)}
+.fk-help{display:flex;align-items:flex-start;gap:7px;font-size:12.5px;color:var(--muted);font-weight:500;margin-top:8px;line-height:1.5}
+.fk-help i{color:var(--tomato);font-size:12px;margin-top:2px;flex:none}
+.fk-error{display:none;align-items:center;gap:7px;font-size:12.5px;font-weight:700;color:var(--tomato);margin-top:8px}
+.fk-error i{font-size:12px}
+.fk-field.has-error .fk-input{border-color:var(--tomato);box-shadow:0 0 0 3px rgba(220,61,23,.10)}
+.fk-field.has-error .fk-error{display:flex}
+.fk-grid{display:grid;gap:16px 18px}
+.fk-grid .fk-field{margin-bottom:0}
+.fk-grid.c2{grid-template-columns:1fr 1fr}
+.fk-grid+.fk-field,.fk-field+.fk-grid{margin-top:22px}
+
+/* şifre göster/gizle — yeni mikro bileşen (fk-suffix statikti; buton hali gerekti) */
+.fk-pass{position:relative}
+.fk-pass .fk-input{padding-right:50px}
+.fk-eye{position:absolute;right:7px;top:50%;transform:translateY(-50%);width:36px;height:36px;border:none;border-radius:var(--radius-sm);background:transparent;color:var(--muted);font-size:14px;cursor:pointer;display:grid;place-items:center;transition:.18s var(--ease)}
+.fk-eye:hover{color:var(--tomato);background:var(--tomato-tint)}
+
+/* beni hatırla satırı */
+.au-row{display:flex;align-items:center;justify-content:space-between;gap:14px;margin:16px 0 20px}
+.au-row .fb-kvkk{margin:0;font-size:13px;align-items:center}
+.au-row .fb-kvkk input{margin-top:0}
+.au-forgot{font-size:13px;font-weight:700;color:var(--tomato);transition:.18s;background:none;border:none;font-family:inherit;cursor:pointer;padding:0}
+.au-forgot:hover{color:var(--tomato-dark);text-decoration:underline;text-underline-offset:2px}
+
+/* KVKK / onay grubu — diyetisyen-ol .ol-consents VERBATIM */
+.ol-consents{display:flex;flex-direction:column;gap:13px}
+.ol-consents .fb-kvkk{margin:0}
+.au-card .ol-consents{margin:18px 0 20px}
+.captcha-note{display:flex;align-items:center;gap:9px;font-size:12px;color:var(--muted);font-weight:500;margin-top:18px;padding-top:16px;border-top:1px solid var(--line)}
+.captcha-note i{color:var(--green-deep);font-size:13px}
+
+/* gönder butonu + pane alt köprüsü */
+.au-submit{width:100%;padding:15px 26px;font-size:15px}
+.au-alt{text-align:center;font-size:13.5px;color:var(--muted);font-weight:500;margin-top:20px;padding-top:18px;border-top:1px solid var(--line)}
+.au-alt button,.au-alt a{background:none;border:none;font-family:inherit;font-size:13.5px;font-weight:700;color:var(--tomato);cursor:pointer;padding:0;transition:.18s}
+.au-alt button:hover,.au-alt a:hover{color:var(--tomato-dark);text-decoration:underline;text-underline-offset:2px}
+
+/* şifre pane'i geri köprüsü */
+.au-back{display:inline-flex;align-items:center;gap:8px;background:none;border:none;font-family:inherit;font-size:13px;font-weight:700;color:var(--muted);cursor:pointer;padding:0;margin-bottom:16px;transition:.18s}
+.au-back:hover{color:var(--tomato)}
+.au-back i{font-size:11px}
+
+/* ---- DURUM İZLERİ ---- */
+/* hata bandı — tarif-ekle .sbanner VERBATIM (rejected varyantı kullanılır).
+   Bu app'te YETİM: gerçek login hatası layouts/guest.blade.php'nin genel
+   $errors flash bandıyla gösteriliyor (layout dokunulmaz, ikinci/çakışan bir
+   hata bandı basılmadı — bkz. view başı not). */
+.sbanner{display:none;align-items:flex-start;gap:14px;border:1px solid;border-radius:var(--radius-lg);padding:16px 18px;margin-bottom:22px;animation:fadeUp .35s var(--ease)}
+.sbanner.show{display:flex}
+.sb-ico{flex:none;width:42px;height:42px;border-radius:var(--radius-md);display:grid;place-items:center;font-size:17px}
+.sb-body{flex:1;min-width:0}
+.sb-body h4{font-size:15.5px;margin-bottom:4px;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.sb-body p{font-size:13.5px;color:var(--slate-2);font-weight:500;line-height:1.6}
+.sb-body p b{color:var(--slate)}
+.sbanner.rejected{background:var(--tomato-tint);border-color:rgba(220,61,23,.35)}
+.sbanner.rejected .sb-ico{background:rgba(220,61,23,.14);color:var(--tomato)}
+/* başarı durumları — shell .fb-success dili pane içinde (form yerine görünür) */
+.au-pane .fb-success{padding:34px 0 14px}
+.au-pane .fb-success .btn{margin-top:22px}
+.au-pane .fb-success p{margin-bottom:0}
+.au-success-note{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;color:var(--muted);font-weight:500;margin-top:16px}
+.au-success-note i{color:var(--green-deep)}
+
+/* e-posta / telefon geçişi (giriş pane) — token segment dili (pf-tabs akrabası, pill YASAK) */
+.au-seg{display:flex;gap:4px;background:var(--bg);border:1px solid var(--line);border-radius:var(--radius-md);padding:4px;margin-bottom:18px}
+.au-seg-btn{flex:1;font-family:inherit;font-weight:700;font-size:13px;color:var(--muted);background:transparent;border:none;border-radius:var(--radius-sm);padding:9px 14px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:7px;transition:.2s var(--ease)}
+.au-seg-btn:hover{color:var(--tomato)}
+.au-seg-btn.active{background:var(--tomato);color:#fff}
+.au-seg-btn i{font-size:12px}
+/* kayıt rol segmenti — au-seg dilinin 4'lü varyantı (Kullanıcı/Antrenör/Diyetisyen/İşletme).
+   Beyar kararı: DadaGastro kapsamında yalnız Kullanıcı gerçek; diğer 3 rol
+   soon-maskeli (aria-disabled + .soon rozeti, kesfet.blade.php emsali) —
+   rol-özel başvuru alan blokları (au-rolefields) hiç taşınmadı. */
+.au-rseg{flex-wrap:wrap;margin-bottom:8px}
+.au-rseg .au-seg-btn{flex:1 1 calc(50% - 4px);min-width:0}
+@media(min-width:560px){.au-rseg .au-seg-btn{flex:1 1 0}}
+.au-rseg-lead{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);font-weight:600;margin:0 0 16px}
+.au-rseg-lead i{color:var(--tomato);font-size:12px}
+.au-rseg .au-seg-btn.active,.au-rseg .au-seg-btn.active i{color:#fff}
+.au-rseg .au-seg-btn.is-soon{cursor:not-allowed;opacity:.55}
+/* telefon önek kutusu — fk-input içinde sabit +90 göstergesi */
+.fk-tel{position:relative}
+.fk-tel .fk-input{padding-left:60px}
+.fk-tel-cc{position:absolute;left:1px;top:1px;bottom:1px;width:50px;display:grid;place-items:center;font-size:13px;font-weight:700;color:var(--slate);background:var(--bg-cream);border-right:1px solid var(--line);border-radius:var(--radius-md) 0 0 var(--radius-md);pointer-events:none}
+
+/* ===================== TABLET (≤1024px) ===================== */
+@media (max-width:1024px){
+  .au-layout{grid-template-columns:1fr;gap:20px}
+  .au-card{order:1;padding:28px 26px 30px}
+  /* RV3 madde 3: tek kolona indiğinde sticky KAPATILIR (position:static) —
+     hero kartla aynı sütunda alt alta dizilir, kaydırırken yapışması istenmez. */
+  .au-visual{order:2;position:static;height:auto;min-height:0;padding:30px 28px}
+  .au-visual h2{font-size:29px}
+  .au-perks{display:none}
+}
+
+/* ===================== MOBİL (≤640px) ===================== */
+@media (max-width:640px){
+  .rd-crumb{padding:14px 0 10px;font-size:12px}
+  .au-top{padding-bottom:50px}
+  .au-card{padding:22px 18px 26px;border-radius:var(--radius-lg)}
+  .au-head h1{font-size:22px}
+  .fk-grid.c2{grid-template-columns:1fr}
+  .au-visual{padding:24px 20px;border-radius:var(--radius-lg)}
+  .au-visual h2{font-size:24px}
+  .au-stats{gap:22px;margin-top:18px;padding-top:16px}
+  .au-stats .st b{font-size:21px}
+  .au-row{flex-wrap:wrap;gap:10px}
+}

@@ -1,0 +1,203 @@
+/* =====================================================================
+   SOZLUK-LISTE — SAYFA CSS (kaynak-transfer, AYNEN)
+   Kaynak: reference/sozluk/sozluk-v1.html ilk <style> bloğunun "SAYFA CSS
+   — sayfa-spesifik stiller BU İŞARETİN ALTINA eklenir" işaretinden sonraki
+   kısmı (orijinal dosya satır 735-876). Üstündeki kabuk/mega-menü/footer
+   katmanı (aynı dosyanın 2. <style> bloğu, satır 878-1001) hariç tutuldu —
+   atlanmadı, resources/css/portal.css'te birebir var olduğu doğrulanarak
+   (.brand-switch/.GilroyXB spot-check eşleşti) çıkarıldı; tarif-liste.css
+   emsali (ilk kapanan modül) aynı yöntemi uyguluyor.
+
+   NOT: Bu dosyanın 2026-07-10 tarihli önceki sürümü (modül reset ÖNCESİ,
+   x-glossary Blade component'ine bağlı, .term-row→.sz-term-row rename'li,
+   az-bar'ı atlayan bir tasarım) B1 dalgasında SIFIRDAN üzerine yazıldı —
+   grep doğrulaması: tokens.css/resources/views/tests/routes'ta o sisteme
+   ait HİÇBİR canlı iz kalmamış (ölü kalıntı, 2026-07-13 reset'i atlatmış
+   public/ asseti). Kaynak-transfer protokolü (CLAUDE.md md.7) gereği
+   referans BİREBİR yeniden çıkarıldı; eski dosyadaki isim çakışması artık
+   geçersiz. ===================================================================== */
+
+/* ============ F11 — MUTFAK SÖZLÜĞÜ · A-Z + arama + satır-içi detay ============
+   Eski sozluk ailesinin 4 sayfası (sozluk + harf-secili + kategori + detay)
+   TEK modern sayfada: harf = .az-bar filtresi · kategori = chip filtresi ·
+   detay = satır-içi açılım (accordion). Miras: rd-crumb · nb-top arama bandı
+   dili (besin-kutuphanesi — yeşil→domates uyarlama, kütüphane akrabası) ·
+   food-row satır kiti (besin-kutuphanesi uyarlaması: .term-row) · ke-filter
+   chip (kesfet) · boş durum (kılavuz §3). Yeni: .az-bar harf navigasyonu
+   (token dili). SS: ?harf=B · ?terim=julyen */
+
+/* breadcrumb — VERBATIM */
+.rd-crumb{display:flex;align-items:center;flex-wrap:wrap;gap:9px;padding:18px 0 14px;font-size:13px;font-weight:500;color:var(--muted)}
+.rd-crumb a{color:var(--muted);transition:.18s}
+.rd-crumb a:hover{color:var(--tomato)}
+.rd-crumb i{font-size:9px;color:#c7c7c7}
+.rd-crumb b{color:var(--slate);font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:360px}
+
+/* ---- üst bölge (besin-kutuphanesi nb-top dili, domates) ---- */
+/* ---- HERO — H1 KOYU KANON (§2f; ansiklopedi-v1 .lst-top/.lst-hero VERBATIM, kardeş tutarlılığı) ---- */
+.lst-top{position:relative;padding-top:128px;background-image:linear-gradient(90deg,rgba(28,25,18,.94),rgba(33,30,22,.74)),url('../../_dis/images.unsplash.com/photo-1466637574441-749b8f19452f.avif');background-size:cover;background-position:center}
+.lst-top .wrap{position:relative}
+.lst-top .rd-crumb,.lst-top .rd-crumb a{color:#c9c3b8}
+.lst-top .rd-crumb a:hover{color:#ea8b74}
+.lst-top .rd-crumb i{color:rgba(255,255,255,.4)}
+.lst-top .rd-crumb b{color:#fff}
+.lst-hero{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:44px;align-items:end;padding:10px 0 42px}
+.lst-hero .lh-main{min-width:0}
+.lst-hero .eyebrow{color:#f1b1a2}
+.lst-hero .eyebrow::before{background:var(--tomato)}
+.lst-hero h1{color:#fff;font-size:44px;margin:14px 0 12px;letter-spacing:-.03em;text-shadow:0 2px 24px rgba(0,0,0,.25)}
+.lst-hero h1 .accent{color:#e87f66;white-space:nowrap}
+.lst-hero .lead{color:#e7edf1;font-weight:500;font-size:15.5px;max-width:560px;text-shadow:0 1px 14px rgba(0,0,0,.3)}
+.lst-stats{display:flex;flex-direction:column;gap:16px;padding-left:38px;border-left:1px solid rgba(255,255,255,.18)}
+.lst-stats .st b{display:block;font-size:29px;font-weight:700;color:#fff;letter-spacing:-.02em;line-height:1.1}
+.lst-stats .st span{font-size:12.5px;color:#c9c3b8;font-weight:500}
+/* keşif kontrolleri — koyu hero altı AÇIK şerit (arama + A-Z + kategori) */
+.sz-controls{background:var(--bg-white);border-bottom:1px solid var(--line);padding:24px 0 10px}
+@media (max-width:1024px){.lst-hero{grid-template-columns:1fr;align-items:start;gap:22px;padding-bottom:32px}.lst-stats{flex-direction:row;gap:34px;padding-left:0;border-left:none;padding-top:18px;border-top:1px solid rgba(255,255,255,.18)}}
+@media (max-width:640px){.lst-top{padding-top:74px}.lst-hero{padding:2px 0 26px}.lst-hero h1{font-size:29px}.lst-stats{gap:10px}.lst-stats .st{flex:1}.sz-controls{padding-top:18px}}
+/* DadaFit sözlük yapısı (Beyar 2026-08-23): 1. satır harfler (kartsız),
+   2. satır kategori pill'leri + sağda arama. `.az-bar`ın kart görünümü
+   (zemin/kenarlık/blur, tokens.css:1120) bu sayfada da sıfırlanır — harf
+   düğmeleri kendi ince kenarlıklarını korur. */
+.az-bar{position:static;background:none;border:0;border-radius:0;box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none;padding:0;margin-bottom:14px}
+.sz-tools{display:flex;align-items:center;gap:14px;margin-bottom:8px}
+.sz-cats{display:flex;align-items:center;gap:8px;flex:1;min-width:0;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.sz-cats::-webkit-scrollbar{display:none}
+.szc{flex:none;display:inline-flex;align-items:center;gap:8px;white-space:nowrap;font-family:inherit;font-size:13px;font-weight:700;color:var(--slate-2);background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-md);padding:10px 15px;cursor:pointer;transition:.18s var(--ease)}
+.szc i{font-size:12px;color:var(--tomato)}
+.szc em{font-style:normal;font-size:12px;font-weight:600;color:var(--muted);letter-spacing:-.01em}
+.szc:hover{border-color:var(--tomato);color:var(--tomato)}
+.szc.active{border-color:var(--tomato);background:var(--tomato-tint);color:var(--tomato)}
+.szc.active em{color:var(--tomato);opacity:.75}
+.sz-searchbar{position:relative;flex:none;width:min(360px,38%);margin-bottom:0}
+.sz-searchbar i{position:absolute;left:18px;top:50%;transform:translateY(-50%);color:var(--tomato);font-size:16px}
+.sz-searchbar input{width:100%;font-family:inherit;font-size:15px;font-weight:500;color:var(--slate);background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-md);padding:15px 18px 15px 48px;outline:none;transition:.2s var(--ease);box-shadow:var(--sh-sm)}
+.sz-searchbar input::placeholder{color:#a7a7a7}
+.sz-searchbar input:focus{border-color:var(--tomato);box-shadow:0 0 0 3px rgba(220,61,23,.10)}
+
+/* ---- A-Z harf navigasyonu (yeni — token dili; eski 32 harflik letter barın modern hâli;
+        tek satır yatay ray = ansiklopedi-v1 .az-bar VERBATIM) ---- */
+/* min-width:0 — admin-sozluk az-bar bulgusuyla (sa-sozluk.css) aynı emsal;
+   burada tetiklenmedi (dar QA taraması temiz) ama aynı overflow-x:auto niyeti
+   için güvenlik ağı olarak eklendi. */
+.az-bar{display:flex;flex-wrap:nowrap;min-width:0;gap:6px;padding:18px 0 8px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.az-bar::-webkit-scrollbar{display:none}
+.az{flex:none;min-width:38px;height:38px;padding:0 6px;display:inline-flex;align-items:center;justify-content:center;font-family:inherit;font-size:13.5px;font-weight:700;color:var(--slate);background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-sm);cursor:pointer;transition:.18s var(--ease)}
+.az:hover{border-color:var(--tomato);color:var(--tomato)}
+.az.active{background:var(--tomato);border-color:var(--tomato);color:#fff}
+.az[disabled]{opacity:.32;pointer-events:none}
+.az-all{min-width:auto;padding:0 13px}
+
+/* ---- kategori chip rayı — MADDE 6 (Beyar revize paketi, 2026-07-20):
+   az-bar'ın altındaki kategori çipleri tek satır SLIDER. Desen tarif-bulucu
+   .mz-grid'in (31fec2e) BİREBİR portu — koşullu kenar-fade maskesi + cross-
+   browser scrollbar gizleme; JS edge-sync sozluk-liste.js'te. Önceki
+   flex-wrap:wrap (masaüstünde çok-satırlı) + yalnız ≤640px'te overflow-x
+   davranışı KALDIRILDI, her genişlikte tek satır. ---- */
+.ke-filter{display:flex;flex-wrap:nowrap;min-width:0;align-items:center;gap:9px;padding:10px 0 20px;overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:none;-ms-overflow-style:none;-webkit-overflow-scrolling:touch}
+.ke-filter::-webkit-scrollbar{display:none}
+.ke-filter.has-overflow:not(.at-start):not(.at-end){-webkit-mask-image:linear-gradient(to right,transparent,#000 28px,#000 calc(100% - 28px),transparent);mask-image:linear-gradient(to right,transparent,#000 28px,#000 calc(100% - 28px),transparent)}
+.ke-filter.has-overflow.at-start:not(.at-end){-webkit-mask-image:linear-gradient(to right,#000 calc(100% - 28px),transparent);mask-image:linear-gradient(to right,#000 calc(100% - 28px),transparent)}
+.ke-filter.has-overflow.at-end:not(.at-start){-webkit-mask-image:linear-gradient(to left,#000 calc(100% - 28px),transparent);mask-image:linear-gradient(to left,#000 calc(100% - 28px),transparent)}
+.ke-filter .chip{flex:none;white-space:nowrap}
+.ke-filter .chip.active{border-color:var(--tomato);background:var(--tomato-tint);color:var(--tomato);font-weight:700}
+
+/* ---- TERİM LİSTESİ (besin-kutuphanesi food-row uyarlaması) ---- */
+.sz-sec{padding:38px 0 74px;background:var(--bg-white)}
+.sz-count{font-size:13px;color:var(--muted);font-weight:500;margin-bottom:14px}
+.sz-count b{color:var(--slate);font-weight:700}
+.term-card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--sh-sm)}
+.term-item{border-bottom:1px solid var(--line)}
+.term-item:last-child{border-bottom:none}
+/* kapalı = nötr zemin · hover = tint · AÇIK (seçili) = başlık satırında tint KALICI */
+.term-row{display:flex;align-items:center;gap:16px;width:100%;text-align:left;font-family:inherit;background:var(--paper);border:none;padding:16px 20px;cursor:pointer;transition:.15s var(--ease)}
+/* İŞ A-2: tokens.css ölü `@media(max-width:560px){.term-row{flex-direction:column}}`
+   sızıntısı satırı ≤560px'de dikey-ortalı karta çeviriyor; referans satır her
+   genişlikte YATAY (mobilde yalnız .tr-cat gizlenir). (0,2,0) ile reassert. */
+.term-card .term-row{flex-direction:row}
+.term-row:hover,.term-item.open .term-row{background:var(--tomato-tint)}
+.tr-ltr{flex:none;width:46px;height:46px;border-radius:var(--radius-md);background:var(--tomato-tint);display:grid;place-items:center;color:var(--tomato);font-size:19px;font-weight:700;transition:.2s var(--ease)}
+.term-item.open .tr-ltr{background:var(--tomato);color:#fff}
+.tr-name{flex:1;min-width:0}
+.tr-name b{font-size:15.5px;color:var(--slate);font-weight:700;display:block;margin-bottom:4px;transition:color .15s var(--ease)}
+.term-item.open .tr-name b{color:var(--tomato)}
+.tr-name span{font-size:12.5px;color:var(--muted);font-weight:500;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tr-cat{flex:none;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--tomato);background:var(--tomato-tint);padding:6px 11px;border-radius:var(--radius-sm);white-space:nowrap;transition:background .15s var(--ease)}
+.term-item.open .tr-cat{background:var(--paper)}
+.tr-go{width:20px;flex:none;text-align:right;color:#c7c7c7;font-size:13px;transition:transform .25s var(--ease),color .2s var(--ease)}
+.term-row:hover .tr-go{color:var(--tomato)}
+.term-item.open .tr-go{transform:rotate(90deg);color:var(--tomato)}
+/* satır-içi detay (eski sozluk-detay sayfasının modern karşılığı)
+   TAM GENİŞLİK (İŞ A-2): tokens.css'teki reset-ÖNCESİ ölü `.term-detail`
+   bloğu (max-width:74ch;display:grid) bu güncel sınıfa sızıp detayı ~746px'e
+   kapıyor → 1176px kartta ~430px sağ boşluk ("sıkışık"). Aşağıdaki
+   `.term-card .term-detail` (0,2,0) o sızıntıyı nötrler; padding token
+   ölçeğinden (--sp-4/--sp-5), 82px sol = letter-tile hizası (row 20 + tile 46
+   + gap 16), referans hizalaması korunur. */
+.term-detail{display:none;padding:var(--sp-4) var(--sp-5) var(--sp-5) 82px;animation:fadeUp .3s var(--ease)}
+.term-card .term-detail{max-width:none}
+.term-item.open .term-detail{display:block}
+.term-detail p{font-size:14.5px;color:var(--slate-2);font-weight:500;line-height:1.75;margin-bottom:12px}
+.term-detail strong{color:var(--slate);font-weight:700}
+.td-ex{display:block;font-size:13.5px;color:var(--muted);font-weight:500;font-style:italic;margin:12px 0 16px;padding-left:13px;border-left:2px solid var(--tomato)}
+.td-foot{display:flex;flex-wrap:wrap;align-items:center;gap:9px}
+.td-foot .lbl{font-size:12.5px;font-weight:700;color:var(--slate);margin-right:2px}
+.td-recipe{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:var(--tomato);background:var(--tomato-tint);border:1px solid rgba(220,61,23,.22);padding:8px 14px;border-radius:var(--radius-sm);transition:.18s var(--ease)}
+.td-recipe:hover{background:var(--tomato);color:#fff}
+.td-recipe i{font-size:11px}
+
+/* boş durum (kılavuz §3) */
+.sz-empty{display:none;text-align:center;padding:60px 20px}
+.sz-empty .se-ico{width:64px;height:64px;border-radius:var(--radius-circle);background:var(--tomato-tint);color:var(--tomato);display:grid;place-items:center;font-size:26px;margin:0 auto 18px}
+.sz-empty h3{font-size:19px;margin-bottom:8px}
+.sz-empty p{font-size:14px;color:var(--muted);font-weight:500;max-width:380px;margin:0 auto 18px}
+
+/* ---- sayfalama (İŞ A-1; ansiklopedi/arama `.pagi` kiti VERBATIM — site ortak
+        görsel dili, token bazlı) ---- */
+.pagi{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:40px;flex-wrap:wrap}
+.pg{min-width:44px;height:44px;padding:0 13px;display:inline-flex;align-items:center;justify-content:center;font-family:inherit;font-size:14px;font-weight:700;color:var(--slate);background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-md);cursor:pointer;transition:.2s var(--ease);text-decoration:none}
+.pg:hover{border-color:var(--tomato);color:var(--tomato)}
+.pg.active{background:var(--tomato);border-color:var(--tomato);color:#fff;cursor:default}
+.pg[disabled]{opacity:.4;pointer-events:none}
+.pg.arrow i{font-size:12px}
+.pg-dots{color:var(--muted);font-weight:700;padding:0 2px;font-size:14px}
+.pagi-note{width:100%;text-align:center;font-size:12.5px;color:var(--muted);font-weight:500;margin-top:12px}
+
+/* öneri bandı — terim öner */
+.sz-suggest{display:flex;align-items:center;gap:16px;background:var(--bg-cream);border:1px solid var(--line);border-radius:var(--radius-lg);padding:20px 24px;margin-top:30px}
+.sz-suggest .ss-ico{flex:none;width:44px;height:44px;border-radius:var(--radius-md);background:var(--tomato-tint);color:var(--tomato);display:grid;place-items:center;font-size:18px}
+.sz-suggest b{display:block;font-size:15px;font-weight:700;color:var(--slate)}
+.sz-suggest span{display:block;font-size:13px;color:var(--muted);font-weight:500;margin-top:2px}
+.sz-suggest .btn{margin-left:auto;flex:none;padding:11px 20px;font-size:13.5px}
+
+/* ===================== MOBİL (≤640px) ===================== */
+@media (max-width:640px){
+  .rd-crumb{padding:14px 0 10px;font-size:12px}
+  .az-bar{padding-bottom:10px}
+  /* .ke-filter mobil-özel nowrap/overflow kuralı KALDIRILDI (madde 6) —
+     artık her genişlikte tek satır slider, üstteki taban kuralda tanımlı. */
+  .sz-sec{padding:26px 0 50px}
+  .tr-cat{display:none}
+  .term-detail{padding-left:20px}
+  .sz-suggest{flex-wrap:wrap}
+  .sz-suggest .btn{margin-left:0;width:100%;justify-content:center}
+}
+
+
+/* saglik-dropdown: scoped health chrome */
+/* diğer dropdown/mega aktif-item (turuncu kanon, underline gizli) */
+.dropdown:not(.dropdown-health) a.active{background:var(--tomato-tint)}
+.dropdown a.active::after,.mega-cats a.active::after{display:none}
+.mega-cats a.active{background:var(--tomato-tint)}
+.d-sub-health a i{color:var(--green)}
+.d-sub-health a:hover{color:var(--green);background:rgba(59,183,126,.10)}
+.nav a[href="saglik-hub-v1.html"]:hover{color:var(--green);background:rgba(59,183,126,.10)}
+.header.at-top .nav>.nav-item>a[href="saglik-hub-v1.html"]:hover{color:#fff;background:rgba(255,255,255,.14)}
+.dropdown-health a i{color:var(--green)}
+.dropdown-health a:hover{background:rgba(59,183,126,.12);color:var(--green)}
+.dropdown-health a.active{background:rgba(59,183,126,.12);color:var(--green)}
+.dropdown-health a.active i{color:var(--green)}
+.dropdown-health a.active::after{display:none}
+
+/* sayfa-yerel (korundu): A-Z çapa scroll offseti */
+html{scroll-padding-top:128px}
