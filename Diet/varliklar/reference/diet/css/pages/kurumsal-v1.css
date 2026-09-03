@@ -1,0 +1,433 @@
+/* ==========================================================================
+   KURUMSAL BÖLÜM DÜZENİ — Hakkımızda + Editoryal ve Bilimsel Kurul
+                          + Sponsorlar ve Partnerler
+   ==========================================================================
+
+   ⚠ ÜÇÜNCÜ EKRAN KATILDI (2026-08-20). Bu not "iki sayfa" diyordu; Sponsorlar
+   ve Partnerler de aynı `diet/kurumsal/` ailesinin üyesi ve bu dosyadan ÜÇ şey
+   alıyor: `.reh-article` gövde ritmi, `.art-quote` alıntı bloğu, `.val-grid`
+   kart ailesi. Yeni bir "sponsorlar" tasarımı ÜRETİLMEDİ — aşağıdaki "tek
+   dosya, iki ekran" gerekçesi olduğu gibi geçerli, yalnız sayı üçe çıktı.
+
+   İKİ SAYFA BU DOSYAYI PAYLAŞIR. Ayrı bir "kurul" tasarımı üretilmedi ve
+   üretilemez: kardeş markada editoryal kurul sayfası YOK (arandı —
+   `hakkimizda` · `sss` · `iletisim` · `kunye` · `reklam-ver` var, kurul
+   yok), yani o sayfanın "yapı referansı" zaten bu sayfanın düzenidir. Tek
+   dosya, iki ekran — yeni bir tasarım dili doğmasının önündeki en somut
+   engel bu.
+
+   YAPI REFERANSI kardeş markanın hakkımızda ekranı: hikâye ızgarası
+   (yazı + görsel öbeği), değer kartları, sayı bandı, köprü kartları. Bu,
+   bu markadaki YERLEŞİK EMSALİN aynısı — `diet._p.faq-list`,
+   `diet.kurumsal._p.hero`, `cozum-merkezi-v1.css` ve `iletisim-v1.css` de
+   yapılarını aynı yerden aldı.
+
+   🔴 ALINAN ŞEY GEOMETRİDİR. Renk, tipografi, radius ve gölge bu markanın
+   token'larından; kaynaktan tek bir değer kopyalanmadı, yeni token
+   ÜRETİLMEDİ.
+
+   🔴 KISA SINIF ADLARI BÖLÜM KAPSAMINA ALINDI. `.fig` · `.st` · `.vi` ·
+   `.bi` tek başlarına tehlikeli derecede genel adlar; `.st` bu markada
+   ZATEN kullanılıyor (`kimlik-v1.css:285`, `.au-stats .st`). Bu yüzden
+   hepsi ebeveyniyle birlikte yazıldı (`.about-figs .fig`, `.statband .st`
+   …). Ad kaynakla aynı kaldı, kapsam daraltıldı — çakışma imkânsız.
+
+   🔴 GÖRSEL `<img>` DEĞİL: `div` + `background-image` + `cover/center`.
+   `CLAUDE.md §3.3 md.1`in kuralı. Oran `aspect-ratio` ile sabitlenir, bu
+   yüzden görsel yüklenmemişken bile kutu yerini korur ve sayfa zıplamaz.
+
+   📐 CSS RENDER GENİŞLİKLERİ (2x retina çarpımı YAPILMAZ — §3.3 md.2).
+   1240px kabuk genişliğinde, 32px yan dolgu ve 28px ızgara boşluğuyla
+   ölçülen gerçek kutu genişlikleri `docs/gorsel-kaynaklari.md`ye yazılır;
+   indirilen dosya o genişliğe göre seçilir.
+   ========================================================================== */
+
+/* ---- BANNER: İKİ KOLON + DİKEY SAYI ŞERİDİ ----
+   YALNIZ HAKKIMIZDA. Kabuk yine `.reh-hero`
+   (`beslenme-ipucu-detay-v1.css:31`) — zemin, dolgu ve kırılımları oradan
+   gelir ve DEĞİŞMEDİ; burada yalnız o kabuğun İÇİ iki kolona ayrılır.
+
+   🔴 ŞERİT VERİYE BAĞLI. Üç sayının üçü de sıfırsa Blade `.lst-stats`i hiç
+   basmaz ve ızgara `.no-stats` ile tek kolona düşer — boş kutu ya da "0"
+   bırakılmaz (`.about-grid.no-figs` ile aynı emsal).
+
+   🔴 `.st` EBEVEYNİYLE YAZILDI (dosyanın kendi kuralı, yukarıdaki not):
+   `.st` bu markada zaten kullanımda (`kimlik-v1.css:285`).
+
+   📐 ÖLÇÜ KAYNAĞI: yapı referansının kendi sayfa CSS'i, 1440px'te ölçüldü —
+   ızgara `minmax(0,1fr) auto`, gap 44px, `align-items:end`; şerit dikey,
+   gap 16px, sol çizgi + 38px iç boşluk; sayı 29px/700, etiket 12.5px.
+   RENKLER ALINMADI: beyaz + `#b9d8c9` bu dosyanın kendi bandındaki
+   (`.statband .st`) ikilinin aynısı, çip vurgusu `--green` — koyu nane
+   zeminin bu markadaki yerleşik vurgusu (`.reh-hero .eyebrow::before`). */
+/* BANNER DİKEYDE KANON YÜKSEKLİĞİNE ÇIKTI (Beyar, 2026-08-25: *"burdaki
+   banner dikeyde çok dar"*). Ölçüldü: kanon 515px, bizimki 432px; iç
+   ızgaranın dolgusu da kanonda 10/42, bizde 0'dı. İkisi de kanondan
+   alındı — yeni ölçü seçilmedi. */
+.reh-hero{min-height:515px}
+.lst-hero{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:44px;align-items:end;padding:10px 0 42px}
+.lst-hero.no-stats{grid-template-columns:1fr}
+.lst-hero .lh-main{min-width:0}
+/* ⚠ BAŞLIK BOYU ALINMADI. Yapı referansının h1'i 44px (ölçüldü); bu markanın
+   `.reh-hero h1`i 38px ve ÖYLE KALDI — bu dosyanın kendi kuralı: "ALINAN ŞEY
+   GEOMETRİDİR, renk ve tipografi bu markanın kendi kitinden gelir". Alınan tek
+   şey dikey ritim: başlığın üst/alt boşluğu. */
+.lst-hero h1{margin:14px 0 12px}
+
+.lh-chips{margin-top:20px}
+.lh-chips .chip{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.22);color:#fff}
+.lh-chips .chip:hover{background:var(--green);border-color:var(--green);color:#fff}
+
+.lst-stats{display:flex;flex-direction:column;gap:16px;padding-left:38px;border-left:1px solid rgba(255,255,255,.18)}
+.lst-stats .st b{display:block;font-size:29px;font-weight:700;color:#fff;letter-spacing:-.02em;line-height:1.1}
+.lst-stats .st span{font-size:12.5px;color:#b9d8c9;font-weight:500}
+
+/* ÇAPA HEDEFİ SABİT BAŞLIĞIN ALTINDA KALMASIN. Ölçüldü (playwright,
+   `.header` sınırlayıcı kutusu): başlık `position:fixed` ve alt kenarı
+   1440/768px'te 113px, 390px'te 63px. Çipler bu boşluk olmadan bölümü
+   başlığın ARKASINA kaydırırdı — "çip gerçek bölüme gitsin" kuralı yalnız
+   hedef GÖRÜNÜYORSA sağlanmış olur. 16px nefes payı eklendi. */
+.sec[id]{scroll-margin-top:129px}
+
+/* ---- ÜST ETİKETİN NEFES PAYI (R23·e, 2026-08-24) ----
+   YALNIZ HAKKIMIZDA. `#hikaye` sayfanın koyu hero'sundan sonra gelen ilk
+   beyaz bölüm ve üstbaşlığı ("Neden buradayız") ekranda en üstte duran
+   etiket. `.sec`in genel kuralı `padding:74px 0` (dd-shell.css:206) — bu
+   sayfanın diğer bölümleriyle aynı ölçü, ama hero'nun koyu zemininden
+   hemen sonra geldiği için etiket sıkışık görünüyordu. Ölçü sayfaya ÖZGÜ
+   `#hikaye` seçicisiyle açıldı; `.sec`in kendisi DEĞİŞMEDİ — genel kural
+   değişseydi sitedeki her bölüm etkilenirdi. Yeni bir boşluk değeri
+   İCAT EDİLMEDİ: 96px bu dosyanın kendi kademelerinden (74 taban + 22
+   ızgara boşluğu, satır 94'teki `.about-grid` gap'i) türetildi. */
+#hikaye{padding-top:96px}
+@media (max-width:640px){#hikaye{padding-top:56px}}
+
+/* ---- HİKÂYE IZGARASI ----
+   📐 BOŞLUK TURU (2026-08-20). Yazı görsellere fazla yakındı. Yapı
+   referansının kendi sayfa CSS'inden ölçülen iki değer taşındı: ızgara
+   boşluğu 28→54px ve görsel kolonu ORANLI olmaktan çıkıp 420px SABİTE
+   döndü. İkincisi olmadan boşluğu büyütmek yazı kolonunu daraltırdı;
+   birlikte uygulanınca 1440px'te yazı kolonu 702px oluyor — referansın
+   kendi ölçüsünün aynısı (ölçüldü: 702/420). */
+.about-grid{display:grid;grid-template-columns:minmax(0,1fr) 420px;gap:54px;align-items:start}
+.about-grid .seo-prose{min-width:0}
+.about-grid .seo-prose>*:first-child{margin-top:0}
+
+/* HİKÂYE PARAGRAFLARININ RİTMİ — yalnız bu kolonda.
+   Paragraflar arası boşluk YOKTU (ölçüldü: margin-bottom 0px), metin tek
+   blok gibi akıyordu. Referansın değeri 12px; satır aralığı 1.7.
+   ⚠ PUNTO ALINMADI: referans 15px basıyor, bu markanın gövde puntosu 16px
+   ve öyle kaldı — bu dosyanın kendi kuralı tipografiyi kaynaktan almayı
+   yasaklıyor. Alınan şey RİTİM (oran + boşluk). */
+.about-grid .seo-prose p{line-height:1.7;margin-bottom:12px}
+.about-grid .seo-prose p:last-child{margin-bottom:0}
+
+/* SATIR UZUNLUĞU 870px. Görsel varken kolon zaten 702px (ızgaranın kendi
+   ölçüsü) ve bu tavana hiç değmez; görsel YOKKEN ızgara tek kolona düşüyor
+   ve yazı kabuk genişliğine yayılıyordu — orada tavan devreye girer.
+   ⚠ `.reh-article`ın kendi tavanı 860px (`beslenme-ipucu-detay-v1.css:57`)
+   ve o dosya bu markanın onlarca yazı ekranını besliyor; ona DOKUNULMADI,
+   tavan yalnız bu ızgaranın kapsamında 870'e alındı. */
+.about-grid.no-figs .seo-prose{max-width:870px}
+.about-grid .seo-prose .reh-article{max-width:870px}
+
+/* HİKÂYE BAŞLIĞI VE VURGU. Yapı referansının yazı ritmi üstbaşlık + güçlü
+   başlık + kısa paragraf + kalın vurgu; ritim alındı, ÖLÇÜLER BU MARKANIN
+   KENDİ KİTİNDEN: 26px başlık bu dosyanın kendi `.statband .sb-head h2`
+   satırının aynısı, vurgu rengi `--slate` (`.about-badge b`in kullandığı
+   token). Referansın 26px'i tesadüfen aynı; alınan değer o değil, bu
+   dosyanın kendi bandındaki değer. */
+.about-grid .seo-prose h2{font-size:26px;margin:0 0 14px;letter-spacing:-.02em}
+/* ÜSTBAŞLIK ile BAŞLIK arasına nefes (Beyar, 2026-08-25): etiket başlığa
+   yapışıyordu. Ölçüldü — kanonda aradaki boşluk 14px, bizde 1px. Aynı
+   değer veriliyor, yeni ölçü uydurulmadı. */
+.about-grid .seo-prose .eyebrow{margin-bottom:13px}
+.about-grid .seo-prose :is(strong,b){color:var(--slate);font-weight:700}
+
+/* ALINTI BLOĞU — sol çizgili, yazının ritmini kıran vurgu.
+   ⚠ ÖNCE ARANDI: bu markanın CSS'inde `blockquote` · `pull` · `quote`
+   karşılığı YOKTU (`grep -rn` → 0 sonuç), yani mevcut bir desen ezilmiyor.
+   AD UYDURULMADI: `.art-quote` yapı referansının kendi adıdır ve orada da
+   `.seo-prose .art-quote` diye EBEVEYNİYLE yazılıdır — bu dosyanın kısa/genel
+   ad kuralıyla zaten uyumlu.
+
+   📐 GEOMETRİ ALINDI: dış boşluk 20px, sol dolgu 22px, 3px sol çizgi.
+   ⚠ PUNTO ALINMADI. Referans burada 19px basıyor; bu dosyanın kendi kuralı
+   tipografiyi kaynaktan almayı yasaklıyor ve bu markanın kitinde 19px diye
+   bir kademe YOK (16 gövde · 16,5 kart başlığı · 26 bölüm başlığı — ölçüldü).
+   Vurgu bu markanın kendi araçlarıyla kuruldu: kalın + `--slate` + sol çizgi.
+   Satır aralığı 1,5 — gövdenin 1,7'sinden sıkı, çünkü blok kalın basılıyor. */
+
+/* ⚠ KAPSAM GENİŞLETİLDİ, KURAL DEĞİL (2026-08-20). Blok ilk yazıldığında tek
+   bir yerde kullanılıyordu (Hakkımızda'nın CMS gövdesi) ve seçici oraya
+   çivilenmişti. Sponsorlar sayfası da bir alıntı istedi ve orada gövde
+   `.reh-article`. YENİ AD ÜRETİLMEDİ ve YENİ DEĞER GİRİLMEDİ — aynı bildirim
+   listesine ikinci bir ebeveyn eklendi. `.art-quote` yine tek başına yazılmıyor;
+   iki kapsamı da ebeveyniyle yazılı (dosyanın kendi kısa-ad kuralı). */
+:is(.about-grid .seo-prose,.reh-article) .art-quote{margin:20px 0;padding:8px 0 8px 22px;border-left:3px solid var(--tomato)}
+:is(.about-grid .seo-prose,.reh-article) .art-quote p{margin:0;line-height:1.5;font-weight:700;color:var(--slate)}
+
+/* Görsel öbeği: solda uzun, sağda iki kısa.
+   🔴 BÖLÜM VERİYE BAĞLIDIR — görsel yoksa Blade bu bloğu HİÇ basmaz ve
+   ızgara tek kolona düşer (aşağıdaki `.about-grid.no-figs`). Sahte görsel
+   ya da "yakında" yer tutucusu KONMAZ (Beyar kuralı). */
+.about-grid.no-figs{grid-template-columns:1fr}
+.about-figs{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:auto auto;gap:14px;position:relative}
+.about-figs .fig{
+  background-size:cover;background-position:center;background-repeat:no-repeat;
+  background-color:var(--tomato-tint);
+  border-radius:var(--radius-lg);box-shadow:var(--sh-sm);
+  aspect-ratio:1/1;
+}
+.about-figs .fig.tall{grid-column:1/-1;aspect-ratio:16/10}
+/* İlk görsel ÜSTTE ve İKİ KOLONU birden kaplar, altında iki kare durur.
+   Önceki hâl (bir kolonda dikey uzun görsel) kanonla eşleşmiyordu —
+   ölçüldü: kanon `grid-column:1/-1` + `16/10`. Değer seçilmedi. */
+
+.about-badge{
+  grid-column:1 / -1;display:flex;align-items:center;gap:12px;
+  background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);
+  padding:14px 16px;box-shadow:var(--sh-sm);
+}
+.about-badge>i{flex:none;width:38px;height:38px;border-radius:var(--radius-md);background:var(--tomato-tint);color:var(--tomato);display:grid;place-items:center;font-size:15px}
+.about-badge div{min-width:0;display:flex;flex-direction:column;gap:3px}
+.about-badge b{font-size:13.5px;font-weight:700;color:var(--slate);line-height:1.4}
+.about-badge span{font-size:12.5px;color:var(--muted);font-weight:500;line-height:1.5}
+
+/* ---- DEĞER KARTLARI ---- */
+.val-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px}
+.val-card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);padding:24px 22px;box-shadow:var(--sh-sm)}
+.val-card .vi{display:grid;place-items:center;width:44px;height:44px;border-radius:var(--radius-md);background:var(--tomato-tint);color:var(--tomato);font-size:18px;margin-bottom:16px}
+.val-card h3{font-size:16.5px;margin:0 0 9px}
+.val-card p{font-size:13.5px;color:var(--muted);font-weight:500;line-height:1.65;margin:0}
+
+/* ---- YAZI GÖVDESİ (`.reh-article`) — KURUMSAL BÖLÜM SAYFALARI ----
+
+   🔴 BU BİR KUSUR DÜZELTMESİDİR, TASARIM TERCİHİ DEĞİL. Ölçüldü (2026-08-20,
+   1440px, çalışan sayfadan): `.reh-article` bu iki ekranda `beslenme-ipucu-
+   detay-v1.css:57`den YALNIZ `max-width:860px` alıyor; kabuk `*{margin:0}` ile
+   sıfırladığı için çocuk `<p>` ve `<ul>` HEPSİ `margin:0` / `padding-left:0`
+   ile doğuyordu. Somut sonuç:
+     · ardışık paragraf ile liste arasında BOŞLUK YOK — blok tek duvar okunuyor,
+     · `<ul>`/`<ol>` işaretçisi `padding-left:0` yüzünden kutunun DIŞINDA kalıyor;
+       Kurul'un numaralı listesinde numaralar hiç görünmüyor, `<ol>` işaretçi
+       alanı metnin üstüne biniyordu (ekran görüntüsüyle doğrulandı).
+   Yani bu iki sayfadaki "düz duruyor" hissinin kaynağı metin değil, HİÇ
+   YAZILMAMIŞ bir gövde ritmiydi.
+
+   ⚠ AYNI KUSUR başka üç kurumsal ekranda da duruyor (`hakkimizda` gövdesi
+   `.seo-prose` sayesinde ETKİLENMİYOR; `reklam` ve `uzmanla-calisma` etkileniyor)
+   — bu dosyayı yüklemedikleri için buradaki düzeltme onlara İNMEZ. Borç
+   raporlandı, kapsam dışı olduğu için buradan genişletilmedi.
+
+   📐 DEĞER ÜRETİLMEDİ: 1,7 satır aralığı ve 12px paragraf arası bu dosyanın
+   kendi `.about-grid .seo-prose p` satırının (yukarıda) aynısı; vurgu rengi
+   yine `--slate`. İki gövde ekranı böylece TEK ritim taşır. */
+.reh-article>p{line-height:1.7;margin-bottom:12px}
+.reh-article>p:last-child{margin-bottom:0}
+/* Vurgu rengi kart gövdesinde de geçerli: `.val-card p` `--muted` basar ve
+   orada YALNIZ kalınlaştırmak zayıf bir vurgudur (aynı gerekçeyle `.seo-prose`
+   satırı da rengi yazıyor, yukarıda). Aynı bildirim, ikinci bir kapsam. */
+:is(.reh-article,.val-card) :is(strong,b){color:var(--slate);font-weight:700}
+
+/* ---- ADIM ŞERİDİ — TAM GENİŞLİK VARYANTI ----
+
+   🔴 YENİ AD UYDURULMADI. Bu markanın numaralı adım deseni ZATEN var:
+   `.tips-steps` / `.tip-step` / `.tip-step .tn`, `iletisim-v1.css:82-88`,
+   kullanımı `diet/kurumsal/iletisim.blade.php:218-230`. Sınıf adları oradan
+   BİREBİR alındı; buradaki blok o deseni yeniden adlandırmaz, YALNIZ tam
+   genişlik kabına göre ölçeklendirir.
+
+   ⚠ NEDEN AYRICA YAZILMAK ZORUNDA: `iletisim-v1.css` bir SAYFA dosyasıdır ve
+   bu iki ekran onu yüklemiyor; iletişim sayfasının form/kart kurallarını buraya
+   çekmek için tüm dosyayı yüklemek gerekirdi. Ortak bir yer yok — tek aday
+   `dd-shell.css` ve ona dokunmak yasak. Bu yüzden bildirimler burada tekrar
+   yazıldı ve ÇAKIŞMA İMKÂNSIZ olacak biçimde `.reh-article` kapsamına alındı:
+   iki dosya aynı sayfada yüklense bile dar varyant kapsam dışında kalır.
+   ⚠ İKİ YERDE DURAN BİR SÖZLEŞME AYRIŞABİLİR — borç olarak raporlandı.
+
+   📐 NEDEN DAR VARYANT OLDUĞU GİBİ YETMEDİ — ÖLÇÜLDÜ (1440px):
+     · dar varyantın ölçüldüğü kap  : `.tip-step b` 336px (iletişim yan sütunu)
+     · buradaki kap                 : 860 − 32 rozet − 14 boşluk = 814px
+     · oran                         : 2,42x
+   12,5px gövde 814px'lik bir satırda ~130 karakter/satır verir; aynı sayfanın
+   yerleşik gövde satırı 16px'te ~105 karakterdir. Yani dar varyant burada hem
+   kabına göre KÜÇÜK hem de çevresindeki gövdeden bir kademe aşağıda kalırdı.
+   Punto bu markanın KENDİ kitinden bir kademe yukarı taşındı — yeni kademe
+   üretilmedi: 13,5 → 16,5 (kart başlığı, `.val-card h3`) ve 12,5 → 16 (gövde).
+   Rozet oranı korundu: dar varyantta 26/13,5 = 1,93; 16,5 × 1,93 ≈ 32px.
+   Rozet rakamı 14,5px — kitin var olan kademesi (`.nut-row b`).
+
+   🔴 ROZET ZEMİNİ `--tomato` DEĞİL `--tomato-deep` — KONTRAST ÖLÇÜLDÜ, GÖZLE
+   SEÇİLMEDİ. Beyaz üstünde `--tomato` (#009A44) 2,54:1 verir; 14,5px kalın
+   metin WCAG'ın "büyük metin" sınırının (18,66px kalın) ALTINDA olduğu için
+   eşik 4,5'tir ve bu geçmez. `--tomato-deep` (#00602b) 5,33:1 — geçer. Yeni
+   renk ÜRETİLMEDİ: beyaz metnin bu markadaki yerleşik dolu zemini zaten
+   `--tomato-deep` (`dd-shell.css:237`, `.btn-primary`).
+   ⚠ DAR VARYANTIN kendi rozeti (`iletisim-v1.css:85`) hâlâ `--tomato` ve aynı
+   eşiği geçmiyor. Başka bir ekrana ait, bu turda DOKUNULMADI — borç yazıldı.
+
+   🔴 ADIM GÖVDESİ `<span>` DEĞİL `<p>`. Gerekçe hiza sözleşmesi: gövde hizası
+   `dd-shell.css:170`de YALNIZ `<p>`ye bağlıdır. `<span>` kalsaydı 814px'lik bir
+   gövde metni kuralın kapsamı dışında kalırdı — Kurul sayfasının bugünkü
+   kusurunun tam olarak sebebi buydu (beş adım `<li>` içindeydi). `<p>` ile
+   kurala DOKUNULMADAN, istisna listesine SATIR EKLEMEDEN yaslı hizaya girer.
+   814px, kararın yaslı BIRAKTIĞI hikâye kolonundan (702px) geniş, kapattığı
+   kart ailelerinden (331px) iki kattan fazla geniş — kararın kendi ölçütü
+   bu yüzeyi açık tarafta bırakıyor. */
+.reh-article .tips-steps{display:flex;flex-direction:column;gap:20px;margin:18px 0}
+.reh-article .tip-step{display:flex;align-items:flex-start;gap:14px}
+.reh-article .tip-step .tn{flex:none;width:32px;height:32px;border-radius:var(--radius-circle);background:var(--tomato-deep);color:#fff;display:grid;place-items:center;font-size:14.5px;font-weight:700}
+/* `flex:1` DAR VARYANTTA YOK ve burada ŞART. Ölçüldü: `flex` verilmeden metin
+   kutusu içeriğe göre daralıyor ve beş adım 5 FARKLI genişlikte duruyordu
+   (ortalama 554px). Dar yan sütunda bu görünmez, çünkü kap zaten 336px ve
+   metin onu dolduruyor. Tam genişlikte ise ızgara ragged düşer ve yaslı hiza
+   her adımda başka bir satır uzunluğuna uygulanır. `flex:1` beşini de 814px'e
+   sabitler — sayfanın kendi gövde kolonuyla (860px) aynı okuma ölçüsü. */
+.reh-article .tip-step>div{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}
+.reh-article .tip-step b{font-size:16.5px;font-weight:700;color:var(--slate);line-height:1.4}
+.reh-article .tip-step p{font-size:16px;line-height:1.7;margin:0}
+
+/* ---- SAYI BANDI ----
+   Zemin bu markanın koyu nane bandıdır (`.reh-hero`nun dili), kaynağın
+   kahve gradienti DEĞİL.
+
+   📷 SABİT GÖRSEL (2026-08-20). Bant düz gradientti; artık altında bu
+   markanın YERLEŞİK hero görseli duruyor ve sayfa kaydırılırken SABİT
+   kalıyor. Görsel yerel: `public/reference/diet/img/diet-hero-poster.jpg`
+   (1600×1089) — `home.blade.php` ve `search.blade.php` de aynı dosyayı
+   kullanıyor. HOTLINK YOK, yeni varlık indirilmedi.
+
+   🔴 `background-attachment:fixed` iOS SAFARI'DE ÇALIŞMAZ. Orada tarayıcı
+   niteliği yok saymakla kalmaz, görseli kutu yerine GÖRÜNTÜ ALANI ölçüsünde
+   boyutlayıp yanlış kırpar. Bu yüzden düşme davranışı TAHMİNE bırakılmadı,
+   AÇIKÇA yazıldı: kaba işaretçili (dokunmatik) cihazlarda iki katman da
+   `scroll`a döner — görsel kalır, yalnız sabitlik gider. Aynı düşüş
+   `prefers-reduced-motion` için de geçerli: sabit zemin kaydırmada hareket
+   izlenimi üretir.
+
+   🔴 KARARTMA PERDESİ — WCAG AA İÇİN ÖLÇÜLDÜ, GÖZLE SEÇİLMEDİ. Yöntem:
+   görselin TAMAMINDAKİ en parlak piksel bulundu (rgb 255,255,255 — masa
+   örtüsündeki parlama), perde onun üstüne alfa bileşimiyle kondu, `.st`
+   kutusunun kendi katmanı da eklendi, oran öyle hesaplandı. Tek bir kareyi
+   ölçmek yanlış-temiz verirdi: görsel `fixed` + `cover` olduğu için bandın
+   hangi bölgeyi göstereceği kaydırmaya göre değişir.
+     perde alfası .92 · kutu rgba(0,0,0,.32) · gradientin AÇIK ucunda,
+     GERÇEK PİKSELDEN (analitik değil, ölçüm aşağıdaki tabloda):
+       `.st b`    (30px bold #fff)   eşik 3,0 ✅
+       `.st span` (12.5px #b9d8c9)   eşik 4,5 ✅
+       `.sb-head h2` (26px bold)     eşik 3,0 ✅
+       `.eyebrow`  (12px bold #99d7b4) eşik 4,5 ✅
+
+   🔴 AÇIK UÇ KOYULAŞTIRILDI: `#00602b` → `#11492f` (Beyar kararı,
+   2026-08-20). Gerekçe ÜSTBAŞLIKTI: `.sb-head .eyebrow` 12px bold `#99d7b4`
+   ve bant üstünde AA'yı geçmiyordu — görselsiz eski bantta 2,75:1, görsel
+   gelince 2,86:1. Karar rengi değil ZEMİNİ değiştirmek oldu; `#99d7b4` ve
+   `--tomato`/`--green` token'larına DOKUNULMADI, YENİ TOKEN ÜRETİLMEDİ.
+
+   📐 DEĞER TAHMİNLE SEÇİLMEDİ, HEDEFTEN GERİ HESAPLANDI. `#99d7b4`ın bağıl
+   parlaklığı 0,6096; 4,5:1 için bandın parlaklığı ≤ 0,0966 olmalı. Açık uç
+   `k × rgb(0,96,43)` diye taranınca eşik k≈0,70'te (4,48 — kıl payı KALIYOR)
+   çıktı; geçen en açık kademe k=0,65 (#124f33, 4,83). Karardaki *"bir tık
+   koyusunu al"* gereği bir kademe aşağısı alındı: k=0,60 → **#11492f**, 5,21.
+
+   ⚠ KUTU DOLGUSU KOYU KALMAK ZORUNDA. Bant koyulaşınca "artık beyaz cam
+   geri gelebilir mi" diye ÖLÇÜLDÜ: `rgba(255,255,255,.08)` ile `.st span`
+   açık uçta 4,39:1'de kalıyor — hâlâ AA'nın ALTINDA. Yani koyu dolgu bir
+   tercih değil, ölçümün dayattığı şey.
+
+   ⚠ 640 KIRILIMI KONTROL EDİLDİ: orada yalnız punto düşüyor (`.st b` 25px,
+   `sb-head h2` 22px) ve ikisi de hâlâ "büyük metin" sınırının (18,66px bold)
+   üstünde, yani eşikleri 3,0 olarak KALIYOR. Üstbaşlık 12px'te sabit. Renk
+   dalı yok — koyulaştırma o kırılıma ayrıca inmiyor.
+
+   ⚠ KUTU DOLGUSU BEYAZDAN SİYAHA DÖNDÜ. `rgba(255,255,255,.08)` kutuyu
+   BANTTAN AÇIK yapıyordu; fotoğrafın üstünde 12,5px etiket böylece açık
+   uçta 2,59:1'de kalıyor ve AA'yı geçemiyordu (ölçüldü). Cam kart görüntüsü
+   korundu, yalnız camın rengi koyulaştı.
+
+   ⚠ AÇIK UÇ .92'YE ÇEKİLDİ. Gradientin iki ucu ayrı ayrı ölçülür; kötü olan
+   AÇIK uçtur ve kapıyı o belirler. */
+.statband{
+  padding:56px 0;
+  background-color:#153A2B;
+  /* 🔴 PERDE KOYULAŞTI ve NÖTRLEŞTİ (Beyar, 2026-08-25). Önceki iki yeşil
+     kat fotoğrafı yıkayıp bandı soluk yeşil bir yüzeye çeviriyordu. Kanonun
+     kendi reçetesi alındı — ve o reçetenin rengi zaten BİZİM `--slate`
+     token'ımızın rgb üçlüsü (33,30,22), yani dışarıdan renk gelmedi. */
+  background-image:
+    linear-gradient(90deg,rgba(28,25,18,.92),rgba(33,30,22,.82)),
+    url("../../img/diet-hero-poster.jpg");
+  background-repeat:no-repeat,no-repeat;
+  background-position:center,center;
+  background-size:cover,cover;
+  /* perde kutuyla birlikte akar, görsel sabit durur */
+  background-attachment:scroll,fixed;
+}
+@media (hover:none) and (pointer:coarse){
+  /* iOS Safari'nin `fixed`i — bkz. yukarıdaki not. Görsel kalır, sabitlik gider. */
+  .statband{background-attachment:scroll,scroll}
+}
+@media (prefers-reduced-motion:reduce){
+  .statband{background-attachment:scroll,scroll}
+}
+/* BAŞLIK ORTALANIR — kanon `sb-head{text-align:center}` + eyebrow ortalı.
+   ⚠ Kartın İKONU KALIYOR: onu R23·b'de Beyar'ın kendisi geri getirdi
+   (2026-08-24), bu turun isteği bandın SOLGUNLUĞUYDU. İki karar
+   çelişmiyor; biri rengi, öteki ikonu konuşuyor. */
+.statband .sb-head{margin-bottom:34px;text-align:center}
+.statband .sb-head .eyebrow{justify-content:center}
+.statband .st{justify-content:center;text-align:center}
+.statband .sb-head .eyebrow{color:#99d7b4}
+.statband .sb-head h2{color:#fff;font-size:26px;margin:10px 0 0;letter-spacing:-.02em}
+.statband .sb-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:18px}
+.statband .st{background:rgba(0,0,0,.32);border:1px solid rgba(255,255,255,.16);border-radius:var(--radius-lg);padding:20px 18px;display:flex;flex-wrap:wrap;align-items:baseline;gap:10px}
+/* İKON GERİ GELDİ (R23·b, 2026-08-24). Kalıp sayfanın kendi "Ne bulursun"
+   başlıklarıyla aynı: çıplak satır içi ikon, zeminsiz kutu YOK. Renk
+   `.sb-head .eyebrow`in bu banttaki AÇIK NANE tonu — YENİ RENK ÜRETİLMEDİ. */
+.statband .st i{flex:none;font-size:16px;color:#99d7b4}
+.statband .st b{font-size:30px;font-weight:700;color:#fff;letter-spacing:-.02em;line-height:1.1}
+.statband .st span{flex-basis:100%;display:block;font-size:12.5px;color:#b9d8c9;font-weight:500}
+
+/* ---- KÖPRÜ KARTLARI ---- */
+.bridge-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:22px}
+.bridge-card{
+  display:block;background:var(--paper);border:1px solid var(--line);
+  border-radius:var(--radius-lg);padding:24px 22px;box-shadow:var(--sh-sm);
+  transition:.2s var(--ease);
+}
+.bridge-card:hover{border-color:rgba(0,154,68,.4);box-shadow:var(--sh-md);transform:translateY(-2px)}
+.bridge-card .bi{display:grid;place-items:center;width:44px;height:44px;border-radius:var(--radius-md);background:var(--tomato-tint);color:var(--tomato);font-size:18px;margin-bottom:16px}
+.bridge-card h3{font-size:16.5px;margin:0 0 9px}
+.bridge-card p{font-size:13.5px;color:var(--muted);font-weight:500;line-height:1.65;margin:0 0 14px}
+.bridge-card .bgo{display:inline-flex;align-items:center;gap:8px;font-size:13.5px;font-weight:700;color:var(--tomato-deep)}
+.bridge-card:hover .bgo i{transform:translateX(3px)}
+.bridge-card .bgo i{font-size:11px;transition:.2s var(--ease)}
+
+/* ---- dar ekran ---- */
+@media (max-width:1024px){
+  /* Banner tek kolona düşer; şerit dikeyden YATAYA döner ve ayıracı sol
+     çizgiden üst çizgiye geçer — yapı referansının kendi kırılımı. */
+  .lst-hero{grid-template-columns:1fr;align-items:start;gap:22px}
+  .lst-stats{flex-direction:row;gap:34px;padding-left:0;border-left:none;padding-top:18px;border-top:1px solid rgba(255,255,255,.18)}
+  /* Tek kolona düşünce boşluk yatay ayraç değil DİKEY ara olur; referans
+     bu kırılımda 34px kullanıyor (ölçüldü), 22px'ten oraya çekildi. */
+  .about-grid{grid-template-columns:1fr;gap:34px}
+  .val-grid{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+}
+@media (max-width:640px){
+  .lst-stats{gap:10px}
+  .lst-stats .st{flex:1}
+  .lst-stats .st b{font-size:20px}
+  /* Çip şeridi dar ekranda sarmaz, yatay kaydırılır (kabuğun `.chip`
+     kuralı zaten `white-space:nowrap` veriyor, dd-shell.css:963). */
+  .lh-chips{margin-top:16px;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;padding-bottom:4px}
+  .lh-chips::-webkit-scrollbar{display:none}
+  .lh-chips .chip{flex:none}
+  .sec[id]{scroll-margin-top:79px}
+  .val-grid{grid-template-columns:1fr}
+  .statband{padding:34px 0}
+  .statband .sb-head h2{font-size:22px}
+  .statband .st b{font-size:25px}
+  .about-figs{gap:11px}
+}

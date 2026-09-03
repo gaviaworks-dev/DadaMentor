@@ -1,0 +1,125 @@
+/* Kaynak-transfer: prototip hesaplayicilar-v1.html <style> blogu — AYNEN.
+   HANDOFF §0: bu tasarim yeniden yapilmaz, oldugu gibi tasinir. */
+/* ===== SAYFA CSS — kabuk CSS'i assets/css/dd-shell.css'te ===== */
+/* =====================================================================
+   HESAPLAYICILAR — Sağlık Araçları modülünün hesaplayıcı listesi.
+   Bu sayfanın gövdesi saglik-araclari-v1'in hesaplayıcı bölümünden geldi;
+   o adres modülün merkez sayfası oldu, liste buraya taşındı.
+   YENİ SINIF YOK. Kullanılan yapılar ve geldikleri sayfa:
+     .tst-top / .rd-crumb / .tst-head               ← saglik-araclari-v1
+     .tst-hero / .tst-stats                         ← diyet-listeleri-v1
+       (.dl-hero/.dl-stats deseni; R7 Beyar kararı 2026-08-24 ile banner
+        standardı oldu, .tst-meta bu sayfada düştü)
+     .hub-grid                                      ← saglik-araclari-v1
+     .calc-card / .calc-ico ailesi                  ← saglik-hub-v1
+     .sec-green .eyebrow                            ← saglik-hub-v1
+     .pf-disclaimer                                 ← saglik-hub-v1
+     .sec / .sec-head / .see-all / .lead / .chips   ← dd-shell.css (kabuk)
+   ===================================================================== */
+
+/* ---- ÜST BÖLGE (saglik-araclari-v1 .tst-top dili — birebir) ---- */
+.tst-top{
+  position:relative;padding-top:128px;
+  background-image:linear-gradient(90deg,rgba(18,28,22,.94),rgba(20,32,25,.74)),
+    url("../../../../_dis/images.unsplash.com/photo-1512621776951-a57141f2eefd.avif");
+  background-size:cover;background-position:center;
+}
+.tst-top .wrap{position:relative}
+.rd-crumb{display:flex;align-items:center;flex-wrap:wrap;gap:9px;padding:18px 0 14px;font-size:13px;font-weight:500;color:var(--muted)}
+.rd-crumb a{color:var(--muted);transition:.18s}
+.rd-crumb a:hover{color:var(--green-deep)}
+.rd-crumb i{font-size:9px;color:#c7c7c7}
+.rd-crumb b{color:var(--slate);font-weight:700}
+.tst-top .rd-crumb{color:#bcd0c4}
+.tst-top .rd-crumb a{color:#bcd0c4}
+.tst-top .rd-crumb a:hover{color:#99d7b4}
+.tst-top .rd-crumb i{color:rgba(255,255,255,.4)}
+.tst-top .rd-crumb b{color:#fff}
+/* ---- BANNER İKİ KOLONU: yazı | dikey sayaç (R7, Beyar kararı 2026-08-24) ----
+   Yatay ikonlu `.tst-meta` satırı kalktı — genel banner standardı artık
+   sağda dikey sayaç bloğu (`.tst-stats`), desen `diyet-listeleri-v1.css`
+   `.dl-hero`/`.dl-stats`inden AYNEN alındı (yeni sınıf İCAT EDİLMEDİ, yalnız
+   bu sayfanın kendi `tst-` önekiyle adlandırıldı — `kurumsal-v1.css`in
+   `.lst-hero`/`.lst-stats`i de aynı deseni kendi önekiyle taşıyor).
+   #18 DÜZELTMESİ: bu yorum CSS kapanışı yerine Blade yorumunun kapanış
+   imiyle bitiyordu. CSS parser onu kapanış saymaz, bir sonraki gerçek CSS
+   kapanışına kadar okumaya devam eder — aşağıdaki 9 kural (`.tst-hero`,
+   `.tst-head`, `.tst-head .eyebrow` + `::before`, `.tst-head h1`,
+   `.tst-head .lead`, `.tst-stats`, `.tst-stats .st b`, `.tst-stats .st span`)
+   yorum gövdesine düşüp HİÇ UYGULANMIYORDU. Renk kuralı ölünce banner metni
+   kabuğun koyu varsayılanına (rgb(33,30,22)) düşüyor ve koyu fotoğraf
+   zeminde okunmuyor. Yeni renk/ölçü/sınıf ÜRETİLMEDİ.
+
+   🔴 #18b — AYNI KUSURUN İKİNCİ VE ÜÇÜNCÜ YARISI (2026-08-24, Beyar #R2).
+   #18'in düzeltmesi kusuru KAPATMADI, iki yeni ağzını açtı:
+
+     (1) Kapanış imi konuldu ama ARDINDAN kapanmamış bir paragraf daha
+         bırakıldı. CSS'te yorum kapandıktan sonra gelen metin yorum değil
+         SEÇİCİdir; parser hatalı seçiciyi atarken bir sonraki `{...}`
+         bloğunu da birlikte yutar. Yutulan blok tam olarak `.tst-hero` idi.
+
+     (2) Daha sinsisi: düzeltme yorumunun KENDİ GÖVDESİ, anlattığı imi
+         ters tırnak içinde LİTERAL olarak yazıyordu. Ters tırnak CSS için
+         bir şey ifade etmez — parser o imi gördüğü yerde yorumu KAPATIR.
+         Yani yorum, tarif ettiği hatayı işleyerek bitiyordu. Bu dosyada üç
+         ayrı satırda geçiyordu; hepsi düz Türkçeyle anlatıma çevrildi.
+         `docs/lessons.md`in Blade/CSS tuzakları kaydında bu zaten yazılı:
+         *"CSS yorumunda kapanış alt-dizgisi tüm dosyayı düşürür."*
+
+   SONUCU (1440px, ölçüldü): ızgara ölünce banner iki kolona ayrılmıyor,
+   `.tst-stats` akışta kalıp spot metnin ve düğmelerin ALTINA düşüyordu —
+   sayaç sol kenarda, `/programlar` kanonunda ise sağ kolonda. Kural yeniden
+   YAZILMADI; tek yapılan yorumu düzgün kapatmak ve gövdesinden literal imi
+   çıkarmak oldu.
+
+   Düzeltme öncesi kontrast ölçümü (1440px, gerçek piksel — metin gizlenip
+   aynı kutunun zemini örneklendi; /hesaplayicilar): h1 1,11:1 · spot 1,14:1
+   · sayaç-sayı 1,07:1 · sayaç-etiket 1,08:1 — dördü de WCAG AA (4,5:1)
+   altındaydı. */
+.tst-hero{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:44px;align-items:end;padding:10px 0 44px}
+.tst-head{max-width:680px}
+.tst-head .eyebrow{color:#99d7b4}
+.tst-head .eyebrow::before{background:var(--green)}
+.tst-head h1{color:#fff;font-size:44px;margin:14px 0 12px;letter-spacing:-.03em;text-shadow:0 2px 24px rgba(0,0,0,.25)}
+.tst-head .lead{color:#e3ede7;font-weight:500;font-size:15.5px;text-shadow:0 1px 14px rgba(0,0,0,.3)}
+.tst-stats{display:flex;flex-direction:column;gap:16px;padding-left:38px;border-left:1px solid rgba(255,255,255,.18)}
+.tst-stats .st b{display:block;font-size:29px;font-weight:700;color:#fff;letter-spacing:-.02em;line-height:1.1}
+.tst-stats .st span{font-size:12.5px;color:#cfe0d6;font-weight:500}
+
+/* ---- sağlık bölümü eyebrow'u (saglik-hub) ---- */
+.sec-green .eyebrow{color:var(--green-deep)}
+.sec-green .eyebrow::before{background:var(--green)}
+
+/* ---- calc-card (hesaplayıcı kartı — saglik-hub'dan) ---- */
+.hub-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px}
+.calc-card{display:flex;align-items:center;gap:14px;padding:16px;background:var(--paper);border:1px solid #e2efe8;border-radius:var(--radius-lg);cursor:pointer;transition:.25s var(--ease)}
+.calc-card:hover{transform:translateY(-4px);border-color:var(--green);box-shadow:var(--sh-md)}
+.calc-ico{flex:none;width:50px;height:50px;border-radius:var(--radius-lg);background:#E3F4EA;display:grid;place-items:center}
+.calc-ico i{font-size:21px;color:var(--tomato-deep)}
+.calc-card h4{font-size:16px;margin-bottom:3px}
+.calc-card p{font-size:12.5px;color:var(--muted);font-weight:500}
+.calc-card .go{margin-left:auto;color:var(--green);font-size:13px;transition:.2s var(--ease)}
+.calc-card:hover .go{transform:translateX(3px)}
+
+/* ---- tıbbi bilgilendirme şeridi (saglik-hub) ---- */
+.pf-disclaimer{background:var(--tomato-tint);border-top:1px solid rgba(0,154,68,.25)}
+.pf-disclaimer .wrap{display:flex;gap:14px;align-items:flex-start;padding-top:22px;padding-bottom:22px}
+.pf-disclaimer i{color:var(--tomato-deep);font-size:17px;margin-top:2px;flex:none}
+.pf-disclaimer p{font-size:13.5px;color:var(--slate-2);font-weight:500;line-height:1.65;max-width:960px}
+.pf-disclaimer b{color:var(--slate);font-weight:700}
+
+/* ---- responsive (saglik-araclari reçetesi) ---- */
+@media (max-width:1024px){
+  .hub-grid{grid-template-columns:1fr 1fr}
+  .tst-head h1{font-size:30px}
+  .tst-hero{grid-template-columns:1fr;align-items:start;gap:22px;padding-bottom:34px}
+  .tst-stats{flex-direction:row;gap:34px;padding-left:0;border-left:none;padding-top:18px;border-top:1px solid rgba(255,255,255,.18)}
+}
+@media (max-width:640px){
+  .tst-top{padding-top:74px}
+  .hub-grid{grid-template-columns:1fr;gap:18px}
+  .tst-head h1{font-size:25px}
+  .tst-stats{gap:12px}
+  .tst-stats .st{flex:1}
+  .tst-stats .st b{font-size:20px}
+}

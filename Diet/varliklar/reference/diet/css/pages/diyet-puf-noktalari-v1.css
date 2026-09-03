@@ -1,0 +1,111 @@
+/* Kaynak-transfer: prototip diyet-puf-noktalari-v1.html <style> blogu — AYNEN.
+   HANDOFF §0: bu tasarim yeniden yapilmaz, oldugu gibi tasinir. */
+/* ===== SAYFA CSS — kabuk CSS'i assets/css/dd-shell.css'te ===== */
+/* =====================================================================
+   DİYETİN PÜF NOKTALARI — liste sayfası. Beslenme başlığının ALTINCI
+   modülü ve iki yazı modülünün kardeşi: İpuçları soru-cevap kısa notlar,
+   Kaç Kalori? porsiyon ve kalori karşılıkları, bu modül ise düz blog
+   yazısı — mutfakta işe yarayan pratik bilgiler ve alışkanlık kurma.
+
+   Yapı referansı DadaGastro "Püf Noktaları" listesi. Referansın kendi
+   liste sayfasından birebir alınanlar:
+     - başlıklı hero + sayaç şeridi (referansta "1561 püf · 11 kategori ·
+       32,1B okunma", burada "10 yazı · 5 kategori · ~4 dk · Genel bilgi")
+     - kart: solda 166px görsel (sağa doğru maskeyle silinir) + sol alt
+       köşede ikon rozeti + sağda dikeyde ortalanmış gövde
+     - kart içi sıra: başlık → özet → aynı satırda kategori + okunma
+     - ızgara: iki kolon, ≤1024'te tek kolon, 16px boşluk
+     - kategori düzeni: tek satır, "Tümü" başta ve sayaçsız, sıralama
+       kontrolü (En Yeni / En Çok Okunan) aynı satırın sağ ucunda
+     - altta "… gösteriliyor" sayısı
+   Renk ve tipografi DadaDiet'in kendi kimliğinden gelir; referansın
+   domates paleti taşınmadı. Sayfalama YOK: on yazı tek sayfaya
+   sığıyor (9. turun ipuçları kararıyla aynı gerekçe).
+
+   YENİ SINIF YOK. Kullanılan yapılar ve geldikleri yer:
+     .reh-hero / .rd-crumb / .reh-htrust / .reh-note   ← beslenme-ipuclari-v1
+     .lst-bar                                          ← dd-shell.css (kabuk)
+     .pf-tabs / .dt / .cnt / .pf-pane / .tst-tabwrap    ← saglik-testler-v1
+     .dl-fbar / .dl-fchip / .lbl                        ← diyet-listeleri-v1
+     .pufl-grid                                         ← kac-kalori-v1
+     .puf-card / .puf-fig / .puf-ico / .puf-body /
+     .puf-tag / .puf-reads                              ← dd-shell.css (kabuk)
+     .macro-note                                        ← beslenme-ipuclari-v1
+     .sec / .eyebrow / .lead                            ← dd-shell.css (kabuk)
+   ===================================================================== */
+
+/* ---- HERO (kardeş modülün .reh-hero dili — birebir; paralaks kabuktan) ---- */
+.rd-crumb{display:flex;align-items:center;flex-wrap:wrap;gap:9px;padding:18px 0 14px;font-size:13px;font-weight:500;color:var(--muted)}
+.rd-crumb a{color:var(--muted);transition:.18s}
+.rd-crumb a:hover{color:var(--green-deep)}
+.rd-crumb i{font-size:9px;color:#c7c7c7}
+.rd-crumb b{color:var(--slate);font-weight:700}
+.reh-hero{position:relative;background-color:#15241c;background-image:linear-gradient(90deg,rgba(18,28,22,.94),rgba(20,32,25,.74)),url("../../../../_dis/images.unsplash.com/photo-1482049016688-2d3e1b311543.avif");background-size:cover;background-position:center;overflow:hidden;padding:128px 0 46px}
+.reh-hero::before{content:"";position:absolute;inset:0;background:radial-gradient(760px 320px at 82% -10%,rgba(0,154,68,.20),transparent 60%),linear-gradient(180deg,rgba(18,28,22,0) 60%,rgba(16,26,20,.6));pointer-events:none}
+.reh-hero .wrap{position:relative;z-index:2}
+.reh-hero .rd-crumb{color:#bcd0c4;padding-bottom:16px;font-size:13px}
+.reh-hero .rd-crumb a{color:#bcd0c4}
+.reh-hero .rd-crumb a:hover{color:#99d7b4}
+.reh-hero .rd-crumb i{color:rgba(255,255,255,.4)}
+.reh-hero .rd-crumb b{color:#fff}
+.reh-hero .eyebrow{color:#99d7b4}
+.reh-hero .eyebrow::before{background:var(--green)}
+.reh-hero h1{color:#fff;font-size:42px;margin:12px 0 12px;letter-spacing:-.03em;text-shadow:0 2px 24px rgba(0,0,0,.25)}
+.reh-hero h1 .accent{color:#7fcca1}
+.reh-hero .lead{color:#e3ede7;font-weight:500;font-size:16px;max-width:620px;text-shadow:0 1px 14px rgba(0,0,0,.3)}
+.reh-htrust{display:flex;flex-wrap:wrap;gap:14px 22px;margin-top:22px}
+.reh-htrust span{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:#cfe6da}
+.reh-htrust i{color:var(--green);font-size:13px}
+.reh-htrust b{color:#fff;font-weight:700}
+
+/* ---- KATEGORİ + SIRALAMA TEK SATIRDA (referansın .pufl-bar düzeni)
+   Şeridin kendisi kabuktaki .lst-bar; solda sitenin tek kategori deseni
+   (.pf-tabs, 9. tur kararı), sağ ucunda sıralama (.dl-fbar). ---- */
+/* flex:1 1 0 + min-width:0 — referansın kategori satırının (.ke-filter)
+   kendi bildirimi. Taban genişlik sıfır olduğu için şerit hiçbir zaman alt
+   satıra kırılmaz; sekmeler kalan yere yayılır, yer yetmezse yatay kayar.
+   Sıralama kontrolü böylece şeridin sağ ucundan hiç ayrılmaz. Sekme iç
+   boşluğu 22→20px: altı sekme kırpılmadan sığsın (sayfaya özel ölçü). */
+.pf-tabs{display:inline-flex;gap:4px;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-md);padding:4px;overflow-x:auto;scrollbar-width:none;max-width:100%;flex:1 1 0;min-width:0}
+.pf-tabs::-webkit-scrollbar{display:none}
+.pf-tabs .dt{font-family:inherit;font-weight:700;font-size:13.5px;color:var(--muted);background:transparent;border:none;border-radius:var(--radius-sm);padding:11px 20px;cursor:pointer;display:inline-flex;align-items:center;gap:8px;line-height:normal;transition:.2s var(--ease);white-space:nowrap;flex:none}
+.pf-tabs .dt:hover{color:var(--green-deep)}
+.pf-tabs .dt.active{background:var(--tomato-deep);color:#fff}
+.pf-tabs .dt .cnt{font-size:11px;font-weight:700;opacity:.6}
+.pf-tabs .dt.active .cnt{opacity:.85}
+.dl-fbar{display:flex;flex-wrap:wrap;align-items:center;gap:4px;padding:4px 4px 4px 14px;width:fit-content;max-width:100%;background:var(--bg);border:1px solid var(--line);border-radius:var(--radius-md);flex:none}
+.dl-fbar .lbl{font-size:13px;color:var(--muted);font-weight:600;flex:none}
+.dl-fchip{font-family:inherit;font-size:13px;font-weight:700;color:var(--muted);background:transparent;border:none;border-radius:var(--radius-sm);padding:9px 15px;cursor:pointer;transition:.2s var(--ease);white-space:nowrap}
+.dl-fchip:hover{color:var(--green-deep);background:rgba(0,154,68,.08)}
+.dl-fchip.active{background:var(--tomato-deep);color:#fff}
+
+/* ---- KART IZGARASI — referansın .pufl-grid ölçüsü birebir ---- */
+.pufl-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.pf-pane{animation:fadeUp .35s var(--ease)}
+.pf-pane[hidden]{display:none}
+
+/* ---- toplam sayısı (referansta ızgaranın ÜSTÜNDEKİ özet satırı, bu yüzden
+   .macro-note'un üst ayracı yok) ---- */
+.macro-note{display:flex;gap:9px;font-size:12.5px;color:var(--muted);font-weight:500;line-height:1.5;margin:20px 0 16px}
+
+/* ---- genel bilgi notu (beslenme-hub) ---- */
+.reh-note{display:flex;gap:14px;align-items:flex-start;margin-top:30px;background:var(--tomato-tint);border:1px solid #bae4cc;border-radius:var(--radius-lg);padding:18px 20px}
+.reh-note>i{color:var(--tomato-deep);font-size:18px;margin-top:2px;flex:none}
+.reh-note p{font-size:14px;color:var(--slate-2);font-weight:500;line-height:1.6}
+.reh-note p a{color:var(--tomato-deep);font-weight:700}
+.reh-note p a:hover{text-decoration:underline}
+
+/* ---- responsive ---- */
+@media (max-width:1024px){
+  .pufl-grid{grid-template-columns:1fr}
+  /* Şerit iki satıra ayrılır: sekmeler tam genişliği alıp yatay kayar,
+     sıralama altına düşer. Tek satırda kalsalardı sekme çubuğuna ~450px
+     kalıyordu ve altı sekmenin yalnız ikisi görünüyordu. */
+  .pf-tabs{flex-basis:100%}
+  .lst-bar{align-items:stretch;gap:12px}
+}
+@media (max-width:640px){
+  .reh-hero{padding:96px 0 34px}
+  .reh-hero h1{font-size:29px}
+  .pf-tabs .dt{padding:11px 16px}
+}

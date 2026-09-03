@@ -1,0 +1,144 @@
+/* Kaynak-transfer: prototip beslenme-ipucu-detay-v1.html <style> blogu — AYNEN.
+   HANDOFF §0: bu tasarim yeniden yapilmaz, oldugu gibi tasinir. */
+/* ===== SAYFA CSS — kabuk CSS'i assets/css/dd-shell.css'te ===== */
+/* =====================================================================
+   BESLENME İPUCU DETAY — Beslenme İpuçları modülünün yazı şablonu.
+   Bölüm sırası DadaGastro "Püf Noktası" detayından alındı: breadcrumb →
+   künyeli başlık (kategori · yazar · tarih · okunma · okuma süresi) →
+   soru başlıklı gövde → etiketler → paylaş → ilgili içerik → "bunlar da
+   işine yarar" kartları → bilgilendirme notu. Renk ve tipografi
+   DadaDiet'in kendi kimliğinden gelir.
+
+   YENİ SINIF YOK. Kullanılan yapılar ve geldikleri sayfa:
+     .reh-hero / .reh-hero-article / .reh-arthero / .reh-artmain /
+     .reh-htrust / .reh-article / .qa-list / .qa / .qa-head / .qa-ico /
+     .qa-car / .qa-body / .reh-note / .reh-note-lg   ← beslenme-dengeli-tabak-v1
+     .rd-crumb                                       ← beslenme-hub-v1
+     .chips / .chip                                  ← dd-shell.css (kabuk)
+     .qz-share / .shr-pop / .share-btn / .lbl        ← test-detay-v1
+     .hub-grid / .hub-card / .hub-body / .hub-foot   ← beslenme-ipuclari-v1
+     .prog-tags / .prog-tag                          ← diyet-listeleri-v1
+     .nut-row / .nr-ico                              ← beslenme-hub-v1
+     .sec / .sec-head / .see-all / .lead / .eyebrow  ← dd-shell.css (kabuk)
+   ===================================================================== */
+
+/* ---- HERO (makale varyantı — beslenme-dengeli-tabak-v1 birebir) ---- */
+.rd-crumb{display:flex;align-items:center;flex-wrap:wrap;gap:9px;padding:18px 0 14px;font-size:13px;font-weight:500;color:var(--muted)}
+.rd-crumb a{color:var(--muted);transition:.18s}
+.rd-crumb a:hover{color:var(--green-deep)}
+.rd-crumb i{font-size:9px;color:#c7c7c7}
+.rd-crumb b{color:var(--slate);font-weight:700}
+.reh-hero{position:relative;background-color:#15241c;background-image:linear-gradient(90deg,rgba(18,28,22,.94),rgba(20,32,25,.74)),url("../../../../_dis/images.unsplash.com/photo-1466637574441-749b8f19452f.jpg");background-size:cover;background-position:center;overflow:hidden;padding:128px 0 46px}
+.reh-hero::before{content:"";position:absolute;inset:0;background:radial-gradient(760px 320px at 82% -10%,rgba(0,154,68,.20),transparent 60%),linear-gradient(180deg,rgba(18,28,22,0) 60%,rgba(16,26,20,.6));pointer-events:none}
+.reh-hero .wrap{position:relative;z-index:2}
+.reh-hero .rd-crumb{color:#bcd0c4;padding-bottom:18px;font-size:13px}
+.reh-hero .rd-crumb a{color:#bcd0c4}
+.reh-hero .rd-crumb a:hover{color:#99d7b4}
+.reh-hero .rd-crumb i{color:rgba(255,255,255,.4)}
+.reh-hero .rd-crumb b{color:#fff}
+.reh-hero .eyebrow{color:#99d7b4}
+.reh-hero .eyebrow::before{background:var(--green)}
+.reh-hero h1{color:#fff;font-size:38px;margin:12px 0 12px;letter-spacing:-.03em;text-shadow:0 2px 24px rgba(0,0,0,.25)}
+.reh-hero h1 .accent{color:#7fcca1}
+.reh-hero .lead{color:#e3ede7;font-weight:500;font-size:16px;max-width:620px;text-shadow:0 1px 14px rgba(0,0,0,.3)}
+.reh-arthero{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:44px;align-items:center;padding-top:4px}
+.reh-htrust{display:flex;flex-wrap:wrap;gap:14px 22px;margin-top:22px}
+.reh-htrust span{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:#cfe6da}
+.reh-htrust i{color:var(--green);font-size:13px}
+.reh-htrust b{color:#fff;font-weight:700}
+
+/* ---- yazar satırı — künyenin ilk parçası (.nut-row koyu zemin varyantı) ---- */
+.nut-row{display:flex;align-items:center;gap:14px;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.20);border-radius:var(--radius-md);padding:13px 16px;backdrop-filter:blur(4px);max-width:340px;margin-top:22px}
+.nut-row .nr-ico{flex:none;width:42px;height:42px;border-radius:var(--radius-md);background:rgba(255,255,255,.14);display:grid;place-items:center;color:#99d7b4;font-size:17px}
+.nut-row b{font-size:14.5px;color:#fff;display:block}
+.nut-row span{font-size:12.5px;color:#cfe6da;font-weight:500}
+
+/* ---- MAKALE GÖVDESİ (soru başlıklı akordeon — dengeli-tabak birebir) ---- */
+.reh-article{max-width:860px}
+.qa-list{display:flex;flex-direction:column;gap:12px}
+.qa{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);overflow:hidden;transition:border-color .25s var(--ease),box-shadow .25s var(--ease)}
+.qa.open{border-color:rgba(0,154,68,.4);box-shadow:var(--sh-sm)}
+/* .qa-head / .qa.open .qa-head BURADA TANIMLI DEĞİL — B2 kararı (Beyar,
+   2026-08-24): 22 kopyanın hepsi kanon olarak dd-shell.css'e taşındı (açık
+   durumdaki alt ayraç dahil), yerel kopya buradan silindi. */
+.qa-ico{flex:none;width:34px;height:34px;border-radius:var(--radius-md);background:var(--tomato-tint);color:var(--tomato-deep);display:grid;place-items:center;font-size:14px}
+.qa-car{margin-left:auto;flex:none;font-size:12px;color:var(--muted);transition:transform .25s var(--ease)}
+.qa.open .qa-car{transform:rotate(180deg);color:var(--tomato-deep)}
+.qa-body{max-height:0;overflow:hidden;transition:max-height .32s var(--ease)}
+.qa-body p{padding:0 26px 18px 70px;font-size:14.5px;color:var(--slate-2);font-weight:500;line-height:1.7}
+.qa-body p+p{padding-top:0;margin-top:-6px}
+.qa-body .qa-sub{padding:2px 26px 10px 70px;font-size:13.5px;font-weight:700;color:var(--slate)}
+
+/* ---- ETİKETLER + PAYLAŞ (test-detay-v1 paylaş dili birebir) ---- */
+.qz-share{position:relative;display:inline-block}
+.share-btn{width:34px;height:34px;border-radius:var(--radius-circle);border:1px solid var(--line);background:var(--paper);color:var(--slate-2);display:grid;place-items:center;font-size:13px;cursor:pointer;transition:.2s var(--ease);font-family:inherit;text-decoration:none}
+.share-btn:hover{transform:translateY(-2px);color:#fff}
+.share-btn.xx:hover{background:#111;border-color:#111}
+.share-btn.wa:hover{background:#25D366;border-color:#25D366}
+.share-btn.cp:hover{background:var(--green);border-color:var(--green)}
+.share-btn.ok,.share-btn.ok:hover{background:var(--tomato-deep);border-color:var(--tomato-deep);color:#fff}
+.shr-pop{display:flex;align-items:center;gap:9px}
+.shr-pop .lbl{font-size:13px;color:var(--muted);font-weight:600}
+.prog-tags{display:flex;flex-wrap:wrap;gap:8px}
+
+/* ---- Kartta etiket ile başlık arasındaki nefes ----
+   ÖLÇÜLDÜ (tarayıcı, 1440px): bu sayfada `.hub-body > .prog-tags` ile hemen
+   altındaki `h4` arası 0px idi — tür etiketi (Kütüphane / Hesaplayıcı /
+   Rehber) başlığa yapışıyordu.
+   KANON 12px: aynı `.hub-body` kartını basan iki bağımsız aile de 12px
+   ölçüyor — `/beslenme-ipuclari/liste` (beslenme-ipuclari-v1.css:82,
+   `.prog-tags{...margin-bottom:12px}`) ve `/beslenme-rehberi`
+   (articles/index + card-hub-genel kartı, aynı dosya). Yeni ölçü
+   ÜRETİLMEDİ, değer kanondan alındı.
+   Seçici neden `.hub-body` ile daraltıldı: aynı `.prog-tags` bu sayfanın
+   "Etiketler + Paylaş" satırında da var ve orası `.macro-note` flex satırı
+   (`align-items:center`); oraya alt boşluk girerse etiketler yukarı kayar,
+   yani düzeltme ikinci bir kusur doğururdu. */
+.hub-body .prog-tags{margin-bottom:12px}
+.prog-tag{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--slate-2);background:#E3F4EA;border:1px solid #c9ead8;padding:6px 11px;border-radius:var(--radius-sm)}
+.prog-tag i{color:var(--green);font-size:11px}
+.macro-note{display:flex;align-items:center;flex-wrap:wrap;gap:16px;font-size:12.5px;color:var(--muted);font-weight:500;margin-top:26px;padding-top:20px;border-top:1px solid var(--line)}
+
+/* ---- İLGİLİ İÇERİK KARTLARI (liste sayfasının görselsiz .hub-card'ı) ----
+   `.hub-body{…}` ve `.hub-foot{…}` KONTEYNER kuralları BURADA TANIMLI
+   DEĞİL — B1 kararı (Beyar, 2026-08-24): 13 kopyanın hepsi kanon olarak
+   dd-shell.css'e taşındı (`.hub-foot`in `margin-top` düzeltmesi de orada).
+   Alt seçiciler (h4/p/.go) kanona GİRMEDİ, sayfaya özel kaldı. ---- */
+.hub-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px}
+.hub-card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);overflow:hidden;display:flex;flex-direction:column;cursor:pointer;transition:.3s var(--ease)}
+.hub-card:hover{transform:translateY(-6px);border-color:#dcdcdc;box-shadow:var(--sh-md)}
+.hub-body h4{font-size:16.5px;margin-bottom:8px;letter-spacing:-.01em}
+.hub-card:hover .hub-body h4{color:var(--green-deep)}
+.hub-body p{font-size:13.5px;color:var(--muted);font-weight:500;line-height:1.55}
+.hub-foot .go{display:inline-flex;align-items:center;gap:7px;color:var(--green-deep);font-weight:700}
+.hub-foot .go i{transition:.2s var(--ease)}
+.hub-card:hover .hub-foot .go i{transform:translateX(3px)}
+
+/* ---- BİLGİLENDİRME NOTU ---- */
+.reh-note{display:flex;gap:14px;align-items:flex-start;margin-top:30px;background:var(--tomato-tint);border:1px solid #bae4cc;border-radius:var(--radius-lg);padding:18px 20px}
+.reh-note>i{color:var(--tomato-deep);font-size:18px;margin-top:2px;flex:none}
+.reh-note p{font-size:14px;color:var(--slate-2);font-weight:500;line-height:1.6}
+.reh-note p a{color:var(--tomato-deep);font-weight:700}
+.reh-note-lg{margin-top:0;padding:24px 26px}
+.reh-note-lg .btn{margin-top:14px}
+
+/* ---- responsive ---- */
+@media (max-width:1024px){
+  .reh-arthero{grid-template-columns:1fr;gap:26px}
+  .hub-grid{grid-template-columns:1fr 1fr}
+}
+@media (max-width:640px){
+  .reh-hero{padding:96px 0 34px}
+  .reh-hero h1{font-size:27px}
+  .hub-grid{grid-template-columns:1fr;gap:18px}
+  .qa-body p{padding-left:26px}
+  .qa-body .qa-sub{padding-left:26px}
+}
+
+/* BÖLÜM ETİKETİ İLE ÜSTÜNDEKİ METİN ARASINA NEFES (Beyar, 2026-08-25).
+   `.sec-head` gövde paragrafının hemen ardından, akışın içinde basılıyor ve
+   kendi üst boşluğu YOK; "Bu ipucunda / Bu yazıda" etiketi bir önceki cümleye
+   yapışıyordu. Değer UYDURULMADI — bu dosyanın kendi blok aralığı olan
+   `.reh-note{margin-top:30px}` ile aynı; sayfada yeni bir blok başladığında
+   kullanılan ölçü zaten bu. Yalnız ÜSTÜNDE bir şey varken uygulanır. */
+.lead + .sec-head,.reh-article + .sec-head,.reh-body > .sec-head:not(:first-child){margin-top:30px}

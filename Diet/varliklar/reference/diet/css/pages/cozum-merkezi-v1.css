@@ -1,0 +1,128 @@
+/* ==========================================================================
+   ÇÖZÜM MERKEZİ — konu şeridi · boş arama durumu · kapanış bandı
+   ==========================================================================
+
+   YAPI REFERANSI kardeş markanın SSS ekranıdır: yapışkan konu şeridi +
+   sayaçlı sekme + arama sırasında sönen sekmeler + boş durum kutusu +
+   kapanış bandı. Bu, bu markadaki YERLEŞİK EMSALİN aynısıdır — `diet._p.
+   faq-list` ve `diet.kurumsal._p.hero` da yapılarını aynı yerden aldı ve
+   baş notlarında aynı cümleyi yazdı.
+
+   🔴 ALINAN ŞEY GEOMETRİDİR — RENK, TİPOGRAFİ VE ÖLÇÜ DEĞİL.
+   Aşağıdaki her renk `--tomato` (bu markada NANE), `--paper`, `--line`,
+   `--muted`, `--slate`, `--bg-cream` token'larından gelir; hiçbiri
+   kaynaktan kopyalanmadı ve yeni renk/gölge/radius ÜRETİLMEDİ.
+
+   🔴 YAPIŞKAN OFSET KAYNAKTAN ALINMADI — BU SİTEDE ÖLÇÜLDÜ.
+   Playwright, canlı `dadadiet.com`, sayfa kaydırılmış hâlde başlığın ALT
+   KENARI:
+       1440px · 1024px · 768px -> 113px   (`.header` top:40 + height:73)
+        640px ·  390px         ->  63px   (`.header` top:0  + height:63)
+   Bu yüzden şerit ≥641px'te 112px'e, ≤640px'te 62px'e yapışır. İkisi de bu
+   markanın KENDİ sabitleridir (`dd-shell.css` `.below-header{padding-top:
+   112px}` ve `.h-top>.wrap{height:62px}`); 1px'lik fark başlığın alt
+   çizgisinin altına girsin diyedir, aksi hâlde kaydırırken saç teli
+   kalınlığında bir boşluk görünür.
+
+   🔴 860px İCAT DEĞİL: bu markanın kendi okuma kolonu genişliği
+   (`beslenme-ipucu-detay-v1.css:57` — `.reh-article{max-width:860px}`).
+   Şerit bilerek TAM GENİŞLİKTEDİR (13 sekme dar kolona sığmaz), içerik
+   kolonu 860px'te ortalanır — kaynak ekranın kurduğu ilişkinin aynısı.
+
+   ⚠ `.qa` / `.qa-head` / `.qa-ico` / `.qa-body` KURALLARI BURADA YOK.
+   Onlar `beslenme-ipucu-detay-v1.css`te ZATEN tanımlı ve bu sayfa o dosyayı
+   zaten yüklüyor. Buraya ikinci kez yazılsaydı iki dosya aynı seçiciyi
+   tanımlar, yükleme sırası davranışı belirlerdi — sessiz bozulma sınıfı.
+   ========================================================================== */
+
+/* ---- YAPIŞKAN ŞERİDİN ÖN KOŞULU ----
+   🔴 ÖLÇÜLDÜ, VARSAYILMADI (Playwright, yerel, 2026-08-20): bu kural
+   olmadan şerit HİÇ YAPIŞMIYOR. Sayfa 1200px kaydırıldığında şeridin üst
+   kenarı üç genişlikte de -829/-860px'e gidiyordu, yani şerit sayfayla
+   birlikte yukarı kaçıyordu.
+
+   Kök neden `dd-shell.css:719` — `html,body{overflow-x:hidden}`. `hidden`
+   body'yi bir KAYDIRMA KONTEYNERİ yapar ve konteynerin içindeki
+   `position:sticky` en yakın kaydırma atasına göre hesaplandığı için
+   viewport'a yapışamaz.
+
+   ÇÖZÜM İCAT DEĞİL — BU DEPODA KAYITLI: `diet/dietitians/show.blade.php`
+   aynı sorunu aynı satırla çözmüş ve gerekçesini yazmış ("clip yatayi
+   keser ama overflow-y visible kalir -> sticky calisir"). Burada da
+   SAYFA-YEREL uygulanır; `dd-shell.css` GLOBAL olarak DEĞİŞTİRİLMEDİ —
+   o satırı değiştirmek bu markanın bütün ekranlarını etkilerdi ve bu
+   turun kapsamı dışındadır. */
+html,body{overflow-x:clip}
+
+/* ---- yapışkan konu şeridi ---- */
+.faq-tabbar{
+  position:sticky;top:112px;z-index:40;
+  background:rgba(255,255,255,.93);
+  -webkit-backdrop-filter:blur(10px) saturate(150%);
+  backdrop-filter:blur(10px) saturate(150%);
+  padding:12px 0;
+}
+.faq-tabs{
+  display:flex;gap:4px;
+  background:var(--paper);border:1px solid var(--line);
+  border-radius:var(--radius-md);padding:4px;
+  overflow-x:auto;scrollbar-width:none;
+}
+.faq-tabs::-webkit-scrollbar{display:none}
+.faq-tab{
+  font-family:inherit;font-weight:700;font-size:13px;
+  color:var(--muted);background:transparent;border:none;
+  border-radius:var(--radius-sm);padding:9px 16px;cursor:pointer;
+  display:inline-flex;align-items:center;gap:7px;
+  transition:.2s var(--ease);white-space:nowrap;flex:none;
+}
+.faq-tab i{font-size:12px}
+.faq-tab:hover{color:var(--tomato)}
+.faq-tab.is-active{background:var(--tomato);color:#fff}
+.faq-tab .cnt{font-size:11px;font-weight:700;opacity:.6}
+/* Arama tüm konularda gezer; sekmeler o sırada karar vermiyor demektir.
+   Söndürmek DEĞİL de gizlemek, aramayı temizleyince şeridin yerinden
+   zıplamasına yol açardı. */
+.faq-tabs.searching .faq-tab{opacity:.45;pointer-events:none}
+
+/* ---- içerik kolonu ---- */
+.faq-col{max-width:860px;margin:0 auto}
+.faq-kat-note{font-size:13.5px;color:var(--muted);font-weight:500;margin:0 0 18px}
+.faq-kat-note b{color:var(--slate);font-weight:700}
+
+/* ---- boş arama durumu ---- */
+.faq-none{
+  display:none;text-align:center;padding:56px 20px 50px;
+  background:var(--paper);border:1.5px dashed var(--line);
+  border-radius:var(--radius-lg);
+}
+.faq-none.show{display:block}
+.faq-none .pe-ico{
+  width:64px;height:64px;border-radius:var(--radius-md);
+  background:var(--tomato-tint);color:var(--tomato);
+  display:grid;place-items:center;font-size:25px;margin:0 auto 18px;
+}
+.faq-none h3{font-size:20px;margin-bottom:8px}
+.faq-none p{font-size:14px;color:var(--muted);font-weight:500;max-width:400px;margin:0 auto 22px;line-height:1.55}
+
+/* ---- kapanış bandı ---- */
+.coll-cta{
+  text-align:center;background:var(--paper);border:1px solid var(--line);
+  border-radius:var(--radius-lg);padding:38px 30px;max-width:860px;margin:0 auto;
+}
+.coll-cta .cc-ico{
+  width:62px;height:62px;border-radius:var(--radius-lg);
+  background:var(--tomato-tint);color:var(--tomato);
+  display:grid;place-items:center;font-size:25px;margin:0 auto 16px;
+}
+.coll-cta h3{font-size:21px;margin-bottom:8px}
+.coll-cta p{font-size:14px;color:var(--muted);font-weight:500;max-width:420px;margin:0 auto 20px;line-height:1.6}
+.coll-cta .cc-btns{display:flex;gap:11px;justify-content:center;flex-wrap:wrap}
+
+/* ---- mobil ---- */
+@media (max-width:640px){
+  .faq-tabbar{top:62px;padding:10px 0}
+  .faq-tab{padding:9px 13px}
+  .coll-cta{padding:30px 20px}
+  .coll-cta .cc-btns .btn{flex:1;min-width:0}
+}

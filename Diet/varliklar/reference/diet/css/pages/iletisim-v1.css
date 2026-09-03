@@ -1,0 +1,101 @@
+/* ==========================================================================
+   İLETİŞİM — iki kolonlu form yerleşimi
+   ==========================================================================
+
+   YAPI REFERANSI kardeş markanın iletişim ekranı: solda form kartı, sağda
+   iletişim bilgileri kartı + "mesajın nereye gider" adım listesi. Bu, bu
+   markadaki YERLEŞİK EMSALİN aynısı (`diet._p.faq-list`,
+   `diet.kurumsal._p.hero` ve bu turda `cozum-merkezi-v1.css` de yapılarını
+   aynı yerden aldı ve baş notlarında aynı cümleyi yazdı).
+
+   🔴 ALINAN ŞEY GEOMETRİDİR. Renk, tipografi, radius ve gölge bu markanın
+   token'larından (`--tomato` NANE, `--paper`, `--line`, `--muted`,
+   `--slate`, `--radius-*`, `--sh-*`); kaynaktan tek bir değer kopyalanmadı
+   ve yeni token ÜRETİLMEDİ.
+
+   🔴 FORM ALANLARININ KENDİSİ BURADA TANIMLI DEĞİL. `.fk-field` ·
+   `.fk-label` · `.fk-input` · `.fk-select` · `.fk-textarea` · `.fk-grid`
+   (ve `.c2` varyantı) · `.ol-consents` · `.captcha-note` bu markanın
+   `pages/kimlik-v1.css` kitinde ZATEN tanımlı; sayfa o dosyayı yüklüyor.
+   Buraya ikinci kez yazılsalardı iki dosya aynı seçiciyi tanımlar ve
+   davranışı yükleme sırası belirlerdi — sessiz bozulma sınıfı.
+   `.fb-kvkk` (onay satırı) `dd-shell.css`te, yani her sayfada zaten var.
+
+   ⚠ HARİTA BÖLÜMÜ YOK ve bu bilinçli. Kaynak ekranda bir `.map-sec` var;
+   bu markada karşılığı YOKTUR çünkü yayınlanmış iletişim metni platformun
+   *"tamamen dijital"* olduğunu ve fiziksel adresi bulunmadığını söylüyor.
+   Harita eklemek o cümleyi yalanlardı.
+   ========================================================================== */
+
+/* ---- iki kolon ----
+   Oranlar kaynağın kendi ilişkisini korur: form geniş, yan sütun dar ve
+   yapışkan. `align-items:start` ŞART — olmasaydı yan sütun form kadar
+   uzar ve `position:sticky` hiçbir zaman devreye girmezdi. */
+.con-layout{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);gap:26px;align-items:start}
+.con-main{min-width:0}
+.con-aside{display:flex;flex-direction:column;gap:18px;position:sticky;top:132px}
+
+/* ---- form kartı ---- */
+.form-card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);padding:26px 26px 24px;box-shadow:var(--sh-sm)}
+.fc-head{margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid var(--line)}
+.fc-head h2{font-size:19px;margin:0 0 6px;display:flex;align-items:center;gap:10px}
+.fc-head h2 i{color:var(--tomato);font-size:16px}
+.fc-head p{font-size:13.5px;color:var(--muted);font-weight:500;margin:0;line-height:1.55}
+
+.ol-submit{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-top:20px}
+.sub-note{font-size:12.5px;color:var(--muted);font-weight:500}
+.sub-note b{color:var(--slate);font-weight:700}
+
+/* ---- gönderildi durumu ----
+   🔴 KAYNAKTAN ALINMADI — BU MARKANIN KENDİ BAŞARI BLOĞUNDAN.
+   Ölçüler `pages/diyetisyen-profil-v1.css:318-321` (`.apt-success`, randevu
+   gönderildi kutusu) ile BİREBİR aynıdır; yalnız sınıf adı `.ol-success`,
+   çünkü `dd-shell.css:154`ün tipografi kuralı o adı ZATEN tanıyor. Yeni
+   bir başarı dili üretilmedi. */
+.ol-success{text-align:center;padding:22px 0 10px}
+.ol-success .ok{width:64px;height:64px;border-radius:var(--radius-circle);background:#E3F4EA;color:var(--green);display:grid;place-items:center;font-size:27px;margin:0 auto 16px}
+.ol-success h2{font-size:19px;margin-bottom:8px}
+.ol-success p{font-size:13.5px;color:var(--muted);font-weight:500;max-width:380px;margin:0 auto;line-height:1.6}
+.os-steps{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 18px;margin:20px 0 22px}
+.os-steps span{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:600;color:var(--muted)}
+.os-steps i{color:var(--green);font-size:12px}
+
+/* ---- yan sütun: iletişim bilgileri ---- */
+.ci-card,.tips-card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);padding:20px 20px 18px;box-shadow:var(--sh-sm)}
+.tips-head{display:flex;align-items:center;gap:9px;font-size:14.5px;font-weight:700;color:var(--slate);margin-bottom:16px}
+.tips-head i{color:var(--tomato);font-size:14px}
+
+.ci-rows{display:flex;flex-direction:column;gap:15px}
+.ci-row{display:flex;align-items:flex-start;gap:12px}
+.ci-row>i{flex:none;width:34px;height:34px;border-radius:var(--radius-md);background:var(--tomato-tint);color:var(--tomato);display:grid;place-items:center;font-size:13px}
+.ci-row .cl{min-width:0;display:flex;flex-direction:column;gap:2px}
+.ci-row .cl span{font-size:11.5px;font-weight:600;color:var(--muted);letter-spacing:.02em}
+.ci-row .cl b{font-size:13.5px;font-weight:700;color:var(--slate);line-height:1.45;overflow-wrap:break-word}
+.ci-row .cl small{font-size:12px;color:var(--muted);font-weight:500;line-height:1.45}
+.ci-row .cl a{color:var(--tomato-deep);font-weight:700;text-decoration:underline;text-underline-offset:2px}
+
+.ci-soc{display:flex;gap:9px;margin-top:18px;padding-top:16px;border-top:1px solid var(--line)}
+.ci-soc a{width:34px;height:34px;border-radius:var(--radius-md);background:var(--bg);color:var(--slate-2);display:grid;place-items:center;font-size:14px;transition:.2s var(--ease)}
+.ci-soc a:hover{background:var(--tomato);color:#fff}
+
+/* ---- yan sütun: mesajın nereye gider ---- */
+.tips-steps{display:flex;flex-direction:column;gap:16px}
+.tip-step{display:flex;align-items:flex-start;gap:12px}
+.tip-step .tn{flex:none;width:26px;height:26px;border-radius:var(--radius-circle);background:var(--tomato);color:#fff;display:grid;place-items:center;font-size:12px;font-weight:700}
+.tip-step>div{min-width:0;display:flex;flex-direction:column;gap:3px}
+.tip-step b{font-size:13.5px;font-weight:700;color:var(--slate);line-height:1.4}
+.tip-step span{font-size:12.5px;color:var(--muted);font-weight:500;line-height:1.5}
+
+/* ---- dar ekran ----
+   Yan sütun formun ALTINA düşer ve yapışkanlığı bırakır: dar ekranda
+   yapışkan bir kart görüntüyü kaplar. */
+@media (max-width:1024px){
+  .con-layout{grid-template-columns:1fr;gap:20px}
+  .con-aside{position:static;top:auto}
+}
+@media (max-width:640px){
+  .form-card{padding:20px 18px 18px}
+  .ol-submit{align-items:stretch}
+  .ol-submit .btn{width:100%;justify-content:center}
+  .os-steps{gap:9px 14px}
+}

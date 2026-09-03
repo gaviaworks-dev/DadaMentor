@@ -1,0 +1,425 @@
+/* Kaynak-transfer: prototip diyet-program-detay-v1.html <style> blogu — AYNEN.
+   HANDOFF §0: bu tasarim yeniden yapilmaz, oldugu gibi tasinir.
+
+   2026-08-17 — GÖRSEL İYİLEŞTİRME YAYILDI (Beyar onayı). Bu dosya, sekiz
+   sayfa-özel Blade'in <style> bloğunun JENERİK ŞABLON karşılığıdır; ikisi
+   AYNI kaynaktan gelir ve ayrışmamalıdır. Tek meşru fark Blade kaçışıdır:
+   Blade tarafında `@@media`, burada `@media`. Eşitlik kapısı:
+   scripts/diet-program-css-esitlik.mjs — ayrışırsa 15 programın 8'i bir
+   görsel dil, 7'si başka bir dil konuşmaya geri döner (Y3 borcu).
+
+   ⚠ BU DOSYA YAYMADAN ÖNCE İKİ KURAL EKSİKTİ ve kimse fark etmemişti:
+   `.pa-who h3:not(:first-child)` (iki liste arası boşluk YOKTU) ve
+   `.pa-who i.fa-circle-xmark`. İkisi de artık burada. */
+/* ===== SAYFA CSS — kabuk CSS'i assets/css/dd-shell.css'te ===== */
+/* =====================================================================
+   F10/DALGA3 — DİYET PROGRAM DETAYI · diyet-listeleri kartlarından inilen sayfa
+   dl-hero (diyet-listeleri VERBATIM) · prog-tag (diyet-listeleri VERBATIM)
+   wk-board ailesi (haftalik-menu VERBATIM) · note-duo (TD VERBATIM) · r-card (v3a)
+   ===================================================================== */
+
+/* ---- BÖLÜM RİTMİ — sayfaya özel (yalnız bu üç .sec; kabuk .sec'i başka
+   yerde kullanılmıyor, ölçüldü: rendered HTML'de 3 adet) ----
+   ÖNCE: üç bölüm de inline padding taşıyordu (44/8 · 46/74 · 74/74). İlk
+   bölümün 8px'lik alt boşluğu son not kutusunu bandın kenarına yapıştırıyor,
+   inline değer de kabuğun ≤640 kuralını (44px) eziyordu. Inline padding
+   söküldü; tek ritim burada, mobil karşılığı ≤640 bloğunda. ---- */
+.sec{padding:58px 0}
+
+/* ---- HERO: koyu band (diyet-listeleri dl-top VERBATIM — görsel programa göre) ---- */
+.dl-top{
+  position:relative;padding-top:112px;
+  background-image:linear-gradient(90deg,rgba(18,28,22,.94),rgba(20,32,25,.74)),
+    url("../../../../_dis/images.unsplash.com/photo-1540420773420-3366772f4999.jpg");
+  background-size:cover;background-position:center;
+}
+
+.dl-top .wrap{position:relative}
+.dl-top .rd-crumb{color:#bcd0c4}
+.dl-top .rd-crumb a{color:#bcd0c4}
+.dl-top .rd-crumb a:hover{color:#99d7b4}
+.dl-top .rd-crumb i{color:rgba(255,255,255,.4)}
+.dl-top .rd-crumb b{color:#fff}
+.rd-crumb{display:flex;align-items:center;flex-wrap:wrap;gap:9px;padding:18px 0 14px;font-size:13px;font-weight:500}
+.rd-crumb i{font-size:9px}
+.dl-hero{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:48px;align-items:end;padding:14px 0 52px}
+.dl-hero .eyebrow{color:#99d7b4}
+.dl-hero .eyebrow::before{background:var(--green)}
+.dl-hero h1{color:#fff;font-size:46px;margin:16px 0 14px;letter-spacing:-.03em;line-height:1.08;text-shadow:0 2px 24px rgba(0,0,0,.25)}
+.dl-hero h1 .accent{color:#7fcca1;white-space:nowrap}
+/* ölçü: 560px'te ~76 karakter; ch ile bağlanınca yazı tipi büyüse de ölçü sabit */
+.dl-hero .lead{color:#e3ede7;font-weight:500;font-size:15.5px;line-height:1.62;max-width:58ch;text-shadow:0 1px 14px rgba(0,0,0,.3)}
+.dl-stats{display:flex;flex-direction:column;gap:18px;padding-left:40px;border-left:1px solid rgba(255,255,255,.18)}
+.dl-stats .st b{display:block;font-size:30px;font-weight:700;color:#fff;letter-spacing:-.02em;line-height:1.05;font-variant-numeric:tabular-nums}
+.dl-stats .st span{display:block;margin-top:2px;font-size:12px;color:#9fb7a8;font-weight:600;letter-spacing:.04em}
+
+/* ---- program rozetleri (diyet-listeleri prog-tag VERBATIM) + hero içi düzen ---- */
+.prog-tags{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
+.prog-tag{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--slate-2);background:#E3F4EA;border:1px solid #c9ead8;padding:6px 11px;border-radius:var(--radius-sm)}
+.prog-tag i{color:var(--green);font-size:11px}
+.dl-hero .prog-tags{margin:16px 0 22px}
+.dl-hero .pd-actions{display:flex;gap:12px;flex-wrap:wrap}
+.btn-green{background:var(--tomato-deep);color:#fff}
+.btn-green:hover{background:var(--green-deep);transform:translateY(-2px)}
+.btn-ghost-light{background:rgba(255,255,255,.10);color:#fff;border:1px solid rgba(255,255,255,.30)}
+.btn-ghost-light:hover{background:rgba(255,255,255,.18);border-color:#fff;transform:translateY(-2px)}
+
+/* ---- GÜN PLANI — gün gün açılır-kapanır liste (.qa deseni + .dp uzantısı) ----
+   ÖNCE burada `.wk-*` ailesi vardı: 7 gün × 3 öğün tek bir IZGARA. ≤1024'te
+   940px'lik sabit genişlikle yatay kaydırıcı açıyor, ilk sütunu yapışkan
+   tutuyor, 390'da hücre metnini altı-sekiz satıra kırıyordu. Beyar beğenmedi
+   (2026-08-17): "tablo yapısı yerine maddeli düzen". Izgara markup'ı gittiği
+   için kuralları da SİLİNDİ — sayfa <style>'ında ölü kural bırakılmadı
+   (`.wk-board .wk-grid .wk-corner .wk-day .wk-mealcol .mcell .mc-* .mcg-*`,
+   ≤1024 ve ≤640 karşılıkları dâhil). Geçmişi `git show HEAD:` taşır.
+
+   YENİ AÇILIR-KAPANIR DİLİ YAZILMADI. Kalıp Diet'in kendi akordeonudur;
+   aşağıdaki `.qa-*` kuralları
+   `public/reference/diet/css/pages/beslenme-ipucu-detay-v1.css:57-66`ten
+   BAYT-ÖZDEŞ transferdir (bu sayfa o CSS dosyasını yüklemiyor). Transfer
+   yöntemi `_p/faq-list.blade.php`nin `.nb-searchbar` bloğuyla aynı emsal.
+   Kullanılmayan iki kural (`.qa-body p`, `.qa-body .qa-sub`) ALINMADI —
+   gün gövdesinde <p> yok. */
+.qa-list{display:flex;flex-direction:column;gap:12px}
+.qa{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);overflow:hidden;transition:border-color .25s var(--ease),box-shadow .25s var(--ease)}
+.qa.open{border-color:rgba(0,154,68,.4);box-shadow:var(--sh-sm)}
+/* B2 KANON (Beyar, revizyon turu 2026-08-24): .qa-head + .qa-head:hover +
+   .qa.open .qa-head SİLİNDİ — dd-shell.css'e taşındı (kanon ayrıca
+   .qa.open .qa-head'e border-bottom ekliyor; bu sayfanın eski kopyası onu
+   ezip susturuyordu). */
+.qa-ico{flex:none;width:34px;height:34px;border-radius:var(--radius-md);background:var(--tomato-tint);color:var(--tomato-deep);display:grid;place-items:center;font-size:14px}
+.qa-car{margin-left:auto;flex:none;font-size:12px;color:var(--muted);transition:transform .25s var(--ease)}
+.qa.open .qa-car{transform:rotate(180deg);color:var(--tomato-deep)}
+.qa-body{max-height:0;overflow:hidden;transition:max-height .32s var(--ease)}
+
+/* ---- .dp-*: gün planına özel uzantı (mekanizma yukarıdan, içerik burada) ---- */
+/* Kanonda `.qa`nın `overflow:hidden`ı odak halkasını KIRPARDI: halka
+   `outline-offset:2px` ile kutunun DIŞINA düşüyor. Kırpmanın tek işi gövdeyi
+   sınırlamaktı, onu `.qa-body` kendi `overflow:hidden`ıyla zaten yapıyor —
+   kapsayıcıda kaldırıldı ki kanon odak reçetesi (dd-shell.css:310) olduğu
+   gibi uygulanabilsin. */
+.dp{overflow:visible}
+.dp-head:focus-visible{outline:2px solid var(--tomato);outline-offset:2px;border-radius:var(--radius-lg)}
+/* Gün rozeti = `.qa-ico` karesinin hafta-günü varyantı. Üç harf sığsın diye
+   genişlik 44px'e çıktı; zemin, renk, radius ve hizalama kanondan. Metin YENİ
+   DEĞİL: ızgarada `.wk-day span` olarak zaten basılan hafta günü. */
+.dp-chip{width:44px;font-size:11.5px;font-weight:700;letter-spacing:.04em}
+.dp-title{min-width:0}
+/* Öğün rayı: ızgaranın en iyi özelliği "Kahvaltı · Öğle · Akşam" dikey
+   ekseniydi; maddeli düzende de korunuyor — ikon 44px'lik rozet sütununun
+   altında, öğün adı gün başlığının hizasında. Ayraçlar kartın genişliğini
+   kullanır (kısalırlarsa kart yarım kalmış görünüyordu, ölçüldü 1440:
+   ayraç 880px, kart 1176px); ölçüyü sınırlayan yalnız metin sütunudur. */
+.dp-meals{list-style:none;margin:0;padding:0 22px 20px}
+.dp-meal{display:grid;grid-template-columns:44px 112px minmax(0,1fr);column-gap:14px;align-items:start;padding:13px 0}
+.dp-meal+.dp-meal{border-top:1px solid var(--line)}
+/* İkon kutusu ızgaranın `.wk-mealcol i` kuralından birebir; tek ek, 21.6px'lik
+   ilk metin satırına ortalayan -5px. */
+.dp-mico{justify-self:center;margin-top:-5px;width:32px;height:32px;border-radius:var(--radius-md);background:var(--paper);border:1px solid var(--line);color:var(--green-deep);display:grid;place-items:center;font-size:14px;flex:none}
+/* Öğün adı ile kalem metni AYNI satır yüksekliğinde (13.5px × 1.6): iki
+   sütunun ilk satır tabanı birebir hizalanıyor — ŞERİT dolgusu bu hizayı
+   yaklaşıka indirdi, aşağıdaki not bunu kayda geçiriyor. */
+/* 🔴 R27 — ÖĞÜN BAŞLIĞI ŞERİT RENKLİ (Beyar kararı, 2026-08-24).
+   "Öğün kısmındaki başlık kısmı" = HER ÖĞÜN maddesinin kendi başlığı
+   (bu kural) — gün akordeon başlığı (`.dp-head`) DEĞİL; ifade başlığı
+   öğünün İÇİNE yerleştiriyor, dışına değil.
+   YENİ RENK YOK: mevcut yeşil aileden `--tomato-deep` zemin + beyaz metin.
+   Kontrast HESAPLANDI (WCAG relative-luminance formülü): 5.33:1 — ≥4.5:1
+   eşiğini geçer. `justify-self:start` grid'in varsayılan stretch'ini
+   keser (`.dp-mico`nun zaten kullandığı desen) — şerit 112px'lik sütunu
+   doldurmaz, yalnız kendi metni kadar geniş bir rozet olur. */
+.dp-mname{justify-self:start;background:var(--tomato-deep);color:#fff;padding:6px 10px;border-radius:var(--radius-sm);font-size:12.5px;font-weight:700;letter-spacing:.01em;line-height:1.3}
+.dp-kcal{display:block;margin-top:1px;font-size:10.5px;color:var(--muted);font-weight:600;line-height:1.3;letter-spacing:.02em;font-variant-numeric:tabular-nums}
+/* İç içe kcal VARSAYILAN `--muted`(#717171) bu koyu zeminde 1.09:1'e
+   düşüyordu — ölçüldü, GÖRÜNMEZ kalıyordu (dalga 2'nin "1.00:1" dersiyle
+   AYNI kusur biçimi). Üzerine `--tomato-tint` yazıldı: HESAPLANDI 4.73:1,
+   geçer. */
+.dp-mname .dp-kcal{color:var(--tomato-tint)}
+/* 78ch — ölçü sınırı `.reh-note p`nin 84ch kuralıyla aynı gerekçe: 1440'ta
+   metin sütununa 948px düşüyor, 13.5px'te ~125 karakterlik satır olurdu. */
+.dp-mtext{font-size:13.5px;font-weight:500;color:var(--slate-2);line-height:1.6;max-width:78ch;overflow-wrap:break-word;text-wrap:pretty}
+/* JS gelmeden (ya da hiç gelmezse) açık günün gövdesi görünür kalsın: kanonda
+   ilk yüksekliği yalnız JS veriyor ve script düşerse açık gün de boş görünür.
+   1200px içeriğin (üç öğün ≈ 250px) çok üstünde, kırpmaz; JS gelince inline
+   px değeri bunun yerine geçer, geçiş ondan sonra kesin ölçüyle akar. */
+.dp.open .dp-body{max-height:1200px}
+/* program hakkında / kimler için */
+.prog-about{display:grid;grid-template-columns:1.25fr 1fr;gap:44px;align-items:start}
+/* h2 boyutu inline'dan ALINDI: bu bölümün başlığı tarayıcı varsayılanıyla
+   (24px) basılıyordu, yandaki iki bölümün .sec-head h2'si 34px — sayfanın ANA
+   içerik başlığı en zayıf başlıktı. 28px ikisinin arasına oturur. */
+.prog-about h2{font-size:28px;margin:10px 0 16px}
+/* TİPOGRAFİSİNE DOKUNULMADI — iki deneme ölçülüp GERİ ALINDI. Bu paragraf
+   kabuk kanonunda İKİ YANA YASLI dizilir (dd-shell.css, `:where(#pageMain) p`
+   kuralı; .pa-lead ≤1023'te
+   zaten start'a alınmış) ve kanonun kabul ölçütü kelime arası ESNEME ORANI,
+   eşiği 2,0x (aynı kuralın gerekçe yorumu). Ölçüldü — scripts/ajan-detay-yasli.mjs:
+     ölçüyü 64ch'e daraltmak   → 1440'ta 1,89x'ten 2,32x'e ÇIKARIYOR
+     gövdeyi 15px'e büyütmek   → 1024'te 1,46x'ten 2,21x'e ÇIKARIYOR
+   İkisi de eşiğin üstü, ikisi de alındı geri. Kalan tek değişiklik kolon
+   arası boşluk (24→44px): ölçüyü 640→629px'e çekiyor ve esnemeyi HER İKİ
+   genişlikte de İYİLEŞTİRİYOR — 1440: 2,06x → 1,89x · 1024: 1,76x → 1,46x. */
+.prog-about .pa-lead{font-size:14.5px;color:var(--slate-2);font-weight:500;line-height:1.75}
+.prog-about .pa-lead b{color:var(--slate)}
+.pa-who{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);padding:24px 26px;box-shadow:var(--sh-sm)}
+.pa-who h3{font-size:15px;margin-bottom:16px;letter-spacing:-.01em}
+.pa-who ul{list-style:none;display:flex;flex-direction:column;gap:12px;margin:0;padding:0}
+.pa-who li{display:flex;gap:11px;font-size:13.5px;color:var(--slate-2);font-weight:500;line-height:1.5}
+.pa-who li i{color:var(--green-deep);margin-top:4px;flex:none;font-size:13px}
+/* ikinci başlık listenin hemen dibindeydi (14px); ayraç + nefes ile iki liste
+   birbirinden ayrılıyor — "uygun" ve "uygun değil" karışmasın */
+.pa-who h3:not(:first-child){margin-top:22px;padding-top:20px;border-top:1px solid var(--line)}
+/* ÖLÜ KURALDI (Beyar kararı, 2026-08-17 — şık b). Kural `--tomato-deep`
+   diyordu; Diet paletinde `--tomato-deep` ve `--green-deep` İKİSİ DE
+   `#00602b` (dd-shell.css `:root` token bloğu). Ölçüldü: "Kimler için uygun" ✓ ile
+   "Kimlere uygun değil" ✕ ikonu canlıda BİREBİR aynı `rgb(0,96,43)`
+   basıyordu — yazar ayrışma istemiş, palet vermiyor, olumsuz anlam
+   kayboluyordu. Yeni renk açmak yasak; palette VAR OLAN `--muted` alındı.
+   Şeklin taşıdığı anlamı (çarpı) artık renk de destekliyor: yeşil = evet,
+   nötr gri = hayır. */
+.pa-who i.fa-circle-xmark{color:var(--muted)}
+/* 760 → 900: 768'de iki kolon duruyordu ama sol kolon 375px, kart 335px'e
+   düşüyor ve kart kalemlerinin çoğu ("Genel sağlığını korumak isteyen
+   yetişkinler") iki satıra kırılıyordu. Tek kolon bu bantta daha okunur. */
+@media(max-width:900px){
+  .prog-about{grid-template-columns:1fr}
+  /* tek kolona inince paragraf 720px'e yayılıyor (~95 karakter). Burada ölçü
+     kısıtlamak GÜVENLİ: kabuk .pa-lead'i ≤1023'te zaten start'a alıyor
+     (dd-shell.css'in `max-width:1023px` bloğu), yaslı esneme ölçütü bu bantta
+     işlemiyor. */
+  .prog-about .pa-lead{max-width:66ch}
+}
+/* A4 diyetisyen disclaimer (reh-note-lg) */
+.reh-note{display:flex;gap:16px;align-items:flex-start;background:var(--tomato-tint);border:1px solid #bae4cc;border-radius:var(--radius-lg);padding:22px 24px;margin-top:26px}
+.reh-note>i{color:var(--tomato-deep);font-size:18px;margin-top:3px;flex:none}
+/* ölçü: 1440'ta gövde 1098px genişti — 14px'te ~140 karakter/satır. Yasal
+   metin bile olsa okunmuyor; 84ch ~85 karaktere indirir. */
+.reh-note p{font-size:14px;color:var(--slate-2);font-weight:500;line-height:1.65;max-width:84ch}
+.reh-note p a{color:var(--tomato-deep);font-weight:700}
+.reh-note p a:hover{text-decoration:underline}
+.reh-note-lg{padding:24px 26px}
+.reh-note-lg .btn{margin-top:18px}
+
+/* ---- .reh-note'un LİSTE varyantı (_p/program-notlari · _p/program-alisveris)
+   Bu iki blok kalıbın ikon+gövde şemasını değil <b> başlık + <ul> şemasını
+   basıyor; flex düzeni ikisini yan yana İKİ KOLONA bölüyordu (ölçüldü 1440:
+   başlık 126px'lik cılız bir kolon, liste 623px; alışveriş listesinde başlık
+   101px, 10 kalem 105px genişliğinde tek sütun hâlinde 248px aşağı iniyordu ve
+   kutunun sağı bomboş kalıyordu). Ayrıca `*{padding:0}` ul dolgusunu sildiği
+   için ilk kalemin madde işareti kutunun dışına düşüp başlığın altında
+   kayboluyordu. Blok düzen + gerçek madde işareti + çok sütunlu akış.
+   Markup PAYLAŞILAN partial'da, dokunulmadı — düzeltme yalnız CSS. ---- */
+.reh-note:has(>ul){display:block}
+.reh-note>b{display:block;font-size:15px;color:var(--slate);letter-spacing:-.01em;line-height:1.3;margin-bottom:14px}
+/* columns: 390'da kendiliğinden tek sütuna iner.
+   NİCELİK SORGUSU SİLİNDİ (2026-08-17): burada bir de
+   `.reh-note>ul:has(li:nth-child(6)){columns:180px}` kademesi vardı, ölçütü
+   kalem SAYISIYDI. Tek müşterisi alışveriş listesiydi; o liste artık kendi
+   ızgarasını kuruyor (`.rl-check`) ve düzeni kalem sayısına değil kap
+   genişliğine bakıyor. Kalan tek müşteri notlar listesi (4 kalem, ölçüldü) —
+   eşiğe hiç değmiyordu, kural ÖLÜYDÜ. */
+/* negatif alt boşluk son kalemin 11px'ini yutar — :last-child ile çözülemez,
+   sütunlara bölünen listede her sütunun son kalemi ayrı bir kalemdir */
+.reh-note>ul{list-style:none;margin:0 0 -11px;padding:0;columns:460px;column-gap:40px}
+.reh-note>ul li{position:relative;break-inside:avoid;padding-left:20px;margin-bottom:11px;font-size:13.5px;color:var(--slate-2);font-weight:500;line-height:1.55}
+.reh-note>ul li::before{content:"";position:absolute;left:4px;top:.6em;width:6px;height:6px;border-radius:var(--radius-circle);background:var(--green)}
+
+/* ---- .reh-list — "Uygulama notları" + "Alışveriş listesi" kartları ----
+   ÖNCE ikisi de mint zeminli ŞERH kutusuydu (`.reh-note`, `--tomato-tint`),
+   başlık düz bir <b>. Aynı sayfada üç blok üç ayrı dil konuşuyordu: şerh
+   kutusu, şerh kutusu, ızgara.
+   SONRA üçü de AYNI kabuk: paper zemin, `--line` çerçeve, `--radius-lg`,
+   `--sh-sm` — yani `.qa` kartının ta kendisi — ve başlıkta `.qa-ico` karesi.
+   Yeni kabuk YAZILMADI; `.reh-list` sadece `.reh-note`un zeminini/çerçevesini
+   o kartın değerlerine çeviren bir varyant. Alt bilgideki hukuk şerhi
+   (`.reh-note-lg`) mint kalır — o gerçekten bir şerh, kart değil. */
+.reh-note.reh-list{background:var(--paper);border-color:var(--line);box-shadow:var(--sh-sm);padding:20px 22px}
+.reh-note.reh-list>b{display:flex;align-items:center;gap:14px;font-size:15.5px;margin-bottom:16px}
+/* ---- R30: alışveriş listesi tetikleyici kartı — .reh-list'in "başlık +
+   düğme" varyantı, <ul> yerine <button> taşır. Yeni kabuk YOK; yalnız
+   düğmeyi sağa yasla + dikeyde ortala (ID'ye özel, diğer .reh-list
+   kullanımlarını etkilemez). ---- */
+#alisListeKart{align-items:center}
+#alisListeKart .btn{margin-left:auto;flex:none}
+
+/* ---- alışveriş kalemleri: İŞARETLENEBİLİR LİSTE (Beyar kararı — şık b1) ----
+   ÖNCE rozet şeridiydi (`.rl-chips`): 10 kalem 1440'ta tek satırda yan yana
+   akıyordu — etiket bulutu, markete götürülebilir bir liste değil. Rozet
+   markup'ı gitti, kuralları da SİLİNDİ (ölü kural bırakılmadı).
+   SONRA kalemler tiklenir; durum `localStorage`ta, programa özel anahtarla.
+
+   ONAY KUTUSU İCAT EDİLMEDİ. Diet'in KENDİ kanon bileşeni alındı:
+   `.fct-row` + `.cbx` + `.ft`. Aşağıdaki blok
+   `public/reference/diet/css/planim.css:414-430`ten BAYT-ÖZDEŞ transferdir
+   (bu sayfa o CSS dosyasını yüklemiyor — transfer yöntemi bu dosyadaki
+   `.qa-*` bloğunun emsaliyle aynı). Aynı üçlü zaten üyenin
+   `/planim/alisveris` sayfasında ve diyetisyen dizini süzgeçlerinde koşuyor;
+   alışveriş kalemi tiklemenin ürün içindeki karşılığı BUDUR.
+   Kanonun satır tipografisi (13.5px/500/`--slate-2`) ve kutu-metin arası
+   11px boşluk, bu dosyadaki `.pa-who` kartıyla zaten BİREBİR aynı.
+   Tek fark: dikey tek sütun yerine otomatik sütun ızgarası. Sütun sayısını
+   kalem SAYISI değil kap genişliği verir (ölçüldü: 5 · 4 · 3 · 1).
+   Sütun boşluğu 12px — `.pa-who`nun satır ritminin ta kendisi; ayrıca
+   768'de üçüncü sütunu açan değer bu (3×210+2×12=654 ≤ 674 iç genişlik). */
+.reh-note>ul.rl-check{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));
+  /* satır aralığını kanon `.fct-row`un KENDİ 8px dolgusu veriyor (2×8=16px);
+     row-gap eklemek onun üstüne binerdi. Dolguyu silip 12px'e inmek satırın
+     dokunma hedefini 35px'ten 21px'e düşürürdü — kanon dolgusu korundu. */
+  gap:0 12px;margin:0;columns:auto;
+}
+/* `.reh-note>ul li` (0,1,2) madde işaretini, 20px sol dolguyu ve 11px alt
+   boşluğu basıyordu: ızgarada boşluğu `gap` + satır dolgusu, işareti kutu
+   veriyor. */
+.reh-note>ul.rl-check li{position:static;padding:0;margin:0;break-inside:auto}
+.reh-note>ul.rl-check li::before{content:none}
+/* --- planim.css:417-430 transferi (değer değişikliği YOK) --- */
+.cbx{
+  flex:none;width:19px;height:19px;border-radius:var(--radius-sm);
+  border:1.5px solid #d3d3d3;background:var(--paper);position:relative;transition:.18s var(--ease);
+}
+.cbx::after{
+  content:"";position:absolute;left:5.5px;top:2px;width:5px;height:10px;
+  border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg) scale(0);transition:transform .16s var(--ease);
+}
+.fct-row{display:flex;align-items:center;gap:11px;padding:8px 2px;cursor:pointer;font-size:13.5px;color:var(--slate-2);font-weight:500}
+.fct-row input{position:absolute;opacity:0;pointer-events:none}
+.fct-row input:checked+.cbx{background:var(--green);border-color:var(--green)}
+.fct-row input:checked+.cbx::after{transform:rotate(45deg) scale(1)}
+.fct-row:hover .cbx{border-color:var(--green)}
+.fct-row .ft{flex:1;min-width:0}
+/* --- transfer bitti; aşağısı bu sayfanın eki --- */
+/* `position:relative` kanonun İKİNCİ kopyasından (diyetisyen-dizin-v1.css:62):
+   planim sürümü onu kapsayıcısından alıyor, burada kapsayıcı yok ve gizli
+   girdi sayfa boyunca kayardı. */
+.reh-note>ul.rl-check .fct-row{position:relative}
+/* Kanonun `transition:.18s` kısaltması TÜM özellikleri kapsıyor — odak
+   halkasını da. Ölçüldü: halka 180ms boyunca renkte ve offsette süzülerek
+   geliyordu (yakalanan ara kare: rgb(76,119,93), offset 1px). Odak
+   göstergesi ANINDA belirmelidir. Süre ve easing kanondan, yalnız kapsam
+   işaretlemede gerçekten değişen iki özelliğe daraltıldı. */
+.reh-note>ul.rl-check .cbx{transition-property:background-color,border-color}
+/* Kanonda odak halkası YOK — gizli girdi odaklanınca hiçbir şey görünmüyor.
+   Kanon reçetesi (dd-shell.css:310) girdinin yerine geçen kutuya verildi. */
+.fct-row input:focus-visible+.cbx{outline:2px solid var(--tomato);outline-offset:2px}
+/* Kanondan TEK SAPMA (Beyar'ın "iki durum gözle ayırt edilebilir olsun"
+   şartı): alınmış kalemin metni `--muted`a düşer. Dolu yeşil kutu durumu
+   zaten söylüyor; bu, listenin ASIL işini kolaylaştırıyor — geriye NE KALDI.
+   Yeni token yok, `--muted` paletten. */
+.fct-row input:checked~.ft{color:var(--muted)}
+/* Sayaç: başlığın sağ ucunda. tabular-nums genişliği sabitler (emsal
+   `.dl-stats .st b`) — sayı değişince başlık satırı kıpırdamaz. */
+.rl-count{margin-left:auto;flex:none;font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.02em;font-variant-numeric:tabular-nums}
+
+/* ---- DİYETİSYEN NOT KUTULARI (TD note-duo/remind-box/editor-box VERBATIM; editör şeridi sağlıkta yeşil) ---- */
+.note-duo{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px;align-items:stretch}
+.note-duo .remind-box,.note-duo .editor-box{margin-top:0}
+.remind-box{
+  display:flex;gap:16px;align-items:flex-start;
+  background:#FFF8E6;border:1px solid rgba(250,192,69,.5);border-radius:var(--radius-lg);
+  padding:20px 22px;margin-top:16px;
+}
+.remind-box .rb-ico{flex:none;width:42px;height:42px;border-radius:var(--radius-md);background:rgba(250,192,69,.25);color:#B8860B;display:grid;place-items:center;font-size:17px}
+.remind-box .rb-body{min-width:0}
+.remind-box .rb-body h4{font-size:15.5px;margin-bottom:5px;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.remind-box .rb-auto{font-size:9.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#B8860B;background:rgba(250,192,69,.22);padding:3px 8px;border-radius:var(--radius-sm)}
+.remind-box .rb-body p{font-size:13.5px;color:var(--slate-2);font-weight:500;line-height:1.6}
+.remind-box .rb-body p b{color:var(--slate)}
+.editor-box{
+  display:flex;gap:16px;align-items:flex-start;
+  background:var(--paper);border:1px solid var(--line);border-left:4px solid var(--green);
+  border-radius:var(--radius-lg);padding:16px 18px;margin-top:14px;box-shadow:var(--sh-sm);
+}
+.editor-box .eb-ico{flex:none;width:42px;height:42px;border-radius:var(--radius-md);background:#E3F4EA;color:var(--green-deep);display:grid;place-items:center;font-size:16px}
+.editor-box .eb-body{min-width:0}
+.editor-box h4{font-size:15.5px;margin-bottom:5px;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.editor-box .eb-tag{font-size:9.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--green-deep);background:#E3F4EA;padding:3px 8px;border-radius:var(--radius-sm)}
+.editor-box p{font-size:13.5px;color:var(--slate-2);font-weight:500;line-height:1.6}
+.editor-box p b{color:var(--slate)}
+.editor-box p a{color:var(--green-deep);font-weight:700;text-decoration:underline;text-underline-offset:2px}
+.editor-box .eb-sign{display:inline-flex;align-items:center;gap:7px;margin-top:8px;font-size:11.5px;font-weight:700;color:var(--muted)}
+.editor-box .eb-sign i{color:var(--green)}
+
+/* ---- r-card sistemi (v3a VERBATIM — programa uygun tarifler) ---- */
+.r-card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);overflow:hidden;transition:.3s var(--ease);cursor:pointer;display:flex;flex-direction:column}
+.r-card:hover{transform:translateY(-6px);border-color:#dcdcdc}
+.r-media-wrap{overflow:hidden}
+.r-media{position:relative;height:200px;background-size:cover;background-position:center;transition:.5s var(--ease)}
+.r-card:hover .r-media{transform:scale(1.04)}
+.r-chip{position:absolute;top:13px;left:13px;background:rgba(255,255,255,.94);color:var(--slate);font-size:11.5px;font-weight:700;padding:6px 12px;border-radius:var(--radius-sm);letter-spacing:.02em}
+.r-save,.p-fav{position:absolute;top:11px;right:11px;width:38px;height:38px;border-radius:var(--radius-circle);background:rgba(255,255,255,.94);border:none;color:var(--slate);cursor:pointer;display:grid;place-items:center;font-size:15px;transition:.2s var(--ease)}
+.r-save:hover,.p-fav:hover{background:#fff;color:var(--tomato)}
+.r-save.saved,.p-fav.saved{background:var(--tomato);color:#fff}
+.m-types{position:absolute;bottom:13px;right:13px;display:flex;gap:6px}
+.mt{display:inline-flex;align-items:center;gap:5px;background:rgba(20,18,12,.72);color:#fff;font-size:11px;font-weight:700;padding:6px 10px;border-radius:var(--radius-sm);backdrop-filter:blur(4px)}
+.r-body{padding:17px 18px 19px;display:flex;flex-direction:column;flex:1}
+.r-body h4{font-size:18px;margin-bottom:11px;letter-spacing:-.01em;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:2.4em}
+.r-card:hover .r-body h4{color:var(--tomato)}
+.r-facts{display:flex;align-items:center;font-size:12.5px;color:var(--muted);font-weight:500;margin-bottom:13px}
+.r-facts span{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.r-facts i{font-size:12px;color:var(--tomato)}
+.r-facts span+span{border-left:1px solid var(--line);padding-left:12px;margin-left:12px}
+.r-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:auto;padding-top:13px;border-top:1px solid var(--line)}
+.r-author{display:flex;align-items:center;gap:9px;min-width:0}
+.r-author .av{width:28px;height:28px;border-radius:var(--radius-circle);background-size:cover;background-position:center;flex:none}
+.r-author span{font-size:12.5px;color:var(--muted);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.r-author b{color:var(--slate);font-weight:700}
+.r-stats{display:flex;align-items:center;gap:12px;flex:none}
+.r-rate{display:inline-flex;align-items:center;gap:5px;font-size:13px;color:var(--slate);font-weight:700}
+.r-rate i{color:var(--yellow)}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:26px;margin-top:0}
+
+/* ---- responsive (dl + wk miras kuralları) ---- */
+@media (max-width:1024px){
+  .dl-hero{grid-template-columns:1fr;align-items:start;gap:26px;padding-bottom:42px}
+  /* 44px → 36px: tek kolona inen hero'da başlık ile 15.5px'lik lead arasındaki
+     sıçrama fazlaydı; ≤640'taki 29px'e de yumuşak bir basamak oluyor */
+  .dl-hero h1{font-size:36px}
+  .dl-stats{flex-direction:row;gap:34px;padding-left:0;border-left:none;padding-top:20px;border-top:1px solid rgba(255,255,255,.18)}
+  .reh-note>ul{columns:300px;column-gap:32px}
+  .note-duo{grid-template-columns:1fr}
+  .grid-4{grid-template-columns:1fr 1fr}
+}
+@media (max-width:640px){
+  .sec{padding:40px 0}
+  .rd-crumb{padding:14px 0 10px;font-size:13px}
+  .dl-hero{padding-bottom:36px}
+  .dl-hero h1{font-size:29px}
+  .dl-hero .lead{font-size:14.5px}
+  .dl-stats{gap:12px}
+  .dl-stats .st{flex:1}
+  .dl-stats .st b{font-size:20px}
+  .dl-hero .pd-actions{width:100%}
+  .dl-hero .pd-actions .btn{flex:1}
+  .prog-about{gap:26px}
+  .prog-about h2{font-size:24px}
+  /* Gün planı ≤640: 44px rozet + 14px + 112px öğün sütunu, 390px'lik ekranda
+     kalem metnine 130px bırakıyordu (ölçüldü). Öğün adı metnin ÜSTÜNE alınır,
+     ikon iki satırı birden kaplar — ray dikeyde kalır, metin tam genişlik. */
+  .qa-head{padding:15px 16px;gap:12px}
+  .dp-meals{padding:0 16px 16px;max-width:none}
+  .dp-meal{grid-template-columns:32px minmax(0,1fr);column-gap:12px;row-gap:2px;padding:12px 0}
+  .dp-mico{grid-row:span 2;justify-self:start;margin-top:-4px}
+  .dp-mname{grid-column:2}
+  .dp-mtext{grid-column:2}
+  .reh-note{padding:20px}
+  .reh-note.reh-list{padding:18px}
+  .reh-note-lg{padding:20px}
+  .grid-4{grid-template-columns:1fr;gap:18px}
+}
+
+/* Hareket azaltma tercihi — kabuk emsali dd-shell.css:1022 ve 1034. Akordeon
+   AÇILIP KAPANMAYA devam eder, yalnız yükseklik/döndürme geçişi anlık olur. */
+@media (prefers-reduced-motion:reduce){
+  .qa,.qa-body,.qa-car,.qa-head{transition:none}
+  /* alışveriş kalemi işaretlenmeye devam eder; yalnız kutunun renk geçişi ve
+     tikin ölçeklenmesi anlık olur — durum değişimi kaybolmaz */
+  .cbx,.cbx::after{transition:none}
+}
+
+/* saglik-dropdown: scoped health chrome */
+/* diğer dropdown/mega aktif-item (turuncu kanon, underline gizli) */
+.dropdown:not(.dropdown-health) a.active{background:var(--tomato-tint)}
+.dropdown a.active::after,.mega-cats a.active::after{display:none}
+.mega-cats a.active{background:var(--tomato-tint)}
+.nav a[href="saglik-hub-v1.html"]:hover{color:var(--green);background:rgba(0,154,68,.10)}

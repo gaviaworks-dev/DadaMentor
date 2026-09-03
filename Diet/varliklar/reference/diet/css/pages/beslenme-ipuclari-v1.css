@@ -1,0 +1,112 @@
+/* Kaynak-transfer: prototip beslenme-ipuclari-v1.html <style> blogu — AYNEN.
+   HANDOFF §0: bu tasarim yeniden yapilmaz, oldugu gibi tasinir. */
+/* ===== SAYFA CSS — kabuk CSS'i assets/css/dd-shell.css'te ===== */
+/* =====================================================================
+   BESLENME İPUÇLARI — liste sayfası. Beslenme başlığının dördüncü modülü.
+   Yapı referansı DadaGastro "Püf Noktaları" listesi: breadcrumb + başlıklı
+   hero + sayaç şeridi, altında tek satır kategori çubuğu, sonra kart
+   ızgarası ve toplam sayısı. Renk ve tipografi DadaDiet'in kendi
+   kimliğinden gelir; Gastro'nun renkleri taşınmadı.
+
+   YENİ SINIF YOK. Kullanılan yapılar ve geldikleri sayfa:
+     .reh-hero / .rd-crumb / .reh-htrust / .reh-note   ← beslenme-hub-v1
+     .pf-tabs / .dt / .cnt / .pf-pane                  ← saglik-testler-v1
+     .lst-bar                                          ← dd-shell.css (kabuk)
+     .dl-filter / .dl-fbar / .dl-fchip / .lbl          ← diyet-listeleri-v1
+     .hub-grid / .hub-card / .hub-body / .hub-foot     ← beslenme-hub-v1
+     .prog-tags / .prog-tag                           ← diyet-listeleri-v1
+     .sec / .sec-head / .see-all / .lead              ← dd-shell.css (kabuk)
+   ===================================================================== */
+
+/* ---- HERO (beslenme merkezinin .reh-hero dili — birebir) ---- */
+.rd-crumb{display:flex;align-items:center;flex-wrap:wrap;gap:9px;padding:18px 0 14px;font-size:13px;font-weight:500;color:var(--muted)}
+.rd-crumb a{color:var(--muted);transition:.18s}
+.rd-crumb a:hover{color:var(--green-deep)}
+.rd-crumb i{font-size:9px;color:#c7c7c7}
+.rd-crumb b{color:var(--slate);font-weight:700}
+.reh-hero{position:relative;background-color:#15241c;background-image:linear-gradient(90deg,rgba(18,28,22,.94),rgba(20,32,25,.74)),url("../../../../_dis/images.unsplash.com/photo-1466637574441-749b8f19452f.jpg");background-size:cover;background-position:center;overflow:hidden;padding:128px 0 46px}
+.reh-hero::before{content:"";position:absolute;inset:0;background:radial-gradient(760px 320px at 82% -10%,rgba(0,154,68,.20),transparent 60%),linear-gradient(180deg,rgba(18,28,22,0) 60%,rgba(16,26,20,.6));pointer-events:none}
+.reh-hero .wrap{position:relative;z-index:2}
+.reh-hero .rd-crumb{color:#bcd0c4;padding-bottom:16px;font-size:13px}
+.reh-hero .rd-crumb a{color:#bcd0c4}
+.reh-hero .rd-crumb a:hover{color:#99d7b4}
+.reh-hero .rd-crumb i{color:rgba(255,255,255,.4)}
+.reh-hero .rd-crumb b{color:#fff}
+.reh-hero .eyebrow{color:#99d7b4}
+.reh-hero .eyebrow::before{background:var(--green)}
+.reh-hero h1{color:#fff;font-size:42px;margin:12px 0 12px;letter-spacing:-.03em;text-shadow:0 2px 24px rgba(0,0,0,.25)}
+.reh-hero h1 .accent{color:#7fcca1}
+.reh-hero .lead{color:#e3ede7;font-weight:500;font-size:16px;max-width:620px;text-shadow:0 1px 14px rgba(0,0,0,.3)}
+.reh-htrust{display:flex;flex-wrap:wrap;gap:14px 22px;margin-top:22px}
+.reh-htrust span{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:#cfe6da}
+.reh-htrust i{color:var(--green);font-size:13px}
+.reh-htrust b{color:#fff;font-weight:700}
+
+/* ---- KATEGORİ SEKME ÇUBUĞU (saglik-testler-v1 — birebir) ---- */
+/* ---- KATEGORİ + SIRALAMA TEK SATIRDA — kac-kalori-v1'in birebir aynısı.
+   Şeridin kendisi kabuktaki .lst-bar; solda sitenin tek kategori deseni
+   (.pf-tabs), sağ ucunda sıralama (.dl-fbar). flex:1 1 0 + min-width:0 ile
+   sekme çubuğunun taban genişliği sıfırdır: şerit alt satıra kırılmaz,
+   sekmeler kalan yere yayılır, yer yetmezse kendi içinde yatay kayar.
+   .tst-tabwrap sarmalayıcısı kalktı — iki kontrol artık kardeş. ---- */
+.lst-bar{margin:0 0 26px}
+.pf-tabs{display:inline-flex;gap:4px;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-md);padding:4px;overflow-x:auto;scrollbar-width:none;max-width:100%;flex:1 1 0;min-width:0}
+.pf-tabs::-webkit-scrollbar{display:none}
+.pf-tabs .dt{font-family:inherit;font-weight:700;font-size:13.5px;color:var(--muted);background:transparent;border:none;border-radius:var(--radius-sm);padding:11px 22px;cursor:pointer;display:inline-flex;align-items:center;gap:8px;line-height:normal;transition:.2s var(--ease);white-space:nowrap;flex:none}
+.pf-tabs .dt:hover{color:var(--green-deep)}
+.pf-tabs .dt.active{background:var(--tomato-deep);color:#fff}
+.pf-tabs .dt .cnt{font-size:11px;font-weight:700;opacity:.6}
+.pf-tabs .dt.active .cnt{opacity:.85}
+
+/* ---- SIRALAMA ÇUBUĞU (diyet-listeleri-v1 .dl-fbar — birebir) ---- */
+.dl-fbar{display:flex;flex-wrap:wrap;align-items:center;gap:4px;padding:4px 4px 4px 14px;width:fit-content;max-width:100%;background:var(--bg);border:1px solid var(--line);border-radius:var(--radius-md);flex:none}
+.dl-fbar .lbl{font-size:13px;color:var(--muted);font-weight:600;flex:none}
+.dl-fchip{font-family:inherit;font-size:13px;font-weight:700;color:var(--muted);background:transparent;border:none;border-radius:var(--radius-sm);padding:9px 15px;cursor:pointer;transition:.2s var(--ease);white-space:nowrap}
+.dl-fchip:hover{color:var(--green-deep);background:rgba(0,154,68,.08)}
+.dl-fchip.active{background:var(--tomato-deep);color:#fff}
+
+/* ---- KART IZGARASI (beslenme-hub .hub-card — görselsiz varyant) ----
+   `.hub-body{…}` ve `.hub-foot{…}` KONTEYNER kuralları BURADA TANIMLI
+   DEĞİL — B1 kararı (Beyar, 2026-08-24): 13 kopyanın hepsi kanon olarak
+   dd-shell.css'e taşındı (`.hub-foot`in `margin-top` düzeltmesi de orada).
+   Alt seçiciler (h4/p/.go) kanona GİRMEDİ, sayfaya özel kaldı. ---- */
+.hub-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px}
+.hub-card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);overflow:hidden;display:flex;flex-direction:column;cursor:pointer;transition:.3s var(--ease)}
+.hub-card:hover{transform:translateY(-6px);border-color:#dcdcdc;box-shadow:var(--sh-md)}
+.hub-body h4{font-size:16.5px;margin-bottom:8px;letter-spacing:-.01em}
+.hub-card:hover .hub-body h4{color:var(--green-deep)}
+.hub-body p{font-size:13.5px;color:var(--muted);font-weight:500;line-height:1.55}
+.hub-foot .go{display:inline-flex;align-items:center;gap:7px;color:var(--green-deep);font-weight:700}
+.hub-foot .go i{transition:.2s var(--ease)}
+.hub-card:hover .hub-foot .go i{transform:translateX(3px)}
+.prog-tags{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.prog-tag{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--slate-2);background:#E3F4EA;border:1px solid #c9ead8;padding:6px 11px;border-radius:var(--radius-sm)}
+.prog-tag i{color:var(--green);font-size:11px}
+.pf-pane{animation:fadeUp .35s var(--ease)}
+.pf-pane[hidden]{display:none}
+
+/* ---- toplam sayısı (referansın "… gösteriliyor" satırı) ---- */
+.macro-note{display:flex;gap:9px;font-size:12.5px;color:var(--muted);font-weight:500;line-height:1.5;margin-top:22px;padding-top:16px;border-top:1px solid var(--line)}
+
+/* ---- genel bilgi notu (beslenme-hub) ---- */
+.reh-note{display:flex;gap:14px;align-items:flex-start;margin-top:30px;background:var(--tomato-tint);border:1px solid #bae4cc;border-radius:var(--radius-lg);padding:18px 20px}
+.reh-note>i{color:var(--tomato-deep);font-size:18px;margin-top:2px;flex:none}
+.reh-note p{font-size:14px;color:var(--slate-2);font-weight:500;line-height:1.6}
+.reh-note p a{color:var(--tomato-deep);font-weight:700}
+.reh-note p a:hover{text-decoration:underline}
+
+/* ---- responsive ---- */
+@media (max-width:1024px){
+  .hub-grid{grid-template-columns:1fr 1fr}
+  /* Şerit iki satıra ayrılır: sekmeler tam genişliği alıp yatay kayar,
+     sıralama altına düşer. Tek satırda kalsalardı sekme çubuğuna dar bir
+     yer kalıyordu ve altı sekmenin yalnız birkaçı görünüyordu. */
+  .pf-tabs{flex-basis:100%}
+  .lst-bar{align-items:stretch;gap:12px}
+}
+@media (max-width:640px){
+  .reh-hero{padding:96px 0 34px}
+  .reh-hero h1{font-size:29px}
+  .hub-grid{grid-template-columns:1fr;gap:18px}
+  .pf-tabs .dt{padding:11px 16px}
+}

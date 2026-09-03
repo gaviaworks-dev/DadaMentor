@@ -1,0 +1,1762 @@
+/* =====================================================================
+   DD-SHELL.CSS — DADADIET PUBLIC KABUK (paylaşılan)
+   37 public Diet sayfasının ortak kabuğu: token'lar, tipografi, utilities,
+   topbar + brand-switch, header + nav/mega/dropdown/hesap menüsü, mobil
+   drawer, bottom-nav, çerez bandı, görüş bildir modalı, lg-gate, footer,
+   DadaMentor FAB, scroll-reveal, scroll-top.
+
+   sa-shell.css'in public kardeşi. Kaynak: gunluk-su-v1.html içindeki gömülü
+   kabuk CSS'i BİREBİR — yeni kural yazılmadı, değer değiştirilmedi.
+   Sıra korundu: chrome → w3-nav-sweep → ADIM 3 kabuk → footer lockup.
+
+   Sayfa CSS'i bu dosyaya GİRMEZ; sayfanın kendi <style> bloğunda kalır ve
+   bu dosyadan SONRA yüklenir. Kabuk elemanı + sayfa bağlamı karışımı seçici
+   (.calc-top .calc-switch, .nav a.active[href="..."] gibi) sayfada kalır.
+
+   Markup ve davranış: assets/js/dd-shell.js
+   ===================================================================== */
+
+/* =====================================================================
+   _SHELL.HTML — KANONİK İSKELET (anasayfa-portal-v3a.html'den BİREBİR)
+   Token + tipografi + utilities + topbar + header + mega menü (KİLİTLİ)
+   + footer + drawer/bottom-nav + çerez/görüş modal + ortak JS.
+   Yeni sayfa = bu dosyanın kopyası; SAYFA İÇERİĞİ bloğu doldurulur,
+   sayfa-spesifik CSS "SAYFA CSS" işaretinin altına eklenir.
+   Header varsayılan KATI; hero'lu sayfa ?hdr=hero benzeri davranış için
+   JS'teki heroMode bayrağını açar.
+   ===================================================================== */
+
+/* ============ GERÇEK SİTE FONTU: Gilroy-Medium — TEK YÜZ (eski site DNA'sı) ============
+   Eski site (main.css): @font-face myBrandFont = Gilroy-Medium.ttf, universal reset ile
+   başlık/gövde/buton dahil HER eleman bu tek yüzle render olur; 600/700 bold'lar
+   tarayıcının sentetik bold'udur. Light/ExtraBold dosyaları klasörde var ama
+   eski site CSS'i hiç yüklemez — bu yüzden burada da yalnız Medium yüklenir. */
+@font-face{
+  font-family:"Gilroy";
+  src:url("../fonts/Gilroy-Medium.ttf") format("truetype");
+  font-weight:500; font-style:normal; font-display:swap;
+}
+/* R2: marka lockup — gerçek ExtraBold + Light (Gastro paritesi; "Dada"=.bd, suffix=.sf) */
+@font-face{font-family:"GilroyXB";src:url("../fonts/Gilroy-ExtraBold.otf") format("opentype");font-weight:800;font-style:normal;font-display:swap}
+@font-face{font-family:"GilroyLt";src:url("../fonts/Gilroy-Light.otf") format("opentype");font-weight:300;font-style:normal;font-display:swap}
+.bd{font-family:"GilroyXB","Gilroy",sans-serif;font-weight:800;letter-spacing:-.01em}
+.sf{font-family:"GilroyLt","Gilroy",sans-serif;font-weight:300}
+
+/* ============ KİMLİK TOKEN'LARI (brand-tokens.md) ============ */
+:root{
+  --tomato:#009A44;          /* DadaDiet kabuk aksanı — NANE (Beyar kararı A5; site default domatesten bilinçli sapma, --green token'ı). DadaFit'in doygun #0093d0 sporcu yeşilinden daha yumuşak/klinik → beslenme tonu */
+  --tomato-dark:#007E38;     /* hover türevi (nane koyu, --green-deep ile aynı) */
+  --tomato-deep:#00602b;     /* gradient ucu (nane derin) */
+  --tomato-tint:#DDF2E6;     /* nane fısıltısı zemin */
+  --slate:#211E16;           /* Pantone Process Black C — başlık/koyu metin/panel */
+  --slate-2:#56514a;           /* sıcak muted koyu */
+  --green:#009A44;           /* yalnız sağlık bloğu */
+  --green-deep:#00602b;
+  --yellow:#FAC045;          /* yalnız puan */
+  --muted:#717171;           /* ikincil metin */
+  --line:#ECECEC;            /* hairline ayraç */
+  --cream:#EFE5D3;           /* sıcak nötr */
+  --cream-2:#F7F1E6;
+  /* kurumsal alternatif renkler (kılavuz) */
+  --c-purple:#b14fc5; --c-mint:#6cca98; --c-green:#0093d0; --c-petrol:#006072;
+  --c-gastro:#E14827;        /* ailenin eksik üyesi — .bs-gastro'daki LİTERAL #E14827 ile birebir (KOL A4, 2026-08-16) */
+  --c-fit:#0093d0;           /* DadaFit'in doygun sporcu yeşili — yukarıdaki --tomato yorumunun kaynağı (D5 kararı, Beyar 2026-08-24) */
+  --paper:#ffffff;
+  --bg:#f9f9f9;              /* eski site grisi — sayfa zemini (Revize T3 M12) */
+  --ink:#211E16;
+  /* section zemin ritmi — açık bölüm alternasyonu (gri ↔ beyaz, eski site ekseni) */
+  --bg-white:#ffffff;        /* saf beyaz */
+  --bg-cream:#f9f9f9;        /* eski site section grisi (own.css'teki en yaygın zemin) */
+
+  --radius-sm:8px; --radius-md:12px; --radius-lg:16px; --radius-xl:24px; --radius-pill:999px; --radius-circle:50%;
+  /* marka işareti (logo chip) köşe yarıçapı — YENİ DEĞER DEĞİL: 11, Diet header
+     işaretinin KENDİ SVG'sinde zaten duruyor (.dd-mark <rect rx="11">, 44'lük
+     viewBox) ve kardeş kabuklarda da aynı (portal .brand-mark, gourmet .dg-mark).
+     Beyar'ın 2026-08-14 header kararı 2026-08-16'da footer'a genişletildi;
+     ölçek tablosunda karşılığı olmadığı için değer ADLANDIRILDI, uydurulmadı. */
+  --radius-mark:11px;
+  /* legacy alias → yeni ölçek */
+  --r:var(--radius-lg); --r-sm:var(--radius-sm); --r-lg:var(--radius-xl);
+  --sh-sm:0 1px 2px rgba(33,30,22,.04), 0 2px 6px rgba(33,30,22,.05);
+  --sh-md:0 6px 22px rgba(33,30,22,.09);
+  --sh-lg:0 18px 50px rgba(33,30,22,.16);
+  --ease:cubic-bezier(.22,.61,.36,1);
+  --wrap:1240px;
+  /* GÖVDE METNİ HİZASI — Beyar kararı 2026-08-17. Diet gövde paragrafı iki
+     yana yaslıdır. Tek kaynak burasıdır; Blade'e sınıf serpilmez.
+     Kırılım kapatması AŞAĞIDA, aynı token üzerinden. */
+  --tx-body-align:justify;
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Gilroy",system-ui,sans-serif;
+  font-weight:500;
+  color:var(--ink);
+  background:var(--bg);
+  line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,h4{font-weight:700;color:var(--slate);line-height:1.12;letter-spacing:-.02em}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%}
+.wrap{max-width:var(--wrap);margin:0 auto;padding:0 32px}
+.muted{color:var(--muted);font-weight:500}
+
+/* ============ GÖVDE METNİ İKİ YANA YASLI (Beyar kararı, 2026-08-17) ============
+   KAPSAM `#pageMain` — kabuk metinleri (çerez şeridi .cookie-text, giriş kapısı
+   .lg-panel, görüş modalı .fb-q, footer .foot-tag) #ddChrome* div'lerinde durur
+   ve bu kapsamın DIŞINDA kalır; ölçüldü (anasayfa: 49 p, 42'si #pageMain içinde,
+   7'si kabukta). Başlık, çip, rozet, tablo hücresi, menü ve footer bağlantısı
+   zaten p değildir — ayrıca elenmelerine gerek yok.
+
+   `:where()` ÖZGÜLLÜĞÜ SIFIRLAR. Kural bir VARSAYILAN kurar; sayfanın kendi
+   text-align bildirimleri (.pagi-note, .food-empty, .wzp-hero .lead gibi
+   ortalanmış olanlar dahil) olduğu gibi kazanır, hiçbiri ezilmez.
+
+   KAPALI KALDIĞI YERLER — hepsi ölçüm sonucu, tahmin değil. Ölçüt sütun
+   ÖLÇÜSÜdür (genişlik değil): esneme oranı = justify'ın her kelime arasına
+   ekleyeceği boşluğun doğal boşluğa oranı.
+     .hub-body p      238-438px ölçü   medyan 2,09x   tepe 7,61x
+     .prog-body p     305-433px        medyan 1,78x   tepe 5,55x
+     .bg-fact p       335px            medyan 2,66x
+     .calc-card-box p 439-517px        tepe 3,70x  (hesaplayıcı kartının
+                                       içine gömülü şerh; .reh-note başka
+                                       yerde 646-1102px ölçüde akar)
+     p.lead           520-680px        medyan 2,00-2,72x  (iki satırlık; tek
+                                       satır esner, kaza gibi durur)
+     tüm sayfalar     640px altı kırılım  medyan 2,56x  tepe 23,42x
+
+   YASLI BASILAN NÜFUSUN GERÇEK DAĞILIMI (40 yüzey, sevk edilen hâl —
+   bant medyanı değil, ekrana çıkanın kendisi):
+     1440  n=40  medyan 1,56x  p90 2,60x  tepe 2,64x   eklenen px tepe +6,55
+     1024  n=40  medyan 1,78x  p90 2,60x  tepe 2,64x   eklenen px tepe +6,55
+      768  n=39  medyan 1,77x  p90 2,15x  tepe 2,73x   eklenen px tepe +6,93
+   2,0x üstünde 6-7 paragraf kalıyor ve hepsi 672-760px ölçüde; oradaki
+   fazlalık kelime arasına +6,4 ila +6,9px ekliyor. Kapalı tutulan kart
+   ailelerinde aynı sayı +18 ila +26px'ti — büyüklük mertebesi farklı.
+
+   Emsal: kararlar.md EDR-15 (Gastro ders ekranı) justify'ı DAR ölçüde geri
+   almıştı; bu kural o dersi kırılım ve aile listesiyle sayıya bağlar.
+   Ölçüm betiği: scripts/diet-yasli-olc.mjs — metin YASLI iken satır kutuları
+   zaten esnetilmiş geldiği için betik ölçümden önce hedefi start'a zorlar;
+   zorlamayan bir ölçüm her paragrafa 1,0x der (yanlış-temiz).
+
+   🔴 LİSTEYE İKİ AİLE SONRADAN EKLENDİ (Beyar kararı, 2026-08-20). Bu, yukarıdaki
+   2026-08-17 kararını GERİ ALMAZ — eksik kalmış uygulamasını tamamlar.
+     .val-card p     331px ölçü   medyan 2,61x   tepe 4,89x   eklenen px tepe +13,13
+     .bridge-card p  531px ölçü   medyan 2,62x   tepe 2,64x   eklenen px tepe  +5,54
+   Eşik referansı bu listenin kendi kalemi: `.hub-body p` 2,09x medyanla
+   KAPATILMIŞTI. 2,09x'te kapatılan bir aile varken 2,61x ve 2,62x açık kalamaz.
+
+   ⚠ 2,09x BU TURDA BİREBİR YENİDEN ÜRETİLMEDİ — ÖRNEKLEM FARKI. Yukarıdaki
+   iki satır bu turun kendi ölçümüdür; 2,09x ise 2026-08-17'de KAYITLI değer ve
+   40 yüzeyin tamamından alınmış. Aynı aleti (`scripts/diet-yasli-olc.mjs`) iki
+   sayfada koşturunca `/beslenme` n=118 → **1,93x**, `/hakkimizda` n=12 →
+   **2,26x** çıktı. Aynı büyüklük mertebesi, ama 2,09x'in kendisi DEĞİL.
+   Yazıldığı gibi bırakıldı: "2,09 çıktı" demek uydurma bir kesinlik olur ve
+   bir sonraki tur ona dayanırdı (`CLAUDE.md §6`: *"başkasının ölçümü, kendi
+   belgene yazdığın anda SENİN iddian olur"*).
+   ⚠ KARAR BU FARKA DAYANMIYOR: 1,93x de 2,26x de, justify'ın AÇIK kaldığı
+   nüfusun medyanının (1,56x) üstünde ve hikâye kolonunun (1,18x) çok üstünde.
+   Örneklem hangisi olursa olsun iki kart ailesi kapatılan tarafta kalıyor.
+
+   ⚠ NEDEN BAŞTAN LİSTEDE DEĞİLLERDİ: iki sınıf da bu liste yazıldıktan SONRA
+   doğdu (`kurumsal-v1.css`, kurumsal bölüm düzeni turu). Liste eksik kalmadı —
+   DÜNYA BÜYÜDÜ ve listeye kimse geri bakmadı. Ders `docs/lessons.md`de.
+
+   ⚠ Hikâye kolonu (`.reh-article p`, 702px, 1,18x) LİSTEYE GİRMEDİ ve yaslı
+   KALIR: kararın kendi ölçütü onu zaten geçiriyor. */
+:where(#pageMain) p{text-align:var(--tx-body-align)}
+:where(#pageMain) :is(p.lead,p.fs-lead,.hub-body p,.prog-body p,.bg-fact p,.calc-card-box p,.val-card p,.bridge-card p){text-align:start}
+/* KALITIM KORUMASI. Bir paragrafa doğrudan yazılan text-align, ATASINDAN
+   MİRAS ALDIĞI hizayı özgüllükten bağımsız olarak ezer — ortalanmış bir
+   kabın içindeki paragraf sola/yaslıya düşer. Aşağıdaki kaplar hizayı
+   KENDİ üzerlerinde ortalıyor ve içlerinde paragraf taşıyor; `inherit`
+   onlara kabın kararını geri verir.
+   Liste tahminle değil taramayla çıkarıldı: 40 Diet yüzeyi × 2 genişlik,
+   her paragrafın ebeveyninin hesaplanmış hizası okundu; 80 ihlal, 8 aile.
+   Tarama betiği: scripts/diet-hiza-tarama.mjs — kapı olarak koşulabilir. */
+:where(#pageMain) :is(.wz-q,.wz-res-head,.wzp-hero,.dz-id,.apt-success,.ol-success,.food-empty,.fs-empty) p{text-align:inherit}
+/* Planım (`layouts.diet` kullanır, yani bu kapsamdadır) oturum arkasında
+   olduğu için tarayıcı taramasına giremedi; kapları KAYNAKTAN çıkarıldı
+   (planim.css `.pnl-empty` ve `.tsr-none` ortalıyor, ikisi de <p> taşıyor —
+   12 yer). Diyetisyen paneli `layouts.diet-panel` kullanır ve `#pageMain`
+   TAŞIMAZ; bu kural oraya hiç ulaşmaz. */
+:where(#pageMain) :is(.pnl-empty,.tsr-none) p{text-align:inherit}
+@media (max-width:1023px){
+  /* .pa-lead (program açıklaması) 1024 altında 387px ölçüye düşüyor: 5,29x. */
+  :where(#pageMain) p.pa-lead{text-align:start}
+}
+@media (max-width:640px){
+  :root{--tx-body-align:start}
+}
+
+/* eyebrow */
+.eyebrow{
+  display:inline-flex;align-items:center;gap:8px;
+  font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--tomato);
+}
+.eyebrow::before{content:"";width:26px;height:2px;background:currentColor;border-radius:var(--radius-sm)}
+
+/* ---- R37 (Beyar kararı, 2026-08-24): AÇIK ZEMİNDE EYEBROW AA EŞİĞİNİ GEÇER ----
+
+   Ölçüldü (gerçek piksel, 1440px, 16 sayfa / 42 eyebrow):
+     · taban `.eyebrow` rengi `--tomato` (#009A44) BEYAZ zeminde  2,54:1
+     · `.sec-green .eyebrow` `--green-deep` kremde 3,41 / beyazda 3,59:1
+   WCAG AA metin eşiği 4,5:1 — üçü de altındaydı.
+
+   ÇÖZÜM MEVCUT TOKEN'DAN: `--tomato-deep` (#00602b). Yeni renk AÇILMADI;
+   token'ın kendi yorumu zaten bu işi tarif ediyor: *"CTA/footer/aksan metin
+   (WCAG AA: beyaz üstü & beyaz zeminde ≥4.5)"*. Ölçüm: beyazda 5,33:1,
+   kremde 5,06:1.
+
+   🔴 KAPSAM `.sec` İLE SINIRLI — VE BU BİLİNÇLİ.
+   Tabanı topluca değiştirmek KOYU banner'ları kırardı: `.below-header
+   .tst-top` / `.dl-top` gibi bölümlerde eyebrow aynı `--tomato`yu KOYU
+   zeminde kullanıyor ve orada 6,18–6,33:1 ile zaten geçiyor; `--tomato-deep`
+   o zeminde 3,02:1'e düşerdi. Yani "hepsini koyulaştır" üç kusuru düzeltip
+   iki yenisini açardı. Ayrım ölçümle bulundu: kırmızıların hepsi
+   `section.sec` içinde, geçenlerin hepsi `section.below-header.*-top`
+   içinde.
+
+   ⚠ Kural KABUKTA durur, sayfalara kopyalanmaz. Sayfa kopyaları bu kusurun
+   sebebiydi: `--green-deep` 13 yerde `#007e38`e yeniden tanımlanıp kanondan
+   kaymıştı (o tanımlar bu turda kaldırıldı, kanon değer #00602b geçerli). */
+.sec .eyebrow{color:var(--tomato-deep)}
+.eyebrow i{font-size:13px}
+
+/* section head */
+.sec{padding:74px 0}
+/* fixed header offseti — sayfanın İLK section'ına bu class verilir
+   (topbar 40 + header 72 = 112px · mobil 62px) */
+.below-header{padding-top:112px}
+/* ortak section header grid'i — aksiyon grubu (Tamamını Gör + oklar/tablar) h2 ile
+   aynı satırda, açıklama altta tek başına: [eyebrow] / [h2 | tools] / [lead] (Revize T4 M1).
+   Sol blok display:contents ile grid'e açılır — DOM aynı, ≤640 pattern'ı ile uyumlu */
+.sec-head,.cat-head,.guide-head{
+  display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:24px;
+  align-items:center;margin-bottom:34px;
+}
+.sec-head>div:first-child,.cat-head>div:first-child,.guide-head>div:first-child{display:contents}
+.sec-head .eyebrow,.cat-head .eyebrow,.guide-head .eyebrow{grid-row:1;grid-column:1/-1;justify-self:start;margin-bottom:14px}
+.sec-head h2,.cat-head h2,.guide-head h2{grid-row:2;grid-column:1}
+.sec-head .sec-tools,.sec-head .disc-tools,.cat-head .sec-tools,.guide-head .sec-tools{grid-row:2;grid-column:2;align-self:center}
+.sec-head .lead,.cat-head .lead,.guide-head .lead{grid-row:3;grid-column:1/-1;margin-top:10px;color:var(--muted);font-weight:500;font-size:15.5px;max-width:520px}
+.sec-head h2{font-size:34px}
+.see-all{
+  flex:none;display:inline-flex;align-items:center;gap:9px;font-weight:700;font-size:13.5px;
+  color:var(--slate);padding:11px 18px;border:1px solid var(--line);border-radius:var(--radius-md);
+  background:var(--paper);transition:.25s var(--ease);white-space:nowrap;
+}
+.see-all i{font-size:13px;transition:.25s var(--ease)}
+.see-all:hover{border-color:var(--tomato);color:var(--tomato)}
+.see-all:hover i{transform:translateX(3px)}
+
+/* buttons */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:10px;
+  font-family:inherit;font-weight:700;font-size:14.5px;cursor:pointer;border:none;
+  padding:14px 26px;border-radius:var(--radius-md);transition:.25s var(--ease);
+}
+.btn-primary{background:var(--tomato-deep);color:#fff}
+.btn-primary:hover{background:var(--tomato-dark);transform:translateY(-2px)}
+.btn-ghost{background:var(--paper);color:var(--slate);border:1px solid var(--line)}
+.btn-ghost:hover{border-color:var(--slate);transform:translateY(-2px)}
+
+/* chips */
+.chips{display:flex;flex-wrap:wrap;gap:9px;align-items:center}
+.chips .lbl{font-size:13px;color:var(--muted);font-weight:500;margin-right:2px}
+.chip{
+  font-size:13px;font-weight:500;color:var(--slate);background:var(--paper);border:1px solid var(--line);
+  padding:8px 15px;border-radius:var(--radius-sm);cursor:pointer;transition:.2s var(--ease);
+}
+.chip:hover{border-color:var(--tomato);color:var(--tomato);background:var(--tomato-tint)}
+
+/* ---- FİLTRE / ARAÇ ŞERİDİ — solda içerik, sağda kontrol, tek satır.
+   diyetisyen-dizin-v1'de tanımlıydı (özet solda, sıralama menüsü sağda) ve
+   ikinci bir sayfa (kac-kalori-v1: kategori sekmeleri solda, sıralama sağda)
+   aynısına ihtiyaç duyunca kopyalanmayıp buraya taşındı, kaynaktan silindi.
+   Sayfaya özel duyarlı ayarlar (dizin'in ≤640 align-items değeri gibi)
+   sayfanın kendi <style>'ında kalır. ---- */
+/* ---- LİSTE ŞERİDİ — ALTINDA NEFES (Beyar, 2026-08-24) ----
+   Ölçüldü: `/diyetin-puf-noktalari/liste`de `.pf-tabs` ile `.pufl-grid`
+   arasındaki boşluk **0px**ti; sekme çubuğu kartların üstüne yapışıyordu.
+   `.lst-bar`ın hiç alt boşluğu yoktu ve bu şerit **7 sayfada** kullanılıyor,
+   yani kusur tekil değil sistemik. Kural kabukta durur, sayfa sayfa yama
+   yapılmaz.
+
+   Değer UYDURULMADI: aynı işi yapan `.pf-tabbar`ın kendi alt boşluğu
+   (30px, diyetisyen profili sekme şeridi) aynen alındı — sekme çubuğu ile
+   içerik arasındaki mesafe artık sitede TEK bir değer. */
+.lst-bar{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:30px}
+
+/* ---- YATAY KART: SOLDA GÖRSEL, SAĞDA GÖVDE (.puf-card ailesi)
+   diyetisyen-profil-v1'de tanımlıydı; kac-kalori-v1 ve kac-kalori-detay-v1 de
+   aynı kartı kullandığı için kopyalanmayıp buraya taşındı ve kaynaktan silindi.
+   Izgara (.pufl-grid) sayfada kalır: profil kartı dar bir kolonun içinde
+   durduğu için 640'ta tek kolona iner, liste sayfası 1024'te. ---- */
+.puf-card{position:relative;display:block;padding:0;overflow:hidden;min-height:118px;border-radius:var(--radius-lg);
+  background:var(--paper);border:1px solid var(--line);box-shadow:var(--sh-sm);
+  cursor:pointer;transition:transform .25s var(--ease),box-shadow .25s var(--ease)}
+.puf-card:hover{transform:translateY(-3px);box-shadow:var(--sh-md)}
+.puf-fig{position:absolute;left:0;top:0;bottom:0;width:166px;background-size:cover;background-position:center;
+  transition:transform .4s var(--ease);
+  -webkit-mask-image:linear-gradient(90deg,#000 34%,rgba(0,0,0,.5) 66%,rgba(0,0,0,0) 100%);
+          mask-image:linear-gradient(90deg,#000 34%,rgba(0,0,0,.5) 66%,rgba(0,0,0,0) 100%)}
+.puf-fig::after{content:"";position:absolute;inset:0;background:linear-gradient(120deg,rgba(33,30,22,.24),transparent 58%)}
+.puf-card:hover .puf-fig{transform:scale(1.05)}
+.puf-ico{position:absolute;left:13px;bottom:13px;z-index:3;width:34px;height:34px;border-radius:var(--radius-md);background:var(--tomato);color:#fff;display:grid;place-items:center;font-size:15px;box-shadow:0 4px 12px rgba(20,18,12,.4)}
+.puf-body{position:relative;z-index:2;padding:20px 24px 20px 180px;min-height:118px;display:flex;flex-direction:column;justify-content:center}
+.puf-body h4{font-size:16.5px;margin-bottom:5px}
+.puf-body p{font-size:13.5px;color:var(--muted);font-weight:500}
+/* R22a (Beyar, 2026-08-24): baş harf büyük — HTML zaten "Alışkanlık" biçiminde
+   basıyordu (<span class="puf-tag">Alışkanlık</span>), büyütmeyi CSS
+   yapıyordu (text-transform:uppercase). letter-spacing .06em büyük-harf
+   dizgi içindi; baş-harf-büyük düz metinde fazla açık durur, .02em'e indi.
+   5 kullanım yerinin tamamına iner: articles/_p/card-puf.blade.php (ortak
+   kart) + püf noktaları liste/detay + kaç kalori liste/detay (B3 kararı). */
+.puf-tag{display:inline-block;margin-top:9px;font-size:11px;font-weight:700;color:var(--tomato);letter-spacing:.02em}
+/* kartın okunma sayacı — ailenin tek eksik üyesiydi, .puf-tag'in yanına
+   oturur. Aynı satırda iki bilgi: solda kategori, sağında okunma. */
+.puf-reads{display:inline-flex;align-items:center;gap:6px;margin-top:9px;margin-left:14px;font-size:11.5px;color:var(--muted);font-weight:500}
+.puf-reads i{font-size:11px}
+@media (max-width:640px){
+  .puf-fig{width:112px}
+  .puf-body{padding:15px 16px 15px 126px;min-height:140px}
+  .puf-body h4{font-size:15.5px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .puf-body p{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* ============ TOP UTILITY BAR ============ */
+.topbar{position:fixed;top:0;left:0;right:0;z-index:70;background:var(--ink);color:#e9e2d6;font-size:12.5px;font-weight:500}
+.topbar .wrap{display:flex;align-items:center;justify-content:space-between;height:40px}
+.topbar a{display:inline-flex;align-items:center;gap:7px;color:#e9e2d6;transition:.2s}
+.topbar a:hover{color:#fff}
+.topbar .tb-left{display:flex;align-items:center;gap:16px}
+.topbar .tb-left b{font-weight:600;color:#fff}
+.tb-div{width:1px;height:14px;background:rgba(233,226,214,.22);flex:none}
+.topbar .tb-right{display:flex;gap:18px;align-items:center}
+.topbar .tb-soc{display:flex;gap:14px}
+.topbar .tb-soc a:hover{color:var(--yellow)}
+/* dil seçici — üst bant (ince, açık zemin yazı) */
+.tb-lang{position:relative;display:flex;align-items:center}
+/* Ayraç boşluğu emsale HİZALANDI (2026-08-15). Diet kopyası tek-düğme
+   turundan (2026-08-11) ÖNCEKİ hâli taşıyordu: `margin-right:4px`, sol boşluk
+   yok. Ölçüldü (1440px, gerçek tarayıcı): ayraç→tetikleyici mesafesi Diet'te
+   **5px**, Gastro ve Gourmet'te **13px**. Kaynak `resources/css/portal.css:152`
+   (Gourmet karşılığı `gourmet.css:234`) — BİREBİR kopya, yeni değer icat
+   edilmedi. `--sp-1`/`--sp-2` bu token setinde tanımlı değil; emsal zaten
+   yedekli yazıyor, yedekler devreye girer (4px / 8px). */
+.tb-lang::before{content:"";width:1px;height:14px;background:rgba(233,226,214,.22);margin-right:var(--sp-2,8px);margin-left:var(--sp-1,4px)}
+.tb-lang-btn{display:inline-flex;align-items:center;gap:7px;background:transparent;border:none;cursor:pointer;color:#e9e2d6;font-family:inherit;font-size:12.5px;font-weight:500;padding:0;transition:color .2s}
+.tb-lang-btn:hover{color:#fff}
+.tb-lang-btn>span{font-weight:600;letter-spacing:.03em}
+.tb-lang-caret{font-size:9px;transition:transform .2s var(--ease)}
+.tb-lang.open .tb-lang-caret{transform:rotate(180deg)}
+.tb-lang-menu{position:absolute;top:calc(100% + 9px);right:0;min-width:148px;background:#fff;border:1px solid var(--line);border-radius:var(--radius-md);box-shadow:var(--sh-md);padding:6px;opacity:0;visibility:hidden;transform:translateY(-6px);transition:opacity .2s var(--ease),transform .2s var(--ease),visibility .2s;z-index:80}
+.tb-lang.open .tb-lang-menu{opacity:1;visibility:visible;transform:translateY(0)}
+.tb-lang-menu a{display:flex;align-items:center;gap:9px;color:var(--ink);font-size:13px;font-weight:600;padding:9px 11px;border-radius:var(--radius-sm);transition:.18s var(--ease)}
+.tb-lang-menu a span{color:var(--muted);font-weight:500;font-size:12.5px}
+.tb-lang-menu a:hover{background:var(--tomato-tint);color:var(--tomato)}
+.tb-lang-menu a.active,.tb-lang-menu a.active span{color:var(--tomato)}
+/* TEK DÜĞME modu (2026-08-15) — geçilecek dil TEK ise açılır liste hiç
+   kurulmaz, düğmenin üstünde SEÇİLİ değil GEÇİLECEK dil yazar ve tek tık dili
+   değiştirir. Kabuk bu markup'ı `x-lang-switch variant=bare`den birebir
+   alıyor, stil de emsalinden: `resources/css/portal.css:171-174` (Gourmet
+   karşılığı `gourmet.css:251-254`). Görsel dil `.tb-lang-btn`ten gelir; tek
+   fark 44×44 şeffaf dokunma kutusu. Seçici `.tb-lang .tb-lang-one` (0,2,0) —
+   `.topbar a` (0,1,1) aksi hâlde rengi ve gap'i kazanırdı. Odak halkası
+   Diet'in kendi vurgusuyla (`--tomato`) çizilir; portal.css orada `--yellow`
+   yazıyor çünkü Gastro'nun vurgusu o. */
+.tb-lang .tb-lang-one{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-width:44px;min-height:44px;color:#e9e2d6;font-size:12.5px;font-weight:500;transition:color .2s}
+.tb-lang .tb-lang-one:hover{color:#fff}
+.tb-lang .tb-lang-one>span{font-weight:600;letter-spacing:.03em}
+.tb-lang .tb-lang-one:focus-visible{outline:2px solid var(--tomato);outline-offset:2px;border-radius:var(--radius-sm)}
+
+/* ---- üst bant dünya kapıları: DadaStore + DadaAkademi markalı geçiş (CİLA-2 Faz 5) ---- */
+.topbar .tb-util{color:#cfc7ba}
+.topbar .tb-util:hover{color:#fff}
+/* DadaStore — domates dünyası (sıcak, e-ticaret) */
+/* DadaAkademi — petrol dünyası (serin, öğrenme) */
+
+/* ============ HEADER — TEK KAT (marka · ortalanmış nav · aksiyonlar) — Revize T3 M2 ============ */
+.header{
+  position:fixed;top:0;left:0;right:0;z-index:60;
+  top:40px;background:rgba(255,255,255,.94);backdrop-filter:saturate(150%) blur(10px);
+  border-bottom:1px solid var(--line);box-shadow:0 4px 20px rgba(33,30,22,.05);
+  transition:background .3s var(--ease),border-color .3s var(--ease),box-shadow .3s var(--ease);
+}
+/* hero üstünde: şeffaf + beyaz — yalnız heroMode açık sayfalarda kullanılır (JS) */
+.header.at-top{background:transparent;backdrop-filter:none;border-color:rgba(255,255,255,.14);box-shadow:none}
+.h-top>.wrap{display:flex;align-items:center;gap:22px;height:72px}
+.brand{display:flex;align-items:center;flex:none}
+.brand img{height:40px;width:auto;display:block}
+.brand .logo-white{display:none}
+.header.at-top .brand .logo-color{display:none}
+.header.at-top .brand .logo-white{display:block}
+/* ---- DadaDiet kabuk markası (akademi .ak-* pattern'inden türetildi) ---- */
+.dd-brand{display:flex;align-items:center;gap:11px}
+.dd-mark{flex:none;display:block;width:40px;height:40px}
+.dd-word{font-size:23px;font-weight:700;letter-spacing:-.02em;line-height:1;white-space:nowrap}
+.dd-word b{color:var(--slate);font-family:"GilroyXB","Gilroy",sans-serif;font-weight:800}
+.dd-word .dd-st{color:var(--tomato);font-family:"GilroyLt","Gilroy",sans-serif;font-weight:300}
+.header.at-top .dd-word b,.header.at-top .dd-word .dd-st{color:#fff}
+.drawer-brand{display:flex;align-items:center;gap:10px;text-decoration:none}
+.drawer-brand .dd-mark{width:32px;height:32px}
+.drawer-brand .dd-word{font-size:18px}
+/* nav, logo ile aksiyonlar arasında ortalanır */
+.nav{display:flex;gap:2px;flex-wrap:nowrap;flex:1;justify-content:center;min-width:0}
+.nav a{
+  position:relative;font-weight:700;font-size:15px;color:var(--slate);white-space:nowrap;
+  padding:9px 12px;border-radius:var(--radius-md);transition:color .2s var(--ease),background .2s var(--ease);
+}
+.nav a .fa-chevron-down{font-size:9px;margin-left:5px;opacity:.5}
+.nav a:hover{color:var(--tomato);background:var(--tomato-tint)}
+.nav a.active{color:var(--tomato)}
+.nav a.active::after{
+  content:"";position:absolute;left:12px;right:12px;bottom:2px;height:2px;
+  background:var(--tomato);border-radius:var(--radius-sm);
+}
+/* at-top nav beyaz */
+.header.at-top .nav>.nav-item>a{color:#fff}
+.header.at-top .nav>.nav-item>a:hover{background:rgba(255,255,255,.14);color:#fff}
+.header.at-top .nav>.nav-item>a.active{color:#fff}
+.header.at-top .nav>.nav-item>a.active::after{background:#fff}
+.head-actions{margin-left:auto;display:flex;align-items:center;gap:9px;flex:none}
+.icon-btn{
+  width:43px;height:43px;border-radius:var(--radius-md);border:1px solid var(--line);background:var(--paper);
+  display:grid;place-items:center;color:var(--slate);font-size:16px;cursor:pointer;transition:.2s var(--ease);position:relative;
+}
+.icon-btn:hover{border-color:var(--tomato);color:var(--tomato)}
+.header.at-top .icon-btn{background:rgba(255,255,255,.10);border-color:rgba(255,255,255,.30);color:#fff}
+.header.at-top .icon-btn:hover{background:rgba(255,255,255,.20);border-color:#fff;color:#fff}
+/* hesap düğmesi at-top'ta .icon-btn ile aynı dile geçer — beyaz zeminli bir pil
+   olarak kalıyordu, şeffaf header'daki tek opak parça oydu. Avatar ve karet
+   koyu banner üzerinde okunur kalsın diye kenarlık ve karet açık tona döner. */
+.header.at-top .acct-btn{background:rgba(255,255,255,.10);border-color:rgba(255,255,255,.30)}
+.header.at-top .acct-btn:hover{background:rgba(255,255,255,.20);border-color:#fff}
+.header.at-top .acct-caret{color:#fff}
+/* minimal giriş butonu — kompakt boy, marka rengi (Beyar: eski renk kalsın), flat */
+.btn-login{
+  display:inline-flex;align-items:center;gap:8px;font-family:inherit;font-weight:700;font-size:14px;
+  color:#fff;background:var(--tomato-deep);border:1px solid var(--tomato-deep);border-radius:var(--radius-md);
+  height:43px;padding:0 18px;margin-left:3px;cursor:pointer;white-space:nowrap;transition:.2s var(--ease);
+}
+.btn-login i{font-size:14px}
+.btn-login:hover{background:var(--tomato-dark);border-color:var(--tomato-dark)}
+
+/* ===== LOGIN-STATE (cila-2 faz 2) — header logged-in chrome ===== */
+/* varsayılan logged-out: ekle/zil/avatar gizli. body.is-auth → açılır, btn-login gizlenir */
+.head-add,.head-bell,.acct-wrap{display:none}
+body.is-auth #btnLogin{display:none}   /* GİRİŞ butonu girişli kullanıcıda gizlenir */
+/* PLANIM DÜĞMESİ — 🔴 KARAR DEĞİŞTİ (Beyar, 2026-08-21).
+   Bu satırın eski yorumu Planım'ın *"her iki durumda da durduğunu"* yazıyordu;
+   2026-08-20 kararının o maddesi İPTAL edildi. Yeni sözleşme iki satırdır:
+     · misafirde GÖRÜNMEZ (madde c)
+     · girişli kullanıcıda HER genişlikte görünür (madde d) — ≤640'taki
+       `.btn-login{display:none}` (satır ~1002) bu kuralı YENEMEZ, çünkü
+       `body.is-auth #btnPlanim` id taşır ve özgüllüğü daha yüksektir.
+   Düğme aynı `.btn-login` dilini kullanmaya devam eder; yeni sınıf/yeni
+   tasarım dili üretilmedi (CLAUDE.md §2 md.3, §3.1 md.1). */
+#btnPlanim{display:none}
+body.is-auth #btnPlanim{display:inline-flex}
+body.is-auth .head-add,body.is-auth .acct-wrap{display:flex}
+body.is-auth .head-bell{display:grid}
+/* ekle + hesap menüsü ortak konteyner (header sağ blok dropdown'ı)
+   NOT: display BASE'te VERİLMEZ — gizle/göster yalnız .head-add/.acct-wrap kurallarınca
+   yönetilir (aksi halde display:flex, üstteki display:none'ı kaynak sırasıyla yener → logged-out sızıntı) */
+.acct-item{position:relative;align-items:center;height:72px}
+.acct-btn{display:inline-flex;align-items:center;gap:7px;height:43px;padding:0 9px 0 5px;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-md);cursor:pointer;font-family:inherit;transition:.2s var(--ease)}
+.acct-btn:hover{border-color:var(--tomato)}
+.acct-ava{width:33px;height:33px;border-radius:var(--radius-circle);background-size:cover;background-position:center;flex:none}
+/* BAS HARF DUSMESI — avatar yuklenmemis kullanici.
+   Kusur (Beyar canlida gordu, 2026-08-20): daire BOS basiliyordu; kullanici
+   header'da kendi hesabini goremiyordu. Harf yalniz `background-image` YOKKEN
+   basilir (`.is-harf`), yani gorselin ustune hicbir zaman binmez.
+   Renk ve olcu ICAT EDILMEDI: zemin `--tomato` (bu markada nane), harf
+   beyaz — kabugun `.btn-login` dugmesiyle ayni cift. */
+.acct-ava.is-harf,.da-ava.is-harf{
+  display:grid;place-items:center;background:var(--tomato);color:#fff;
+  font-weight:700;letter-spacing:0;line-height:1;
+}
+.acct-ava.is-harf{font-size:14px}
+.acct-id .acct-ava.is-harf{font-size:17px}
+.da-ava.is-harf{font-size:18px}
+.acct-caret{font-size:9px;color:var(--muted);transition:transform .2s var(--ease)}
+.acct-item.open .acct-caret{transform:rotate(180deg)}
+/* bildirim zili + sayaç */
+.head-bell{position:relative}
+.hb-badge{position:absolute;top:-4px;right:-4px;min-width:17px;height:17px;padding:0 4px;border-radius:var(--radius-circle);background:var(--tomato);color:#fff;font-size:10px;font-weight:700;display:grid;place-items:center;border:2px solid #fff}
+/* dropdown panel (header sağa hizalı; nav dropdown diliyle aynı) */
+/* R35a (Beyar, revizyon turu 2026-08-24 · C4 kararı: YALNIZ sunum eşitlenir):
+   "Aboneliğim ve Ödemelerim" diğer GRUP 3 kalemlerinden ("Hesap ve Ayarlar",
+   "Destek Merkezi") uzun olduğu için 236px'te satıra kırılıyor, tek başına
+   iki satır yüksekliğine çıkıp sıra dışı duruyordu. Metin AYNEN kalıyor
+   (2026-08-20/22 Beyar kararı, sıra da değişmiyor) — min-width büyütüldü ve
+   etiket sarmasız yapıldı ki üç kalem aynı satır yüksekliğinde dursun. */
+.acct-menu{position:absolute;top:calc(100% + 12px);right:0;min-width:268px;background:#fff;border:1px solid var(--line);border-radius:var(--radius-lg);box-shadow:var(--sh-lg);padding:10px;opacity:0;visibility:hidden;transform:translateY(8px);transition:.22s var(--ease);z-index:80}
+.acct-item:hover .acct-menu,.acct-item.open .acct-menu{opacity:1;visibility:visible;transform:translateY(0)}
+.acct-menu::before{content:"";position:absolute;top:-7px;right:24px;width:13px;height:13px;background:#fff;border-left:1px solid var(--line);border-top:1px solid var(--line);transform:rotate(45deg)}
+.acct-menu>a{display:flex;align-items:center;gap:12px;padding:11px 13px;border-radius:var(--radius-md);font-size:14px;font-weight:500;color:var(--slate);transition:.16s var(--ease)}
+.acct-menu>a i{width:18px;text-align:center;color:var(--tomato);font-size:14px}
+.acct-menu>a span{display:block;white-space:nowrap}
+.acct-menu>a small{display:block;font-size:11.5px;color:var(--muted);font-weight:500;margin-top:1px}
+.acct-menu>a:hover{background:var(--tomato-tint);color:var(--tomato);padding-left:16px}
+.acct-menu .acct-logout,.acct-menu .acct-logout i{color:var(--tomato)}
+/* hesap menüsü kimlik başlığı */
+.acct-id{display:flex;align-items:center;gap:11px;padding:8px 11px 12px}
+.acct-id .acct-ava{width:42px;height:42px}
+.acct-id-txt{min-width:0}
+.acct-id-txt b{display:block;font-size:14.5px;color:var(--slate);font-weight:700}
+.acct-id-txt small{display:block;font-size:12px;color:var(--muted);font-weight:500}
+.acct-div{height:1px;background:var(--line);margin:6px 4px}
+.nav-div{height:1px;background:var(--line);margin:5px 4px}
+/* drawer logged-in kimlik satırı (mobil) */
+.drawer-acct{display:none;align-items:center;gap:12px;padding:2px 2px 12px}
+body.is-auth .drawer-acct{display:flex}
+body.is-auth .drawer-login{display:none}
+.drawer-acct .da-ava{width:46px;height:46px;border-radius:var(--radius-circle);background-size:cover;background-position:center;flex:none}
+.drawer-acct .da-info{min-width:0}
+.drawer-acct .da-info b{display:block;font-size:15px;color:var(--slate);font-weight:700}
+.da-links{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:3px}
+.da-links a{font-size:12.5px;font-weight:700;color:var(--tomato)}
+.da-links a:not(:last-child)::after{content:"·";margin-left:8px;color:var(--muted);font-weight:500}
+/* ===== /LOGIN-STATE ===== */
+
+/* ===== LG-GATE (cila-2 faz 2) — logged-out mikro-aksiyon giriş kapısı ===== */
+.lg-overlay{position:fixed;inset:0;background:rgba(20,18,12,.5);z-index:97;opacity:0;visibility:hidden;transition:opacity .25s var(--ease),visibility .25s}
+.lg-overlay.show{opacity:1;visibility:visible}
+.lg-gate{position:fixed;inset:0;z-index:98;display:grid;place-items:center;padding:20px;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .25s var(--ease),visibility .25s}
+.lg-gate.show{opacity:1;visibility:visible;pointer-events:auto}
+.lg-panel{position:relative;width:min(382px,100%);background:#fff;border-radius:var(--radius-lg);box-shadow:var(--sh-lg);padding:32px 26px 26px;text-align:center;transform:translateY(14px);transition:transform .3s var(--ease)}
+.lg-gate.show .lg-panel{transform:translateY(0)}
+.lg-close{position:absolute;top:13px;right:13px;width:36px;height:36px;border-radius:var(--radius-md);border:1px solid var(--line);background:var(--paper);color:var(--slate);font-size:15px;cursor:pointer;display:grid;place-items:center;transition:.2s var(--ease)}
+.lg-close:hover{border-color:var(--tomato);color:var(--tomato)}
+.lg-ico{width:62px;height:62px;border-radius:var(--radius-circle);background:var(--tomato-tint);color:var(--tomato);display:grid;place-items:center;font-size:25px;margin:0 auto 16px}
+.lg-gate h4{font-size:19px;margin-bottom:8px}
+.lg-gate p{font-size:13.5px;color:var(--muted);font-weight:500;max-width:300px;margin:0 auto 22px;line-height:1.55}
+.lg-acts{display:flex;gap:10px}
+.lg-acts .btn{flex:1}
+/* ===== /LG-GATE ===== */
+
+/* ---- NAV DROPDOWNS ---- */
+.nav .nav-item{position:relative}
+/* nav item tek katın tam yüksekliğini doldursun → hover sürekliliği (mega'ya geçişte kopmaz) */
+.h-top .nav-item{display:flex;align-items:center;height:72px}
+.nav .nav-item>a{display:inline-flex;align-items:center}
+.soon{margin-left:7px;font-size:9.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+  color:#fff;background:var(--green);padding:3px 7px;border-radius:var(--radius-sm);vertical-align:middle}
+/* top:100% — panel tetikleyiciye YAPIŞIK. Önceki calc(100% + 12px) 12px'lik
+   ölü bir şerit bırakıyordu; panel yalnız hover ile açıldığı ve kapalıyken
+   visibility:hidden olduğu için imleç o şeride girince menü kapanıp bir daha
+   açılamıyordu. .mega da aynı sebeple top:100% kullanır. */
+.dropdown{
+  position:absolute;top:100%;left:50%;transform:translateX(-50%) translateY(8px);
+  min-width:230px;background:#fff;border:1px solid var(--line);border-radius:var(--radius-lg);box-shadow:var(--sh-lg);
+  padding:10px;opacity:0;visibility:hidden;transition:.22s var(--ease);z-index:80;
+}
+.nav-item:hover .dropdown,.nav-item.open .dropdown{opacity:1;visibility:visible;transform:translateX(-50%) translateY(0)}
+.dropdown::before{content:"";position:absolute;top:-7px;left:50%;transform:translateX(-50%) rotate(45deg);
+  width:13px;height:13px;background:#fff;border-left:1px solid var(--line);border-top:1px solid var(--line)}
+.dropdown a{
+  display:flex;align-items:flex-start;gap:12px;padding:11px 13px;border-radius:var(--radius-md);font-size:14px;font-weight:500;
+  color:var(--slate);transition:.16s var(--ease);
+}
+.dropdown a i{width:18px;text-align:center;color:var(--tomato);font-size:14px;margin-top:2px}
+.dropdown a small{display:block;font-size:11.5px;color:var(--muted);font-weight:500;margin-top:1px}
+.dropdown a:hover{background:var(--tomato-tint);color:var(--tomato);padding-left:16px}
+.dd-head{padding:8px 13px 4px;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.dd-col{display:flex;flex-direction:column}
+
+/* ---- MEGA MENÜ (Tarifler) — header'a bağlı tam genişlik panel — KİLİTLİ ---- */
+.nav-item.has-mega{position:static}            /* containing block = .header (fixed) */
+.mega{
+  position:absolute;left:0;right:0;top:100%;
+  background:#fff;border-top:1px solid var(--line);
+  box-shadow:var(--sh-lg);padding:28px 0 26px;
+  opacity:0;visibility:hidden;transform:translateY(8px);
+  transition:.22s var(--ease);z-index:80;
+}
+.nav-item:hover .mega,.nav-item.open .mega{opacity:1;visibility:visible;transform:translateY(0)}
+.mega-grid{display:grid;grid-template-columns:2.2fr 1fr;gap:22px;align-items:start}
+.mega-cats{display:grid;grid-template-columns:repeat(3,1fr);gap:2px 16px;align-content:start}
+.mega-cats a{
+  display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:var(--radius-md);
+  font-size:14.5px;font-weight:500;color:var(--slate);transition:.16s var(--ease);line-height:1.25;
+}
+.mega-cats a i{width:20px;text-align:center;color:var(--tomato);font-size:15px;flex:none}
+.mega-cats a small{display:block;font-size:11.5px;color:var(--muted);font-weight:500;margin-top:1px}
+.mega-cats a:hover{background:var(--tomato-tint);color:var(--tomato)}
+.mega-feat{min-width:0;border-left:1px solid var(--line);padding-left:22px}
+.mf-fig{
+  position:relative;aspect-ratio:16/10;border-radius:var(--radius-md);overflow:hidden;
+  background-size:cover;background-position:center;display:flex;align-items:flex-end;cursor:pointer;
+}
+.mf-fig::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(33,30,22,0) 35%,rgba(15,13,9,.78))}
+.mf-fig .r-chip{position:absolute;top:12px;left:12px;background:var(--tomato);color:#fff;z-index:2}
+.mf-fig h4{position:relative;z-index:2;color:#fff;font-size:17px;padding:16px;line-height:1.25}
+/* "Tüm Tarifler" — kategori grid'inin 13. hücresi, buton dilinde (Revize T3 M1) */
+.mega-cats .mega-cat-all{
+  font-weight:700;color:var(--tomato);
+  background:var(--tomato-tint);border:1px solid rgba(0,154,68,.22);
+}
+.mega-cats .mega-cat-all small{color:var(--tomato);opacity:.75}
+.mega-cats .mega-cat-all .mca-arrow{margin-left:auto;width:auto;font-size:13px;transition:transform .2s var(--ease)}
+.mega-cats .mega-cat-all:hover{background:var(--tomato);color:#fff;border-color:var(--tomato)}
+.mega-cats .mega-cat-all:hover i,.mega-cats .mega-cat-all:hover small{color:#fff;opacity:1}
+.mega-cats .mega-cat-all:hover .mca-arrow{transform:translateX(3px)}
+/* Tarif Bulucu CTA — mega-feat kolonunda (Faz3 #22; finder giriş noktası) */
+/* mega içindeki r-chip (mf-fig rozeti) için minimal taban */
+.r-chip{background:rgba(255,255,255,.94);color:var(--slate);font-size:11.5px;font-weight:700;padding:6px 12px;border-radius:var(--radius-sm);letter-spacing:.02em}
+
+/* ---- PARALAKS BANNER — fotoğraflı hero'ların arka planı sabit kalır,
+   içerik üzerinden kayar. 11. turda .dl-top'ta dokuz sayfaya girdi; koşul
+   aynen korunarak fotoğraf taşıyan bütün public hero ailelerine yayıldı ve
+   dokuz sayfadaki kopyalar silinip tek kaynağa indi.
+
+   Opt-in, üç koşul birden sağlanmazsa normal banner:
+     hover:hover + pointer:fine → dokunmatik cihazlar dışarıda kalır.
+       iOS Safari background-attachment:fixed'i desteklemez ve arka planı
+       bozar; bu sorgu iPad dahil tüm iOS'u genişlikten bağımsız eler —
+       yalnız genişlik sorgusu iPad Pro'yu (1366px) kaçırırdı.
+     min-width:1025px           → telefon ve tablet genişlikleri dışarıda.
+     prefers-reduced-motion: no-preference → hareket azaltma tercihinde kapalı.
+
+   Yalnız background-attachment değişir; yükseklik, iç boşluk, breadcrumb
+   konumu ve metin yerleşimi aynı kalır — düzen üretmeyen bir özelliktir.
+   Fotoğrafsız hero'lar (.tb-top, .pf-top, .sh-top) listede yoktur:
+   arka planlarında görsel yok, özelliğin tutacağı bir katman da yok.
+   .wzp-top 17. turda krem zeminden koyu görselli banner'a geçti ve listeye
+   katıldı. ---- */
+@media (min-width:1025px) and (hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference){
+  .dl-top,      /* 9 program sayfası */
+  .reh-hero,    /* 8 beslenme sayfası */
+  .calc-top,    /* 10 hesaplayıcı sayfası */
+  .tst-top,     /* 4 araç/test sayfası */
+  .nb-top,      /* besin-kutuphanesi-v1 */
+  .fs-top,      /* arama-diet-v1 */
+  .lst-top,     /* diyetisyen-dizin-v1 */
+  .ol-top,      /* diyetisyen-ol-v1 */
+  .wzp-top      /* 4 sihirbaz sayfası */
+  {background-attachment:fixed}
+}
+
+/* ---- BANNER YÜKSEKLİĞİ — grup içinde tek ölçü, tek kaynak ----------------
+   Banner taşıyan public sayfalar iki role ayrılır (liste/merkez ve detay) ve
+   her rol kendi içinde tek yükseklikte durur. Üyelik dd-shell.js'teki
+   BG_LISTE / BG_DETAY / BG_SIHIRBAZ dizilerinde; oradan <body data-banner>
+   basılır. Sayfalar kendi ölçüsünü taşımaz.
+
+   Seçici neden yapısal: 46 banner sayfasının 46'sında da banner
+   #pageMain'in ilk eleman çocuğudur ve içinde tam olarak bir > .wrap vardır
+   (tarayıcıda ölçüldü). Böylece on bir hero ailesini tek tek saymak
+   gerekmiyor; yeni bir hero ailesi eklendiğinde bu kural onu da kapsar.
+
+   Ölçü nasıl bulundu: her genişlik bandında gruptaki EN UZUN banner ölçüldü
+   (bant içinde birkaç genişlikte tarandı, bandın tepesi alındı). Kısa olan
+   ona yükselir, uzun olan kısalmaz — min-height, height değil.
+
+     bant            liste  detay  sihirbaz   bandın tepesini kim belirledi
+     >1024px          544    560     434      hesaplayicilar / ogun-planlama
+     641–1024px       607    617     427      diyetisyen-dizin / ipucu-detay@641
+     ≤640px           587    726     455      hesaplayicilar / ipucu-detay@320
+
+   Detay grubunun ≤1024 tavanı 834/887'den 617/726'ya indi: beş beslenme
+   rehberi yazısının .reh-arthero grafiği o iki bantta gizlendi, çünkü iki
+   kolon üst üste binince grafiğin yüksekliği doğrudan banda ekleniyordu ve
+   tavanı tek başına o beş sayfa belirliyordu (HANDOFF §6.9). >1024'te grafik
+   yerinde durduğu için masaüstü tavanı 560'ta kaldı.
+
+   Sihirbaz grubunun üç tavanı da 17. turda yükseldi (414→434, 407→427,
+   408→455): .wzp-top krem düz zeminden koyu görselli banner'a geçti ve
+   ailenin alt boşluğu kardeşlerininkine (50px) hizalandı. ≤640'taki sıçrama
+   ondan büyük çünkü eski 408 değeri bandın tepesini eksik ölçüyordu: gerçek
+   tepe 320px'te 435'ti, yani grup o genişlikte zaten eşit değildi. Yeni
+   değerler bandın en dar ucuna kadar tarandı.
+
+   Bant sınırları repoda hâlihazırda kullanılan 1024 ve 640; yeni kırılma
+   noktası açılmadı. 1024 ile 768 aynı bandın içindedir ve aynı değeri alır —
+   istenen "her genişlikte grup içi eşitlik" bu şekilde sağlanır. Tavanlar
+   bandın en dar ucuna kadar tarandı (>1024: 1440…1025 · 641–1024:
+   1024…641 · ≤640: 640…320), çünkü bir bandın en uzun banner'ı çoğu zaman
+   en dar genişlikte çıkar: detay grubu 360–390'da 696, 320'de 726'dır.
+
+   İçerik dikeyde ortalanır: bölüm column-flex olur, tek çocuğu .wrap
+   ortalanır. padding-top yerinde kalır ve taban görevi görür — 128px (bir
+   sayfada 112px) sabit header'ın 113px'lik alt kenarını geçer, yani
+   breadcrumb hiçbir ölçüde şeffaf header'ın altına girmez. Kısa içerikli
+   sayfada metin artık banner'ın üstüne yapışmaz, bandın ortasında durur.
+   Paralaks etkilenmez: o kural yalnız background-attachment yazar. -------- */
+body[data-banner] #pageMain>:first-child{
+  display:flex;flex-direction:column;justify-content:center;
+}
+body[data-banner] #pageMain>:first-child>.wrap{width:100%}
+body[data-banner="liste"]    #pageMain>:first-child{min-height:544px}
+body[data-banner="detay"]    #pageMain>:first-child{min-height:560px}
+body[data-banner="sihirbaz"] #pageMain>:first-child{min-height:434px}
+@media (max-width:1024px){
+  body[data-banner="liste"]    #pageMain>:first-child{min-height:607px}
+  body[data-banner="detay"]    #pageMain>:first-child{min-height:617px}
+  body[data-banner="sihirbaz"] #pageMain>:first-child{min-height:427px}
+}
+@media (max-width:640px){
+  body[data-banner="liste"]    #pageMain>:first-child{min-height:587px}
+  body[data-banner="detay"]    #pageMain>:first-child{min-height:726px}
+  body[data-banner="sihirbaz"] #pageMain>:first-child{min-height:455px}
+}
+
+/* ---- R1 (Beyar, canlı gezinti turu 2026-08-23/24): banner altındaki beyaz
+   panelin üst köşe yarıçapı — kardeş markanın liste sayfasındaki dikişin
+   aynısı (salt-okuma, kod bağı yok): beyaz panel banner'ın içine biraz biner,
+   üst iki köşe yuvarlanır, altında yumuşak gölge var. DadaDiet'te #pageMain'in
+   ilk eleman çocuğu (banner) 12 ayrı sınıf ailesinden geliyor (.below-header
+   varyantları · .reh-hero(+-article) · .wzp-top · .lst-top · .ol-top ·
+   .fs-top · .au-top …) — kural sınıf saymak yerine bu dosyanın zaten kurduğu
+   "banner = #pageMain'in ilk eleman çocuğu" çapasına bağlanıyor (üstteki
+   body[data-banner] bloğuyla aynı çapa). `.sec` ile başlayan üst bantlar
+   (planım/hesabım/destek/abonelik/hata — banner DEĞİL, beyaz kimlik bandı)
+   ilk-çocuk konumundaysa hariç tutulur.
+   🔴 STICKY İSTİSNASI (grep ile doğrulandı): search.blade.php'de banner'ın
+   DİREKT sonraki kardeşi `.fs-tabbar`, programs/pages/liste.blade.php'de
+   `.dl-filter` — ikisi de kendi sayfa CSS'inde position:sticky taşıyor.
+   #pageMain'in ID'si (100,0,0,0) sayfa CSS'indeki tek sınıf seçiciyi cascade
+   sırasından bağımsız ezer; yani buradan gelecek bir position:relative o
+   yapışkanlığı gerçekten öldürürdü. Bu yüzden ikisi ana kuraldan hariç
+   tutulup aşağıda `position` VERMEYEN ikinci bir kuralla kapsandı — görsel
+   etki (üst köşe + gölge) aynı, yapışkanlık dokunulmadan kalıyor. */
+#pageMain > :first-child:not(.sec) + *:not(.fs-tabbar):not(.dl-filter) {
+  position:relative; z-index:2;
+  margin-top:-22px;
+  border-radius:22px 22px 0 0;
+  box-shadow:0 -12px 32px rgba(20,16,10,.18);
+}
+#pageMain > :first-child:not(.sec) + .fs-tabbar,
+#pageMain > :first-child:not(.sec) + .dl-filter {
+  z-index:2;
+  margin-top:-22px;
+  border-radius:22px 22px 0 0;
+  box-shadow:0 -12px 32px rgba(20,16,10,.18);
+}
+
+/* ---- İSTİSNA: BANNER'IN KENDİ YUVARLAĞI VARSA PANEL YUVARLANMAZ ----
+   Beyar (2026-08-24): *"burada radius var, burada panelde radius uygulamana
+   gerek yok."*
+
+   Ölçüldü (`/diyetisyen/{slug}`, 1440px): `.pf-banner` zaten `24px` yarıçap
+   taşıyor; üstüne yukarıdaki kural `.sec`e `22px` + `-22px` biniş veriyordu.
+   Sonuç ÇİFT yuvarlamaydı — iki farklı yarıçap (24 ve 22) üst üste biniyor
+   ve kenar kırık görünüyordu.
+
+   Kural yalnız bu banner ailesini hedefler: `.pf-top` kendi yuvarlağını
+   çizdiği için panelin ayrıca yuvarlanmasına gerek yok. Diğer 11 banner
+   ailesi R1 davranışını AYNEN sürdürür.
+
+   ⚠ SEÇİCİ ÖZGÜLLÜĞÜ EŞİTLENDİ — ölçüldü. İlk hâl `#pageMain > .pf-top + *`
+   idi (özgüllük 110) ve yukarıdaki kuralı (140) YENEMİYORDU: kural yazılıydı
+   ama hiç uygulanmıyordu, panel 22px'te kalıyordu. `:first-child` ve iki
+   `:not()` eklenerek 140'a çıkarıldı; dosyada SONRA geldiği için artık
+   kazanıyor. */
+#pageMain > .pf-top:first-child + *:not(.fs-tabbar):not(.dl-filter){
+  margin-top:0;
+  border-radius:0;
+  box-shadow:none;
+}
+
+/* ---- HESAPLAYICI GEÇİŞ RAYI (.calc-switch) --------------------------------
+   On hesaplayıcı sayfasının onunda da bu kural birebir aynıydı (aynı md5);
+   §5.2 gereği kopyalanmadı, buraya taşındı ve on sayfadan silindi. Markup
+   .calc-switch-band > .wrap > nav.calc-switch, banner'ın DIŞINDA.
+
+   Ray TEK SATIRDIR: sığmadığında sarmaz, yatay kaydırır ve kaydırma çubuğu
+   görünmez. Reçete .pf-tabs'ın (saglik-testler-v1) birebir aynısıdır —
+   overflow-x:auto + scrollbar-width:none + ::-webkit-scrollbar{display:none},
+   çocuklarda flex:none + white-space:nowrap. width:fit-content ile max-width
+   100% birlikte çalışır: ray sığarken kutu içerik kadar olup margin:0 auto
+   ile ortalanır, taşarken kutu tam genişliğe oturur ve baştan kaydırılır.
+   (flex-wrap:wrap ve justify-content:center kaldırıldı — ikincisi taşan
+   içerikte ilk kalemi erişilemez kılıyordu.) */
+.calc-switch{display:flex;gap:4px;padding:4px;width:fit-content;max-width:100%;margin:0 auto;background:var(--bg);border:1px solid var(--line);border-radius:var(--radius-md);overflow-x:auto;scrollbar-width:none}
+.calc-switch::-webkit-scrollbar{display:none}
+.calc-switch a{flex:none;display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:var(--muted);background:transparent;border:0;padding:9px 14px;border-radius:var(--radius-sm);transition:.2s var(--ease);white-space:nowrap}
+.calc-switch a i{font-size:14px;color:var(--green)}
+.calc-switch a:hover{color:var(--tomato-deep);background:rgba(0,154,68,.08)}
+.calc-switch a.active{background:var(--tomato-deep);border-color:var(--tomato-deep);color:#fff}
+.calc-switch a.active i{color:#fff}
+.calc-switch-band{background:var(--bg-white);border-bottom:1px solid var(--line)}
+.calc-switch-band .wrap{padding-top:18px;padding-bottom:4px}
+.calc-switch-band .calc-switch{margin-bottom:14px}
+
+/* ---- "TÜMÜNÜ GÖR" SLIDER ALTYAPISI (oklar + snap track) ---- */
+.sec-tools{flex:none;display:flex;align-items:center;gap:12px}
+.row-nav{display:flex;gap:8px}
+.row-nav button{width:42px;height:42px;font-size:13px;border-radius:var(--radius-md);border:1px solid var(--line);background:var(--paper);color:var(--slate);cursor:pointer;transition:.2s var(--ease)}
+.row-nav button:hover{background:var(--tomato);border-color:var(--tomato);color:#fff}
+.row-track{
+  display:flex;gap:26px;overflow-x:auto;scroll-snap-type:x mandatory;
+  scrollbar-width:none;padding:6px 2px 10px;
+}
+.row-track::-webkit-scrollbar{display:none}
+.row-track>*{flex:none;width:274px;scroll-snap-align:start}
+
+/* ---- FOOTER REVEAL (gaviaworks perde efekti) — yalnız desktop/tablet ----
+   Footer sayfanın arkasında sabit bekler (z düşük); opak içerik wrapper'ı
+   üstünde durur ve sonuna JS ile footer yüksekliği kadar boşluk açılır —
+   scroll sonunda içerik kalkar, footer alttan ortaya çıkar. Mobil: statik. */
+@media (min-width:641px){
+  .footer.orange{position:fixed;left:0;right:0;bottom:0;z-index:1}
+  .page-main{position:relative;z-index:2;background:var(--bg)}
+}
+
+/* ============ FOOTER ============ */
+.footer{background:var(--slate);color:#aebcc6;padding:70px 0 0}
+/* kolon ritmi: logo bloğu geniş, 4 link kolonu eşit dağılır → sağ kenara kadar dengeli */
+.foot-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr 1.05fr;gap:44px 28px;padding-bottom:50px;border-bottom:1px solid rgba(255,255,255,.1)}
+.foot-col a{white-space:nowrap}
+.foot-brand img{height:42px;width:auto;margin-bottom:22px}
+.foot-soc{display:flex;gap:11px}
+.foot-soc a{width:42px;height:42px;border-radius:var(--radius-md);background:rgba(255,255,255,.07);display:grid;place-items:center;color:#cdd8e0;font-size:16px;transition:.2s var(--ease)}
+.foot-soc a:hover{background:var(--tomato);color:#fff;transform:translateY(-3px)}
+.foot-col h5{color:#fff;font-size:15px;font-weight:700;margin-bottom:18px}
+/* Ikinci grup basligi (4. sutun: Kurumsal + Iletisim, talimat 4.B). Yeni SINIF
+   icat edilmedi, bitisiklik seciciyle cozuldu; aralik yukaridaki 18px h5
+   ritminden turetildi. Grid oranlarina DOKUNULMADI. */
+.foot-col a + h5{margin-top:18px}
+.foot-col a{display:block;font-size:14px;font-weight:500;color:#9fb0bc;padding:7px 0;transition:.2s}
+.foot-col a:hover{color:var(--tomato);padding-left:5px}
+/* legal bar — 9 link, ince dikey ayraçlı, wrap'li */
+.foot-legal{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px 10px;padding:24px 0 0;font-size:12px;font-weight:500}
+.foot-legal a{white-space:nowrap;transition:.2s}
+.foot-legal .sep{width:1px;height:11px;background:rgba(255,255,255,.28);flex:none}
+.foot-bottom{display:flex;align-items:center;justify-content:space-between;padding:16px 0 26px;font-size:13px;font-weight:500;color:#7e8e9a}
+.foot-bottom a:hover{color:#cdd8e0}
+
+/* ---- TIBBİ UYARI BANDI (Faz 2, doküman §2.1) ----
+   Footer'ın İLK çocuğu, tam genişlikte (yatay padding .footer'da 0 — bant
+   kenardan kenara akar, metin .wrap ile hizalanır). Üstteki 70px'i bandın
+   kendi dolgusu devraldığı için orange footer'ın padding-top'u sıfırlanır. */
+.footer.orange{padding-top:0}
+.foot-med{background:rgba(0,0,0,.16);border-bottom:1px solid rgba(255,255,255,.18);margin-bottom:52px}
+.foot-med>.wrap{display:flex;gap:14px;align-items:center;padding-top:18px;padding-bottom:18px}
+.foot-med>.wrap>i{color:#fff;font-size:17px;flex:none;align-self:flex-start;margin-top:2px}
+.foot-med p{font-size:13px;line-height:1.65;font-weight:500;color:rgba(255,255,255,.92)}
+.foot-med .fm-link{color:#fff;font-weight:700;font-size:13px;white-space:nowrap;text-decoration:underline;flex:none}
+.foot-med .fm-link:hover{text-decoration:none}
+@media (max-width:860px){
+  .foot-med>.wrap{flex-wrap:wrap;align-items:flex-start}
+  .foot-med .fm-link{margin-left:31px}
+}
+
+/* ---- ORANGE FOOTER (gaviaworks yapısı) ---- */
+.gw-code{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-weight:700;letter-spacing:-.04em;margin-right:2px}
+.footer.orange{background:var(--tomato-deep);color:rgba(255,255,255,.88)}
+.footer.orange .foot-grid{border-bottom-color:rgba(255,255,255,.18)}
+.footer.orange .foot-soc a{background:rgba(255,255,255,.14);color:#fff}
+.footer.orange .foot-soc a:hover{background:#fff;color:var(--tomato);transform:translateY(-3px)}
+.footer.orange .foot-col h5{color:#fff}
+.footer.orange .foot-col a{color:rgba(255,255,255,.92)}
+.footer.orange .foot-col a:hover{color:#fff;padding-left:5px}
+.footer.orange .foot-legal a{color:rgba(255,255,255,.84)}
+.footer.orange .foot-legal a:hover{color:#fff}
+.footer.orange .foot-bottom{color:rgba(255,255,255,.84)}
+.footer.orange .foot-bottom a{color:rgba(255,255,255,.84)}
+.footer.orange .foot-bottom a:hover{color:#fff}
+
+/* =========================================================
+   RESPONSIVE TABAN  ·  desktop ≥1025px DEĞİŞMEZ
+   tablet 641–1024px · mobil ≤640px
+   ========================================================= */
+
+/* yatay taşmayı global engelle */
+html,body{overflow-x:hidden}
+
+/* sürükle-kaydır (mouse) imleci — yatay slider'lar */
+.drag-scroll.dragging{cursor:grabbing;user-select:none;scroll-behavior:auto}
+.drag-scroll.dragging *{pointer-events:none}
+
+/* ---- MOBİL KOMPONENTLER (desktop'ta gizli) ---- */
+.hamburger{display:none}
+.drawer,.drawer-overlay,.bottom-nav{display:none}
+
+/* drawer */
+.drawer-overlay{position:fixed;inset:0;background:rgba(20,18,12,.5);z-index:95;opacity:0;pointer-events:none;transition:opacity .3s var(--ease)}
+.drawer-overlay.open{opacity:1;pointer-events:auto}
+.drawer{
+  position:fixed;top:0;right:0;height:100%;width:min(360px,86vw);background:#fff;z-index:96;
+  transform:translateX(100%);transition:transform .32s var(--ease);
+  flex-direction:column;box-shadow:-12px 0 44px rgba(20,18,12,.22);
+}
+.drawer.open{transform:translateX(0)}
+.drawer-head{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--line);flex:none}
+.drawer-logo{height:34px;width:auto;display:block}
+.drawer-close{width:42px;height:42px;border-radius:var(--radius-md);border:1px solid var(--line);background:var(--paper);color:var(--slate);font-size:18px;cursor:pointer;display:grid;place-items:center}
+.drawer-close:hover{border-color:var(--tomato);color:var(--tomato)}
+.drawer-nav{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.d-item{border-bottom:1px solid var(--line)}
+.d-link{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;
+  font-family:inherit;font-weight:700;font-size:16px;color:var(--slate);
+  background:none;border:none;text-align:left;padding:16px 22px;cursor:pointer;
+}
+.d-link .fa-chevron-down{font-size:12px;color:var(--muted);transition:transform .25s var(--ease),color .25s var(--ease)}
+.d-item.open>.d-link .fa-chevron-down{transform:rotate(180deg);color:var(--tomato)}
+.d-link .soon{font-size:9.5px}
+.d-sub{max-height:0;overflow:hidden;transition:max-height .3s var(--ease);background:var(--bg)}
+.d-item.open>.d-sub{max-height:760px}
+.d-sub a{display:flex;align-items:center;gap:11px;padding:13px 22px 13px 36px;font-size:14.5px;font-weight:500;color:var(--slate-2)}
+.d-sub a i{width:18px;text-align:center;color:var(--tomato);font-size:13px}
+.d-sub a:hover{color:var(--tomato);background:var(--tomato-tint)}
+.drawer-foot{padding:18px 20px;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:11px;flex:none}
+.drawer-add{display:flex;align-items:center;justify-content:center;gap:9px;font-weight:700;font-size:14.5px;color:var(--slate);padding:13px;border:1px solid var(--line);border-radius:var(--radius-md);transition:.2s var(--ease)}
+.drawer-add:hover{border-color:var(--tomato);color:var(--tomato)}
+/* drawer dil seçici (mobilde üst bant yok) — aç/kapa liste: N dile ölçeklenir */
+.drawer-lang{display:flex;flex-direction:column;margin-top:3px}
+.drawer-lang-toggle{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;background:none;border:none;font-family:inherit;padding:4px 0;cursor:pointer}
+.drawer-lang-label{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--muted)}
+.drawer-lang-cur{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:700;letter-spacing:.03em;color:var(--slate)}
+.drawer-lang-cur i{font-size:10px;color:var(--muted);transition:transform .25s var(--ease)}
+.drawer-lang.open .drawer-lang-cur i{transform:rotate(180deg)}
+.drawer-lang-list{display:none;flex-direction:column;gap:5px;margin-top:10px;max-height:212px;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.drawer-lang.open .drawer-lang-list{display:flex}
+.drawer-lang-list button{display:flex;align-items:center;gap:10px;width:100%;text-align:left;font-family:inherit;font-size:13.5px;font-weight:500;color:var(--slate);background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-sm);padding:10px 13px;cursor:pointer;transition:.18s var(--ease)}
+.drawer-lang-list button b{font-weight:700;letter-spacing:.03em;width:26px;flex:none}
+.drawer-lang-list button:hover{border-color:var(--tomato);color:var(--tomato)}
+.drawer-lang-list button.active{border-color:rgba(0,154,68,.4);background:var(--tomato-tint);color:var(--tomato)}
+.drawer-lang-list button.active::after{content:"\f00c";font-family:"Font Awesome 6 Free";font-weight:900;margin-left:auto;font-size:12px}
+
+/* mobil alt navigasyon — Instagram tarzı floating frosted pill */
+.bottom-nav{
+  position:fixed;left:16px;right:16px;z-index:90;
+  bottom:calc(14px + env(safe-area-inset-bottom,0px));
+  justify-content:space-around;align-items:center;gap:4px;
+  padding:6px 8px;border-radius:var(--radius-lg);
+  background:rgba(255,255,255,.55);
+  -webkit-backdrop-filter:blur(30px) saturate(190%);backdrop-filter:blur(30px) saturate(190%);
+  border:none;
+  box-shadow:0 10px 30px rgba(33,30,22,.16),0 2px 8px rgba(33,30,22,.07),inset 0 1px 0 rgba(255,255,255,.6);
+  transition:transform .26s var(--ease);
+}
+.bottom-nav.bn-hidden{transform:translateY(calc(100% + 30px));pointer-events:none}
+.bn-item{
+  flex:none;position:relative;display:grid;place-items:center;
+  width:40px;height:40px;border-radius:var(--radius-lg);
+  color:var(--slate-2);font-size:19px;transition:background .2s var(--ease),color .2s var(--ease),transform .12s var(--ease);
+}
+/* etiketler görsel gizli (icon-only, IG tarzı) — erişilebilirlik için DOM'da kalır */
+.bn-item>span:last-child{position:absolute;width:1px;height:1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+/* aktif: yarı saydam domates (primary) — glass korunur, radius-lg pill ile uyumlu */
+.bn-item.active{color:var(--tomato);background:rgba(0,154,68,.15)}
+.bn-item:active{transform:scale(.9)}
+/* orta FAB: bar'dan çıkık (raised) — düz domates, token radius, halka yok */
+.bn-center{width:auto;height:auto;background:none;transform:translateY(-14px)}
+.bn-center:active{transform:translateY(-14px) scale(.92)}
+.bn-fab{
+  width:52px;height:52px;border-radius:var(--radius-lg);border:none;color:#fff;
+  background:var(--tomato);
+  display:grid;place-items:center;font-size:19px;
+  box-shadow:0 8px 20px rgba(0,154,68,.5);
+}
+
+/* ===================== GÖRÜŞ BİLDİR (eski site "Öneri ve Şikayet" mirası) =====================
+   Eski sitedeki sunum: sağ kenarda 90° döndürülmüş sabit buton (open-feedback-modal).
+   Aynı desen, yeni dile çevrildi.
+
+   REVİZE R2 (Beyar, 2026-08-23 — docs/REVIZE-2026-08-23.md):
+   şerit dili dadahaber v2'deki dikey şeride yaklaştırıldı ve dikeyde banner
+   hizasına çekildi. Dört ölçü değişti, hiçbiri yeni token icat etmiyor:
+
+   (a) DİKEY KONUM 50% → 42%. Şerit `position:fixed` olduğu için banner'ı
+       gerçekten TAKİP EDEMEZ; ölçülebilir hedef "açılış ekranında bandın
+       hizasına denk gelmek"tir. Ölçüm: 1440x900'de banner alt kenarı
+       viewport'un ~%62'sinde bitiyor, 50% şeridi bandın alt çeyreğine
+       düşürüyordu; 42% şeridi bandın gövdesine oturtuyor.
+
+   🔴 (b) DÖNÜŞÜME DOKUNULMADI ve bu bilinçli. `transform-origin:100% 0` +
+       `rotate(90deg)` elemanı origin'den YUKARI doğru bir boy uzatır (yerel
+       +x ekseni sayfada -y'ye düşer); ardından gelen `translateX(50%)` onu
+       yarım boy aşağı çekip tam olarak `top` çizgisinde ORTALAR. Yani `top`
+       zaten şeridin MERKEZİDİR — dikeyde oynatmak için tek gereken odur.
+       (`translateX(-50%)` kardeş markada denenmiş ve şerit yarım boy yukarı
+       kaçmış; ölçümü orada kayıtlı.)
+
+   🔴 (c) YARIÇAP `0 0 X X` YAZILIR, `X X 0 0` DEĞİL. 90° dönüş sonrası ALT
+       iki köşe SOL kenara düşer — yani şerit sayfaya bakan tarafından
+       yuvarlanır, sağ kenara yapışık düz tarafı kalır. Kart diliyle aynı
+       ölçüye çıktı: --radius-md → --radius-lg.
+
+   (d) Dolgu ve yazı büyüdü, kart gölgesi eklendi (--sh-md).
+
+   RENK DEĞİŞMEDİ ve DEĞİŞMEZ: bu projede `--tomato` token'ı nane yeşiline
+   (#009A44) bağlıdır (bkz. §token, Beyar kararı A5). Şerit yeşilini ayrıca
+   yazmak ikinci bir kaynak yaratır ve token değişince sessizce ayrışır. */
+/* ---- SAĞ KENAR DİKEY ŞERİT (.edge-rail) — Beyar kararı 2026-08-24 ----
+
+   🔴 KARAR DEĞİŞTİ. Bu madde (R39) daha önce *"bant EKLENMESİN"* diye
+   ölçümüyle kapatılmıştı; Beyar kararı tersine çevirdi ve şeridi istedi.
+   Eski gerekçe kayıtta durur, hüküm bu satırla değişmiştir.
+
+   Ölçü kardeş markadan ALINMADI, ölçülüp karşılığı kuruldu: 8px genişlik,
+   viewport boyu sürekli bant, kenara yaslı. RENK bu markanın kendi
+   token'ıdır (`--tomato` = nane yeşili, A5 kararı); kardeş markanın turuncusu
+   KOPYALANMADI — `§1` sınır kuralı renk için de geçerli.
+
+   `z-index:54` — "Görüş Bildir" etiketinin (55) hemen ALTINDA, yani etiket
+   şeridin üstünde durur; sayfa içeriğinin (2) üstünde.
+
+   ⚠ Etiketle AYNI kırılımda düşer: ≤640px'te `.feedback-tab` gizleniyor,
+   şerit de gizlenir — yoksa mobilde sahibi olmayan bir bant kalırdı. */
+.edge-rail{
+  /* 🔴 z-index 54 -> 72 (Beyar, 2026-08-25): şerit siyah üst bandın ALTINDA
+     kalıyordu ve ekranın en üstünde kesiliyordu. Kanon kardeş ekranda şerit
+     bandın ÜSTÜNDEN geçip tam yüksekliği kaplıyor. 72 seçildi çünkü üst bant
+     70'te; 72 onun hemen üstü ve dosyadaki 90+ katmanların (çekmece, modal,
+     bildirim) hiçbirinin altını oymuyor. */
+  position:fixed;top:0;right:0;z-index:72;
+  width:8px;height:100vh;
+  background:var(--tomato);
+  pointer-events:none;
+}
+
+.feedback-tab{
+  position:fixed;top:42%;right:0;z-index:55;
+  transform-origin:100% 0;transform:rotate(90deg) translateX(50%);
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--tomato);color:#fff;font-size:13px;font-weight:700;letter-spacing:.04em;
+  padding:15px 24px 17px;border-radius:0 0 var(--radius-lg) var(--radius-lg);
+  box-shadow:var(--sh-md);
+  white-space:nowrap;
+  transition:background .2s var(--ease),transform .25s var(--ease);
+}
+.feedback-tab i{font-size:13px}
+.feedback-tab:hover{background:var(--tomato-dark);transform:rotate(90deg) translateX(50%) translateY(3px)}
+
+/* görüş bildir modal'ı — eski site akışı (konu seç → form → teşekkür) tek panelde */
+.fb-overlay{position:fixed;inset:0;background:rgba(20,18,12,.5);z-index:97;opacity:0;visibility:hidden;transition:opacity .25s var(--ease),visibility .25s}
+.fb-overlay.show{opacity:1;visibility:visible}
+.fb-modal{position:fixed;inset:0;z-index:98;display:grid;place-items:center;padding:20px;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .25s var(--ease),visibility .25s}
+.fb-modal.show{opacity:1;visibility:visible;pointer-events:auto}
+.fb-panel{width:min(520px,100%);max-height:calc(100vh - 40px);overflow-y:auto;background:#fff;border-radius:var(--radius-lg);box-shadow:var(--sh-lg);transform:translateY(14px);transition:transform .3s var(--ease)}
+.fb-modal.show .fb-panel{transform:translateY(0)}
+.fb-head{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:20px 24px;border-bottom:1px solid var(--line)}
+.fb-head h3{font-size:19px}
+.fb-head p{font-size:12.5px;color:var(--muted);font-weight:500;margin-top:2px}
+.fb-close{flex:none;width:40px;height:40px;border-radius:var(--radius-md);border:1px solid var(--line);background:var(--paper);color:var(--slate);font-size:16px;cursor:pointer;display:grid;place-items:center;transition:.2s var(--ease)}
+.fb-close:hover{border-color:var(--tomato);color:var(--tomato)}
+.fb-body{padding:22px 24px 24px}
+.fb-topics{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:16px}
+.fb-topic{display:flex;align-items:center;gap:10px;font-family:inherit;font-size:13.5px;font-weight:500;color:var(--slate);background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-md);padding:12px 14px;cursor:pointer;transition:.18s var(--ease);text-align:left}
+.fb-topic i{width:18px;text-align:center;color:var(--tomato);font-size:14px;flex:none}
+.fb-topic:hover{border-color:var(--tomato);color:var(--tomato)}
+.fb-topic.active{border-color:rgba(0,154,68,.4);background:var(--tomato-tint);color:var(--tomato);font-weight:700}
+.fb-topic[data-topic="puan"]{grid-column:1/-1;justify-content:center} /* 5. tip (Puan ver — Yasin Bey'e öneri) tam satır */
+.fb-field{margin-bottom:11px}
+.fb-field input,.fb-field textarea{width:100%;font-family:inherit;font-size:14px;font-weight:500;color:var(--slate);background:var(--bg);border:1px solid var(--line);border-radius:var(--radius-md);padding:13px 15px;outline:none;transition:border-color .2s var(--ease)}
+.fb-field input::placeholder,.fb-field textarea::placeholder{color:#a7a7a7}
+.fb-field input:focus,.fb-field textarea:focus{border-color:var(--tomato)}
+.fb-field textarea{min-height:108px;resize:vertical}
+/* M17 — tipe göre alan setleri */
+.fb-fields{display:none}
+.fb-fields.active{display:block;animation:fadeUp .3s var(--ease)}
+.fb-q{font-size:13.5px;font-weight:700;color:var(--slate);margin-bottom:10px}
+.fb-select{
+  appearance:none;-webkit-appearance:none;width:100%;font-family:inherit;font-size:14px;font-weight:500;color:var(--slate);
+  background:var(--bg) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%237E7E7E' stroke-width='1.6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 15px center;
+  border:1px solid var(--line);border-radius:var(--radius-md);padding:13px 40px 13px 15px;outline:none;cursor:pointer;transition:border-color .2s var(--ease);
+}
+.fb-select:focus{border-color:var(--tomato)}
+.fb-select:invalid{color:#a7a7a7}
+.fb-chiprow{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:13px}
+.fb-chiprow .chip.active{border-color:var(--tomato);color:var(--tomato);background:var(--tomato-tint);font-weight:700}
+.fb-emoji{display:flex;gap:8px;margin-bottom:13px}
+.fb-emoji button{
+  flex:1;font-size:25px;line-height:1;padding:13px 0;background:var(--bg);border:1px solid var(--line);
+  border-radius:var(--radius-md);cursor:pointer;filter:grayscale(1);opacity:.65;transition:.18s var(--ease);
+}
+.fb-emoji button:hover{filter:none;opacity:1;border-color:var(--tomato)}
+.fb-emoji button.active{filter:none;opacity:1;border-color:rgba(0,154,68,.4);background:var(--tomato-tint);transform:scale(1.06)}
+.fb-shot{
+  display:flex;align-items:center;justify-content:center;gap:9px;width:100%;font-family:inherit;font-size:13px;font-weight:700;
+  color:var(--muted);background:transparent;border:1.5px dashed #d9d9d9;border-radius:var(--radius-md);padding:13px;margin-bottom:11px;
+  cursor:pointer;transition:.18s var(--ease);
+}
+.fb-shot small{font-weight:500}
+.fb-shot:hover{border-color:var(--tomato);color:var(--tomato)}
+.fb-kvkk{display:flex;align-items:flex-start;gap:9px;font-size:12.5px;font-weight:500;color:var(--muted);line-height:1.5;margin:14px 0 16px;cursor:pointer}
+.fb-kvkk input{margin-top:3px;accent-color:var(--tomato);flex:none}
+.fb-kvkk a{color:var(--tomato);font-weight:700;text-decoration:underline;text-underline-offset:2px}
+.fb-send{width:100%}
+.fb-success{text-align:center;padding:18px 0 10px}
+.fb-success .ok{width:62px;height:62px;border-radius:var(--radius-circle);background:#E3F4EA;color:var(--green);display:grid;place-items:center;font-size:26px;margin:0 auto 16px}
+.fb-success h4{font-size:18px;margin-bottom:7px}
+.fb-success p{font-size:13.5px;color:var(--muted);font-weight:500;max-width:340px;margin:0 auto}
+
+/* ===================== ÇEREZ ONAY BANNER ===================== */
+.cookie-banner{
+  position:fixed;left:0;right:0;bottom:24px;z-index:95;
+  width:min(1180px,calc(100% - 48px));margin:0 auto;
+  background:#fff;border:1px solid var(--line);border-radius:var(--radius-lg);
+  box-shadow:var(--sh-lg);padding:16px 20px;
+  transform:translateY(140%);opacity:0;visibility:hidden;
+  transition:transform .42s var(--ease),opacity .35s var(--ease),visibility .42s;
+}
+.cookie-banner.show{transform:translateY(0);opacity:1;visibility:visible}
+/* ===== E2E turu, 2026-08-21 — BANT ICERIGI ORTUYORDU =====================
+   OLCULDU (gercek tarayici, elementFromPoint): `/giris` ekraninda formun
+   kendi "Giris Yap" dugmesi y 802-850 arasinda; bant y 781-876 arasini
+   kapliyor ve dugmenin MERKEZINDE elementFromPoint `div.cookie-inner`
+   donduruyor. Yani ilk ziyaretinde kullanici, bandi kapatmadan giris
+   yapamiyordu. Ayni ekranda bant kunye baglantilarinin da ustundeydi
+   (390/414'te e-posta alanina yapilan gercek `tap` odagi alana goturmuyor).
+
+   COZUM: bant GORUNURKEN sayfanin altina onun kadar bosluk birakilir.
+   Deger UYDURULMADI, olculdu: bant + `bottom` bosluğu 1440'ta 119px,
+   414'te 329px, 390'da 349px. Asagidaki degerler o olcumun ustune
+   birakilan paydir.
+
+   ⚠ BANDIN KENDI GORUNUMU DEGISMEDI: konum, golge, radius, gecis, renk —
+   hicbiri elle tutulmadi. Degisen tek sey SAYFANIN alt boslugudur ve o da
+   yalniz bant EKRANDAYKEN. Bant kapatilinca (`.show` dusunce) bosluk da
+   kalkar; yeni tasarim dili uretilmedi. */
+body:has(.cookie-banner.show){padding-bottom:140px}
+.cookie-inner{display:flex;align-items:center;justify-content:space-between;gap:24px}
+.cookie-text{display:flex;align-items:center;gap:14px}
+.cookie-ico{flex:none;width:44px;height:44px;border-radius:var(--radius-md);background:var(--tomato-tint);color:var(--tomato);display:grid;place-items:center;font-size:19px}
+.cookie-text p{font-size:13.5px;font-weight:500;color:var(--slate-2);line-height:1.5;max-width:700px}
+.cookie-text a{color:var(--tomato);font-weight:700;text-decoration:underline;text-underline-offset:2px;white-space:nowrap}
+.cookie-text a:hover{color:var(--tomato-dark)}
+.cookie-actions{flex:none;display:flex;align-items:center;gap:10px}
+.btn-cookie-reject,.btn-cookie-accept{font-family:inherit;font-size:13.5px;font-weight:700;border-radius:var(--radius-md);padding:11px 22px;cursor:pointer;transition:.2s var(--ease);white-space:nowrap}
+.btn-cookie-reject{color:var(--slate);background:transparent;border:1px solid var(--line)}
+.btn-cookie-reject:hover{border-color:var(--slate);color:var(--ink)}
+.btn-cookie-accept{color:#fff;background:var(--tomato-deep);border:1px solid var(--tomato-deep)}
+.btn-cookie-accept:hover{background:var(--tomato-dark);border-color:var(--tomato-dark);transform:translateY(-1px)}
+
+/* ===================== TABLET (≤1024px) — chrome katmanı ===================== */
+@media (max-width:1024px){
+  .wrap{padding:0 24px}
+
+  /* yatay menü → hamburger + drawer */
+  .h-top .nav{display:none}
+  .hamburger{display:grid}
+  .drawer{display:flex}
+  .drawer-overlay{display:block}
+
+  /* üst bant sadeleşir — yatay taşma engeli */
+  .topbar .tb-soc,.topbar .tb-div{display:none}
+
+  .foot-grid{grid-template-columns:1fr 1fr;gap:36px 28px}
+  .foot-brand{grid-column:1/-1}
+  .sec-head h2{font-size:30px}
+}
+
+/* ===================== MOBİL (≤640px) — chrome katmanı ===================== */
+@media (max-width:640px){
+  .wrap{padding:0 16px}
+
+  /* üst bant gizli, header en üste (tek kat 62px) */
+  .topbar{display:none}
+  .header{top:0}
+  .h-top>.wrap{height:62px;gap:10px}
+  .brand img{height:32px}
+  .head-actions{gap:6px}
+  .btn-login{display:none}                                   /* giriş → drawer + bottom-nav */
+  /* ⚠ ÜSTTEKİ SATIR ARTIK PLANIM'I DÜŞÜRMÜYOR: `body.is-auth #btnPlanim`
+     (satır ~424) daha özgül. Beyar 2026-08-21 md.d — Planım'a erişim hiçbir
+     genişlikte kapanmaz; ≤640'ta girişli kullanıcının header düğmesi durur. */
+  /* logged-in header öğeleri mobilde drawer + bottom-nav'a devreder (kaynak sıra ile is-auth'u yener) */
+  body.is-auth .head-add,body.is-auth .head-bell,body.is-auth .acct-wrap{display:none}
+  .icon-btn{width:40px;height:40px;font-size:15px}
+
+  /* fixed header offseti mobilde tek kat */
+  .below-header{padding-top:62px}
+
+  /* bölüm ritmi */
+  .sec{padding:44px 0}
+
+  /* section başlık araçları: oklar h2 satırında, "Tamamını Gör" kompakt metin-link.
+     DOM aynı — sol blok + sec-tools display:contents ile grid'e açılır:
+     [eyebrow] / [h2 | oklar] / [lead] / [see-all] */
+  .sec-head,.cat-head,.guide-head{
+    display:grid;grid-template-columns:minmax(0,1fr) auto;
+    column-gap:14px;align-items:center;margin-bottom:24px;
+  }
+  .sec-head>div:first-child,.cat-head>div:first-child,.guide-head>div:first-child,
+  .sec-head .sec-tools,.cat-head .sec-tools,.guide-head .sec-tools{display:contents}
+  .sec-head .eyebrow,.cat-head .eyebrow,.guide-head .eyebrow{grid-row:1;grid-column:1/-1}
+  .sec-head h2,.cat-head h2,.guide-head h2{grid-row:2;grid-column:1;font-size:24px}
+  .row-nav,.cat-nav{grid-row:2;grid-column:2;align-self:center}
+  .row-nav button,.cat-nav button{width:38px;height:38px;font-size:12px}
+  .sec-head .lead,.cat-head .lead,.guide-head .lead{grid-row:3;grid-column:1/-1;font-size:14.5px}
+  /* kompakt see-all: buton kabuğu kalkar, metin-link kalır */
+  .see-all{padding:0;border:none;background:transparent;font-size:13.5px;color:var(--tomato)}
+  .sec-tools>.see-all{grid-row:4;grid-column:1/-1;justify-self:start;margin-top:14px}
+
+  .chip{font-size:12px;padding:7px 12px;white-space:nowrap}
+
+  /* görüş bildir etiketi mobilde gizli — bottom-nav + FAB yeterli */
+  .feedback-tab{display:none}
+  .edge-rail{display:none}
+
+  /* footer — floating pill nav'ı örtmesin */
+  .footer.orange{padding-bottom:calc(86px + env(safe-area-inset-bottom,0px))}
+  .foot-grid{grid-template-columns:1fr;gap:30px}
+  .foot-legal{justify-content:center;text-align:center}
+  .foot-bottom{flex-direction:column;gap:14px;text-align:center}
+
+  /* mobil alt bar aç */
+  .bottom-nav{display:flex}
+
+  /* çerez banner: floating bottom-nav'ın ÜSTÜNDE, alt alta */
+  .cookie-banner{
+    width:calc(100% - 24px);padding:15px 16px;
+    bottom:calc(80px + env(safe-area-inset-bottom,0px));
+  }
+  .cookie-inner{flex-direction:column;align-items:stretch;gap:13px}
+  /* Mobilde bant dikey yigiliyor: olculen toplam 329px (414) / 349px (390). */
+  body:has(.cookie-banner.show){padding-bottom:370px}
+  .cookie-text{align-items:flex-start}
+  .cookie-actions{gap:9px}
+  .cookie-actions button{flex:1;padding:12px 8px;font-size:12.5px}
+}
+
+/* ============ w3-nav-sweep ============ */
+/* w3-nav-sweep */
+.dropdown .dd-group{margin:6px 0 2px;padding:9px 13px 4px;border-top:1px solid var(--line);font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+.d-sub .d-sub-group{margin-top:6px;padding:10px 22px 4px 36px;border-top:1px solid var(--line);font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+.acct-menu .acct-pro i{color:#d99812}
+.acct-menu .acct-pro:hover{background:linear-gradient(180deg,rgba(251,230,180,.55),rgba(243,209,120,.32))}
+.acct-menu .acct-pro:hover,.acct-menu .acct-pro:hover i{color:#8a6410}
+/* Pro Menü maddesi — altın PRO pill (acct-pro crown diliyle tutarlı); pro içerik işareti */
+.acct-menu .pm-badge{margin-left:auto;display:inline-flex;align-items:center;gap:4px;font-size:9.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#8a6410;background:linear-gradient(180deg,#fbe6b4,#f3d178);border:1px solid #e0bc63;padding:2px 7px;border-radius:999px}
+.acct-menu .pm-badge i{font-size:9px;color:#b8860b}
+.vid-pro{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:#8a6410;background:linear-gradient(180deg,#fbe6b4,#f3d178);border:1px solid #e0bc63;padding:2px 8px;border-radius:999px;vertical-align:middle;margin-left:9px}
+.vid-pro i{font-size:9px}
+
+/* ============ ADIM 3 — KABUK: brand-switch band (Diet, .bs-diet aktif) ============ */
+/* NOT: .bs-gastro --bs-c artık var(--c-gastro) (KOL A4, 2026-08-16 — eskiden LİTERAL
+   #E14827 idi, tek kaynağa toplandı) — bu sayfada --tomato NANE'ye swap'lı (Diet aksanı),
+   var(--tomato) kullanılsaydı Gastro pill'i mint render olurdu. Diğer markalar page-bağımsız token. */
+:root{--c-mint-deep:#009A44}
+.brand-switch{display:flex;align-items:center;gap:5px}
+.bs-item{display:inline-flex;align-items:center;gap:7px;height:27px;padding:0 11px;border-radius:var(--radius-sm);color:#e9e2d6;font-size:12px;font-weight:800;letter-spacing:.01em;line-height:1;border:1px solid transparent;transition:background .2s var(--ease),border-color .2s var(--ease),color .2s var(--ease)}
+.bs-item i{font-size:13px;color:var(--bs-ic);transition:color .2s var(--ease)}
+.bs-name{max-width:0;opacity:0;overflow:hidden;white-space:nowrap;transform:translateX(-4px);transition:max-width .26s var(--ease),opacity .2s var(--ease),transform .22s var(--ease)}
+.bs-item:hover,.bs-item:focus-visible{background:var(--bs-c);border-color:var(--bs-c);color:#fff;outline:none}
+.bs-item:hover i,.bs-item:focus-visible i{color:#fff}
+.bs-item:hover .bs-name,.bs-item:focus-visible .bs-name{max-width:140px;opacity:1;transform:none}
+.bs-item.is-active{background:var(--bs-bg);border-color:var(--bs-bd);color:#fff;cursor:default;box-shadow:inset 0 -2px 0 var(--bs-ic)}
+.bs-item.is-active .bs-name{max-width:140px;opacity:1;transform:none}
+.bs-item.is-active i,.bs-item.is-active:hover i{color:var(--bs-ic)}
+.bs-item.is-active:hover{background:var(--bs-bg);border-color:var(--bs-bd)}
+.bs-gastro {--bs-c:var(--c-gastro);    --bs-bg:rgba(225,72,39,.18); --bs-bd:rgba(225,72,39,.46); --bs-ic:#ff7d5e}
+.bs-diet   {--bs-c:var(--c-mint-deep); --bs-bg:rgba(0,154,68,.20);--bs-bd:rgba(0,154,68,.5); --bs-ic:#66c28f}
+.bs-fit    {--bs-c:var(--c-green);     --bs-bg:rgba(0,147,208,.22);  --bs-bd:rgba(0,147,208,.5);   --bs-ic:#66bee3}
+.bs-gourmet{--bs-c:var(--c-purple);    --bs-bg:rgba(177,79,197,.22);--bs-bd:rgba(177,79,197,.5); --bs-ic:#c97ad6}
+.bs-campus {--bs-c:var(--c-petrol);    --bs-bg:rgba(0,96,114,.30);  --bs-bd:rgba(95,203,216,.40);--bs-ic:#5fcbd8}
+
+/* ============ ADIM 3 — KABUK: reveal + scroll-top + DadaMentor FAB (Diet) ============ */
+html.reveal-ready .reveal{opacity:0;transform:translateY(22px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+html.reveal-ready .reveal.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){html.reveal-ready .reveal{opacity:1 !important;transform:none !important;transition:none}}
+/* scroll-to-top (sağ-alt) — var(--tomato) bu sayfada NANE
+   Alt kenarı DadaMentor mini panelininkiyle AYNI: ikisi tek sıra oluşturur.
+   Gastro tarafında sağ altta ikinci bir yüzen düğme (yol güzergâhı) olduğu
+   için burası bir kat yukarıdaydı (92px / mobilde 148px); Diet'te o düğme
+   yok, sıra boş kaldı. Değer .mentor-panel.mini ile aynı yerden okunur:
+   24px (>640) ve 88px + güvenli alan (≤640). */
+.to-top{position:fixed;right:22px;bottom:24px;z-index:55;width:54px;height:54px;border-radius:var(--radius-lg);background:#fff;color:var(--tomato);border:1px solid var(--line);cursor:pointer;font-size:16px;display:inline-flex;align-items:center;justify-content:center;box-shadow:0 8px 20px rgba(33,30,22,.16);opacity:0;visibility:hidden;transform:translateY(8px);transition:opacity .25s var(--ease),transform .25s var(--ease),visibility .25s,background .2s var(--ease),color .2s var(--ease),border-color .2s var(--ease)}
+.to-top.show{opacity:1;visibility:visible;transform:none}
+.to-top:hover{background:var(--tomato);color:#fff;border-color:var(--tomato);transform:translateY(-2px)}
+.to-top:focus-visible{outline:3px solid var(--tomato-tint);outline-offset:2px}
+@media (max-width:640px){.to-top{right:16px;bottom:calc(88px + env(safe-area-inset-bottom,0px));width:48px;height:48px}}
+@media (prefers-reduced-motion:reduce){.to-top{transition:opacity .15s linear}.to-top:hover{transform:none}}
+/* ---- DadaMentor asistan token'lar (Diet: --tomato-rgb NANE 59,183,126 → atmos/av glow mint; gövde koyu kanonik) ---- */
+:root{
+  --d-3:#322D26; --d-deep:#161310;
+  --dline:rgba(251,248,243,.16);
+  --r-md:12px; --r-lg:16px; --r-xl:24px; --r-circle:50%;
+  --ease-spring:cubic-bezier(.16,1,.3,1);
+  --tomato-rgb:59,183,126;
+  --sh-3:0 18px 50px rgba(33,30,22,.16);
+  --panel-fl:360px;
+  --b-gastro:#E14827;  --b-gastro-l:#F0613F;
+  --b-gourmet:#b14fc5; --b-gourmet-l:#C66BD8;
+  --b-diet:#009A44;    --b-diet-l:#7FCCA1;
+  --b-fit:#0093d0;     --b-fit-l:#4DB4DE;
+  --b-akademi:#006072; --b-akademi-l:#2E97AB;
+}
+.w-gastro{--bc:var(--b-gastro);--bl:var(--b-gastro-l)}
+.w-gourmet{--bc:var(--b-gourmet);--bl:var(--b-gourmet-l)}
+.w-diet{--bc:var(--b-diet);--bl:var(--b-diet-l)}
+.w-fit{--bc:var(--b-fit);--bl:var(--b-fit-l)}
+.w-akademi{--bc:var(--b-akademi);--bl:var(--b-akademi-l)}
+.mentor-panel{overflow:hidden;border:1px solid var(--dline);border-radius:var(--r-xl);box-shadow:var(--sh-3);background:var(--d-deep);display:flex;flex-direction:column;justify-content:space-between;transition:width .5s var(--ease-spring),height .5s var(--ease-spring),border-radius .5s var(--ease-spring),box-shadow .42s var(--ease),transform .45s var(--ease-spring),opacity .35s var(--ease),background .4s var(--ease),border-color .4s var(--ease)}
+.mp-media{position:absolute;inset:0;z-index:0;overflow:hidden}
+.mp-atmos{position:absolute;inset:0;background:radial-gradient(110% 60% at 34% 24%, rgba(var(--tomato-rgb),.24), transparent 58%),linear-gradient(162deg,var(--d-3) 0%,var(--d-deep) 92%)}
+.mp-media video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.mp-fade{position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(180deg, rgba(22,19,16,.05) 0%, transparent 30%, rgba(22,19,16,.34) 54%, rgba(22,19,16,.82) 78%, rgba(22,19,16,.97) 100%)}
+.mp-top{position:relative;z-index:3;display:flex;align-items:center;justify-content:space-between;padding:15px 16px;flex:none;transition:opacity .25s var(--ease)}
+.mp-tag{display:inline-flex;align-items:center;gap:8px;font-weight:300;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.82)}
+.mp-tag i{font-size:11px;color:var(--tomato)}
+.mp-toggle{width:30px;height:30px;border-radius:var(--r-circle);border:1px solid var(--dline);background:rgba(22,19,16,.40);backdrop-filter:blur(4px);color:rgba(255,255,255,.8);display:grid;place-items:center;cursor:pointer;font-size:12px;transition:.2s var(--ease)}
+.mp-toggle:hover{color:#fff;border-color:rgba(255,255,255,.4)}
+.mp-chat{position:relative;z-index:3;padding:0 16px 17px;display:flex;flex-direction:column;gap:11px;flex:1;min-height:0;justify-content:flex-end;transition:opacity .3s var(--ease),transform .3s var(--ease)}
+.mp-id{display:flex;align-items:center;gap:11px;flex:none}
+.mp-av{width:38px;height:38px;border-radius:var(--r-circle);background:var(--tomato);color:#fff;display:grid;place-items:center;font-size:15px;flex:none;box-shadow:0 0 0 4px rgba(var(--tomato-rgb),.22)}
+.mp-id .nm{font-weight:800;font-size:15.5px;color:#fff;line-height:1.1}
+.mp-id .on{display:inline-flex;align-items:center;gap:6px;font-weight:300;font-size:11px;letter-spacing:.04em;color:rgba(255,255,255,.74)}
+.mp-id .on .d{width:7px;height:7px;border-radius:var(--r-circle);background:var(--b-diet-l);box-shadow:0 0 0 3px color-mix(in srgb,var(--b-diet-l) 28%,transparent)}
+.mp-bubble{flex:none;align-self:flex-start;max-width:94%;background:rgba(38,34,29,.86);backdrop-filter:blur(7px);border:1px solid var(--dline);border-radius:4px 15px 15px 15px;padding:12px 15px;font-weight:600;font-size:15.5px;line-height:1.4;color:#fff}
+.mp-row{flex:0 0 auto;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.mp-opt{display:inline-flex;align-items:center;justify-content:center;min-width:0;cursor:pointer;white-space:nowrap;text-decoration:none;padding:9px 10px;border-radius:var(--r-md);background:rgba(22,19,16,.50);backdrop-filter:blur(7px);border:1px solid var(--dline);color:rgba(255,255,255,.92);font-weight:600;font-size:12.5px;transition:background .2s var(--ease),border-color .2s var(--ease),color .2s var(--ease),transform .2s var(--ease)}
+.mp-opt:hover{background:rgba(42,38,32,.86);border-color:var(--bc,var(--tomato));color:#fff;transform:translateY(-1px)}
+.mp-opt.active{background:var(--bc,var(--tomato));border-color:transparent;color:#fff;box-shadow:0 5px 18px color-mix(in srgb,var(--bc,var(--tomato)) 42%,transparent)}
+.mp-mini-overlay{display:flex;position:absolute;inset:0;z-index:5;align-items:center;justify-content:flex-start;gap:11px;padding:0 22px 0 8px;cursor:pointer;opacity:0;pointer-events:none;transition:opacity .3s var(--ease)}
+.mp-mini-overlay .mav{width:40px;height:40px;border-radius:var(--r-circle);background:var(--tomato);color:#fff;display:grid;place-items:center;font-size:17px;flex:none;box-shadow:0 0 0 3px rgba(var(--tomato-rgb),.26);transform:scale(.55);transition:transform .45s var(--ease-spring)}
+.mp-mini-lbl{font-weight:800;font-size:14.5px;letter-spacing:-.01em;color:#fff;white-space:nowrap;opacity:0;transform:translateX(-6px);transition:opacity .3s var(--ease) .05s,transform .35s var(--ease-spring) .05s}
+.mentor-panel.mini .mp-mini-lbl{opacity:1;transform:none}
+.mentor-panel.floating{position:fixed;left:24px;right:auto;bottom:24px;top:auto;width:var(--panel-fl) !important;height:min(72vh,540px);z-index:94;border-radius:var(--r-xl);box-shadow:0 28px 80px rgba(16,14,9,.46);animation:floatIn .5s var(--ease-spring)}
+@keyframes floatIn{from{opacity:0;transform:translateY(26px) scale(.965)}to{opacity:1;transform:none}}
+.mentor-panel.foot-hide{transform:translateY(150%) !important;opacity:0;pointer-events:none}
+.mentor-panel.floating .mp-chat{flex:none;justify-content:flex-end}
+.mentor-panel.mini{position:fixed;left:24px;right:auto;bottom:24px;top:auto;width:148px !important;height:56px !important;max-height:56px;border-radius:var(--r-lg);z-index:94;cursor:pointer;overflow:hidden;background:var(--slate);border:1px solid rgba(255,255,255,.09);box-shadow:0 14px 38px rgba(16,14,9,.46)}
+.mentor-panel.mini .mp-media,.mentor-panel.mini .mp-fade{opacity:0}
+.mentor-panel.mini .mp-top,.mentor-panel.mini .mp-chat{position:absolute;left:0;right:0}
+.mentor-panel.mini .mp-chat{bottom:0;opacity:0;pointer-events:none;transform:translateY(6px)}
+.mentor-panel.mini .mp-top{top:0;opacity:0;pointer-events:none}
+.mentor-panel.mini .mp-mini-overlay{position:relative;inset:auto;height:56px;opacity:1;pointer-events:auto}
+.mentor-panel.mini .mp-mini-overlay .mav{transform:scale(1)}
+/* ≤640: açık panel ekran genişliğini alır. Mini pil ALMAZ — panel iki sınıfı
+   birlikte taşıdığı için (.floating.mini) buradaki genişlik mini'nin kendi
+   148px'ini eziyordu ve pil neredeyse tam genişlikte bir şerit oluyordu.
+   Mini kendi ölçüsünü burada tekrar beyan eder; böylece sağ alttaki .to-top
+   ile aynı sırada yan yana durabiliyorlar. */
+@media (max-width:640px){.mentor-panel.floating{left:16px;bottom:calc(88px + env(safe-area-inset-bottom,0px));width:calc(100vw - 32px) !important;max-width:360px;height:min(64vh,520px)}.mentor-panel.mini{left:16px;bottom:calc(88px + env(safe-area-inset-bottom,0px));width:148px !important}}
+
+/* ===== Footer marka hizalama (Gastro footer dili; marka-nötr, sızma yok) ===== */
+.foot-lockup{display:inline-flex;align-items:center;gap:11px;margin-bottom:15px}
+/* İŞARET BİÇİMİ HEADER'DAN GELİR (Beyar, 2026-08-16). Diet header'ı ikon-çipi
+   DEĞİL, çizilmiş bir SVG (.dd-mark) — yuvarlatılmış kareyi kendi <rect rx="11">
+   niteliğiyle taşır, CSS yarıçapı yoktur. Bu yüzden footer, kardeş kabukların
+   ÖLÇÜLEN header kanonuna hizalandı (canlı, 4 genişlik): 40px kutu / 11px yarıçap /
+   18px ikon → iç boşluk oranı 18÷40 = 0,450.
+   Footer 42px kutuda aynı oran → 42 × 0,450 = 18,9 ≈ 19px ikon.
+   Öncesi: radius %50 (DAİRE), ikon 17px (oran 0,405). Kutu boyutu ve ters renk
+   (beyaz zemin + marka rengi, koyu bant üstünde) DEĞİŞMEDİ. */
+.foot-lockup .fl-mark{width:42px;height:42px;border-radius:var(--radius-mark);background:#fff;color:var(--tomato);display:grid;place-items:center;font-size:19px;flex:none;box-shadow:0 4px 14px rgba(0,0,0,.16)}
+.foot-lockup .fl-word{font-weight:800;font-size:23px;letter-spacing:-.015em;color:#fff;line-height:1}
+.foot-lockup .fl-word .bd,.foot-lockup .fl-word .sf{color:#fff}
+.foot-brand .foot-tag{font-size:14px;font-weight:500;color:rgba(255,255,255,.82);line-height:1.6;max-width:34ch;margin:0 0 18px}
+.foot-bottom .fb-left b{color:#fff;font-weight:700}
+.foot-bottom .fb-left b .bd,.foot-bottom .fb-left b .sf{color:#fff}
+
+/* ===== Çapraz-marka wordmark, küçük etiket kapları içinde (KOL 4, 2026-08-15)
+   Diet'te DadaGastro'ya köprü kuran etiketler iki kaba giriyor ve İKİSİ DE
+   marka lockup'ını bozuyor — ölçüldü, canlı yerel aynada:
+     .eyebrow    → text-transform:uppercase · letter-spacing:1.92px (bu dosya, 96-100)
+     .brg-brand  → text-transform:uppercase · letter-spacing:0.46px
+                   (beslenme-rehberi sayfalarının kendi <style>'ı, ör.
+                    dengeli-tabak.blade.php:315)
+   Wordmark bu markada HİÇBİR yerde büyük harf/geniş tracking ile basılmaz
+   (topbar .bs-name, footer .fb-left b, .foot-lockup .fl-word, mp-opt,
+   partials/topbar.blade.php:32 — hepsi karışık harf). .bd/.sf'nin kendi
+   yüzleri (GilroyXB 800 / GilroyLt 300) yukarıda 42-43'te ZATEN tanımlı;
+   burada yalnız kabın dayattığı dönüşüm geri alınır, yeni tipografi YOK. */
+.eyebrow .brand-word,.brg-brand .brand-word{text-transform:none;letter-spacing:normal}
+
+/* ===== Çapraz-marka wordmark boyutu — ÜÇ markaya da eşit (R16a, Beyar
+   canlı gezinti turu 2026-08-23/24: "diet niye küçük ki").
+   KÖK NEDEN (ölçüldü): 23px büyütme yalnız .is-gastro değiştiricisine
+   yazılmıştı (KOL A4, 2026-08-16); DadaDiet ve DadaFit lockup'ları
+   değiştirici taşımadığı için .eyebrow/.brg-brand'ın kendi 11.5px/12px
+   "kategori etiketi" ölçeğinde kalıyordu. Kural artık DEĞİŞTİRİCİSİZ temel
+   seçiciye yazılı — üç marka da aynı 23px'i alır. 23px İCAT DEĞİL, KOL
+   A4'ün zaten kayda geçirdiği ölçü: bu dosyadaki .foot-lockup .fl-word
+   (satır ~1010, 23px) VE Gastro'nun kendi header logosu
+   resources/css/portal.css:231 .brand .brand-word (23px) ile birebir.
+   İkon (.eyebrow i 13px sabit, .brg-brand i 12px sabit) ve ::before çizgisi
+   (26x2px sabit) bu kuraldan ETKİLENMEZ. Kapı:
+   tests/Feature/Diet/DietCrossBrandSectionTest.php */
+.eyebrow .brand-word,.brg-brand .brand-word{font-size:23px}
+
+/* ===== Çapraz-marka DadaGastro etiketi — turuncu (KOL A4, 2026-08-16)
+   .eyebrow/.brg-brand içindeki DadaGastro köprü etiketleri Diet naneşiyle
+   (--green-deep, INLINE style idi — 28 basımdan kaldırıldı) değil kendi
+   markasının rengiyle (--c-gastro, yukarı 61-62'de token'landı, .bs-gastro'daki
+   LİTERAL'le birebir) basılır — değiştirici sınıf .is-gastro, yeni sınıf
+   AİLESİ değil var olan .eyebrow/.brg-brand'ın değiştiricisi. Boyut kuralı
+   üstteki temel seçiciye taşındığı için burada yalnız RENK kalıyor.
+   Kapı: tests/Feature/Diet/DietCrossBrandSectionTest.php */
+.eyebrow.is-gastro,.brg-brand.is-gastro{color:var(--c-gastro)}
+.brg-brand.is-gastro i{color:var(--c-gastro)}
+
+/* ===== Çapraz-marka DadaFit etiketi — sporcu yeşili (R16a, D5 kararı
+   Beyar 2026-08-24: "#0093d0" olarak token açılsın. Kaynağı yukarı 47'deki
+   --tomato yorumu: "DadaFit'in doygun #0093d0 sporcu yeşili" — İCAT DEĞİL,
+   dosyanın kendi kaydettiği değer. Simetri: .is-gastro ile aynı kalıp,
+   yalnız renk kaynağı farklı. Lockup GERÇEK LOGO DOSYASI DEĞİL — ikon +
+   <x-brand-word> kalıbı korunuyor, hiçbir görsel dosya eklenmedi (D5). */
+.eyebrow.is-fit,.brg-brand.is-fit{color:var(--c-fit)}
+.brg-brand.is-fit i{color:var(--c-fit)}
+
+/* ===== Lockup altına ayraç (R16) — kart başlığından ayrışsın diye lockup
+   tam genişlik alıp altına ince çizgi + boşluk kazanıyor. Değer --line
+   token'ından, yeni renk/kalınlık icat edilmedi. */
+.brg-card .brg-brand{display:flex;width:100%;padding-bottom:11px;border-bottom:1px solid var(--line)}
+
+/* =========================================================================
+   B1 KANON — `.hub-foot` ayraç hizası (Beyar, revizyon turu 2026-08-24;
+   R3/R10/R20'nin ölçtüğü aynı kusurun 13 kopyası)
+   =========================================================================
+   KÖK NEDEN (ölçüldü): repodaki 13 kopyanın 11'i `margin-top:auto` hiç
+   yazmıyordu (doğrudan 16px), ikisi (home.blade.php:207,
+   beslenme-dengeli-tabak-v1.css:165) `margin-top:auto` yazıp HEMEN ARDINDAN
+   `margin-top:16px` ile eziyordu. `.hub-body` her yerde zaten
+   `display:flex;flex-direction:column;flex:1` — altyapı doğru, eksik olan
+   tek şey ayrağı tabana iten `auto`nun tek başına, ikinci bir bildirimle
+   ezilmeden durması. Üstteki boşluk zaten `padding-top:14px` ile var, ikinci
+   bir margin-top YAZILMAZ.
+   Tek kaynak burada; B kararı (Beyar 2026-08-24) gereği kopyaların
+   kullanıldığı 13 dosya kendi sahibi grup tarafından dalga 2-3'te silinir
+   (bu grup `kabuk` yalnız kaynağı açar, sayfa dosyalarına dokunmaz). Ara
+   dönemde kopya duran sayfada görünür değişiklik olmaz — bu bilinen ve
+   kabul edilmiş bir ara durumdur (aynı spesifiklik, sonradan yüklenen kopya
+   kazanır), hata değildir. */
+/* ---- KART GÖVDESİ — HİZALI SATIRLAR + AYRACIN İKİ YANINDA NEFES ----
+   Beyar (2026-08-24): *"kartlar hizalı değil… 2 satırlık başlık, 2 satırlık
+   açıklama, dividerın üstü ve altı boşluk olsun."*
+
+   ÖLÇÜLDÜ (ipucu listesi, 1440px): başlık 18px (1 satır) ↔ 37px (2 satır),
+   açıklama 42px (2 satır) ↔ 63px (3 satır), kart 204 ↔ 225px. Ayraç bu yüzden
+   her kartta başka yükseklikte duruyordu.
+
+   Çözüm satır sayısını SABİTLEMEK: başlık ve açıklama iki satıra kilitlenir
+   (kısa olan boşluğu korur, uzun olan kırpılır), böylece ayraç her kartta
+   aynı Y'ye düşer ve ızgara hizalanır.
+
+   Ayracın ALTINDA zaten 14px vardı (`.hub-foot{padding-top:14px}`), ÜSTÜNDE
+   0'dı — çizgi metne yapışıyordu. Ayracın hemen öncesindeki öğeye aynı 14px
+   verildi; iki yan simetrik. Yeni ölçü üretilmedi, mevcut değer kullanıldı.
+
+   ⚠ `margin-top:auto` KORUNUR (ayracı kartın dibine iter); onun yerine
+   sabit bir üst boşluk yazılamaz, o yüzden boşluk ÖNCEKİ öğeden verilir. */
+.hub-body{padding:18px;display:flex;flex-direction:column;flex:1}
+.hub-body h4{
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+  min-height:calc(2 * 1.12em);
+}
+.hub-body p{
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+  min-height:calc(2 * 1.55em);
+}
+.hub-body > :not(.hub-foot):has(+ .hub-foot){margin-bottom:14px}
+.hub-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:auto;padding-top:14px;border-top:1px solid var(--line);font-size:12.5px;color:var(--muted);font-weight:500}
+
+/* =========================================================================
+   B2 KANON — `.qa-head` accordion ayracı (Beyar, revizyon turu 2026-08-24;
+   R15/R21'in ölçtüğü aynı kusurun 22 kopyası)
+   =========================================================================
+   Kural kopyalardaki birebir değerlerle taşındı, tek eklenen satır AÇIKKEN
+   alt ayraç: kapalı kutuda çizgi kutunun içinde asılı kalırdı, bu yüzden
+   yalnız `.qa.open .qa-head` altına iniyor. Tek kaynak burada; 22 kopya
+   (8 beslenme rehberi + 8 program + kaç-kalori/beslenme-ipuçları detayları +
+   4 referans CSS) B kararı gereği sahibi gruplar tarafından silinir. */
+.qa-head{display:flex;align-items:center;gap:14px;width:100%;background:none;border:none;font-family:inherit;font-size:15.5px;font-weight:700;color:var(--slate);padding:18px 22px;cursor:pointer;text-align:left;transition:color .2s var(--ease)}
+.qa-head:hover{color:var(--tomato-deep)}
+.qa.open .qa-head{color:var(--tomato-deep);border-bottom:1px solid var(--line)}
+/* AYRACIN ALTINA NEFES (Beyar, 2026-08-25). Ayracın ÜSTÜNDE başlığın kendi
+   18px dikey dolgusu vardı, ALTINDA hiç yoktu: `.qa-body p` dolgusu
+   `0 26px 18px 70px`, yani üstten sıfır. Çizgi metne yapışıyordu.
+   Değer UYDURULMADI — bileşenin kendi 18px'i aynadan yansıtıldı, ayracın
+   iki yanı artık eşit. Yalnız AÇIK kutuda uygulanır, çünkü ayraç da yalnız
+   orada var. Kapsam `> :first-child`: gövde bazı sayfalarda paragrafla
+   değil küçük bir alt etiketle (`.qa-sub`) başlıyor; kural neyle
+   başladığını sormadan ayracın altını açar. */
+.qa.open .qa-body > :first-child{padding-top:18px}
+
+/* =========================================================================
+   FOOTER REVİZYONU — "Dada Diet Footer" belgesi (2026-08-17)
+   =========================================================================
+   Belgenin sabit mimarisi:
+     Marka Alanı | Beslenme ve Araçlar | Öğren ve İlerle | Uzman Desteği | Uygulama
+   + altında YATAY KURUMSAL BANT, onun altında MEVCUT YASAL BANT.
+
+   🔴 DOKUNULMAYANLAR (kanıt: scripts/diet-footer-parity.mjs):
+     · .foot-grid'in grid-template-columns'ı — beş hücre aynen duruyor
+       (1.5fr 1fr 1fr 1fr 1.05fr, satır 595). Dördüncü sütun kalkmadı,
+       İÇERİĞİ değişti: "Kurumsal" bandına, hücre uygulama alanına geçti.
+     · .foot-legal / .foot-bottom — belgenin dipnotu gereği tek kural bile
+       yazılmadı; renk, sıra, ayraç, hizalama aynen.
+     · .foot-med tıbbi bandı — dokunulmadı.
+
+   Bu blok dosyanın SONUNA eklendi (öncekilerin hiçbirini ezmez, kendi
+   mobil media query'sini taşır — 858'deki bloktan sonra geldiği için
+   eşit özgüllükte kaynak sırası kazanır).
+   ========================================================================= */
+
+/* ---- MOBİL ACCORDION İSKELETİ (masaüstünde görünmez) ----
+   Başlık metni <h5> içindeki bir <button>'a taşındı. Masaüstünde buton
+   düz metin gibi davranır: kabuk yok, imleç yok, chevron yok — h5'in
+   kendi tipografisini miras alır, tek piksel kaymaz. */
+.foot-col h5>.fc-toggle{
+  display:flex;align-items:center;gap:10px;width:100%;
+  background:none;border:0;padding:0;margin:0;
+  font:inherit;color:inherit;letter-spacing:inherit;text-align:left;
+  cursor:default;
+}
+.foot-col .fc-chev{display:none}
+
+/* ---- SAĞ SABİT UYGULAMA ALANI (belge §5) ----
+   Mağaza butonu değerleri Diyet'in KENDİ referansından birebir alındı
+   (public/reference/diet/css/pages/diyet-listeleri-v1.css:83-88 — aynı
+   sayfanın .app-store bandı). Yeni ölçü/renk İCAT EDİLMEDİ; yalnız
+   footer'ın turuncu zemininde okunacak şekilde .footer.orange altında
+   opaklıkları eşlenir (aşağıda). */
+.foot-app h5{color:#fff;font-size:15px;font-weight:700;margin-bottom:12px}
+.foot-app h5 .bd,.foot-app h5 .sf{color:#fff}
+.foot-app-lead{font-size:13.5px;font-weight:500;color:#9fb0bc;line-height:1.6;margin:0 0 18px}
+/* Diyet'in kendi .app-stores kuralıyla AYNI (diyet-listeleri-v1.css:83):
+   satır + wrap. Dar footer sütununda (1.05fr) butonlar zaten alt alta düşer,
+   geniş yerleşimde yan yana gelir — sabit bir yön dayatılmadı. */
+.foot-app-stores{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-start}
+/* 🔴 İKİ BUTON EŞİT GENİŞLİKTE (revizyon, 2026-08-20).
+   Önceki hâlinde genişliği METİN belirliyordu ve iki buton eşit değildi —
+   ölçüldü (1440·768·390'ın üçünde de): App Store 130.81px · Google Play
+   151.91px, yani 21.10px'lik bir fark. Alt alta düştükleri yerleşimde
+   (1.05fr'lik dar sütun) bu fark sağ kenarları da kaydırıyordu.
+
+   İKİ BİLDİRİM BİRLİKTE çalışır ve ikisi de gerekli:
+     · `max-width` SABİT genişliği verir — 164px = ölçülen en geniş butonun
+       max-content'i (151.91 → 152) + kabın kendi `gap` değeri kadar (12px)
+       pay. Yeni bir ölçü icat edilmedi, ikisi de bu bloğun kendi sayıları.
+     · `width:100%` yalnızca TAŞMA EMNİYETİDİR. Beş sütunlu yerleşimin en dar
+       ucunda (1025px viewport) kap 157.92px'e iner; sabit 164px orada sütunu
+       taşırırdı. Yüzde, butonu kabın genişliğine kilitler — iki buton yine
+       EŞİT kalır, çünkü ikisi de aynı kaba bakar.
+
+   Yerleşim yönü DAYATILMADI, eskisi gibi `flex-wrap`e bırakıldı: 164+12+164
+   sığdığı genişlikte (768 · 390) yan yana, sığmadığı yerde (1440 · 1025) alt
+   alta durur — ve alt alta düştüğünde sol/sağ kenarlar artık hizalıdır. */
+.foot-app-store{
+  display:inline-flex;align-items:center;gap:11px;
+  width:100%;max-width:164px;
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);
+  border-radius:var(--radius-md);padding:11px 18px;
+  transition:.2s var(--ease);
+}
+/* 🔴 Uygulama yayımlanmadığı için buton bugün <span> olarak basılır (hedefi
+   yok). Hover yükselmesi YALNIZ gerçek <a>'ya verilir — hedefsiz butonun
+   tıklanabilir görünmesi belgenin sert kuralını çiğnerdi. */
+a.foot-app-store:hover{background:rgba(255,255,255,.14);transform:translateY(-2px)}
+span.foot-app-store{cursor:default}
+.foot-app-store i{font-size:24px;color:#fff;flex:none}
+.foot-app-store span{display:block;font-size:10.5px;color:#9fb0bc;font-weight:500;line-height:1.2}
+.foot-app-store b{display:block;font-size:14px;color:#fff;font-weight:700}
+
+/* ---- YATAY KURUMSAL BANT ----
+   Belge: "geniş masaüstü ekranlarında tek satırda, daha dar ekranlarda iki
+   dengeli satır halinde gösterilebilir." flex-wrap + ortalama tam olarak
+   bunu yapar; sabit sütun sayısı DAYATILMADI, satır sayısı genişliğe göre
+   kendiliğinden 1'den 2'ye iner. */
+.foot-corp{
+  display:flex;flex-wrap:wrap;align-items:center;justify-content:center;
+  gap:10px 26px;padding:22px 0;
+  border-bottom:1px solid rgba(255,255,255,.1);
+}
+.foot-corp a{font-size:13px;font-weight:600;white-space:nowrap;transition:.2s}
+.foot-corp a:hover{color:var(--tomato)}
+/* Mobilde de ortalı akar, yalnız aralık daralır; belge "iki dengeli satır"
+   diyor, dar ekranda daha fazlasına sarar — dayatılan satır sayısı yok. */
+@media (max-width:640px){
+  .foot-corp{gap:10px 18px;padding:20px 0}
+}
+
+/* ---- ORANGE FOOTER EŞLEMESİ ----
+   Turuncu zeminde gri tonlar okunmaz; kardeş kurallar (satır 633-644) hangi
+   opaklıkları kullanıyorsa yeni bloklar da AYNILARINI kullanır. */
+.footer.orange .foot-app h5{color:#fff}
+.footer.orange .foot-app-lead{color:rgba(255,255,255,.82)}
+.footer.orange .foot-app-store{background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.24)}
+.footer.orange a.foot-app-store:hover{background:rgba(255,255,255,.22)}
+.footer.orange .foot-app-store span{color:rgba(255,255,255,.78)}
+.footer.orange .foot-corp{border-bottom-color:rgba(255,255,255,.18)}
+.footer.orange .foot-corp a{color:rgba(255,255,255,.92)}
+.footer.orange .foot-corp a:hover{color:#fff;text-decoration:underline}
+
+/* ===================== MOBİL (≤640px) — belge "Mobil sıralama" =====================
+   Sıra DOM'un kendisidir (logo+açıklama+sosyal · üç menü · uygulama ·
+   kurumsal · yasal), bu yüzden tek bir `order` kuralı yazılmadı.
+   Burada yalnız üç orta menü accordion'a döner. */
+@media (max-width:640px){
+  /* Accordion satırları bitişik dursun: grid'in 30px satır boşluğu kalkar,
+     boşluk marka ve uygulama bloklarına ELDEN verilir (aynı 30px). */
+  .foot-grid{row-gap:0}
+  .foot-brand{margin-bottom:30px}
+  .foot-app{margin-top:30px}
+
+  .foot-col{border-bottom:1px solid rgba(255,255,255,.16)}
+  .foot-col:first-of-type{border-top:1px solid rgba(255,255,255,.16)}
+  .foot-col h5{margin-bottom:0}
+  .foot-col h5>.fc-toggle{cursor:pointer;justify-content:space-between;padding:15px 0}
+  .foot-col .fc-chev{display:block;font-size:12px;flex:none;transition:transform .2s var(--ease)}
+  .foot-col h5>.fc-toggle[aria-expanded="true"] .fc-chev{transform:rotate(180deg)}
+  /* Kapalı durum YALNIZ JS'in eklediği sınıfla oluşur — script çalışmazsa
+     kalemler görünür kalır, menü yutulmaz. Sınıf, butonun `aria-controls`
+     ile İŞARET ETTİĞİ kutuya konur (sütuna değil): bir sütun ileride ikinci
+     bir gruba bölünürse ötekini yanlışlıkla kapatmaz. */
+  .fc-links.is-closed{display:none}
+  .fc-links{padding-bottom:10px}
+  .foot-col a{white-space:normal}
+}
+
+
+/* =====================================================================
+   SAYFALAMA — ORTAK BİLEŞEN (R28 · Beyar, 2026-08-25)
+   ---------------------------------------------------------------------
+   🔴 NEDEN BURAYA TAŞINDI — ÖLÇÜLDÜ, TERCİH DEĞİL.
+
+   Bu kurallar on liste yüzeyinin ALTISINDA ayrı ayrı, elle kopyalanmış
+   duruyordu; DÖRDÜNDE ise hiç yoktu (`articles/index` ·
+   `articles/kategori` · `nutrition-hub` · `programs/index`). Yani aynı
+   bileşen bazı sayfalarda düğme, bazılarında çıplak metin olarak
+   basılıyordu. Kopyalar ayrıca birbirinden SAPMIŞTI:
+
+     · `kac-kalori/liste` kopyasında `.pagi-note` kuralı HİÇ YOKTU —
+       özet satırı biçimsiz basılıyordu,
+     · `.pg:hover` altı kopyanın altısında da korumasızdı: AKTİF sayfa ve
+       PASİF oklar da renk değiştiriyordu,
+     · klavye odak halkası (`:focus-visible`) hiçbir kopyada yoktu,
+     · dar ekran sıkıştırma bloğu hiçbir kopyada yoktu.
+
+   `09 §3.1` md.1: *"İhtiyaç varsa ortak arayüz paketine eklenir."*
+   Referans da aynı yolu izlemiş ve kuralları kendi kabuk dosyasına
+   taşımış. Tek kaynak burasıdır; sayfa içi kopyalar KALDIRILDI.
+
+   ÖLÇÜ REFERANSTAN BİREBİR, PALET BU MARKANIN:
+     `.pagi{gap:8px;justify-content:center;margin-top:40px}`
+     `.pg{min-width:44px;height:44px;padding:0 13px;font-size:14px/700}`
+     `.pagi-note{width:100%;text-align:center;font-size:12.5px;margin-top:6px}`
+   ⚠ 44×44 tesadüf değil: dokunma hedefi eşiği. Küçültme.
+   ===================================================================== */
+.pagi{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:40px;flex-wrap:wrap}
+.pg{
+  min-width:44px;height:44px;padding:0 13px;
+  display:inline-flex;align-items:center;justify-content:center;
+  font-family:inherit;font-size:14px;font-weight:700;color:var(--slate);
+  background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-md);
+  cursor:pointer;transition:.2s var(--ease);text-decoration:none;
+}
+/* İki koruma ŞART: bunlar olmadan aktif sayfa ve pasif oklar da imleçle
+   renk değiştiriyordu — tıklanamayan bir öğenin tıklanır gibi davranması. */
+.pg:hover:not([disabled]):not(.active){border-color:var(--green);color:var(--green-deep)}
+.pg:focus-visible{outline:3px solid var(--green);outline-offset:2px}
+.pg.active{background:var(--tomato-deep);border-color:var(--tomato-deep);color:#fff;cursor:default}
+.pg.arrow i{font-size:12px}
+.pg[disabled]{opacity:.4;pointer-events:none}
+.pg-dots{color:var(--muted);font-weight:700;padding:0 2px;font-size:14px;user-select:none}
+/* Sayfalamanın ALTINDAKİ özet satırı: `width:100%` onu kendi satırına
+   düşürür (`.pagi` sarmalı `flex-wrap` taşıyor), `margin-top` de aradaki
+   boşluğu verir. İkisinden biri düşerse satır düğmelerin YANINA geçer. */
+.pagi-note{width:100%;text-align:center;font-size:12.5px;color:var(--muted);font-weight:500;margin-top:6px}
+@media (max-width:640px){
+  .pagi{gap:6px;margin-top:32px}
+  .pg{min-width:40px;height:40px;font-size:13px;padding:0 10px}
+}
+
+/* =====================================================================
+   KÖPRÜ — Diet maketi · kanon ekranları ↔ canlı sayfalar
+   ---------------------------------------------------------------------
+   Beyar kararı 2026-09-03: T1 seçeneği (c). 2245 sayfa çevrilmedi,
+   16 kanon ekranı geri alınmadı; iki sözlük yan yana yaşıyor ve
+   aralarındaki ÖLÇÜLMÜŞ fark bu dosyayla kapatılıyor.
+
+   🔴 BU DOSYA KANON DEĞİLDİR. `kanon/` altında duruyor çünkü kanon
+      ekranlarıyla birlikte bakılması gerekiyor, ama kanon sözleşmesinin
+      parçası değil: kanona karıştırılmaz, kanon kuralı buradan
+      türetilmez. Kalıcı çözüm tam çeviridir → docs/borc-diet-kanon.md
+
+   ── KAPSAM SINIRI ────────────────────────────────────────────────────
+   YALNIZ ortak kabuk: üst bant · header · ana menü · çekmece · dip ·
+   alt çubuk · hesap menüsü. GÖVDE İÇİ SINIFLAR KAPSAM DIŞI — Beyar:
+   "gövde içi sınıflar zaten kendi sayfasında tutarlı; kimse iki sayfayı
+   yan yana koyup sınıf adı karşılaştırmıyor."
+
+   ── ÖLÇÜM: NE BULUNDU ────────────────────────────────────────────────
+   Kabuk yüzeyleri iki tarafta AYNI DURUMA getirilip karşılaştırıldı
+   (canlı kaydırıldı → at-top düştü; dip akordeonu açıldı):
+
+     çekmece      ✅ birebir (yalnız 335.4 ↔ 335.0 px yuvarlama)
+     alt çubuk    ✅ birebir
+     ana menü     ✅ birebir
+     dip listesi  ✅ birebir
+     hesap menüsü ✅ kutu birebir
+
+   Kural düzeyinde: kabuk seçicilerinin gövdesi 1 tanesi hariç AYNI;
+   kanona özgü 37 seçicinin hepsi PARALEL AD (`.dip`, `.dip-kolon`,
+   `.cekmece*`), aynı düğümü aynı görünüme boyuyor. Yani iki sözlük
+   ÇAKIŞMIYOR — her sayfa kendi CSS'ini taşıyor ve doğru render ediyor.
+
+   Geriye ölçülen TEK gerçek tasarım farkı kaldı; bu dosyanın tamamı o.
+
+   ── NE YAPMIYOR, NEDEN ───────────────────────────────────────────────
+   Üç görünür fark daha ölçüldü ve BİLEREK BURAYA ALINMADI: üçü de CSS
+   farkı değil, kanon ekranlarında dinleyicisi bağlanmayan ÇALIŞMA-ANI
+   durum sınıfı. CSS ile taklit etmek kusuru büyütürdü:
+
+     1) header saydamlığı — canlı `.header.at-top`, kanon
+        `.kabuk-basi.tepede`. Kural İKİ TARAFTA DA VAR ve aynı; kanonda
+        sınıfı basan kod yok. Zorla saydam yapılırsa kaydırınca da
+        saydam kalır — canlıdan daha yanlış olur.
+     2) dip akordeonu (≤900px) — canlı `.fc-links.is-closed`, kanonda
+        hiç eklenmiyor. Zorla kapatılırsa kanon ekranında dip bağlantıları
+        AÇILAMAZ olur; uzun ama gezilebilir dip, kısa ama ölü dipten iyi.
+     3) hesap menüsü — canlıda `.acct-wrap` tıklamada `open` alıyor,
+        kanonda alan kod yok (`acct-wrap`in 5 geçişi de CSS içinde).
+        :hover ile taklidi etkileşimi değiştirirdi.
+
+   Üçü de docs/borc-diet-kanon.md'de, ölçümleriyle.
+   ===================================================================== */
+
+/* ---------------------------------------------------------------------
+   DİP KOLON BAŞLIĞI — kanonun aralık kuralı canlıya iner
+   ---------------------------------------------------------------------
+   Kanon `.dip-kolon h5,.dip-kolon h4` başlığa `padding-bottom` EKLİYOR;
+   canlının `.foot-col h5` kuralında yalnız `margin-bottom:18px` var.
+   Ölçülen fark: kolon yüksekliği 258→274 @1440 · 279→316 @390.
+   Kanonun kendi değeri `var(--bosluk-18)`; o token canlı sayfada
+   tanımlı olmadığı için çözülmüş hâli yazıldı. Ham px taşıması bu
+   dosyanın köprü olmasından; kanon kuralı olsaydı token zorunluydu.
+   Kanonun `border-bottom`u burada YOK — kanon onu kendi ikinci
+   kuralıyla (`.dip-kolon h5,.dip-kolon .fc-head{border-bottom:0}`)
+   zaten sıfırlıyor, yani net etki sadece dolgu.                        */
+.footer .foot-col h5 { padding-bottom: 18px; }
+
+/* ⚠ MOBİLDE MARGIN'E DOKUNULMUYOR — bilerek. Canlı ≤900px'te
+   `.foot-col h5{margin-bottom:0}` yazıyor; bu kanonun eksiği değil,
+   AKORDEONUN kuralı: kapalı kolonda başlık dokunulabilir satırdır ve
+   altında boşluk istemez. Kanon ekranında akordeon yok, o yüzden orada
+   margin duruyor. Denkleştirmek için canlıya 18px geri verilseydi
+   akordeon satır ritmi bozulurdu — kabuk farkını kapatırken canlının
+   kendi davranışını bozmak köprünün işi değil. Fark kayıtta:
+   dip kolonu 279 ↔ 316 @390 (akordeon açıkken). */
+
+/* === DADADIET MARKA KATMANI (diet-marka.mjs) ===
+   Ekosistem rayında marka adı AYRI yazılır: "dada diet".
+   Kanon kararı; FIT ve Gastro'da da böyle. Kural kaynakta YOKTU. */
+.bs-name .sf{margin-left:.26em}
+
+/* === DADADIET KELİME MARKASI — vektör (diet-logo.mjs) ===
+   Kural kanonun: kanon/bilesenler.css §27b. Ölçü OPTİK EŞİTLİK ile —
+   FIT kutusu ÷ 1,0096. Ölçüt "dada" logotipi; .ai'den ölçüldü ve iki
+   markada birebir aynı çıktı (286,605 birim).
+   Renk KAPTAN gelir — SVG currentColor taşır. */
+.diet-word-mark{height:23.77px;width:auto;display:block;flex:0 0 auto;color:var(--tomato)}
+.drawer-brand .diet-word-mark{height:18.82px}
+.foot-lockup  .diet-word-mark{height:27.73px;color:currentColor}
+/* işaret düştü: kelime markası kabın sol kenarına oturur */
+.brand.dd-brand,.drawer-brand{gap:0}
+.foot-lockup{gap:0}

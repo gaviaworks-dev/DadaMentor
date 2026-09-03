@@ -1,0 +1,196 @@
+/* Kaynak-transfer: prototip besin-kutuphanesi-v1.html <style> blogu — AYNEN.
+   HANDOFF §0: bu tasarim yeniden yapilmaz, oldugu gibi tasinir. */
+/* ===== SAYFA CSS — kabuk CSS'i assets/css/dd-shell.css'te ===== */
+/* =====================================================================
+   F10 — BESİN KÜTÜPHANESİ · arama + besin satırı + detay şablonu
+   (eski besin-kalori-hesapla.html besin değer tablosu modernize)
+   ?besin=1 → detay hâli · r-card (v3a) ilgili tarifler
+   ===================================================================== */
+
+/* ---- ÜST BÖLGE: arama bandı (krem) ---- */
+/* Alt boşluk 46px — kardeş hero'ların değeri (.reh-hero 128/46, .dl-hero 44,
+   .sh-hero 50). Önceden yoktu: arama kutusunun margin-bottom'u banner'ın
+   dışına düşüyor, kutu banner'ın alt kenarına sıfır mesafede kalıyordu. */
+.nb-top{position:relative;padding:128px 0 46px;background-image:linear-gradient(90deg,rgba(18,28,22,.94),rgba(20,32,25,.74)),url("../../../../_dis/images.unsplash.com/photo-1559054663-e8d23213f55c.avif");background-size:cover;background-position:center}
+.rd-crumb{display:flex;align-items:center;flex-wrap:wrap;gap:9px;padding:18px 0 14px;font-size:13px;font-weight:500;color:var(--muted)}
+.rd-crumb a{color:var(--muted);transition:.18s}
+.rd-crumb a:hover{color:var(--green-deep)}
+.rd-crumb i{font-size:9px;color:#c7c7c7}
+.rd-crumb b{color:var(--slate);font-weight:700}
+.nb-head{padding:6px 0 22px;max-width:640px}
+.nb-head .eyebrow{color:var(--green-deep)}
+.nb-head .eyebrow::before{background:var(--green)}
+.nb-head h1{font-size:36px;margin:14px 0 10px;letter-spacing:-.02em}
+.nb-head .lead{color:var(--muted);font-weight:500;font-size:15.5px}
+.nb-searchbar{position:relative;max-width:560px}
+.nb-searchbar i{position:absolute;left:18px;top:50%;transform:translateY(-50%);color:var(--green);font-size:16px}
+.nb-searchbar input{width:100%;font-family:inherit;font-size:15px;font-weight:500;color:var(--slate);background:var(--paper);border:1px solid #c9ead8;border-radius:var(--radius-md);padding:15px 18px 15px 48px;outline:none;transition:.2s var(--ease);box-shadow:var(--sh-sm)}
+.nb-searchbar input::placeholder{color:#a7a7a7}
+.nb-searchbar input:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(0,154,68,.12)}
+/* ---- KATEGORİ SEKME ÇUBUĞU (saglik-testler-v1 — sitedeki tek kategori deseni).
+   9. turdan önce burada banner'ın içinde duran .nb-cats çip satırı vardı;
+   kaldırıldı, kategori seçimi banner dışındaki beyaz alana taşındı. ---- */
+.tst-tabwrap{display:flex;justify-content:center;margin:0 0 26px}
+.pf-tabs{display:inline-flex;gap:4px;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-md);padding:4px;overflow-x:auto;scrollbar-width:none;max-width:100%}
+.pf-tabs::-webkit-scrollbar{display:none}
+.pf-tabs .dt{font-family:inherit;font-weight:700;font-size:13.5px;color:var(--muted);background:transparent;border:none;border-radius:var(--radius-sm);padding:11px 22px;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:.2s var(--ease);white-space:nowrap;flex:none}
+.pf-tabs .dt:hover{color:var(--green-deep)}
+.pf-tabs .dt.active{background:var(--tomato-deep);color:#fff}
+.pf-tabs .dt .cnt{font-size:11px;font-weight:700;opacity:.6}
+.pf-tabs .dt.active .cnt{opacity:.85}
+
+/* ---- BESİN LİSTESİ (tablo başlığı + satırlar) ---- */
+.food-thead{display:flex;align-items:center;gap:16px;padding:15px 20px 13px;font-size:11.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line)}
+.food-thead .th-name{flex:1}
+.food-thead .th-m{width:62px;text-align:center;flex:none}
+.food-thead .th-kcal{width:96px;text-align:right;flex:none}
+.food-thead .th-go{width:20px;flex:none}
+.food-list{display:flex;flex-direction:column}
+.food-row{display:flex;align-items:center;gap:16px;width:100%;text-align:left;font-family:inherit;background:var(--paper);border:none;border-bottom:1px solid var(--line);padding:15px 20px;cursor:pointer;transition:.15s var(--ease)}
+.food-row:hover{background:#F4FBF7}
+.fr-ico{flex:none;width:46px;height:46px;border-radius:var(--radius-md);background:#E3F4EA;display:grid;place-items:center;color:var(--green);font-size:19px}
+.fr-name{flex:1;min-width:0}
+.fr-name b{font-size:15px;color:var(--slate);font-weight:700;display:block}
+.fr-name span{font-size:12.5px;color:var(--muted);font-weight:500}
+.fr-m{width:62px;text-align:center;flex:none;font-size:13px;font-weight:600;color:var(--slate-2)}
+.fr-m small{display:block;font-size:10px;color:var(--muted);font-weight:600;letter-spacing:.04em;text-transform:uppercase}
+.fr-kcal{width:96px;text-align:right;flex:none;font-size:15px;font-weight:700;color:var(--green-deep)}
+.fr-kcal small{font-size:11px;color:var(--muted);font-weight:500}
+.fr-go{width:20px;flex:none;text-align:right;color:#c7c7c7;font-size:13px}
+.food-row:hover .fr-go{color:var(--green)}
+.food-empty{display:none;text-align:center;padding:60px 20px}
+.food-empty .fe-ico{width:64px;height:64px;border-radius:var(--radius-circle);background:#E3F4EA;color:var(--green);display:grid;place-items:center;font-size:26px;margin:0 auto 18px}
+.food-empty h3{font-size:19px;margin-bottom:8px}
+.food-empty p{font-size:14px;color:var(--muted);font-weight:500;max-width:360px;margin:0 auto 18px}
+.food-card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--sh-sm)}
+.food-count{font-size:13px;color:var(--muted);font-weight:500;margin-bottom:14px}
+.food-count b{color:var(--slate);font-weight:700}
+
+/* ---- BESİN DETAYI (?besin=1) ---- */
+.nd-back{display:inline-flex;align-items:center;gap:9px;font-size:13.5px;font-weight:700;color:var(--slate);background:var(--paper);border:1px solid var(--line);padding:10px 16px;border-radius:var(--radius-md);cursor:pointer;transition:.2s var(--ease);margin-bottom:22px}
+.nd-back:hover{border-color:var(--green);color:var(--green-deep)}
+.nd-head{display:flex;align-items:center;gap:22px;background:linear-gradient(180deg,#EFF9F3,#E3F4EA);border:1px solid #c9ead8;border-radius:var(--radius-xl);padding:28px 30px;margin-bottom:26px}
+.nd-fig{flex:none;width:96px;height:96px;border-radius:var(--radius-lg);background-size:cover;background-position:center;box-shadow:var(--sh-sm)}
+.nd-info{flex:1;min-width:0}
+.nd-info .nd-cat{font-size:11.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--green-deep)}
+/* E2E 2026-08-21: cift h1 duzeltmesi — panel basligi h2'ye indi.
+   Secici genisletildi, DEGER DEGISMEDI. */
+.nd-info h1,.nd-info h2{font-size:30px;margin:6px 0 8px;letter-spacing:-.02em}
+.nd-info p{font-size:13.5px;color:var(--slate-2);font-weight:500}
+.nd-kcal{flex:none;text-align:center;padding-left:26px;border-left:1px solid #c9ead8}
+.nd-kcal b{display:block;font-size:38px;font-weight:700;color:var(--green-deep);line-height:1;letter-spacing:-.02em}
+.nd-kcal span{font-size:12px;color:var(--muted);font-weight:600}
+.nd-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:26px;align-items:start}
+/* besin değer tablosu (1 porsiyon / 100 g)
+   Panel çerçevesi artık .macro-card'dan geliyor — iki kart da aynı bileşen,
+   böylece üst kenarları aynı yerden başlıyor. Eskiden başlık <caption>'dı ve
+   caption tablonun boyalı kutusunun DIŞINDA kalıyor; sol paneli sağdakinden
+   ~41px aşağı düşüren şey buydu. Başlık artık sağdakiyle aynı <h3>.
+   Tablo, kartın 24px iç boşluğunu negatif kenar boşluğuyla taşarak şerit
+   zeminlerini kart kenarına kadar götürür. */
+.nut-table{width:calc(100% + 48px);margin:0 -24px -24px;border-collapse:collapse}
+.nut-table thead th{font-size:11.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);text-align:right;padding:14px 24px 12px}
+.nut-table thead th:first-child{text-align:left}
+.nut-table tbody th{text-align:left;font-size:14px;font-weight:600;color:var(--slate);padding:13px 24px}
+.nut-table tbody td{text-align:right;font-size:14px;font-weight:600;color:var(--slate-2);padding:13px 24px}
+.nut-table tbody tr+tr{border-top:1px solid var(--line)}
+.nut-table tbody tr:nth-child(odd){background:#fafbf9}
+.nut-table .row-hl th,.nut-table .row-hl td{color:var(--green-deep);font-weight:700}
+/* makro dağılım kartı — besin değer tablosu da aynı kabuğu kullanır
+   (overflow:hidden, tablonun taşan şeritlerini kartın yuvarlak köşesinde keser) */
+.macro-card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);padding:24px;overflow:hidden}
+.macro-card h3{font-size:15px;margin-bottom:18px}
+.macro-bar{display:flex;height:14px;border-radius:var(--radius-sm);overflow:hidden;margin-bottom:18px}
+.macro-bar .mp{background:var(--green-deep)}
+.macro-bar .mc{background:#6aa9d8}
+.macro-bar .mf{background:var(--green)}
+.macro-legend{display:flex;flex-direction:column;gap:12px}
+.macro-leg{display:flex;align-items:center;gap:11px;font-size:13.5px;font-weight:600;color:var(--slate)}
+.macro-leg .sw{width:12px;height:12px;border-radius:3px;flex:none}
+.macro-leg .sw.p{background:var(--green-deep)}
+.macro-leg .sw.c{background:#6aa9d8}
+.macro-leg .sw.f{background:var(--green)}
+/* DadaFit dengele köprüsü (besin detay) */
+.nd-fit{display:flex;align-items:center;gap:15px;margin-top:26px;background:var(--paper);border:1px solid #c9ead8;border-radius:var(--radius-lg);padding:16px 20px;transition:.2s var(--ease)}
+.nd-fit:hover{border-color:var(--green);transform:translateY(-2px);box-shadow:var(--sh-sm)}
+.nd-fit .ndf-ico{flex:none;width:44px;height:44px;border-radius:var(--radius-md);background:#E3F4EA;color:var(--green-deep);display:grid;place-items:center;font-size:18px}
+.nd-fit .ndf-txt b{display:block;font-size:14.5px;color:var(--slate)}
+.nd-fit .ndf-txt span{display:block;font-size:12.5px;color:var(--muted);font-weight:500;margin-top:1px}
+.nd-fit .ndf-go{margin-left:auto;flex:none;color:var(--green-deep);font-size:15px}
+/* Değer sütunları. Seçici eskiden .macro-leg span idi ve rengi/margin'i
+   .sw rozetine de uyguluyordu: rozet margin-left:auto alınca satırın tamamı
+   sağa itiliyor, itilme miktarı etiket uzunluğuna göre değiştiği için üç
+   satırın rozeti ve etiketi üç farklı yerden başlıyordu. Seçici artık yalnız
+   değer kutusunu hedefliyor; gram ve yüzde kendi sabit genişlikli, sağa
+   yaslı sütunlarında duruyor. */
+.macro-leg>span:last-child{margin-left:auto;display:flex;gap:16px;color:var(--muted);font-weight:600}
+.macro-leg>span:last-child b{font-weight:600;text-align:right}
+.macro-leg>span:last-child b:first-child{min-width:58px}
+.macro-leg>span:last-child b:last-child{min-width:40px}
+.macro-note{display:flex;gap:9px;font-size:12px;color:var(--muted);font-weight:500;line-height:1.5;margin-top:18px;padding-top:16px;border-top:1px solid var(--line)}
+.macro-note i{color:var(--green);margin-top:2px}
+
+/* ---- r-card (v3a VERBATIM) ---- */
+.r-card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);overflow:hidden;transition:.3s var(--ease);cursor:pointer;display:flex;flex-direction:column}
+.r-card:hover{transform:translateY(-6px);border-color:#dcdcdc}
+.r-media-wrap{overflow:hidden}
+.r-media{position:relative;height:200px;background-size:cover;background-position:center;transition:.5s var(--ease)}
+.r-card:hover .r-media{transform:scale(1.04)}
+.r-chip{position:absolute;top:13px;left:13px;background:rgba(255,255,255,.94);color:var(--slate);font-size:11.5px;font-weight:700;padding:6px 12px;border-radius:var(--radius-sm);letter-spacing:.02em}
+.r-save{position:absolute;top:11px;right:11px;width:38px;height:38px;border-radius:var(--radius-circle);background:rgba(255,255,255,.94);border:none;color:var(--slate);cursor:pointer;display:grid;place-items:center;font-size:15px;transition:.2s var(--ease)}
+.r-save:hover{background:#fff;color:var(--tomato)}
+.r-save.saved{background:var(--tomato);color:#fff}
+.m-types{position:absolute;bottom:13px;right:13px;display:flex;gap:6px}
+.mt{display:inline-flex;align-items:center;gap:5px;background:rgba(20,18,12,.72);color:#fff;font-size:11px;font-weight:700;padding:6px 10px;border-radius:var(--radius-sm);backdrop-filter:blur(4px)}
+.r-body{padding:17px 18px 19px;display:flex;flex-direction:column;flex:1}
+.r-body h4{font-size:18px;margin-bottom:11px;letter-spacing:-.01em;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:2.4em}
+.r-card:hover .r-body h4{color:var(--tomato)}
+.r-facts{display:flex;align-items:center;font-size:12.5px;color:var(--muted);font-weight:500;margin-bottom:13px}
+.r-facts span{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.r-facts i{font-size:12px;color:var(--tomato)}
+.r-facts span+span{border-left:1px solid var(--line);padding-left:12px;margin-left:12px}
+.r-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:auto;padding-top:13px;border-top:1px solid var(--line)}
+.r-author{display:flex;align-items:center;gap:9px;min-width:0}
+.r-author .av{width:28px;height:28px;border-radius:var(--radius-circle);background-size:cover;background-position:center;flex:none}
+.r-author span{font-size:12.5px;color:var(--muted);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.r-author b{color:var(--slate);font-weight:700}
+.r-stats{display:flex;align-items:center;gap:12px;flex:none}
+.r-rate{display:inline-flex;align-items:center;gap:5px;font-size:13px;color:var(--slate);font-weight:700}
+.r-rate i{color:var(--yellow)}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:26px;margin-top:0}
+
+/* ---- responsive ---- */
+@media (max-width:1024px){
+  .nd-grid{grid-template-columns:1fr;gap:20px}
+  .grid-4{grid-template-columns:1fr 1fr}
+  .nb-head h1{font-size:30px}
+}
+@media (max-width:640px){
+  .grid-4{grid-template-columns:1fr;gap:18px}
+  .food-thead .th-m,.fr-m{display:none}
+  .nd-head{flex-wrap:wrap;gap:16px;padding:22px}
+  .nd-kcal{padding-left:0;border-left:none;text-align:left}
+  .nb-head h1{font-size:25px}
+}
+/* HERO ZENGINLESTIRME (hero-zengin ADIM2) */
+.nb-top .wrap{position:relative}
+.nb-top .rd-crumb,.nb-top .rd-crumb a{color:#bcd0c4}
+.nb-top .rd-crumb a:hover{color:#99d7b4}
+.nb-top .rd-crumb i{color:rgba(255,255,255,.4)}
+.nb-top .rd-crumb b{color:#fff}
+.nb-top .eyebrow{color:#99d7b4}
+.nb-top h1{color:#fff;text-shadow:0 2px 24px rgba(0,0,0,.25)}
+.nb-top h1 .accent{color:#7fcca1}
+.nb-top .lead{color:#e3ede7;text-shadow:0 1px 14px rgba(0,0,0,.3)}
+.nb-top .nb-searchbar input{background:rgba(255,255,255,.96);border-color:rgba(255,255,255,.35);color:var(--slate)}
+@media (max-width:640px){.nb-top{padding:74px 0 34px}}
+/* saglik-renk: aktif "Saglik" nav linki yesil (saglik ailesi) — chrome override, sadece bu link */
+.nav a.active[href="saglik-hub-v1.html"]{color:var(--green)}
+.nav a.active[href="saglik-hub-v1.html"]::after{background:var(--green)}
+
+/* saglik-dropdown: scoped health chrome */
+/* diğer dropdown/mega aktif-item (turuncu kanon, underline gizli) */
+.dropdown:not(.dropdown-health) a.active{background:var(--tomato-tint)}
+.dropdown a.active::after,.mega-cats a.active::after{display:none}
+.mega-cats a.active{background:var(--tomato-tint)}
+.nav a[href="saglik-hub-v1.html"]:hover{color:var(--green);background:rgba(0,154,68,.10)}
