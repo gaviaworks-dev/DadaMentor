@@ -22,7 +22,17 @@
     var b = document.body;
     if (!b) return;
     b.classList.add('is-auth');
-    if (!b.getAttribute('data-roles')) b.setAttribute('data-roles', 'kullanici');
+
+    /* [gourmet-revize d4] rol desteği */
+    /* FIT'in sözcük dağarcığı (fit-shell.js): ?business=1 · ?role=<rol>.
+       Kök kuralı da FIT'in: auth ⟹ roller "kullanici" ile BAŞLAR. */
+    var roller = ['kullanici'];
+    if (qs.get('business') === '1') roller.push('isletme');
+    var rp = qs.get('role');
+    if (rp && ['isletme', 'antrenor', 'diyetisyen'].indexOf(rp) > -1 && roller.indexOf(rp) < 0)
+      roller.push(rp);
+    b.setAttribute('data-roles', roller.join(' '));
+    if (roller.indexOf('isletme') > -1) b.classList.add('has-business');  /* FIT'in köprü sinyali */
 
     /* Avatar — canlının misafir render'ında BOŞ geliyor (fotoğraf yok).
        Sitenin kendi geleneği uygulanır: fotoğrafsız avatar BAŞ HARF
@@ -48,7 +58,7 @@
       if (/[?&]auth=/.test(h)) return;
       var hash = '', s = h;
       var hi2 = s.indexOf('#'); if (hi2 > -1) { hash = s.slice(hi2); s = s.slice(0, hi2); }
-      a.setAttribute('href', s + (s.indexOf('?') < 0 ? '?' : '&') + 'auth=1' + hash);
+      a.setAttribute('href', s + (s.indexOf('?') < 0 ? '?' : '&') + 'auth=1' + (qs.get('business') === '1' ? '&business=1' : '') + (rp ? '&role=' + rp : '') + hash);
     });
   }
 

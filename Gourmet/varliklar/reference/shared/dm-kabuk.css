@@ -1,0 +1,39 @@
+/* FIT kabuğundan ÖLÇÜLEREK çıkarıldı — Gourmet'te karşılığı olmayan
+   6 yapısal sınıf. Yuva takası: {"--fit-wash":"--tomato-tint","--fit":"--tomato"} */
+.acct-menu .acct-logout, .acct-menu .acct-logout i { color: var(--tomato); }
+.d-row { display: flex; align-items: stretch; }
+.d-row > .d-link { flex: 1 1 0%; min-width: 0px; }
+.d-toggle { flex: 0 0 auto; width: 56px; border-top-width: medium; border-right-width: medium; border-bottom-width: medium; border-top-style: none; border-right-style: none; border-bottom-style: none; border-top-color: currentcolor; border-right-color: currentcolor; border-bottom-color: currentcolor; border-image: none; background: none; cursor: pointer; border-left: 1px solid var(--line); color: var(--muted); font-size: 12px; display: grid; place-items: center; transition: color .2s var(--ease),background .2s var(--ease); }
+.d-toggle:hover { background: var(--tomato-tint); color: var(--tomato); }
+.d-toggle:focus-visible { outline: 3px solid var(--tomato); outline-offset: -3px; }
+.d-toggle i { transition: transform .25s var(--ease); }
+.d-item.open > .d-row > .d-toggle { color: var(--tomato); }
+.d-item.open > .d-row > .d-toggle i { transform: rotate(180deg); }
+.d-acct-block { display: none; border-top: 1px solid var(--line); }
+body.is-auth .d-acct-block { display: block; }
+
+/* ═══ HESAP BLOĞU AÇIK KALIR ═══════════════════════════════════════
+   🔴 ÖLÇÜLMÜŞ ÇARPIŞMA (390, ?auth=1, çekmece açık):
+        Gourmet  .d-acct-sub  max-height:0   overflow:hidden  h=0     🔴
+        FIT      .d-acct-sub  max-height:none overflow:visible h=722  ✅
+   Kök: Gourmet'in KENDİ akordeon tabanı '.d-sub{max-height:0}' diyor ve
+   kalemi ancak '.d-item.open' açıyor. FIT'in tabanı bunu yapmıyor, o
+   yüzden FIT'te '.d-acct-sub' için AYRI BİR KURAL YOK — açık doğuyor.
+   Yani bu, "FIT'te olup Gourmet'te olmayan bir kural" değil; iki tabanın
+   ÇARPIŞMASI. Kabuk markup'ı taşınınca maketin kendi kuralı onu yuttu.
+   (Deponun kayıtlı sınıfı: "kabuk ↔ maket eşit özgüllük çarpışması".)
+
+   🔴 GÖZLE YAKALANDI, ÖLÇÜM KAÇIRDI. DOM sayımı 11 kalemi "display!=none"
+      diye YEŞİL vermişti — kalemler gerçekten display:flex'ti, ama
+      ATALARI 0 yükseklikte kırpıyordu. Taşma/kırpma ATA ZİNCİRİNDE
+      ölçülür; elemanın kendi display'i yetmez.
+
+   Değer TAHMİN DEĞİL: FIT'in hesaplanmış değeri (none · visible).
+   Özgüllük (0,2,0) > maketin (0,1,0) — ezme değil, kapsama. */
+.d-acct-block > .d-acct-sub{max-height:none;overflow:visible}
+
+/* rol kapısı — belge şerhi bir KOŞULDUR (bkz. enjektör D0 şerhi) */
+.acct-menu > a[data-rol],
+.d-acct-sub > a[data-rol]{display:none}
+body[data-roles~="isletme"] .acct-menu > a[data-rol="isletme"],
+body[data-roles~="isletme"] .d-acct-sub > a[data-rol="isletme"]{display:flex}
