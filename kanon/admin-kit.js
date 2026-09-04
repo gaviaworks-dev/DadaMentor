@@ -842,12 +842,20 @@
     var sayfa = kok || document;
     var cubuk = sayfa.querySelector('.suzgec-cubuk');
     if (!cubuk) return;
+    /* 🔴 SAYAÇ ŞİŞİYORDU — B ölçtü: tek parametre için 3–4 süzgeç
+       sayılıyor ve sayı DEĞERE GÖRE değişiyordu (`?kaynak=Veritabanı`→3,
+       `?kaynak=Sistem`→4). İki kök üst üste:
+         · her tetik bir kez, sonra kendi açılırındaki aktif çip BİR KEZ
+           DAHA sayılıyordu — aynı süzgeç iki kere;
+         · varsayılan değerini taşıyan tetikler de "açık" sayılıyordu.
+       Açık süzgeç = değeri varsayılanından FARKLI olan tetik, ve her
+       tetik BİR kez. Çipler tetiğin durumunu zaten yansıtıyor. */
     var acik = 0;
     cubuk.querySelectorAll('[data-suzgec]').forEach(function (d) {
-      var v = d.getAttribute('data-deger') || '';
-      if (v && v !== 'hepsi') acik++;
+      var v = (d.getAttribute('data-deger') || '').trim();
+      var vars = (d.getAttribute('data-varsayilan-deger') || '').trim();
+      if (v && v !== 'hepsi' && v !== vars) acik++;
     });
-    cubuk.querySelectorAll('.acilir-yuzey .cip.aktif').forEach(function () { acik++; });
     var sayac = cubuk.querySelector('[data-rol="suzgec-sayisi"]');
     if (sayac) sayac.textContent = acik ? acik + ' süzgeç açık' : 'Süzgeç yok';
     var temizle = cubuk.querySelector('.suzgec-temizle');
@@ -873,6 +881,36 @@
     });
     var kayit = cubuk.querySelector('.suzgec-sayac b');
     if (kayit) kayit.textContent = String(gorunen);
+
+    /* 🔴 0 SATIRDA BOŞ DURUM ÇIKMIYORDU — B ölçtü: tablo boşalıyor,
+       yalnız "0 bildirim" yazıyordu. Sayaç süzgecin açık olduğunu
+       söylüyor ama neden hiçbir şey olmadığını söylemiyor.
+       "Hiç yok" ile "süzgeç eledi" ayrı görünmeli — bu turun dört kez
+       yandığı desen. Sayfada bir `.bos-durum` varsa o açılır; yoksa
+       kit tablonun altına dürüst bir satır düşürür (markup ÜRETMEK
+       değil, DURUMU söylemek — toast'la aynı sınıf). */
+    var bos = document.querySelector('.bos-durum');
+    var tabloKap = tablo.closest('table') || tablo;
+    if (gorunen === 0 && olcut.length) {
+      if (bos) { bos.hidden = false; tabloKap.hidden = true; }
+      else {
+        var s2 = document.querySelector('.suzgec-bos-satiri');
+        if (!s2) {
+          s2 = document.createElement('tr');
+          s2.className = 'suzgec-bos-satiri';
+          s2.innerHTML = '<td colspan="' + (tablo.rows[0] ? tablo.rows[0].cells.length : 1) + '">' +
+            '<div class="sonuc-kutu"><span class="sonuc-bas">' +
+            '<i class="fa-solid fa-filter-circle-xmark" aria-hidden="true"></i> ' +
+            'Bu süzgeçle eşleşen kayıt yok</span></div></td>';
+          tablo.appendChild(s2);
+        }
+        s2.hidden = false;
+      }
+    } else {
+      if (bos) { bos.hidden = true; tabloKap.hidden = false; }
+      var s3 = document.querySelector('.suzgec-bos-satiri');
+      if (s3) s3.hidden = true;
+    }
   }
   window.DM_SUZGEC_TAZELE = suzgecTazele;
 
@@ -1084,8 +1122,27 @@
       if (poz) poz.value = String(i);
     });
     /* Sayaç: SAYIYI değiştir, BİRİMİ koru ("4 adım" · "1 bölüm" · "3 bant"). */
+    /* 🔴 SAYACIN İLKİ HEP SAYAÇ DEĞİL — A2 ölçtü: `#chHedefSec`in birinci
+       `.alan-sayac`ı `#chHedefTip`, yani seçili TİPİN ADI. Yedi adımlı
+       kayıt açılınca kit oraya "7 Egzersiz serisi" yazıyordu. Bugün
+       görünmüyor çünkü sayfanın kendi betiği etiketi geri yazıyor —
+       betik kalktığı gün kusur ortaya çıkardı.
+       Sıra: açık kanca (`data-sayac-for`) → listenin kendi kabı →
+       bölümdeki, metni "N <birim>" kalıbına UYAN ilk sayaç. Uymayan
+       hiçbir şeye yazılmaz. */
+    var sayac = document.querySelector('.alan-sayac[data-sayac-for="#' + (liste.id || '') + '"]');
+    if (!sayac && liste.id) sayac = document.querySelector('.alan-sayac[data-sayac-for="' + liste.id + '"]');
+    if (!sayac) {
+      var yakinKap = liste.closest('.alan') || liste.parentElement;
+      if (yakinKap) sayac = yakinKap.querySelector('.alan-sayac');
+    }
     var bolum = liste.closest('.form-bolum') || liste.parentElement;
-    var sayac = bolum && bolum.querySelector('.alan-sayac');
+    if (!sayac && bolum) {
+      var adaylar = bolum.querySelectorAll('.alan-sayac');
+      for (var ai = 0; ai < adaylar.length; ai++) {
+        if (/^\s*\d+\s+\S/.test(adaylar[ai].textContent || '')) { sayac = adaylar[ai]; break; }
+      }
+    }
     if (sayac) {
       var birim = (sayac.textContent || '').replace(/^\s*\d+\s*/, '').trim();
       sayac.textContent = satirlar.length + (birim ? ' ' + birim : '');
@@ -1914,6 +1971,15 @@
        Markup "2 alan düzeltilmeli" özetini ve kırmızı kenarları taşıyor;
        bunlar boş formun gösterimi. Düzenleme kipine geçilince hepsi
        düşer — doğrulama kullanıcı kaydetmeye basınca yeniden koşar. */
+    /* 🔴 BİLDİRİLMEMİŞ ÇOKLU SEÇİM YANLIŞ VERİ GÖSTERİYORDU — A2 ölçtü,
+       ve bu benim çip düzeltmemin yan etkisi. Markup'ta duran demo çip
+       (`#pfHedef` → "Güç & Kondisyon") kayıt onu bildirmese bile
+       kalıyordu: ÜÇ AYRI programın formunda aynı hedef görünüyordu.
+       Boş alandan kötüsü budur — emin bir başlık altında başka kaydın
+       verisi. Düzenleme kipinde bütün çip kapları boşaltılır; kaydın
+       bildirdikleri hemen ardından yeniden kurulur. */
+    form.querySelectorAll('.coklu-secim .cipler').forEach(function (c) { c.innerHTML = ''; });
+    form.querySelectorAll('.coklu-secim input[data-cs]').forEach(function (g) { g.value = ''; });
     form.querySelectorAll('.alan-ozet').forEach(function (o) { o.classList.remove('goster'); });
     form.querySelectorAll('.alan-hata').forEach(function (o) { o.classList.remove('goster'); o.hidden = true; });
     form.querySelectorAll('.hatali').forEach(function (o) { o.classList.remove('hatali'); });
@@ -1999,8 +2065,13 @@
             kopya.querySelectorAll('[data-klon-sil]').forEach(function (x) { x.remove(); });
             kopya.querySelectorAll('[data-klon-metin]').forEach(function (x) { x.textContent = ''; });
             kopya.querySelectorAll('input, textarea').forEach(function (x) {
+              if (x.type === 'hidden') return;
               if (x.type === 'checkbox' || x.type === 'radio') x.checked = false; else x.value = '';
             });
+            /* ⚠ `<select>` de temizlenir — A2 ölçtü: dizi dalı klonlarken
+               yalnız input/textarea'yı boşaltıyordum, seçim klonlandığı
+               satırın değerini taşıyordu (form-tasarım "Alan türü"). */
+            kopya.querySelectorAll('select').forEach(function (x) { x.selectedIndex = 0; });
             kap.appendChild(kopya);
             mevcut.push(kopya);
           }
@@ -2148,8 +2219,25 @@
     var gorunur = hepsi.filter(function (c) {
       return c.offsetParent !== null || c.classList.contains('cubuk-sabit');
     });
-    (gorunur.length ? gorunur : hepsi).slice(-1)[0].classList.add('cubuk-sabit');
+    var secilen = (gorunur.length ? gorunur : hepsi).slice(-1)[0];
+    secilen.classList.add('cubuk-sabit');
+    /* 🔴 SAYFA DİBİ PAYI ÇUBUĞUN GERÇEK BOYUNU BİLMİYORDU.
+       Kural payı 116px diye YAZIYORDU (48 + 44 + 2×12) ve o sayı çubuğun
+       tek satır kaldığı varsayımına dayanıyordu. `admin-entegrasyonlar`da
+       ölçüldü: çubuk 56px'lik bir kutu, ama içindeki "Anahtarı yenile"
+       düğmesi 44px ve kutu gölgesiyle birlikte son satırın üstüne 24px
+       biniyordu — satırın "Düzenle"si sayfa sonuna kadar kaydırılsa bile
+       TIKLANAMIYORDU. (A1 aynı kusuru `admin-sozluk`ta bulmuştu; orada
+       kaynağı bir liste ekranındaki kart ayağıydı.)
+       Yazılmış sayı yerine ÖLÇÜLEN boy: kit çubuğu ölçüp gövdeye yazar,
+       kural onu okur. Çubuk sarınca pay kendiliğinden büyür. */
+    var boy = Math.ceil(secilen.getBoundingClientRect().height) || 68;
+    document.body.style.setProperty('--kit-cubuk-h', boy + 'px');
   }
+  /* Pencere yeniden boyutlanınca çubuk sarabilir — pay yeniden ölçülür. */
+  window.addEventListener('resize', function () {
+    if (window.DM_EYLEM_CUBUGU) window.DM_EYLEM_CUBUGU();
+  });
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', eylemCubuguIsaretle);
   } else { eylemCubuguIsaretle(); }

@@ -616,8 +616,15 @@
    🔴 BU BİR ÖLÇEK KADEMESİ DEĞİL, TÜRETİLMİŞ ÇERÇEVE DEĞERİDİR — 88
    (üst çubuk telafisi) ile aynı ailede. Ölçüm raporunda ikisi de ölçek
    dışı sayılır ve ayrıca yazılır; sekizinci bir kademe açılmadı. */
+/* 🔴 YAZILMIŞ SAYI YERİNE ÖLÇÜLEN BOY. Bu pay 116px diye yazılıydı
+   (48 + 44 + 2×12) ve çubuğun TEK SATIR kaldığı varsayımına dayanıyordu.
+   `admin-entegrasyonlar`da ölçüldü: son satırın "Düzenle"si sayfa sonuna
+   kadar kaydırılsa bile çubuğun altında kalıyor ve TIKLANAMIYORDU.
+   Kit çubuğu ölçüp `--kit-cubuk-h` yazıyor (`admin-kit.js §20`); çubuk
+   sarınca pay kendiliğinden büyüyor. Varsayılan, kit koşmazsa eski
+   davranışı korur. */
 .yetkili .panel-sayfa:has(.form-eylem){
-  padding-bottom:calc(var(--kit-blok) + 44px + var(--kit-satir) * 2);
+  padding-bottom:calc(var(--kit-blok) + var(--kit-cubuk-h, 68px) + var(--kit-satir));
 }
 /* Sağ sütun da çubuğun üstünde bitsin — yapışkan kutusunun alt sınırı
    çubuğun üst kenarıdır, ekranın dibi değil. */
@@ -2379,7 +2386,17 @@
    ─────────────────────────────────────────────────────────────────────── */
 .yetkili .kurgu-hafta-rayi{
   display:flex; flex-wrap:wrap; align-items:center; gap:2px;
-  padding:var(--bosluk-6);
+  /* 🔴 KİT ÜSTYAZIMI DA GELMELİYDİ — B ölçtü ve gerilemeyi sevk etmeyi
+     reddetti. İlk yazımda yalnız `bilesenler.css:11269`daki BİLEŞEN
+     kuralını kopyalamıştım; `admin.css:1529`daki kit üstyazımı
+     (`padding: --kit-bagli --kit-satir` = 8/12) gelmeyince ray kitin §1
+     ölçeğinden düşüp bileşenin ham 6px'ine indi:
+         ÖNCE  8px 12px · yükseklik 152/61 · genişlik 658/305
+         SONRA 6px      · yükseklik 145/57 · genişlik 658/269
+     Ders: bir adı değiştirirken İKİ KATMANA birden bakılır — bileşen
+     kuralı ve kitin üstyazımı. ("Kabuk ↔ kanon eşit özgüllük" tuzağının
+     kardeşi; B'nin kendi ifadesi.) */
+  padding:var(--kit-bagli) var(--kit-satir);
   background:var(--zemin);
   border-bottom:var(--cizgi-1) solid var(--cizgi);
 }
