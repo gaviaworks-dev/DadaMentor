@@ -209,7 +209,14 @@ button.fy-help.is-voted{color:var(--fit-deep)}
 }
 @media (max-width:520px){
   .fy-liste .rev-top{flex-wrap:wrap}
-  .fy-liste .rev-rate{width:100%;order:3;margin-left:57px}
+  /* 🔴 margin → padding · ÖLÇÜLDÜ 2026-09-04 @390: kural hem `width:100%`
+     hem `margin-left:57px` yazıyordu; marj kutunun DIŞINDA kaldığı için
+     kalem kabı 57px aşıyordu (ölçüm: sol 94 · sağ 410 · görüntü alanı 390 →
+     20px viewport dışı, egzersiz-detay-v1 ×2 · program-detay-v1 ×3).
+     Girinti aynı 57px (avatar hizası), ama `box-sizing:border-box`
+     (fit-shell.css `*`) sayesinde dolgu genişliğin İÇİNDE kalıyor.
+     Yeni ölçü üretilmedi, ölçünün yeri değişti. */
+  .fy-liste .rev-rate{width:100%;order:3;padding-left:57px}
   .fy-foot{align-items:flex-start;flex-direction:column}
 }
 @media (prefers-reduced-motion:reduce){

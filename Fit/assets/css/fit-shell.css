@@ -965,13 +965,24 @@ body.is-auth .d-item.d-plan{display:block}
   transition:transform .26s var(--ease);
 }
 .bottom-nav.bn-hidden{transform:translateY(calc(100% + 30px));pointer-events:none}
+/* 🔴 İKON + ETİKET — BEYAR KARARI 2026-09-04. Önceki hâli "icon-only,
+   IG tarzı" idi ve etiketi ekran-okuyucuya gizliyordu; kalem 44×44
+   kareydi. Kanon §67.1 çubuğu "5 kalem · <a> · ikon + etiket, dikey"
+   diye tanımlıyor ve `.alt-cubuk .ac-kalem` dikey kolonu + 3px boşluğu
+   ZATEN yazıyordu — ama 42 yüzey sayfası `kanon/bilesenler.css`i HİÇ
+   yüklemiyor (yalnız `tokenlar.css` + `markalar/fit.css`), üstelik kabuk
+   onlardan SONRA geliyor. Yani kanon kuralı o sayfalara hiç inmiyordu ve
+   çubuk etiketsiz kalıyordu (Beyar canlı ekranda gördü).
+   ÖLÇÜ UYDURULMADI — Gastro'nun canlı çubuğundan HTTP üstünden okundu
+   (@390): kalem 72×64 · dikey · gap 3px, etiket 9.5px / 700 /
+   rgb(86,81,74) · satır 10.925px. `--slate-2` o rengin kabuktaki adı. */
 .bn-item{
-  flex:none;position:relative;display:grid;place-items:center;
-  width:44px;height:44px;border-radius:var(--radius-lg);
+  flex:1;position:relative;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:3px;
+  min-height:64px;border-radius:var(--radius-lg);
   color:var(--slate-2);font-size:19px;transition:background .2s var(--ease),color .2s var(--ease),transform .12s var(--ease);
 }
-/* etiketler görsel gizli (icon-only, IG tarzı) — erişilebilirlik için DOM'da kalır */
-.bn-item>span:last-child{position:absolute;width:1px;height:1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+.bn-item>span:last-child{position:static;width:auto;height:auto;padding:0;overflow:visible;clip:auto;clip-path:none;border:0;white-space:nowrap;font-size:9.5px;line-height:1.15;font-weight:700}
 /* aktif: yarı saydam domates (primary) — glass korunur, radius-lg pill ile uyumlu */
 .bn-item.active{color:var(--fit);background:color-mix(in srgb, var(--marka) 15%, transparent)}
 /* R8 madde 1 — alt bardaki Planım kalemi de oturuma bağlı.

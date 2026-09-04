@@ -348,6 +348,12 @@
 <!-- Metin yaslama katmani (tek kaynak) — sayfa stillerinden SONRA yuklenir,
      boylece sayfa ici text-align kurallari yaslamayi geri alamaz -->
 <link rel="stylesheet" href="assets/css/fit-type.css" />
+<!-- 🔴 ALT ÇUBUK BİLEŞENİ — EN SON YÜKLENİR. `:where()` kapsamı özgüllüğü
+     kabuğunkiyle eşitler; eşitlikte sonra yüklenen kazanır, o yüzden bu
+     satır kabuk CSS'inden SONRA gelmek zorunda. Tek kaynak:
+     kanon/alt-cubuk.css + kanon/alt-cubuk.html -->
+<link rel="stylesheet" href="../kanon/alt-cubuk.css">
+<link rel="stylesheet" href="../kanon/hero.css">
 </head>
 <body data-brand="fit" data-fit-page="anatomi-v1">
 
@@ -509,11 +515,20 @@
     function kalem(sayi, etiket) {
       return '<div class="lib-stat"><b>' + sayi + '</b><span>' + etiket + '</span></div>';
     }
+    /* 🔴 DÖRT → ÜÇ · BEYAR KURALI 2026-09-04 (madde 10): banner istatistiği
+       HER ZAMAN üç kalem. Ölçüldü: bu sayfa dört basıyordu, FIT public'te
+       tek 4'lük banner buydu.
+       Düşen kalem `gövde modeli` (modelSayisi). Gerekçe: kalan üçü TEK BİR
+       AİLE — toplam ve onun iki parçası (ön + arka = toplam), yani birlikte
+       okunuyorlar; `gövde modeli` başka bir eksen (kaç 3B model var) ve
+       banner'da dördüncü kalem olarak duruyordu.
+       ⚠ UYDURMA YOK: hiçbir sayı üretilmedi, var olan dördünden biri
+         çıkarıldı. `modelSayisi` hesabı yukarıda duruyor; başka bir kalem
+         tercih edilirse tek satır değişir (karar Beyar'ın). */
     statlar.innerHTML =
       kalem(c.toplam, 'kas bölgesi') +
       kalem(c.on, 'ön görünüm kası') +
-      kalem(c.arka, 'arka görünüm kası') +
-      kalem(modelSayisi, 'gövde modeli');
+      kalem(c.arka, 'arka görünüm kası');
   })();
 
   /* =================================================================

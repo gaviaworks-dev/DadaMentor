@@ -10506,6 +10506,37 @@ a.ayar-satir:hover .as-ikon{ background:var(--aksan-yikama); color:var(--aksan-k
   border-top:var(--cizgi-1) solid var(--cizgi);
 }
 
+/* ── 🔴 BANT KENDİ ZEMİNİNİ BOYAMAZ · ÖLÇÜLDÜ 2026-09-04 ──────────────
+   Beyar: "sekme rayının altında tam genişlik beyaz panel var, üst kenarı
+   gri zeminden ince çizgiyle ayrılıyor; egzersizlerim/programlarim'da
+   pano zeminde duruyor, içerik kartlar hâlinde."
+
+   KÖK KAYNAĞIN KENDİ ZEBRASI — kanonunki onu YALNIZ YARISINDA eziyordu.
+   `fit-shell.css:4275-4276` şunu yazıyor:
+       .modul-govde .fit-pane > section:nth-of-type(odd){ background:var(--bg-white) }
+       .modul-govde .fit-pane > section:nth-of-type(even){ background:var(--bg-cream) }
+   Yukarıdaki kanon kuralı (0,5,1) bunu (0,3,1) YENİYOR — ama yalnız KART
+   TAŞIYAN bantta. Kart taşımayan bant kaynağın beyazında kalıyordu ve
+   sekme rayının hemen altında tam genişlik beyaz bir panel olarak
+   okunuyordu.
+
+   ÖLÇÜLDÜ (@1440, pano ilk çocuğu):
+       fit-egzersizlerim #egz-gecmis   DIV.kap        x100 w1240  saydam
+       fit-programlarim  #prg-gecmis   DIV.bolum.kap  x100 w1240  saydam
+       fit-enerji-defterim #def-su     SECTION        x0   w1440  #ffffff  ← panel
+   Yani kardeş sayfalarda bandın kendisi YOK; pano doğrudan kolonu taşıyor
+   ve modül zemini görünüyor. Bant kullanan sayfalarda da olması gereken
+   bu: bandın işi KOLONU TAŞIMAK, zemin boyamak değil.
+
+   ÖZGÜLLÜK BİLEREK DÜŞÜK (0,4,1): yukarıdaki kart kuralını (0,5,1)
+   YENMEZ — kart taşıyan bant `--zemin`de kalır. İkisi de aynı griye
+   çıkar, yani sonuç tek zemin. `kendi-zemini` ve `kimlik-bant` seçicinin
+   KENDİSİNDE dışlanır; yüzeyini içeriği belirleyen bant etkilenmez.
+   Yeni renk YAZILMADI — bant saydamlaşıyor, gri modül zemininden geliyor. */
+.modul-govde .fit-pane > section:not(.kendi-zemini):not(.kimlik-bant){
+  background:transparent;
+}
+
 
 .ust-etiket{
   display:inline-flex; align-items:center; gap:var(--bosluk-8);
@@ -11276,7 +11307,27 @@ a.ayar-satir:hover .as-ikon{ background:var(--aksan-yikama); color:var(--aksan-k
 
 @media (max-width:640px){
   .kenar-serit,.kenar-sekmesi{ display:none; }
-  .basa-don{ right:var(--bosluk-16); }
+  /* 🔴 MOBİL İSTİF · ÖLÇÜLDÜ 2026-09-04 — 65 FIT public sayfası @390,
+     düğmeler GÖRÜNÜR hâle gelene kadar kaydırıldıktan sonra.
+         20 sayfada  .basa-don ↔ #msjFab  örtüşme 54×47 px
+         .basa-don   54×54 · dip 92    ← masaüstü ölçüsü, mobilde de
+         #msjFab     54×54 · dip 85
+     KÖK KABUK ↔ KANON ÖZGÜLLÜK ÇARPIŞMASI. Kabuk mobil istifi ZATEN
+     yazıyor (`fit-shell.css` · `@media(max-width:640px){.to-top{
+     bottom:calc(148px + env(safe-area-inset-bottom,0px)); width:48px;
+     height:48px}}`) ama kanonun `.basa-don` TABAN kuralı medya kapısı
+     taşımıyor ve kanon kabuktan SONRA yükleniyor: eşit özgüllükte
+     (0,1,0) sonraki kazanır, kabuğun mobil kuralı ölür.
+     ⚠ KANIT KÜME FARKINDA: aynı düğme 42 yüzey sayfasında YALNIZ
+       `to-top` sınıfını taşıyor (kanon sınıfı yok) ve orada 48×48 ·
+       dip 148 ölçülüyor, çakışma SIFIR. Yani kusur düğmenin değil,
+       kanon adının bulunduğu yerin kusuru.
+     Yeni ölçü ÜRETİLMEDİ: üç değer de kaynağın kendi mobil bildirimi. */
+  .basa-don{
+    right:var(--bosluk-16);
+    bottom:calc(148px + env(safe-area-inset-bottom,0px));
+    width:48px; height:48px;
+  }
   .yuzen-dugme{ right:var(--bosluk-16); width:52px; height:52px; }
 }
 
@@ -16688,47 +16739,14 @@ body:has(.kapak) .kabuk-basi.tepede{
    Yani çubuk YALNIZ ≤640'ta vardır. Kanon artık aynı kapıyı kuruyor.
    ⚠ Bu değişiklik Diyet ekranlarında BAYT-NÖTR: orada `.alt-cubuk`
      adını taşıyan eleman yok, kural zaten hiç uygulanmıyordu. */
-.alt-cubuk{ display:none; }
-@media (max-width:640px){
-.alt-cubuk{
-  position:fixed; left:0; right:0;
-  bottom:var(--alt-cubuk-dip);
-  height:var(--alt-cubuk-h);
-  z-index:var(--kat-alt-bar);
-  display:flex; align-items:stretch;
-}
-.alt-cubuk .ac-kalem{
-  flex:1; display:flex; flex-direction:column;
-  align-items:center; justify-content:center;
-  gap:var(--bosluk-3);
-  font-family:inherit; text-decoration:none;
-  /* 🔴 DOKUNMA HEDEFİ — kalem yüksekliği çubuğun tamamı, 64px.
-     WCAG 2.5.5'in 44px tabanını kalemin KENDİSİ karşılar; ikon
-     ölçüsü değil kalem kutusu hedefi tanımlar. */
-  min-height:var(--alt-cubuk-h);
-}
-/* Ortadaki FAB — pozisyon 3. Kabuk basar, sayfa basmaz. */
-.alt-cubuk .ac-kalem.ac-orta .ac-fab{
-  display:inline-flex; align-items:center; justify-content:center;
-  width:52px; height:52px;
-  border-radius:var(--yuvarlak-lg);
-  background:var(--aksan-koyu); color:var(--kagit);
-  box-shadow:var(--golge-yuzen);
-}
-}   /* ← @media (max-width:640px) · alt çubuk mobil kapsamı biter */
-
-/* 🔴 GÖVDE ALT DOLGUSU — alt çubuk sabit, içeriğin altına biner.
-   Gövde kendi dibine çubuğun yüksekliği + dip payı kadar nefes bırakır;
-   yoksa son eleman çubuğun ALTINDA kalır ve okunamaz. */
-@media (max-width:640px){
-  /* Gövdenin kanonik adı `main.page-main` — kaynak adı korundu (§19'un
-     `.kap`ı gibi). Uydurma ad YAZILMADI: `deneme/*.html` ve kaynak
-     birlikte `<main class="page-main" id="pageMain">` basıyor. */
-  main.page-main{
-    padding-bottom:calc(var(--alt-cubuk-h) + var(--alt-cubuk-dip) + var(--bosluk-16));
-  }
-}
-
+/* 🔴 ALT ÇUBUK BİLEŞENİ BURADAN ÇIKARILDI — 2026-09-04, BEYAR KARARI.
+   Tek kaynak: `kanon/alt-cubuk.css` (+ şablon `kanon/alt-cubuk.html`).
+   GEREKÇE ÖLÇÜLDÜ: FIT'in 42 yüzey sayfası bu dosyayı HİÇ yüklemiyor
+   (yalnız `tokenlar.css` + `markalar/fit.css`), Gastro maket sayfaları da
+   öyle. Bileşen burada kaldığı sürece o sayfalara inmiyor ve çubuk
+   kabuğun "icon-only" kipinde etiketsiz kalıyordu.
+   Bu dosya onu yukarıdaki `@import` ile geri alır; bileşene ihtiyacı olan
+   sayfa ise `kanon/alt-cubuk.css`i DOĞRUDAN ve EN SON bağlar. */
 
 /* =====================================================================
    68 · YÜZEN İSTİF SÖZLEŞMESİ — kapı ölçütü
@@ -18629,6 +18647,12 @@ body:has(#antAlt-pane-ant-mesaj:not([hidden])) .msj-ortu{ display:none; }
    ══════════════════════════════════════════════════════════════════════ */
 body{ background:var(--zemin); font-family:var(--yuz); }
 </style>
+<!-- 🔴 ALT ÇUBUK BİLEŞENİ — EN SON YÜKLENİR. `:where()` kapsamı özgüllüğü
+     kabuğunkiyle eşitler; eşitlikte sonra yüklenen kazanır, o yüzden bu
+     satır kabuk CSS'inden SONRA gelmek zorunda. Tek kaynak:
+     kanon/alt-cubuk.css + kanon/alt-cubuk.html -->
+<link rel="stylesheet" href="../kanon/alt-cubuk.css">
+<link rel="stylesheet" href="../kanon/hero.css">
 </head>
 <body data-brand="fit" data-fit-page="programlarim-v1" data-fit-hero-kind="liste" class="is-auth" data-roles="kullanici">
 <a id="fitSkip" class="skip-link atlama-baglantisi" href="#pageMain">İçeriğe atla</a>
@@ -18835,11 +18859,11 @@ body{ background:var(--zemin); font-family:var(--yuz); }
   </div>
 </aside>
 <nav class="bottom-nav alt-cubuk" aria-label="Mobil alt navigasyon">
-  <a href="egzersiz-kutuphane-v1.html" class="bn-item ac-kalem"><i class="fa-solid fa-person-running"></i><span>Keşfet</span></a>
-  <a href="programlar-merkezi-v1.html" class="bn-item ac-kalem"><i class="fa-solid fa-dumbbell"></i><span>Programlar</span></a>
-  <a href="antrenorler-v1.html" class="bn-item ac-kalem bn-center ac-orta"><span class="bn-fab ac-fab"><i class="fa-solid fa-user-tie"></i></span><span>Uzmanlar</span></a>
-  <a href="fit-programlarim.html" class="bn-item ac-kalem bn-plan"><i class="fa-solid fa-dumbbell"></i><span>Planım</span></a>
-  <a href="fit-hesabim.html" id="bnAccount" class="bn-item ac-kalem"><i class="fa-solid fa-user"></i><span>Hesabım</span></a>
+  <a href="dadafit-hub-v1.html" class="bn-item ac-kalem"><i class="fa-solid fa-house" aria-hidden="true"></i><span>Ana Sayfa</span></a>
+  <a href="egzersiz-kutuphane-v1.html" class="bn-item ac-kalem"><i class="fa-solid fa-person-running" aria-hidden="true"></i><span>Hareketler</span></a>
+  <a href="programini-bul-v1.html" class="bn-item ac-kalem bn-center ac-orta"><span class="bn-fab ac-fab"><i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i></span><span>Programını Bul</span></a>
+  <a href="fit-programlarim.html" class="bn-item ac-kalem"><i class="fa-solid fa-list-check" aria-hidden="true"></i><span>Programlarım</span></a>
+  <a href="fit-hesabim.html" id="bnAccount" class="bn-item ac-kalem"><i class="fa-solid fa-user" aria-hidden="true"></i><span>Profil</span></a>
 </nav>
 <span class="fb-rail kenar-serit" aria-hidden="true"></span>
 <a class="feedback-tab kenar-sekmesi" href="#" id="fbTab" aria-label="Görüş Bildir — öneri ve şikayet">
@@ -20665,6 +20689,27 @@ body{ background:var(--zemin); font-family:var(--yuz); }
         }
         if(a)x.setAttribute('aria-current','page'); else x.removeAttribute('aria-current'); });
       pn.forEach(function(x){ x.hidden=x.getAttribute('data-pane')!==k; });
+      /* 🔴 AKTİF SEKME RAYIN GÖRÜNÜR PENCERESİNE ÇEKİLİR — ölçüldü 2026-09-04.
+         Ray dar ekranda kaydırmaya düşüyor (`overflow-x:auto`) ve sekme
+         TIKLAMA DIŞI bir yoldan etkinleşince (hash ile açılış, `h.click()`)
+         rayın kaydırma konumu 0'da kalıyordu: içerik doğru panoyu
+         gösterirken aktif sekme rayın dışında kalıyor, kullanıcı hangi
+         sekmede olduğunu göremiyordu.
+         ÖLÇÜLDÜ (hash ile açılış, 7 ekran):
+             @1440  dışarıda kalan  0/7
+             @1024                  2/7   en fazla 194px
+             @390                   6/7   en fazla 689px
+         ⚠ SAYFA KAYDIRILMAZ. Kanonun kendi kuralı (`fit-shell.js:4414`)
+           "bileşen scrollTo/scrollIntoView ÇAĞIRMAZ" diyor; burada yalnız
+           RAYIN kendi `scrollLeft`i değişiyor, sayfa yerinde kalıyor.
+           8px pay rayın kendi dolgusunun (4px) iki katı — yeni ölçü değil. */
+      (function(){ var akt=null;
+        gr.forEach(function(x){ if(x.getAttribute('data-tab')===k) akt=x; });
+        if(!akt) return; var ray=akt.parentElement;
+        if(!ray||ray.scrollWidth<=ray.clientWidth+1) return;
+        var xb=akt.getBoundingClientRect(), rb=ray.getBoundingClientRect();
+        if(xb.left<rb.left) ray.scrollLeft-=(rb.left-xb.left)+8;
+        else if(xb.right>rb.right) ray.scrollLeft+=(xb.right-rb.right)+8; })();
       if(location.hash.slice(1)!==k)history.replaceState(null,'','#'+k);
     }); });
   if(location.hash){ var h=d.querySelector('[data-tab="'+location.hash.slice(1)+'"]');

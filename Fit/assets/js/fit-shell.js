@@ -211,20 +211,23 @@ var NAV = [
 
 /* Mobil alt bar — belge §3.2 / §19: BEŞTEN FAZLA sabit öğe olamaz. */
 var BOTTOM = [
-  {label:'Ana Sayfa',  href:'dadafit-hub-v1.html',        icon:'fa-solid fa-house',           match:['dadafit-hub-v1']},
-  /* K34: "Hareketi Anlamak" sayfaları (sozluk-v1 · sozluk-detay-v1 · anatomi-v1
-     · antrenman-olusturucu-v1) alt barda da Hareket kalemini aktif etsin —
-     ayrı bir alt bar kalemi açılmıyor, §3.2'nin "beşten fazla sabit öğe
-     olamaz" kuralı korunuyor. */
-  {label:'Hareketler', href:'egzersiz-kutuphane-v1.html',    icon:'fa-solid fa-person-running',  match:['egzersiz-kutuphane-v1','egzersiz-detay-v1','hareket-rehberi-v1','hareket-yeni-baslayanlar-v1','hareket-dogru-form-v1','hareket-sureye-gore-v1','hareket-hedefe-gore-v1','hareket-bolgeye-gore-v1','hareket-masa-basi-v1','hareket-isinma-soguma-v1','hareket-sozluk-v1','sozluk-v1','sozluk-detay-v1','anatomi-v1','antrenman-olusturucu-v1']},
-  {label:'Programlar', href:'programlar-merkezi-v1.html', icon:'fa-solid fa-dumbbell', center:true, match:['programlar-merkezi-v1','program-liste-v1','program-detay-v1','programini-bul-v1','challenge-merkezi-v1','challenge-v1']},
-  /* R8 madde 1 — `cls` alanı: alt bar kalemi oturuma bağlandı (bn-plan). */
-  /* R15/1 · Beyar kararı — kalem ad ve hedef olarak Programlarım'a döndü.
-     `match` listesi modül sayfalarını ve Planım kabuğunu hâlâ kullanan
-     sayfaları birlikte sayar; hiçbiri kalemsiz kalmaz. */
-  {label:'Programlarım', cls:'bn-plan', href:'fit-programlarim.html',      icon:'fa-solid fa-dumbbell',        match:['programlarim-v1','egzersizlerim-v1','challengelarim-v1','rozetlerim-v1','bagli-uygulamalar-v1','fit-planim-veri-izin-v1']},
-  /* §1 — belge alt bar son kalemini "Profil" diye adlandırıyor. */
-  {label:'Profil',     href:'fit-giris.html',              icon:'fa-solid fa-user', id:'bnAccount'}
+  {label:'Ana Sayfa', href:'dadafit-hub-v1.html', icon:'fa-solid fa-house', match:['dadafit-hub-v1','index']},
+  /* 🔴 ALT ÇUBUK ROL SIRASI — BEYAR KARARI 2026-09-04, referans GASTRO.
+     Ölçülen Gastro dizisi (deploy ağacı, HTTP üstünden):
+       Ana Sayfa fa-house · Tarifler fa-bowl-food ·
+       Ne Pişirsem fa-wand-magic-sparkles (bn-center ac-orta) ·
+       Kaydettiklerim fa-bookmark · Profil fa-user (id=bnAccount)
+     FIT karşılıkları markanın KENDİ kaynağından alındı, kardeş markadan
+     DEĞİL: "Programını Bul" sihirbazı kaynakta zaten
+     `fa-solid fa-wand-magic-sparkles` taşıyor (fit-shell.js · menü kaydı),
+     yani orta kalemin glifi iki markada aynı çünkü ROL aynı, kopya değil.
+     ⚠ `cls:'bn-plan'` KALDIRILDI: oturuma bağlı gizlenen kalem çubukta
+       BOŞ YUVA bırakıyordu (Beyar canlı ekranda gördü; ölçüldü: 44 sayfada
+       görünür kalem 4/5). Rol tablosunda boş yuva yok. */
+  {label:'Hareketler',     href:'egzersiz-kutuphane-v1.html', icon:'fa-solid fa-person-running', match:['egzersiz-kutuphane-v1','egzersiz-detay-v1','hareket-rehberi-v1','hareket-yeni-baslayanlar-v1','hareket-dogru-form-v1','hareket-sureye-gore-v1','hareket-hedefe-gore-v1','hareket-bolgeye-gore-v1','hareket-masa-basi-v1','hareket-isinma-soguma-v1','hareket-sozluk-v1','sozluk-v1','sozluk-detay-v1','anatomi-v1','antrenman-olusturucu-v1']},
+  {label:'Programını Bul', href:'programini-bul-v1.html', icon:'fa-solid fa-wand-magic-sparkles', center:true, match:['programini-bul-v1','programlar-merkezi-v1','program-liste-v1','program-detay-v1','challenge-merkezi-v1','challenge-v1']},
+  {label:'Programlarım',   href:'fit-programlarim.html', icon:'fa-solid fa-list-check', match:['programlarim-v1','fit-programlarim','fit-egzersizlerim','fit-challengelarim','fit-rozetlerim','bagli-uygulamalar-v1','fit-planim-veri-izin-v1']},
+  {label:'Profil',         href:'fit-hesabim.html', icon:'fa-solid fa-user', id:'bnAccount'}
 ];
 
 /* ============================================================
@@ -715,8 +718,11 @@ function bottomNavHtml(){
   return BOTTOM.map(function(b){
     var act = isActive(b) ? ' active' : '';
     var id  = b.id ? ' id="'+b.id+'"' : '';
-    var ico = b.center ? '<span class="bn-fab"><i class="'+b.icon+'"></i></span>' : '<i class="'+b.icon+'"></i>';
-    return '<a href="'+b.href+'"'+id+' class="bn-item'+(b.center?' bn-center':'')+(b.cls?' '+b.cls:'')+act+'">'+ico+'<span>'+b.label+'</span></a>';
+    /* Kanon adları da basılır (`ac-kalem`/`ac-orta`/`ac-fab`) — §67 kabuk
+       sözleşmesi onlara yazılı ve 22 kanon ekranı statik markup'ında zaten
+       bunları taşıyor. İkisi aynı diziyi basmazsa 65 sayfada tek DOM olmaz. */
+    var ico = b.center ? '<span class="bn-fab ac-fab"><i class="'+b.icon+'" aria-hidden="true"></i></span>' : '<i class="'+b.icon+'" aria-hidden="true"></i>';
+    return '<a href="'+b.href+'"'+id+' class="bn-item ac-kalem'+(b.center?' bn-center ac-orta':'')+act+'">'+ico+'<span>'+b.label+'</span></a>';
   }).join('\n  ');
 }
 
@@ -1337,7 +1343,7 @@ if(_top){
      Fit'te yönetim kabuğu yok (§M8 · Dalga P), bileşen hazır durur. */
   var RAIL_HTML = document.body.getAttribute('data-fit-rail') === '1' ? railHtml() + '\n' : '';
   _top.outerHTML = RAIL_HTML + TOPBAR + '\n' + headerHtml() + '\n' + drawerHtml() +
-    '\n<nav class="bottom-nav" aria-label="Mobil alt navigasyon">\n  ' + bottomNavHtml() + '\n</nav>\n' +
+    '\n<nav class="bottom-nav alt-cubuk" aria-label="Mobil alt navigasyon">\n  ' + bottomNavHtml() + '\n</nav>\n' +
     FEEDBACK_HTML + '\n' + COOKIE_HTML;
 }
 var _bot = document.getElementById('fitShellBottom');
@@ -1946,7 +1952,19 @@ if(OVER_MODE) document.body.setAttribute('data-fit-over','1');
  CSS iki token okuyor: --hero-h-list / --hero-h-detail. */
 var DETAY_PAGES = ['challenge-v1','egzersiz-detay-v1','antrenor-detay-v1','program-detay-v1'];
 var IS_DETAY = /-detay(-|$)/.test(PAGE) || DETAY_PAGES.indexOf(PAGE) > -1;
-document.body.setAttribute('data-fit-hero-kind', IS_DETAY ? 'detay' : 'liste');
+/* 🔴 ÜÇÜNCÜ AİLE · YASAL — BEYAR KARARI 2026-09-04: "YASAL sayfalar
+   DETAY tipiyle aynı [yükseklik]". Önce yalnız iki aile vardı ve yasal
+   sayfalar `liste` sayılıyordu (544px). Ayrım yine DOSYA ADINDAN — depodaki
+   tek istikrarlı işaret. Yükseklik `kanon/hero.css`te
+   `--banner-h-yasal:var(--banner-h-detay)` ile detaya bağlı. */
+/* ⚠ PAGE DEĞİL FILE — ölçüldü: `data-fit-page` dosya adıyla aynı değil
+   (`yasal-v1.html` → "yasal", `veri-islem-kaydi-v1.html` → "hesabim").
+   Aile ayrımı DOSYA ADINDAN yapılır; PAGE bir içerik etiketi. */
+var YASAL_FILES = ['yasal-v1','saglik-bilgilendirme-v1','veri-islem-kaydi-v1'];
+var IS_YASAL = YASAL_FILES.indexOf(FILE) > -1 || YASAL_FILES.indexOf(PAGE) > -1 ||
+               /^(gizlilik|cerez|kvkk|kullanim|yasal)(-|$)/.test(FILE);
+document.body.setAttribute('data-fit-hero-kind',
+  IS_YASAL ? 'yasal' : (IS_DETAY ? 'detay' : 'liste'));
 
 /* ------------------------------------------------------------------
  R6 · MADDE 4 — BANNER İKİ KOLONA AYRILIR: SOL İÇERİK + SAĞ İSTATİSTİK
@@ -1991,9 +2009,18 @@ document.body.setAttribute('data-fit-hero-kind', IS_DETAY ? 'detay' : 'liste');
      aynı hizada başlıyor ve iri sayı ince kırıntı satırıyla yarışıyor
      (ölçüldü: 6 sayfada ilk sayının üst kenarı kırıntının 0.8 px üstünde).
      Referansta bu olmuyor çünkü kırıntı kolonların üstünde ayrı bir satır. */
-  var ilk = wrap.firstElementChild;
-  var krumb = (ilk && ilk !== stats &&
-               (/crumb/.test(ilk.className || '') || ilk.tagName === 'NAV')) ? ilk : null;
+  /* 🔴 KIRINTI KONUMA DEĞİL SEÇİCİYE GÖRE BULUNUR — ölçüldü 2026-09-04.
+     Eski hâl yalnız `wrap.firstElementChild`e bakıyordu. `hareket-rehberi-v1`
+     gibi sayfalarda `.wrap`ın ilk çocuğu fazladan bir kaydet düğmesi
+     (`<button class="kyt-btn">`); kırıntı ikinci sıraya düşünce tanınmıyor
+     ve `.lib-main`in İÇİNE alınıyordu. Sonuç: kırıntı sol üstte değil,
+     107px aşağıda ve tam genişlikte (ölçüm: y 128 → 235, x 132 → 170,
+     genişlik 146 → 1044). 31 liste sayfasının 30'u doğru, biri bozuktu —
+     tek sayfalık kusur, ama kökü konuma bağlı tanıma.
+     Artık ilk `[class*="crumb"]`/`<nav>` çocuğu aranıyor; sıra değişse de
+     kırıntı satırın üstünde kalıyor. */
+  var krumb = wrap.querySelector(':scope > [class*="crumb"], :scope > nav');
+  if(krumb === stats) krumb = null;
 
   var satir = document.createElement('div');  satir.className = 'lib-row';
   var sol   = document.createElement('div');  sol.className   = 'lib-main';
@@ -2271,9 +2298,15 @@ window.FIT_SHELL.unlockScroll = unlockScroll;
     if(u.verified)b.setAttribute('data-verified','1');
     if(u.level)b.setAttribute('data-level',String(u.level));
   }
-  var bnA=document.getElementById('bnAccount');   // M6 — bottom-nav Hesap hedefi
-  /* belge §3.3: Fit alt barında hesap kalemi Gastro defterine değil hesaba gider */
-  if(bnA)bnA.setAttribute('href', authed?'fit-hesabim.html':'fit-giris.html');
+  /* 🔴 ALT ÇUBUK HESAP HEDEFİ ARTIK OTURUMA GÖRE DEĞİŞMİYOR — 2026-09-04.
+     Eskiden `authed ? 'fit-hesabim.html' : 'fit-giris.html'` yazılıyordu ve
+     alt çubuğun markup'ı sayfadan sayfaya AYRIŞIYORDU: kapı ölçümü 65 FIT
+     sayfasında `#bnAccount`ın href'i yüzünden iki ayrı imza buldu.
+     Beyar kararı "alt çubuk TEK KAYNAK" — hedef sabit, oturum kapısı hedef
+     sayfanın kendi işi. Referans Gastro da sabit yazıyor (`g-hesabim.html`).
+     ⚠ Belge §3.3'ün "hesap kalemi hesaba gider" şartı korunuyor; değişen
+       yalnız oturumsuz kullanıcının giriş ekranına ÇUBUKTAN değil HEDEF
+       SAYFADAN yönlenmesi. */
 })();
 
 if(location.search.indexOf('dd=1')>-1){document.querySelector('.nav-item').classList.add('open');var _l=document.getElementById('tbLang');if(_l)_l.classList.add('open');}

@@ -1,0 +1,156 @@
+/* =====================================================================
+   KANON — HERO / BANNER BİLEŞENİ  ·  TEK KAYNAK
+   ---------------------------------------------------------------------
+   BEYAR KARARI, 2026-09-04 (madde 10). Referans "best":
+   `egzersiz-kutuphane-v1.html` hero'su. Bozuk örnek: `hareket-rehberi-v1`.
+
+   `kanon/alt-cubuk.css` ile aynı sözleşme: AYRI DOSYA, tek başına
+   yüklenebilir, seçiciler `:where()` ile kapsanır, sayfaya EN SON bağlanır.
+   Gerekçe aynı ve ölçülmüş: FIT'in 42 yüzey sayfası `bilesenler.css`i HİÇ
+   yüklemiyor; bileşen orada kalırsa o sayfalara inmiyor.
+
+   ── SÖZLEŞME ─────────────────────────────────────────────────────────
+     · Ekmek kırıntısı HER ZAMAN sol üstte, hero başlangıcından SABİT ofset.
+       İki kolonun DIŞINDA, onların üstünde ayrı bir satır.
+     · Sol sütun: üst etiket (çizgi+ikon+küçük başlık) → H1 → açıklama.
+       Sabit y hizası, sabit genişlik.
+     · İstatistik bloğu SAĞDA, dikey, ALTA hizalı, dikey ayraçlı,
+       HER ZAMAN 3 kalem (sayı + etiket).
+     · Hero yüksekliği SAYFA TİPİNE göre sabit; içerik uzunluğuna göre
+       esnemez. LİSTE tek yükseklik · DETAY tek yükseklik ·
+       YASAL sayfalar DETAY ile aynı.
+     · Yükseklik o tipteki EN UZUN içeriğe göre belirlenir — kısaya göre
+       alıp uzunu sıkıştırmak yasak. Kısa sayfada boşluk kalması sorun
+       değil; TAŞMA/KIRPMA yok.
+
+   ── ÖLÇÜM (@1440, 33 `.lib-top` sayfası, her sayfa tek tek) ──────────
+     tip     sayfa  sabit h   içerik+dolgu: min / medyan / MAKS   maks kim
+     ------  -----  -------   --------------------------------   -------------
+     liste     31     544px          378 / 483 / 521             anatomi-v1
+     detay      2     560px          455 / 503 / 503             fit-testi-detay-v1
+   LİSTE ailesinde mevcut 544px en uzun içeriği (521) zaten karşılıyordu —
+   DEĞİŞTİRİLMEDİ; ölçümün söylemediği bir büyütme yazılmadı.
+   DETAY/YASAL ailesinde durum başka: üç yasal sayfanın üçü de 560'ı aşıp
+   590'a çıkıyordu. İki aile aynı yüksekliği paylaşacağı için değer EN
+   UZUNUNKİ oldu → 590 (aşağıdaki token şerhinde ölçümüyle).
+   SONUÇ (yeniden ölçüldü): liste 544 · detay 590 · yasal 590 · kırpma 0.
+   ⚠ `--banner-h-kurumsal` 544 (=liste) idi; Beyar "YASAL sayfalar DETAY
+     ile aynı" dediği için ayrı bir `--banner-h-yasal` doğdu ve detaya bağlandı.
+   ⚠ Aile ayrımı DOSYA ADINDAN yapılır (`fit-shell.js`). `data-fit-page`
+     kullanılamaz: ölçüldü, dosya adıyla aynı değil (`yasal-v1.html` → "yasal",
+     `veri-islem-kaydi-v1.html` → "hesabim").
+
+   ── TOKENLAR ─────────────────────────────────────────────────────────
+   Her `var()` bir yedek taşır; dosya `tokenlar.css` olmadan da çizer.
+   Yedekler kaynağın kendi ölçülmüş değerleridir, yeni değer DEĞİLDİR.
+
+   ── GASTRO'YA ENJEKSİYON NOTU ────────────────────────────────────────
+   Sözleşme marka bağımsızdır; değişen yalnız SAYFA TİPİ eşlemesi.
+   Gastro'nun karşılıkları (ad eşlemesi, ölçüm Gastro turunda yapılacak):
+     LİSTE   tarifler · mutfak sözlüğü · şefler · koleksiyonlar · market
+     DETAY   tarif detay · şef detay · koleksiyon detay
+     YASAL   kullanım · gizlilik · çerez · KVKK  → DETAY yüksekliği
+   ===================================================================== */
+
+:root{
+  --banner-h-liste:544px;      /* ölçüldü · 31 liste sayfası, en uzun içerik 521 */
+  /* 🔴 560 → 590 · ÖLÇÜLDÜ 2026-09-04. Beyar: "YASAL sayfalar DETAY tipiyle
+     aynı" + "tip başına sabit yükseklik o tipteki EN UZUN içeriğe göre;
+     kısaya göre alıp uzunu sıkıştırmak yasak". Üç yasal sayfanın üçü de
+     560'lık `min-height`i AŞIYOR ve 590'a çıkıyor:
+         yasal-v1 590 · saglik-bilgilendirme-v1 590 · veri-islem-kaydi-v1 590
+         fit-testi-detay-v1 560 (detay ailesinin `.lib-top` taşıyan tek üyesi)
+     İki aile aynı yüksekliği paylaşacaksa değer EN UZUNUN ölçüsüdür: 590.
+     Detay sayfaları 30px büyür — Beyar'ın izin verdiği boşluk. */
+  --banner-h-detay:590px;
+  --banner-h-yasal:var(--banner-h-detay);   /* BEYAR: yasal = detay */
+  --banner-stat-gutter:44px;   /* sol kolon ↔ şerit · kardeş marka ölçümü */
+  --banner-stat-gap:16px;      /* şerit kalemleri arası · kardeş marka ölçümü */
+  --banner-crumb-ofset:128px;  /* kırıntının hero üstünden ofseti — REFERANS */
+}
+
+/* ── TİP BAŞINA SABİT YÜKSEKLİK ──────────────────────────────────────
+   `min-height` kullanılır, `height` değil: içerik beklenmedik biçimde
+   uzarsa TAŞMAZ, bant büyür. Beyar'ın "taşma/kırpma yok" şartı bu. */
+:where(body[data-fit-hero-kind="liste"]) .lib-top{ min-height:var(--banner-h-liste, 544px); }
+:where(body[data-fit-hero-kind="detay"]) .lib-top{ min-height:var(--banner-h-detay, 560px); }
+:where(body[data-fit-hero-kind="yasal"]) .lib-top{ min-height:var(--banner-h-yasal, 560px); }
+
+/* ── KIRINTI · HER ZAMAN SOL ÜSTTE, SABİT OFSET ──────────────────────
+   🔴 ÖLÇÜLDÜ 2026-09-04: 31 liste sayfasının 30'unda kırıntı hero üstünden
+      128px'te; BİRİNDE 235px (`hareket-rehberi-v1`, 107px aşağıda).
+      Kök kırıntının kendisi değil: `.wrap`ın İLK çocuğu olarak fazladan
+      bir `<button class="kyt-btn">` (kaydet) duruyor ve kırıntıyı aşağı
+      itiyor. Kural kırıntıyı akıştaki sırasından bağımsız kılar:
+      kırıntı satırın BAŞINA çekilir (`order:-1`), yatayda sola yaslanır.
+   ⚠ Yeni ofset uydurulmadı; 128px referansın kendi değeri ve zaten
+     30 sayfanın ortak ölçüsü. */
+:where(body[data-fit-hero-kind]) .lib-top > .wrap{
+  display:flex; flex-direction:column; align-items:stretch;
+}
+:where(body[data-fit-hero-kind]) .lib-top > .wrap > [class*="crumb"]{
+  order:-1; align-self:flex-start; width:auto; flex:none;
+  margin-right:auto;
+}
+/* Kaydet düğmesi gibi mutlak yerleşimli süsler kırıntıyı İTMEZ. */
+:where(body[data-fit-hero-kind]) .lib-top > .wrap > .kyt-btn{
+  position:absolute; top:0; right:0;
+}
+
+/* ── İKİ KOLONLU SATIR — kabuk JS'i kurar (fit-shell.js · `.lib-row`) ──
+     .wrap > kırıntı                       (tam genişlik, satırın ÜSTÜNDE)
+     .wrap > .lib-row > .lib-main | .lib-stats
+   🔴 JS bu satırı YALNIZ `.lib-stats` varsa kuruyor. Ölçüldü: 31 liste
+      sayfasının 16'sında istatistik markup'ı YOK, o yüzden iki kolonlu
+      düzen hiç kurulmuyor. Sözleşme "her zaman 3 kalem" olduğu için
+      eksik olan CSS değil VERİDİR; liste `docs/fit-hero-olcum.md`de. */
+:where(body[data-fit-hero-kind]) .wrap > .lib-row{
+  display:flex; flex-direction:row; align-items:stretch;
+  column-gap:var(--banner-stat-gutter, 44px); min-width:0;
+}
+:where(body[data-fit-hero-kind]) .wrap > .lib-row > .lib-main{
+  display:flex; flex-direction:column; align-items:stretch;
+  row-gap:var(--banner-gap, 10px); min-width:0; flex:1 1 auto;
+}
+:where(body[data-fit-hero-kind]) .lib-row > .lib-main > *{ margin-top:0; margin-bottom:0; }
+
+/* ── İSTATİSTİK ŞERİDİ · SAĞDA, DİKEY, ALTA HİZALI, AYRAÇLI ──────────
+   Ölçüm kardeş markalardan (kanon kaydı, `fit-shell.css` R6 şerhi):
+   kolon sağa yaslı · flex COLUMN · kalem arası 16px · sol kolonla arası
+   44px · alt kenarlar Δ0. Dikey ayraç Beyar'ın şartı; referansın kendi
+   çizgisi (`1px rgba(255,255,255,.18)`) kanona alındı. */
+:where(body[data-fit-hero-kind]) .wrap > .lib-row > .lib-stats{
+  display:flex; flex-direction:column; flex:none;
+  align-self:flex-end; align-items:flex-start;
+  gap:var(--banner-stat-gap, 16px);
+  margin-top:0; padding-left:38px;
+  border-left:1px solid rgba(255,255,255,.18);
+}
+:where(body[data-fit-hero-kind]) .lib-row > .lib-stats > .lib-stat{ display:block; }
+:where(body[data-fit-hero-kind]) .lib-row > .lib-stats > .lib-stat b{
+  display:block; font-size:29px; font-weight:700; line-height:1.1;
+  letter-spacing:-.02em; color:#fff;
+}
+:where(body[data-fit-hero-kind]) .lib-row > .lib-stats > .lib-stat span{
+  display:block; margin-top:6px; font-size:12.5px; font-weight:500;
+  line-height:1.55; color:rgba(255,255,255,.85);
+}
+/* içi boş kalem satırda hayalet boşluk bırakmasın */
+:where(body[data-fit-hero-kind]) .lib-row > .lib-stats > .lib-stat:empty{ display:none; }
+
+/* ── ≤1024 · şerit sol kolonun ALTINA düşer, yatay sıraya döner ───────
+   Referansın kendi davranışı (üç kardeş sayfada ölçüldü). Ayraç dikeyden
+   yataya döner; yoksa yatay sırada dikey çizgi anlamsız kalır. */
+@media (max-width:1024px){
+  :where(body[data-fit-hero-kind]) .wrap > .lib-row{ flex-direction:column; }
+  :where(body[data-fit-hero-kind]) .wrap > .lib-row > .lib-stats{
+    flex-direction:row; flex-wrap:wrap; align-self:flex-start;
+    column-gap:34px; row-gap:14px;
+    padding-left:0; padding-top:18px;
+    border-left:0; border-top:1px solid rgba(255,255,255,.18);
+  }
+}
+@media (max-width:640px){
+  :where(body[data-fit-hero-kind]) .lib-row > .lib-stats{ column-gap:20px; row-gap:12px; }
+  :where(body[data-fit-hero-kind]) .lib-row > .lib-stats > .lib-stat b{ font-size:20px; }
+}
