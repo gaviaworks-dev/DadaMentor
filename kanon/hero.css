@@ -76,6 +76,43 @@
 :where(body[data-fit-hero-kind="detay"]) .lib-top{ min-height:var(--banner-h-detay, 560px); }
 :where(body[data-fit-hero-kind="yasal"]) .lib-top{ min-height:var(--banner-h-yasal, 560px); }
 
+/* ── 🔴 MOBİL YÜKSEKLİK · ÖLÇÜLDÜ, DEĞER YAZILMADI · 2026-09-04 ──────
+   Tip yüksekliklerini önce YALNIZ 1440'ta ölçmüştüm. @390 ölçülünce
+   `fit-testi-sonuc-v1` sabit 544'ü aşıyor göründü ve buraya
+   `--banner-h-liste:572px` yazdım. **GERİ ALINDI — o bir gerilemeydi.**
+
+   OLUMSUZ SINAMA (hero.css ağ düzeyinde iptal edilip ölçüldü, anatomi-v1 @390):
+       hero.css KAPALI   yükseklik 587 · scrollHeight 621 · taşma 34 · alt pay 0
+       hero.css AÇIK/572 yükseklik 572 · scrollHeight 606 · taşma 34 · alt pay 0
+   İki şey birden çıktı:
+   ① Kabuğun KENDİ mobil liste yüksekliği zaten **587**; benim 572'm onu
+     15px KÜÇÜLTÜYORDU. Yani "en uzuna göre" şartını iyileştirmiyor, bozuyordu.
+   ② İçeriğin kutuyu 34px taşırması (=yazılan `padding-bottom`) **hero.css
+     OLMADAN DA** aynen var — 33 bandın 30'unda, `overflow:hidden` ile birlikte.
+     Yani kusur bu bileşenin değil, kabuğun banner kutu modelinin; bu turda
+     DOKUNULMADI ve `docs/fit-hero-olcum.md`de kalem olarak duruyor.
+
+   🔴 DAHA ÖNEMLİSİ — ÖLÇÜM YÖNTEMİ GÜVENİLİR DEĞİLDİ. "Gereken yükseklik"i
+   `min-height` yürürlükteyken ölçmek DAİRESELDİR: şerit `align-self:flex-end`
+   ile gerildiği için kısıtı büyütünce ölçülen ihtiyaç da büyüyor (aynı sayfa
+   üç yöntemde 571 · 585 · 606 verdi). Bu yüzden buraya SAYI YAZILMADI:
+   mobil için doğru değer, kısıttan bağımsız bir ölçümle belirlenmeli.
+   Masaüstü değerleri (544 / 590) bu sorundan etkilenmiyor; onlar duruyor.
+
+   ── MOBİL DEĞERLER KABUĞUN KENDİ ÖLÇÜSÜDÜR ────────────────────────
+   Kanon kuralı medya kapısı taşımadığı için masaüstü değeri 390'da da
+   uygulanıyor ve kabuğun kendi mobil yüksekliğini KÜÇÜLTÜYORDU
+   (liste 587 → 544, 43px). Ölçüldü (hero.css ağ düzeyinde iptal edilip):
+       @390  liste 587 · detay 726 · yasal 621 (kabuk yasalı liste sayıyor)
+   Beyar'ın "yasal = detay" şartıyla ikisinin ortak değeri EN UZUNUDUR:
+   726. Hiçbiri uydurulmadı; üçü de kabuğun kendi bildirdiği ölçü. */
+@media (max-width:640px){
+  :root{
+    --banner-h-liste:587px;
+    --banner-h-detay:726px;   /* yasal buna bağlı (--banner-h-yasal) */
+  }
+}
+
 /* ── KIRINTI · HER ZAMAN SOL ÜSTTE, SABİT OFSET ──────────────────────
    🔴 ÖLÇÜLDÜ 2026-09-04: 31 liste sayfasının 30'unda kırıntı hero üstünden
       128px'te; BİRİNDE 235px (`hareket-rehberi-v1`, 107px aşağıda).
