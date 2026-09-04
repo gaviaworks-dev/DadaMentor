@@ -57,12 +57,26 @@
       e.preventDefault();
       var acik = document.body.classList.toggle('panel-acik');
       ac.setAttribute('aria-expanded', String(acik));
+      /* 🔴 AKTİF KALEM GÖRÜNÜR AÇILIR (madde 7). Menü gövdesi 2283px
+         uzunluğunda ve kaydırılabilir; uzun menüde aktif modül görünüm
+         alanının ALTINDA kalıyordu — ölçüldü, üç sayfa tipinde.
+         Kullanıcı çekmeceyi "nerdeyim" diye açar; cevabı görmeli. */
+      if (acik) {
+        var aktif = document.querySelector('.panel-menu-link.aktif, .panel-menu-link[aria-current]');
+        if (aktif && aktif.scrollIntoView) aktif.scrollIntoView({ block: 'center' });
+      }
       return;
     }
-    /* Perdeye ya da bir modüle tıklayınca kapanır. */
+    /* Perdeye ya da bir modüle tıklayınca kapanır.
+       🔴 ÇEKMECE ARTIK İKİ SÜTUN: ray + menü (kit K27, madde 7). Bu dal
+       yalnız `.panel-menu`yü "içerisi" sayıyordu ve RAYA TIKLAMAK
+       çekmeceyi kapatıyordu — ölçüldü, 900'de dört sayfa tipinde de.
+       Marka değiştirici bir kez bile kullanılamazdı. */
     if (document.body.classList.contains('panel-acik')) {
       var menu = document.querySelector('.panel-menu');
-      if (!menu.contains(e.target) || e.target.closest('.panel-menu-link')) {
+      var ray = document.querySelector('.panel-ray');
+      var icerisi = (menu && menu.contains(e.target)) || (ray && ray.contains(e.target));
+      if (!icerisi || e.target.closest('.panel-menu-link')) {
         document.body.classList.remove('panel-acik');
         var d = document.querySelector('.panel-ac');
         if (d) d.setAttribute('aria-expanded', 'false');

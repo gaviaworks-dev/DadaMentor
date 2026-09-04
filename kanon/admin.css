@@ -1001,6 +1001,161 @@
 }
 
 
+
+/* ═══════════════════════════════════════════════════════════════════════
+   K27 · MOBİL ÇEKMECE — RAY + MENÜ TEK BLOK
+   ───────────────────────────────────────────────────────────────────────
+   2026-09-04 · parti 3 · Beyar kuralı (madde 7):
+   *"≤900'de çekmece = rail + menü yan yana, 100dvh, iç scroll,
+   backdrop + dış tık/ESC kapatır, body scroll kilidi, aktif kalem
+   görünür."*
+
+   ÖLÇÜLDÜ (390 · 640 · 900 × dört sayfa tipi, TIKLANARAK):
+
+       ray yok (390 · 640)                8 / 8
+       arka sayfa çekmece açıkken kayıyor 4
+       raya tıklamak çekmeceyi kapatıyor  4   (900'de ray görünür)
+       aktif kalem görünüm dışında        3
+
+   🔴 EN GÖRÜNÜR KUSUR: kanon ≤640'ta `.panel-ray{display:none}` diyor
+      (kendi kararı, §75i) ama `.panel-menu`nün `left`i 76px'te KALIYOR.
+      Sonuç: çekmece açılınca sol kenarda **76px'lik boş bir şerit**
+      duruyor ve arkadaki sayfa oradan görünüyor. Marka rayı (ekosistem
+      şeridi + Gavia imzası) telefonda hiç erişilemiyor — devir belgesi
+      §24-4c bunu "tasarım sorusu, Beyar'a bırakıldı" diye bırakmıştı.
+      Beyar kararını verdi: ray çekmecenin PARÇASI olur.
+
+   ⚠ PUBLIC KANON SALT OKUMA. `bilesenler.css` §75i'ye dokunulmadı;
+     kit en sonda yüklendiği için aynı özgüllükte üstüne yazıyor.
+
+   ⚠ Kaydırma kilidi `overflow:hidden` YAZMAKLA olmuyor — hangi elemanın
+     kaydırdığı ölçüye bağlı. Hem `html` hem `body` kilitlenir ve kapı
+     bunu HESAPLANMIŞ DEĞERLE DEĞİL, tekerleği çevirip `scrollY`
+     değişti mi diye ölçer.
+   ═══════════════════════════════════════════════════════════════════════ */
+@media (max-width:900px){
+  /* Ray çekmecenin sol sütunu: menüyle birlikte gelir, birlikte gider. */
+  .yetkili .panel-ray{
+    display:flex;
+    position:fixed; top:0; left:0;
+    height:100dvh;
+    overflow-y:auto; overscroll-behavior:contain;
+    transform:translateX(-100%);
+    transition:transform var(--sure, .2s) var(--yumusama, ease);
+  }
+  .yetkili.panel-acik .panel-ray{ transform:none; }
+
+  /* Menü: tam yükseklik, kendi içinde kayar; dip kalemleri kesilmez. */
+  .yetkili .panel-menu{ top:0; height:100dvh; }
+  .yetkili .panel-menu-govde{ overflow-y:auto; overscroll-behavior:contain; }
+
+  /* Ray artık gövdeyi ötelemiyor — çekmece kapalıyken sayfa tam genişlik.
+     (Kanon 641–900 arasında 76px pay bırakıyordu; ray oradan çıktı.) */
+  .yetkili .panel-govde{ margin-left:0; }
+  .yetkili .panel-ust{ left:0; }
+
+  /* Gövde kaydırma kilidi — çekmece açıkken arkadaki sayfa DURUR. */
+  .yetkili.panel-acik{ overflow:hidden; touch-action:none; }
+}
+html:has(> body.panel-acik){ overflow:hidden; }
+
+
+/* ═══════════════════════════════════════════════════════════════════════
+   K28 · YALNIZ-İKON DÜĞME · İPUCU HER ZAMAN
+   ───────────────────────────────────────────────────────────────────────
+   2026-09-04 · parti 3 · Beyar kuralı (madde 9):
+   *"Satır eylem ikonları anlaşılmıyor — hover'da açıklama yok."*
+
+   ÖLÇÜLDÜ: 83 ekranda **2.155** yalnız-ikon düğme var. Erişilebilir ad
+   (`aria-label`) 2.155'inde de VAR — önceki turların kazanımı. Ama
+   ipucu **1.032'sinde YOK**: ekran okuyucu ne olduğunu biliyor,
+   GÖZLE BAKAN bilmiyor. Bu, ARIA'nın tersine dönmüş hâli.
+
+   Kit `data-ipucu`yu zaten çiziyordu ama YALNIZ ray ve katlı menü
+   kalemlerinde (K12). Kural bütün yalnız-ikon düğmelere genişletildi;
+   metni kit `aria-label`dan TÜRETİR — ikinci bir metin kaynağı
+   doğmaz, ikisi kayamaz.
+
+   ⚠ 300ms gecikme: imleç satırın üstünden geçerken balon yağmuru
+     olmasın. Odakta gecikme YOK — klavye kullanıcısı beklemez.
+   ═══════════════════════════════════════════════════════════════════════ */
+.yetkili [data-ipucu]{ position:relative; }
+.yetkili [data-ipucu]::after{
+  content:attr(data-ipucu);
+  position:absolute; left:50%; top:calc(100% + var(--kit-atom));
+  transform:translateX(-50%) translateY(2px);
+  z-index:var(--kat-ipucu);
+  background:var(--murekkep); color:var(--kagit);
+  font-size:var(--yazi-12); font-weight:var(--agirlik-orta);
+  line-height:1.35; text-align:center;
+  padding:var(--kit-atom) var(--kit-bagli);
+  border-radius:var(--yuvarlak-sm);
+  max-width:220px; width:max-content;
+  box-shadow:var(--golge-md);
+  opacity:0; visibility:hidden; pointer-events:none;
+  transition:opacity .12s ease, transform .12s ease, visibility .12s;
+  transition-delay:0s;
+}
+/* Satırın sağ ucundaki düğmede balon dışarı taşmasın. */
+.yetkili td.eylem [data-ipucu]::after,
+.yetkili .satir-eylem > :last-child[data-ipucu]::after{ left:auto; right:0; transform:translateY(2px); }
+
+.yetkili [data-ipucu]:hover::after{
+  opacity:1; visibility:visible; transform:translateX(-50%) translateY(0);
+  transition-delay:.3s;                       /* 300ms — Beyar ölçüsü */
+}
+.yetkili td.eylem [data-ipucu]:hover::after,
+.yetkili .satir-eylem > :last-child[data-ipucu]:hover::after{ transform:translateY(0); }
+.yetkili [data-ipucu]:focus-visible::after{
+  opacity:1; visibility:visible; transform:translateX(-50%) translateY(0);
+  transition-delay:0s;                        /* klavye beklemez */
+}
+.yetkili td.eylem [data-ipucu]:focus-visible::after,
+.yetkili .satir-eylem > :last-child[data-ipucu]:focus-visible::after{ transform:translateY(0); }
+
+/* Tablo hücresi ipucunu kırpmasın. */
+.yetkili .tablo td.eylem{ overflow:visible; }
+
+/* Sıralama tutamağı: sürüklenebilir olduğunu İMLEÇ de söyler. */
+.yetkili .ikon-dugme.tutamak{ cursor:grab; }
+.yetkili .ikon-dugme.tutamak:active{ cursor:grabbing; }
+.yetkili tr.siralaniyor{ background:var(--aksan-yikama); }
+
+
+/* ═══════════════════════════════════════════════════════════════════════
+   K29 · GÖRSEL BLOĞU FORMUN İLK BÖLÜMÜ — `order` ÇALIŞAN BİR KAPTA
+   ───────────────────────────────────────────────────────────────────────
+   2026-09-04 · parti 3 · Beyar bildirdi (madde 10):
+   *"admin-sayfa-form'da Kapak görseli, künye alanlarının ALTINDA."*
+
+   Sözleşme §6 sırayı zaten yazıyordu (`KAPAK GÖRSELİ → künye → …`) ve
+   kural `order` ile kurulmuştu. ÖLÇÜLDÜ — kural HİÇ ÇALIŞMIYORDU:
+
+       .form-gorsel  order: 0     ✅ doğru
+       kardeşleri    order: 0     🔴 "2" olmalıydı
+       KABIN display: block       🔴 `order` yalnız flex/grid'de geçer
+
+   Kök: eski seçici kabı ADIYLA arıyordu (`.form-ana > *` ve
+   `.form-ana > .kart > .kart-govde > *`). Gerçek formlarda bölümler
+   ADSIZ bir `<div>` ya da doğrudan `.kart.panel` içinde duruyor;
+   ikisi de o listede yok. **K24'ün aynısı, üçüncü tekrarı:** kural
+   doğru, KANCA kaçmış. Kanca artık kabın adı değil, `.form-bolum`
+   çocuğu taşıması.
+
+   ⚠ `display:flex` yalnız SIRA için; `gap` verilmedi. Bölümler arası
+     nefes §6 gereği bölüm BAŞLIĞININ üst payından geliyor (32) ve
+     flex'te de aynen duruyor — kapı ölçtü, aralıklar değişmedi.
+   ═══════════════════════════════════════════════════════════════════════ */
+.yetkili :is(.form-ana, .kart-govde, .kart.panel, form, div):has(> .form-bolum + .form-bolum){
+  display:flex;
+  flex-direction:column;
+}
+.yetkili :is(.form-ana, .kart-govde, .kart.panel, form, div):has(> .form-bolum + .form-bolum) > *{ order:2; }
+.yetkili :is(.form-ana, .kart-govde, .kart.panel, form, div):has(> .form-bolum + .form-bolum) > :is(.form-gorsel, .form-bolum.gorsel){ order:0; }
+.yetkili :is(.form-ana, .kart-govde, .kart.panel, form, div):has(> .form-bolum + .form-bolum) > :is(.form-icerik, .form-bolum.icerik){ order:9; }
+/* Sabit eylem çubuğu her zaman en sonda kalır — sıralamaya karışmaz. */
+.yetkili :is(.form-ana, .kart-govde, .kart.panel, form, div):has(> .form-bolum + .form-bolum) > .form-eylem{ order:10; }
+
 /* ═══════════════════════════════════════════════════════════════════════
    K14 · ZENGİN METİN EDİTÖRÜ — dış çerçeve DİĞER INPUT'LARLA AYNI
    ───────────────────────────────────────────────────────────────────────
@@ -1818,12 +1973,14 @@
 .yetkili .alan.kart-izgara > *{ margin-top:0; margin-bottom:0; }
 
 @supports (grid-template-rows: subgrid){
+  /* ⚠ K26 ile dört raya çıktı — K24 bu bloğu zaten eziyor, ama iki
+     yerde iki ayrı sayı bırakmak sonraki turun tuzağı olurdu. */
   .yetkili .alan-izgara,
-  .yetkili .alan.kart-izgara{ grid-template-rows:auto auto auto; }
+  .yetkili .alan.kart-izgara{ grid-template-rows:auto auto auto auto; }
   .yetkili .alan-izgara > .alan,
   .yetkili .alan.kart-izgara > .alan{
     display:grid;
-    grid-row:span 3;
+    grid-row:span 4;
     grid-template-rows:subgrid;
     row-gap:0;
   }
@@ -1845,6 +2002,167 @@
      yardımı varsa ikisinin denetimi yine aynı hizada kalır. */
   .yetkili .alan-izgara > .alan > .alan-yardim,
   .yetkili .alan-izgara > .alan > .alan-hata{ align-self:start; margin-top:var(--kit-bagli); }
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════
+   K24 · SATIR KANCASI ÜÇÜNCÜ KEZ KAÇTI — ARTIK ADA DEĞİL İÇERİĞE BAKAR
+   ───────────────────────────────────────────────────────────────────────
+   2026-09-04 · parti 3 · Beyar kuralı (madde 4):
+   *"Aynı satırdaki girdilerin üst kenarı aynı y'de olur."*
+
+   K23 bu kuralı `.alan-izgara`ya yazdı, sonra `.alan.kart-izgara`yı da
+   ekledi. Bu turda TIKLANARAK ölçülünce ÜÇÜNCÜ bir kanca çıktı:
+   `.kart-izgara.c2` — `.alan` ÖN EKİ OLMADAN, ama içinde `.alan`
+   çocukları taşıyarak. K23'ün bileşik seçicisi ona değmiyordu.
+
+       admin-form-tasarim   6 satır · 24px
+       admin-rehber-form    2 satır · 24-25px
+       admin-duyuru-form    1 satır · 24px
+       admin-hizmetler      1 satır · 24px  (c4)
+       admin-hareket-form   1 satır · 21px
+                           ──────────────
+                            11 satır KAYIK
+
+   🔴 Kapı da aynı hatayı yaptı ve ÖNCE kendisi düzeltildi: satır kabını
+      ADIYLA arıyordu (`.alan-izgara, .form-satir, .alan-satir`) ve
+      "hizasız 0" dedi; gerçek fark 25px'ti. İkinci kusuru da vardı —
+      satırları ÜST KENARA göre grupluyordu, yani tam da kayık olanlar
+      ayrı gruplara düşüp eleniyordu. (Kusuru arayan ölçüt kusurun
+      kendisiyle kör oluyordu.) Ölçüt artık DİKEY ÖRTÜŞME.
+
+   KURAL: kanca kabın ADI değil, `.alan` ÇOCUĞU TAŞIMASIDIR. Dördüncü
+   bir sınıf adı doğarsa kural onu da kapsar; liste bir daha büyümez.
+   ⚠ `:has(> .alan)` gerçek KART ızgarasını dışarıda bırakır
+     (`.kart-izgara > .kart`) — ona dokunulmuyor, K23'ün kararı duruyor.
+   ═══════════════════════════════════════════════════════════════════════ */
+.yetkili :is(.alan-izgara, .kart-izgara):has(> .alan){
+  align-items:start;
+  grid-auto-rows:min-content;
+}
+.yetkili :is(.alan-izgara, .kart-izgara):has(> .alan) > *{ margin-top:0; margin-bottom:0; }
+
+@supports (grid-template-rows: subgrid){
+  /* 🔴 DÖRT RAY, ÜÇ DEĞİL — K26'nın gerekçesi aşağıda.
+     Hata kutusu alanın DÖRDÜNCÜ çocuğudur; üç raylı bir subgridde
+     dördüncü çocuk üçüncü rayın ÜSTÜNE biniyordu. */
+  .yetkili :is(.alan-izgara, .kart-izgara):has(> .alan){ grid-template-rows:auto auto auto auto; }
+  .yetkili :is(.alan-izgara, .kart-izgara):has(> .alan) > .alan{
+    display:grid;
+    grid-row:span 4;
+    grid-template-rows:subgrid;
+    row-gap:0;
+  }
+  .yetkili :is(.alan-izgara, .kart-izgara):has(> .alan) > .alan > :is(label, .alan-etiket){
+    align-self:end; margin-bottom:var(--kit-bagli);
+  }
+  .yetkili :is(.alan-izgara, .kart-izgara):has(> .alan) > .alan
+    > :is(.alan-girdi, .alan-secim, .alan-metin, .girdi-kap, .cipler, .coklu-secim, div){
+    align-self:start;
+  }
+  .yetkili :is(.alan-izgara, .kart-izgara):has(> .alan) > .alan
+    > :is(.alan-yardim, .alan-hata){ align-self:start; margin-top:var(--kit-bagli); }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   K25 · DENETİM RAYININ BAŞI DENETİMDİR — SÜS GİRDİYİ AŞAĞI İTEMEZ
+   ───────────────────────────────────────────────────────────────────────
+   Beyar bildirdi: *"'Sayfa ikonu' önizlemesi girdinin ÜSTÜNDE."*
+   Ölçüldü — 83 ekranda 7 alanda kalıp aynı:
+
+       <div class="alan">
+         <label class="alan-etiket">…</label>
+         <div>                          ← ADI OLMAYAN sarmalayıcı
+           <i class="fa-solid …"></i>   ← süs
+           <input class="alan-girdi">   ← DENETİM
+         </div>
+
+   Kök: `.alan-girdi` kitte `display:block; width:100%`. Satır içi `<i>`
+   onun yanına sığamıyor ve KENDİ SATIRINA çıkıyor; denetim 24–25px
+   aşağı iniyor, komşu sütunun girdisiyle hizası bozuluyor. Yani
+   madde 4'ün ikinci yarısı bu kalıptan doğuyor — iki kusur tek kök.
+
+   KURAL: `.alan` içindeki adsız sarmalayıcı bir SATIRDIR — süs solda,
+   denetim onun sağında ve rayın tepesini denetim belirler.
+
+   ⚠ SAPMA, bilerek: görev "önizleme girdinin ALTINA" diyordu. Ölçüldü
+     ve uygulanmadı — süs üçüncü raya (yardım rayı) düşerdi ve o ray
+     DOLU: `admin-rehber-form`da "Sayfa ikonu"nun kendi yardım metni
+     orada duruyor. İkisi üst üste binerdi (madde 6'nın kusuru), ya da
+     dördüncü bir ray açmak gerekirdi ve o ray komşu sütunda YOK —
+     subgrid hizası yeniden bozulurdu. Süs bir ALT YAZI değil, denetimin
+     ÖN EKİ (kilit · seçili ikonun önizlemesi); yeri denetimin solu.
+     Beyar'ın şikâyeti — "girdinin üstünde" — tamamen kapanıyor.
+
+   ⚠ `.form-gorsel` / `.birak-alani` DIŞARIDA: oradaki ikon kit §10'un
+     bırakma alanının kendi parçası, süs değil — kalıp doğru.
+   ═══════════════════════════════════════════════════════════════════════ */
+.yetkili .alan > div:not([class]):has(> :is(.alan-girdi, .alan-secim, .alan-metin, input, select, textarea)){
+  display:flex;
+  align-items:center;
+  gap:var(--kit-bagli);
+}
+.yetkili .alan > div:not([class]):has(> :is(.alan-girdi, .alan-secim, .alan-metin, input, select, textarea))
+  > :is(.alan-girdi, .alan-secim, .alan-metin, input, select, textarea){
+  flex:1 1 auto; min-width:0;
+}
+.yetkili .alan > div:not([class]):has(> :is(.alan-girdi, .alan-secim, .alan-metin, input, select, textarea))
+  > :is(i, img, svg){
+  flex:0 0 auto;
+  font-size:var(--yazi-16);
+  color:var(--metin-ikincil);
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════
+   K26 · HATA MESAJI AKIŞTADIR — YARDIM METNİNİN ÜSTÜNE BİNMEZ
+   ───────────────────────────────────────────────────────────────────────
+   2026-09-04 · parti 3 · Beyar bildirdi (madde 6):
+   *"'Bu alan zorunlu.' yardım metninin üstüne biniyor."*
+
+   ÖLÇÜLDÜ — hata TETİKLENEREK (markup'ta `hidden` duruyor; doğurmadan
+   ölçmek sahte yeşildir): 40 ekranda zorunlu alan var, 205 hata doğdu,
+   **29 alanda** hata kutusu yardım metniyle ÇAKIŞTI.
+
+   KÖK KİTTE DEĞİL, IZGARADAYDI. `hataYaz` kutuyu zaten doğru yere
+   koyuyor — yardım metninden ÖNCE, akışın içine. Ama K23/K24 alanı
+       ray 1 etiket · ray 2 denetim · ray 3 yardım
+   diye ÜÇ raylı bir subgride oturtuyor ve `grid-row:span 3` diyordu.
+   Hata doğunca alanın DÖRDÜNCÜ çocuğu oluyor; üç raylık bir alanda
+   dördüncü çocuk yerleştirilecek ray bulamayıp ÜÇÜNCÜNÜN ÜSTÜNE
+   biniyordu. Yani kusur "hata yanlış yere yazılıyor" değil,
+   **alanın hata için ayrılmış rayı yoktu.**
+
+   KURAL — dört ray, sırası sabit:
+       1 etiket · 2 DENETİM · 3 HATA · 4 yardım
+
+   Hata girdinin hemen altında doğar, yardım metni onun altına iner.
+   Hata yokken üçüncü ray BOŞ ve yüksekliği 0 — komşu sütunların
+   denetim hizası (madde 4) bozulmaz, çünkü hiza ray 2'den geliyor.
+   ⚠ Bu yüzden hata rayı "gerektiğinde açılan" bir şey değil, HER
+     alanda duran ama boşken yer kaplamayan bir ray. Aksi hâlde hata
+     doğan sütun ötekileri aşağı iterdi.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* Izgarada olmayan (tek sütun) alanlarda da sıra aynı: hata denetimin
+   hemen altı, yardım en altta. Markup sırası zaten böyle; `order`
+   markup'ı yeniden dizmeden garantiler (EKSİ BİRİNCİ MADDE). */
+.yetkili .alan:not(:has(> .alan-hata)) { }
+.yetkili .alan > .alan-hata{ margin-top:var(--kit-bagli); }
+.yetkili .alan > .alan-hata + .alan-yardim{ margin-top:var(--kit-atom); }
+
+@supports (grid-template-rows: subgrid){
+  /* Hata rayı: boşken 0, doluyken kendi yüksekliği. */
+  .yetkili :is(.alan-izgara, .kart-izgara):has(> .alan) > .alan > .alan-hata{
+    grid-row:3; align-self:start; margin-top:var(--kit-bagli);
+  }
+  .yetkili :is(.alan-izgara, .kart-izgara):has(> .alan) > .alan > .alan-yardim{
+    grid-row:4; align-self:start; margin-top:var(--kit-bagli);
+  }
+  .yetkili .alan-izgara > .alan > .alan-hata,
+  .yetkili .alan.kart-izgara > .alan > .alan-hata{ grid-row:3; }
+  .yetkili .alan-izgara > .alan > .alan-yardim,
+  .yetkili .alan.kart-izgara > .alan > .alan-yardim{ grid-row:4; }
 }
 
 /* Denetim yüksekliği TEK — hizanın ikinci şartı. Farklı yükseklikte iki

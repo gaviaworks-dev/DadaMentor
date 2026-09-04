@@ -580,6 +580,14 @@
     return true;
   }
   window.DM_ALAN_DENETLE = alanDenetle;
+  /* 🔴 İKİ IIFE, TEK HATA YÜZEYİ. `hataYaz`/`hataSil` bu blokta yaşıyor;
+     §23 (girdi tipi) ikinci blokta. Devir belgesi §20-2'nin kusuru tam
+     buydu: `hataSil` başka IIFE'de kaldı, çağrı ReferenceError attı ve
+     doldurma döngüsü ortada kesildi — belirti "sayaç kusuru" sanıldı
+     çünkü konsol dinlenmiyordu. Üçüncü kapsam tuzağına düşmemek için
+     yüzey AÇIKÇA dışarı veriliyor. */
+  window.DM_HATA_YAZ = hataYaz;
+  window.DM_HATA_SIL = hataSil;
 
   /* Yazarken hatayı temizle — kullanıcı düzeltirken kırmızı durmasın. */
   document.addEventListener('input', function (e) {
@@ -921,10 +929,11 @@
     e.preventDefault();
     var yuzey = s.closest('.acilir-yuzey');
     var tetik = document.querySelector('[aria-controls="' + yuzey.id + '"]');
-    yuzey.querySelectorAll('[data-deger]').forEach(function (x) {
-      x.classList.toggle('aktif', x === s);
-      x.setAttribute('aria-checked', String(x === s));
-    });
+    /* 🔴 Durum ÜÇ ADLA bildiriliyor (`aria-pressed` · `aria-selected` ·
+       `aria-checked`); ilk yazım yalnız `.aktif` + `aria-checked` yazıyordu
+       ve "Tümü" 73 yüzeyde `aria-selected="true"` kalıyordu — göze doğru,
+       ekran okuyucuya yanlış. Tek yazıcı: §22 `cipDurum`. */
+    yuzey.querySelectorAll('[data-deger]').forEach(function (x) { cipDurum(x, x === s); });
     if (tetik) {
       tetik.setAttribute('data-deger', s.getAttribute('data-deger'));
       var et = tetik.querySelector('[data-rol="etiket"]') || tetik.querySelector('span');
@@ -1281,6 +1290,62 @@
         return;
       }
 
+      /* ── ÖNİZLE · göz ikonunun GERÇEK karşılığı (§24) ──────────
+         Kayıt bir üye yüzü taşıyorsa oraya YENİ SEKMEDE gidilir —
+         yönetici paneli terk etmez (kitin `duzenle` kuralıyla aynı
+         gerekçe). Taşımıyorsa satırın BİLDİRDİĞİ hücrelerden önizleme
+         paneli açılır ve panel bunun bir önizleme olduğunu YAZAR. */
+      case 'onizle': {
+        e.preventDefault();
+        var trO = d.closest('tr');
+        var adres = d.getAttribute('data-onizle') || '';
+        if (!adres && trO) {
+          /* Satırdaki "Sitede gör" bağı zaten üye yüzünü bildiriyor. */
+          var disBag = trO.querySelector('a[target="_blank"][href]');
+          if (disBag) adres = disBag.getAttribute('href');
+          else {
+            /* Satırın kendi bildirdiği yol (`<small>/duyuru/…`). */
+            var yol = trO.querySelector('td small');
+            var m = yol && (yol.textContent || '').trim().match(/^\/[\w\-\/]+$/);
+            if (m) adres = '..' + m[0];
+          }
+        }
+        if (adres) { window.open(adres, '_blank', 'noopener'); toast('Üye yüzü yeni sekmede açıldı.'); return; }
+        if (!trO) { toast('Önizlenecek kayıt bulunamadı.', 'uyari'); return; }
+        var adO = (trO.querySelector('td b') || trO.cells[1] || {}).textContent || 'Kayıt';
+        panelAc(adO.replace(/\s+/g, ' ').trim() + ' — önizleme', 'fa-eye', satirVerisi(trO),
+          'Bu bir ÖNİZLEMEDİR: kaydın listede görünen alanları. Üye yüzü sayfası bu kayıt için bildirilmemiş.');
+        return;
+      }
+
+      /* ── İSTATİSTİK · grafik ikonunun GERÇEK karşılığı (§24) ───── */
+      case 'istatistik': {
+        e.preventDefault();
+        var trI = d.closest('tr');
+        if (!trI) { toast('İstatistik için kayıt bulunamadı.', 'uyari'); return; }
+        var hepsi = satirVerisi(trI);
+        /* Sayı taşıyan sütunlar + hedef kitle: ekranda GÖRÜNEN veri. */
+        var sayilar = hepsi.filter(function (x) { return x.sayi; });
+        var hedef = hepsi.filter(function (x) { return /hedef:/i.test(x.not); })
+          .map(function (x) { return { etiket: 'Hedef kitle', deger: x.not.replace(/^.*hedef:\s*/i, ''), not: '' }; });
+        var adI = (trI.querySelector('td b') || trI.cells[1] || {}).textContent || 'Kayıt';
+        panelAc(adI.replace(/\s+/g, ' ').trim() + ' — istatistik', 'fa-chart-simple',
+          sayilar.concat(hedef).length ? sayilar.concat(hedef) : hepsi,
+          'Sayılar listedeki sütunlardan okunur — maket verisi, canlı ölçüm değil.');
+        return;
+      }
+
+      /* ── SIRALA · tutamağın GERÇEK karşılığı (§24) ───────────────
+         🔴 Devir belgesi §24-1: 57 sıralama tutamağı ölçüldü ve
+         HEPSİ ÖLÜ; `aria-label` ok tuşlarını VAAT ediyor, kökü kitte
+         sıralama eyleminin hiç olmamasıydı. Tıklama satırı bir aşağı
+         taşır, ok tuşları yukarı/aşağı — vaat edilen ikisi de var. */
+      case 'sirala': {
+        e.preventDefault();
+        siraTasi(d, 1);
+        return;
+      }
+
       case 'suzgec-temizle': {
         e.preventDefault();
         var c = d.closest('.suzgec-cubuk');
@@ -1290,7 +1355,11 @@
           var et = x.querySelector('[data-rol="etiket"]') || x.querySelector('span');
           if (et && x.getAttribute('data-varsayilan')) et.textContent = x.getAttribute('data-varsayilan');
         });
-        c.querySelectorAll('.acilir-yuzey .cip.aktif').forEach(function (x) { x.classList.remove('aktif'); });
+        /* §22: temizlemek seçimi boşaltır, boş süzgeç YOKTUR — Tümü döner. */
+        c.querySelectorAll('.acilir-yuzey .cip').forEach(function (x) { cipDurum(x, false); });
+        c.querySelectorAll('.acilir-yuzey').forEach(function (y) {
+          if (!y.hasAttribute('data-tarih-suzgec')) tumuNormalle(y, null);
+        });
         c.querySelectorAll('input[type=search], .panel-arama-girdi').forEach(function (x) { x.value = ''; });
         suzgecTazele();
         toast('Süzgeçler temizlendi.');
@@ -1565,6 +1634,12 @@
         yeniSatir.querySelectorAll('.coklu-secim .cipler').forEach(function (c) { c.innerHTML = ''; });
         yeniSatir.querySelectorAll('.coklu-secim input[data-cs]').forEach(function (g) { g.value = ''; });
 
+        /* 🔴 KLONLANAN EDİTÖR — kopyalanan `.tox` kabı ÖLÜ doğar: TinyMCE
+           onu tanımaz, içine yazılan yazı hiçbir textarea'ya gitmez ve
+           ekranda ikinci bir editör görünür. Kap silinir, textarea
+           gerçek bir editör olarak yeniden kurulur (§7). */
+        if (window.DM_EDITOR_KLON) window.DM_EDITOR_KLON(yeniSatir);
+
         yeniSatir.classList.add('yeni');
         liste.appendChild(yeniSatir);
         listeTazele(liste);
@@ -1585,6 +1660,65 @@
       case 'git': {
         e.preventDefault();
         var hedefG = d.getAttribute('data-hedef') || d.getAttribute('href') || '';
+        /* 🔴 SATIRIN KENDİ BAĞI BİR HEDEF BİLDİRİMİDİR (§24 · madde 9).
+           `admin-log`da "İlişkili kayda git" düğmesi `calistir` taşıyordu
+           ve hiçbir şey yapmıyordu — oysa satırın "Ekran" sütunu zaten
+           `<a href="admin-rozetler.html">` diyor. Hedef satırda YAZILI,
+           düğme onu görmüyordu. Kitin `duzenle` merdiveniyle aynı kural:
+           satırdan türetilen bağ paneli TERK ETMİYORSA izlenir. */
+        if (!hedefG) {
+          var trG = d.closest('tr, .liste-satir');
+          if (trG) {
+            var baglar = [].slice.call(trG.querySelectorAll('a[href]'));
+            for (var bi = 0; bi < baglar.length; bi++) {
+              var h = baglar[bi].getAttribute('href') || '';
+              if (!h || /^#/.test(h)) continue;
+              if (baglar[bi].getAttribute('target') === '_blank') continue;  /* üye yüzü */
+              if (/^(https?:)?\/\//.test(h) || h.charAt(0) === '/' || h.indexOf('../') === 0) continue;
+              hedefG = h; break;
+            }
+          }
+        }
+        /* 3 · SATIRIN BİLDİRDİĞİ MODÜL ADI — panelin KENDİ menüsünde ara.
+           `admin-sistem-bildirimleri`de satırın "Kaynak" sütunu
+           "Entegrasyonlar" diyor; o ad sol menüde kayıtlı bir modül ve
+           adresi orada YAZILI. Menü panelin kendi kaydıdır — eşleme
+           uydurulmuyor, OKUNUYOR. Kaynak süzgeç olarak taşınır; süzgeç
+           denetimi olmayan ekranda kit satırları doğrudan süzer. */
+        if (!hedefG) {
+          var trM = d.closest('tr, .liste-satir');
+          if (trM) {
+            /* 🔴 MENÜ ETİKETİNE SAYAÇ ROZETİ KARIŞIYOR: "Faturalar7" ·
+               "Antrenörler3" — `textContent` rozeti de topluyor ve tam
+               eşleşme düşüyordu. Rozet çıkarılır.
+               Ve eşleşme ÖN EK de olabilir: satır "Görevler" diyor,
+               menü "Görevler & Zamanlanmış İşlemler". Ayırıcıyla
+               başlayan ön ek güvenli eşleşmedir. */
+            var menu = [];
+            document.querySelectorAll('.panel-menu-link[href]').forEach(function (a) {
+              var kopya = a.cloneNode(true);
+              kopya.querySelectorAll('.sayac, .sayi, .rozet').forEach(function (x) { x.remove(); });
+              var ad = (kopya.textContent || '').replace(/\s+/g, ' ').trim().toLocaleLowerCase('tr');
+              if (ad) menu.push({ ad: ad, yol: a.getAttribute('href') });
+            });
+            function menudeAra(ad) {
+              var k = ad.toLocaleLowerCase('tr');
+              for (var i = 0; i < menu.length; i++) if (menu[i].ad === k) return menu[i].yol;
+              for (var j = 0; j < menu.length; j++)
+                if (menu[j].ad.indexOf(k) === 0 && /^[\s&·\/,-]/.test(menu[j].ad.charAt(k.length))) return menu[j].yol;
+              return null;
+            }
+            for (var ci = 0; ci < trM.cells.length && !hedefG; ci++) {
+              var h = trM.cells[ci];
+              if (h.classList.contains('eylem') || h.classList.contains('sec')) continue;
+              var kucuk = h.querySelector('small');
+              var ana = (h.textContent || '').replace(kucuk ? (kucuk.textContent || '') : '', '')
+                          .replace(/\s+/g, ' ').trim();
+              var yol = ana && menudeAra(ana);
+              if (yol) hedefG = yol + '?kaynak=' + encodeURIComponent(ana);
+            }
+          }
+        }
         if (hedefG && !/^#/.test(hedefG)) { window.location.href = hedefG; return; }
         var bolge = hedefG ? document.querySelector(hedefG) : null;
         if (!bolge) {
@@ -1593,7 +1727,24 @@
             .filter(function (x) { return ad && (x.textContent || '').trim().indexOf(ad.split(' ')[0]) !== -1; })[0];
           if (bolge) bolge = bolge.closest('.kart') || bolge;
         }
-        if (!bolge) { toast('Bu eylem için bir hedef bildirilmemiş.', 'hata'); return; }
+        if (!bolge) {
+          /* 🔴 SON BASAMAK: hedef modül yoksa KAYIT GÖSTERİLİR.
+             `admin-sistem-bildirimleri`de iki satırın kaynağı
+             ("Güvenlik" · "Sistem") panelde bir modül DEĞİL; o adla bir
+             ekran uydurmak §26'nın "ada bakan talimat" tuzağı olurdu.
+             Ama düğme de sessiz kalamaz ve "bağlanmadı" DİYEMEZ
+             (Beyar yasağı). Dürüst karşılık: satırın kendisi — kaydın
+             bildirdiği alanlar panelde gösterilir, kaynak adı dahil.
+             Kullanıcı nereye gideceğine kendi karar verir. */
+          var trS = d.closest('tr, .liste-satir');
+          if (trS && typeof panelAc === 'function') {
+            var adS = (trS.querySelector('td b') || trS.cells[1] || {}).textContent || 'Kayıt';
+            panelAc(adS.replace(/\s+/g, ' ').trim() + ' — kayıt', 'fa-circle-info', satirVerisi(trS),
+              'Bu kaydın kaynağı panelde ayrı bir modül olarak tutulmuyor; kaydın kendisi gösteriliyor.');
+            return;
+          }
+          toast('Bu eylem için bir hedef bildirilmemiş.', 'hata'); return;
+        }
         bolge.scrollIntoView({ block: 'start' });
         bolge.classList.add('guncellendi');
         setTimeout(function () { bolge.classList.remove('guncellendi'); }, 1600);
@@ -2284,7 +2435,29 @@
                    .toLocaleLowerCase('tr');
         if (ad === alan.toLocaleLowerCase('tr')) hedef = t;
       });
-      if (!hedef) return;
+      if (!hedef) {
+        /* 🔴 SÜZGEÇ DENETİMİ YOKSA BAĞ SESSİZCE ÖLÜYORDU (§24 · madde 9).
+           `admin-taksonomi`nin liste ikonu `admin-hareketler.html?taksonomi=Kuvvet`
+           adresine gidiyor ve orada `taksonomi` diye bir süzgeç YOK —
+           ölçüldü: 17 satırın 17'si görünüyor, süzgeç notu doğmuyor.
+           Yönetici "bu terime bağlı içerikler" bekliyor, TAM LİSTE
+           görüyor ve farkı anlamıyor. Devir belgesi §24-4 bunu "B'nin
+           12 bağı yarım" diye bırakmıştı.
+           Denetimi olmayan parametre satırları DOĞRUDAN süzer: eşleşme
+           satırın kendi metninde aranır ve not "hangi parametre"
+           olduğunu YAZAR. Uydurma bir süzgeç yüzeyi AÇILMAZ. */
+        var tabloD = document.querySelector('.tablo tbody, table tbody');
+        if (!tabloD) return;
+        var ara = deger.toLocaleLowerCase('tr');
+        var eslesen = 0;
+        [].forEach.call(tabloD.rows, function (r) {
+          var uyar = (r.textContent || '').toLocaleLowerCase('tr').indexOf(ara) !== -1;
+          if (!uyar) r.hidden = true;
+          else eslesen++;
+        });
+        uygulanan.push(alan + ': ' + deger);
+        return;
+      }
       /* Çipi seç — açılırın kendi tıklama yolundan geçmeden, ama aynı
          durumu bırakarak (tetikteki etiket + `data-deger`). */
       var yuzeyId = hedef.getAttribute('aria-controls');
@@ -2329,8 +2502,473 @@
       ' <button type="button" class="dugme hayalet" data-eylem="suzgec-temizle">Süzgeci kaldır</button>';
     cubuk.insertAdjacentElement('afterend', not);
   }
+
+  /* ═══════════════════════════════════════════════════════════════════
+     22 · SÜZGEÇ ÇİPİ · "TÜMÜ" DIŞLAYICIDIR
+     ───────────────────────────────────────────────────────────────────
+     Beyar kuralı, 2026-09-04 (parti 3): *"Tümü seçiliyken tek kalem
+     seçince Tümü kalkmıyor."*
+
+     Kural iki cümle:
+       1 · Bir kalem seçilince **Tümü düşer**.
+       2 · Seçim boşalınca **Tümü döner** — süzgeç asla boş kalmaz.
+
+     🔴 ÖLÇÜM OKUDUĞUMU ÇÜRÜTTÜ. Markup'a bakınca kusur dört ekranda
+     görünüyordu (`data-deger` taşımayan çipler; onları yalnız panel.js
+     toggle ediyor, Tümü'ye hiç dokunulmuyor). TIKLAYARAK ölçülünce
+     **142 yüzeyin 85'i** kırmızı çıktı: `data-deger` taşıyan 130
+     yüzeyin 73'ünde de Tümü "seçili" kalıyordu — ama GÖZLE DEĞİL.
+
+     Kök: kitin tek-seçim yazıcısı yalnız `.aktif` sınıfını ve
+     `aria-checked`i güncelliyordu. Markup ise durumu ÜÇ AYRI adla
+     bildiriyor: `aria-pressed` (düğme kipi) · `aria-selected`
+     (`role="option"`) · `aria-checked`. Tümü'nün `.aktif`i kalkıyor,
+     `aria-selected="true"` YERİNDE KALIYORDU — yani ekran görsel olarak
+     doğru, **ekran okuyucuya yalan** söylüyordu. panel.js'in kendi
+     başlığındaki uyarının aynısı: *bildirilmiş ama sürülmeyen bir ARIA
+     denetimi, hiç bildirilmemiş olmasından kötüdür.*
+
+     Çözüm tek yazıcı: `cipDurum()` markup'ın BİLDİRDİĞİ her adı birlikte
+     çevirir; bildirmediğini uydurmaz.
+
+     ⚠ İKİ NÜFUS AYRI KALIR, birleştirilmedi:
+       · `data-deger` taşıyan yüzey → tek seçim (`role="option"`),
+         kit tetiğin etiketini de yazıyor ve yüzeyi kapatıyor;
+       · taşımayan yüzey → çoklu seçim, panel.js toggle ediyor.
+     İkisini tek kipe indirmek satır süzme ölçütünü (tek `data-deger`)
+     yeniden yazmak olurdu; kural ikisinde de aynı: Tümü yalnız kalır.
+
+     ⚠ SIRA: panel.js her ekranda kitten ÖNCE yükleniyor (83/83 ölçüldü),
+     bu yüzden onun toggle'ı bu dinleyiciden önce koşar ve buradaki
+     normalleştirme SON durumu görür. Yine de yazım DURUMA bakar,
+     olaya değil — sıra kayarsa sonuç değişmez (idempotent).            */
+
+  var TUMU_METIN = /^(tümü|hepsi)$/i;
+
+  /* Bir çipin durumunu markup'ın bildirdiği HER adla birlikte yazar. */
+  function cipDurum(c, acik) {
+    c.classList.toggle('aktif', acik);
+    if (c.hasAttribute('aria-pressed'))  c.setAttribute('aria-pressed',  String(acik));
+    if (c.hasAttribute('aria-selected')) c.setAttribute('aria-selected', String(acik));
+    if (c.hasAttribute('aria-checked'))  c.setAttribute('aria-checked',  String(acik));
+  }
+  function cipAcik(c) {
+    return c.classList.contains('aktif') ||
+           c.getAttribute('aria-pressed') === 'true' ||
+           c.getAttribute('aria-selected') === 'true' ||
+           c.getAttribute('aria-checked') === 'true';
+  }
+  window.DM_CIP_DURUM = cipDurum;
+
+  /* Yüzeyin "Tümü" çipi: markup bildiriyorsa o, yoksa metinden bulunur
+     ve BİR KEZ damgalanır. Damga sayesinde kural metne değil bildirime
+     bakar; başka dilde/adda bir "hepsi" çipi `data-cip-tumu` yazarak
+     kendini bildirebilir. */
+  function tumuCipi(yuzey) {
+    var d = yuzey.querySelector('[data-cip-tumu]');
+    if (d) return d;
+    var bulunan = null;
+    yuzey.querySelectorAll('.cip').forEach(function (c) {
+      if (!bulunan && TUMU_METIN.test((c.textContent || '').trim())) bulunan = c;
+    });
+    if (bulunan) bulunan.setAttribute('data-cip-tumu', '');
+    return bulunan;
+  }
+
+  /* Kuralın kapsadığı yüzey: süzgeç şeridindeki çip yüzeyi.
+     🔴 Tarih aralığı süzgeci HARİÇ — o `admin-tarih.js`in kendi tek-seçim
+        kipi ve "Tümü" çipi yok (ilk kalemi "Bugün"). Konuma göre "ilk çip
+        Tümü'dür" varsayımı panel.js'te vardı ve orada da yanlıştı. */
+  function suzgecYuzeyi(el) {
+    var y = el.closest ? el.closest('.acilir-yuzey') : null;
+    if (!y || y.hasAttribute('data-tarih-suzgec')) return null;
+    if (!y.closest('.suzgec-cubuk')) return null;
+    return y;
+  }
+
+  /* Tetikteki sayaç: AKTİF ama Tümü OLMAYAN çip sayısı.
+     panel.js aynı sayıyı `:not(:first-child)` ile konumdan çıkarıyordu;
+     burada bildirimden çıkıyor ve kit sonra koştuğu için bu değer kalır. */
+  function tetikSayaci(yuzey) {
+    var tumu = tumuCipi(yuzey), n = 0;
+    yuzey.querySelectorAll('.cip').forEach(function (c) {
+      if (c !== tumu && cipAcik(c)) n++;
+    });
+    var tetik = yuzey.id ? document.querySelector('[aria-controls="' + yuzey.id + '"]') : null;
+    var s = tetik && tetik.querySelector('.sayi');
+    if (s) { s.textContent = n ? String(n) : ''; s.setAttribute('data-sayi', String(n)); }
+    return n;
+  }
+
+  /* Yüzeyi kurala uydurur. Duruma bakar, tıklanan çipe değil —
+     iki kez koşarsa aynı sonucu verir. */
+  function tumuNormalle(yuzey, tiklanan) {
+    var tumu = tumuCipi(yuzey);
+    if (!tumu) return;
+    var digerler = [];
+    yuzey.querySelectorAll('.cip').forEach(function (c) { if (c !== tumu) digerler.push(c); });
+
+    if (!tiklanan) digerler.forEach(function (c) { cipDurum(c, c.classList.contains('aktif')); });
+    if (tiklanan === tumu) {
+      /* Tümü'ye basmak seçimi sıfırlar — ötekiler düşer. */
+      cipDurum(tumu, true);
+      digerler.forEach(function (c) { cipDurum(c, false); });
+    } else {
+      /* 🔴 SEÇİLEN ÇİPİN KENDİ ARIA'SI DA YALAN SÖYLÜYORDU. Çoklu seçim
+         yüzeyinde `.aktif`i panel.js çeviriyor, `aria-pressed`e hiç
+         dokunmuyor: "DadaFit" görsel olarak seçili, ekran okuyucuya
+         `aria-pressed="false"`. Kuralın ilk yazımı yalnız Tümü'yü
+         düzeltiyordu; kapı OR ile okuduğu için ikinci yalanı GÖRMEDİ.
+         Kapıya `ariaCeliskisi` kovası eklenince 12 yüzeyde çıktı.
+         Kural: BİLDİRİLEN ARIA `.aktif`i izler — sınıf tek gerçektir. */
+      digerler.forEach(function (c) { cipDurum(c, c.classList.contains('aktif')); });
+      var seciliVar = digerler.some(cipAcik);
+      cipDurum(tumu, !seciliVar);      /* kalem varsa düşer · yoksa döner */
+    }
+    tetikSayaci(yuzey);
+  }
+  window.DM_TUMU_NORMALLE = tumuNormalle;
+
+  /* Açılış durumu da kurala uyar: markup "Tümü + iki kalem seçili"
+     bırakmışsa ekran daha ilk saniyede kendiyle çelişir. */
+  function tumuKur() {
+    document.querySelectorAll('.suzgec-cubuk .acilir-yuzey').forEach(function (y) {
+      if (y.hasAttribute('data-tarih-suzgec')) return;
+      if (!tumuCipi(y)) return;
+      tumuNormalle(y, null);
+    });
+  }
+
+  document.addEventListener('click', function (e) {
+    var c = e.target.closest ? e.target.closest('.cip') : null;
+    if (!c) return;
+    var y = suzgecYuzeyi(c);
+    if (!y || !tumuCipi(y)) return;
+    tumuNormalle(y, c);
+  });
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', tumuKur);
+  else tumuKur();
+
+
+  /* ═══════════════════════════════════════════════════════════════════
+     23 · GİRDİ TİPİ — MASKE VE DOĞRULAMA
+     ───────────────────────────────────────────────────────────────────
+     2026-09-04 · parti 3 · Beyar kuralı (madde 8):
+     *"Telefon alanı '+90 5555555555555' kabul ediyor."*
+
+     Alan tipini MARKUP BİLDİRİR, kit sürer:
+         data-girdi="telefon|eposta|url|slug|sayi|para|iban|vergino|tarih"
+
+     🔴 AD NEDEN `data-tip` DEĞİL: `data-tip` KANONDA DOLU — üç ekranda
+        28 kullanımı var ve anlamı BAŞKA (challenge tipi sureli/seri/
+        aliskanlik, hizmet tipi aylik/seans/tanisma). Görev metni
+        `data-tip` diyordu; ölçüldü ve kullanılmadı, çünkü kit o adı
+        görünce `<label class="onay-kutusu" data-tip="seri">`i girdi
+        sanıp maskelemeye çalışırdı. `.kunye` dersinin girdi karşılığı:
+        ad yazmadan önce kanon taranır.
+
+     Her tip üç şey yapar: MASKE (yazarken biçimlenir) · SÜZGEÇ
+     (yapıştırma temizlenir) · DOĞRULAMA (blur'da K26 kalıbıyla hata).
+     ⚠ Maske DEĞERİ BOZMAZ: `value` görünen biçim, ham değer
+       `dataset.ham`da (tarih seçicinin `dataset.iso`suyla aynı desen).
+     ⚠ `readonly`/`disabled` alan maskelenmez — orada değer bir KAYIT.
+     ═══════════════════════════════════════════════════════════════════ */
+  var GIRDI = {
+    telefon: {
+      mod: 'tel', ipucu: '+90 5xx xxx xx xx',
+      /* +90 ve ARDINDAN TAM 10 hane. Beyar'ın örneği (+90 5555555555555)
+         13 hane ve bu yüzden geçersiz. */
+      maske: function (h) {
+        var d = h.replace(/\D/g, '');
+        if (d.indexOf('90') === 0) d = d.slice(2);
+        d = d.slice(0, 10);
+        var par = [d.slice(0, 3), d.slice(3, 6), d.slice(6, 8), d.slice(8, 10)].filter(Boolean);
+        return d ? '+90 ' + par.join(' ') : '';
+      },
+      ham: function (v) { return v.replace(/\D/g, '').replace(/^90/, ''); },
+      gecerli: function (v) { return !v || /^\d{10}$/.test(v.replace(/\D/g, '').replace(/^90/, '')); },
+      hata: 'Telefon +90 ve 10 hane olmalı — örn. +90 532 111 22 33.'
+    },
+    eposta: {
+      mod: 'email', ipucu: 'ad@alan.com',
+      gecerli: function (v) { return !v || /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim()); },
+      hata: 'Geçerli bir e-posta adresi yaz — örn. ad@alan.com.'
+    },
+    url: {
+      mod: 'url', ipucu: 'https://',
+      maske: function (h) { return h.replace(/\s+/g, ''); },
+      gecerli: function (v) {
+        var t = v.trim(); if (!t) return true;
+        if (t.charAt(0) === '/') return true;         /* site içi yol geçerli */
+        try { var u = new URL(t); return u.protocol === 'http:' || u.protocol === 'https:'; }
+        catch (e) { return false; }
+      },
+      hata: 'Adres https:// ile başlamalı ya da / ile site içi yol olmalı.'
+    },
+    slug: {
+      mod: 'text', ipucu: 'kucuk-harf-ve-tire',
+      /* Türkçe harfler ASCII karşılığına iner — yoksa adres bozulur. */
+      maske: function (h) {
+        var tr = { 'ı': 'i', 'İ': 'i', 'ş': 's', 'Ş': 's', 'ğ': 'g', 'Ğ': 'g', 'ü': 'u', 'Ü': 'u', 'ö': 'o', 'Ö': 'o', 'ç': 'c', 'Ç': 'c' };
+        return h.replace(/[ıİşŞğĞüÜöÖçÇ]/g, function (c) { return tr[c] || c; })
+                .toLowerCase().replace(/[^a-z0-9/-]+/g, '-')
+                .replace(/-{2,}/g, '-').replace(/^-/, '');
+      },
+      gecerli: function (v) { return !v || /^[a-z0-9/-]+$/.test(v); },
+      hata: 'Adres yalnız küçük harf, rakam ve tire içerebilir.'
+    },
+    sayi: {
+      mod: 'decimal',
+      gecerli: function (v, g) {
+        if (!v) return true;
+        var n = parseFloat(String(v).replace(',', '.'));
+        if (isNaN(n)) return false;
+        var mn = g && g.getAttribute('min'), mx = g && g.getAttribute('max');
+        if (mn !== null && mn !== '' && mn !== undefined && n < parseFloat(mn)) return false;
+        if (mx !== null && mx !== '' && mx !== undefined && n > parseFloat(mx)) return false;
+        return true;
+      },
+      hata: function (g) {
+        var mn = g.getAttribute('min'), mx = g.getAttribute('max');
+        if (mn && mx) return 'Değer ' + mn + ' ile ' + mx + ' arasında olmalı.';
+        if (mn) return 'Değer en az ' + mn + ' olmalı.';
+        if (mx) return 'Değer en çok ' + mx + ' olabilir.';
+        return 'Yalnız sayı yazılabilir.';
+      }
+    },
+    para: {
+      mod: 'decimal', ipucu: '0,00',
+      /* TR biçimi: binlik nokta, kuruş virgül. */
+      maske: function (h) {
+        var t = String(h).replace(/[^\d,]/g, '');
+        var par = t.split(','), tam = par[0].replace(/^0+(?=\d)/, ''), kur = par[1];
+        tam = tam.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+        return tam ? (tam + (kur !== undefined ? ',' + kur.slice(0, 2) : '')) : '';
+      },
+      ham: function (v) { return v.replace(/\./g, '').replace(',', '.'); },
+      gecerli: function (v) { return !v || /^\d{1,3}(\.\d{3})*(,\d{1,2})?$/.test(v); },
+      hata: 'Tutar biçimi: 1.250,00'
+    },
+    iban: {
+      mod: 'text', ipucu: 'TR00 0000 0000 0000 0000 0000 00',
+      maske: function (h) {
+        var t = String(h).toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 26);
+        return t.replace(/(.{4})/g, '$1 ').trim();
+      },
+      ham: function (v) { return v.replace(/\s/g, ''); },
+      gecerli: function (v) { var t = v.replace(/\s/g, ''); return !t || /^TR\d{24}$/.test(t); },
+      hata: 'IBAN TR ile başlar ve 26 karakterdir.'
+    },
+    vergino: {
+      mod: 'numeric', ipucu: '10 hane (VKN) ya da 11 hane (TCKN)',
+      maske: function (h) { return String(h).replace(/\D/g, '').slice(0, 11); },
+      gecerli: function (v) { return !v || /^\d{10}$/.test(v) || /^\d{11}$/.test(v); },
+      hata: 'Vergi no 10, T.C. kimlik no 11 hanedir.'
+    },
+    tarih: { gecerli: function () { return true; } }   /* `admin-tarih.js` sürüyor */
+  };
+
+  function girdiTipi(g) {
+    return (g && g.getAttribute) ? (GIRDI[g.getAttribute('data-girdi')] || null) : null;
+  }
+
+  function girdiBicimle(g) {
+    var t = girdiTipi(g); if (!t || !t.maske) return;
+    var once = g.value, bas = g.selectionStart, sonMu = bas === once.length;
+    var yeni = t.maske(once);
+    if (yeni === once) { if (t.ham) g.dataset.ham = t.ham(yeni); return; }
+    g.value = yeni;
+    if (t.ham) g.dataset.ham = t.ham(yeni);
+    if (!sonMu && g.setSelectionRange) {
+      var fark = yeni.length - once.length;
+      try { g.setSelectionRange(Math.max(0, bas + fark), Math.max(0, bas + fark)); } catch (e) {}
+    }
+  }
+
+  function girdiDenetle(g) {
+    var t = girdiTipi(g); if (!t) return true;
+    var ok = t.gecerli ? t.gecerli(g.value, g) : true;
+    var alan = g.closest ? g.closest('.alan') : null;
+    if (!alan) return ok;
+    if (ok) { if (window.DM_HATA_SIL) window.DM_HATA_SIL(alan); }
+    else if (window.DM_HATA_YAZ) {
+      window.DM_HATA_YAZ(alan, typeof t.hata === 'function' ? t.hata(g) : t.hata);
+    }
+    return ok;
+  }
+  window.DM_GIRDI_DENETLE = girdiDenetle;
+
+  function girdiKur(kok) {
+    (kok || document).querySelectorAll('[data-girdi]').forEach(function (g) {
+      if (!g.matches || !g.matches('input, textarea')) return;
+      if (g.disabled || g.readOnly) return;     /* kayıt — kullanıcı girdisi değil */
+      var t = girdiTipi(g); if (!t) return;
+      if (t.mod && !g.getAttribute('inputmode')) g.setAttribute('inputmode', t.mod);
+      if (t.ipucu && !g.getAttribute('placeholder')) g.setAttribute('placeholder', t.ipucu);
+      if (g.value) girdiBicimle(g);
+    });
+  }
+  window.DM_GIRDI_KUR = girdiKur;
+
+  document.addEventListener('input', function (e) {
+    var g = e.target;
+    if (!g || !g.getAttribute || !g.getAttribute('data-girdi')) return;
+    if (g.disabled || g.readOnly) return;
+    girdiBicimle(g);
+  });
+  document.addEventListener('blur', function (e) {
+    var g = e.target;
+    if (g && g.getAttribute && g.getAttribute('data-girdi')) girdiDenetle(g);
+  }, true);
+  /* Yapıştırma: maske `input` olayında zaten koşuyor, ama yapıştırılan
+     metin bir an ham görünüyordu. */
+  document.addEventListener('paste', function (e) {
+    var g = e.target;
+    if (!g || !g.getAttribute || !g.getAttribute('data-girdi')) return;
+    setTimeout(function () { girdiBicimle(g); }, 0);
+  });
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function () { girdiKur(); });
+  else girdiKur();
+
+
+  /* ═══════════════════════════════════════════════════════════════════
+     24 · YALNIZ-İKON DÜĞME · İPUCU + GERÇEK KARŞILIK
+     ───────────────────────────────────────────────────────────────────
+     2026-09-04 · parti 3 · Beyar kuralı (madde 9):
+     *"Göz, istatistik… hover'da açıklama yok, tıklayınca ne olduğu
+     belli değil. Her ikonun gerçek karşılığı olsun."*
+
+     ÖLÇÜLDÜ: 2.155 yalnız-ikon düğme · `aria-label` 2.155/2.155 VAR ·
+     ipucu 1.032'sinde YOK. İpucu metni `aria-label`dan TÜRETİLİR —
+     ikinci bir metin kaynağı doğmaz, ikisi kayamaz.
+
+     🔴 VE İKİ İKON YANLIŞ İŞ YAPIYORDU (`admin-duyurular`, Beyar'ın
+        gösterdiği ekran): göz de istatistik de `data-eylem="calistir"`
+        taşıyordu — kitin "Çalışıyor… → toast → zaman damgası" eylemi.
+        Yani düğme "önizle" diyor, kronometre çalıştırıyor. Ölü buton
+        DEĞİL (toast doğuyor, tarayıcı yeşil veriyor) ama **yanlış iş**;
+        bu turun üçüncü "doğru şey mi oldu" kusuru.
+
+     Üç gerçek eylem eklendi:
+       `onizle`     → kaydın üye yüzü YENİ SEKMEDE; yoksa satırın
+                      BİLDİRDİĞİ hücrelerden önizleme paneli
+       `istatistik` → o kaydın sayı taşıyan sütunları, `thead` etiketi
+                      ve hedef kitlesiyle birlikte
+       `sirala`     → satırı bir yukarı/aşağı taşır (tutamak)
+
+     ⚠ İkisi de veriyi UYDURMAZ: panel satırın kendi hücrelerinden ve
+       `thead`in kendi etiketlerinden kurulur, ekranda GÖRÜNEN veridir.
+       (§5b'nin yasağı FORM içindir — orada tablodan alan türetmek
+       kaydın tam alanlarını göstermediği için yalan olur. Burada
+       gösterilen şey zaten o satırın kendisi.)
+     ═══════════════════════════════════════════════════════════════════ */
+
+  /* ── Sıralama: satırı taşı, durumu SÖYLE ────────────────────────
+     Tutamak `role` bildirmiyor ama `aria-label`ı ok tuşlarını vaat
+     ediyor; ikisi de bağlandı. Taşınan satır kısa süre işaretlenir —
+     "bir şey oldu" görünür olmalı, yoksa kullanıcı iki kez basar. */
+  function siraTasi(dugme, yon) {
+    var tr = dugme.closest('tr'); if (!tr) return;
+    var govde = tr.parentElement; if (!govde) return;
+    var hedef = yon < 0 ? tr.previousElementSibling : tr.nextElementSibling;
+    while (hedef && hedef.hidden) hedef = yon < 0 ? hedef.previousElementSibling : hedef.nextElementSibling;
+    if (!hedef) { toast(yon < 0 ? 'Satır zaten en üstte.' : 'Satır zaten en altta.', 'uyari'); return; }
+    if (yon < 0) govde.insertBefore(tr, hedef); else govde.insertBefore(hedef, tr);
+    tr.classList.add('siralaniyor');
+    setTimeout(function () { tr.classList.remove('siralaniyor'); }, 900);
+    var sira = [].indexOf.call(govde.rows, tr) + 1;
+    /* Sıra numarası taşıyan hücreler varsa yeniden numaralanır. */
+    [].forEach.call(govde.rows, function (r, i) {
+      var n = r.querySelector('[data-rol="sira-no"], .sira-no');
+      if (n) n.textContent = String(i + 1);
+      var g = r.querySelector('input[data-field="position"], input[name="sira"]');
+      if (g) g.value = String(i + 1);
+    });
+    dugme.focus();
+    toast('Sıra değişti — satır ' + sira + '. konumda.');
+  }
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'ArrowUp' && e.key !== 'ArrowDown') return;
+    var d = e.target.closest ? e.target.closest('.tutamak, [data-eylem="sirala"]') : null;
+    if (!d) return;
+    e.preventDefault();
+    siraTasi(d, e.key === 'ArrowUp' ? -1 : 1);
+  });
+
+  /* ── İpucu: yalnız-ikon her düğmede ─────────────────────────────── */
+  function ipucuKur(kok) {
+    (kok || document).querySelectorAll('button, a').forEach(function (b) {
+      if (b.getAttribute('data-ipucu')) return;
+      if ((b.textContent || '').replace(/\s+/g, '')) return;      /* metni var */
+      if (!b.querySelector('i[class*="fa-"], svg')) return;       /* ikonu yok */
+      var ad = b.getAttribute('aria-label') || b.getAttribute('title') || '';
+      if (!ad) return;
+      b.setAttribute('data-ipucu', ad);
+      /* `title` de duruyorsa tarayıcının kendi balonu ikinci bir yüzey
+         olur ve ikisi üst üste çıkar — kit balonu tek kalır. */
+      if (b.getAttribute('title')) b.removeAttribute('title');
+    });
+  }
+  window.DM_IPUCU_KUR = ipucuKur;
+
+  /* ── Satırın BİLDİRDİĞİ veriyi oku: thead etiketi + hücre ───────── */
+  function satirVerisi(tr) {
+    var tablo = tr.closest('table'); if (!tablo) return [];
+    var bas = [].slice.call(tablo.querySelectorAll('thead th')).map(function (th) {
+      return (th.textContent || '').replace(/\s+/g, ' ').trim();
+    });
+    var out = [];
+    [].forEach.call(tr.cells, function (td, i) {
+      if (td.classList.contains('sec') || td.classList.contains('eylem')) return;
+      var etiket = bas[i] || '';
+      var ana = (td.querySelector('b') || td).textContent || '';
+      var alt = td.querySelector('small');
+      out.push({
+        etiket: etiket,
+        deger: ana.replace(alt ? (alt.textContent || '') : '', '').replace(/\s+/g, ' ').trim(),
+        not: alt ? (alt.textContent || '').replace(/\s+/g, ' ').trim() : '',
+        sayi: td.classList.contains('num')
+      });
+    });
+    return out;
+  }
+
+  function panelAc(baslik, ikon, satirlar, altNot) {
+    var eski = document.querySelector('.kit-onizleme');
+    if (eski) eski.remove();
+    var k = document.createElement('div');
+    k.className = 'onay-ortu kit-onizleme';
+    var govde = satirlar.map(function (s) {
+      return '<div class="satir-kunye"><span>' + s.etiket + '</span><b>' + (s.deger || '—') + '</b>' +
+             (s.not ? '<small>' + s.not + '</small>' : '') + '</div>';
+    }).join('');
+    k.innerHTML =
+      '<div class="onay-kapi" role="dialog" aria-modal="true" aria-labelledby="kitOnzBas">' +
+        '<h2 id="kitOnzBas"><i class="fa-solid ' + ikon + '" aria-hidden="true"></i> ' + baslik + '</h2>' +
+        '<div class="kit-onizleme-govde">' + govde + '</div>' +
+        (altNot ? '<p class="alan-yardim"><span>' + altNot + '</span></p>' : '') +
+        '<div class="eylem-satiri"><button type="button" class="dugme hayalet" data-onz-kapat>Kapat</button></div>' +
+      '</div>';
+    document.body.appendChild(k);
+    var odak = document.activeElement;
+    function kapat() { k.remove(); if (odak && document.contains(odak)) odak.focus(); }
+    k.addEventListener('click', function (e) {
+      if (e.target === k || e.target.closest('[data-onz-kapat]')) kapat();
+    });
+    document.addEventListener('keydown', function esc(e) {
+      if (e.key === 'Escape' && document.contains(k)) { kapat(); document.removeEventListener('keydown', esc); }
+    });
+    var ilk = k.querySelector('[data-onz-kapat]'); if (ilk) ilk.focus();
+    return k;
+  }
+  window.DM_KIT_PANEL = panelAc;
+
+  function ilkKurulum() { adrestenSuzgec(); ipucuKur(); }
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', adrestenSuzgec);
-  } else { adrestenSuzgec(); }
+    document.addEventListener('DOMContentLoaded', ilkKurulum);
+  } else { ilkKurulum(); }
 
 })();
