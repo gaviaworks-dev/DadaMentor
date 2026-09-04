@@ -1156,6 +1156,30 @@ html:has(> body.panel-acik){ overflow:hidden; }
 /* Sabit eylem çubuğu her zaman en sonda kalır — sıralamaya karışmaz. */
 .yetkili :is(.form-ana, .kart-govde, .kart.panel, form, div):has(> .form-bolum + .form-bolum) > .form-eylem{ order:10; }
 
+
+/* ═══════════════════════════════════════════════════════════════════════
+   K30 · KAYDIRILAN ÖĞE SABİT ÇUBUĞUN ALTINDA KALMAZ
+   ───────────────────────────────────────────────────────────────────────
+   2026-09-04 · parti 3 · canlı tıklama kapısından çıktı.
+
+   `.panel-ust` `position:fixed` ve 64px yüksekliğinde. Bir öğeye
+   kaydırıldığında (çapa bağı · `scrollIntoView` · kitin `git` eylemi ·
+   ilk hatalı alana odaklanma) öğe çubuğun ALTINA giriyor ve görünmüyor.
+
+   ÖLÇÜLDÜ: canlı tıklama kapısı 44 denetimi "tıklanamadı" saydı —
+   hepsi GÖRÜNÜR, hepsi süzgeç şeridinde ya da tablo başlığında; tıklama
+   sabit çubuğa iniyordu. Kapının kusuru gibi görünen şey PANELİN kendi
+   kusuruydu: aynı şey gerçek kullanıcının çapa bağında da oluyor.
+
+   `scroll-margin-top` tarayıcının kaydırma hedefini çubuk kadar aşağı
+   alır — tek satır, bütün kaydırma yollarını birden kapsar.
+   ⚠ Değer ölçekten türer (`--kit-ust-h` + bir nefes), çıplak yazılmaz.
+   ═══════════════════════════════════════════════════════════════════════ */
+.yetkili .panel-sayfa :is(h1, h2, h3, .kart, .form-bolum, .suzgec-cubuk,
+  .alan, .sekmeler, .tablo, th, tr, [id]){
+  scroll-margin-top:calc(var(--kit-ust-h) + var(--kit-grup));
+}
+
 /* ═══════════════════════════════════════════════════════════════════════
    K14 · ZENGİN METİN EDİTÖRÜ — dış çerçeve DİĞER INPUT'LARLA AYNI
    ───────────────────────────────────────────────────────────────────────

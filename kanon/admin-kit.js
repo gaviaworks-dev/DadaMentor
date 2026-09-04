@@ -845,6 +845,14 @@
     return a;
   }
 
+  /* 🔴 ADRESTEN GELEN ÖLÇÜT `suzgecTazele`YE DE GÖRÜNMELİ.
+     İlk yazımda `adrestenSuzgec` satırları DOĞRUDAN gizliyordu; hemen
+     ardından `suzgecTazele` koşuyor ve kendi ölçütü boş olduğu için
+     hepsini GERİ AÇIYORDU. Canlıda ölçüldü: not "12 kayıt" yazıyor,
+     tabloda 17/17 satır duruyor — sayfa kendi kendisiyle çelişiyordu.
+     Ölçüt tek havuzda tutulur; iki yol da aynı listeyi okur. */
+  var ADRES_OLCUT = [];
+
   /* ── Süzgeç uygulama · sayaç · temizle ─────────────────────────────── */
   function suzgecTazele(kok) {
     var sayfa = kok || document;
@@ -864,6 +872,7 @@
       var vars = (d.getAttribute('data-varsayilan-deger') || '').trim();
       if (v && v !== 'hepsi' && v !== vars) acik++;
     });
+    acik += ADRES_OLCUT.length;
     var sayac = cubuk.querySelector('[data-rol="suzgec-sayisi"]');
     if (sayac) sayac.textContent = acik ? acik + ' süzgeç açık' : 'Süzgeç yok';
     var temizle = cubuk.querySelector('.suzgec-temizle');
@@ -879,7 +888,11 @@
     });
     var gorunen = 0;
     [].forEach.call(tablo.rows, function (tr) {
-      var uyar = olcut.every(function (o) {
+      /* Adresten gelen, süzgeç denetimi OLMAYAN ölçütler: satır metninde aranır. */
+      var adresUyar = ADRES_OLCUT.every(function (a) {
+        return (tr.textContent || '').toLocaleLowerCase('tr').indexOf(a) !== -1;
+      });
+      var uyar = adresUyar && olcut.every(function (o) {
         var h = tr.querySelector('[data-alan="' + o.alan + '"]') ||
                 tr.cells[parseInt(o.alan, 10)] || tr;
         return (h.textContent || '').toLocaleLowerCase('tr').indexOf(o.deger) !== -1;
@@ -1335,6 +1348,52 @@
         return;
       }
 
+      /* ── TAŞI · yatay sıralama (hafta · adım · sekme) ────────────
+         `admin-program-kurgu`nun "Seçili haftayı sola/sağa taşı"
+         düğmeleri hiçbir şey yapmıyordu — canlı tıklama kapısı
+         yakaladı. Sıralama DİKEY (`sirala`) ile aynı iş, farklı eksen:
+         seçili sekme kardeşleri arasında yer değiştirir ve PANOSU
+         ONUNLA BİRLİKTE taşınır. Pano taşınmazsa sekme adı bir
+         haftayı, içeriği başkasını gösterirdi. */
+      case 'tasi': {
+        e.preventDefault();
+        var yonT = d.getAttribute('data-yon') === 'sol' ? -1 : 1;
+        var liste = document.querySelector('[role="tablist"]');
+        var aktifT = liste && liste.querySelector('[role="tab"][aria-selected="true"], [role="tab"].aktif');
+        if (!aktifT) { toast('Taşınacak bir seçim yok.', 'uyari'); return; }
+        var komsu = yonT < 0 ? aktifT.previousElementSibling : aktifT.nextElementSibling;
+        while (komsu && komsu.getAttribute('role') !== 'tab')
+          komsu = yonT < 0 ? komsu.previousElementSibling : komsu.nextElementSibling;
+        if (!komsu) { toast(yonT < 0 ? 'Zaten en solda.' : 'Zaten en sağda.', 'uyari'); return; }
+        /* ⚠ Pano bağı İKİ ADLA kurulmuş olabilir: `aria-controls` ile
+           tek panoya (içeriği JS değiştiriyor) ya da `data-hafta` ↔
+           `data-form-panel` çiftiyle ayrı panolara. `admin-program-kurgu`
+           ikincisini kullanıyor ve ilk yazım panoları HİÇ taşımadı —
+           sekme adı bir haftayı, içeriği başkasını gösterirdi. */
+        var anahtar1 = aktifT.getAttribute('data-hafta') || aktifT.getAttribute('data-pano');
+        var anahtar2 = komsu.getAttribute('data-hafta') || komsu.getAttribute('data-pano');
+        var p1 = anahtar1 ? document.querySelector('[data-form-panel="' + anahtar1 + '"]')
+                          : document.getElementById(aktifT.getAttribute('aria-controls'));
+        var p2 = anahtar2 ? document.querySelector('[data-form-panel="' + anahtar2 + '"]')
+                          : document.getElementById(komsu.getAttribute('aria-controls'));
+        if (yonT < 0) aktifT.parentElement.insertBefore(aktifT, komsu);
+        else aktifT.parentElement.insertBefore(komsu, aktifT);
+        if (p1 && p2 && p1.parentElement === p2.parentElement) {
+          if (yonT < 0) p1.parentElement.insertBefore(p1, p2);
+          else p1.parentElement.insertBefore(p2, p1);
+        }
+        /* Uç düğmeleri durumu bildirir — ölü değil, KAPALI. */
+        var sekmeler = [].slice.call(liste.querySelectorAll('[role="tab"]'));
+        var yer = sekmeler.indexOf(aktifT);
+        document.querySelectorAll('[data-eylem="tasi"]').forEach(function (b) {
+          var sol = b.getAttribute('data-yon') === 'sol';
+          b.disabled = sol ? yer === 0 : yer === sekmeler.length - 1;
+        });
+        aktifT.focus();
+        toast('Sıra değişti — ' + (aktifT.textContent || '').trim() + ' ' + (yer + 1) + '. sırada.');
+        return;
+      }
+
       /* ── SIRALA · tutamağın GERÇEK karşılığı (§24) ───────────────
          🔴 Devir belgesi §24-1: 57 sıralama tutamağı ölçüldü ve
          HEPSİ ÖLÜ; `aria-label` ok tuşlarını VAAT ediyor, kökü kitte
@@ -1355,6 +1414,7 @@
           var et = x.querySelector('[data-rol="etiket"]') || x.querySelector('span');
           if (et && x.getAttribute('data-varsayilan')) et.textContent = x.getAttribute('data-varsayilan');
         });
+        ADRES_OLCUT.length = 0;      /* adresten gelen ölçüt de kalkar */
         /* §22: temizlemek seçimi boşaltır, boş süzgeç YOKTUR — Tümü döner. */
         c.querySelectorAll('.acilir-yuzey .cip').forEach(function (x) { cipDurum(x, false); });
         c.querySelectorAll('.acilir-yuzey').forEach(function (y) {
@@ -2446,15 +2506,8 @@
            Denetimi olmayan parametre satırları DOĞRUDAN süzer: eşleşme
            satırın kendi metninde aranır ve not "hangi parametre"
            olduğunu YAZAR. Uydurma bir süzgeç yüzeyi AÇILMAZ. */
-        var tabloD = document.querySelector('.tablo tbody, table tbody');
-        if (!tabloD) return;
-        var ara = deger.toLocaleLowerCase('tr');
-        var eslesen = 0;
-        [].forEach.call(tabloD.rows, function (r) {
-          var uyar = (r.textContent || '').toLocaleLowerCase('tr').indexOf(ara) !== -1;
-          if (!uyar) r.hidden = true;
-          else eslesen++;
-        });
+        if (!document.querySelector('.tablo tbody, table tbody')) return;
+        ADRES_OLCUT.push(deger.toLocaleLowerCase('tr'));
         uygulanan.push(alan + ': ' + deger);
         return;
       }
@@ -2865,12 +2918,91 @@
        gösterilen şey zaten o satırın kendisi.)
      ═══════════════════════════════════════════════════════════════════ */
 
+
+  /* ── ÇİP GRUBU · seçim bir SÜZGEÇTİR (§24) ──────────────────────────
+     `admin-yasal-form`un sürüm çipleri (`v5.0 · 15.08.2026` …) hiçbir
+     şey yapmıyordu; sayfanın kendi yardım metni ise *"Bir sürüme
+     tıklayınca karşılaştırma açılır"* diye söz veriyor. Canlı tıklama
+     kapısı üçünü de "karşılıksız" saydı.
+
+     Uydurma bir karşılaştırma görünümü AÇILMADI (§26: "ada bakan
+     talimat"). Çipin kendi metni zaten bir ÖLÇÜT ve sayfada o ölçütü
+     taşıyan gerçek bir tablo var (yasal formda "Onay kayıtları", her
+     satır bir sürüm taşıyor). Çip artık o tabloyu SÜZER: seçim görünür
+     bir durum kazanır, satırlar filtrelenir, ikinci tık seçimi kaldırır.
+
+     ⚠ Kapsam dar tutuldu: yalnız `data-eylem` TAŞIMAYAN, süzgeç
+       şeridinde OLMAYAN ve `.cipler` grubunda duran çipler. Süzgeç
+       şeridinin çipleri §22'nin kendi yolundan geçiyor; form içi çoklu
+       seçim çipleri `.coklu-secim` sürücüsünde.                        */
+  document.addEventListener('click', function (e) {
+    var c = e.target.closest ? e.target.closest('.cipler > .cip') : null;
+    if (!c || c.getAttribute('data-eylem') || c.getAttribute('data-deger')) return;
+    if (c.closest('.suzgec-cubuk') || c.closest('.coklu-secim') || c.closest('.oran-grubu')) return;
+    var grup = c.parentElement;
+    e.preventDefault();
+    /* 🔴 İLK YAZIM "aynı kartta tablo yoksa karışma" diyordu ve
+       `admin-yasal-form`un sürüm çipleri (kartında tablo YOK) hâlâ
+       karşılıksız kaldı. Seçim ZATEN bir karşılıktır: durum görünür
+       değişir. Tablo varsa ayrıca süzülür — yoksa seçim tek başına
+       yeter, uydurma bir görünüm açılmaz. */
+    var kart = c.closest('.kart') || document;
+    var tablo = kart.querySelector('table tbody') ||
+                (function () {
+                  var anahtar = (c.textContent || '').trim().split(/[·|]/)[0].trim().toLocaleLowerCase('tr');
+                  var bulunan = null;
+                  document.querySelectorAll('table tbody').forEach(function (tb) {
+                    if (!bulunan && (tb.textContent || '').toLocaleLowerCase('tr').indexOf(anahtar) !== -1) bulunan = tb;
+                  });
+                  return bulunan;
+                })();
+    var secildi = !c.classList.contains('aktif');
+    grup.querySelectorAll('.cip').forEach(function (x) {
+      var bu = x === c && secildi;
+      x.classList.toggle('aktif', bu);
+      if (x.hasAttribute('aria-pressed')) x.setAttribute('aria-pressed', String(bu));
+    });
+    var ara = secildi ? (c.textContent || '').trim().split(/[·|]/)[0].trim().toLocaleLowerCase('tr') : '';
+    var gorunen = null;
+    if (tablo) {
+      gorunen = 0;
+      [].forEach.call(tablo.rows, function (r) {
+        var uyar = !ara || (r.textContent || '').toLocaleLowerCase('tr').indexOf(ara) !== -1;
+        r.hidden = !uyar; if (uyar) gorunen++;
+      });
+      var kap = tablo.closest('table');
+      if (secildi && kap) kap.scrollIntoView({ block: 'nearest' });
+    }
+    toast(secildi
+      ? (c.textContent || '').trim() + (gorunen !== null ? ' — ' + gorunen + ' kayıt' : ' seçildi')
+      : 'Seçim kaldırıldı' + (gorunen !== null ? ' — ' + gorunen + ' kayıt' : ''));
+  });
+
   /* ── Sıralama: satırı taşı, durumu SÖYLE ────────────────────────
      Tutamak `role` bildirmiyor ama `aria-label`ı ok tuşlarını vaat
      ediyor; ikisi de bağlandı. Taşınan satır kısa süre işaretlenir —
      "bir şey oldu" görünür olmalı, yoksa kullanıcı iki kez basar. */
+  /* 🔴 SATIR HER ZAMAN `<tr>` DEĞİL. İlk yazım yalnız tabloyu biliyordu
+     ve `admin-menu`nün 90 tutamağı ÖLÜ kaldı — orada satır
+     `.adim-karti`. Ölü buton kapısı bunu yakaladı. Kap listesi
+     bildirilir; hiçbiri tutmazsa düğmenin kendi kardeş yapısından
+     TÜRETİLİR (aynı etiket + aynı sınıfı taşıyan ≥2 kardeş). */
+  function siraSatiri(dugme) {
+    var bilinen = dugme.closest('tr, li, .adim-karti, .liste-satir, .satir, .kart.satir');
+    if (bilinen) return bilinen;
+    var e = dugme;
+    while (e && e.parentElement) {
+      var p = e.parentElement, ayni = 0;
+      for (var i = 0; i < p.children.length; i++)
+        if (p.children[i].tagName === e.tagName && p.children[i].className === e.className) ayni++;
+      if (ayni >= 2) return e;
+      e = p;
+    }
+    return null;
+  }
+
   function siraTasi(dugme, yon) {
-    var tr = dugme.closest('tr'); if (!tr) return;
+    var tr = siraSatiri(dugme); if (!tr) return;
     var govde = tr.parentElement; if (!govde) return;
     var hedef = yon < 0 ? tr.previousElementSibling : tr.nextElementSibling;
     while (hedef && hedef.hidden) hedef = yon < 0 ? hedef.previousElementSibling : hedef.nextElementSibling;
@@ -2878,9 +3010,10 @@
     if (yon < 0) govde.insertBefore(tr, hedef); else govde.insertBefore(hedef, tr);
     tr.classList.add('siralaniyor');
     setTimeout(function () { tr.classList.remove('siralaniyor'); }, 900);
-    var sira = [].indexOf.call(govde.rows, tr) + 1;
+    var kardesler = govde.rows ? [].slice.call(govde.rows) : [].slice.call(govde.children);
+    var sira = kardesler.indexOf(tr) + 1;
     /* Sıra numarası taşıyan hücreler varsa yeniden numaralanır. */
-    [].forEach.call(govde.rows, function (r, i) {
+    kardesler.forEach(function (r, i) {
       var n = r.querySelector('[data-rol="sira-no"], .sira-no');
       if (n) n.textContent = String(i + 1);
       var g = r.querySelector('input[data-field="position"], input[name="sira"]');
