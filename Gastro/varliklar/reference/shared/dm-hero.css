@@ -1,0 +1,30 @@
+/* DadaGastro — HERO BAĞLAMA KATMANI
+   ÜRETİLİR, ELLE DÜZENLENMEZ: scripts/gastro-public-revize.mjs --adim d14
+
+   🔴 KANON DOSYASI SAYFAYA BAĞLANMADI — DENENDİ, ÖLÇÜLDÜ, GERİ ALINDI.
+   'kanon/hero.css' yüksekliklerini ':root' üstünde token olarak
+   bildiriyor ('--banner-h-liste' · '--banner-h-detay' · '--banner-h-yasal').
+   Gastro'nun KANON KULVARI (18 'g-*' sayfası) AYNI ADLARI kendi satır
+   içi stilinde ZATEN kullanıyor (ölçüldü, 'g-hesabim.html':
+   'var(--banner-h-liste)' 4 · 'var(--banner-h-detay)' 4 ·
+   'var(--banner-h-kurumsal)' 1 · 'var(--banner-h-profil)' 1).
+   Kanonu bağlamak o değerleri SAYFA GENELİNDE değiştirdi ve kimlik bandı
+   613 → 1037'ye çıktı (ölçüldü). Bu, handoff §2'nin kayıtlı bulgusunun
+   aynısı: kanonun tamamını yüklemek maketi/kulvarı KAYDIRIYOR.
+   Bu yüzden burada ':root' YAZILMAZ; kural yalnız BANDA bağlanır.
+
+   Değerler kanonun kendi türetme yöntemiyle, GASTRO'NUN içeriğinden
+   ('docs/gastro-hero-olcum.md §3'):
+     LİSTE   en uzun içerik 548.2 → 552  (kanonun FIT için 544'ü Gastro'yu
+             4.2px kırpardı; 4px merdiveni, yukarı yuvarlama)
+     PROFİL  en uzun içerik 701.6 → 704  ('g-mutfak-defterim')
+
+   ÖZGÜLLÜK BİLİNÇLİ (0,2,0): sayfanın kendi '.lst-top{min-height:515px}'
+   kuralı (0,1,0) satır içi '<style>'te ve bu dosyadan SONRA geliyor.
+   ':where()' ile sıfırlamak onu kaybettirirdi (deponun kayıtlı
+   "kabuk ↔ kanon eşit özgüllük çarpışması" kusuru).
+
+   'min-height' — 'height' DEĞİL: içerik uzarsa TAŞMAZ, bant büyür
+   (Beyar'ın "taşma/kırpma yok" şartı, kanonun kendi gerekçesi). */
+body[data-fit-hero-kind="liste"]  [data-hero-band]{ min-height:552px; }
+body[data-fit-hero-kind="profil"] [data-hero-band]{ min-height:704px; }
