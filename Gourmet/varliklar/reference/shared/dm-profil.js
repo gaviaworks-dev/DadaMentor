@@ -18,6 +18,17 @@
 (function () {
   'use strict';
   var d = document;
+
+  /* 🔴 SATIR KALIBI TEK KAYNAK — çıkarıcı bu satırı DOSYADAN okur.
+     Neden: `dm-profil.css` donör sayfaya benim gövdemi koyup eşleşen
+     kuralları süzerek üretiliyor. Çalışma anında DOĞAN markup ilk turda
+     o gövdede YOKTU; `.ks-ikon`·`.ks-metin`·`.ks-eylem` için sıfır kural
+     çıktı ve kimse görmedi — "olmayan elemanın çifti de yoktur"
+     (KOPYALAMA-KURALI eksi-birinci madde). Kalıp burada tek sabit
+     olunca çıkarıcı onu tohumlayabiliyor ve kural düşmüyor.
+     ⚠ Bu satır değişirse `scripts/olcum/_tmpB-css-cikar.mjs` yeniden
+       koşulmalı; aksi hâlde yeni sınıf çizimsiz doğar. */
+  var SATIR_KALIBI = '<span class="ks-ikon"><i class="@@IKON@@" aria-hidden="true"></i></span><span class="ks-metin"><b></b><small></small></span><span class="ks-eylem"><span class="rozet pasif"></span><button class="dugme hayalet dm-mini" type="button" data-dm-durum>Durumu gör</button><button class="dugme hayalet dm-mini" type="button" data-dm-sil>Kaldır</button></span><div class="dm-durum-govde" hidden></div>';
   var qa = function (s, k) { return Array.prototype.slice.call((k || d).querySelectorAll(s)); };
 
   /* ── 1 · SEKME RAYI ─────────────────────────────────────────────────
@@ -207,18 +218,12 @@
       if (!hedef) return;
       var alanlar = qa('[data-dm-alan]', f);
       var bos = alanlar.filter(function (x) { return x.required && !String(x.value).trim(); });
-      if (bos.length) { bos[0].focus(); duyur(f, 'Zorunlu alanları doldur.'); return; }
+      if (bos.length) { bos[0].focus(); duyur(hedef, 'Zorunlu alanları doldur.'); return; }
       var deger = {};
       alanlar.forEach(function (x) { deger[x.getAttribute('data-dm-alan')] = String(x.value).trim(); });
       var kal = document.createElement('div');
       kal.className = 'kalem-satiri dm-yeni';
-      kal.innerHTML =
-        '<span class="ks-ikon"><i class="' + (f.getAttribute('data-dm-ikon') || 'fa-solid fa-location-dot') + '" aria-hidden="true"></i></span>' +
-        '<span class="ks-metin"><b></b><small></small></span>' +
-        '<span class="ks-eylem"><span class="rozet pasif"></span>' +
-        '<button class="dugme hayalet dm-mini" type="button" data-dm-durum>Durumu gör</button>' +
-        '<button class="dugme hayalet dm-mini" type="button" data-dm-sil>Kaldır</button></span>' +
-        '<div class="dm-durum-govde" hidden></div>';
+      kal.innerHTML = SATIR_KALIBI.replace('@@IKON@@', f.getAttribute('data-dm-ikon') || 'fa-solid fa-location-dot');
       kal.querySelector('b').textContent = deger.ad || 'Adsız kayıt';
       kal.querySelector('small').textContent = [deger.tur, deger.yer, deger.tarih, deger.not].filter(Boolean).join(' · ');
       kal.querySelector('.rozet').textContent = f.getAttribute('data-dm-rozet') || 'İnceleniyor';
@@ -282,6 +287,9 @@
   function duyur(yakin, metin) {
     var kap = yakin.closest ? (yakin.closest('.fit-pane') || d) : d;
     var s = kap.querySelector('[data-dm-bildirim]');
-    if (s) s.textContent = metin;
+    /* 🔴 DONÖRÜN KİPİ: `.fpx-durum` `hidden` DOĞAR, mesaj gelince açılır.
+       Ölçüldü — donörde boş durum satırı display:none (h=0); markup'ta
+       `hidden` olmadan 26px'lik BOŞ leylak bir çubuk doğuyordu. */
+    if (s) { s.textContent = metin; s.hidden = !metin; }
   }
 })();
