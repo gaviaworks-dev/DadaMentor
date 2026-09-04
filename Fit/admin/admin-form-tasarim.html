@@ -8,6 +8,10 @@
 <link rel="stylesheet" href="../../kanon/markalar/fit.css">
 <link rel="stylesheet" href="../../kanon/bilesenler.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<!-- ADMIN-KIT:CSS:BAS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.css">
+<link rel="stylesheet" href="../../kanon/admin.css">
+<!-- ADMIN-KIT:CSS:SON -->
 </head>
 <body class="yetkili">
 <!-- ═══════════════════════════════════════════════════════════════════
@@ -32,21 +36,34 @@
      aria-current="true" title="DadaFit" aria-label="DadaFit"><i class="fa-solid fa-dumbbell"></i></a>
   <span class="panel-ray-ayrac" role="presentation"></span>
   <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-gastro)"  title="DadaGastro"  aria-label="DadaGastro"><i class="fa-solid fa-utensils"></i></a>
-  <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-diet)"    title="DadaDiet"    aria-label="DadaDiet"><i class="fa-solid fa-leaf"></i></a>
-  <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-gourmet)" title="DadaGourmet" aria-label="DadaGourmet"><i class="fa-solid fa-wine-glass"></i></a>
+  <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-diet)"    title="DadaDiet"    aria-label="DadaDiet"><i class="fa-solid fa-heart-pulse"></i></a>
+  <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-gourmet)" title="DadaGourmet" aria-label="DadaGourmet"><i class="fa-solid fa-map-location-dot"></i></a>
   <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-campus)"  title="DadaCampus"  aria-label="DadaCampus"><i class="fa-solid fa-graduation-cap"></i></a>
+  <span class="panel-ray-ikon kilitli" title="DadaStore — erişimin yok" aria-label="DadaStore, erişim yok"><i class="fa-solid fa-bag-shopping"></i></span>
   <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-mentor)"  title="DadaMentor"  aria-label="DadaMentor"><i class="fa-solid fa-compass"></i></a>
-  <span class="panel-ray-ikon kilitli" title="DadaStore — erişimin yok" aria-label="DadaStore, erişim yok"><i class="fa-solid fa-lock"></i></span>
   <div class="panel-ray-alt">
     <a class="panel-ray-ikon" href="#" title="Yardım" aria-label="Yardım"><i class="fa-solid fa-circle-question"></i></a>
+<!-- ADMIN-KIT:IMZA:BAS -->
+    <a class="panel-ray-imza" href="https://gaviaworks.com" target="_blank" rel="noopener"
+       title="Gaviaworks" aria-label="Gaviaworks — gaviaworks.com">
+      <span class="yalniz-okuyucu">Gaviaworks</span>
+    </a>
+<!-- ADMIN-KIT:IMZA:SON -->
   </div>
 </aside>
 
 <!-- ── MODÜL MENÜSÜ · DÖRT KATEGORİ ───────────────────────────────── -->
 <nav class="panel-menu" id="panelMenu" aria-label="Modüller">
+<!-- ADMIN-KIT:KABUK:BAS -->
   <div class="panel-menu-bas">
-    <b>DadaFit</b><span>Yönetim paneli</span>
+    <a class="panel-marka" href="admin-genel-bakis.html" aria-label="DadaFit yönetim paneli"
+       style="--marka-logo:url('../../kanon/varlik/dadafit-kelime.svg')">
+      <span class="yalniz-okuyucu">DadaFit · Yönetim paneli</span>
+    </a>
   </div>
+  <button type="button" class="panel-katla" aria-pressed="false"
+          aria-label="Menüyü daralt"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i></button>
+<!-- ADMIN-KIT:KABUK:SON -->
   <div class="panel-menu-govde">
 
     <div class="panel-menu-bolum">01 Genel</div>
@@ -159,7 +176,7 @@
         <p>Formun alanları, doğrulama kuralları ve yayın ayarları. Alan sırası başvuru ekranında <b>aynen</b> görünür; sıra değişirse gelen başvuruların cevap eşlemesi korunur.</p>
       </div>
       <div class="eylem-satiri">
-        <a class="dugme hayalet" href="#"><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>Formu önizle</a>
+        <a class="dugme hayalet" href="#" data-eylem="panel-ac"><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>Formu önizle</a>
       </div>
     </div>
 
@@ -185,7 +202,7 @@
             <div class="bos-ikon" aria-hidden="true"><i class="fa-solid fa-triangle-exclamation"></i></div>
             <h3>Kayıt yüklenemedi</h3>
             <p>Bağlantı kurulamadı. Birkaç saniye sonra yeniden dene.</p>
-            <button class="dugme hayalet" type="button"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i>Yeniden dene</button>
+            <button class="dugme hayalet" type="button" data-eylem="calistir" data-ad="Yeniden dene"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i>Yeniden dene</button>
             <p class="hata-izi">Referans: <code>FRM-7C41-5001</code></p>
           </div>
           <div class="form-bolum">
@@ -212,11 +229,11 @@
                   <div class="kart-izgara c2">
             <div class="alan">
               <label class="alan-etiket">Alan adı <span class="zorunlu">*</span></label>
-              <input class="alan-girdi" type="text" placeholder="Örn. Ad soyad" value="Ad soyad">
+              <input class="alan-girdi" type="text" placeholder="Örn. Ad soyad" value="Ad soyad" required="">
             </div>
             <div class="alan">
               <label class="alan-etiket">Alan türü <span class="zorunlu">*</span></label>
-              <select class="alan-secim"><option>Metin</option><option>Metin</option><option>Uzun metin</option><option>Sayı</option><option>E-posta</option><option>Telefon</option><option>Tarih</option><option>Açılır liste</option><option>Çoklu seçim</option><option>Onay kutusu</option><option>Dosya</option></select>
+              <select class="alan-secim" required=""><option>Metin</option><option>Metin</option><option>Uzun metin</option><option>Sayı</option><option>E-posta</option><option>Telefon</option><option>Tarih</option><option>Açılır liste</option><option>Çoklu seçim</option><option>Onay kutusu</option><option>Dosya</option></select>
             </div>
                   </div>
                   <div class="kart-izgara c2">
@@ -246,7 +263,7 @@
                 </div>
                 <div class="adim-yan">
                   <button class="ikon-dugme tutamak" type="button" aria-label="Sırayı değiştir"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button>
-                  <button class="ikon-dugme yikici" type="button" aria-label="Satırı sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button>
+                  <button class="ikon-dugme yikici" type="button" aria-label="Satırı sil" data-islem="sil" data-ad="Satırı sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button>
                 </div>
               </div>
               <div class="adim-karti">
@@ -255,11 +272,11 @@
                   <div class="kart-izgara c2">
             <div class="alan">
               <label class="alan-etiket">Alan adı <span class="zorunlu">*</span></label>
-              <input class="alan-girdi" type="text" placeholder="Örn. Ad soyad" value="Uzmanlık alanları">
+              <input class="alan-girdi" type="text" placeholder="Örn. Ad soyad" value="Uzmanlık alanları" required="">
             </div>
             <div class="alan">
               <label class="alan-etiket">Alan türü <span class="zorunlu">*</span></label>
-              <select class="alan-secim"><option>Çoklu seçim</option><option>Metin</option><option>Uzun metin</option><option>Sayı</option><option>E-posta</option><option>Telefon</option><option>Tarih</option><option>Açılır liste</option><option>Çoklu seçim</option><option>Onay kutusu</option><option>Dosya</option></select>
+              <select class="alan-secim" required=""><option>Çoklu seçim</option><option>Metin</option><option>Uzun metin</option><option>Sayı</option><option>E-posta</option><option>Telefon</option><option>Tarih</option><option>Açılır liste</option><option>Çoklu seçim</option><option>Onay kutusu</option><option>Dosya</option></select>
             </div>
                   </div>
                   <div class="kart-izgara c2">
@@ -289,7 +306,7 @@
                 </div>
                 <div class="adim-yan">
                   <button class="ikon-dugme tutamak" type="button" aria-label="Sırayı değiştir"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button>
-                  <button class="ikon-dugme yikici" type="button" aria-label="Satırı sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button>
+                  <button class="ikon-dugme yikici" type="button" aria-label="Satırı sil" data-islem="sil" data-ad="Satırı sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button>
                 </div>
               </div>
               <div class="adim-karti">
@@ -298,11 +315,11 @@
                   <div class="kart-izgara c2">
             <div class="alan">
               <label class="alan-etiket">Alan adı <span class="zorunlu">*</span></label>
-              <input class="alan-girdi" type="text" placeholder="Örn. Ad soyad" value="Sertifika">
+              <input class="alan-girdi" type="text" placeholder="Örn. Ad soyad" value="Sertifika" required="">
             </div>
             <div class="alan">
               <label class="alan-etiket">Alan türü <span class="zorunlu">*</span></label>
-              <select class="alan-secim"><option>Dosya</option><option>Metin</option><option>Uzun metin</option><option>Sayı</option><option>E-posta</option><option>Telefon</option><option>Tarih</option><option>Açılır liste</option><option>Çoklu seçim</option><option>Onay kutusu</option><option>Dosya</option></select>
+              <select class="alan-secim" required=""><option>Dosya</option><option>Metin</option><option>Uzun metin</option><option>Sayı</option><option>E-posta</option><option>Telefon</option><option>Tarih</option><option>Açılır liste</option><option>Çoklu seçim</option><option>Onay kutusu</option><option>Dosya</option></select>
             </div>
                   </div>
                   <div class="kart-izgara c2">
@@ -332,11 +349,11 @@
                 </div>
                 <div class="adim-yan">
                   <button class="ikon-dugme tutamak" type="button" aria-label="Sırayı değiştir"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button>
-                  <button class="ikon-dugme yikici" type="button" aria-label="Satırı sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button>
+                  <button class="ikon-dugme yikici" type="button" aria-label="Satırı sil" data-islem="sil" data-ad="Satırı sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button>
                 </div>
               </div>
             </div>
-            <button class="satir-ekle" type="button"><i class="fa-solid fa-plus" aria-hidden="true"></i> Alan ekle</button>
+            <button class="satir-ekle" type="button" data-eylem="panel-ac"><i class="fa-solid fa-plus" aria-hidden="true"></i> Alan ekle</button>
           </div>          <div class="form-bolum">
             <h3 class="form-bolum-bas"><i class="fa-solid fa-arrow-down-1-9" aria-hidden="true"></i> Alan sırası</h3>
             <div class="bilgi-notu">
@@ -351,16 +368,16 @@
             <h3 class="form-bolum-bas"><i class="fa-solid fa-sliders" aria-hidden="true"></i> Form ayarları</h3>
             <div class="alan">
               <label class="alan-etiket">Form adı <span class="zorunlu">*</span></label>
-              <input class="alan-girdi" type="text" placeholder="Örn. Antrenör başvuru formu" value="Antrenör başvuru formu">
+              <input class="alan-girdi" type="text" placeholder="Örn. Antrenör başvuru formu" value="Antrenör başvuru formu" required="">
             </div>            <div class="alan">
               <label class="alan-etiket">Adres <span class="zorunlu">*</span></label>
-              <div class="slug-alani"><span class="slug-onek">dadafit.com/form/</span><input class="alan-girdi" type="text" placeholder="antrenor-basvuru"></div>
+              <div class="slug-alani"><span class="slug-onek">dadafit.com/form/</span><input class="alan-girdi" type="text" placeholder="antrenor-basvuru" required=""></div>
             </div>            <div class="alan">
               <label class="alan-etiket">Açıklama</label>
-              <textarea class="alan-metin" rows="4" placeholder="Formun üstünde okunan iki cümle."></textarea>
+              <textarea class="alan-metin" rows="4" placeholder="Formun üstünde okunan iki cümle." data-editor="aciklama"></textarea>
             </div>            <div class="alan">
               <label class="alan-etiket">Gönderim sonrası mesajı</label>
-              <textarea class="alan-metin" rows="3" placeholder="Başvuru alındığında ekranda ne yazsın?"></textarea>
+              <textarea class="alan-metin" rows="3" placeholder="Başvuru alındığında ekranda ne yazsın?" data-editor="mesaj"></textarea>
             </div>            <div class="alan">
               <label class="alan-etiket">Varsayılan atanan</label>
               <select class="alan-secim"><option>— seç —</option><option>Yasin Yavuz</option><option>Deniz Korkmaz</option><option>Ela Bozkurt</option></select>
@@ -393,10 +410,10 @@
               <select class="alan-secim"><option>Yayında</option><option>Taslak</option><option>İncelemede</option><option>Pasif</option></select>
             </div>            <div class="alan">
               <label class="alan-etiket">Yayın tarihi</label>
-              <input class="alan-girdi" type="date" placeholder="" value="2026-08-01">
+              <input class="alan-girdi" type="text" data-tarih="tarih" placeholder="" value="01.08.2026" data-iso="2026-08-01">
             </div>            <div class="alan">
               <label class="alan-etiket">Kapanış tarihi</label>
-              <input class="alan-girdi" type="date" placeholder="">
+              <input class="alan-girdi" type="text" data-tarih="tarih" placeholder="" value="">
               <span class="alan-yardim"><i class="fa-solid fa-circle-info" aria-hidden="true"></i><span>Boş bırakılırsa form süresiz açık kalır.</span></span>
             </div>            <div class="alan">
               <span class="alan-etiket" id="swdybccc">Formu sitede listele</span>
@@ -416,9 +433,9 @@
           </div>
 
           <div class="kart-alt form-eylem">
-            <a class="dugme hayalet" href="#">İptal</a>
-            <button class="dugme hayalet" type="button">Taslak kaydet</button>
-            <button class="dugme birincil" type="submit">Formu kaydet</button>
+            <a class="dugme hayalet iptal" href="admin-formlar.html">İptal</a>
+            <button class="dugme hayalet" type="button" data-eylem="taslak">Taslak kaydet</button>
+            <button class="dugme birincil" type="submit" data-eylem="kaydet">Formu kaydet</button>
           </div>
       </div>
 
@@ -445,7 +462,7 @@
           <div class="kart-bas"><h2 class="kart-baslik"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>Tehlikeli bölge</h2></div>
           <div class="kart-govde">
             <p class="alan-yardim"><span>Formu silmek gelen başvuruları da erişilemez kılar. Önce pasif yap; silme yalnız yetkili rollerce ve geri alınabilir biçimde yapılır.</span></p>
-            <div class="eylem-satiri"><button class="dugme hayalet tehlike" type="button"><i class="fa-solid fa-trash-can" aria-hidden="true"></i>Formu sil</button></div>
+            <div class="eylem-satiri"><button class="dugme hayalet tehlike" type="button" data-eylem="sil" data-ad="Formu sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i>Formu sil</button></div>
           </div>
         </div>
       </aside>
@@ -454,4 +471,13 @@
   </div>
 </main>
 <script src="_ortak/panel.js" defer></script>
+<!-- ADMIN-KIT:JS:BAS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/7.3.0/tinymce.min.js" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/l10n/tr.js"></script>
+<script src="../../kanon/admin-editor-tr.js"></script>
+<script src="../../kanon/admin-kit.js" defer></script>
+<script src="../../kanon/admin-editor.js" defer></script>
+<script src="../../kanon/admin-tarih.js" defer></script>
+<!-- ADMIN-KIT:JS:SON -->
 </body></html>

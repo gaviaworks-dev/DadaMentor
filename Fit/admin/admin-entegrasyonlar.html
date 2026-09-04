@@ -8,6 +8,10 @@
 <link rel="stylesheet" href="../../kanon/markalar/fit.css">
 <link rel="stylesheet" href="../../kanon/bilesenler.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<!-- ADMIN-KIT:CSS:BAS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.css">
+<link rel="stylesheet" href="../../kanon/admin.css">
+<!-- ADMIN-KIT:CSS:SON -->
 </head>
 <body class="yetkili">
 <!-- ═══════════════════════════════════════════════════════════════════
@@ -32,21 +36,34 @@
      aria-current="true" title="DadaFit" aria-label="DadaFit"><i class="fa-solid fa-dumbbell"></i></a>
   <span class="panel-ray-ayrac" role="presentation"></span>
   <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-gastro)"  title="DadaGastro"  aria-label="DadaGastro"><i class="fa-solid fa-utensils"></i></a>
-  <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-diet)"    title="DadaDiet"    aria-label="DadaDiet"><i class="fa-solid fa-leaf"></i></a>
-  <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-gourmet)" title="DadaGourmet" aria-label="DadaGourmet"><i class="fa-solid fa-wine-glass"></i></a>
+  <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-diet)"    title="DadaDiet"    aria-label="DadaDiet"><i class="fa-solid fa-heart-pulse"></i></a>
+  <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-gourmet)" title="DadaGourmet" aria-label="DadaGourmet"><i class="fa-solid fa-map-location-dot"></i></a>
   <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-campus)"  title="DadaCampus"  aria-label="DadaCampus"><i class="fa-solid fa-graduation-cap"></i></a>
+  <span class="panel-ray-ikon kilitli" title="DadaStore — erişimin yok" aria-label="DadaStore, erişim yok"><i class="fa-solid fa-bag-shopping"></i></span>
   <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-mentor)"  title="DadaMentor"  aria-label="DadaMentor"><i class="fa-solid fa-compass"></i></a>
-  <span class="panel-ray-ikon kilitli" title="DadaStore — erişimin yok" aria-label="DadaStore, erişim yok"><i class="fa-solid fa-lock"></i></span>
   <div class="panel-ray-alt">
     <a class="panel-ray-ikon" href="#" title="Yardım" aria-label="Yardım"><i class="fa-solid fa-circle-question"></i></a>
+<!-- ADMIN-KIT:IMZA:BAS -->
+    <a class="panel-ray-imza" href="https://gaviaworks.com" target="_blank" rel="noopener"
+       title="Gaviaworks" aria-label="Gaviaworks — gaviaworks.com">
+      <span class="yalniz-okuyucu">Gaviaworks</span>
+    </a>
+<!-- ADMIN-KIT:IMZA:SON -->
   </div>
 </aside>
 
 <!-- ── MODÜL MENÜSÜ · DÖRT KATEGORİ ───────────────────────────────── -->
 <nav class="panel-menu" id="panelMenu" aria-label="Modüller">
+<!-- ADMIN-KIT:KABUK:BAS -->
   <div class="panel-menu-bas">
-    <b>DadaFit</b><span>Yönetim paneli</span>
+    <a class="panel-marka" href="admin-genel-bakis.html" aria-label="DadaFit yönetim paneli"
+       style="--marka-logo:url('../../kanon/varlik/dadafit-kelime.svg')">
+      <span class="yalniz-okuyucu">DadaFit · Yönetim paneli</span>
+    </a>
   </div>
+  <button type="button" class="panel-katla" aria-pressed="false"
+          aria-label="Menüyü daralt"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i></button>
+<!-- ADMIN-KIT:KABUK:SON -->
   <div class="panel-menu-govde">
 
     <div class="panel-menu-bolum">01 Genel</div>
@@ -156,8 +173,8 @@
         </div>
         <div class="eylem-satiri">
           <a class="dugme hayalet" href="admin-ayarlar.html"><i class="fa-solid fa-sliders" aria-hidden="true"></i>Ayarlar</a>
-          <button class="dugme hayalet" type="button"><i class="fa-solid fa-vial" aria-hidden="true"></i>Tümünü test et</button>
-          <button class="dugme birincil" type="button"><i class="fa-solid fa-plus" aria-hidden="true"></i>Servis bağla</button>
+          <button class="dugme hayalet" type="button" data-eylem="calistir" data-ad="Tümünü test et"><i class="fa-solid fa-vial" aria-hidden="true"></i>Tümünü test et</button>
+          <button class="dugme birincil" type="button" data-eylem="panel-ac"><i class="fa-solid fa-plus" aria-hidden="true"></i>Servis bağla</button>
         </div>
       </div>
       <div class="uyari-kutu hata"><i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i><span><b>Google Maps anahtarı süresi doldu.</b> Harita taşıyan sayfalar boş basılıyor. Anahtarı yenile ve bağlantıyı yeniden test et.</span></div>
@@ -196,8 +213,7 @@
         </div>
       </div>
       <div class="bilgi-notu"><i class="fa-solid fa-lock" aria-hidden="true"></i><p>Gizli değerler şifrelenerek saklanır ve ekranda <b>maskeli</b> basılır. Bir anahtarı açık görmek <b>Gizli değer görme</b> yetkisi ister; yetkisi olmayan kullanıcıda "Göster" eylemi <b>görünmez</b> — devre dışı değil, yok. Her açma ve her anahtar değişimi Log Kayıtları'na yazılır.</p></div>
-      <div class="kart panel">
-        <div class="sekmeler" role="tablist" aria-label="Kuyruklar">
+      <div class="sekmeler" role="tablist" aria-label="Kuyruklar">
           <button class="sekme aktif" type="button" role="tab" id="en-s0" aria-controls="en-pano" aria-selected="true">Tümü<span class="sekme-sayi">12</span></button>
           <button class="sekme" type="button" role="tab" id="en-s1" aria-controls="en-pano" aria-selected="false">E-posta &amp; SMS<span class="sekme-sayi">2</span></button>
           <button class="sekme" type="button" role="tab" id="en-s2" aria-controls="en-pano" aria-selected="false">Push<span class="sekme-sayi">1</span></button>
@@ -206,6 +222,8 @@
           <button class="sekme" type="button" role="tab" id="en-s5" aria-controls="en-pano" aria-selected="false">Depolama &amp; harita<span class="sekme-sayi">2</span></button>
           <button class="sekme" type="button" role="tab" id="en-s6" aria-controls="en-pano" aria-selected="false">Webhook<span class="sekme-sayi">1</span></button>
         </div>
+      <div class="kart panel">
+        
         <div class="suzgec-cubuk">
           <div class="panel-arama">
             <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
@@ -213,48 +231,48 @@
             <input class="panel-arama-girdi" id="en-ara" type="search" placeholder="Servis ya da sağlayıcı ara" autocomplete="off">
           </div>
           <div class="coklu-secim">
-            <button class="suzgec-dugme" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="en-f0">
-              <span>Durum</span><span class="sayi" data-sayi="0">0</span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+            <button class="suzgec-dugme" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="en-f0" data-suzgec="" data-alan="5" data-varsayilan="Durum">
+              <span data-rol="etiket">Durum</span><span class="sayi" data-sayi="0">0</span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
             </button>
             <div class="acilir-yuzey suzgec" id="en-f0" role="group" aria-label="Durum" hidden="">
-              <div class="acilir-bas"><span>Durum</span><button type="button">Temizle</button></div>
-              <button class="cip suzgec aktif" type="button" aria-pressed="true">Tümü</button>
-              <button class="cip suzgec" type="button" aria-pressed="false">Yapılandırılmadı</button>
-              <button class="cip suzgec" type="button" aria-pressed="false">Test bekliyor</button>
-              <button class="cip suzgec" type="button" aria-pressed="false">Bağlı</button>
-              <button class="cip suzgec" type="button" aria-pressed="false">Uyarı</button>
-              <button class="cip suzgec" type="button" aria-pressed="false">Hatalı</button>
-              <button class="cip suzgec" type="button" aria-pressed="false">Devre dışı</button>
+              <div class="acilir-bas"><span>Durum</span><button type="button" data-eylem="suzgec-temizle">Temizle</button></div>
+              <button class="cip suzgec aktif" type="button" aria-pressed="true" data-deger="hepsi">Tümü</button>
+              <button class="cip suzgec" type="button" aria-pressed="false" data-deger="Yapılandırılmadı">Yapılandırılmadı</button>
+              <button class="cip suzgec" type="button" aria-pressed="false" data-deger="Test bekliyor">Test bekliyor</button>
+              <button class="cip suzgec" type="button" aria-pressed="false" data-deger="Bağlı">Bağlı</button>
+              <button class="cip suzgec" type="button" aria-pressed="false" data-deger="Uyarı">Uyarı</button>
+              <button class="cip suzgec" type="button" aria-pressed="false" data-deger="Hatalı">Hatalı</button>
+              <button class="cip suzgec" type="button" aria-pressed="false" data-deger="Devre dışı">Devre dışı</button>
             </div>
           </div>
           <div class="coklu-secim">
-            <button class="suzgec-dugme" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="en-f1">
-              <span>Ortam</span><span class="sayi" data-sayi="0">0</span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+            <button class="suzgec-dugme" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="en-f1" data-suzgec="" data-varsayilan="Ortam">
+              <span data-rol="etiket">Ortam</span><span class="sayi" data-sayi="0">0</span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
             </button>
             <div class="acilir-yuzey suzgec" id="en-f1" role="group" aria-label="Ortam" hidden="">
-              <div class="acilir-bas"><span>Ortam</span><button type="button">Temizle</button></div>
-              <button class="cip suzgec aktif" type="button" aria-pressed="true">Tümü</button>
-              <button class="cip suzgec" type="button" aria-pressed="false">Canlı</button>
-              <button class="cip suzgec" type="button" aria-pressed="false">Test</button>
+              <div class="acilir-bas"><span>Ortam</span><button type="button" data-eylem="suzgec-temizle">Temizle</button></div>
+              <button class="cip suzgec aktif" type="button" aria-pressed="true" data-deger="hepsi">Tümü</button>
+              <button class="cip suzgec" type="button" aria-pressed="false" data-deger="Canlı">Canlı</button>
+              <button class="cip suzgec" type="button" aria-pressed="false" data-deger="Test">Test</button>
             </div>
           </div>
           <div class="sag">
             <div class="coklu-secim kolon-secim">
-              <button class="suzgec-dugme" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="en-kolon">
+              <button class="suzgec-dugme" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="en-kolon" data-eylem="kolonlar">
                 <i class="fa-solid fa-table-columns" aria-hidden="true"></i><span>Kolonlar</span>
               </button>
               <div class="acilir-yuzey saga" id="en-kolon" role="group" aria-label="Görünen kolonlar" hidden="">
                 <div class="acilir-bas"><span>Görünen kolonlar</span><button type="button">Sıfırla</button></div>
-                <label class="acilir-kalem kilitli"><input type="checkbox" checked="" disabled=""><span>Servis</span></label>
-                <label class="acilir-kalem"><input type="checkbox" checked=""><span>Grup</span></label>
-                <label class="acilir-kalem"><input type="checkbox" checked=""><span>Anahtar</span></label>
-                <label class="acilir-kalem"><input type="checkbox" checked=""><span>Son kontrol</span></label>
-                <label class="acilir-kalem"><input type="checkbox" checked=""><span>Durum</span></label>
+                <div class="kolon-secim"><label class="acilir-kalem kilitli"><input type="checkbox" checked="" disabled="" data-kolon-anahtar="1"><span>Servis</span></label>
+                <label class="acilir-kalem"><input type="checkbox" checked="" data-kolon-anahtar="2"><span>Grup</span></label>
+                <label class="acilir-kalem"><input type="checkbox" checked="" data-kolon-anahtar="3"><span>Anahtar</span></label>
+                <label class="acilir-kalem"><input type="checkbox" checked="" data-kolon-anahtar="4"><span>Son kontrol</span></label>
+                <label class="acilir-kalem"><input type="checkbox" checked="" data-kolon-anahtar="5"><span>Durum</span></label></div>
               </div>
             </div>
-            <button class="dugme hayalet kucuk" type="button" data-yetki="disa-aktar"><i class="fa-solid fa-file-export" aria-hidden="true"></i>Dışa aktar</button>
+            <button class="dugme hayalet kucuk" type="button" data-yetki="disa-aktar" data-eylem="disa-aktar"><i class="fa-solid fa-file-export" aria-hidden="true"></i>Dışa aktar</button>
             <span class="suzgec-sayac"><b>12</b> servis</span>
-          </div>
+          <span class="suzgec-sayac" data-rol="suzgec-sayisi">Süzgeç yok</span><button class="suzgec-temizle" type="button" data-eylem="suzgec-temizle" hidden>Temizle</button></div>
         </div>
         <div class="kart-govde bosluksuz" id="en-pano" role="tabpanel" aria-labelledby="en-s0">
           <div class="alan-ozet" role="alert">
@@ -264,9 +282,9 @@
         <div class="toplu-islem" hidden="">
           <b><span data-rol="secim-sayisi">0</span> kayıt seçildi</b>
           <div class="eylem-satiri">
-            <button class="dugme hayalet kucuk" type="button">Bağlantıyı test et</button>
-            <button class="dugme hayalet kucuk" type="button">Anahtarı yenile</button>
-            <button class="dugme hayalet kucuk" type="button">Devre dışı bırak</button>
+            <button class="dugme hayalet kucuk" type="button" data-eylem="calistir" data-ad="Bağlantıyı test et">Bağlantıyı test et</button>
+            <button class="dugme hayalet kucuk" type="button" data-eylem="calistir" data-ad="Anahtarı yenile">Anahtarı yenile</button>
+            <button class="dugme hayalet kucuk" type="button" data-eylem="calistir" data-ad="Devre dışı bırak">Devre dışı bırak</button>
           </div>
         </div>
           <div class="tablo-kap gomulu">
@@ -274,131 +292,131 @@
               <caption class="yalniz-okuyucu">Harici servis bağlantıları</caption>
               <thead>
                 <tr>
-              <th class="sec"><label><input type="checkbox" aria-label="Tümünü seç"></label></th>
-              <th class="sirali" aria-sort="ascending"><button type="button">Servis</button></th>
-              <th class="sirali"><button type="button">Grup</button></th>
-              <th>Anahtar</th>
-              <th class="sirali"><button type="button">Son kontrol</button></th>
-              <th class="sirali"><button type="button">Durum</button></th>
-              <th class="eylem">İşlem</th>
+              <th class="sec" data-kolon="0"><label><input type="checkbox" aria-label="Tümünü seç"></label></th>
+              <th class="sirali" aria-sort="ascending" data-kolon="1"><button type="button">Servis</button></th>
+              <th class="sirali" data-kolon="2"><button type="button">Grup</button></th>
+              <th data-kolon="3">Anahtar</th>
+              <th class="sirali" data-kolon="4"><button type="button">Son kontrol</button></th>
+              <th class="sirali" data-kolon="5"><button type="button">Durum</button></th>
+              <th class="eylem" data-kolon="6">İşlem</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td class="sec"><label><input type="checkbox" aria-label="Amazon SES satırını seç"></label></td>
-                  <td><b>Amazon SES</b></td>
-                  <td><span class="tur-rozeti notr">E-posta</span></td>
-                  <td><code>sk_live_••••••••••••4f2a</code><small>Canlı ortam</small></td>
-                  <td>02.09.2026 03:12</td>
-                  <td><span class="rozet olumlu"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>Bağlı</span></td>
-                  <td class="eylem"><div class="satir-eylem"><button class="ikon-dugme" type="button" data-yetki="gizli-goster" aria-label="Amazon SES — anahtarı göster"><i class="fa-solid fa-eye" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="Amazon SES — bağlantıyı test et"><i class="fa-solid fa-vial" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="Amazon SES — logları görüntüle"><i class="fa-solid fa-list" aria-hidden="true"></i></button></div></td>
+                  <td class="sec" data-kolon="0"><label><input type="checkbox" aria-label="Amazon SES satırını seç"></label></td>
+                  <td data-kolon="1"><b>Amazon SES</b></td>
+                  <td data-kolon="2"><span class="tur-rozeti notr">E-posta</span></td>
+                  <td data-kolon="3"><code>sk_live_••••••••••••4f2a</code><small>Canlı ortam</small></td>
+                  <td data-kolon="4">02.09.2026 03:12</td>
+                  <td data-kolon="5"><span class="rozet olumlu"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>Bağlı</span></td>
+                  <td class="eylem" data-kolon="6"><div class="satir-eylem satir-islem"><button class="ikon-dugme" type="button" data-yetki="gizli-goster" aria-label="Amazon SES — anahtarı göster" data-eylem="calistir" data-ad="Amazon SES — anahtarı göster"><i class="fa-solid fa-eye" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="Amazon SES — bağlantıyı test et" data-eylem="calistir" data-ad="Amazon SES — bağlantıyı test et"><i class="fa-solid fa-vial" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="Amazon SES — logları görüntüle" data-eylem="calistir" data-ad="Amazon SES — logları görüntüle"><i class="fa-solid fa-list" aria-hidden="true"></i></button></div></td>
                 </tr>
                 <tr>
-                  <td class="sec"><label><input type="checkbox" aria-label="Netgsm satırını seç"></label></td>
-                  <td><b>Netgsm</b></td>
-                  <td><span class="tur-rozeti notr">SMS</span></td>
-                  <td><code>ng_••••••••••••8c10</code><small>Canlı ortam</small></td>
-                  <td>02.09.2026 03:12</td>
-                  <td><span class="rozet olumlu"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>Bağlı</span></td>
-                  <td class="eylem"><div class="satir-eylem"><button class="ikon-dugme" type="button" data-yetki="gizli-goster" aria-label="Netgsm — anahtarı göster"><i class="fa-solid fa-eye" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="Netgsm — bağlantıyı test et"><i class="fa-solid fa-vial" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="Netgsm — logları görüntüle"><i class="fa-solid fa-list" aria-hidden="true"></i></button></div></td>
+                  <td class="sec" data-kolon="0"><label><input type="checkbox" aria-label="Netgsm satırını seç"></label></td>
+                  <td data-kolon="1"><b>Netgsm</b></td>
+                  <td data-kolon="2"><span class="tur-rozeti notr">SMS</span></td>
+                  <td data-kolon="3"><code>ng_••••••••••••8c10</code><small>Canlı ortam</small></td>
+                  <td data-kolon="4">02.09.2026 03:12</td>
+                  <td data-kolon="5"><span class="rozet olumlu"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>Bağlı</span></td>
+                  <td class="eylem" data-kolon="6"><div class="satir-eylem satir-islem"><button class="ikon-dugme" type="button" data-yetki="gizli-goster" aria-label="Netgsm — anahtarı göster" data-eylem="calistir" data-ad="Netgsm — anahtarı göster"><i class="fa-solid fa-eye" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="Netgsm — bağlantıyı test et" data-eylem="calistir" data-ad="Netgsm — bağlantıyı test et"><i class="fa-solid fa-vial" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="Netgsm — logları görüntüle" data-eylem="calistir" data-ad="Netgsm — logları görüntüle"><i class="fa-solid fa-list" aria-hidden="true"></i></button></div></td>
                 </tr>
                 <tr>
-                  <td class="sec"><label><input type="checkbox" aria-label="Firebase Cloud Messaging satırını seç"></label></td>
-                  <td><b>Firebase Cloud Messaging</b></td>
-                  <td><span class="tur-rozeti notr">Push</span></td>
-                  <td><code>AAAA••••••••••••dd91</code><small>Canlı ortam</small></td>
-                  <td>02.09.2026 03:12</td>
-                  <td><span class="rozet olumlu"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>Bağlı</span></td>
-                  <td class="eylem"><div class="satir-eylem"><button class="ikon-dugme" type="button" data-yetki="gizli-goster" aria-label="Firebase Cloud Messaging — anahtarı göster"><i class="fa-solid fa-eye" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="Firebase Cloud Messaging — bağlantıyı test et"><i class="fa-solid fa-vial" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="Firebase Cloud Messaging — logları görüntüle"><i class="fa-solid fa-list" aria-hidden="true"></i></button></div></td>
+                  <td class="sec" data-kolon="0"><label><input type="checkbox" aria-label="Firebase Cloud Messaging satırını seç"></label></td>
+                  <td data-kolon="1"><b>Firebase Cloud Messaging</b></td>
+                  <td data-kolon="2"><span class="tur-rozeti notr">Push</span></td>
+                  <td data-kolon="3"><code>AAAA••••••••••••dd91</code><small>Canlı ortam</small></td>
+                  <td data-kolon="4">02.09.2026 03:12</td>
+                  <td data-kolon="5"><span class="rozet olumlu"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>Bağlı</span></td>
+                  <td class="eylem" data-kolon="6"><div class="satir-eylem satir-islem"><button class="ikon-dugme" type="button" data-yetki="gizli-goster" aria-label="Firebase Cloud Messaging — anahtarı göster" data-eylem="calistir" data-ad="Firebase Cloud Messaging — anahtarı göster"><i class="fa-solid fa-eye" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="Firebase Cloud Messaging — bağlantıyı test et" data-eylem="calistir" data-ad="Firebase Cloud Messaging — bağlantıyı test et"><i class="fa-solid fa-vial" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="Firebase Cloud Messaging — logları görüntüle" data-eylem="calistir" data-ad="Firebase Cloud Messaging — logları görüntüle"><i class="fa-solid fa-list" aria-hidden="true"></i></button></div></td>
                 </tr>
                 <tr>
-                  <td class="sec"><label><input type="checkbox" aria-label="iyzico satırını seç"></label></td>
-                  <td><b>iyzico</b></td>
-                  <td><span class="tur-rozeti notr">Ödeme</span></td>
-                  <td><code>iyz_live_••••••••3b77</code><small>Canlı ortam</small></td>
-                  <td>04.09.2026 02:40</td>
-                  <td><span class="rozet olumlu"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>Bağlı</span></td>
-                  <td class="eylem"><div class="satir-eylem"><button class="ikon-dugme" type="button" data-yetki="gizli-goster" aria-label="iyzico — anahtarı göster"><i class="fa-solid fa-eye" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="iyzico — bağlantıyı test et"><i class="fa-solid fa-vial" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="iyzico — logları görüntüle"><i class="fa-solid fa-list" aria-hidden="true"></i></button></div></td>
+                  <td class="sec" data-kolon="0"><label><input type="checkbox" aria-label="iyzico satırını seç"></label></td>
+                  <td data-kolon="1"><b>iyzico</b></td>
+                  <td data-kolon="2"><span class="tur-rozeti notr">Ödeme</span></td>
+                  <td data-kolon="3"><code>iyz_live_••••••••3b77</code><small>Canlı ortam</small></td>
+                  <td data-kolon="4">04.09.2026 02:40</td>
+                  <td data-kolon="5"><span class="rozet olumlu"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>Bağlı</span></td>
+                  <td class="eylem" data-kolon="6"><div class="satir-eylem satir-islem"><button class="ikon-dugme" type="button" data-yetki="gizli-goster" aria-label="iyzico — anahtarı göster" data-eylem="calistir" data-ad="iyzico — anahtarı göster"><i class="fa-solid fa-eye" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="iyzico — bağlantıyı test et" data-eylem="calistir" data-ad="iyzico — bağlantıyı test et"><i class="fa-solid fa-vial" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="iyzico — logları görüntüle" data-eylem="calistir" data-ad="iyzico — logları görüntüle"><i class="fa-solid fa-list" aria-hidden="true"></i></button></div></td>
                 </tr>
                 <tr>
-                  <td class="sec"><label><input type="checkbox" aria-label="Stripe satırını seç"></label></td>
-                  <td><b>Stripe</b></td>
-                  <td><span class="tur-rozeti notr">Ödeme</span></td>
-                  <td><code>sk_test_••••••••91ac</code><small>Test ortam</small></td>
-                  <td>28.08.2026 11:05</td>
-                  <td><span class="rozet bekleme"><i class="fa-solid fa-flask" aria-hidden="true"></i>Test bekliyor</span></td>
-                  <td class="eylem"><div class="satir-eylem"><button class="ikon-dugme" type="button" data-yetki="gizli-goster" aria-label="Stripe — anahtarı göster"><i class="fa-solid fa-eye" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="Stripe — bağlantıyı test et"><i class="fa-solid fa-vial" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="Stripe — logları görüntüle"><i class="fa-solid fa-list" aria-hidden="true"></i></button></div></td>
+                  <td class="sec" data-kolon="0"><label><input type="checkbox" aria-label="Stripe satırını seç"></label></td>
+                  <td data-kolon="1"><b>Stripe</b></td>
+                  <td data-kolon="2"><span class="tur-rozeti notr">Ödeme</span></td>
+                  <td data-kolon="3"><code>sk_test_••••••••91ac</code><small>Test ortam</small></td>
+                  <td data-kolon="4">28.08.2026 11:05</td>
+                  <td data-kolon="5"><span class="rozet bekleme"><i class="fa-solid fa-flask" aria-hidden="true"></i>Test bekliyor</span></td>
+                  <td class="eylem" data-kolon="6"><div class="satir-eylem satir-islem"><button class="ikon-dugme" type="button" data-yetki="gizli-goster" aria-label="Stripe — anahtarı göster" data-eylem="calistir" data-ad="Stripe — anahtarı göster"><i class="fa-solid fa-eye" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="Stripe — bağlantıyı test et" data-eylem="calistir" data-ad="Stripe — bağlantıyı test et"><i class="fa-solid fa-vial" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="Stripe — logları görüntüle" data-eylem="calistir" data-ad="Stripe — logları görüntüle"><i class="fa-solid fa-list" aria-hidden="true"></i></button></div></td>
                 </tr>
                 <tr>
-                  <td class="sec"><label><input type="checkbox" aria-label="Paraşüt satırını seç"></label></td>
-                  <td><b>Paraşüt</b><small>Son 24 saatte 3 istek zaman aşımına uğradı.</small></td>
-                  <td><span class="tur-rozeti notr">Fatura / muhasebe</span></td>
-                  <td><code>ps_••••••••••••20e4</code><small>Canlı ortam</small></td>
-                  <td>03.09.2026 07:30</td>
-                  <td><span class="rozet durdu"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>Uyarı</span></td>
-                  <td class="eylem"><div class="satir-eylem"><button class="ikon-dugme" type="button" data-yetki="gizli-goster" aria-label="Paraşüt — anahtarı göster"><i class="fa-solid fa-eye" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="Paraşüt — bağlantıyı test et"><i class="fa-solid fa-vial" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="Paraşüt — logları görüntüle"><i class="fa-solid fa-list" aria-hidden="true"></i></button></div></td>
+                  <td class="sec" data-kolon="0"><label><input type="checkbox" aria-label="Paraşüt satırını seç"></label></td>
+                  <td data-kolon="1"><b>Paraşüt</b><small>Son 24 saatte 3 istek zaman aşımına uğradı.</small></td>
+                  <td data-kolon="2"><span class="tur-rozeti notr">Fatura / muhasebe</span></td>
+                  <td data-kolon="3"><code>ps_••••••••••••20e4</code><small>Canlı ortam</small></td>
+                  <td data-kolon="4">03.09.2026 07:30</td>
+                  <td data-kolon="5"><span class="rozet durdu"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>Uyarı</span></td>
+                  <td class="eylem" data-kolon="6"><div class="satir-eylem satir-islem"><button class="ikon-dugme" type="button" data-yetki="gizli-goster" aria-label="Paraşüt — anahtarı göster" data-eylem="calistir" data-ad="Paraşüt — anahtarı göster"><i class="fa-solid fa-eye" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="Paraşüt — bağlantıyı test et" data-eylem="calistir" data-ad="Paraşüt — bağlantıyı test et"><i class="fa-solid fa-vial" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="Paraşüt — logları görüntüle" data-eylem="calistir" data-ad="Paraşüt — logları görüntüle"><i class="fa-solid fa-list" aria-hidden="true"></i></button></div></td>
                 </tr>
                 <tr>
-                  <td class="sec"><label><input type="checkbox" aria-label="Google Analytics 4 satırını seç"></label></td>
-                  <td><b>Google Analytics 4</b></td>
-                  <td><span class="tur-rozeti notr">Analytics</span></td>
-                  <td><code>G-••••••••7T</code><small>Canlı ortam</small></td>
-                  <td>01.09.2026 00:00</td>
-                  <td><span class="rozet olumlu"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>Bağlı</span></td>
-                  <td class="eylem"><div class="satir-eylem"><button class="ikon-dugme" type="button" data-yetki="gizli-goster" aria-label="Google Analytics 4 — anahtarı göster"><i class="fa-solid fa-eye" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="Google Analytics 4 — bağlantıyı test et"><i class="fa-solid fa-vial" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="Google Analytics 4 — logları görüntüle"><i class="fa-solid fa-list" aria-hidden="true"></i></button></div></td>
+                  <td class="sec" data-kolon="0"><label><input type="checkbox" aria-label="Google Analytics 4 satırını seç"></label></td>
+                  <td data-kolon="1"><b>Google Analytics 4</b></td>
+                  <td data-kolon="2"><span class="tur-rozeti notr">Analytics</span></td>
+                  <td data-kolon="3"><code>G-••••••••7T</code><small>Canlı ortam</small></td>
+                  <td data-kolon="4">01.09.2026 00:00</td>
+                  <td data-kolon="5"><span class="rozet olumlu"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>Bağlı</span></td>
+                  <td class="eylem" data-kolon="6"><div class="satir-eylem satir-islem"><button class="ikon-dugme" type="button" data-yetki="gizli-goster" aria-label="Google Analytics 4 — anahtarı göster" data-eylem="calistir" data-ad="Google Analytics 4 — anahtarı göster"><i class="fa-solid fa-eye" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="Google Analytics 4 — bağlantıyı test et" data-eylem="calistir" data-ad="Google Analytics 4 — bağlantıyı test et"><i class="fa-solid fa-vial" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="Google Analytics 4 — logları görüntüle" data-eylem="calistir" data-ad="Google Analytics 4 — logları görüntüle"><i class="fa-solid fa-list" aria-hidden="true"></i></button></div></td>
                 </tr>
                 <tr>
-                  <td class="sec"><label><input type="checkbox" aria-label="Google Tag Manager satırını seç"></label></td>
-                  <td><b>Google Tag Manager</b></td>
-                  <td><span class="tur-rozeti notr">Tag Manager</span></td>
-                  <td><code>GTM-••••4KQ</code><small>Canlı ortam</small></td>
-                  <td>01.09.2026 00:00</td>
-                  <td><span class="rozet olumlu"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>Bağlı</span></td>
-                  <td class="eylem"><div class="satir-eylem"><button class="ikon-dugme" type="button" data-yetki="gizli-goster" aria-label="Google Tag Manager — anahtarı göster"><i class="fa-solid fa-eye" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="Google Tag Manager — bağlantıyı test et"><i class="fa-solid fa-vial" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="Google Tag Manager — logları görüntüle"><i class="fa-solid fa-list" aria-hidden="true"></i></button></div></td>
+                  <td class="sec" data-kolon="0"><label><input type="checkbox" aria-label="Google Tag Manager satırını seç"></label></td>
+                  <td data-kolon="1"><b>Google Tag Manager</b></td>
+                  <td data-kolon="2"><span class="tur-rozeti notr">Tag Manager</span></td>
+                  <td data-kolon="3"><code>GTM-••••4KQ</code><small>Canlı ortam</small></td>
+                  <td data-kolon="4">01.09.2026 00:00</td>
+                  <td data-kolon="5"><span class="rozet olumlu"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>Bağlı</span></td>
+                  <td class="eylem" data-kolon="6"><div class="satir-eylem satir-islem"><button class="ikon-dugme" type="button" data-yetki="gizli-goster" aria-label="Google Tag Manager — anahtarı göster" data-eylem="calistir" data-ad="Google Tag Manager — anahtarı göster"><i class="fa-solid fa-eye" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="Google Tag Manager — bağlantıyı test et" data-eylem="calistir" data-ad="Google Tag Manager — bağlantıyı test et"><i class="fa-solid fa-vial" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="Google Tag Manager — logları görüntüle" data-eylem="calistir" data-ad="Google Tag Manager — logları görüntüle"><i class="fa-solid fa-list" aria-hidden="true"></i></button></div></td>
                 </tr>
                 <tr>
-                  <td class="sec"><label><input type="checkbox" aria-label="Search Console satırını seç"></label></td>
-                  <td><b>Search Console</b></td>
-                  <td><span class="tur-rozeti notr">Search Console</span></td>
-                  <td><code>—</code><small>Canlı ortam</small></td>
-                  <td>25.08.2026 09:00</td>
-                  <td><span class="rozet pasif"><i class="fa-solid fa-circle-minus" aria-hidden="true"></i>Yapılandırılmadı</span></td>
-                  <td class="eylem"><div class="satir-eylem"><button class="ikon-dugme" type="button" data-yetki="gizli-goster" aria-label="Search Console — anahtarı göster"><i class="fa-solid fa-eye" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="Search Console — bağlantıyı test et"><i class="fa-solid fa-vial" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="Search Console — logları görüntüle"><i class="fa-solid fa-list" aria-hidden="true"></i></button></div></td>
+                  <td class="sec" data-kolon="0"><label><input type="checkbox" aria-label="Search Console satırını seç"></label></td>
+                  <td data-kolon="1"><b>Search Console</b></td>
+                  <td data-kolon="2"><span class="tur-rozeti notr">Search Console</span></td>
+                  <td data-kolon="3"><code>—</code><small>Canlı ortam</small></td>
+                  <td data-kolon="4">25.08.2026 09:00</td>
+                  <td data-kolon="5"><span class="rozet pasif"><i class="fa-solid fa-circle-minus" aria-hidden="true"></i>Yapılandırılmadı</span></td>
+                  <td class="eylem" data-kolon="6"><div class="satir-eylem satir-islem"><button class="ikon-dugme" type="button" data-yetki="gizli-goster" aria-label="Search Console — anahtarı göster" data-eylem="calistir" data-ad="Search Console — anahtarı göster"><i class="fa-solid fa-eye" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="Search Console — bağlantıyı test et" data-eylem="calistir" data-ad="Search Console — bağlantıyı test et"><i class="fa-solid fa-vial" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="Search Console — logları görüntüle" data-eylem="calistir" data-ad="Search Console — logları görüntüle"><i class="fa-solid fa-list" aria-hidden="true"></i></button></div></td>
                 </tr>
                 <tr>
-                  <td class="sec"><label><input type="checkbox" aria-label="Cloudflare R2 satırını seç"></label></td>
-                  <td><b>Cloudflare R2</b></td>
-                  <td><span class="tur-rozeti notr">CDN / depolama</span></td>
-                  <td><code>r2_••••••••••••5aa0</code><small>Canlı ortam</small></td>
-                  <td>04.09.2026 03:00</td>
-                  <td><span class="rozet olumlu"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>Bağlı</span></td>
-                  <td class="eylem"><div class="satir-eylem"><button class="ikon-dugme" type="button" data-yetki="gizli-goster" aria-label="Cloudflare R2 — anahtarı göster"><i class="fa-solid fa-eye" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="Cloudflare R2 — bağlantıyı test et"><i class="fa-solid fa-vial" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="Cloudflare R2 — logları görüntüle"><i class="fa-solid fa-list" aria-hidden="true"></i></button></div></td>
+                  <td class="sec" data-kolon="0"><label><input type="checkbox" aria-label="Cloudflare R2 satırını seç"></label></td>
+                  <td data-kolon="1"><b>Cloudflare R2</b></td>
+                  <td data-kolon="2"><span class="tur-rozeti notr">CDN / depolama</span></td>
+                  <td data-kolon="3"><code>r2_••••••••••••5aa0</code><small>Canlı ortam</small></td>
+                  <td data-kolon="4">04.09.2026 03:00</td>
+                  <td data-kolon="5"><span class="rozet olumlu"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>Bağlı</span></td>
+                  <td class="eylem" data-kolon="6"><div class="satir-eylem satir-islem"><button class="ikon-dugme" type="button" data-yetki="gizli-goster" aria-label="Cloudflare R2 — anahtarı göster" data-eylem="calistir" data-ad="Cloudflare R2 — anahtarı göster"><i class="fa-solid fa-eye" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="Cloudflare R2 — bağlantıyı test et" data-eylem="calistir" data-ad="Cloudflare R2 — bağlantıyı test et"><i class="fa-solid fa-vial" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="Cloudflare R2 — logları görüntüle" data-eylem="calistir" data-ad="Cloudflare R2 — logları görüntüle"><i class="fa-solid fa-list" aria-hidden="true"></i></button></div></td>
                 </tr>
                 <tr>
-                  <td class="sec"><label><input type="checkbox" aria-label="Google Maps satırını seç"></label></td>
-                  <td><b>Google Maps</b><small>Anahtar süresi doldu; harita boş basılıyor.</small></td>
-                  <td><span class="tur-rozeti notr">Harita</span></td>
-                  <td><code>AIza••••••••••••kQ7</code><small>Canlı ortam</small></td>
-                  <td>20.08.2026 14:20</td>
-                  <td><span class="rozet durdu"><i class="fa-solid fa-circle-xmark" aria-hidden="true"></i>Hatalı</span></td>
-                  <td class="eylem"><div class="satir-eylem"><button class="ikon-dugme" type="button" data-yetki="gizli-goster" aria-label="Google Maps — anahtarı göster"><i class="fa-solid fa-eye" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="Google Maps — bağlantıyı test et"><i class="fa-solid fa-vial" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="Google Maps — logları görüntüle"><i class="fa-solid fa-list" aria-hidden="true"></i></button></div></td>
+                  <td class="sec" data-kolon="0"><label><input type="checkbox" aria-label="Google Maps satırını seç"></label></td>
+                  <td data-kolon="1"><b>Google Maps</b><small>Anahtar süresi doldu; harita boş basılıyor.</small></td>
+                  <td data-kolon="2"><span class="tur-rozeti notr">Harita</span></td>
+                  <td data-kolon="3"><code>AIza••••••••••••kQ7</code><small>Canlı ortam</small></td>
+                  <td data-kolon="4">20.08.2026 14:20</td>
+                  <td data-kolon="5"><span class="rozet durdu"><i class="fa-solid fa-circle-xmark" aria-hidden="true"></i>Hatalı</span></td>
+                  <td class="eylem" data-kolon="6"><div class="satir-eylem satir-islem"><button class="ikon-dugme" type="button" data-yetki="gizli-goster" aria-label="Google Maps — anahtarı göster" data-eylem="calistir" data-ad="Google Maps — anahtarı göster"><i class="fa-solid fa-eye" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="Google Maps — bağlantıyı test et" data-eylem="calistir" data-ad="Google Maps — bağlantıyı test et"><i class="fa-solid fa-vial" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="Google Maps — logları görüntüle" data-eylem="calistir" data-ad="Google Maps — logları görüntüle"><i class="fa-solid fa-list" aria-hidden="true"></i></button></div></td>
                 </tr>
                 <tr>
-                  <td class="sec"><label><input type="checkbox" aria-label="Webhook · abonelik olayları satırını seç"></label></td>
-                  <td><b>Webhook · abonelik olayları</b></td>
-                  <td><span class="tur-rozeti notr">Webhook</span></td>
-                  <td><code>whsec_••••••••1f30</code><small>Canlı ortam</small></td>
-                  <td>04.09.2026 03:05</td>
-                  <td><span class="rozet pasif"><i class="fa-solid fa-circle-minus" aria-hidden="true"></i>Devre dışı</span></td>
-                  <td class="eylem"><div class="satir-eylem"><button class="ikon-dugme" type="button" data-yetki="gizli-goster" aria-label="Webhook · abonelik olayları — anahtarı göster"><i class="fa-solid fa-eye" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="Webhook · abonelik olayları — bağlantıyı test et"><i class="fa-solid fa-vial" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="Webhook · abonelik olayları — logları görüntüle"><i class="fa-solid fa-list" aria-hidden="true"></i></button></div></td>
+                  <td class="sec" data-kolon="0"><label><input type="checkbox" aria-label="Webhook · abonelik olayları satırını seç"></label></td>
+                  <td data-kolon="1"><b>Webhook · abonelik olayları</b></td>
+                  <td data-kolon="2"><span class="tur-rozeti notr">Webhook</span></td>
+                  <td data-kolon="3"><code>whsec_••••••••1f30</code><small>Canlı ortam</small></td>
+                  <td data-kolon="4">04.09.2026 03:05</td>
+                  <td data-kolon="5"><span class="rozet pasif"><i class="fa-solid fa-circle-minus" aria-hidden="true"></i>Devre dışı</span></td>
+                  <td class="eylem" data-kolon="6"><div class="satir-eylem satir-islem"><button class="ikon-dugme" type="button" data-yetki="gizli-goster" aria-label="Webhook · abonelik olayları — anahtarı göster" data-eylem="calistir" data-ad="Webhook · abonelik olayları — anahtarı göster"><i class="fa-solid fa-eye" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="Webhook · abonelik olayları — bağlantıyı test et" data-eylem="calistir" data-ad="Webhook · abonelik olayları — bağlantıyı test et"><i class="fa-solid fa-vial" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="Webhook · abonelik olayları — logları görüntüle" data-eylem="calistir" data-ad="Webhook · abonelik olayları — logları görüntüle"><i class="fa-solid fa-list" aria-hidden="true"></i></button></div></td>
                 </tr>
               </tbody>
               <tbody aria-busy="true" hidden="">
-                <tr><td class="sec"><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet orta"></span></td></tr>
-                <tr><td class="sec"><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet orta"></span></td></tr>
-                <tr><td class="sec"><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet orta"></span></td></tr>
-                <tr><td class="sec"><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet orta"></span></td></tr>
-                <tr><td class="sec"><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet orta"></span></td></tr>
+                <tr><td class="sec" data-kolon="0"><span class="iskelet kisa"></span></td><td data-kolon="1"><span class="iskelet orta"></span></td><td data-kolon="2"><span class="iskelet orta"></span></td><td data-kolon="3"><span class="iskelet orta"></span></td><td data-kolon="4"><span class="iskelet orta"></span></td><td data-kolon="5"><span class="iskelet orta"></span></td><td data-kolon="6"><span class="iskelet orta"></span></td></tr>
+                <tr><td class="sec" data-kolon="0"><span class="iskelet kisa"></span></td><td data-kolon="1"><span class="iskelet orta"></span></td><td data-kolon="2"><span class="iskelet orta"></span></td><td data-kolon="3"><span class="iskelet orta"></span></td><td data-kolon="4"><span class="iskelet orta"></span></td><td data-kolon="5"><span class="iskelet orta"></span></td><td data-kolon="6"><span class="iskelet orta"></span></td></tr>
+                <tr><td class="sec" data-kolon="0"><span class="iskelet kisa"></span></td><td data-kolon="1"><span class="iskelet orta"></span></td><td data-kolon="2"><span class="iskelet orta"></span></td><td data-kolon="3"><span class="iskelet orta"></span></td><td data-kolon="4"><span class="iskelet orta"></span></td><td data-kolon="5"><span class="iskelet orta"></span></td><td data-kolon="6"><span class="iskelet orta"></span></td></tr>
+                <tr><td class="sec" data-kolon="0"><span class="iskelet kisa"></span></td><td data-kolon="1"><span class="iskelet orta"></span></td><td data-kolon="2"><span class="iskelet orta"></span></td><td data-kolon="3"><span class="iskelet orta"></span></td><td data-kolon="4"><span class="iskelet orta"></span></td><td data-kolon="5"><span class="iskelet orta"></span></td><td data-kolon="6"><span class="iskelet orta"></span></td></tr>
+                <tr><td class="sec" data-kolon="0"><span class="iskelet kisa"></span></td><td data-kolon="1"><span class="iskelet orta"></span></td><td data-kolon="2"><span class="iskelet orta"></span></td><td data-kolon="3"><span class="iskelet orta"></span></td><td data-kolon="4"><span class="iskelet orta"></span></td><td data-kolon="5"><span class="iskelet orta"></span></td><td data-kolon="6"><span class="iskelet orta"></span></td></tr>
               </tbody>
             </table>
           </div>
@@ -406,13 +424,13 @@
           <span class="bos-ikon"><i class="fa-solid fa-plug" aria-hidden="true"></i></span>
           <h3>Bu grupta servis yok</h3>
           <p>Bir servis bağlayarak başla.</p>
-          <button class="dugme birincil" type="button">Servis bağla</button>
+          <button class="dugme birincil" type="button" data-eylem="panel-ac">Servis bağla</button>
         </div>
         <div class="bos-durum kart-ici" hidden="" data-durum="bos-suzgec">
           <span class="bos-ikon"><i class="fa-solid fa-filter-circle-xmark" aria-hidden="true"></i></span>
           <h3>Bu süzgeçle sonuç yok</h3>
           <p>Süzgeci genişlet ya da aramayı değiştir.</p>
-          <button class="dugme hayalet" type="button">Süzgeci temizle</button>
+          <button class="dugme hayalet" type="button" data-eylem="suzgec-temizle">Süzgeci temizle</button>
         </div>
         <div class="bos-durum kart-ici yetkisiz" hidden="" data-durum="yetkisiz">
           <span class="bos-ikon"><i class="fa-solid fa-lock" aria-hidden="true"></i></span>
@@ -423,7 +441,7 @@
           <span class="bos-ikon"><i class="fa-solid fa-plug-circle-xmark" aria-hidden="true"></i></span>
           <h3>Servis listesi yüklenemedi</h3>
           <p>Bağlantı kurulamadı. Yeniden dene.</p>
-          <button class="dugme birincil" type="button"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i>Yeniden dene</button>
+          <button class="dugme birincil" type="button" data-eylem="calistir" data-ad="Yeniden dene"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i>Yeniden dene</button>
           <p class="hata-izi">Destek referansı <code>FIT-ENT-9013</code></p>
         </div>
         </div>
@@ -502,9 +520,9 @@
           <div class="kart-alt form-eylem">
             <span class="not">Anahtar son değişim <b>04.09.2026</b> · Yasin Yavuz</span>
             <div class="eylem-satiri">
-              <button class="dugme hayalet" type="button">Logları görüntüle</button>
-              <button class="dugme hayalet" type="button">Bağlantıyı test et</button>
-              <button class="dugme birincil" type="submit">Kaydet</button>
+              <button class="dugme hayalet" type="button" data-eylem="calistir" data-ad="Logları görüntüle">Logları görüntüle</button>
+              <button class="dugme hayalet" type="button" data-eylem="calistir" data-ad="Bağlantıyı test et">Bağlantıyı test et</button>
+              <button class="dugme birincil" type="submit" data-eylem="kaydet">Kaydet</button>
             </div>
           </div>
         </div>
@@ -524,8 +542,8 @@
             <div class="kart-alt form-eylem">
               <span class="not">Yenileme kesinti yaratmaz.</span>
               <div class="eylem-satiri">
-                <button class="dugme hayalet" type="button" data-yetki="gizli-goster"><i class="fa-solid fa-eye" aria-hidden="true"></i>Anahtarı göster</button>
-                <button class="dugme hayalet" type="button"><i class="fa-solid fa-rotate" aria-hidden="true"></i>Anahtarı yenile</button>
+                <button class="dugme hayalet" type="button" data-yetki="gizli-goster" data-eylem="calistir" data-ad="Anahtarı göster"><i class="fa-solid fa-eye" aria-hidden="true"></i>Anahtarı göster</button>
+                <button class="dugme hayalet" type="button" data-eylem="calistir" data-ad="Anahtarı yenile"><i class="fa-solid fa-rotate" aria-hidden="true"></i>Anahtarı yenile</button>
               </div>
             </div>
           </div>
@@ -535,12 +553,12 @@
               <div class="tablo-kap gomulu">
                 <table class="tablo panel">
                   <caption class="yalniz-okuyucu">Bu servisin son olay kayıtları</caption>
-                  <thead><tr><th>Zaman</th><th>Olay</th><th>Sonuç</th></tr></thead>
+                  <thead><tr><th data-kolon="0">Zaman</th><th data-kolon="1">Olay</th><th data-kolon="2">Sonuç</th></tr></thead>
                   <tbody>
-                    <tr><td>04.09 02:40</td><td>Tahsilat</td><td><span class="rozet olumlu"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>200</span></td></tr>
-                    <tr><td>04.09 02:12</td><td>Webhook</td><td><span class="rozet olumlu"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>200</span></td></tr>
-                    <tr><td>03.09 23:58</td><td>Tahsilat</td><td><span class="rozet durdu"><i class="fa-solid fa-circle-xmark" aria-hidden="true"></i>402</span></td></tr>
-                    <tr><td>03.09 19:04</td><td>İade</td><td><span class="rozet olumlu"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>200</span></td></tr>
+                    <tr><td data-kolon="0">04.09 02:40</td><td data-kolon="1">Tahsilat</td><td data-kolon="2"><span class="rozet olumlu"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>200</span></td></tr>
+                    <tr><td data-kolon="0">04.09 02:12</td><td data-kolon="1">Webhook</td><td data-kolon="2"><span class="rozet olumlu"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>200</span></td></tr>
+                    <tr><td data-kolon="0">03.09 23:58</td><td data-kolon="1">Tahsilat</td><td data-kolon="2"><span class="rozet durdu"><i class="fa-solid fa-circle-xmark" aria-hidden="true"></i>402</span></td></tr>
+                    <tr><td data-kolon="0">03.09 19:04</td><td data-kolon="1">İade</td><td data-kolon="2"><span class="rozet olumlu"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>200</span></td></tr>
                   </tbody>
                 </table>
               </div>
@@ -552,4 +570,13 @@
     </div>
   </main>
 <script src="_ortak/panel.js" defer></script>
+<!-- ADMIN-KIT:JS:BAS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/7.3.0/tinymce.min.js" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/l10n/tr.js"></script>
+<script src="../../kanon/admin-editor-tr.js"></script>
+<script src="../../kanon/admin-kit.js" defer></script>
+<script src="../../kanon/admin-editor.js" defer></script>
+<script src="../../kanon/admin-tarih.js" defer></script>
+<!-- ADMIN-KIT:JS:SON -->
 </body></html>

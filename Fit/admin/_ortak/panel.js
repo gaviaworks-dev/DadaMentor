@@ -184,6 +184,11 @@
     olc.remove();
   })();
 
+  /* Kit (`kanon/admin-kit.js`) satır sildikten sonra seçim durumunu
+     tazelemek zorunda; fonksiyon burada yaşıyor, dışarı verilir.
+     🔴 İkinci bir kopya YAZILMADI — iki kopya kayar. */
+  window.DM_SECIM_TAZELE = secimiTazele;
+
   document.querySelectorAll('.tablo').forEach(secimiTazele);
 
   /* ═══════════════════════════════════════════════════════════════════
