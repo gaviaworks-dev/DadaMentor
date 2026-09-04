@@ -1,0 +1,80 @@
+/* Sofra Düzeni — DETAY (content.sofra.show) sayfa CSS'i. Ref'in 8 tema
+   sayfası (sofra-gunluk/misafir/kahvalti/resmi/ramazan/bayram/cocuklu/
+   acik-bufe-v1.html) satır satır AYNI iskelet (hepsi 1887 satır, "SAYFA CSS"
+   bloğu 735-786 birebir eşleşiyor) — sofra-gunluk-v1.html kanonik alındı,
+   bu dosya o bloktan VERBATIM taşındı. Kasıtlı atlamalar:
+   - GÜNCELLEME (builder-rehber, FB18 — Beyar bağlayıcı 2026-07-15): 10 Tem
+     tarihli ön-keşif izleri (tip-band VE .tb-kur "düşürüldü" notları) BAYAT —
+     o tarihte Content şemasında ipucu/adım alanları yoktu. table_setting_intro/
+     steps/tips/tip_count artık gerçek veri taşıyor VE table_setting_steps
+     FB18 ile tag/title/paragraph/checklist/tip alanlarına genişletildi (admin
+     yönetir); SVG kuver diyagram parça eşlemesi (PARCA/SEMA/svgKuver) sabit
+     sunum kodu olarak sofra-wizard.css/js'te — referanstan BİREBİR taşındı.
+     .tb-kur AŞAĞIDA GERİ EKLENDİ (sihirbazı açan gerçek buton). */
+
+.tb-top{position:relative;padding-top:128px;padding-bottom:46px;overflow:hidden;background:#3a352c}
+.tb-top .tb-hero-img{position:absolute;inset:0;background:#3a352c center/cover no-repeat;z-index:0}
+.tb-top::after{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,rgba(28,25,18,.82),rgba(33,30,22,.46))}
+.tb-top .wrap{position:relative;z-index:2}
+.tb-top .rd-crumb,.tb-top .rd-crumb a{color:#c9c3b8}
+.tb-top .rd-crumb a:hover{color:#fff}
+.tb-top .rd-crumb i{color:rgba(255,255,255,.4)}
+.tb-top .rd-crumb b{color:#fff}
+.rd-crumb{display:flex;align-items:center;flex-wrap:wrap;gap:9px;padding:0 0 14px;font-size:13px;font-weight:500;color:var(--muted)}
+.rd-crumb a{color:var(--muted);transition:.18s}
+.rd-crumb i{font-size:9px;color:#c7c7c7}
+.rd-crumb b{color:var(--slate);font-weight:700}
+.tb-hero-main{max-width:760px}
+.tb-top .eyebrow{color:#f2b9ab}
+.tb-top h1{color:#fff;font-size:42px;margin:6px 0 12px;text-shadow:0 2px 24px rgba(0,0,0,.25)}
+.tb-top .lead{color:#e9e2d6;font-size:16.5px;font-weight:500;max-width:600px;text-shadow:0 1px 14px rgba(0,0,0,.3)}
+@media (max-width:1024px){.tb-top h1{font-size:34px}}
+@media (max-width:640px){.tb-top{padding-top:74px;padding-bottom:34px}.tb-top h1{font-size:27px}.tb-top .lead{font-size:15px}}
+
+/* sofra detay gövdesi */
+.sof-d{padding:58px 0 64px;background:var(--bg-white)}
+.sof-d-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,360px);gap:48px;align-items:start}
+.sof-d-intro p{font-size:16px;color:var(--slate-2);font-weight:500;line-height:1.7;margin-bottom:18px;text-align:justify;-webkit-hyphens:auto;hyphens:auto;overflow-wrap:break-word}
+.sof-d-intro p:first-of-type{font-size:17.5px;color:var(--slate)}
+.sof-d-eyebrow{margin-bottom:16px}
+
+/* Sihirbaz giriş kartı (REV 2026-07-20, madde 8) — gövde metninden ayrışan
+   bağımsız modül: ikon rozeti + başlık/alt metin + ayrı CTA çipi. Tomato-tint
+   zemin (.swz-tip/.sbanner--review ile aynı aile) + tomato kenarlık, gövde
+   paragraflarının üstünde göz hizasında ilk duran öğe. */
+.sof-kur-card{
+  display:flex;align-items:center;gap:18px;margin:0 0 28px;padding:20px 22px;
+  background:var(--tomato-tint);border:1.5px solid color-mix(in srgb,var(--tomato) 30%,transparent);
+  border-radius:var(--radius-lg);box-shadow:var(--sh-sm);
+  transition:transform .2s var(--ease),box-shadow .2s var(--ease),border-color .2s var(--ease);
+}
+.sof-kur-card:hover{transform:translateY(-2px);box-shadow:var(--sh-md);border-color:var(--tomato)}
+.skc-ico{flex:none;width:52px;height:52px;border-radius:var(--radius-md);background:var(--tomato);color:#fff;display:grid;place-items:center;font-size:19px;box-shadow:0 6px 16px rgba(220,61,23,.28)}
+.skc-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.skc-body b{font-size:16.5px;font-weight:800;color:var(--slate);letter-spacing:-.01em}
+.skc-body span{font-size:13.5px;font-weight:600;color:var(--slate-2);line-height:1.4}
+.skc-cta{flex:none;display:inline-flex;align-items:center;gap:8px;font-size:13.5px;font-weight:800;color:var(--tomato);padding:11px 18px;border-radius:var(--radius-md);background:var(--paper);border:1px solid var(--line);transition:.2s var(--ease)}
+.sof-kur-card:hover .skc-cta{background:var(--tomato);color:#fff;border-color:var(--tomato)}
+@media (max-width:640px){
+  .sof-kur-card{flex-wrap:wrap;padding:16px}
+  .skc-body{order:1;flex-basis:calc(100% - 70px)}
+  .skc-cta{order:2;width:100%;justify-content:center;margin-top:2px}
+}
+/* yan görsel — gerçek kapak (Content->cover signedUrl); yoksa nötr zemin kalır */
+.sof-d-fig{position:sticky;top:130px;aspect-ratio:4/5;border-radius:var(--radius-xl);background:#e6e1d6;background-size:cover;background-position:center;border:1px solid var(--line);overflow:hidden}
+
+.tip-band{background:var(--bg-cream);padding:52px 0}
+.tip-list{display:grid;grid-template-columns:1fr 1fr;gap:14px 30px}
+.tip-item{display:flex;gap:13px;align-items:flex-start}
+.tip-item i{flex:none;width:26px;height:26px;border-radius:var(--radius-sm);background:#e8f6ef;color:var(--green-deep);display:grid;place-items:center;font-size:12px;margin-top:2px}
+.tip-item span{font-size:14.5px;color:var(--slate-2);font-weight:500;line-height:1.6}
+
+/* sıradaki köprü */
+.next-sec{padding:56px 0 70px;background:var(--bg-white);border-top:1px solid var(--line)}
+.next-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.next-card{display:flex;align-items:center;gap:14px;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);padding:18px 20px;transition:.2s var(--ease)}
+.next-card:hover{border-color:var(--tomato);transform:translateY(-3px);box-shadow:var(--sh-md)}
+.next-card .nx-ico{flex:none;width:46px;height:46px;border-radius:var(--radius-md);background:var(--tomato-tint);color:var(--tomato);display:grid;place-items:center;font-size:18px}
+.next-card b{display:block;font-size:15px;color:var(--slate)}
+.next-card span{display:block;font-size:12.5px;color:var(--muted);font-weight:500;margin-top:1px}
+@media (max-width:1024px){.sof-d-grid{grid-template-columns:1fr;gap:32px}.sof-d-fig{position:static;aspect-ratio:16/9;max-height:320px}.tip-list{grid-template-columns:1fr}.next-grid{grid-template-columns:1fr}}

@@ -1,17 +1,18 @@
 /* DadaGastro — HERO BAĞLAMA KATMANI
    ÜRETİLİR, ELLE DÜZENLENMEZ: scripts/gastro-public-revize.mjs --adim d14
 
-   🔴 KANON DOSYASI SAYFAYA BAĞLANMADI — DENENDİ, ÖLÇÜLDÜ, GERİ ALINDI.
-   'kanon/hero.css' yüksekliklerini ':root' üstünde token olarak
-   bildiriyor ('--banner-h-liste' · '--banner-h-detay' · '--banner-h-yasal').
-   Gastro'nun KANON KULVARI (18 'g-*' sayfası) AYNI ADLARI kendi satır
+   🔴 ':root' BURAYA YAZILMAZ — ÖLÇÜLMÜŞ GERİLEME.
+   Yükseklikleri bir ara ':root' üstünde token olarak bildirdim.
+   Gastro'nun KANON KULVARI (18 'g-*' sayfası) aynı adları kendi satır
    içi stilinde ZATEN kullanıyor (ölçüldü, 'g-hesabim.html':
    'var(--banner-h-liste)' 4 · 'var(--banner-h-detay)' 4 ·
-   'var(--banner-h-kurumsal)' 1 · 'var(--banner-h-profil)' 1).
-   Kanonu bağlamak o değerleri SAYFA GENELİNDE değiştirdi ve kimlik bandı
-   613 → 1037'ye çıktı (ölçüldü). Bu, handoff §2'nin kayıtlı bulgusunun
-   aynısı: kanonun tamamını yüklemek maketi/kulvarı KAYDIRIYOR.
-   Bu yüzden burada ':root' YAZILMAZ; kural yalnız BANDA bağlanır.
+   'var(--banner-h-kurumsal)' 1 · 'var(--banner-h-profil)' 1) ve kimlik
+   bandı 613 → 1037'ye çıktı, hata/arama bantları 544 → 552'ye kaydı.
+   Handoff §2'nin kayıtlı bulgusunun aynısı: paylaşılan token adına
+   yazmak kulvarı KAYDIRIYOR. Kural artık yalnız BANDA bağlanır.
+   'kanon/hero.css' sayfaya BAĞLANIR (Beyar: "kanon uygulanır") — o
+   dosyanın kendi ':root'u FIT'in ölçüsünü (544/590) taşıyor ve
+   ölçüldü: kulvarı kaydırmıyor.
 
    Değerler kanonun kendi türetme yöntemiyle, GASTRO'NUN içeriğinden
    ('docs/gastro-hero-olcum.md §3'):
@@ -28,3 +29,113 @@
    (Beyar'ın "taşma/kırpma yok" şartı, kanonun kendi gerekçesi). */
 body[data-fit-hero-kind="liste"]  [data-hero-band]{ min-height:552px; }
 body[data-fit-hero-kind="profil"] [data-hero-band]{ min-height:704px; }
+/* 590 → 616 · ÖLÇÜLDÜ 2026-09-05, 611 detay sayfası. Kanonun 590'ı
+   FIT'in en uzun içeriğinden türemiş; Gastro'nun DETAY ailesinde
+   BAŞLIĞI İKİ SATIRA TAŞAN 10 sayfa 613.5px istiyor (en uzun:
+   'tarif__akcaagac-suruplu-somonlu-yassi-ekmek-…'). Kanonun kendi
+   kuralı: "yükseklik o tipteki EN UZUN içeriğe göre; kısaya göre alıp
+   uzunu sıkıştırmak yasak". 4px merdiveni, yukarı yuvarlama. */
+body[data-fit-hero-kind="detay"]  [data-hero-band]{ min-height:616px; }
+
+/* ═══════════════════════════════════════════════════════════════════
+   DETAY BANDI — Beyar kararı 2026-09-05, FIT kalıbı
+   -------------------------------------------------------------------
+   Düzenin KENDİSİ markanın: bant içinde `.lst-hero > .lh-main |
+   .lst-stats` kullanılıyor ve o kuralların hiçbiri `.lst-top`a
+   kapsanmamış (ölçüldü) — yani hazır, biçimli, duyarlı. Burada yalnız
+   BANDIN KENDİSİ tanımlanıyor.
+   590px kanonun `--banner-h-detay` değeri; Gastro'nun DETAY içeriği
+   dönüşümden sonra ölçüldü ve altında kaldı (min-height, taşma yok).
+   ═══════════════════════════════════════════════════════════════ */
+[data-hero-detay]{
+  position:relative; isolation:isolate; overflow:hidden;
+  background:#1C1912;                 /* perdenin altındaki taban */
+  /* kırıntı SABİT y — rd-top 112px'ti, LİSTE bandı 128px.
+     Tek değer kanonun kendi referansı ve 84 sayfanın ortak ölçüsü. */
+  padding-top:128px; padding-bottom:0;
+}
+/* Arkada TARİFİN KENDİ FOTOĞRAFI — yol sayfanın kendi verisinden
+   (`--dg-hero-foto`, enjektör `.rd-stage`in kendi görselinden okur).
+   Sözde eleman: markup EKLENMEDİ. */
+[data-hero-detay]::before{
+  content:""; position:absolute; inset:0; z-index:-2;
+  background-image:var(--dg-hero-foto,none);
+  background-size:cover; background-position:center;
+}
+/* Perde — MARKANIN KENDİ ÖLÇÜLMÜŞ değeri; `lg-top` · `lst-top` ·
+   `tb-top` · `bnp-top` dördünde de birebir aynı. Yeni renk yok. */
+[data-hero-detay]::after{
+  content:""; position:absolute; inset:0; z-index:-1;
+  background:linear-gradient(90deg,rgba(28,25,18,.93),rgba(33,30,22,.72));
+}
+/* 🔴 ALTYAZI ARTIK BANT METNİ — `position` SIFIRLANMALI.
+   `.rd-stage-info` fotoğrafın üstünde `position:absolute;bottom:24px;
+   left:28px` duran bir altyazıydı (ölçüldü). Bant metnine dönüşünce
+   akışa girer; sıfırlanmazsa bandın köşesine yapışır. */
+[data-hero-detay] .rd-stage-info{
+  position:static; inset:auto; padding:0; width:auto; max-width:none;
+}
+/* Künye satırı (yazar · tarih) bandın AÇIKLAMA rolünde — rengi markanın
+   kendi `.lst-hero .lead` rengi (#E7EDF1, ölçüldü), yeni değer değil. */
+/* 🔴 ÖZGÜLLÜK ÖLÇÜLDÜ: sayfanın kendi '.art-hmeta .art-hauthor b'
+   kuralı (0,3,1) beyaz bant için koyu renk yazıyor ve '(0,2,0)'lık
+   genel kuralı yeniyordu — yazar adı koyu bant üstünde 1.05:1 kaldı
+   (ölçüldü, 7 tarif sayfası). Kural donörün ihtiyacı olan özgüllükte
+   yazılır; renk yine markanın kendi bant metni (#E7EDF1). */
+[data-hero-detay] .rd-head, [data-hero-detay] .art-hmeta,
+[data-hero-detay] .art-hmeta *,
+[data-hero-detay] .art-hmeta .art-hauthor b,
+[data-hero-detay] .art-hmeta .art-hauthor span,
+[data-hero-detay] .art-hmeta .art-hstat,
+[data-hero-detay] .art-hmeta .art-hstat i{ color:#E7EDF1; }
+/* Avatar diski kendi zeminini taşır — rengi DEĞİŞMEZ (kontrastı
+   bandın değil kendi diskinin işi). */
+[data-hero-detay] .art-hmeta .av-ini{ color:var(--tomato-deep,#9C2B10); }
+[data-hero-detay] .rd-head{ margin-top:14px; }
+/* Puan/rozet satırı H1'in ALTINDA — kaynağın kendi sırası korunuyor;
+   yalnız koyu bant üstünde okunur renge çekilir (markanın kendi tonu). */
+[data-hero-detay] .rd-rateline, [data-hero-detay] .rd-rateline *{ color:rgba(255,255,255,.88); }
+/* 🔴 AÇIKLAMA KOYU BANT ÜSTÜNDE KOYU KALIYORDU. '.rd-sub' beyaz bandın
+   metniydi (ölçüldü: rgb(86,81,74)); bant koyulaşınca okunmaz oldu.
+   Rengi markanın kendi bant açıklaması ('.lst-hero .lead' → #E7EDF1). */
+[data-hero-detay] .rd-sub, [data-hero-detay] .rd-lead,
+[data-hero-detay] .lh-main > p{ color:#E7EDF1; }
+/* Kırıntı bandın İLK çocuğu, '.lst-hero'nun DIŞINDA — markanın kendi
+   liste bandındaki kırıntı rengi ('.lst-hero .rd-crumb', ölçüldü). */
+[data-hero-detay] .rd-crumb, [data-hero-detay] .rd-crumb a,
+[data-hero-detay] .rd-crumb b, [data-hero-detay] .rd-crumb i,
+[data-hero-detay] .rd-crumb .sep{ color:rgba(255,255,255,.85); }
+/* 🔴 BAŞLIK ÖLÇÜSÜ TİP İÇİNDE TEK OLMALI. '.rd-stage-info h1' 38px
+   (fotoğraf altyazısının ölçüsü), markanın bant başlığı 44px. Altyazı
+   bant metnine dönüştüğü için bandın ölçüsü geçerli — ölçüldü:
+   dönüşümden sonra tipte iki değer birden görülüyordu (38 ↔ 44). */
+[data-hero-detay] .lst-hero h1, [data-hero-detay] .rd-stage-info h1{ font-size:44px; }
+@media (max-width:640px){ [data-hero-detay] .lst-hero h1,
+  [data-hero-detay] .rd-stage-info h1{ font-size:29px; } }
+
+/* ── İKİ KOLONLU DÜZEN · MARKANIN KENDİ KURALLARI ────────────────────
+   KAYNAK: 'tarifler.html'in RENDER EDİLMİŞ hâli (scripts/olcum/
+   glst-hero-css-cikar.mjs). Sınıf taşındı ama kural liste sayfasının
+   kendi CSS'inde kalmıştı ('tarif-liste.css'); ölçüldü — detay
+   sayfasında 20 kuraldan 2'si vardı, şerit 16px koyu basılıyordu.
+   Kurallar burada BİREBİR, yalnız detay bandına KAPSANARAK duruyor. */
+[data-hero-detay] .lst-hero{ display: flex; flex-direction: column; gap: var(--sp-3); align-items: flex-start; }
+[data-hero-detay] .lst-hero .rd-crumb,[data-hero-detay] .lst-hero .rd-crumb a,[data-hero-detay] .lst-hero .rd-crumb b,[data-hero-detay] .lst-hero .rd-crumb .sep{ color: rgba(255, 255, 255, 0.85); }
+[data-hero-detay] .lst-hero .eyebrow{ color: rgb(241, 177, 162); }
+[data-hero-detay] .lst-hero .eyebrow::before{ background: var(--tomato); }
+[data-hero-detay] .lst-hero{ display: grid; grid-template-columns: minmax(0px, 1fr) auto; gap: 44px; align-items: end; padding: 10px 0px 42px; }
+[data-hero-detay] .lst-hero h1{ color: rgb(255, 255, 255); font-size: 44px; margin: 14px 0px 12px; letter-spacing: -0.03em; text-shadow: rgba(0, 0, 0, 0.25) 0px 2px 24px; }
+[data-hero-detay] .lst-hero h1 .accent{ color: rgb(232, 127, 102); white-space: nowrap; }
+[data-hero-detay] .lst-hero .lead{ color: rgb(231, 237, 241); font-weight: 500; font-size: 15.5px; max-width: 560px; text-shadow: rgba(0, 0, 0, 0.3) 0px 1px 14px; }
+[data-hero-detay] .lst-hero .lh-main{ min-width: 0px; }
+[data-hero-detay] .lst-stats{ display: flex; flex-direction: column; gap: 16px; padding-left: 38px; border-left: 1px solid rgba(255, 255, 255, 0.18); }
+[data-hero-detay] .lst-stats .st b{ display: block; font-size: 29px; font-weight: 700; color: rgb(255, 255, 255); letter-spacing: -0.02em; line-height: 1.1; }
+[data-hero-detay] .lst-stats .st span{ font-size: 12.5px; color: rgb(174, 188, 198); font-weight: 500; }
+@media (max-width: 1024px){[data-hero-detay] .lst-hero{ grid-template-columns: 1fr; align-items: start; gap: 22px; padding-bottom: 32px; }}
+@media (max-width: 1024px){[data-hero-detay] .lst-stats{ flex-direction: row; gap: 34px; padding-left: 0px; border-left-width: medium; border-left-style: none; border-left-color: currentcolor; padding-top: 18px; border-top: 1px solid rgba(255, 255, 255, 0.18); }}
+@media (max-width: 640px){[data-hero-detay] .lst-hero{ padding: 2px 0px 26px; }}
+@media (max-width: 640px){[data-hero-detay] .lst-hero h1{ font-size: 29px; }}
+@media (max-width: 640px){[data-hero-detay] .lst-hero .lead{ font-size: 14.5px; }}
+@media (max-width: 640px){[data-hero-detay] .lst-stats{ gap: 10px; }}
+@media (max-width: 640px){[data-hero-detay] .lst-stats .st{ flex: 1 1 0%; }}
+@media (max-width: 640px){[data-hero-detay] .lst-stats .st b{ font-size: 20px; }}
