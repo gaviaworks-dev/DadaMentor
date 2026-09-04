@@ -1,0 +1,40 @@
+/* Yatay kaydırılan şerit affordance'ı — ORTAK desen (kapanış turu 2026-08-08).
+   Kök sorun: `overflow-x:auto` + gizli scrollbar (`scrollbar-width:none` +
+   `::-webkit-scrollbar{display:none}`) kombinasyonu birden çok ekranda
+   taşmayı KASITLI gizliyor ama kullanıcıya "daha fazla var" ipucu bırakmıyor.
+   İlk vaka: gourmet-mekan-detay `.vd-actbar` (S6-c, scrollWidth 902/clientWidth
+   364 ölçüldü). İkinci vaka: dada-route hızlı-filtre şeritleri (Y5/E7b, çip
+   x=1590 iken görünür kutu yalnız x=18..381). Tekil yama yerine TEK kaynak:
+   bu dosya + scroll-affordance.js, iki sayfa da AYNI çözümü çağırır.
+
+   Kullanım: kaydırılan kapsayıcıya `data-scroll-fade` eklenir. Kapsayıcı
+   `position:fixed/relative/absolute` taşımıyorsa bu dosya `position:relative`
+   verir (bar zaten fixed'se çakışmaz, aynı değer). Kenar rengi kapsayıcının
+   KENDİ arka planından `--sf-fade-color` custom property'siyle yerel olarak
+   tanımlanır (varsayılan `rgba(255,255,255,.92)`, beyaz/paper zeminli
+   panellerin çoğuna uyar) — yeni renk icat edilmez, yalnız var olan zemin
+   rengi kenara doğru şeffaflaşır. Görünürlük scroll-affordance.js'in ölçtüğü
+   `.has-scroll-r`/`.has-scroll-l` class'larıyla açılıp kapanır: daha
+   kaydırılacak yer kalmayınca ipucu kaybolur (sahte pozitif YOK).
+
+   R1 (kapanış turu 2026-08-08, ölçüldü): "çakışmaz, aynı değer" varsayımı
+   YANLIŞTI — `[data-scroll-fade]` ile `.vd-actbar` AYNI özgüllükte (0,1,0),
+   bu dosya mekan-detay.css'ten SONRA yüklendiği için kazanıyordu ve
+   `.vd-actbar`'ın `position:fixed`'ini `position:relative`'e düşürüyordu.
+   Sonuç: bar artık pencereye sabit değil, normal akışta bir yerdeydi —
+   sayfa hiç bu noktaya kaydırılmadıkça "hiç çıkmıyor" gibi görünüyordu.
+   `:where()` sıfır özgüllük taşır, bu yüzden `.vd-actbar{position:fixed}`
+   gibi component'in KENDİ kuralı yükleme sırasından bağımsız HER ZAMAN
+   kazanır — dosyanın belgelediği "zaten fixed'se çakışmaz" niyetini
+   gerçekten kuran budur. */
+:where([data-scroll-fade]){position:relative}
+[data-scroll-fade].has-scroll-r::after,
+[data-scroll-fade].has-scroll-l::before{
+  content:"";position:absolute;top:0;bottom:0;width:26px;pointer-events:none;z-index:1;
+}
+[data-scroll-fade].has-scroll-r::after{
+  right:0;background:linear-gradient(to right, transparent, var(--sf-fade-color, rgba(255,255,255,.92)));
+}
+[data-scroll-fade].has-scroll-l::before{
+  left:0;background:linear-gradient(to left, transparent, var(--sf-fade-color, rgba(255,255,255,.92)));
+}

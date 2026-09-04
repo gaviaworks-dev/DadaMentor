@@ -1,0 +1,1264 @@
+/* =====================================================================
+   YOL GÜZERGAHIM v2 — kaynak-transfer (YG1 teaser, kararlar.md §2 + FB36-b).
+   Referans: v7-6cu356/yol-guzergahim-v2.html <style> satır 17-929, birebir.
+   Ayıklama (diğer sayfa-scoped CSS'lerle aynı desen): @font-face bloğu YOK
+   (bozuk göreli yol + tokens.css'te zaten tekilleştirilmiş Gilroy). Kendine-
+   yeten; kanonik kabuk (sa-shell/_shell) YÜKLENMEZ. İzole sayfa-içi CSS.
+   Layout: minimal header + [sol panel 400px | tam-ekran harita] split (overlay
+   YOK).
+
+   2026-07-29 (YG1 İPTAL, kararlar.md §2 — gerçek arayüz kuruluyor): teaser
+   eki (.yg-teaser-veil/.yg-teaser-card/.yg-map-placeholder) SÖKÜLDÜ, ref'in
+   canlı Leaflet haritası + motoru geri geldi. Ref'ten TEK sapma: aşağıdaki
+   :root bloğunda --tomato ailesi DadaGourmet moruna çevrildi (kaynak:
+   resources/css/gourmet.css satır 44-47, birebir). Başka HİÇBİR görsel değer
+   elle değiştirilmedi; --tomato'yu okuyan her kural (rota çizgisi dahil,
+   JS cssVar('--tomato')) moru otomatik alır.
+   İkinci sapma: dosya sonundaki MARKA KİMLİĞİ bloğu (ref'in <img> logosu
+   yerine DadaGourmet lockup'ı) — aşağıdaki not.
+   ===================================================================== */
+
+/* Gilroy @font-face — ref'in KENDİ bloğu (satır 22-26), yalnız yolu düzeltilmiş.
+   Önceki turda "tokens.css'te zaten var" gerekçesiyle atılmıştı, ama bu sayfa
+   standalone: tokens.css YÜKLENMİYOR → sayfa system-ui'ye düşüyordu. Yollar
+   tokens.css satır 14-27 ile aynı (mutlak /fonts/gilroy/). XB/Lt yüzleri marka
+   lockup'ı (.dg-word) için gerekli. */
+@font-face{
+  font-family:"Gilroy";
+  src:url("../../fonts/gilroy/Gilroy-Medium.ttf") format("truetype");
+  font-weight:500; font-style:normal; font-display:swap;
+}
+@font-face{
+  font-family:"GilroyXB";
+  src:url("../../fonts/gilroy/Gilroy-ExtraBold.otf") format("opentype");
+  font-weight:800; font-style:normal; font-display:swap;
+}
+@font-face{
+  font-family:"GilroyLt";
+  src:url("../../fonts/gilroy/Gilroy-Light.otf") format("opentype");
+  font-weight:300; font-style:normal; font-display:swap;
+}
+
+:root{
+  /* DadaGourmet aksanı — gourmet.css :root ile AYNI dörtlü (ref domatesi #E14827/
+     #C43D20/#A8331A/#FBE9E3 yerine). Marka kimliği; başka değer dokunulmadı. */
+  --tomato:#742982; --tomato-dark:#5f226b; --tomato-deep:#5f226b; --tomato-tint:#ECE2EE;
+  --slate:#211E16; --slate-2:#56514a;
+  --green:#009d4f;            /* DadaFit kurumsal yeşil — "Yol Üstü" olumlu sinyali (Dalga 2) */
+  --green-soft:#3BB77E;
+  --green-tint:rgba(0,157,79,.08);  /* "eklendi" hover zemini — krem yerine (revize D1: krem azalt) */
+  --muted:#7E7E7E; --line:#ECECEC; --line-2:#E2DDD3;
+  --cream:#EFE5D3; --cream-2:#F7F1E6; --paper:#ffffff; --bg:#f9f9f9;
+  --route-alt:#A8A29A;        /* alternatif rota çizgisi (nötr) */
+  --yellow:#FAC045;           /* YALNIZ puan yıldızı (marka istisnası) */
+  --geo:#1a73e8;              /* "buradayım" konum noktası — standart harita konvansiyonu (işlevsel, marka-dışı; --yellow gibi istisna) */
+  --radius-sm:8px; --radius-md:12px; --radius-lg:16px; --radius-pill:999px;
+  --sh-sm:0 1px 2px rgba(33,30,22,.05), 0 2px 6px rgba(33,30,22,.05);
+  --sh-md:0 6px 22px rgba(33,30,22,.09);
+  --sh-pop:0 12px 34px rgba(33,30,22,.16);
+  --ease:cubic-bezier(.22,.61,.36,1);
+  --panel-w:400px;
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{
+  font-family:"Gilroy",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  color:var(--slate); background:var(--bg);
+  height:100dvh; overflow:hidden;
+  -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+}
+button{font:inherit;cursor:pointer}
+input{font:inherit}
+::selection{background:var(--tomato-tint)}
+:focus-visible{outline:2px solid var(--tomato);outline-offset:2px;border-radius:4px}
+
+/* ===================== MİNİMAL HEADER ===================== */
+.yg-top{
+  position:fixed; top:0; left:0; right:0; height:60px;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 18px 0 22px; z-index:40;
+  background:rgba(255,255,255,.90);
+  -webkit-backdrop-filter:blur(20px) saturate(150%); backdrop-filter:blur(20px) saturate(150%);
+  border-bottom:1px solid var(--line);
+  box-shadow:0 4px 22px rgba(33,30,22,.10);
+}
+.yg-top::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:var(--tomato)}  /* app-bar imza aksanı — header net görünsün */
+.yg-brand{display:flex;align-items:center;gap:15px;min-width:0}
+.yg-brand img{height:26px;width:auto;display:block}
+.yg-sep{width:1px;height:24px;background:var(--line-2)}
+/* KAPANIŞ TURU Y5/E17 (2026-08-08): paylaşılan güzergâhta bu etiket artık
+   sabit "Dada Route" değil, kullanıcının verdiği rota adı (64 karaktere kadar)
+   olabiliyor — flex:1/min-width:0/ellipsis eklendi ki uzun ad .yg-close
+   düğmesine binmesin (aynı ailenin 860px kırılma noktası, alttaki yorum). */
+.yg-title{font-weight:700;font-size:15.5px;letter-spacing:-.01em;color:var(--slate);white-space:nowrap;flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis}
+.yg-close{
+  display:inline-flex;align-items:center;gap:8px;height:40px;padding:0 16px 0 14px;
+  border:1px solid var(--line-2); background:var(--paper); border-radius:var(--radius-md);
+  color:var(--slate-2); font-weight:600; font-size:13.5px; transition:.18s var(--ease);
+}
+.yg-close i{font-size:13px}
+.yg-close:hover{border-color:var(--tomato);color:var(--tomato);background:var(--tomato-tint)}
+
+/* ===================== GÖVDE: tam-ekran harita + yüzen cam yüzeyler (araba kadranı, dozunda) ===================== */
+.yg-app{position:fixed;inset:0;overflow:hidden;z-index:0}
+
+/* --- SOL PANEL (yüzen cam dock, 400px) --- */
+.yg-panel{
+  position:absolute; top:60px; left:0; bottom:0; width:var(--panel-w);
+  display:flex; flex-direction:column; min-height:0; z-index:30;
+  background:rgba(252,250,246,.82);
+  -webkit-backdrop-filter:blur(22px) saturate(150%); backdrop-filter:blur(22px) saturate(150%);
+  border-right:1px solid rgba(255,255,255,.6);
+  box-shadow:8px 0 36px rgba(33,30,22,.12);
+}
+/* SHEET GRIP — yalnız mobil (bottom-sheet sürükle/aç-kapa tutamağı). Desktop'ta gizli (sol dock). */
+.yg-sheet-grip{display:none;flex:0 0 auto;height:22px;position:relative;cursor:grab}
+.yg-sheet-grip::before{content:"";position:absolute;top:9px;left:50%;transform:translateX(-50%);
+  width:38px;height:4px;border-radius:99px;background:var(--line-2)}
+.yg-sheet-ctx,.yg-browse-cta{display:none}   /* yalnız mobil — aşağıda @media(max-width:860px) tanımlı */
+/* grip/chip/CTA buton oldu → tıklayınca kalan default focus dikdörtgenini KALDIR; klavye için ince :focus-visible halka */
+.yg-sheet-grip:focus,.yg-sheet-ctx:focus,.yg-browse-cta:focus{outline:none}
+.yg-sheet-grip:focus-visible,.yg-sheet-ctx:focus-visible,.yg-browse-cta:focus-visible{outline:2px solid var(--tomato);outline-offset:2px;border-radius:10px}
+.yg-tabs{display:flex;gap:7px;padding:13px 16px 12px;border-bottom:1px solid var(--line);flex:0 0 auto}
+.yg-tab{
+  flex:1; height:42px; display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  border:1px solid var(--line); background:var(--paper); border-radius:var(--radius-md);
+  font-weight:600; font-size:13.5px; color:var(--slate-2); transition:.16s var(--ease);
+}
+.yg-tab i{font-size:13px}
+.yg-tab:hover:not(.is-active){border-color:var(--line-2);color:var(--slate)}
+.yg-tab.is-active{background:var(--tomato);border-color:var(--tomato);color:#fff;box-shadow:var(--sh-sm)}
+.yg-tab .yg-tab-cnt{font-size:12px;font-weight:700;opacity:.85}
+
+.yg-views{flex:1;min-height:0;position:relative}
+.yg-view{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;padding:20px 18px 28px;
+  scrollbar-width:thin;opacity:0;visibility:hidden;transition:opacity .18s var(--ease)}
+.yg-view::-webkit-scrollbar{width:9px}
+.yg-view::-webkit-scrollbar-thumb{background:var(--line);border-radius:99px;border:2px solid var(--paper)}
+.yg-view.is-active{opacity:1;visibility:visible}
+
+/* --- eyebrow + bölüm başlığı --- */
+.yg-eyebrow{font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--tomato)}
+.yg-sec-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:16px}
+.yg-reverse{
+  display:inline-flex;align-items:center;gap:7px;height:32px;padding:0 11px;
+  border:1px solid var(--line);background:var(--paper);border-radius:var(--radius-md);
+  font-size:12px;font-weight:600;color:var(--slate-2);transition:.16s var(--ease)
+}
+.yg-reverse i{font-size:12px}
+.yg-reverse:hover:not(:disabled){border-color:var(--tomato);color:var(--tomato)}
+.yg-reverse:disabled{opacity:.4;cursor:not-allowed}
+.yg-sec-actions{display:flex;align-items:center;gap:8px}
+/* B — "Yeni Güzergah" ghost buton (sec-head; çizili/dolu durumda görünür) */
+.yg-newroute{display:inline-flex;align-items:center;gap:7px;height:32px;padding:0 11px;border:1px solid var(--line);background:var(--paper);border-radius:var(--radius-md);font-size:12px;font-weight:600;color:var(--slate-2);transition:.16s var(--ease)}
+.yg-newroute[hidden]{display:none}
+.yg-newroute i{font-size:12px}
+.yg-newroute:hover{border-color:var(--tomato);color:var(--tomato)}
+.yg-newroute.confirm{border-color:var(--tomato);background:var(--tomato);color:#fff}
+
+/* ===================== YOL EKSENİ (signature) ===================== */
+.yg-route{position:relative;padding-left:2px}
+/* sürekli dikey eksen çizgisi — terminal/istasyon markerları üstünde durur */
+.yg-route::before{content:"";position:absolute;left:13px;top:16px;bottom:18px;width:2px;
+  background:var(--line-2);border-radius:2px;z-index:0}
+
+.yg-node{position:relative;display:flex;gap:14px;align-items:flex-start}
+.yg-node + .yg-node{margin-top:14px}
+.yg-node:focus-within{z-index:5}            /* açık autocomplete kardeş düğümün ÜSTÜnde kalsın (stacking tuzağı) */
+
+/* marker sütunu */
+.yg-marker{flex:0 0 28px;width:28px;height:28px;display:inline-flex;align-items:center;justify-content:center;
+  border-radius:50%;margin-top:21px;background:var(--paper);position:relative;z-index:2}
+/* terminal = içi boş halka (rol etiketli, numarasız) */
+.yg-marker.term{border:2.5px solid var(--tomato)}
+.yg-marker.term::after{content:"";width:8px;height:8px;border-radius:50%;background:var(--tomato)}
+.yg-marker.term.dest{border-color:var(--slate)}
+.yg-marker.term.dest::after{background:var(--slate)}
+/* istasyon = dolu numaralı domates rozet */
+.yg-marker.station{background:var(--tomato);color:#fff;font-weight:700;font-size:12.5px;border:2px solid var(--paper);
+  box-shadow:0 0 0 1.5px var(--tomato)}
+
+.yg-node-body{flex:1;min-width:0;position:relative;z-index:1}  /* eksen çizgisinin üstünde */
+.yg-role{display:block;font-size:10.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:5px}
+.yg-field{position:relative}
+.yg-field input{
+  width:100%;height:46px;padding:0 14px;border:1px solid var(--line-2);border-radius:var(--radius-md);
+  background:var(--bg);color:var(--slate);font-size:14.5px;font-weight:600;transition:.16s var(--ease)
+}
+.yg-field input::placeholder{color:var(--muted);font-weight:500}
+.yg-field input:focus{outline:none;border-color:var(--tomato);background:var(--paper);box-shadow:0 0 0 3px var(--tomato-tint)}
+
+/* autocomplete açılır — KAPANIŞ TURU R5 madde 3 (2026-08-08): panel
+   (`.yg-ac` → `.ac-panel`, bkz. dada-route.js'teki rename) + `.ac-item*` satır
+   CSS'i buradan `reference/shared/dada-autocomplete.css`ye (kanon, bu bloktan
+   BİREBİR taşındı) taşındı — mekân listesi de artık AYNI dosyayı ve AYNI
+   wrapper class'ını yüklüyor, ikinci bir sınıf ailesi kalmadı. Bu sayfa o
+   dosyayı `<link>` ile yükler (bkz. dada-route/index.blade.php <head>). Bu
+   satırın ALTINDA görsel olarak hiçbir şey değişmedi — yalnız dosya taşındı. */
+
+/* istasyon (ara şehir) satırı */
+.yg-wp-list{list-style:none;margin:14px 0 0;padding:0}
+.yg-wp{position:relative;display:flex;gap:14px;align-items:center;z-index:1;padding:3px 0;border-radius:var(--radius-md)}
+.yg-wp + .yg-wp{margin-top:8px}
+.yg-wp.dragging{opacity:.5}
+.yg-wp.drop-into{background:var(--tomato-tint)}
+.yg-wp .yg-marker{margin-top:0}
+.yg-wp-main{flex:1;min-width:0;display:flex;align-items:center;gap:8px;
+  background:var(--bg);border:1px solid var(--line);border-radius:var(--radius-md);padding:9px 8px 9px 13px}
+.yg-wp-name{flex:1;min-width:0;font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.yg-grip{flex:0 0 auto;width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;
+  color:var(--muted);cursor:grab;font-size:13px}
+.yg-grip:active{cursor:grabbing}
+.yg-wp-x{flex:0 0 auto;width:34px;height:34px;display:inline-flex;align-items:center;justify-content:center;
+  border:0;background:none;color:var(--muted);border-radius:var(--radius-sm);transition:.14s var(--ease)}
+.yg-wp-x:hover{color:var(--tomato);background:var(--tomato-tint)}
+
+/* TEK TİP DURAK satırı (eksen üzerinde numaralı, input'lu) */
+.yg-stop-list{list-style:none;margin:0;padding:0}
+/* G5 (2026-07-30) — .yg-stop içinde marker+stop-body+stop-wait (ara durakta)
+   AYNI flex satırında yarışıyordu: stop-body{flex:1;min-width:0} sonsuz
+   küçülebildiği için flex-wrap TEK BAŞINA satırı hiç sarmıyordu, stop-wait
+   şehir input'unu neredeyse sıfıra sıkıştırıyordu (1440px'de ölçülen input
+   genişliği 30px). flex-wrap:wrap + .yg-stop-wait'e flex-basis (aşağıda)
+   ekleyerek bekleme kutusu KENDİ SATIRINA döner, mevcut margin-left:39px
+   indent'i (satır 1038) KORUNUR — yalnız layout bug'ı düzeltildi, görsel
+   dil değişmedi. */
+.yg-stop{position:relative;display:flex;flex-wrap:wrap;gap:0 14px;align-items:flex-start;z-index:1}
+.yg-stop + .yg-stop{margin-top:12px}
+.yg-stop:focus-within{z-index:6}
+.yg-stop.dragging{opacity:.5}
+.yg-stop.drop-into .yg-stop-body{box-shadow:0 -3px 0 var(--tomato)}
+.yg-stop .yg-marker{margin-top:9px}
+.yg-stop-body{flex:1;min-width:0;display:flex;align-items:center;gap:4px;position:relative;z-index:1}
+.yg-stop-body .yg-field{flex:1;min-width:0;position:relative}   /* input içi clear için relative */
+/* input ferah: padding-right içteki clear × için (dıştan daralmaz) */
+.yg-stop-input{width:100%;height:46px;padding:0 38px 0 13px;border:1px solid var(--line-2);border-radius:var(--radius-md);
+  background:var(--bg);color:var(--slate);font-size:14.5px;font-weight:600;transition:.16s var(--ease)}
+.yg-stop-input::placeholder{color:var(--muted);font-weight:500}
+.yg-stop-input:focus{outline:none;border-color:var(--tomato);background:var(--paper);box-shadow:0 0 0 3px var(--tomato-tint)}
+/* CLEAR × — input İÇİNDE sağda, SADECE metin varken (Google Maps deseni; :placeholder-shown = boş) */
+.yg-stop-clear{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:30px;height:30px;
+  display:none;align-items:center;justify-content:center;border:0;background:none;color:var(--muted);
+  border-radius:var(--radius-sm);cursor:pointer;font-size:12px;transition:.14s var(--ease);z-index:3}
+/* görünür çip büyümeden ≥44px tap hedefi (satır-sil/grip ile aynı radius deseni; metni kaydırmaz) */
+.yg-stop-clear::before{content:"";position:absolute;inset:-7px -2px -7px -12px}
+.yg-stop-input:not(:placeholder-shown) ~ .yg-stop-clear{display:inline-flex}
+.yg-stop-clear:hover{color:var(--tomato);background:var(--tomato-tint)}
+/* drag-grip — kompakt (dış kontroller input'u sıkıştırmasın) */
+.yg-stop .yg-grip{flex:0 0 auto;width:22px;height:42px;display:inline-flex;align-items:center;justify-content:center;color:var(--muted);cursor:grab;font-size:13px}
+.yg-stop .yg-grip:active{cursor:grabbing}
+/* SATIR-SİL — durağı komple kaldır (trash, clear ×'ten ayrı; min 2'de pasif) */
+.yg-stop-x{flex:0 0 auto;width:30px;height:42px;display:inline-flex;align-items:center;justify-content:center;border:0;background:none;color:var(--muted);border-radius:var(--radius-sm);transition:.14s var(--ease)}
+.yg-stop-x i{font-size:12.5px}
+.yg-stop-x:hover:not(:disabled){color:var(--tomato);background:var(--tomato-tint)}
+.yg-stop-x:disabled{opacity:.28;cursor:not-allowed}   /* min 2 durak — son 2'de pasif (silinemez) */
+/* harita durak pini numarası */
+.yg-pin.stop .yg-pin-b{font-weight:700;font-size:12.5px}
+
+/* + şehir ekle satırı (eksene hizalı, dashed) */
+.yg-add-row{position:relative;display:flex;gap:14px;align-items:center;margin-top:14px;z-index:1}
+.yg-add-dot{flex:0 0 28px;width:28px;height:28px;display:inline-flex;align-items:center;justify-content:center;
+  border-radius:50%;border:1.5px dashed var(--line-2);color:var(--muted);font-size:12px;background:var(--paper)}
+.yg-add{flex:1;display:inline-flex;align-items:center;gap:9px;height:42px;padding:0 15px;
+  border:1.5px dashed var(--line-2);background:var(--paper);border-radius:var(--radius-md);
+  font-size:13.5px;font-weight:600;color:var(--slate-2);transition:.16s var(--ease)}
+.yg-add i{font-size:12px;color:var(--tomato)}
+.yg-add:hover{border-color:var(--tomato);color:var(--tomato);background:var(--tomato-tint)}
+
+/* ara-şehir arama kutusu (ekle'ye basınca) */
+.yg-add-search{margin-top:12px;position:relative;padding-left:42px}
+.yg-add-search:focus-within{z-index:5}
+.yg-add-search[hidden]{display:none}
+.yg-add-search input{width:100%;height:44px;padding:0 14px;border:1px solid var(--line-2);
+  border-radius:var(--radius-md);background:var(--bg);font-size:14px;font-weight:600}
+.yg-add-search input:focus{outline:none;border-color:var(--tomato);background:var(--paper);box-shadow:0 0 0 3px var(--tomato-tint)}
+
+/* --- rota özeti --- */
+.yg-divider{height:1px;background:var(--line);margin:24px 0}
+.yg-summary[hidden]{display:none}
+.yg-sum-card{background:rgba(255,255,255,.66);border:1px solid var(--line-2);border-radius:var(--radius-lg);padding:15px 16px}
+.yg-sum-figs{display:flex;align-items:baseline;gap:8px}
+.yg-sum-figs b{font-size:28px;font-weight:800;letter-spacing:-.02em;color:var(--slate);line-height:1}
+.yg-sum-figs span{font-size:13px;color:var(--muted)}
+.yg-sum-note{margin-top:12px;padding-top:12px;border-top:1px dashed var(--line-2);display:flex;gap:10px;align-items:flex-start;
+  font-size:12.5px;line-height:1.5;color:var(--slate-2)}
+.yg-sum-note i{color:var(--tomato);margin-top:2px;font-size:13px}
+.yg-sum-note b{color:var(--slate);font-weight:700}
+.yg-sum-note.err i{color:var(--tomato-deep)}
+.yg-retry{margin-top:9px;display:inline-flex;align-items:center;gap:7px;height:34px;padding:0 14px;
+  border:1px solid var(--tomato);background:var(--paper);color:var(--tomato);border-radius:var(--radius-pill);
+  font-size:12.5px;font-weight:600;transition:.16s var(--ease)}
+.yg-retry:hover{background:var(--tomato);color:#fff}
+
+/* --- boş / bilgi durumları --- */
+.yg-empty{text-align:center;padding:30px 16px}
+.yg-empty .yg-empty-ico{width:62px;height:62px;margin:0 auto 16px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;background:var(--tomato-tint);color:var(--tomato);font-size:24px}
+.yg-empty h3{font-size:16px;font-weight:700;margin-bottom:7px}
+.yg-empty p{font-size:13.5px;line-height:1.55;color:var(--muted);max-width:280px;margin:0 auto}
+.yg-empty .yg-empty-cta{margin-top:18px}
+.yg-empty-cta button{display:inline-flex;align-items:center;gap:8px;height:42px;padding:0 18px;
+  border:1px solid var(--tomato);background:var(--tomato);color:#fff;border-radius:var(--radius-md);font-weight:600;font-size:13.5px;transition:.16s var(--ease)}
+.yg-empty-cta button:hover{background:var(--tomato-dark);border-color:var(--tomato-dark)}
+
+/* --- HARİTA (kalan alan, tam etkileşimli) --- */
+.yg-map-wrap{position:absolute;inset:0;z-index:0;background:var(--bg)}
+#routeMap{position:absolute;inset:0;width:100%;height:100%;background:var(--bg)}
+/* leaflet kontrollerini header'ın altına + panelin sağına kaydır (cam yüzeylerin altında kalmasın) */
+.leaflet-top{top:68px}
+.leaflet-top.leaflet-left{left:calc(var(--panel-w) + 8px)}
+.leaflet-control-zoom{border:1px solid var(--line)!important;box-shadow:var(--sh-md)!important}
+/* Leaflet kontrolleri marka tonuna */
+.leaflet-bar a{color:var(--slate)}
+.leaflet-bar a:hover{color:var(--tomato)}
+.leaflet-container{font-family:"Gilroy",system-ui,sans-serif}
+
+/* harita pin (terminal / istasyon) */
+.yg-pin .yg-pin-b{display:flex;align-items:center;justify-content:center;width:100%;height:100%;
+  border-radius:50%;background:var(--tomato);color:#fff;box-shadow:var(--sh-md);border:2px solid #fff;font-size:11px}
+.yg-pin.dest .yg-pin-b{background:var(--slate)}
+.yg-pin.wp .yg-pin-b{background:var(--tomato);font-size:10px}
+
+/* ===================== DALGA 2: alternatif rota · eşik slider · ALT YATAY KADRAN (yol üstü mekanlar) · pinler ===================== */
+/* alternatif rota listesi */
+.yg-alts{margin-top:18px}
+.yg-alts[hidden]{display:none}
+.yg-alts-h{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:9px}
+.yg-alt{display:flex;align-items:center;gap:12px;width:100%;text-align:left;border:1px solid var(--line);background:rgba(255,255,255,.7);border-radius:var(--radius-md);padding:10px 13px;margin-bottom:8px;transition:.16s var(--ease);cursor:pointer}
+/* hover VEYA harita-çizgisi senkron vurgusu (.is-hover JS'ten) — nötr, ana rotayla yarışmaz */
+.yg-alt:hover,.yg-alt.is-hover{border-color:var(--slate-2);background:rgba(255,255,255,.96);box-shadow:var(--sh-sm)}
+.yg-alt.is-hover:not(.is-active) .yg-alt-bar,.yg-alt:hover:not(.is-active) .yg-alt-bar{background:var(--slate-2)}
+.yg-alt-bar{width:4px;align-self:stretch;border-radius:2px;background:var(--route-alt);transition:background .14s var(--ease)}
+.yg-alt-main{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
+.yg-alt-km{font-size:15.5px;font-weight:700;color:var(--slate);letter-spacing:-.01em}
+.yg-alt-time{font-size:12px;color:var(--muted)}
+.yg-alt-tag{font-size:11px;font-weight:600;color:var(--muted)}
+.yg-alt.is-active{border-color:var(--tomato);background:var(--tomato-tint)}
+.yg-alt.is-active .yg-alt-bar{background:var(--tomato)}
+.yg-alt.is-active .yg-alt-km{color:var(--tomato-deep)}
+.yg-alt.is-active .yg-alt-tag{color:var(--tomato)}
+/* Leaflet vektör focus: mouse tıkta UA varsayılan outline (auto #005FCC) path bbox'ı etrafında
+   lacivert dikdörtgen çiziyordu → bastır. Klavye erişilebilirliği KORUNUR (focus-visible → tomato ring). */
+.leaflet-interactive:focus{outline:none}
+.leaflet-interactive:focus-visible{outline:2px solid var(--tomato);outline-offset:2px}
+/* harita alternatif-rota hover tooltip'i (km · süre) — sade koyu pill */
+.leaflet-tooltip.yg-alt-tip{background:var(--slate);color:#fff;border:0;border-radius:var(--radius-sm);
+  font-family:"Gilroy",system-ui,sans-serif;font-size:11.5px;font-weight:700;padding:4px 9px;box-shadow:var(--sh-md);white-space:nowrap}
+.leaflet-tooltip.yg-alt-tip.leaflet-tooltip-top::before{border-top-color:var(--slate)}
+.leaflet-tooltip.yg-alt-tip.leaflet-tooltip-bottom::before{border-bottom-color:var(--slate)}
+
+/* eşik slider */
+.yg-corr{margin-top:20px}
+.yg-corr[hidden]{display:none}
+.yg-corr-top{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:8px}
+.yg-corr-h{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.yg-corr-val{font-size:13px;font-weight:700;color:var(--slate)}
+/* yakınlığa göre renk: track statik gradient (yakın=yeşil → uzak=domates); thumb 3 banda (--thumb, JS) */
+.yg-corr input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:22px;cursor:pointer;background:transparent}
+.yg-corr input[type=range]::-webkit-slider-runnable-track{height:6px;border-radius:99px;
+  background:linear-gradient(90deg,var(--green) 0%,var(--yellow) 50%,var(--tomato) 100%)}
+.yg-corr input[type=range]::-moz-range-track{height:6px;border-radius:99px;
+  background:linear-gradient(90deg,var(--green) 0%,var(--yellow) 50%,var(--tomato) 100%)}
+.yg-corr input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:18px;height:18px;border-radius:50%;
+  background:var(--thumb,var(--tomato));border:3px solid #fff;box-shadow:0 1px 4px rgba(33,30,22,.3);margin-top:-6px;transition:background .15s var(--ease)}
+.yg-corr input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;
+  background:var(--thumb,var(--tomato));border:3px solid #fff;box-shadow:0 1px 4px rgba(33,30,22,.3)}
+.yg-corr input[type=range]:focus-visible{outline:none}
+.yg-corr input[type=range]:focus-visible::-webkit-slider-thumb{box-shadow:0 0 0 3px var(--tomato-tint),0 1px 4px rgba(33,30,22,.3)}
+.yg-corr-counts{margin-top:11px;display:flex;gap:9px}
+.yg-cc{flex:1;text-align:center;border:1px solid var(--line);background:rgba(255,255,255,.6);border-radius:var(--radius-md);padding:9px 6px}
+.yg-cc b{display:block;font-size:18px;font-weight:800;line-height:1.1}
+.yg-cc.on b{color:var(--green)} .yg-cc.near b{color:var(--muted)}
+.yg-cc span{font-size:11px;color:var(--muted)}
+
+/* ALT YATAY KADRAN — yol üstü mekanlar (durak DEĞİL; rota üstünde belirtilir) */
+.yg-dash{position:absolute;left:calc(var(--panel-w) + 16px);right:16px;bottom:16px;z-index:20;
+  background:rgba(255,255,255,.88);-webkit-backdrop-filter:blur(20px) saturate(150%);backdrop-filter:blur(20px) saturate(150%);
+  border:1px solid var(--line-2);border-radius:var(--radius-lg);padding:12px 14px 13px;
+  transition:transform .34s var(--ease)}
+.yg-dash[hidden]{display:none}
+/* B1: aç-kapat — kapalıyken GÖVDE tamamen gömülür (YOL ÜSTÜ MEKANLAR şeridi + Tümünü Gör tam aşağı iner), SADECE üstteki
+   yüzen tutamak görünür. Tam gömme → taşan full-width şerit yok → sağdaki konum-bul FAB ile çakışma da biter (handle orta, FAB sağ). */
+.yg-dash.collapsed{transform:translateY(calc(100% + 16px))}
+/* B2: full-view'da TAM gizle (handle dahil) — yumuşak translateY (.collapsed dili, ani pop yok). collapsed'dan SONRA → onu ezer */
+.yg-dash.full-hidden{transform:translateY(calc(100% + 96px));pointer-events:none}
+/* TUTAMAK — yüzen TAM pill, kadran üst-ORTASINDA (sağdaki konum-bul FAB'ı sağda → çakışmaz). HER durumda AYNI boyut/hiza (tutarlı):
+   yatay+dikey TAM ortalı (inline-flex + line-height:1), tamamı kadranın dışında yüzer (yarısı içerde DEĞİL). Etiket her zaman görünür.
+   Açık=chevron-down (gizle) · kapalı=chevron-up (göster) — tek fark ok yönü. */
+.yg-dash-handle{position:absolute;top:-38px;left:50%;transform:translateX(-50%);height:30px;padding:0 16px;
+  display:inline-flex;align-items:center;justify-content:center;gap:7px;line-height:1;
+  border:1px solid var(--line-2);background:rgba(255,255,255,.97);
+  -webkit-backdrop-filter:blur(20px) saturate(150%);backdrop-filter:blur(20px) saturate(150%);
+  border-radius:var(--radius-md);color:var(--slate-2);font-weight:700;font-size:11.5px;white-space:nowrap;
+  box-shadow:var(--sh-md);transition:color .16s var(--ease),border-color .16s var(--ease);z-index:3}
+.yg-dash-handle i{font-size:11px;line-height:1}
+.yg-dash-handle:hover{color:var(--tomato);border-color:var(--tomato)}
+.yg-dash-handle-lbl{font-size:11.5px;font-weight:700;letter-spacing:.01em;line-height:1}
+@media (prefers-reduced-motion:reduce){ .yg-dash{transition:none} }
+.yg-dash-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:11px}
+.yg-dash-title{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--slate)}
+.yg-dash-title>i{color:var(--tomato);font-size:13px}
+.yg-dash-cnt{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 6px;border-radius:999px;background:var(--tomato);color:#fff;font-size:11px;font-weight:700}
+.yg-dash-all{display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 12px;border:1px solid var(--line-2);background:var(--paper);border-radius:var(--radius-md);font-size:12px;font-weight:700;color:var(--tomato);white-space:nowrap;transition:.16s var(--ease)}
+.yg-dash-all i{font-size:11px}
+.yg-dash-all:hover{border-color:var(--tomato);background:var(--tomato-tint)}
+/* "tümünü gör" hayalet kart (scroll sonu — vitrinde gizli kalan mekan varsa) */
+.yg-dmore{flex:0 0 124px;min-height:88px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;
+  border:1.5px dashed var(--line-2);background:rgba(255,255,255,.5);border-radius:var(--radius-md);color:var(--tomato);font-weight:700;font-size:12.5px;cursor:pointer;transition:.16s var(--ease)}
+.yg-dmore:hover{border-color:var(--tomato);background:var(--tomato-tint)}
+.yg-dmore i{font-size:15px}
+.yg-dmore span{font-size:11px;color:var(--muted);font-weight:600}
+/* overflow-x:auto, overflow-y görünür kalsın (auto'ya düşerse hover/lift kart tepesini KIRPAR — K8 top-line bug) */
+.yg-dash-scroll{display:flex;align-items:stretch;gap:11px;overflow-x:auto;overflow-y:visible;padding:2px 0 8px;scrollbar-width:thin}
+.yg-dash-scroll::-webkit-scrollbar{height:7px}
+.yg-dash-scroll::-webkit-scrollbar-thumb{background:var(--line-2);border-radius:99px}
+.yg-dcard{position:relative;flex:0 0 232px;min-height:88px;display:flex;gap:10px;text-align:left;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-md);overflow:hidden;padding:0;cursor:pointer;transition:border-color .15s var(--ease),box-shadow .15s var(--ease)}
+/* hover: yalnız kenar + gölge — translateY KALDIRILDI (üstte beliren kırpık çizgi nedeniydi) */
+.yg-dcard:hover{border-color:var(--tomato)}   /* hover = yalnız border feedback, gölge YOK (düz) */
+/* DADA ÖNERİYOR — SOFT premium (beyaz kart + ince domates sol-aksan + küçük rozet; puf-noktaları ruhu, gradient YOK) */
+.yg-dcard.dada{border-color:rgba(225,72,39,.28)}   /* resting box-shadow KALDIRILDI (Beyar: kart altı durağan gölge gitsin); domates border + sol-aksan kimlik KORUNUR */
+.yg-dcard.dada:hover{border-color:var(--tomato)}   /* hover border KORUNUR, gölge YOK */
+.yg-dcard.dada::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;z-index:4;background:linear-gradient(var(--tomato),var(--tomato-dark))}  /* ince domates sol-kenar aksan */
+/* SEÇİLİ (Eklendi) — soft yeşil vurgu + köşe ✓; tik metne BİNMEZ (body sağ-pad). Dada ise sol-aksan korunur → seçili+Dada birlikte okunur */
+.yg-dcard.sel{border-color:var(--green);background:var(--green-tint)}   /* resting gölge YOK (düz, tutarlı) */
+.yg-dcard.sel:hover{border-color:var(--green)}   /* hover border KORUNUR, gölge YOK */
+.yg-dcard.sel .yd-body{padding-right:28px}      /* ✓ rozetine yer aç → tik-metin çakışması 0 */
+.yg-dcard.sel::after{content:"\f00c";font-family:"Font Awesome 6 Free";font-weight:900;position:absolute;top:8px;right:8px;width:19px;height:19px;border-radius:50%;background:var(--green);color:#fff;font-size:9.5px;display:flex;align-items:center;justify-content:center;z-index:6;box-shadow:var(--sh-sm)}
+.yd-media{flex:0 0 74px;align-self:stretch;background-size:cover;background-position:center;background-color:var(--line);position:relative}
+.yd-badge{position:absolute;left:5px;top:5px;display:inline-flex;align-items:center;gap:4px;font-size:9px;font-weight:700;background:var(--tomato);color:#fff;padding:3px 6px;border-radius:999px}
+.yd-body{flex:1;min-width:0;padding:9px 11px 9px 2px;display:flex;flex-direction:column;gap:3px;justify-content:center}
+.yd-name{font-size:13px;font-weight:700;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.yd-loc{font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.yd-tag{font-size:10.5px;font-weight:700}
+.yd-tag.on{color:var(--green)} .yd-tag.near{color:var(--muted)}
+/* SPONSOR — premium DARK kart (DEMO · Yasin onayı bekler). Premium = KONTRAST: koyu --slate slab ↔ beyaz komşular;
+   gradient/glow/altın YOK. "Dada"dan AYRI register: Dada=beyaz+domates pill · Sponsor=koyu+cream pill+domates CTA.
+   sponsor↔dada karşılıklı dışlar (render + dada:false). */
+/* yüzey = KOYU slate baz + nazik DOMATES gradient katmanı: alt-sağ köşeden yükselen --tomato radial ember (düşük yoğunluk) →
+   domates sıcaklığı hissedilir ama koyu/premium baskın; flat değil, neon değil. color-mix = token-içi gölgeleme (yeni hue yok). */
+.yg-dcard.sponsor{flex-basis:272px;border-color:var(--slate);
+  background:
+    radial-gradient(132% 126% at 82% 116%, color-mix(in srgb, var(--slate) 62%, var(--tomato)) 0%, transparent 58%),
+    linear-gradient(152deg,
+      color-mix(in srgb, var(--slate) 86%, var(--tomato-deep)) 0%,
+      var(--slate) 52%,
+      color-mix(in srgb, var(--slate) 92%, #000) 100%)}
+/* DADA marka watermark — GERÇEK header logo markı (şapkalı şef + çatal/kaşık amblemi). Kaynak: header'ın kullandığı
+   logo-official.png'den izole edilen MARK (wordmark HARİÇ), yüksek çözünürlük beyaz siluet (650px → ~104px = 6× küçültme → KESKİN, bulanık YOK).
+   Sağ-çapraz YATIK (-15°), çok silik (.10), içeriğin ARKASINDA (z:0, pointer-events yok, base overflow:hidden kırpar) → isim/loc/CTA/pill kapatmaz. */
+.yg-dcard.sponsor::before{content:"";position:absolute;z-index:0;right:4px;top:50%;width:108px;height:108px;
+  transform:translateY(-50%) rotate(-15deg);opacity:.1;pointer-events:none;
+  background:url(assets/img/logo-mark-white.png) center/contain no-repeat}
+/* içerik watermark'ın ÜSTÜNDE — TAM okunur (✓ rozeti z:6 ile zaten en üstte kalır) */
+.yg-dcard.sponsor .yd-media,.yg-dcard.sponsor .yd-body{position:relative;z-index:2}
+.yg-dcard.sponsor:hover{border-color:var(--slate-2)}   /* hover border KORUNUR, gölge YOK */
+.yg-dcard.sponsor .yd-body{gap:2px;padding-top:8px;padding-bottom:8px}
+.yg-dcard.sponsor .yd-name{color:var(--paper)}                       /* koyu zeminde ~15:1 */
+.yg-dcard.sponsor .yd-loc{color:rgba(255,255,255,.62)}               /* açık-muted ~6:1 (düz --muted koyuda sönük) */
+.yg-dcard.sponsor .yd-tag.on{color:var(--green-soft)}                /* koyuda mat --green yerine açık yeşil */
+.yg-dcard.sponsor .yd-tag.near{color:rgba(255,255,255,.55)}
+/* "Sponsorlu" disclosure — KOYU slate chip + cream yazı + gölge → parlak foto üstünde NET pop (cream-zemin foto'da siliniyordu),
+   domates "Dada" pill'inden AYRI (ücretli ≠ editöryal). Radius (999px pill) korunur. */
+.yd-badge.spon{background:var(--slate);color:var(--cream);box-shadow:0 1px 4px rgba(33,30,22,.4)}
+/* domates dolu CTA — koyu zeminde primary patlar (yalnız sponsor kartta) */
+.yd-cta{display:inline-flex;align-items:center;gap:5px;align-self:flex-start;margin-top:2px;padding:3px 9px;
+  background:var(--tomato);color:#fff;border-radius:var(--radius-sm);font-size:10.5px;font-weight:700;line-height:1.35}
+.yd-cta i{font-size:8.5px}
+.yg-dcard.sponsor:hover .yd-cta{background:var(--tomato-dark)}
+/* sponsor + eklendi: gradient yüzey korunur (sel green-tint'i source-order'da .sponsor yener), yeşil ✓ + kenarla "eklendi" okunur */
+.yg-dcard.sponsor.sel{border-color:var(--green-soft)}
+.yg-dcard.sponsor.sel:hover{border-color:var(--green-soft)}
+/* AKTİF/SEÇİLİ — HOVER border dili (ince 1px temiz, kaba concentric ring DEĞİL) + hafif glow (hover'dan kalıcı ayrım).
+   4 KATMAN: border register'ı EZMEZ; her register kendi HOVER rengini KALICI alır → normal/dada=tomato · sponsor=slate-2 · eklendi=green.
+   Seçili-belli sinyali: kalıcı hover-border + yumuşak glow (hover geçici + glow yok/sönük). */
+.yg-dcard.is-active{border-color:var(--tomato);box-shadow:0 4px 14px rgba(225,72,39,.22),0 1px 3px rgba(33,30,22,.08);z-index:3}
+.yg-dcard.sponsor.is-active{border-color:var(--slate-2)}     /* sponsor slate kimliği korunur (is-active tomato'yu ezmesin) */
+.yg-dcard.sel.is-active{border-color:var(--green)}           /* eklendi yeşil korunur (is-active tomato'yu ezmesin) → seçili glow'dan belli */
+
+/* harita venue pini — temiz daire (teardrop yerine) */
+.yg-vpin .vp{display:flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;
+  background:#fff;border:2.5px solid var(--muted);color:var(--muted);box-shadow:var(--sh-md);font-size:11px;
+  transition:transform .14s var(--ease),box-shadow .14s var(--ease);transform-origin:center bottom}
+/* DADA pini = dolu domates daire + beyaz çatal → harita üstünde NET ayrışır
+   ("sade balon tıklayınca Dada öneriyor diyor" tutarsızlığı biter: Dada pin'i artık sade değil) */
+.yg-vpin.dada .vp{background:var(--tomato);border-color:#fff;color:#fff}
+/* seçili (güzergaha eklendi) = yeşil halka — dada/normal her ikisinde de "eklendi" sinyali
+   (Dada-seçili: domates dolgu KORUNUR + üstüne yeşil halka birlikte) */
+.yg-vpin.sel .vp{box-shadow:0 0 0 3px var(--green),var(--sh-md)}
+.yg-vpin.sel:not(.dada) .vp{border-color:var(--green);color:var(--green)}
+/* PİN HOVER — büyü + öne gel (görsel önizleme tooltip ile birlikte).
+   JS-YÖNETİMLİ .is-hover (saf CSS :hover DEĞİL): harita flyTo/zoom ile pin cursor altından kayınca
+   (mousemove olmadan) :hover takılı kalıp pini büyük bırakıyordu → tooltip ile AYNI yaşam döngüsüne bağlandı
+   (tek-sahip; movestart/mouseout/safety-net temizler) → "pin takılması" giderildi. */
+/* FLICKER FIX: is-hover'da z-index BUMP YOK. is-hover SAHİP pine konur (pickHoverPin seçimi, illa cursor-altı topmost
+   değil) → z:1000 sahibi tepeye fırlatınca yoğun çakışık kümede cursor-altı pin ↔ sahip salınıyordu (flip-flop: çift
+   balon + dada/default kimlik). riseOnHover:false niyetiyle de çelişiyordu. Hovered pin zaten en üstte → bump gereksiz;
+   kaldırıldı → sahiplik Leaflet latlng-z sırasıyla DETERMINISTIK (osilasyon kesik). */
+.yg-vpin.is-hover .vp{transform:scale(1.22);box-shadow:var(--sh-pop)}
+/* seçili pin HOVER → yeşil halka KORUNUR (sade hover sh-pop'u halkayı ezmesin; Dada-seçili dahil) */
+.yg-vpin.sel.is-hover .vp{box-shadow:0 0 0 3px var(--green),var(--sh-pop)}
+/* ZİYARET EDİLDİ (b — yüklü kayıtlı rotada haritadan işaretlenir): dolu yeşil + beyaz ✓ + sönük "gidildi" sinyali;
+   sel yeşil halkasıyla birlikte okunur; Dada-ziyaret domates kimliğini korur. Specificity sel:not(.dada)'yı (0,4,1) yensin diye .sel.visited / .dada.visited (sıra: sel önce, dada sonra) */
+.yg-vpin.visited .vp{opacity:.66}
+.yg-vpin.sel.visited .vp{background:var(--green);border-color:#fff;color:#fff;box-shadow:0 0 0 3px var(--green),var(--sh-md)}
+.yg-vpin.dada.visited .vp{background:var(--tomato);border-color:#fff;color:#fff}
+/* SPONSOR pini (mock/demo · Yasin onayı bekler) — PREMIUM: KOYU slate dolu daire + beyaz DADA LOGO MARK'ı (megafon DEĞİL → sofistike, marka-içi);
+   strip + detay watermark'ı ile AYNI asset → 3 yüzey tek premium kimlik. dada (domates/çatal) ve normal (beyaz/iğne) pinden NET ayrışır. Token-içi.
+   Kimlik (dada gibi) sel/visited durumunda KORUNUR: yeşil halka .sel'den gelir ama slate dolgu sabit kalır.
+   Kaynak-sıra: bu blok .sel:not(.dada) (431) ve .sel.visited (440) ile EŞİT özgüllükte → sonradan geldiği için kazanır. */
+.yg-vpin.sponsor .vp{background:var(--slate);border-color:#fff;color:var(--cream)}
+.yg-vpin.sponsor .vp-logo{width:17px;height:17px;display:block;pointer-events:none;
+  background:url(assets/img/logo-mark-white.png) center/contain no-repeat}
+.yg-vpin.sponsor.sel .vp{background:var(--slate);border-color:#fff;color:var(--cream)}
+.yg-vpin.sponsor.visited .vp{background:var(--slate);border-color:#fff;color:var(--cream)}
+.yg-vpin.visited.is-hover .vp{opacity:1}
+/* AKTİF PİN (geçici — balonu açık / son seçilen mekan; çift yönlü senkron: kart/liste ↔ pin). KANAL = scale + tomato DIŞ-halka + elevation.
+   Register dolgu (dada domates / sponsor slate / normal beyaz) DOLGU kanalında → halka EZMEZ. sel YEŞİL halka korunur:
+   sel'de iç yeşil (eklendi) + dış tomato (aktif) concentric → ikisi de okunur. Kartlardaki tomato glow diliyle tutarlı. */
+.yg-vpin.is-active{z-index:1100!important}
+/* ölçülü: ring 2.5px + %82 opacity (color-mix, token-içi) + scale 1.22 → seçili NET ama göze batmaz */
+.yg-vpin.is-active .vp{transform:scale(1.22);box-shadow:0 0 0 2.5px rgba(225,72,39,.82),var(--sh-pop)}
+/* eklendi YEŞİL iç-halka DEĞİŞMEZ (3px green); yalnız aktif tomato dış-ring incelir (6px→5.5px) + opacity */
+.yg-vpin.sel.is-active .vp{box-shadow:0 0 0 3px var(--green),0 0 0 5.5px rgba(225,72,39,.82),var(--sh-pop)}
+/* aktif pin hover'da da aktif kimliğini korur (sade hover scale/gölge aktif halkayı ezmesin) */
+.yg-vpin.is-active.is-hover .vp{transform:scale(1.22);box-shadow:0 0 0 2.5px rgba(225,72,39,.82),var(--sh-pop)}
+.yg-vpin.sel.is-active.is-hover .vp{box-shadow:0 0 0 3px var(--green),0 0 0 5.5px rgba(225,72,39,.82),var(--sh-pop)}
+/* venue önizleme tooltip (hover'da foto + ad + konum) */
+.leaflet-tooltip.yg-vtip{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-md);
+  box-shadow:var(--sh-pop);padding:0;overflow:hidden;display:flex;width:188px;white-space:normal;
+  transition:none!important}   /* FLICKER FIX: Leaflet fade-anim (.leaflet-fade-anim opacity .2s) remove+add'de iki balonu üst üste gösteriyordu → kapat (anlık göster/gizle, overlap imkânsız) */
+.leaflet-tooltip.yg-vtip.leaflet-tooltip-top::before{border-top-color:var(--paper)}
+.yg-vtip-img{flex:0 0 56px;align-self:stretch;min-height:56px;background-size:cover;background-position:center;background-color:var(--line)}
+.yg-vtip-b{flex:1;min-width:0;padding:8px 10px;display:flex;flex-direction:column;gap:2px;justify-content:center}
+.yg-vtip-name{font-size:12.5px;font-weight:700;color:var(--slate);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.yg-vtip-loc{font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.yg-vtip-tier{font-size:10.5px;font-weight:700;margin-top:1px}  /* preview yakınlık etiketi — kadran/detayla tutarlı */
+.yg-vtip-tier.on{color:var(--green)} .yg-vtip-tier.near{color:var(--muted)}
+.yg-vtip.dada .yg-vtip-name{color:var(--tomato)}
+/* SPONSOR balon — GÖRÜNÜR ama KOMPAKT/klas ayrım: belirgin slate SOL-SPİNE (featured listing edge, brand register) + hafif slate-tint zemin (beyaz komşulardan ayrışır) + derin elevasyon.
+   "Sponsorlu" pill meta SLOTUNDA durur (tier yerine, JS) → DİKEY ŞİŞME YOK, balon dada/normal ile aynı yükseklik. Büyük detay kartının AĞIR dili (koyu gradient + logo watermark) YOK — küçük balon için ölçülü; zemin açık, içerik okunur. */
+.leaflet-tooltip.yg-vtip.sponsor{border-color:color-mix(in srgb, var(--line) 56%, var(--slate));
+  border-left:4px solid var(--slate);
+  background:color-mix(in srgb, var(--paper) 94%, var(--slate));
+  box-shadow:0 14px 38px rgba(33,30,22,.24)}
+/* ok ucu balon zeminiyle aynı (tint) — saf-beyaz uçla uyumsuzluk olmasın */
+.leaflet-tooltip.yg-vtip.sponsor.leaflet-tooltip-top::before{border-top-color:color-mix(in srgb, var(--paper) 94%, var(--slate))}
+/* SPONSOR hover önizleme (mock/demo) — pin'in hover yüzeyinde de "Sponsorlu" şeffaflığı: küçük slate/cream megafon etiketi (reklam disclosure) */
+.yg-vtip-spon{display:inline-flex;align-items:center;gap:4px;align-self:flex-start;margin-top:2px;padding:2px 7px;
+  background:var(--slate);color:var(--cream);border-radius:var(--radius-pill);font-size:9.5px;font-weight:700;line-height:1.4}
+.yg-vtip-spon i{font-size:8px}
+/* seçili mekan (selectedVenues) → preview: İNCE yeşil kenar (1px, kalın halka kaldırıldı) + hafif yeşil overlay + köşe ✓
+   (alt kadran seçili kartla aynı dil — soft) */
+.leaflet-tooltip.yg-vtip.sel{border-color:var(--green);background:linear-gradient(var(--green-tint),var(--green-tint)),var(--paper);box-shadow:var(--sh-pop)}
+.leaflet-tooltip.yg-vtip.sel.leaflet-tooltip-top::before{border-top-color:var(--green)}
+.leaflet-tooltip.yg-vtip.sel .yg-vtip-b{padding-right:24px}   /* ✓ için yer aç → ad metnine binmez (çakışma 0) */
+.leaflet-tooltip.yg-vtip.sel::after{content:"\f00c";font-family:"Font Awesome 6 Free";font-weight:900;position:absolute;
+  top:5px;right:5px;width:17px;height:17px;border-radius:50%;background:var(--green);color:#fff;font-size:8.5px;
+  display:flex;align-items:center;justify-content:center;z-index:3;box-shadow:var(--sh-sm)}
+
+/* ===================== K1: MEKAN DETAY KARTI (tıkla → harita uçar + bu kart) ===================== */
+.yg-detail{position:absolute;top:74px;right:16px;width:286px;z-index:25;
+  background:rgba(255,255,255,.94);-webkit-backdrop-filter:blur(20px) saturate(150%);backdrop-filter:blur(20px) saturate(150%);
+  border:1px solid rgba(255,255,255,.7);border-radius:var(--radius-lg);box-shadow:0 16px 44px rgba(33,30,22,.22);overflow:hidden}
+.yg-detail[hidden]{display:none}
+.yg-detail-media{height:128px;background-size:cover;background-position:center;background-color:var(--line);position:relative}
+.yg-detail-x{position:absolute;top:9px;right:9px;width:32px;height:32px;display:inline-flex;align-items:center;justify-content:center;
+  border:0;border-radius:50%;background:rgba(33,30,22,.55);color:#fff;font-size:13px;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);transition:.16s var(--ease)}
+.yg-detail-x:hover{background:rgba(33,30,22,.78)}
+.yg-detail-badge{position:absolute;left:10px;top:10px;display:inline-flex;align-items:center;gap:5px;font-size:10.5px;font-weight:700;
+  background:var(--tomato);color:#fff;padding:4px 9px;border-radius:var(--radius-pill);box-shadow:var(--sh-sm)}
+.yg-detail-badge[hidden]{display:none}   /* display:inline-flex UA [hidden]'ı eziyordu → dada:false mekanda rozet sızıyordu (bug fix) */
+/* SPONSOR detay senkronu (mock/demo · Yasin onayı bekler) — alt şerit + harita pini ile AYNI register:
+   KOYU slate chip + cream yazı + megafon (domates-DIŞI → ücretli ≠ editöryal "Dada"). Dada rozetiyle karşılıklı dışlar. */
+.yg-detail-badge.spon{background:var(--slate);color:var(--cream);box-shadow:0 1px 4px rgba(33,30,22,.4)}
+.yg-detail-badge.spon i{font-size:9.5px}
+/* PREMIUM detay register → ALT ŞERİT sponsor kartıyla SENKRON: gövde koyu slate + domates ember gradient + Dada logo watermark (sağdan -15°).
+   Düz beyaz DEĞİL; içerik (isim/loc/CTA) watermark'ın ÜSTÜnde TAM okunur. Üst ince slate hairline = premium frame. cızırtı/glow yok. */
+.yg-detail.is-sponsor{border-top:3px solid var(--slate)}
+.yg-detail.is-sponsor .yg-detail-body{position:relative;
+  background:
+    radial-gradient(132% 126% at 82% 116%, color-mix(in srgb, var(--slate) 62%, var(--tomato)) 0%, transparent 58%),
+    linear-gradient(152deg,
+      color-mix(in srgb, var(--slate) 86%, var(--tomato-deep)) 0%,
+      var(--slate) 52%,
+      color-mix(in srgb, var(--slate) 92%, #000) 100%)}
+/* Dada marka watermark — strip ile AYNI asset (beyaz logo mark), sağ-çapraz yatık, çok silik (.10), içeriğin ARKASINDA (z:0, pointer yok; kart overflow:hidden kırpar) */
+.yg-detail.is-sponsor .yg-detail-body::before{content:"";position:absolute;z-index:0;right:-8px;top:50%;width:120px;height:120px;
+  transform:translateY(-50%) rotate(-15deg);opacity:.1;pointer-events:none;
+  background:url(assets/img/logo-mark-white.png) center/contain no-repeat}
+/* içerik watermark'ın ÜSTÜnde — TAM okunur */
+.yg-detail.is-sponsor .yg-detail-body > *{position:relative;z-index:1}
+/* koyu zeminde tipografi (alt şerit register'ı): isim ~15:1, loc açık-muted, tag'ler koyuya uyarlı */
+.yg-detail.is-sponsor .yg-detail-name{color:var(--paper)}
+.yg-detail.is-sponsor .yg-detail-loc{color:rgba(255,255,255,.72)}
+.yg-detail.is-sponsor .yg-detail-tag.on{color:var(--green-soft)}
+.yg-detail.is-sponsor .yg-detail-tag.near{color:rgba(255,255,255,.6)}
+/* "Menüyü Gör" ikincil — koyuda açık ghost (light border + cream yazı), hover domates dolu */
+.yg-detail.is-sponsor .yg-detail-more{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.28);color:var(--cream)}
+.yg-detail.is-sponsor .yg-detail-more i{color:var(--paper)}
+.yg-detail.is-sponsor .yg-detail-more:hover{border-color:var(--tomato);color:#fff;background:var(--tomato)}
+/* "Ziyaret ettim" (yalnız yüklü rota) — koyuda görünür ghost; "Güzergaha Ekle" domates dolu zaten koyuda patlar, "Eklendi" açık chip korunur */
+.yg-detail.is-sponsor .yg-detail-visit{background:transparent;border-color:var(--green-soft);color:var(--green-soft)}
+.yg-detail.is-sponsor .yg-detail-visit.is-visited{background:var(--green);border-color:var(--green);color:#fff}
+.yg-detail-body{padding:13px 15px 15px}
+.yg-detail-name{font-size:16px;font-weight:700;letter-spacing:-.01em;line-height:1.25;margin-bottom:4px}
+.yg-detail-loc{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--muted);font-weight:500}
+.yg-detail-loc i{font-size:11px;color:var(--tomato)}
+.yg-detail-meta{display:flex;align-items:center;gap:10px;margin-top:9px}
+.yg-detail-tag{font-size:12px;font-weight:700}
+.yg-detail-tag.on{color:var(--green)} .yg-detail-tag.near{color:var(--muted)}
+.yg-detail-star{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:700;color:var(--slate-2)}
+.yg-detail-star[hidden]{display:none}   /* display:inline-flex UA [hidden]'ı eziyordu → dada-dışı (sponsor/normal) mekanda önceki puan sızıyordu (badge'le aynı sınıf bug) */
+.yg-detail-star i{color:var(--yellow);font-size:11px}
+.yg-detail-add{margin-top:13px;width:100%;height:44px;display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  border:1px solid var(--tomato);background:var(--tomato);color:#fff;border-radius:var(--radius-md);font-weight:700;font-size:13.5px;transition:.16s var(--ease)}
+.yg-detail-add i{font-size:13px}
+.yg-detail-add:hover{background:var(--tomato-dark);border-color:var(--tomato-dark)}
+.yg-detail-add.is-added{background:var(--paper);color:var(--green);border-color:var(--green)}
+.yg-detail-add.is-added:hover{background:var(--green-tint)}
+/* ZİYARET TOGGLE — yalnız yüklü kayıtlı rotada + güzergaha eklenmiş mekanda görünür (b).
+   "Eklendi" iki-durum desenini yeşil/ziyaret kaydında yineler: ghost "Ziyaret ettim" → dolu yeşil "Ziyaret edildi ✓" */
+.yg-detail-visit{margin-top:9px;width:100%;height:40px;display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  border:1.5px solid var(--green);background:var(--paper);color:var(--green);border-radius:var(--radius-md);
+  font-weight:700;font-size:13px;cursor:pointer;transition:.16s var(--ease)}
+.yg-detail-visit[hidden]{display:none}
+.yg-detail-visit i{font-size:13px}
+.yg-detail-visit:hover{background:var(--green-tint)}
+.yg-detail-visit.is-visited{background:var(--green);border-color:var(--green);color:#fff}
+.yg-detail-visit.is-visited:hover{filter:brightness(.95)}
+/* ikincil: mekan sayfasına git (sade ghost text-link) */
+.yg-detail-more{margin-top:9px;width:100%;height:38px;display:inline-flex;align-items:center;justify-content:center;gap:7px;
+  border:1px solid var(--line-2);background:var(--paper);color:var(--slate-2);border-radius:var(--radius-md);
+  font-weight:600;font-size:12.5px;text-decoration:none;transition:.16s var(--ease)}
+.yg-detail-more i{font-size:11px;color:var(--tomato)}
+.yg-detail-more:hover{border-color:var(--tomato);color:var(--tomato);background:var(--tomato-tint)}
+
+/* ===================== K3: SOL PANEL — GÜZERGAHIMDAKİ MEKANLAR ===================== */
+.yg-mine{margin-top:22px}
+.yg-mine[hidden]{display:none}
+.yg-mine-head{display:flex;align-items:center;gap:8px;margin-bottom:11px}
+.yg-mine-head .yg-mine-h{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.yg-mine-cnt{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 6px;
+  border-radius:var(--radius-pill);background:var(--tomato);color:#fff;font-size:11px;font-weight:700}
+.yg-mine-empty{display:flex;gap:10px;align-items:flex-start;border:1px dashed var(--line-2);border-radius:var(--radius-md);
+  padding:13px 14px;background:rgba(255,255,255,.5)}
+.yg-mine-empty[hidden]{display:none}
+.yg-mine-empty i{color:var(--tomato);font-size:14px;margin-top:1px}
+.yg-mine-empty span{font-size:12.5px;line-height:1.5;color:var(--slate-2)}
+.yg-mine-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.yg-mine-card{display:flex;align-items:center;gap:11px;background:var(--paper);border:1px solid var(--line);
+  border-radius:var(--radius-md);padding:7px 7px 7px 8px}
+.yg-mine-media{flex:0 0 42px;width:42px;height:42px;border-radius:var(--radius-sm);background-size:cover;background-position:center;background-color:var(--line)}
+.yg-mine-info{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
+.yg-mine-name{font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.yg-mine-loc{font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.yg-mine-x{flex:0 0 auto;width:34px;height:34px;display:inline-flex;align-items:center;justify-content:center;
+  border:0;background:none;color:var(--muted);border-radius:var(--radius-sm);transition:.14s var(--ease)}
+.yg-mine-x:hover{color:var(--tomato);background:var(--tomato-tint)}
+/* ZİYARET EDİLDİ (b — yüklü rotada haritadan işaretlenir): üstü-çizik ad + sönük kart + medya köşesinde yeşil ✓ (saved checklist 'on' diliyle tutarlı) */
+.yg-mine-card.visited{background:var(--green-tint);border-color:var(--green)}
+.yg-mine-card.visited .yg-mine-name{color:var(--muted);text-decoration:line-through}
+.yg-mine-card.visited .yg-mine-media{position:relative}
+.yg-mine-vchk{position:absolute;right:-4px;bottom:-4px;width:18px;height:18px;border-radius:50%;background:var(--green);color:#fff;
+  display:flex;align-items:center;justify-content:center;font-size:9px;border:2px solid var(--paper);box-shadow:var(--sh-sm)}
+/* A — yüklü rotada sol-liste tek-tık ziyaret affordance (serbest planlamada satır statik) */
+.yg-mine.is-loaded .yg-mine-card{cursor:pointer}
+.yg-mine.is-loaded .yg-mine-card:not(.visited):hover{border-color:var(--green);background:var(--green-tint)}
+.yg-mine.is-loaded .yg-mine-card:focus-visible{outline:2px solid var(--green);outline-offset:2px}
+/* C — sahiplik çapası: sol liste = SENİN eklediklerin (alt şerit = öneri) */
+.yg-mine-sub{font-size:11px;color:var(--muted);margin:-4px 0 11px;line-height:1.45}
+.yg-mine-sub[hidden]{display:none}
+.yg-mine-sub b{color:var(--slate-2);font-weight:700}
+
+/* ===================== K9: TÜM ROTA MEKANLARI (Tümünü Gör push view) ===================== */
+.yg-bc{display:flex;align-items:center;gap:9px;margin-bottom:16px}
+.yg-bc-back{display:inline-flex;align-items:center;gap:7px;height:36px;padding:0 13px 0 10px;border:1px solid var(--line-2);
+  background:var(--paper);border-radius:var(--radius-md);font-size:13px;font-weight:700;color:var(--slate);transition:.16s var(--ease)}
+.yg-bc-back i{font-size:12px;color:var(--tomato)}
+.yg-bc-back:hover{border-color:var(--tomato);color:var(--tomato);background:var(--tomato-tint)}
+.yg-bc-cur{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.yg-search{position:relative;margin-bottom:12px}
+.yg-search>i{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:13px;pointer-events:none}
+.yg-search input{width:100%;height:44px;padding:0 14px 0 38px;border:1px solid var(--line-2);border-radius:var(--radius-md);
+  background:var(--bg);color:var(--slate);font-size:14px;font-weight:600;transition:.16s var(--ease)}
+.yg-search input::placeholder{color:var(--muted);font-weight:500}
+.yg-search input:focus{outline:none;border-color:var(--tomato);background:var(--paper);box-shadow:0 0 0 3px var(--tomato-tint)}
+.yg-fl-chips{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:13px}
+.yg-fl-chip{height:34px;padding:0 13px;border:1px solid var(--line);background:var(--paper);border-radius:var(--radius-pill);
+  font-size:12.5px;font-weight:600;color:var(--slate-2);transition:.14s var(--ease)}
+.yg-fl-chip:hover:not(.is-active){border-color:var(--line-2);color:var(--slate)}
+.yg-fl-chip.is-active{background:var(--tomato);border-color:var(--tomato);color:#fff;font-weight:700}
+.yg-fl-count{font-size:12px;font-weight:600;color:var(--muted);margin-bottom:11px}
+.yg-fl-list{list-style:none;margin:0;padding:0}
+.yg-fl-card{display:flex;align-items:stretch;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-md);
+  overflow:hidden;margin-bottom:9px;transition:border-color .15s var(--ease),box-shadow .15s var(--ease)}
+.yg-fl-card:hover{border-color:var(--tomato);box-shadow:var(--sh-sm)}
+.yg-fl-main{flex:1;min-width:0;display:flex;gap:12px;text-align:left;border:0;background:none;padding:0;cursor:pointer}
+.yg-fl-media{flex:0 0 80px;align-self:stretch;min-height:80px;background-size:cover;background-position:center;background-color:var(--line);position:relative}
+.yg-fl-badge{position:absolute;left:5px;top:5px;display:inline-flex;align-items:center;gap:4px;font-size:9px;font-weight:700;
+  background:var(--tomato);color:#fff;padding:3px 6px;border-radius:999px}
+.yg-fl-body{flex:1;min-width:0;padding:10px 2px 10px 0;display:flex;flex-direction:column;gap:3px;justify-content:center}
+.yg-fl-name{font-size:13.5px;font-weight:700;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.yg-fl-loc{font-size:11.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.yg-fl-tag{font-size:11px;font-weight:700}
+.yg-fl-tag.on{color:var(--green)} .yg-fl-tag.near{color:var(--muted)}
+.yg-fl-add{flex:0 0 auto;align-self:center;margin-right:9px;display:inline-flex;align-items:center;gap:6px;height:40px;padding:0 13px;
+  border:1px solid var(--tomato);background:var(--paper);color:var(--tomato);border-radius:var(--radius-md);
+  font-size:12.5px;font-weight:700;white-space:nowrap;transition:.15s var(--ease)}
+.yg-fl-add i{font-size:12px}
+.yg-fl-add:hover{background:var(--tomato);color:#fff}
+.yg-fl-add.is-added{border-color:var(--green);color:var(--green);background:var(--paper)}
+.yg-fl-add.is-added:hover{background:var(--green-tint);color:var(--green)}
+.yg-fl-empty{text-align:center;padding:34px 16px}
+.yg-fl-empty[hidden]{display:none}
+.yg-fl-empty-ico{width:54px;height:54px;margin:0 auto 13px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  background:var(--tomato-tint);color:var(--tomato);font-size:20px}
+.yg-fl-empty p{font-size:13.5px;line-height:1.55;color:var(--muted);max-width:240px;margin:0 auto}
+/* SPONSOR liste satırı (mock/demo · Yasin onayı bekler) — BALON dozuyla ölçülü ayrım (uzun/çok-tekrarlı yüzey → alt şerit gibi TAM koyu/gradient DEĞİL, liste boğulmaz):
+   belirgin slate SOL-SPİNE 4px (balon spine'ı liste satırına uyarlı, featured-listing edge) + çok hafif slate-tint zemin (saf beyazdan ayrışır) + slate kenar.
+   "Sponsorlu" pill YAKINLIK SATIRINDA inline durur (ayrı header bandı YOK → DİKEY ŞİŞME YOK, satır yüksekliği ≈ diğer satırlar). sponsor↔dada dışlar (dada:false → Dada rozeti hiç render olmaz). */
+/* Sol-spine YOK (alt şerit sponsor kartıyla tutarlı — orada koyu zemin sinyali, burada köşe pill + tint zemin yeterli).
+   Sponsor sinyali: görsel köşesindeki "Sponsorlu" pill + hafif slate-tint zemin + tüm-kenar ince slate-mix kenar. (Domates ember denendi → geri alındı, düz tint kaldı.) */
+.yg-fl-card.sponsor{border-color:color-mix(in srgb, var(--line) 54%, var(--slate));
+  background:color-mix(in srgb, var(--paper) 93%, var(--slate))}
+.yg-fl-card.sponsor:hover{border-color:var(--slate-2);box-shadow:var(--sh-sm)}
+/* SEÇİLİ (Eklendi) sponsor satırı — seçim NET belli olsun (resting slate kenar + tint, "Eklendi" yeşil butonu yutuyordu):
+   tüm-kenar yeşil border ("Eklendi" semantiği, buton + slider sponsor .sel ile tutarlı) → seçim açıkça okunur. :has() ile, JS dokunmadan. */
+.yg-fl-card.sponsor:has(.yg-fl-add.is-added),
+.yg-fl-card.sponsor:has(.yg-fl-add.is-added):hover{border-color:var(--green)}
+/* "Sponsorlu" disclosure = "Dada" tag'iyle BİREBİR aynı konum/yapı (görsel sol-üst köşe overlay, .yg-fl-badge tabanı), FARKLI register:
+   slate chip + cream yazı + megafon (Dada=domates+çatal). Foto üstünde NET pop için gölge. sponsor↔dada KARŞILIKLI DIŞLAR. */
+.yg-fl-badge.spon{background:var(--slate);color:var(--cream);white-space:nowrap;box-shadow:0 1px 4px rgba(33,30,22,.4)}
+/* AKTİF/SEÇİLİ tam-liste satırı — slider .yg-dcard.is-active ile BİREBİR: HOVER border dili (ince temiz) + hafif glow. */
+.yg-fl-card{position:relative}
+/* sponsor.is-active glow'u açık çünkü .yg-fl-card.sponsor:hover (0,3,0, sh-sm) sade .is-active'i (0,2,0) ezerdi; sponsor slate border korunur.
+   sponsor+eklendi seçili → .sponsor:has(.is-added) (0,4,0) green border'ı zaten kazanır → eklendi yeşili okunur. */
+.yg-fl-card.is-active{border-color:var(--tomato);box-shadow:0 4px 14px rgba(225,72,39,.22),0 1px 3px rgba(33,30,22,.08);z-index:2}
+.yg-fl-card.sponsor.is-active{border-color:var(--slate-2);box-shadow:0 4px 14px rgba(225,72,39,.22),0 1px 3px rgba(33,30,22,.08);z-index:2}
+
+/* ===================== DALGA 3-B: GÜZERGAHIMI KAYDET (sol panel, rota çizili durumda) ===================== */
+.yg-save{margin-top:22px}
+.yg-save[hidden]{display:none}
+.yg-save .yg-divider{margin:0 0 18px}
+/* YÜKLÜ GÜZERGAH bağlamı — "yeni kuruyorum değil, kayıtlı rotamı açtım" sinyali (soft: tomato sol-aksan + tint, Dada dili) */
+.yg-save-ctx{display:flex;align-items:center;gap:9px;margin-bottom:14px;padding:10px 12px;
+  border:1px solid var(--line-2);border-left:3px solid var(--tomato);border-radius:var(--radius-md);
+  background:var(--tomato-tint);font-size:12.5px;color:var(--slate-2);font-weight:600}
+.yg-save-ctx[hidden]{display:none}
+.yg-save-ctx i{color:var(--tomato);font-size:12px}
+.yg-save-ctx b{color:var(--slate);font-weight:800}
+.yg-save-lbl{display:block;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:9px}
+.yg-save-field{position:relative;margin-bottom:11px}
+.yg-save-field>i{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:12px;pointer-events:none}
+.yg-save-name{width:100%;height:46px;padding:0 14px 0 38px;border:1px solid var(--line-2);border-radius:var(--radius-md);
+  background:var(--bg);color:var(--slate);font-size:14.5px;font-weight:700;transition:.16s var(--ease)}
+.yg-save-name::placeholder{color:var(--muted);font-weight:500}
+.yg-save-name:focus{outline:none;border-color:var(--tomato);background:var(--paper);box-shadow:0 0 0 3px var(--tomato-tint)}
+.yg-save-btn{width:100%;height:48px;display:inline-flex;align-items:center;justify-content:center;gap:9px;
+  border:1px solid var(--tomato);background:var(--tomato);color:#fff;border-radius:var(--radius-md);font-weight:700;font-size:14px;transition:.16s var(--ease)}
+.yg-save-btn i{font-size:14px}
+.yg-save-btn:hover{background:var(--tomato-dark);border-color:var(--tomato-dark)}
+
+/* ===================== DALGA 3-B: GÜZERGAHLARIM (kayıtlı liste + checkpoint/ziyaret) ===================== */
+.yg-saved-head[hidden]{display:none}
+.yg-saved-total{font-size:12.5px;color:var(--muted);font-weight:600}
+.yg-saved-total b{color:var(--slate);font-weight:800}
+.yg-saved-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px}
+.yg-saved-list:empty{display:none}
+.yg-sv-card{background:rgba(255,255,255,.72);border:1px solid var(--line-2);border-radius:var(--radius-lg);
+  padding:14px 15px 13px;box-shadow:var(--sh-sm)}
+.yg-sv-name{font-size:15.5px;font-weight:800;letter-spacing:-.01em;line-height:1.25;color:var(--slate);
+  display:flex;align-items:center;gap:8px}
+.yg-sv-name>i{color:var(--tomato);font-size:13px;flex:0 0 auto}
+.yg-sv-name>span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.yg-sv-meta{margin-top:6px;font-size:12.5px;font-weight:600;color:var(--slate-2);display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.yg-sv-meta .dot{width:3px;height:3px;border-radius:50%;background:var(--line-2);flex:0 0 auto}
+.yg-sv-date{margin-top:5px;font-size:11.5px;color:var(--muted);font-weight:500;display:flex;align-items:center;gap:6px}
+.yg-sv-date i{font-size:11px}
+/* ilerleme (ziyaret) — yalnız mekanlı kayıtta */
+.yg-sv-prog{margin-top:11px}
+.yg-sv-prog[hidden]{display:none}
+.yg-sv-prog-bar{height:7px;border-radius:99px;background:var(--line);overflow:hidden}
+.yg-sv-prog-bar>span{display:block;height:100%;border-radius:99px;background:var(--green);transition:width .25s var(--ease)}
+.yg-sv-prog-txt{display:block;margin-top:6px;font-size:11.5px;font-weight:700;color:var(--slate-2)}
+.yg-sv-prog-txt.done{color:var(--green)}
+/* aksiyon satırı */
+/* KAPANIŞ TURU Y1/F17 (2026-08-08): 5-6 aksiyon (Tekrar Kullan · Düzenle ·
+   Kopyala · Paylaş · [Ziyaretler] · Sil) 400px'lik panelde (--panel-w) tek
+   satıra sığmıyordu; flex-wrap YOK, overflow-x YOK → Paylaş/Ziyaretler
+   `elementFromPoint` ile ERİŞİLEMEZ çıktı (taşma-affordance eksikliği değil,
+   gerçek erişilemezlik). Kaydırma değil SIĞDIRMA seçildi (E2'nin yatay-şerit
+   affordance çözümüyle karışmaz — burada kaydırılacak bir şerit yok, kart
+   kendi yüksekliğinde büyür): flex-wrap eklendi, birincil eylem (Tekrar
+   Kullan) `flex-basis:100%` ile KENDİ satırına düşer, geri kalanlar ikinci
+   satırda sığdıkları kadar yan yana durur — .yg-sv-meta'daki AYNI
+   flex-wrap deseni (satır ~787), yeni değer icat edilmedi. */
+.yg-sv-acts{margin-top:13px;display:flex;flex-wrap:wrap;gap:8px}
+.yg-sv-btn{height:40px;display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:0 14px;
+  border:1px solid var(--line-2);background:var(--paper);border-radius:var(--radius-md);
+  font-size:12.5px;font-weight:700;color:var(--slate-2);transition:.16s var(--ease);white-space:nowrap}
+.yg-sv-btn i{font-size:12px}
+.yg-sv-load{flex:1 1 100%;border-color:var(--tomato);color:var(--tomato)}
+.yg-sv-load:hover{background:var(--tomato);color:#fff}
+.yg-sv-check{flex:0 0 auto}
+.yg-sv-check:hover{border-color:var(--slate-2);color:var(--slate)}
+.yg-sv-check.open{background:var(--bg);border-color:var(--line-2);color:var(--slate)}
+.yg-sv-del{flex:0 0 auto;width:40px;padding:0;color:var(--muted)}
+.yg-sv-del:hover{border-color:var(--tomato);color:var(--tomato);background:var(--tomato-tint)}
+/* sil onayı (inline mini-state — bu sayfada saConfirm yok) */
+.yg-sv-confirm{margin-top:13px;display:flex;align-items:center;gap:9px;background:var(--tomato-tint);
+  border:1px solid rgba(225,72,39,.3);border-radius:var(--radius-md);padding:9px 10px 9px 13px}
+.yg-sv-confirm[hidden]{display:none}
+.yg-sv-confirm span{flex:1;min-width:0;font-size:12.5px;font-weight:700;color:var(--tomato-deep)}
+.yg-sv-confirm button{height:34px;padding:0 13px;border-radius:var(--radius-sm);font-size:12px;font-weight:700;transition:.14s var(--ease);border:1px solid transparent}
+.yg-sv-cancel{background:var(--paper);border-color:var(--line-2)!important;color:var(--slate-2)}
+.yg-sv-cancel:hover{border-color:var(--slate-2)!important;color:var(--slate)}
+.yg-sv-yes{background:var(--tomato);color:#fff}
+.yg-sv-yes:hover{background:var(--tomato-dark)}
+/* ziyaret checklist (route-scoped) */
+.yg-sv-venues{list-style:none;margin:12px 0 0;padding:11px 0 2px;border-top:1px dashed var(--line-2);display:flex;flex-direction:column;gap:4px}
+.yg-sv-venues[hidden]{display:none}
+.yg-sv-vrow{display:flex;align-items:center;gap:11px;width:100%;text-align:left;border:0;background:none;
+  padding:8px 9px;border-radius:var(--radius-sm);transition:.14s var(--ease)}
+.yg-sv-vrow:hover{background:rgba(255,255,255,.7)}
+.yg-sv-cbox{flex:0 0 auto;width:22px;height:22px;border-radius:7px;border:2px solid var(--line-2);background:var(--paper);
+  display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:11px;transition:.14s var(--ease)}
+.yg-sv-vrow.on .yg-sv-cbox{background:var(--green);border-color:var(--green)}
+.yg-sv-vname{flex:1;min-width:0;font-size:13px;font-weight:600;color:var(--slate);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.yg-sv-vrow.on .yg-sv-vname{color:var(--muted);text-decoration:line-through}
+/* Güzergahlarım Dada mekanı — NET: domates "Dada" pill (alt kadran .yd-badge / detay rozetiyle aynı kimlik)
+   + ince domates-gradient sol-kenar aksan (dikey listede soldan da taranır; pill + aksan birlikte ferah) */
+.yg-sv-vrow.dada{position:relative}
+.yg-sv-vrow.dada::before{content:"";position:absolute;left:0;top:5px;bottom:5px;width:3px;border-radius:2px;
+  background:linear-gradient(var(--tomato),var(--tomato-dark))}
+.yg-sv-vbadge{flex:0 0 auto;display:inline-flex;align-items:center;gap:4px;height:20px;padding:0 8px;
+  border-radius:var(--radius-pill);background:var(--tomato);color:#fff;font-size:10px;font-weight:700;letter-spacing:.02em}
+.yg-sv-vbadge i{font-size:9px}
+.yg-sv-vrow.on .yg-sv-vbadge{opacity:.5}   /* ziyaret edilince diğer satır içeriğiyle birlikte sönükleşir (kimlik korunur) */
+
+/* ===================== KONUM BUL — sağ-alt FAB + mavi konum noktası + en-yakın-şehir promptu + toast ===================== */
+/* FAB: harita sağ-altı. --locb = alt kadran açıkken yükseklik kadar yukarı kayar (kadranla çakışmaz). */
+.yg-locate{position:absolute;right:16px;bottom:calc(16px + var(--locb,0px));z-index:22;
+  width:44px;height:44px;display:inline-flex;align-items:center;justify-content:center;
+  border:1px solid var(--line);background:var(--paper);color:var(--tomato);border-radius:50%;
+  box-shadow:var(--sh-md);font-size:16px;transition:background .16s var(--ease),color .16s var(--ease),border-color .16s var(--ease),bottom .2s var(--ease)}
+.yg-locate:hover:not(:disabled){background:var(--tomato);color:#fff;border-color:var(--tomato)}
+.yg-locate:disabled{cursor:progress;opacity:.85}
+.yg-locate.busy i{animation:yg-spin .8s linear infinite}
+@keyframes yg-spin{to{transform:rotate(360deg)}}
+
+/* mavi konum noktası (divIcon) — beyaz halka + soluk nabız */
+.yg-geo{position:relative}
+.yg-geo-pulse{position:absolute;left:50%;top:50%;width:22px;height:22px;margin:-11px 0 0 -11px;border-radius:50%;
+  background:var(--geo);opacity:.4;animation:yg-geopulse 2.1s ease-out infinite}
+@keyframes yg-geopulse{0%{transform:scale(.5);opacity:.4}70%{opacity:0}100%{transform:scale(2.4);opacity:0}}
+.yg-geo-dot{position:absolute;left:50%;top:50%;width:16px;height:16px;margin:-8px 0 0 -8px;border-radius:50%;
+  background:var(--geo);border:3px solid #fff;box-shadow:0 0 0 1px rgba(33,30,22,.18),0 2px 5px rgba(33,30,22,.35)}
+
+/* en-yakın-şehir promptu (haritada bottom-center; onaylı "Buradan başla") */
+.yg-geo-prompt{position:absolute;left:calc((100% + var(--panel-w)) / 2);transform:translateX(-50%);
+  bottom:calc(16px + var(--locb,0px));z-index:24;display:flex;align-items:center;gap:11px;max-width:360px;
+  background:rgba(255,255,255,.95);-webkit-backdrop-filter:blur(20px) saturate(150%);backdrop-filter:blur(20px) saturate(150%);
+  border:1px solid var(--line-2);border-radius:var(--radius-lg);box-shadow:var(--sh-pop);padding:10px 11px 10px 14px}
+.yg-geo-prompt[hidden]{display:none}
+.yg-geo-prompt-ico{flex:0 0 auto;width:34px;height:34px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;
+  background:var(--tomato-tint);color:var(--tomato);font-size:14px}
+.yg-geo-prompt-main{display:flex;flex-direction:column;gap:1px;min-width:0}
+.yg-geo-prompt-lbl{font-size:10.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.yg-geo-prompt-city{font-size:14px;font-weight:700;color:var(--slate);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.yg-geo-start{flex:0 0 auto;display:inline-flex;align-items:center;gap:7px;height:38px;padding:0 14px;
+  border:1px solid var(--tomato);background:var(--tomato);color:#fff;border-radius:var(--radius-md);font-size:12.5px;font-weight:700;transition:.16s var(--ease)}
+.yg-geo-start i{font-size:12px}
+.yg-geo-start:hover{background:var(--tomato-dark);border-color:var(--tomato-dark)}
+.yg-geo-x{flex:0 0 auto;width:30px;height:30px;display:inline-flex;align-items:center;justify-content:center;border:0;background:none;
+  color:var(--muted);border-radius:50%;transition:.14s var(--ease)}
+.yg-geo-x:hover{color:var(--tomato);background:var(--tomato-tint)}
+
+/* toast (kibar hata/bilgi — bottom-center, sahte konum YOK) */
+.yg-toast-wrap{position:absolute;left:calc((100% + var(--panel-w)) / 2);transform:translateX(-50%);
+  bottom:calc(16px + var(--locb,0px));z-index:60;display:flex;flex-direction:column-reverse;gap:8px;align-items:center;pointer-events:none}
+.yg-toast{display:flex;align-items:center;gap:10px;max-width:380px;background:var(--slate);color:#fff;
+  border-radius:var(--radius-md);box-shadow:var(--sh-pop);padding:11px 15px;font-size:13px;font-weight:600;line-height:1.45;
+  pointer-events:auto;opacity:0;transform:translateY(8px);transition:.22s var(--ease)}
+.yg-toast.show{opacity:1;transform:none}
+.yg-toast i{font-size:14px;opacity:.92;flex:0 0 auto}
+
+/* ===================== RESPONSIVE (≤860px → panel üstte cam sheet, harita altta) ===================== */
+@media (max-width:860px){
+  /* FAZ 1 — PANEL → ALT BOTTOM-SHEET (harita tam-ekran dominant). Sheet dipten yükselir, transform ile
+     3 detent (peek/half/full). Base = HALF; JS (Faz 2) .sheet-* sınıflarını toggle eder. Desktop scope DIŞI. */
+  .yg-panel{top:auto;bottom:0;left:0;right:0;width:auto;height:86dvh;
+    border-right:0;border-top:0;                       /* üst çizgi kaldırıldı — ayrımı gölge sağlıyor (çift-kenar/line giderildi) */
+    border-radius:var(--radius-lg) var(--radius-lg) 0 0;
+    box-shadow:0 -12px 38px rgba(33,30,22,.17);
+    transform:translateY(34dvh);transition:transform .34s var(--ease)}   /* default = HALF → ~52dvh görünür */
+  .yg-panel.sheet-half{transform:translateY(34dvh)}
+  .yg-panel.sheet-full{transform:translateY(0)}                          /* tam → 86dvh, iç scroll */
+  .yg-panel.sheet-peek{transform:translateY(calc(86dvh - 84px))}         /* grip + özet chip (~84px) görünür → harita ~%82 */
+  .yg-panel.sheet-dragging{transition:none}                              /* drag sırasında parmağı 1:1 takip */
+  .yg-sheet-grip{display:block;touch-action:none;height:26px}
+  /* PEEK özet chip — yalnız peek (browse): rota özeti / rotasız prompt. half/full'da gizli (tam bilgi zaten görünür). */
+  .yg-sheet-ctx{display:none;width:100%;align-items:center;justify-content:space-between;gap:12px;
+    padding:4px 18px 12px;background:transparent;text-align:left;cursor:pointer}
+  .yg-panel.sheet-peek .yg-sheet-ctx{display:flex}
+  .yg-sheet-ctx-txt{display:flex;flex-direction:column;gap:2px;min-width:0}
+  .yg-sheet-ctx-main{font-size:15px;font-weight:700;letter-spacing:-.01em;color:var(--slate);line-height:1.2;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:74vw}
+  .yg-sheet-ctx-sub{font-size:12px;font-weight:600;color:var(--muted);line-height:1.2;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:74vw}
+  .yg-sheet-ctx-go{flex:0 0 auto;width:30px;height:30px;display:inline-flex;align-items:center;justify-content:center;
+    border-radius:50%;background:var(--tomato-tint);color:var(--tomato);font-size:11px}
+  /* BROWSE CTA (half/full) — yol üstü mekanlara götürür */
+  .yg-browse-cta:not([hidden]){display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;
+    margin-top:14px;padding:13px 15px;border:1px solid var(--tomato);border-radius:var(--radius-md);
+    background:var(--tomato-tint);cursor:pointer;transition:transform .12s var(--ease)}
+  .yg-browse-cta:active{transform:scale(.99)}
+  .yg-browse-cta-l{display:flex;align-items:center;gap:9px;font-size:13.5px;font-weight:600;color:var(--slate);min-width:0}
+  .yg-browse-cta-l i{color:var(--tomato);font-size:14px}
+  .yg-browse-cta-l b{font-weight:800}
+  .yg-browse-cta-go{flex:0 0 auto;display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;color:var(--tomato);white-space:nowrap}
+  /* iki-handle netliği: dash kendi handle'ı mobilde GİZLİ (ray görünürlüğü sheet detent'inden yönetilir → tek tutamak = grip) */
+  .yg-dash-handle{display:none}
+  /* boş-durum illüstrasyonu mobilde gizli (peek chip + numaralı durak alanları zaten yönlendiriyor; kırpık görünmesin) */
+  #ygStart{display:none}
+  /* TÜMÜNÜ GÖR (full) — başlık+arama+filtre SABİT, yalnız liste scroll (Maps liste pattern) */
+  #viewAll{padding:0;display:flex;flex-direction:column;overflow:hidden}
+  #viewAll .yg-all-head{flex:0 0 auto;padding:15px 16px 9px;background:rgba(252,250,246,.97);
+    -webkit-backdrop-filter:blur(8px) saturate(150%);backdrop-filter:blur(8px) saturate(150%);border-bottom:1px solid var(--line)}
+  #viewAll .yg-all-head .yg-bc{margin-bottom:11px}
+  #viewAll .yg-all-head .yg-fl-chips{margin-bottom:9px}
+  #viewAll .yg-all-head .yg-fl-count{margin-bottom:0}
+  #viewAll .yg-all-body{flex:1 1 auto;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px 16px 26px;
+    -webkit-mask-image:linear-gradient(to bottom,#000 calc(100% - 22px),transparent);
+    mask-image:linear-gradient(to bottom,#000 calc(100% - 22px),transparent)}
+  .yg-map-wrap{inset:0}
+  /* harita tam-ekran → leaflet zoom kontrolü header (60px) altına, sol-üst */
+  .leaflet-top.leaflet-left{left:8px;top:68px}
+  .yg-top{padding:0 14px 0 16px}
+  .yg-title{font-size:14.5px}
+  .yg-dash{left:8px;right:8px;bottom:var(--dashb,8px);padding:10px 11px}
+  /* GRUP B: handle touch hedefi 30→40px (yüzme/konum korunsun → top -38→-44). Collapsed'da handle
+     viewport dışına taşmasın: 100%+16 mobil bottom:8'de alt-kenarı tam sınıra getiriyordu (1px clip + safe-area).
+     40px handle/-44 offset ile 100%+2px → ~10px güvenli marj. :not(.full-hidden) → full-view tam-gizleme korunur. */
+  .yg-dash-handle{height:40px;top:-44px}
+  .yg-dash.collapsed:not(.full-hidden){transform:translateY(calc(100% + 2px))}
+  .yg-dcard{flex:0 0 200px}
+  /* GRUP A: detay kartı alt-offset'i dash gerçek yüksekliğine bağlı (--dashh, JS sync) — hardcoded 132px
+     dash 161px iken 29px çakışma yapıyordu. Açıkken offsetHeight+8, kapalı handle clearance, gizli tabana. */
+  .yg-detail{top:auto;bottom:calc(8px + var(--dashh,140px));left:8px;right:8px;width:auto}
+  /* DETAY KARTI KOMPAKT (mobil) — preview küçült: media+gövde+CTA daralt, harita/ray için yer aç */
+  .yg-detail-media{height:78px}
+  .yg-detail-body{padding:11px 13px 13px}
+  .yg-detail-name{font-size:15px}
+  .yg-detail-add{height:40px;margin-top:11px}
+  .yg-detail-visit{height:38px;margin-top:8px}
+  .yg-detail-more{height:38px}
+  /* KONUM BUL: tam-genişlik harita altında merkez/sığdır (panel-w formülü mobilde geçersiz) */
+  .yg-locate{right:14px}
+  .yg-geo-prompt{left:8px;right:8px;max-width:none;transform:none;justify-content:space-between}
+  .yg-toast-wrap{left:8px;right:8px;transform:none;align-items:center}
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition:none!important;animation:none!important}
+}
+
+/* =====================================================================
+   MARKA KİMLİĞİ (ref'te YOK — 2026-07-29). Ref .yg-brand'de platformun eski markasinin PNG
+   logosu (.yg-brand img, 26px) taşıyor; DadaGourmet'in kimliği görsel değil
+   lockup: gourmet.css satır 815-819 (.dg-brand/.dg-mark/.dg-word) BİREBİR
+   buraya kopyalandı — gourmet.css bu standalone sayfada yüklenmiyor.
+   TEK uyarlama: ölçüler ref'in 26px logo bandına indirildi (mark 40→30px,
+   word 23→17px) — header yüksekliği, hizası ve boşluğu ref'teki gibi kalsın.
+   Renk/font/radius değerleri gourmet.css'ten aynen; yeni değer icat edilmedi.
+   ===================================================================== */
+.dg-brand{display:flex;align-items:center;gap:9px;text-decoration:none}
+.dg-mark{flex:none;width:30px;height:30px;border-radius:9px;background:var(--tomato);color:#fff;display:grid;place-items:center;font-size:14px}
+.dg-word{font-size:17px;font-weight:700;letter-spacing:-.02em;line-height:1;white-space:nowrap}
+.dg-word b{color:var(--slate);font-family:"GilroyXB","Gilroy",sans-serif;font-weight:800}
+.dg-word .dg-st{color:var(--tomato-deep);font-family:"GilroyLt","Gilroy",sans-serif;font-weight:300}
+
+/* =====================================================================
+   DOKÜMAN TURU (2026-07-29) — "Dada Route – Yol Haritası" kalemleri.
+   Ref'te karşılığı OLMAYAN bölümler. Hepsi mevcut token'lardan ve mevcut
+   component ailesinden türetildi (yeni renk/radius/gölge İCAT EDİLMEDİ):
+   çipler .yg-fl-chip ailesinden, kartlar .yg-sum-card / .yg-sv-card
+   register'ından, butonlar .yg-detail-add / .yg-sv-btn deseninden.
+   ===================================================================== */
+
+/* --- §2 sayfa üst alanı ------------------------------------------------ */
+.yg-intro{margin-bottom:16px}
+.yg-h1{font-size:19px;font-weight:800;letter-spacing:-.02em;line-height:1.25;color:var(--slate);margin-bottom:6px}
+.yg-lede{font-size:13px;line-height:1.55;color:var(--slate-2)}
+
+/* --- §17 demo modu + §18 pilot güzergâhlar ----------------------------- */
+.yg-demo{margin-bottom:18px;padding:12px 13px;border:1px dashed var(--line-2);
+  border-radius:var(--radius-md);background:var(--cream-2)}
+.yg-demo[hidden]{display:none}
+.yg-demo-h{display:flex;align-items:center;gap:7px;font-size:11px;font-weight:800;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--tomato-deep);margin-bottom:6px}
+.yg-demo-note{font-size:12px;line-height:1.5;color:var(--slate-2)}
+/* KAPANIŞ TURU T10 (2026-08-08): .yg-pilots-block artık .yg-demo'nun DIŞINDA
+   ayrı bir kap (index.blade.php) — demo şeridi kapalıyken de pilotlar
+   basılsın diye. margin-bottom .yg-demo ile AYNI değer (18px), yeni bir
+   ölçü icat edilmedi. Pilot listesi boşsa (ROUTE_CFG.pilotGuzergahlar=[])
+   kap da .yg-saved-list:empty/.yg-sum-grid:empty İLE AYNI desenle gizlenir. */
+.yg-pilots-block{margin-bottom:18px}
+.yg-pilots-block:has(.yg-pilots:empty){display:none}
+/* İKİNCİ TUR (QA-2 bulgusu, 2026-08-08): #ygPilots kabı ayrıldıktan sonra
+   6/6 buton gerçek boyuta kavuştu ama 400px panelde 6 pilot tek satıra
+   sığmıyor — kaydırma ipucu #ygQuickFilters/#ygAllChips/.yg-tol-chips İLE
+   AYNI ortak dosyadan gelir (reference/shared/scroll-affordance.{css,js},
+   .vd-actbar ile de PAYLAŞILIR — ikinci kopya yazılmadı), `data-scroll-fade`
+   attribute'u index.blade.php'de. Renk AYNI komşu kurallardaki --paper
+   (satır ~1071), yeni değer icat edilmedi. */
+.yg-pilots{display:flex;gap:6px;margin-top:10px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px;--sf-fade-color:var(--paper)}
+.yg-pilots::-webkit-scrollbar{display:none}
+.yg-pilot{flex:0 0 auto;height:30px;padding:0 12px;border:1px solid var(--line-2);background:var(--paper);
+  border-radius:var(--radius-pill);font-size:12px;font-weight:600;color:var(--slate-2);
+  white-space:nowrap;transition:.16s var(--ease)}
+.yg-pilot:hover{border-color:var(--tomato);color:var(--tomato);background:var(--tomato-tint)}
+
+/* --- §5 zengin rota özeti --------------------------------------------- */
+.yg-sum-grid{margin-top:12px;display:flex;flex-direction:column;gap:1px}
+.yg-sum-grid:empty{display:none}
+.yg-sum-row{display:flex;align-items:baseline;justify-content:space-between;gap:12px;
+  padding:6px 0;border-bottom:1px solid var(--line)}
+.yg-sum-row:last-child{border-bottom:0}
+.yg-sum-k{flex:0 0 auto;display:inline-flex;align-items:center;gap:7px;font-size:12px;color:var(--muted)}
+.yg-sum-k i{font-size:11px;color:var(--line-2);width:13px;text-align:center}
+.yg-sum-v{flex:1;min-width:0;text-align:right;font-size:12.5px;font-weight:700;color:var(--slate);
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.yg-sum-row.acc .yg-sum-k i{color:var(--tomato)}
+.yg-sum-row.acc .yg-sum-v{color:var(--tomato-deep)}
+
+/* --- §4 alternatif rota kartı ----------------------------------------- */
+.yg-alt-figs{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.yg-alt-eta{font-size:11.5px;color:var(--muted)}
+.yg-alt-venues{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;color:var(--slate-2);margin-top:3px}
+.yg-alt-venues i{font-size:10px;color:var(--tomato)}
+.yg-alt-deltas{display:flex;gap:7px;margin-top:4px}
+.yg-alt-d{font-size:11px;font-weight:700;padding:1px 7px;border-radius:var(--radius-pill);
+  background:var(--cream-2);color:var(--slate-2)}
+.yg-alt-d.up{color:var(--tomato-deep)}
+.yg-alt-d.down{color:var(--green)}
+.yg-alt.is-active .yg-alt-tag{font-weight:800}
+
+/* --- §6 sapma toleransı (süre ekseni) --------------------------------- */
+.yg-tol-chips{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px;--sf-fade-color:var(--paper)}
+.yg-tol-chips::-webkit-scrollbar{display:none}
+.yg-tol-chip{flex:0 0 auto;height:32px;padding:0 12px;border:1px solid var(--line);background:var(--paper);
+  border-radius:var(--radius-pill);font-size:12px;font-weight:600;color:var(--muted);
+  white-space:nowrap;transition:.16s var(--ease)}
+.yg-tol-chip:hover:not(.is-active){border-color:var(--line-2);color:var(--slate)}
+.yg-tol-chip.is-active{background:var(--tomato);border-color:var(--tomato);color:#fff;font-weight:700}
+.yg-tol-custom{margin-top:12px}
+.yg-tol-custom[hidden]{display:none}
+
+/* --- §7 hızlı filtre şeridi (sol panel) ------------------------------- */
+.yg-quick{margin-top:20px}
+.yg-quick-h{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:8px}
+/* 15 çip mobilde sayfayı uzatmasın (§7): sarma yerine yatay kaydırma.
+   --sf-fade-color (Y5/E7b, kapanış turu 2026-08-08): kaydırma ipucu ortak
+   dosyadan gelir (reference/shared/scroll-affordance.css/js — .vd-actbar
+   ile AYNI kaynak, bkz. mekan-detay.css S6-c notu); rengi bu panelin kendi
+   zemini (--paper) — yeni renk icat edilmedi. */
+#ygQuickFilters,#ygAllChips,.yg-saved-tabs{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;--sf-fade-color:var(--paper)}
+#ygQuickFilters::-webkit-scrollbar,#ygAllChips::-webkit-scrollbar,.yg-saved-tabs::-webkit-scrollbar{display:none}
+#ygQuickFilters .yg-fl-chip,#ygAllChips .yg-fl-chip,.yg-saved-tabs .yg-fl-chip{flex:0 0 auto}
+.yg-fl-chip:disabled{opacity:.45;cursor:not-allowed}
+.yg-fl-chip:disabled:hover{border-color:var(--line);color:var(--muted)}
+
+/* --- §3 ara durak bekleme süresi -------------------------------------- */
+/* flex-basis calc(100% - 39px) + margin-left:39px = tam .yg-stop genişliği,
+   taşma yok; .yg-stop'un flex-wrap:wrap kuralıyla (yukarıda) birlikte bu
+   kutuyu marker+stop-body satırının ALTINA, girinti hizasında ayrı satıra
+   düşürür (G5 fix, bkz. yukarıdaki not). */
+.yg-stop-wait{display:flex;flex:0 0 calc(100% - 39px);align-items:center;justify-content:space-between;gap:10px;
+  margin:7px 0 0 39px;padding:7px 10px;border:1px solid var(--line);border-radius:var(--radius-sm);
+  background:rgba(255,255,255,.6)}
+.yg-stop-wait label{display:inline-flex;align-items:center;gap:7px;font-size:11.5px;color:var(--muted)}
+.yg-stop-wait i{font-size:11px;color:var(--tomato)}
+.yg-wait-sel,.yg-pl-stay-sel{height:26px;border:1px solid var(--line-2);border-radius:var(--radius-sm);
+  background:var(--paper);font-size:11.5px;font-weight:600;color:var(--slate);padding:0 5px}
+.yg-stop-add-t{font-size:11.5px;font-weight:700;color:var(--tomato-deep);white-space:nowrap}
+
+/* --- §9 mekân kartı ek alanları --------------------------------------- */
+.yd-detour,.yg-fl-detour{display:block;font-size:11px;line-height:1.4;color:var(--muted);margin-top:3px}
+.yg-fl-meta{display:flex;align-items:center;gap:7px;font-size:11.5px;color:var(--slate-2);margin-top:2px}
+.yg-fl-meta i{font-size:10px;color:var(--yellow)}
+.yg-fl-meta .dot{width:3px;height:3px;border-radius:50%;background:var(--line-2)}
+
+/* --- §13 sonuç bulunamadı aksiyonları --------------------------------- */
+.yg-fl-empty-acts{display:flex;flex-direction:column;gap:7px;max-width:260px;margin:14px auto 0}
+.yg-fl-empty-acts button{height:38px;display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  border:1px solid var(--line-2);background:var(--paper);border-radius:var(--radius-md);
+  font-size:12.5px;font-weight:600;color:var(--slate-2);transition:.16s var(--ease)}
+.yg-fl-empty-acts button i{font-size:11px;color:var(--tomato)}
+.yg-fl-empty-acts button:hover{border-color:var(--tomato);color:var(--tomato);background:var(--tomato-tint)}
+
+/* --- §10 Güzergâh Planım ---------------------------------------------- */
+.yg-plan{margin-top:20px}
+.yg-plan[hidden]{display:none}
+.yg-plan-h{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--tomato);margin-bottom:10px}
+.yg-plan-list{list-style:none;display:flex;flex-direction:column;gap:8px}
+.yg-pl-row{display:flex;align-items:flex-start;gap:10px;padding:11px 12px;background:var(--paper);
+  border:1px solid var(--line);border-radius:var(--radius-md)}
+.yg-pl-no{flex:none;width:24px;height:24px;border-radius:50%;background:var(--tomato);color:#fff;
+  display:grid;place-items:center;font-size:12px;font-weight:800}
+.yg-pl-main{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.yg-pl-name{font-size:13.5px;font-weight:700;color:var(--slate);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.yg-pl-loc{font-size:11.5px;color:var(--muted)}
+.yg-pl-facts{display:flex;flex-direction:column;gap:2px;margin-top:3px}
+.yg-pl-facts span{display:inline-flex;align-items:center;gap:6px;font-size:11px;color:var(--slate-2)}
+.yg-pl-facts i{font-size:10px;color:var(--line-2);width:12px;text-align:center}
+.yg-pl-unverified{color:var(--muted)}
+.yg-pl-stay{display:inline-flex;align-items:center;gap:7px;margin-top:6px;font-size:11px;color:var(--muted)}
+.yg-pl-stay i{font-size:10px;color:var(--tomato)}
+.yg-pl-acts{flex:none;display:flex;flex-direction:column;gap:4px}
+.yg-pl-acts button{width:28px;height:28px;border:1px solid var(--line);background:var(--paper);
+  border-radius:var(--radius-sm);color:var(--muted);font-size:11px;transition:.16s var(--ease)}
+.yg-pl-acts button:hover:not(:disabled){border-color:var(--tomato);color:var(--tomato)}
+.yg-pl-acts button:disabled{opacity:.35;cursor:not-allowed}
+.yg-plan-foot{margin-top:11px}
+/* Ayraç deseni püf detayının .art-hsep'inden (1px dikey çizgi) — metrikler
+   arasına dikey çizgi. ÖLÇÜM 2026-07-29: sayfadaki üç metrik satırından
+   #ygSumGrid satır-altı çizgisiyle (border-bottom) zaten ayrılıydı,
+   .yg-corr-counts kutu kenarlıklarıyla ayrılıydı, .yg-pl-sum ise HİÇ ayraç
+   taşımıyordu. Eksik olan tek satır buydu. */
+.yg-pl-sum{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:12px;background:var(--cream-2);
+  border-radius:var(--radius-md)}
+.yg-pl-sum div{position:relative}
+.yg-pl-sum div:nth-child(odd)::after{content:"";position:absolute;top:2px;bottom:2px;right:-4px;
+  width:1px;background:var(--line-2)}
+.yg-pl-sum div{display:flex;flex-direction:column;gap:2px}
+.yg-pl-sum span{font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.yg-pl-sum b{font-size:14px;font-weight:800;color:var(--slate)}
+.yg-pl-cta{display:flex;gap:8px;margin-top:9px}
+.yg-pl-cta button{flex:1;height:40px;display:inline-flex;align-items:center;justify-content:center;gap:7px;
+  border-radius:var(--radius-md);font-size:12.5px;font-weight:700;transition:.16s var(--ease)}
+.yg-pl-share{border:1px solid var(--line-2);background:var(--paper);color:var(--slate-2)}
+.yg-pl-share:hover{border-color:var(--tomato);color:var(--tomato);background:var(--tomato-tint)}
+.yg-pl-maps{border:1px solid var(--tomato);background:var(--tomato);color:#fff}
+.yg-pl-maps:hover{background:var(--tomato-dark);border-color:var(--tomato-dark)}
+
+/* --- §9 detay kartı: sapma · doğrulama · durak yap · ikincil aksiyonlar - */
+.yg-detail-detour{margin-top:9px;font-size:11.5px;line-height:1.45;color:var(--slate-2)}
+.yg-detail-detour:empty{display:none}
+.yg-detail-verify{margin-top:8px;padding:8px 10px;border-radius:var(--radius-sm);
+  font-size:11px;line-height:1.45;display:flex;gap:7px;align-items:flex-start}
+.yg-detail-verify:empty{display:none}
+.yg-detail-verify i{font-size:11px;margin-top:1px}
+.yg-detail-verify.warn{background:var(--cream-2);color:var(--slate-2)}
+.yg-detail-verify.warn i{color:var(--yellow)}
+.yg-detail-verify.ok{background:var(--green-tint);color:var(--slate-2)}
+.yg-detail-verify.ok i{color:var(--green)}
+.yg-detail-stop{margin-top:9px;width:100%;height:40px;display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  border:1px solid var(--line-2);background:var(--paper);border-radius:var(--radius-md);
+  font-size:13px;font-weight:700;color:var(--slate-2);transition:.16s var(--ease)}
+.yg-detail-stop i{font-size:12px;color:var(--tomato)}
+.yg-detail-stop:hover{border-color:var(--tomato);color:var(--tomato);background:var(--tomato-tint)}
+.yg-detail-sec{display:flex;gap:6px;margin-top:11px;padding-top:11px;border-top:1px solid var(--line)}
+.yg-detail-sbtn{flex:1;height:34px;display:inline-flex;align-items:center;justify-content:center;gap:5px;
+  border:1px solid var(--line);background:var(--paper);border-radius:var(--radius-sm);
+  font-size:11px;font-weight:600;color:var(--muted);transition:.16s var(--ease)}
+.yg-detail-sbtn i{font-size:11px}
+.yg-detail-sbtn:hover{border-color:var(--tomato);color:var(--tomato)}
+.yg-detail-sbtn.is-on{border-color:var(--tomato);color:var(--tomato);background:var(--tomato-tint)}
+
+/* --- §11 kaydetme kapısı + §15 hata bildir (aynı diyalog ailesi) ------- */
+.yg-gate{position:fixed;inset:0;z-index:600;display:grid;place-items:center;padding:22px;
+  background:rgba(33,30,22,.42);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px)}
+.yg-gate[hidden]{display:none}
+.yg-gate-card{position:relative;width:100%;max-width:380px;background:var(--paper);
+  border:1px solid var(--line);border-radius:var(--radius-lg);box-shadow:var(--sh-pop);
+  padding:28px 24px 22px;text-align:center}
+.yg-gate-x{position:absolute;top:10px;right:10px;width:32px;height:32px;border:0;background:transparent;
+  color:var(--muted);font-size:14px;border-radius:var(--radius-sm)}
+.yg-gate-x:hover{background:var(--cream-2);color:var(--slate)}
+.yg-gate-ico{width:52px;height:52px;margin:0 auto 14px;border-radius:50%;background:var(--tomato-tint);
+  color:var(--tomato);display:grid;place-items:center;font-size:20px}
+.yg-gate-card h2{font-size:17px;font-weight:800;letter-spacing:-.01em;margin-bottom:7px}
+.yg-gate-card p{font-size:13px;line-height:1.55;color:var(--slate-2);margin-bottom:18px}
+.yg-gate-acts{display:flex;flex-direction:column;gap:8px}
+.yg-gate-primary,.yg-gate-secondary{height:44px;display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  border-radius:var(--radius-md);font-size:13.5px;font-weight:700;text-decoration:none;transition:.16s var(--ease)}
+.yg-gate-primary{background:var(--tomato);border:1px solid var(--tomato);color:#fff}
+.yg-gate-primary:hover{background:var(--tomato-dark);border-color:var(--tomato-dark)}
+.yg-gate-secondary{background:var(--paper);border:1px solid var(--line-2);color:var(--slate-2)}
+.yg-gate-secondary:hover{border-color:var(--tomato);color:var(--tomato);background:var(--tomato-tint)}
+.yg-gate-ghost{height:38px;border:0;background:transparent;font-size:12.5px;font-weight:600;color:var(--muted)}
+.yg-gate-ghost:hover{color:var(--slate);text-decoration:underline}
+.yg-rep-acts button{height:44px;display:inline-flex;align-items:center;justify-content:flex-start;gap:10px;
+  padding:0 14px;border:1px solid var(--line-2);background:var(--paper);border-radius:var(--radius-md);
+  font-size:13px;font-weight:600;color:var(--slate-2);transition:.16s var(--ease)}
+.yg-rep-acts button i{font-size:12px;color:var(--tomato);width:16px;text-align:center}
+.yg-rep-acts button:hover{border-color:var(--tomato);color:var(--tomato);background:var(--tomato-tint)}
+
+/* --- §12 kayıtlı güzergâh kartı ek alanları ---------------------------- */
+.yg-saved-tabs{margin-bottom:12px}
+.yg-saved-tabs[hidden]{display:none}
+.yg-sv-kn{display:inline-block;min-width:17px;padding:0 4px;border-radius:var(--radius-pill);
+  background:rgba(33,30,22,.10);font-size:10.5px;font-weight:800;line-height:16px}
+.yg-fl-chip.is-active .yg-sv-kn{background:rgba(255,255,255,.28)}
+.yg-sv-empty-kat{padding:22px 12px;text-align:center;font-size:12.5px;color:var(--muted)}
+.yg-sv-ends{font-size:12px;color:var(--slate-2);margin-bottom:8px}
+.yg-sv-mini{display:block;width:100%;height:38px;margin-bottom:9px;border-radius:var(--radius-sm);
+  background:var(--cream-2);padding:3px 5px}
+.yg-sv-fav{margin-left:auto;width:28px;height:28px;border:0;background:transparent;color:var(--line-2);font-size:13px}
+.yg-sv-fav:hover{color:var(--yellow)}
+.yg-sv-card.is-fav .yg-sv-fav{color:var(--yellow)}
+.yg-sv-trip{display:flex;align-items:center;gap:8px;margin:8px 0 2px;font-size:11px;color:var(--muted)}
+.yg-sv-trip i{font-size:11px;color:var(--tomato)}
+.yg-sv-trip-i{height:28px;border:1px solid var(--line-2);border-radius:var(--radius-sm);background:var(--paper);
+  font-size:11.5px;font-weight:600;color:var(--slate);padding:0 6px}
+
+/* --- Güzergâh başlığı: etiket iki satıra düşünce sıkışmasın -------------
+   ÖLÇÜM (2026-07-29, 390px): iki aksiyon butonu tek satırda kalıyor ama
+   ETİKETLERİ buton içinde iki satıra sarıyordu; buton `height:32px` sabit
+   olduğu için iki satır 32px'e sıkışıyor, satırlar birbirine giriyordu
+   ("Yeni Rota / Oluştur", "Başlangıç ve Varışı / Değiştir").
+   Çözüm: sabit yükseklik yerine ALT SINIR + gerçek dikey padding + okunur
+   satır yüksekliği; başlık ve aksiyon şeridi dar ekranda sarabilsin, sarınca
+   satır arası boşluk kalsın. Yeni token/renk/radius YOK — mevcut değerler. */
+.yg-sec-head{flex-wrap:wrap;row-gap:10px}
+.yg-sec-actions{flex-wrap:wrap;row-gap:8px}
+.yg-newroute,.yg-reverse{
+  height:auto;min-height:32px;padding:6px 11px;line-height:1.25;
+  text-align:left;white-space:normal;
+}
+.yg-newroute i,.yg-reverse i{flex:none}
+
+/* --- §8 mobil Harita/Liste segmenti ------------------------------------ */
+.yg-viewtoggle{display:none}
+.yg-empty-sub{margin-top:9px;font-size:12.5px;color:var(--muted)}
+
+@media (max-width:860px){
+  /* segment yalnız mobilde: sheet zaten alta sabit, yeni sabit katman eklenmez */
+  .yg-viewtoggle{display:flex;gap:6px;padding:0 16px 10px}
+  .yg-viewtoggle button{flex:1;height:40px;display:inline-flex;align-items:center;justify-content:center;gap:7px;
+    border:1px solid var(--line-2);background:var(--paper);border-radius:var(--radius-md);
+    font-size:12.5px;font-weight:700;color:var(--slate-2);transition:.16s var(--ease)}
+  .yg-viewtoggle button i{font-size:12px}
+  .yg-viewtoggle button.is-active{background:var(--tomato);border-color:var(--tomato);color:#fff}
+  /* peek = harita modu: segment bandı katlanır, listeye dönüş etiketi peek şeridinde durur */
+  .yg-panel.sheet-peek .yg-viewtoggle{display:none}
+  .yg-sheet-ctx-cta{flex:0 0 auto;display:inline-flex;align-items:center;height:30px;padding:0 11px;
+    border-radius:var(--radius-pill);background:var(--tomato-tint);color:var(--tomato-deep);
+    font-size:11.5px;font-weight:700;white-space:nowrap}
+  .yg-panel:not(.sheet-peek) .yg-sheet-ctx-cta{display:none}
+  .yg-pl-sum{grid-template-columns:1fr 1fr}
+  .yg-h1{font-size:17.5px}
+}
+/* Dar ekran: lockup ref logosunun bandına (≈111px) sığmalı. Ölçüldü — 149px'lik
+   masaüstü boyu 390px'te .yg-title'ı .yg-close'un üstüne bindiriyordu (başlık
+   sağ kenarı 297px, buton sol kenarı 288px; referansta 260 < 288). Kırılma
+   noktası .yg-top'un kendi mobil bandıyla (860px) aynı. */
+@media (max-width:860px){
+  .dg-brand{gap:7px}
+  .dg-mark{width:26px;height:26px;border-radius:8px;font-size:12px}
+  .dg-word{font-size:14px}
+}

@@ -1,0 +1,404 @@
+<!DOCTYPE html><html lang="tr"><head>
+    <meta charset="utf-8">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    
+    
+    <title>Dada Route · Dada Route · DadaGourmet</title>
+    
+    <meta property="og:type" content="website">
+<meta property="og:site_name" content="DadaGourmet">
+<meta property="og:title" content="Dada Route · Dada Route · DadaGourmet">
+<meta property="og:url" content="https://dadagourmet.com/dada-route">
+<meta name="twitter:card" content="summary">
+    <link rel="shortcut icon" type="image/x-icon" href="varliklar/favicon.ico">
+    <link rel="stylesheet" href="varliklar/fontawesome/css/all.min.css">
+    
+    <link rel="stylesheet" href="varliklar/_dis/unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+    <link rel="stylesheet" href="varliklar/reference/dada-route/dada-route.css">
+    
+    <link rel="stylesheet" href="varliklar/reference/shared/scroll-affordance.css">
+    
+    <link rel="stylesheet" href="varliklar/reference/shared/dada-autocomplete.css">
+<style>/* GOURMET KELİME MARKASI · gömülü — bu sayfa harici stil yüklemiyor */
+
+/* === DADAGOURMET KELİME MARKASI — vektör (gourmet-logo.mjs) ===
+   Kanon §27b karşılığı. Ölçü OPTİK EŞİTLİK ile: FIT kutusu ÷ 0.8406
+   — "gourmet"in 'g' ineni kutuya giriyor, aynı kutuda harfler küçük kalıyordu.
+   Renk KAPTAN gelir; SVG currentColor taşır. */
+.gourmet-word-mark{height:28.55px;width:auto;display:block;flex:0 0 auto;color:var(--tomato-deep)}
+/* işaret düştü: kutu ve aradaki boşluk da kalkar */
+.brand,.dg-brand,.drawer-brand,.foot-lockup{gap:0}
+/* dip · koyu marka zemini — kaynağın kendi kuralı (.fl-word .bd/.sf → #fff) */
+.site-foot .gourmet-word-mark,.foot-lockup .gourmet-word-mark{color:#fff;height:33.31px}
+/* çekmece: kaynak kelimeyi küçültüyordu (23px → 18px); kanon oranı 19 ÷ 0.8406 */
+.drawer-brand .gourmet-word-mark{height:22.6px}
+.drawer-brand{display:flex;align-items:center}
+/* kopuk mod (header.yg-top) — kaynak orada kelimeyi 17px basıyordu;
+   aynı oran korunarak kanon kutusuna çevrildi: 17/23 × header */
+.yg-brand .gourmet-word-mark{height:21.1px}
+.yg-brand .dg-brand{display:flex;align-items:center}
+
+/* ── LOGO RENGİ · SAYDAM HEADER → BEYAZ ───────────────────────────────
+   Kaynağın kendi davranışı, metin sürümünde ölçüldü:
+     .header.at-top .dg-word .bd,.header.at-top .dg-word .sf{color:#fff}
+   Vektörde karşılığı tek satır. */
+.header.at-top .gourmet-word-mark{color:#fff}
+
+/* ── İSTİSNA · GİRİŞ VE KAYIT: HER ZAMAN RENKLİ ───────────────────────
+   Beyar kuralı 2026-09-04, dört markada geçerli. Emsal deneme/fit-giris.html:
+   orada at-top→beyaz kuralı hiç yok, marka rengi saydam header'da da durur.
+   Burada kabuk CSS'i ORTAK olduğu için kural silinemez; gövdeye basılan
+   dg-auth sınıfıyla geri alınır (yalnız giriş ailesi bu sınıfı taşır). */
+body.dg-auth .header.at-top .gourmet-word-mark{color:var(--tomato-deep)}
+</style>
+</head>
+<body>
+
+<!-- ===== MİNİMAL HEADER (kopuk mod) ===== -->
+<header class="yg-top">
+  <div class="yg-brand">
+    
+    <a class="dg-brand" href="anasayfa.html" aria-label="DadaGourmet — Keşfet">
+      <span class="dg-word"><svg class="gourmet-word-mark" viewBox="948.855 1817.809 1982.461 348.812" role="img" aria-label="DadaGourmet" xmlns="http://www.w3.org/2000/svg"><title>DadaGourmet</title><path fill-rule="nonzero" fill="currentColor" d="M 1054.648438 1965.539062 C 1076.578125 1965.539062 1091.199219 1982.464844 1091.199219 2002.46875 C 1091.199219 2022.859375 1076.578125 2039.398438 1054.648438 2039.398438 C 1032.722656 2039.398438 1018.101562 2022.859375 1018.101562 2002.46875 C 1018.101562 1982.464844 1032.722656 1965.539062 1054.648438 1965.539062 M 1054.648438 2104.414062 C 1116.203125 2104.414062 1160.445312 2061.710938 1160.445312 2002.851562 L 1160.445312 1817.808594 L 1091.199219 1817.808594 L 1091.199219 1911.292969 C 1079.265625 1904.753906 1065.039062 1900.523438 1050.800781 1900.523438 C 989.636719 1900.523438 948.855469 1941.300781 948.855469 2002.851562 C 948.855469 2058.632812 994.636719 2104.414062 1054.648438 2104.414062  M 1268.167969 1965.152344 C 1290.101562 1965.152344 1304.722656 1982.078125 1304.722656 2002.46875 C 1304.722656 2022.472656 1290.101562 2039.402344 1268.167969 2039.402344 C 1246.242188 2039.402344 1231.625 2022.472656 1231.625 2002.46875 C 1231.625 1982.078125 1246.242188 1965.152344 1268.167969 1965.152344 M 1256.628906 2104.414062 C 1278.945312 2104.414062 1296.257812 2097.105469 1308.566406 2084.410156 L 1308.566406 2098.644531 L 1373.96875 2098.644531 L 1373.96875 2002.082031 C 1373.96875 1943.222656 1329.726562 1900.136719 1268.167969 1900.136719 C 1208.160156 1900.136719 1162.378906 1946.300781 1162.378906 2002.082031 C 1162.378906 2058.25 1200.464844 2104.414062 1256.628906 2104.414062  M 1481.691406 1965.539062 C 1503.625 1965.539062 1518.242188 1982.464844 1518.242188 2002.46875 C 1518.242188 2022.859375 1503.625 2039.398438 1481.691406 2039.398438 C 1459.765625 2039.398438 1445.148438 2022.859375 1445.148438 2002.46875 C 1445.148438 1982.464844 1459.765625 1965.539062 1481.691406 1965.539062 M 1481.691406 2104.414062 C 1543.246094 2104.414062 1587.492188 2061.710938 1587.492188 2002.851562 L 1587.492188 1817.808594 L 1518.242188 1817.808594 L 1518.242188 1911.292969 C 1506.316406 1904.753906 1492.085938 1900.523438 1477.847656 1900.523438 C 1416.679688 1900.523438 1375.902344 1941.300781 1375.902344 2002.851562 C 1375.902344 2058.632812 1421.683594 2104.414062 1481.691406 2104.414062  M 1695.214844 1965.152344 C 1717.148438 1965.152344 1731.769531 1982.078125 1731.769531 2002.46875 C 1731.769531 2022.472656 1717.148438 2039.402344 1695.214844 2039.402344 C 1673.292969 2039.402344 1658.667969 2022.472656 1658.667969 2002.46875 C 1658.667969 1982.078125 1673.292969 1965.152344 1695.214844 1965.152344 M 1683.675781 2104.414062 C 1705.988281 2104.414062 1723.304688 2097.105469 1735.613281 2084.410156 L 1735.613281 2098.644531 L 1801.011719 2098.644531 L 1801.011719 2002.082031 C 1801.011719 1943.222656 1756.769531 1900.136719 1695.214844 1900.136719 C 1635.207031 1900.136719 1589.425781 1946.300781 1589.425781 2002.082031 C 1589.425781 2058.25 1627.507812 2104.414062 1683.675781 2104.414062  M 1920.078125 2084.046875 C 1937.285156 2084.046875 1951.984375 2078.105469 1963.867188 2066.21875 C 1975.753906 2054.023438 1981.695312 2039.320312 1981.695312 2022.117188 C 1981.695312 2004.914062 1975.753906 1990.214844 1963.867188 1978.328125 C 1951.984375 1966.128906 1937.285156 1960.1875 1920.078125 1960.1875 C 1902.875 1960.1875 1888.175781 1966.128906 1876.292969 1978.328125 C 1864.40625 1990.214844 1858.464844 2004.914062 1858.464844 2022.117188 C 1858.464844 2039.320312 1864.40625 2054.023438 1876.292969 2066.21875 C 1888.175781 2078.105469 1902.875 2084.046875 1920.078125 2084.046875 M 1981.695312 1943.925781 L 2002.339844 1943.925781 L 2002.339844 2094.058594 C 2002.339844 2116.574219 1994.519531 2134.40625 1979.195312 2147.226562 C 1963.867188 2160.054688 1945.414062 2166.621094 1923.832031 2166.621094 C 1887.238281 2166.621094 1862.53125 2153.796875 1849.707031 2128.460938 L 1867.847656 2118.140625 C 1877.230469 2137.21875 1895.996094 2146.601562 1923.832031 2146.601562 C 1959.800781 2146.601562 1981.695312 2126.273438 1981.695312 2094.058594 L 1981.695312 2069.660156 C 1967.308594 2092.492188 1946.355469 2104.066406 1918.515625 2104.066406 C 1896.308594 2104.066406 1877.230469 2096.246094 1861.277344 2080.292969 C 1845.640625 2064.34375 1837.820312 2044.949219 1837.820312 2022.117188 C 1837.820312 1999.285156 1845.640625 1979.894531 1861.277344 1963.941406 C 1877.230469 1947.992188 1896.308594 1940.171875 1918.515625 1940.171875 C 1946.355469 1940.171875 1967.308594 1951.746094 1981.695312 1974.574219 Z M 1981.695312 1943.925781  M 2101.804688 2084.046875 C 2119.007812 2084.046875 2133.710938 2078.105469 2145.59375 2066.21875 C 2157.480469 2054.023438 2163.425781 2039.320312 2163.425781 2022.117188 C 2163.425781 2004.914062 2157.480469 1990.214844 2145.59375 1978.328125 C 2133.710938 1966.128906 2119.007812 1960.1875 2101.804688 1960.1875 C 2084.605469 1960.1875 2069.902344 1966.128906 2058.015625 1978.328125 C 2046.132812 1990.214844 2040.1875 2004.914062 2040.1875 2022.117188 C 2040.1875 2039.320312 2046.132812 2054.023438 2058.015625 2066.21875 C 2069.902344 2078.105469 2084.605469 2084.046875 2101.804688 2084.046875 M 2101.804688 2104.066406 C 2078.972656 2104.066406 2059.269531 2096.246094 2043.316406 2080.605469 C 2027.367188 2064.65625 2019.546875 2045.261719 2019.546875 2022.117188 C 2019.546875 1998.972656 2027.367188 1979.582031 2043.316406 1963.941406 C 2059.269531 1947.992188 2078.972656 1940.171875 2101.804688 1940.171875 C 2124.640625 1940.171875 2144.03125 1947.992188 2159.980469 1963.941406 C 2175.933594 1979.582031 2184.066406 1998.972656 2184.066406 2022.117188 C 2184.066406 2045.261719 2175.933594 2064.65625 2159.980469 2080.605469 C 2144.03125 2096.246094 2124.640625 2104.066406 2101.804688 2104.066406  M 2311.371094 1943.925781 L 2332.015625 1943.925781 L 2332.015625 2100.3125 L 2311.371094 2100.3125 L 2311.371094 2075.917969 C 2299.796875 2094.683594 2282.28125 2104.066406 2258.824219 2104.066406 C 2220.980469 2104.066406 2197.519531 2079.042969 2197.519531 2039.945312 L 2197.519531 1943.925781 L 2218.164062 1943.925781 L 2218.164062 2039.945312 C 2218.164062 2067.785156 2233.488281 2084.046875 2260.699219 2084.046875 C 2290.726562 2084.046875 2311.371094 2065.59375 2311.371094 2025.871094 Z M 2311.371094 1943.925781  M 2379.25 1969.886719 C 2388.945312 1950.804688 2405.207031 1941.421875 2428.667969 1941.421875 L 2428.667969 1961.4375 C 2400.203125 1961.4375 2379.25 1977.390625 2379.25 2013.359375 L 2379.25 2100.3125 L 2358.605469 2100.3125 L 2358.605469 1943.925781 L 2379.25 1943.925781 Z M 2379.25 1969.886719  M 2664.816406 2002.726562 L 2664.816406 2100.3125 L 2644.171875 2100.3125 L 2644.171875 2002.726562 C 2644.171875 1975.511719 2628.847656 1960.1875 2606.011719 1960.1875 C 2580.054688 1960.1875 2562.539062 1977.078125 2562.539062 2013.671875 L 2562.539062 2100.3125 L 2541.894531 2100.3125 L 2541.894531 2002.726562 C 2541.894531 1975.203125 2527.820312 1960.1875 2505.300781 1960.1875 C 2480.277344 1960.1875 2460.257812 1977.390625 2460.257812 2013.671875 L 2460.257812 2100.3125 L 2439.617188 2100.3125 L 2439.617188 1943.925781 L 2460.257812 1943.925781 L 2460.257812 1966.757812 C 2471.519531 1948.929688 2487.472656 1940.171875 2508.113281 1940.171875 C 2530.636719 1940.171875 2546.585938 1949.554688 2555.65625 1968.632812 C 2566.917969 1949.554688 2583.808594 1940.171875 2606.328125 1940.171875 C 2641.355469 1940.171875 2664.816406 1964.253906 2664.816406 2002.726562  M 2699.542969 2012.421875 L 2816.207031 2012.421875 C 2814.015625 1995.847656 2807.761719 1983.023438 2797.125 1973.949219 C 2786.492188 1964.878906 2773.980469 1960.1875 2759.90625 1960.1875 C 2727.378906 1960.1875 2703.609375 1981.457031 2699.542969 2012.421875 M 2815.894531 1964.878906 C 2830.28125 1981.144531 2837.476562 2000.535156 2837.476562 2022.742188 C 2837.476562 2024.933594 2837.164062 2028.375 2836.851562 2032.4375 L 2699.542969 2032.4375 C 2703.609375 2064.03125 2728.316406 2084.046875 2761.785156 2084.046875 C 2785.554688 2084.046875 2803.382812 2073.414062 2812.140625 2057.460938 L 2830.28125 2068.097656 C 2816.519531 2090.304688 2791.808594 2104.066406 2761.472656 2104.066406 C 2736.761719 2104.066406 2716.746094 2096.246094 2701.417969 2080.921875 C 2686.089844 2065.59375 2678.269531 2045.890625 2678.269531 2022.117188 C 2678.269531 1998.660156 2685.78125 1979.269531 2701.105469 1963.628906 C 2716.429688 1947.992188 2735.824219 1940.171875 2759.90625 1940.171875 C 2783.050781 1940.171875 2801.820312 1948.304688 2815.894531 1964.878906  M 2931.316406 1963.941406 L 2886.273438 1963.941406 L 2886.273438 2058.710938 C 2886.273438 2085.609375 2901.289062 2083.421875 2931.316406 2082.171875 L 2931.316406 2100.3125 C 2887.527344 2106.882812 2865.628906 2094.996094 2865.628906 2058.710938 L 2865.628906 1963.941406 L 2832.789062 1963.941406 L 2832.789062 1943.925781 L 2865.628906 1943.925781 L 2865.628906 1906.390625 L 2886.273438 1900.136719 L 2886.273438 1943.925781 L 2931.316406 1943.925781 Z M 2931.316406 1963.941406 "/></svg></span>
+    </a>
+    <span class="yg-sep"></span>
+    
+    <b class="yg-title" title="Dada Route">Dada Route</b>
+  </div>
+  <a class="yg-close" href="anasayfa.html" aria-label="Kapat ve ana sayfaya dön">
+    <i class="fa-solid fa-xmark"></i> Kapat
+  </a>
+</header>
+
+<!-- ===== SPLIT: SOL PANEL + TAM-EKRAN HARİTA ===== -->
+<div class="yg-app" style="--locb: 0px; --dashh: 0px;">
+
+  <!-- SOL PANEL (Dock) · mobilde alttan çekilen bottom-sheet -->
+  <aside class="yg-panel">
+    <div class="yg-sheet-grip" role="button" tabindex="0"></div>
+    <!-- PEEK özet chip — yalnız mobil + peek -->
+    <button class="yg-sheet-ctx" id="ygSheetCtx" type="button">
+      <span class="yg-sheet-ctx-txt">
+        <span class="yg-sheet-ctx-main" id="ygSheetCtxMain">Rotanı çiz</span>
+        <span class="yg-sheet-ctx-sub" id="ygSheetCtxSub">Kalkış ve varış şehrini seç</span>
+      </span>
+      
+      <span class="yg-sheet-ctx-cta">Listeyi Gör</span>
+      <i class="fa-solid fa-chevron-up yg-sheet-ctx-go" aria-hidden="true"></i>
+    </button>
+
+    
+    <div class="yg-viewtoggle" id="ygViewToggle" role="group" aria-label="Görünüm">
+      <button type="button" data-v="map"><i class="fa-solid fa-map-location-dot"></i> Haritayı Gör</button>
+      <button type="button" data-v="list" class="is-active"><i class="fa-solid fa-list-ul"></i> Listeyi Gör</button>
+    </div>
+
+    <div class="yg-tabs" role="tablist">
+      <button class="yg-tab is-active" id="tabRoute" role="tab" aria-selected="true">
+        <i class="fa-solid fa-route"></i> Rota Kur
+      </button>
+      <button class="yg-tab" id="tabSaved" role="tab" aria-selected="false">
+        <i class="fa-regular fa-bookmark"></i> Güzergâhlarım <span class="yg-tab-cnt" id="savedCnt" hidden="">0</span>
+      </button>
+    </div>
+
+    <div class="yg-views">
+
+      <!-- VIEW A: ROTA KUR -->
+      <section class="yg-view is-active" id="viewRoute" role="tabpanel" aria-labelledby="tabRoute">
+
+        
+        <div class="yg-intro">
+          <h1 class="yg-h1">Yol Üstü Lezzet Rotanı Oluştur</h1>
+          <p class="yg-lede">Nereden nereye gittiğini seç; rotana en az sapmayla ulaşabileceğin DadaGourmet duraklarını keşfet.</p>
+        </div>
+
+        
+        <div class="yg-demo" id="ygDemo" hidden="">
+          <div class="yg-demo-h"><i class="fa-solid fa-flask" aria-hidden="true"></i> Demo sürümü</div>
+          <p class="yg-demo-note" id="ygDemoNote"></p>
+        </div>
+
+        
+        <div class="yg-pilots-block">
+          <span class="yg-eyebrow">Pilot güzergâhlar</span>
+          <div class="yg-pilots has-scroll-r" id="ygPilots" data-scroll-fade="" data-sf-wired="1"><button class="yg-pilot" type="button" data-p="0">İstanbul – İzmir</button><button class="yg-pilot" type="button" data-p="1">İstanbul – Ankara</button><button class="yg-pilot" type="button" data-p="2">Ankara – Antalya</button><button class="yg-pilot" type="button" data-p="3">İstanbul – Bursa</button><button class="yg-pilot" type="button" data-p="4">İzmir – Çeşme</button></div>
+        </div>
+
+        <div class="yg-sec-head">
+          <span class="yg-eyebrow">Güzergâh</span>
+          <div class="yg-sec-actions">
+            <button class="yg-newroute" id="ygNewRoute" type="button" hidden=""><i class="fa-solid fa-rotate-left"></i> Yeni Rota Oluştur</button>
+            
+            <button class="yg-newroute" id="ygUseLocation" type="button" title="Konumumu kullan">
+              <i class="fa-solid fa-location-crosshairs"></i> Konumumu kullan
+            </button>
+            <button class="yg-reverse" id="ygReverse" type="button" disabled="" title="Başlangıç ve Varışı Değiştir">
+              <i class="fa-solid fa-arrow-right-arrow-left"></i> Başlangıç ve Varışı Değiştir
+            </button>
+          </div>
+        </div>
+
+        <div class="yg-route">
+          <!-- TEK TİP DURAK LİSTESİ (1, 2, 3… seçim sırasına göre) -->
+          <ul class="yg-stop-list" id="ygStopList"><li class="yg-stop" draggable="true" data-i="0"><span class="yg-marker station" aria-hidden="true">1</span><div class="yg-stop-body"><div class="yg-field"><input type="text" class="yg-stop-input" data-i="0" autocomplete="off" placeholder="Nereden? Şehir, ilçe, semt veya nokta" aria-label="Nereden?" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="dada-ac-xdk6ocn"><button class="yg-stop-clear" type="button" tabindex="-1" aria-label="Seçimi temizle"><i class="fa-solid fa-xmark"></i></button><div class="ac-panel" hidden="" id="dada-ac-xdk6ocn" role="listbox"></div></div><span class="yg-grip" aria-hidden="true" title="Sürükle"><i class="fa-solid fa-grip-vertical"></i></span><button class="yg-stop-x" type="button" aria-label="Durağı kaldır" title="Durağı kaldır" disabled=""><i class="fa-solid fa-trash-can"></i></button></div></li><li class="yg-stop" draggable="true" data-i="1"><span class="yg-marker station" aria-hidden="true">2</span><div class="yg-stop-body"><div class="yg-field"><input type="text" class="yg-stop-input" data-i="1" autocomplete="off" placeholder="Nereye? Şehir, ilçe, semt veya nokta" aria-label="Nereye?" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="dada-ac-bsv7ki9"><button class="yg-stop-clear" type="button" tabindex="-1" aria-label="Seçimi temizle"><i class="fa-solid fa-xmark"></i></button><div class="ac-panel" hidden="" id="dada-ac-bsv7ki9" role="listbox"></div></div><span class="yg-grip" aria-hidden="true" title="Sürükle"><i class="fa-solid fa-grip-vertical"></i></span><button class="yg-stop-x" type="button" aria-label="Durağı kaldır" title="Durağı kaldır" disabled=""><i class="fa-solid fa-trash-can"></i></button></div></li></ul>
+
+          <!-- §3 + durak ekle (en fazla 3 ara durak) -->
+          <div class="yg-add-row">
+            <span class="yg-add-dot" aria-hidden="true"><i class="fa-solid fa-plus"></i></span>
+            <button class="yg-add" id="ygStopAdd" type="button" title=""><i class="fa-solid fa-plus"></i> Ara Durak Ekle</button>
+          </div>
+        </div>
+
+        
+        <div class="yg-summary" id="ygSummary" hidden="">
+          <div class="yg-divider"></div>
+          <div class="yg-sum-card">
+            <div class="yg-sum-figs"><b id="ygKm">—</b><span id="ygKmUnit">km</span></div>
+            <div class="yg-sum-grid" id="ygSumGrid"></div>
+            <div class="yg-sum-note" id="ygNote"></div>
+          </div>
+        </div>
+
+        <!-- MOBİL browse keşfi -->
+        <button class="yg-browse-cta" id="ygBrowseCta" type="button" hidden="">
+          <span class="yg-browse-cta-l"><i class="fa-solid fa-utensils"></i> <span><b id="ygBrowseCnt">0</b> yol üstü mekân</span></span>
+          <span class="yg-browse-cta-go">Haritada gör <i class="fa-solid fa-arrow-right"></i></span>
+        </button>
+
+        
+        <div class="yg-alts" id="ygAlts" hidden="">
+          <div class="yg-alts-h">Alternatif rotalar</div>
+          <div id="ygAltList"></div>
+        </div>
+
+        
+        <div class="yg-corr" id="ygCorr" hidden="">
+          <div class="yg-corr-top">
+            <span class="yg-corr-h">Sapma toleransı</span>
+          </div>
+          <div class="yg-tol-chips" id="ygTolChips" data-scroll-fade="" data-sf-wired="1"><button class="yg-tol-chip" type="button" data-tol="tam">Tam Yol Üstü</button><button class="yg-tol-chip" type="button" data-tol="dk5">En Fazla 5 Dakika Sapma</button><button class="yg-tol-chip is-active" type="button" data-tol="dk10">En Fazla 10 Dakika Sapma</button><button class="yg-tol-chip" type="button" data-tol="dk20">En Fazla 20 Dakika Sapma</button><button class="yg-tol-chip" type="button" data-tol="ozel">Özel Mesafe Seç</button></div>
+          <div class="yg-tol-custom" id="ygTolCustom" hidden="">
+            <div class="yg-corr-top">
+              <span class="yg-corr-h">Rotadan en fazla uzaklık</span>
+              <span class="yg-corr-val" id="ygCorrVal">12 km</span>
+            </div>
+            <input type="range" id="ygCorrSlider" min="2" max="30" step="1" value="12" aria-label="Rotadan en fazla uzaklık (km)">
+          </div>
+          <div class="yg-corr-counts">
+            <div class="yg-cc on"><b id="ygCntOn">0</b><span>Yol üstü</span></div>
+            <div class="yg-cc near"><b id="ygCntNear">0</b><span>Yola yakın</span></div>
+          </div>
+        </div>
+
+        
+        <div class="yg-quick" id="ygQuickWrap">
+          <div class="yg-quick-h">Hızlı filtreler</div>
+          <div class="yg-fl-chips has-scroll-r" id="ygQuickFilters" data-scroll-fade="" data-sf-wired="1"><button class="yg-fl-chip is-active" type="button" data-f="all">Tümü</button><button class="yg-fl-chip" type="button" data-f="tam">Tam Yol Üstü</button><button class="yg-fl-chip" type="button" data-f="dk5">5 Dakikaya Kadar Sapma</button><button class="yg-fl-chip" type="button" data-f="dk10">10 Dakikaya Kadar Sapma</button><button class="yg-fl-chip" type="button" data-f="dk20">20 Dakikaya Kadar Sapma</button><button class="yg-fl-chip" type="button" data-f="acik">Şu An Açık</button><button class="yg-fl-chip" type="button" data-f="kahvalti">Kahvaltı</button><button class="yg-fl-chip" type="button" data-f="ogle">Öğle Yemeği</button><button class="yg-fl-chip" type="button" data-f="aksam">Akşam Yemeği</button><button class="yg-fl-chip" type="button" data-f="kahve">Kahve</button><button class="yg-fl-chip" type="button" data-f="tatli">Tatlı</button><button class="yg-fl-chip" type="button" data-f="yoresel">Yöresel Lezzet</button><button class="yg-fl-chip" type="button" data-f="hizli">Hızlı Mola</button><button class="yg-fl-chip" type="button" data-f="aile">Aileye Uygun</button></div>
+        </div>
+
+        <!-- GÜZERGÂHIMDAKİ MEKÂNLAR (seçili mekân koleksiyonu; durak DEĞİL) -->
+        <div class="yg-mine" id="ygMine" hidden="">
+          <div class="yg-mine-head">
+            <span class="yg-mine-h">Güzergâhımdaki mekânlar</span>
+            <span class="yg-mine-cnt" id="ygMineCnt">0</span>
+          </div>
+          <div class="yg-mine-sub" id="ygMineSub" hidden=""></div>
+          <div class="yg-mine-empty" id="ygMineEmpty">
+            <i class="fa-solid fa-utensils"></i>
+            <span>Henüz mekân eklemedin. Aşağıdaki kadrandan bir mekâna dokun, Güzergâha Ekle ile buraya taşı.</span>
+          </div>
+          <ul class="yg-mine-list" id="ygMineList"></ul>
+        </div>
+
+        
+        <div class="yg-plan" id="ygPlan" hidden="">
+          <div class="yg-divider"></div>
+          <div class="yg-plan-h"><i class="fa-solid fa-list-ol" aria-hidden="true"></i> Güzergâh Planım</div>
+          <ul class="yg-plan-list" id="ygPlanList"></ul>
+          <div class="yg-plan-foot" id="ygPlanFoot"></div>
+        </div>
+
+        <!-- GÜZERGÂHIMI KAYDET -->
+        <div class="yg-save" id="ygSave" hidden="">
+          <div class="yg-divider"></div>
+          <div class="yg-save-ctx" id="ygSaveCtx" hidden="">
+            <i class="fa-solid fa-route" aria-hidden="true"></i>
+            <span>Yüklü güzergâh: <b id="ygSaveCtxName">—</b></span>
+          </div>
+          <label class="yg-save-lbl" for="ygSaveName">Güzergâh adı</label>
+          <div class="yg-save-field">
+            <i class="fa-solid fa-pen" aria-hidden="true"></i>
+            <input type="text" id="ygSaveName" class="yg-save-name" maxlength="64" autocomplete="off" aria-label="Güzergâh adı" placeholder="Kalkış → Varış">
+          </div>
+          <button class="yg-save-btn" id="ygSaveBtn" type="button"><i class="fa-regular fa-bookmark" id="ygSaveBtnIco"></i> <span id="ygSaveBtnTxt">Güzergâhımı Kaydet</span></button>
+        </div>
+
+        
+        <div class="yg-empty" id="ygStart">
+          <div class="yg-empty-ico"><i class="fa-solid fa-map-location-dot"></i></div>
+          <h3>Yol üstü lezzetleri keşfetmeye hazır mısın?</h3>
+          
+          <p>Kalkış ve varış noktanı seç; rotandaki DadaGourmet duraklarını bulalım.</p>
+          <p class="yg-empty-sub">Kalkış ve varış noktanı seçtiğinde rota mesafesi, tahmini süre ve yol üstü mekânlar burada görünecek.</p>
+        </div>
+      </section>
+
+      <!-- VIEW B: TÜM ROTA MEKÂNLARI ("Tümünü Gör" push view) -->
+      <section class="yg-view" id="viewAll" role="tabpanel" hidden="">
+        <div class="yg-all-head">
+          <div class="yg-bc">
+            <button class="yg-bc-back" id="ygAllBack" type="button"><i class="fa-solid fa-chevron-left"></i> Geri</button>
+            <span class="yg-bc-cur">Tüm Mekânlar</span>
+          </div>
+          <div class="yg-search">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="ygAllSearch" autocomplete="off" placeholder="Mekân ara…" aria-label="Mekân ara">
+          </div>
+          <div class="yg-fl-chips" id="ygAllChips" data-scroll-fade="" data-sf-wired="1"><button class="yg-fl-chip is-active" type="button" data-f="all">Tümü</button><button class="yg-fl-chip" type="button" data-f="tam">Tam Yol Üstü</button><button class="yg-fl-chip" type="button" data-f="dk5">5 Dakikaya Kadar Sapma</button><button class="yg-fl-chip" type="button" data-f="dk10">10 Dakikaya Kadar Sapma</button><button class="yg-fl-chip" type="button" data-f="dk20">20 Dakikaya Kadar Sapma</button><button class="yg-fl-chip" type="button" data-f="acik">Şu An Açık</button><button class="yg-fl-chip" type="button" data-f="kahvalti">Kahvaltı</button><button class="yg-fl-chip" type="button" data-f="ogle">Öğle Yemeği</button><button class="yg-fl-chip" type="button" data-f="aksam">Akşam Yemeği</button><button class="yg-fl-chip" type="button" data-f="kahve">Kahve</button><button class="yg-fl-chip" type="button" data-f="tatli">Tatlı</button><button class="yg-fl-chip" type="button" data-f="yoresel">Yöresel Lezzet</button><button class="yg-fl-chip" type="button" data-f="hizli">Hızlı Mola</button><button class="yg-fl-chip" type="button" data-f="aile">Aileye Uygun</button></div>
+          <div class="yg-fl-count" id="ygAllCount">0 mekân</div>
+        </div>
+        <div class="yg-all-body">
+          <div class="yg-fl-empty" id="ygAllEmpty" hidden=""></div>
+          <ul class="yg-fl-list" id="ygAllList"></ul>
+        </div>
+      </section>
+
+      <!-- VIEW C: GÜZERGÂHLARIM (§12) -->
+      <section class="yg-view" id="viewSaved" role="tabpanel" aria-labelledby="tabSaved" hidden="">
+        <div class="yg-sec-head yg-saved-head" id="ygSavedHead" hidden="">
+          <span class="yg-eyebrow">Kayıtlı</span>
+          <span class="yg-saved-total"><b id="ygSavedTotal">0</b> güzergâh</span>
+        </div>
+        
+        <div class="yg-fl-chips yg-saved-tabs" id="ygSavedTabs" hidden="" data-scroll-fade="" data-sf-wired="1"></div>
+        <ul class="yg-saved-list" id="ygSavedList"></ul>
+        <div class="yg-empty" id="ygSavedEmpty">
+                        
+              <div class="yg-gate-ico"><i class="fa-regular fa-bookmark" aria-hidden="true"></i></div>
+              <h3>Güzergâhların hesabına bağlı</h3>
+              <p>Misafir olarak kurduğun bir rota yalnız bu cihazda saklanır. Hesabına kaydetmek, her cihazdan erişmek ve ziyaretlerini takip etmek için giriş yap.</p>
+              <div class="yg-gate-acts">
+                  <a class="yg-gate-primary" href="giris.html"><i class="fa-solid fa-right-to-bracket"></i> Giriş Yap</a>
+                  <a class="yg-gate-secondary" href="giris.html"><i class="fa-solid fa-user-plus"></i> Ücretsiz Üye Ol</a>
+              </div>
+              <div class="yg-empty-cta"><button id="ygGoBuild" type="button"><i class="fa-solid fa-route"></i> İlk rotanı kur</button></div>
+                  </div>
+      </section>
+
+    </div>
+  </aside>
+
+  <!-- HARİTA -->
+  <div class="yg-map-wrap">
+    
+    <div id="routeMap" data-auth="0" data-login-url="https://dadagourmet.com/giris?tab=giris" data-register-url="https://dadagourmet.com/giris?tab=kayit" data-suggest-url="https://dadagourmet.com/mekanlar" data-csrf="TvzHEXO9zE2btApHNby60CIowODwj1papTtleyGw" data-boot="{&quot;provider&quot;:{&quot;ad&quot;:&quot;Google Routes&quot;,&quot;surucu&quot;:&quot;google&quot;,&quot;demo&quot;:false,&quot;yetenek&quot;:{&quot;ucretliYol&quot;:false,&quot;feribot&quot;:false,&quot;trafik&quot;:false,&quot;routeMatrix&quot;:false,&quot;calismaSaati&quot;:true}},&quot;maxAraDurak&quot;:3,&quot;varsayilanMolaDk&quot;:45,&quot;sapmaHiziKmS&quot;:55,&quot;tamYolUstuKm&quot;:1,&quot;varsayilanTolerans&quot;:&quot;dk10&quot;,&quot;tolerans&quot;:[{&quot;id&quot;:&quot;tam&quot;,&quot;ad&quot;:&quot;Tam Yol Üstü&quot;,&quot;dk&quot;:0},{&quot;id&quot;:&quot;dk5&quot;,&quot;ad&quot;:&quot;En Fazla 5 Dakika Sapma&quot;,&quot;dk&quot;:5},{&quot;id&quot;:&quot;dk10&quot;,&quot;ad&quot;:&quot;En Fazla 10 Dakika Sapma&quot;,&quot;dk&quot;:10},{&quot;id&quot;:&quot;dk20&quot;,&quot;ad&quot;:&quot;En Fazla 20 Dakika Sapma&quot;,&quot;dk&quot;:20},{&quot;id&quot;:&quot;ozel&quot;,&quot;ad&quot;:&quot;Özel Mesafe Seç&quot;,&quot;dk&quot;:null,&quot;km&quot;:{&quot;min&quot;:2,&quot;max&quot;:30,&quot;default&quot;:12}}],&quot;ozelKm&quot;:{&quot;min&quot;:2,&quot;max&quot;:30,&quot;default&quot;:12},&quot;siralamaAgirliklari&quot;:{&quot;detour&quot;:0.3,&quot;quality&quot;:0.2,&quot;open_now&quot;:0.15,&quot;user_rating&quot;:0.1,&quot;editor&quot;:0.1,&quot;meal_fit&quot;:0.05,&quot;freshness&quot;:0.05,&quot;preference&quot;:0.05},&quot;filtreler&quot;:[{&quot;id&quot;:&quot;all&quot;,&quot;ad&quot;:&quot;Tümü&quot;,&quot;ikon&quot;:null,&quot;kural&quot;:&quot;all&quot;,&quot;deger&quot;:null,&quot;gerekli&quot;:null},{&quot;id&quot;:&quot;tam&quot;,&quot;ad&quot;:&quot;Tam Yol Üstü&quot;,&quot;ikon&quot;:null,&quot;kural&quot;:&quot;detour_tier&quot;,&quot;deger&quot;:&quot;on&quot;,&quot;gerekli&quot;:null},{&quot;id&quot;:&quot;dk5&quot;,&quot;ad&quot;:&quot;5 Dakikaya Kadar Sapma&quot;,&quot;ikon&quot;:null,&quot;kural&quot;:&quot;detour_tier&quot;,&quot;deger&quot;:&quot;5&quot;,&quot;gerekli&quot;:null},{&quot;id&quot;:&quot;dk10&quot;,&quot;ad&quot;:&quot;10 Dakikaya Kadar Sapma&quot;,&quot;ikon&quot;:null,&quot;kural&quot;:&quot;detour_tier&quot;,&quot;deger&quot;:&quot;10&quot;,&quot;gerekli&quot;:null},{&quot;id&quot;:&quot;dk20&quot;,&quot;ad&quot;:&quot;20 Dakikaya Kadar Sapma&quot;,&quot;ikon&quot;:null,&quot;kural&quot;:&quot;detour_tier&quot;,&quot;deger&quot;:&quot;20&quot;,&quot;gerekli&quot;:null},{&quot;id&quot;:&quot;acik&quot;,&quot;ad&quot;:&quot;Şu An Açık&quot;,&quot;ikon&quot;:null,&quot;kural&quot;:&quot;open_now&quot;,&quot;deger&quot;:null,&quot;gerekli&quot;:null},{&quot;id&quot;:&quot;kahvalti&quot;,&quot;ad&quot;:&quot;Kahvaltı&quot;,&quot;ikon&quot;:null,&quot;kural&quot;:&quot;meal&quot;,&quot;deger&quot;:&quot;kahvalti&quot;,&quot;gerekli&quot;:null},{&quot;id&quot;:&quot;ogle&quot;,&quot;ad&quot;:&quot;Öğle Yemeği&quot;,&quot;ikon&quot;:null,&quot;kural&quot;:&quot;meal&quot;,&quot;deger&quot;:&quot;ogle&quot;,&quot;gerekli&quot;:null},{&quot;id&quot;:&quot;aksam&quot;,&quot;ad&quot;:&quot;Akşam Yemeği&quot;,&quot;ikon&quot;:null,&quot;kural&quot;:&quot;meal&quot;,&quot;deger&quot;:&quot;aksam&quot;,&quot;gerekli&quot;:null},{&quot;id&quot;:&quot;kahve&quot;,&quot;ad&quot;:&quot;Kahve&quot;,&quot;ikon&quot;:null,&quot;kural&quot;:&quot;meal&quot;,&quot;deger&quot;:&quot;kahve&quot;,&quot;gerekli&quot;:null},{&quot;id&quot;:&quot;tatli&quot;,&quot;ad&quot;:&quot;Tatlı&quot;,&quot;ikon&quot;:null,&quot;kural&quot;:&quot;meal&quot;,&quot;deger&quot;:&quot;tatli&quot;,&quot;gerekli&quot;:null},{&quot;id&quot;:&quot;yoresel&quot;,&quot;ad&quot;:&quot;Yöresel Lezzet&quot;,&quot;ikon&quot;:null,&quot;kural&quot;:&quot;local&quot;,&quot;deger&quot;:null,&quot;gerekli&quot;:null},{&quot;id&quot;:&quot;hizli&quot;,&quot;ad&quot;:&quot;Hızlı Mola&quot;,&quot;ikon&quot;:null,&quot;kural&quot;:&quot;meal&quot;,&quot;deger&quot;:&quot;hizli&quot;,&quot;gerekli&quot;:null},{&quot;id&quot;:&quot;aile&quot;,&quot;ad&quot;:&quot;Aileye Uygun&quot;,&quot;ikon&quot;:null,&quot;kural&quot;:&quot;family&quot;,&quot;deger&quot;:null,&quot;gerekli&quot;:null}],&quot;pilotGuzergahlar&quot;:[{&quot;ad&quot;:&quot;İstanbul – İzmir&quot;,&quot;from&quot;:{&quot;id&quot;:34,&quot;ad&quot;:&quot;İstanbul&quot;,&quot;alt&quot;:&quot;Marmara&quot;,&quot;lat&quot;:41.0112,&quot;lng&quot;:28.9781,&quot;tur&quot;:&quot;city&quot;},&quot;to&quot;:{&quot;id&quot;:35,&quot;ad&quot;:&quot;İzmir&quot;,&quot;alt&quot;:&quot;Ege&quot;,&quot;lat&quot;:38.429,&quot;lng&quot;:27.1342,&quot;tur&quot;:&quot;city&quot;}},{&quot;ad&quot;:&quot;İstanbul – Ankara&quot;,&quot;from&quot;:{&quot;id&quot;:34,&quot;ad&quot;:&quot;İstanbul&quot;,&quot;alt&quot;:&quot;Marmara&quot;,&quot;lat&quot;:41.0112,&quot;lng&quot;:28.9781,&quot;tur&quot;:&quot;city&quot;},&quot;to&quot;:{&quot;id&quot;:6,&quot;ad&quot;:&quot;Ankara&quot;,&quot;alt&quot;:&quot;İç Anadolu&quot;,&quot;lat&quot;:39.9207,&quot;lng&quot;:32.854,&quot;tur&quot;:&quot;city&quot;}},{&quot;ad&quot;:&quot;Ankara – Antalya&quot;,&quot;from&quot;:{&quot;id&quot;:6,&quot;ad&quot;:&quot;Ankara&quot;,&quot;alt&quot;:&quot;İç Anadolu&quot;,&quot;lat&quot;:39.9207,&quot;lng&quot;:32.854,&quot;tur&quot;:&quot;city&quot;},&quot;to&quot;:{&quot;id&quot;:7,&quot;ad&quot;:&quot;Antalya&quot;,&quot;alt&quot;:&quot;Akdeniz&quot;,&quot;lat&quot;:36.8871,&quot;lng&quot;:30.7032,&quot;tur&quot;:&quot;city&quot;}},{&quot;ad&quot;:&quot;İstanbul – Bursa&quot;,&quot;from&quot;:{&quot;id&quot;:34,&quot;ad&quot;:&quot;İstanbul&quot;,&quot;alt&quot;:&quot;Marmara&quot;,&quot;lat&quot;:41.0112,&quot;lng&quot;:28.9781,&quot;tur&quot;:&quot;city&quot;},&quot;to&quot;:{&quot;id&quot;:16,&quot;ad&quot;:&quot;Bursa&quot;,&quot;alt&quot;:&quot;Marmara&quot;,&quot;lat&quot;:40.1885,&quot;lng&quot;:29.0608,&quot;tur&quot;:&quot;city&quot;}},{&quot;ad&quot;:&quot;İzmir – Çeşme&quot;,&quot;from&quot;:{&quot;id&quot;:35,&quot;ad&quot;:&quot;İzmir&quot;,&quot;alt&quot;:&quot;Ege&quot;,&quot;lat&quot;:38.429,&quot;lng&quot;:27.1342,&quot;tur&quot;:&quot;city&quot;},&quot;to&quot;:{&quot;id&quot;:569,&quot;ad&quot;:&quot;Çeşme&quot;,&quot;alt&quot;:&quot;İzmir&quot;,&quot;lat&quot;:38.3229,&quot;lng&quot;:26.3024,&quot;tur&quot;:&quot;district&quot;}}],&quot;auth&quot;:false,&quot;uclar&quot;:{&quot;yerler&quot;:&quot;https:\/\/dadagourmet.com\/dada-route\/yerler&quot;,&quot;enYakin&quot;:&quot;https:\/\/dadagourmet.com\/dada-route\/en-yakin&quot;,&quot;rota&quot;:&quot;https:\/\/dadagourmet.com\/dada-route\/rota&quot;,&quot;mekanlar&quot;:&quot;https:\/\/dadagourmet.com\/dada-route\/mekanlar&quot;,&quot;guzergahlar&quot;:&quot;https:\/\/dadagourmet.com\/dada-route\/guzergahlarim&quot;,&quot;giris&quot;:&quot;https:\/\/dadagourmet.com\/giris?tab=giris&quot;,&quot;kayit&quot;:&quot;https:\/\/dadagourmet.com\/giris?tab=kayit&quot;,&quot;mekanOner&quot;:&quot;https:\/\/dadagourmet.com\/mekanlar&quot;,&quot;mekanKaydet&quot;:&quot;https:\/\/dadagourmet.com\/mekanlar\/__SLUG__\/kaydet&quot;,&quot;mekanHata&quot;:&quot;https:\/\/dadagourmet.com\/mekanlar\/__SLUG__\/bilgi-hatasi&quot;}}" class="leaflet-container leaflet-touch leaflet-fade-anim leaflet-grab leaflet-touch-drag leaflet-touch-zoom" tabindex="0"><div class="leaflet-pane leaflet-map-pane" style="transform: translate3d(0px, 0px, 0px);"><div class="leaflet-pane leaflet-tile-pane"><div class="leaflet-layer " style="z-index: 1; opacity: 1;"><div class="leaflet-tile-container leaflet-zoom-animated" style="z-index: 19; transform: translate3d(0px, 0px, 0px) scale(1);"><img alt="" src="varliklar/_dis/b.tile.openstreetmap.org/6/37/24.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(453px, 406px, 0px); opacity: 1;"><img alt="" src="varliklar/_dis/c.tile.openstreetmap.org/6/38/24.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(709px, 406px, 0px); opacity: 1;"><img alt="" src="varliklar/_dis/a.tile.openstreetmap.org/6/37/23.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(453px, 150px, 0px); opacity: 1;"><img alt="" src="varliklar/_dis/b.tile.openstreetmap.org/6/38/23.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(709px, 150px, 0px); opacity: 1;"><img alt="" src="varliklar/_dis/c.tile.openstreetmap.org/6/37/25.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(453px, 662px, 0px); opacity: 1;"><img alt="" src="varliklar/_dis/a.tile.openstreetmap.org/6/38/25.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(709px, 662px, 0px); opacity: 1;"><img alt="" src="varliklar/_dis/a.tile.openstreetmap.org/6/36/24.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(197px, 406px, 0px); opacity: 1;"><img alt="" src="varliklar/_dis/a.tile.openstreetmap.org/6/39/24.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(965px, 406px, 0px); opacity: 1;"><img alt="" src="varliklar/_dis/c.tile.openstreetmap.org/6/36/23.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(197px, 150px, 0px); opacity: 1;"><img alt="" src="varliklar/_dis/c.tile.openstreetmap.org/6/39/23.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(965px, 150px, 0px); opacity: 1;"><img alt="" src="varliklar/_dis/b.tile.openstreetmap.org/6/36/25.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(197px, 662px, 0px); opacity: 1;"><img alt="" src="varliklar/_dis/b.tile.openstreetmap.org/6/39/25.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(965px, 662px, 0px); opacity: 1;"><img alt="" src="varliklar/_dis/c.tile.openstreetmap.org/6/37/22.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(453px, -106px, 0px); opacity: 1;"><img alt="" src="varliklar/_dis/a.tile.openstreetmap.org/6/38/22.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(709px, -106px, 0px); opacity: 1;"><img alt="" src="varliklar/_dis/a.tile.openstreetmap.org/6/37/26.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(453px, 918px, 0px); opacity: 1;"><img alt="" src="varliklar/_dis/b.tile.openstreetmap.org/6/38/26.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(709px, 918px, 0px); opacity: 1;"><img alt="" src="varliklar/_dis/b.tile.openstreetmap.org/6/36/22.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(197px, -106px, 0px); opacity: 1;"><img alt="" src="varliklar/_dis/b.tile.openstreetmap.org/6/39/22.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(965px, -106px, 0px); opacity: 1;"><img alt="" src="varliklar/_dis/c.tile.openstreetmap.org/6/35/24.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(-59px, 406px, 0px); opacity: 1;"><img alt="" src="varliklar/_dis/b.tile.openstreetmap.org/6/40/24.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(1221px, 406px, 0px); opacity: 1;"><img alt="" src="varliklar/_dis/c.tile.openstreetmap.org/6/36/26.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(197px, 918px, 0px); opacity: 1;"><img alt="" src="varliklar/_dis/c.tile.openstreetmap.org/6/39/26.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(965px, 918px, 0px); opacity: 1;"><img alt="" src="varliklar/_dis/b.tile.openstreetmap.org/6/35/23.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(-59px, 150px, 0px); opacity: 1;"><img alt="" src="varliklar/_dis/a.tile.openstreetmap.org/6/40/23.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(1221px, 150px, 0px); opacity: 1;"><img alt="" src="varliklar/_dis/a.tile.openstreetmap.org/6/35/25.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(-59px, 662px, 0px); opacity: 1;"><img alt="" src="varliklar/_dis/c.tile.openstreetmap.org/6/40/25.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(1221px, 662px, 0px); opacity: 1;"><img alt="" src="varliklar/_dis/a.tile.openstreetmap.org/6/35/22.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(-59px, -106px, 0px); opacity: 1;"><img alt="" src="varliklar/_dis/c.tile.openstreetmap.org/6/40/22.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(1221px, -106px, 0px); opacity: 1;"><img alt="" src="varliklar/_dis/b.tile.openstreetmap.org/6/35/26.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(-59px, 918px, 0px); opacity: 1;"><img alt="" src="varliklar/_dis/a.tile.openstreetmap.org/6/40/26.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(1221px, 918px, 0px); opacity: 1;"></div></div></div><div class="leaflet-pane leaflet-overlay-pane"></div><div class="leaflet-pane leaflet-shadow-pane"></div><div class="leaflet-pane leaflet-marker-pane"></div><div class="leaflet-pane leaflet-tooltip-pane"></div><div class="leaflet-pane leaflet-popup-pane"></div><div class="leaflet-proxy leaflet-zoom-animated"></div></div><div class="leaflet-control-container"><div class="leaflet-top leaflet-left"><div class="leaflet-control-zoom leaflet-bar leaflet-control"><a class="leaflet-control-zoom-in" href="#" title="Zoom in" role="button" aria-label="Zoom in" aria-disabled="false"><span aria-hidden="true">+</span></a><a class="leaflet-control-zoom-out" href="#" title="Zoom out" role="button" aria-label="Zoom out" aria-disabled="false"><span aria-hidden="true">−</span></a></div></div><div class="leaflet-top leaflet-right"></div><div class="leaflet-bottom leaflet-left"></div><div class="leaflet-bottom leaflet-right"><div class="leaflet-control-attribution leaflet-control"><a href="https://leafletjs.com" title="A JavaScript library for interactive maps"><svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="12" height="8" viewBox="0 0 12 8" class="leaflet-attribution-flag"><path fill="#4C7BE1" d="M0 0h12v4H0z"></path><path fill="#FFD500" d="M0 4h12v3H0z"></path><path fill="#E0BC00" d="M0 7h12v1H0z"></path></svg> Leaflet</a> <span aria-hidden="true">|</span> © OpenStreetMap</div></div></div></div>
+  </div>
+
+  <!-- ALT YATAY KADRAN — HIZLI VİTRİN -->
+  <div class="yg-dash" id="ygDash" hidden="">
+    <button class="yg-dash-handle" id="ygDashHandle" type="button" aria-expanded="true" aria-controls="ygDashScroll" aria-label="Mekân panelini gizle"><i class="fa-solid fa-chevron-down" id="ygDashHandleIco"></i><span class="yg-dash-handle-lbl">Yol üstü mekânlar</span></button>
+    <div class="yg-dash-head">
+      <span class="yg-dash-title"><i class="fa-solid fa-utensils"></i> <span id="ygDashTitleTxt">Yol üstü mekânlar</span> <span class="yg-dash-cnt" id="ygDashCount">0</span></span>
+      <button class="yg-dash-all" id="ygDashAll" type="button">Tümünü Gör <i class="fa-solid fa-arrow-right"></i></button>
+    </div>
+    <div class="yg-dash-scroll" id="ygDashScroll"></div>
+  </div>
+
+  
+  <div class="yg-detail" id="ygDetail" hidden="">
+    <div class="yg-detail-media" id="ygDetailMedia">
+      <button class="yg-detail-x" id="ygDetailClose" type="button" aria-label="Kapat"><i class="fa-solid fa-xmark"></i></button>
+      
+      <span class="yg-detail-badge" id="ygDetailBadge" hidden=""><i class="fa-solid fa-award"></i> Editör Önerisi</span>
+    </div>
+    <div class="yg-detail-body">
+      <h4 class="yg-detail-name" id="ygDetailName">—</h4>
+      <div class="yg-detail-loc"><i class="fa-solid fa-location-dot"></i> <span id="ygDetailLoc">—</span></div>
+      <div class="yg-detail-meta">
+        <span class="yg-detail-tag" id="ygDetailTag">—</span>
+        <span class="yg-detail-star" id="ygDetailStar" hidden=""><i class="fa-solid fa-star"></i> <span id="ygDetailStarVal">—</span></span>
+      </div>
+      
+      <div class="yg-detail-detour" id="ygDetailDetour"></div>
+      <div class="yg-detail-verify" id="ygDetailVerify"></div>
+      
+      <button class="yg-detail-add" id="ygDetailAdd" type="button"><i class="fa-solid fa-plus"></i> <span id="ygDetailAddTxt">Güzergâha Ekle</span></button>
+      
+      <button class="yg-detail-stop" id="ygDetailStop" type="button"><i class="fa-solid fa-map-pin"></i> Bu Mekânı Durak Yap</button>
+      <button class="yg-detail-visit" id="ygDetailVisit" type="button" hidden=""><i class="fa-regular fa-circle-check"></i> <span id="ygDetailVisitTxt">Ziyaret ettim</span></button>
+      <a class="yg-detail-more" id="ygDetailMore" href="mekanlar.html" target="_blank" rel="noopener"><i class="fa-solid fa-arrow-up-right-from-square" id="ygDetailMoreIco"></i> <span id="ygDetailMoreTxt">Mekânı İncele</span></a>
+      
+      <div class="yg-detail-sec">
+        <button class="yg-detail-sbtn" id="ygDetailSave" type="button" aria-pressed="false"><i class="fa-regular fa-bookmark"></i> Kaydet</button>
+        <button class="yg-detail-sbtn" id="ygDetailShare" type="button"><i class="fa-solid fa-share-nodes"></i> Paylaş</button>
+        <button class="yg-detail-sbtn" id="ygDetailReport" type="button"><i class="fa-regular fa-flag"></i> Hata Bildir</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- KONUM BUL — sağ-alt FAB (§2 "Mevcut Konumumu Kullan") -->
+  <button class="yg-locate" id="ygLocate" type="button" aria-label="Mevcut Konumumu Kullan" title="Mevcut Konumumu Kullan">
+    <i class="fa-solid fa-location-crosshairs"></i>
+  </button>
+
+  <!-- en yakın şehir promptu (otomatik doldurmaz, kullanıcı basar) -->
+  <div class="yg-geo-prompt" id="ygGeoPrompt" hidden="">
+    <span class="yg-geo-prompt-ico" aria-hidden="true"><i class="fa-solid fa-location-arrow"></i></span>
+    <div class="yg-geo-prompt-main">
+      <span class="yg-geo-prompt-lbl">Sana en yakın</span>
+      <span class="yg-geo-prompt-city" id="ygGeoCity">—</span>
+    </div>
+    <button class="yg-geo-start" id="ygGeoStart" type="button"><i class="fa-solid fa-flag-checkered"></i> Buradan başla</button>
+    <button class="yg-geo-x" id="ygGeoClose" type="button" aria-label="Kapat"><i class="fa-solid fa-xmark"></i></button>
+  </div>
+
+  <!-- kibar hata/bilgi toast'ı -->
+  <div class="yg-toast-wrap" id="ygToastWrap" aria-live="polite"></div>
+
+  
+  <div class="yg-gate" id="ygSaveGate" hidden="">
+    <div class="yg-gate-card" role="dialog" aria-modal="true" aria-labelledby="ygGateH">
+      <button class="yg-gate-x" type="button" data-gate="kapat" aria-label="Kapat"><i class="fa-solid fa-xmark"></i></button>
+      <div class="yg-gate-ico"><i class="fa-regular fa-bookmark" aria-hidden="true"></i></div>
+      <h2 id="ygGateH">Rotanı kaybetme.</h2>
+      <p>Rotanı daha sonra tekrar kullanmak için hesabına kaydet.</p>
+      
+      <div class="yg-gate-acts">
+        <a class="yg-gate-primary" href="giris.html"><i class="fa-solid fa-right-to-bracket"></i> Giriş Yap ve Kaydet</a>
+        <a class="yg-gate-secondary" href="giris.html"><i class="fa-solid fa-user-plus"></i> Ücretsiz Üye Ol</a>
+        <button class="yg-gate-ghost" type="button" data-gate="devam">Kaydetmeden Devam Et</button>
+      </div>
+    </div>
+  </div>
+
+  
+  <div class="yg-gate" id="ygReport" hidden="">
+    <div class="yg-gate-card" role="dialog" aria-modal="true" aria-labelledby="ygReportH">
+      <button class="yg-gate-x" type="button" data-rep="kapat" aria-label="Kapat"><i class="fa-solid fa-xmark"></i></button>
+      <div class="yg-gate-ico"><i class="fa-regular fa-flag" aria-hidden="true"></i></div>
+      <h2 id="ygReportH">Yanlış bilgi bildir</h2>
+      <p><b id="ygReportName">—</b> hakkında ne yanlış?</p>
+      <div class="yg-gate-acts yg-rep-acts">
+        <button type="button" data-rep-tip="konum"><i class="fa-solid fa-location-dot"></i> Konum yanlış</button>
+        <button type="button" data-rep-tip="saat"><i class="fa-regular fa-clock"></i> Çalışma saati yanlış</button>
+        <button type="button" data-rep-tip="kapali"><i class="fa-solid fa-door-closed"></i> İşletme kapanmış</button>
+        <button type="button" data-rep-tip="diger"><i class="fa-regular fa-comment-dots"></i> Diğer</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script src="varliklar/_dis/unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+<script src="varliklar/reference/shared/dada-autocomplete.js"></script>
+
+<script src="varliklar/reference/shared/scroll-affordance.js"></script>
+<script src="varliklar/reference/dada-route/dada-route.js"></script>
+
+
+
+<script src="varliklar/reference/shared/maket-auth.js"></script>
+</body></html>

@@ -1,0 +1,218 @@
+/* Form kiti (fk-*) — GOURMET KABUĞU İÇİN SAYFA-YEREL KOPYA
+   (FOOTER-REVIZE-TALIMAT §7, 2026-08-16)
+
+   NEDEN VAR: `x-form.*` bileşenlerinin stili `resources/css/tokens.css`
+   içindedir ve o dosyayı YALNIZ `layouts.app` (Gastro) yükler.
+   `layouts.gourmet` yalnız `gourmet.css` yükler — yani Gourmet kabuğunda
+   x-form bileşenleri ÇIPLAK HTML olarak render oluyordu (ölçüldü).
+
+   NEDEN tokens.css'i olduğu gibi yüklemedik: tokens.css `:root`ta
+   `--tomato: #E14827` (Gastro TURUNCUSU) tanımlıyor; gourmet.css'ten SONRA
+   yüklenirse Gourmet'in MOR paletini ezer ve sayfa turuncuya döner (ölçüldü).
+
+   BU DOSYA NEDİR: tokens.css'in 340-501 satır aralığındaki "Form kiti (fk-*)"
+   bloğunun BİREBİR kopyası + o bloğun ihtiyaç duyduğu ama gourmet.css'te
+   TANIMLI OLMAYAN 8 token. tokens.css'in marka rengi taşıyan `:root` bloğu
+   ALINMADI.
+
+   ⚠ SENKRON BORCU: tokens.css'teki form kiti değişirse burası elle
+   güncellenmelidir. Kalıcı çözüm form kitini kendi dosyasına ayırıp iki
+   kabuğun da yüklemesidir — bu turun kapsamı değildi, borç raporlandı.
+   Kaynak: resources/css/tokens.css (340-501). */
+
+/* tokens.css'te tanımlı ama gourmet.css'te OLMAYAN tokenlar. Yoklarında
+   alanlar padding'siz/yüksekliksiz çıkıyor (ölçüldü: input yüksekliği 17px,
+   padding 0). Değerler tokens.css :root'undan birebir; marka rengi YOK, o
+   yüzden Gourmet paletiyle çakışmaz. */
+:root {
+  --ctl-h: 48px;
+  --danger: #C43D20;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 24px;
+  --sp-6: 32px;
+  --sp-7: 48px;
+}
+
+/* ==========================================================================
+   Form kiti (fk-*) — §4. Tüm formlar bundan türetilir; yeni form dili YASAK.
+   ========================================================================== */
+.fk-form { display: grid; gap: var(--sp-4); }
+.fk-grid { display: grid; gap: var(--sp-4); grid-template-columns: 1fr 1fr; }
+@media (max-width: 640px) { .fk-grid { grid-template-columns: 1fr; } }
+
+.fk-field { display: grid; gap: var(--sp-2); }
+.fk-label { font-weight: 800; font-size: .9rem; color: var(--slate-2); letter-spacing: -0.01em; }
+.fk-label .req { color: var(--tomato); margin-left: 2px; }
+
+.fk-input, .fk-select, .fk-textarea {
+  width: 100%; min-height: var(--ctl-h);
+  padding: var(--sp-3) var(--sp-4);
+  background: var(--paper); color: var(--ink);
+  border: 1px solid var(--line); border-radius: var(--radius-md);
+  font-weight: 500; transition: border-color .2s var(--ease), box-shadow .2s var(--ease);
+}
+.fk-textarea { min-height: 120px; resize: vertical; line-height: 1.55; }
+.fk-input::placeholder, .fk-textarea::placeholder { color: color-mix(in srgb, var(--muted) 80%, transparent); }
+.fk-input:hover, .fk-select:hover, .fk-textarea:hover { border-color: color-mix(in srgb, var(--ink) 18%, var(--line)); }
+.fk-input:focus, .fk-select:focus, .fk-textarea:focus {
+  outline: none; border-color: var(--tomato);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--tomato) 16%, transparent);
+}
+.fk-select {
+  appearance: none; -webkit-appearance: none; padding-right: var(--sp-7);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%237E7E7E' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right var(--sp-4) center;
+}
+.fk-input[aria-invalid="true"], .fk-select[aria-invalid="true"], .fk-textarea[aria-invalid="true"] {
+  border-color: var(--tomato);
+}
+.fk-help { font-size: .83rem; color: var(--muted); }
+.fk-err { font-size: .83rem; color: var(--danger); font-weight: 500; display: inline-flex; align-items: center; gap: var(--sp-2); }
+/* .fk-error: .fk-err ile AYNI dil — 6 view (odeme x2, tarif-ekle, puf/create,
+   uretici/plan, admin abonelikler/show) validasyon mesajını bu adla basıyor
+   ve hiçbir bundle tanımlamıyordu (K3 yetim süpürmesi, FB55-b); kit'e
+   konsolidasyon, yeni dil değil. */
+.fk-error { font-size: .83rem; color: var(--danger); font-weight: 500; display: inline-flex; align-items: center; gap: var(--sp-2); }
+.fk-count { font-size: .8rem; color: var(--muted); text-align: right; }
+
+/* Fieldset bölümü (fk-fieldset) — ödeme formlarının B14 e-Arşiv fatura-adresi
+   bloğu gibi form-içi başlıklı alt bölümler; kit türetmesi (K3, FB55-b:
+   class'lar markup'ta vardı, CSS'i hiç yoktu — PARA yüzeyi pro.odeme dahil).
+   Referansta karşılığı yok (backend-genişletme bölümü); yalnız mevcut
+   token/kit dili kullanıldı. */
+.fk-fieldset { display: grid; gap: var(--sp-4); margin-top: var(--sp-4); padding-top: var(--sp-5); border-top: 1px solid var(--line); }
+.fk-fieldset-title { font-size: 1.02rem; font-weight: 800; color: var(--slate); letter-spacing: -0.01em; }
+.fk-fieldset-note { font-size: .83rem; color: var(--muted); margin-top: calc(-1 * var(--sp-3)); }
+
+/* Şifre (fk-pass + fk-eye) */
+.fk-pass { position: relative; }
+.fk-pass .fk-input { padding-right: var(--sp-7); }
+.fk-eye {
+  position: absolute; right: 6px; top: 50%; transform: translateY(-50%);
+  width: 40px; height: 40px; display: inline-flex; align-items: center; justify-content: center;
+  color: var(--muted); border-radius: var(--radius-sm);
+}
+.fk-eye:hover { color: var(--ink); background: var(--cream-2); }
+
+/* Telefon ülke kodu seçici (fk-tel-cc-select) — D3 MADDE 1, Beyar onaylı.
+   .fk-tel (position:relative) + .fk-input{padding-left:60px} ref'in
+   public/reference/giris/giris.css'inde tanımlı (bu dosyanın kapsamı
+   dışında, DOKUNULMADI); eski dekoratif "+90" span'ının AYNI 1px/top/bottom
+   kutusunu devralan YENİ bir seçici sınıfı — eski .fk-tel-cc'nin
+   pointer-events:none'ını miras almaz (artık gerçek, tıklanabilir kontrol).
+   58px genişlik ref'in 60px input-padding'i içine 2px pay ile oturur (en
+   uzun kod "+994" bu genişlikte 11px'te rahat sığar). Ok ikonu .fk-select
+   ile AYNI SVG (mevcut token deseni, yeni renk icat edilmedi). */
+.fk-tel-cc-select {
+  position: absolute; left: 1px; top: 1px; bottom: 1px; width: 58px;
+  appearance: none; -webkit-appearance: none; cursor: pointer;
+  border: none; border-right: 1px solid var(--line);
+  border-radius: var(--radius-md) 0 0 var(--radius-md);
+  background-color: var(--bg-cream); color: var(--slate);
+  font: inherit; font-size: 11px; font-weight: 700;
+  padding: 0 14px 0 6px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%237E7E7E' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 4px center; background-size: 8px 6px;
+}
+.fk-tel-cc-select:hover { background-color: color-mix(in srgb, var(--bg-cream) 80%, var(--ink) 8%); }
+.fk-tel-cc-select:focus-visible { outline: 2px solid var(--tomato); outline-offset: -2px; }
+/* Açılan option listesi genişliğini tarayıcı içeriğe göre kendi ayarlar
+   (native <select>) — kutu 58px kalsa da liste "+994 AZ — Azerbaycan" gibi
+   tam metni okunaklı gösterir. */
+.fk-tel-cc-select option { font-weight: 500; }
+
+/* Şifre kuralı canlı kontrol listesi (fk-pwrules) — D3 MADDE 2, x-form.password
+   :rules="true" + resources/js/ui.js bindPasswordRules. Referansta karşılığı
+   yok (statik yardım satırının yerine geçti); yalnız mevcut token dili
+   (fk-help ile aynı ölçek/renk, .fk-chip:has(input:checked) ile aynı "aktif ol"
+   ilkesi) türetildi. JS'siz: tüm satırlar nötr (boş daire) kalır — yine de
+   kuralları önceden gösterir, submit sonrası fk-err fallback'i bozulmaz. */
+.fk-pwrules { display: grid; gap: var(--sp-2); margin-top: 2px; list-style: none; }
+.fk-pwrules li { display: flex; align-items: center; gap: var(--sp-2); font-size: .82rem; color: var(--muted); transition: color .15s var(--ease); }
+.fk-pwrules li i { font-size: .78rem; flex: none; }
+.fk-pwrules li.is-ok { color: var(--green-deep); }
+.fk-pwrules li.is-ok i { color: var(--green); }
+
+/* Onay satırı (cbx / agree) */
+.fk-cbx, .fk-agree { display: flex; align-items: flex-start; gap: var(--sp-3); font-size: .95rem; color: var(--slate-2); line-height: 1.5; }
+.fk-agree { padding: var(--sp-3) var(--sp-4); background: var(--cream-2); border: 1px solid var(--line); border-radius: var(--radius-md); }
+.fk-cbx input[type="checkbox"], .fk-agree input[type="checkbox"] {
+  appearance: none; -webkit-appearance: none; flex: none;
+  width: 22px; height: 22px; margin-top: 1px;
+  border: 1.5px solid color-mix(in srgb, var(--ink) 30%, var(--line));
+  border-radius: 6px; background: var(--paper); transition: all .15s var(--ease);
+}
+.fk-cbx input[type="checkbox"]:checked, .fk-agree input[type="checkbox"]:checked {
+  background: var(--tomato); border-color: var(--tomato);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14'%3E%3Cpath fill='none' stroke='%23fff' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round' d='M2.5 7.5l3 3 6-6.5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: center;
+}
+.fk-cbx a, .fk-agree a { color: var(--tomato); font-weight: 800; text-decoration: underline; text-underline-offset: 2px; }
+
+/* Switch (tgl / tk) */
+.fk-toggle { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-4); padding: var(--sp-3) 0; }
+.fk-toggle__label { font-weight: 500; color: var(--slate-2); }
+.fk-toggle input[type="checkbox"] { appearance: none; -webkit-appearance: none; flex: none; position: relative; width: 46px; height: 26px; border-radius: var(--radius-pill); background: color-mix(in srgb, var(--ink) 16%, var(--line)); transition: background .2s var(--ease); }
+.fk-toggle input[type="checkbox"]::after { content: ""; position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: var(--radius-circle); background: var(--paper); box-shadow: var(--sh-sm); transition: transform .2s var(--ease); }
+.fk-toggle input[type="checkbox"]:checked { background: var(--tomato); }
+.fk-toggle input[type="checkbox"]:checked::after { transform: translateX(20px); }
+
+/* Radio (segment) */
+.fk-radios { display: grid; gap: var(--sp-3); }
+.fk-radio { display: flex; align-items: center; gap: var(--sp-3); padding: var(--sp-3) var(--sp-4); border: 1px solid var(--line); border-radius: var(--radius-md); cursor: pointer; transition: border-color .15s var(--ease), background .15s var(--ease); }
+.fk-radio:hover { border-color: color-mix(in srgb, var(--ink) 18%, var(--line)); }
+.fk-radio:has(input:checked) { border-color: var(--tomato); background: var(--tomato-tint); }
+.fk-radio input[type="radio"] { appearance: none; -webkit-appearance: none; flex: none; width: 20px; height: 20px; border: 1.5px solid color-mix(in srgb, var(--ink) 30%, var(--line)); border-radius: var(--radius-circle); transition: all .15s var(--ease); }
+.fk-radio input[type="radio"]:checked { border-color: var(--tomato); border-width: 6px; }
+
+/* Seçilebilir çip grid (onboarding tercih setleri) */
+.fk-chips { display: flex; flex-wrap: wrap; gap: var(--sp-3); }
+.fk-chip { display: inline-flex; align-items: center; gap: var(--sp-2); padding: var(--sp-3) var(--sp-4); border: 1px solid var(--line); border-radius: var(--radius-md); background: var(--paper); font-weight: 500; color: var(--slate-2); cursor: pointer; transition: all .15s var(--ease); user-select: none; }
+.fk-chip:hover { border-color: color-mix(in srgb, var(--ink) 18%, var(--line)); }
+.fk-chip input { position: absolute; opacity: 0; width: 0; height: 0; }
+.fk-chip:has(input:checked) { border-color: var(--tomato); background: var(--tomato-tint); color: var(--tomato-deep); }
+.fk-chip:has(input:checked)::before { content: "\f00c"; font-family: "Font Awesome 6 Free"; font-weight: 900; font-size: .72rem; color: var(--tomato); }
+
+/* Serbest-metin etiket çipi (tarif wizard, data-tag-input) — her zaman "seçili"
+   görünümü (fk-chip:has(input:checked) ile aynı renk), kaldır butonlu. */
+.fk-chip--tag { cursor: default; border-color: var(--tomato); background: var(--tomato-tint); color: var(--tomato-deep); padding: var(--sp-2) var(--sp-2) var(--sp-2) var(--sp-4); }
+.fk-chip__rm { display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; border: none; border-radius: var(--radius-circle); background: transparent; color: inherit; cursor: pointer; }
+.fk-chip__rm:hover { background: color-mix(in srgb, var(--tomato) 20%, transparent); }
+
+/* --- Butonlar ---------------------------------------------------------------*/
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: var(--sp-2);
+  min-height: var(--ctl-h); padding: var(--sp-3) var(--sp-6);
+  border-radius: var(--radius-md); font-weight: 800; letter-spacing: -0.01em;
+  transition: background .2s var(--ease), color .2s var(--ease), border-color .2s var(--ease), transform .05s var(--ease);
+}
+.btn:active { transform: translateY(1px); }
+.btn--primary { background: var(--tomato); color: #fff; }
+.btn--primary:hover { background: var(--tomato-dark); }
+.btn--ghost { background: var(--paper); color: var(--ink); border: 1px solid var(--line); }
+.btn--ghost:hover { border-color: color-mix(in srgb, var(--ink) 24%, var(--line)); background: var(--cream-2); }
+.btn--danger { background: var(--paper); color: var(--danger); border: 1px solid color-mix(in srgb, var(--tomato) 40%, transparent); }
+.btn--danger:hover { background: var(--tomato); color: #fff; border-color: var(--tomato); }
+.btn--block { width: 100%; }
+.btn--sm { min-height: 38px; padding: var(--sp-2) var(--sp-4); font-size: .9rem; }
+
+/* ==========================================================================
+   Katlanır bölüm (fk-collapse) — 2026-08-17 eklendi.
+
+   NEDEN: Gourmet'in "Reklam ve Marka İş Birlikleri" sayfası, Gastro'nun
+   `reklam-ver` sayfasındaki SSS bloğunun aynısını kullanıyor
+   (`.rv-faq-list .fk-collapse`, reference/reklam-ver/reklam-ver.css:382). O
+   kuralın TABANI tokens.css'tedir ve Gourmet kabuğu tokens.css'i yüklemez —
+   taban olmadan <details> çıplak tarayıcı oku ile render oluyordu.
+
+   Kaynak: resources/css/tokens.css (840-846) — BİREBİR kopya, marka rengi
+   taşımaz. Aynı senkron borcuna tabidir (bkz. dosya başı uyarısı).
+   ========================================================================== */
+.fk-collapse { border: 1px solid var(--line); border-radius: var(--radius-md); overflow: hidden; }
+.fk-collapse > summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: var(--sp-3); padding: var(--sp-3) var(--sp-4); font-weight: 800; font-size: .92rem; color: var(--slate-2); }
+.fk-collapse > summary::-webkit-details-marker { display: none; }
+.fk-collapse > summary::after { content: "\f078"; font-family: "Font Awesome 6 Free"; font-weight: 900; font-size: .72rem; color: var(--muted); transition: transform .2s var(--ease); }
+.fk-collapse[open] > summary::after { transform: rotate(180deg); }
+.fk-collapse__body { padding: 0 var(--sp-4) var(--sp-4); display: grid; gap: var(--sp-4); }

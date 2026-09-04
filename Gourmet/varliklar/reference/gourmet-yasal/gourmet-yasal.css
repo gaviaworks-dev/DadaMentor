@@ -1,0 +1,155 @@
+/* ============ YASAL METİNLER — DadaGourmet kabuğu ============
+   KAYNAK-TRANSFER (CLAUDE.md "Modül İnşa Protokolü" §2). Bu dosya
+   `public/reference/yasal/yasal.css`in (Gastro'da CANLI ve çalışan yasal
+   sayfa dili) Gourmet kabuğuna taşınmış hâlidir. `.lg-*` kurallarının
+   TAMAMI BİREBİR kopyadır — tek bir değer bile değiştirilmedi.
+
+   NEDEN AYRI DOSYA / NEDEN EK BLOKLAR VAR (css-context-blockify-parity-trap,
+   docs/lessons.md): yasal.css kendi başlığında yazdığı gibi `.rd-crumb` ve
+   `.prose*` tipografisini `resources/css/tokens.css`ten alıyor — o dosya
+   YALNIZ `layouts/app.blade.php` (Gastro) kabuğunda yüklenir.
+   `layouts/gourmet.blade.php` `resources/css/gourmet.css` yükler ve orada
+   `.rd-crumb` de `.prose*` de YOKTUR (ölçüldü: grep, 0 eşleşme). Aynı CSS
+   farklı kapsayıcıda farklı sonuç verir — yasal.css'i olduğu gibi Gourmet
+   kabuğuna asmak stilsiz breadcrumb + stilsiz gövde metni üretirdi.
+
+   Emsal AYNI dosya-deseniyle çözülmüş: `public/reference/gurme-lezzetler/
+   gurme-lezzetler.css:141-146` `.rd-crumb`i "VERBATIM" notuyla sayfa-yerel
+   yeniden bildiriyor — bu dosya o bloğu ORADAN, karakteri karakterine alır
+   (Gourmet kabuğunda kanıtlanmış sürüm).
+
+   `.prose*` bloğu `resources/css/tokens.css:612-624`ten BİREBİR alındı; tek
+   dönüşüm `--sp-N` boşluk token'larının SAYISAL KARŞILIKLARINA açılmasıdır
+   (tokens.css:121-122 — `--sp-2:8px --sp-3:12px --sp-4:16px --sp-5:24px`),
+   çünkü gourmet.css bu ölçek token'larını TANIMLAMAZ (ölçüldü; gourmet.css
+   234. satır bu yüzden zaten `var(--sp-2,8px)` yedekli yazılmış). Render
+   çıktısı Gastro'daki ile aynı piksellere denk gelir; yeni değer İCAT
+   EDİLMEDİ. */
+
+/* ---- breadcrumb — VERBATIM (gurme-lezzetler.css:141-146) ---- */
+.rd-crumb{display:flex;align-items:center;flex-wrap:wrap;gap:9px;padding:18px 0 14px;font-size:13px;font-weight:500;color:var(--muted)}
+.rd-crumb a{color:var(--muted);transition:.18s}
+.rd-crumb a:hover{color:var(--tomato)}
+.rd-crumb i{font-size:9px;color:#c7c7c7}
+.rd-crumb b{color:var(--slate);font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:360px}
+
+/* ---- uzun-form gövde — VERBATIM (tokens.css:612-624, --sp-N açıldı) ---- */
+.prose{max-width:74ch}
+.prose h1{margin-bottom:8px}
+.prose__meta{color:var(--muted);font-size:.88rem;margin-bottom:24px}
+.prose__body{color:var(--slate-2);line-height:1.7}
+.prose__body p{margin-bottom:16px;text-align:justify;-webkit-hyphens:auto;hyphens:auto;overflow-wrap:break-word}
+/* h2 — PORT DÜŞÜKLÜĞÜ DÜZELTMESİ (2026-08-15): `.seo-prose`→`.prose__body`
+   yeniden adlandırması h3'ü almış, h2'yi ALMAMIŞ (tokens.css'te de eksikti,
+   orada da eklendi). reference/sayfalar/yasal-v1.html:785'ten BİREBİR. */
+.prose__body h2{font-size:26px;margin-bottom:14px}
+.prose__body h3{font-size:18px;margin:30px 0 10px}
+.prose__body strong{color:var(--ink);font-weight:700}
+.prose__body a.inline{color:var(--tomato);font-weight:700;text-decoration:underline;text-underline-offset:2px}
+.prose__body ul{margin:0 0 14px;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:8px}
+.prose__body ul li{position:relative;padding-left:22px;font-size:14.5px;color:var(--slate-2);font-weight:500;line-height:1.65}
+.prose__body ul li::before{content:"";position:absolute;left:4px;top:.62em;width:7px;height:7px;border-radius:var(--radius-circle);background:var(--tomato)}
+
+/* ---- üst bant ---- */
+.lg-top{position:relative;padding-top:128px;background-image:linear-gradient(90deg,rgba(28,25,18,.93),rgba(33,30,22,.72)),url("../../_dis/images.unsplash.com/photo-1414235077428-338989a2e8c0.avif");background-size:cover;background-position:center}
+.lg-top .wrap{position:relative}
+.lg-top .rd-crumb,.lg-top .rd-crumb a{color:#c9c3b8}
+.lg-top .rd-crumb a:hover{color:#AC7FB4}
+.lg-top .rd-crumb i{color:rgba(255,255,255,.4)}
+.lg-top .rd-crumb b{color:#fff}
+/* =====================================================================
+   🔴 F5/T5.2 — KAYNAK MARKANIN SABİT HEX'İ İKAME EDİLDİ.
+
+   ÖLÇÜM (`scripts/t52-renk-tarama.mjs`, getComputedStyle): bu kural
+   rgb(255,217,207) basıyordu — kaynak markanın domates ailesinin soluk tonu.
+   Token DEĞİL SABİT HEX olduğu için kabuğun `--tomato` ikamesinin dışında
+   kalıyordu.
+
+   🔴 YENİ RENK İCAT EDİLMEDİ: karşılık `gourmet-kurumsal.css`in KENDİ ikame
+   tablosundan (satır 19) BİREBİR alındı. Aynı düzeltme T5.1'de arama
+   ekranında yapılmıştı. Kayıt: `docs/parite/T5.2-sapma.md §3`.
+   ===================================================================== */
+.lg-top .eyebrow{color:var(--tomato-tint)}
+.lg-top h1{color:#fff;text-shadow:0 2px 24px rgba(0,0,0,.25)}
+.lg-top .lead{color:#e7edf1;text-shadow:0 1px 14px rgba(0,0,0,.3)}
+.lg-top .lg-update{color:#cdd8e0}
+.lg-top .lg-update b{color:#fff!important}
+.lg-head{padding:6px 0 30px}
+.lg-head h1{font-size:34px;letter-spacing:-.03em;margin:14px 0 10px}
+.lg-update{display:inline-flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);font-weight:500}
+.lg-update i{color:var(--tomato);font-size:12px}
+
+/* ---- yerleşim: sol sticky dizin + sağ uzun-form metin ---- */
+.lg-sec{padding:38px 0 74px;background:var(--bg-cream)}
+.lg-layout{display:grid;grid-template-columns:272px minmax(0,1fr);gap:30px;align-items:start}
+.lg-side{position:sticky;top:130px;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);padding:8px;max-height:calc(100vh - 154px);overflow-y:auto;scrollbar-width:thin}
+.lg-side h3{display:flex;align-items:center;gap:9px;font-size:14px;padding:14px 14px 10px;border-bottom:1px solid var(--line);margin-bottom:6px}
+.lg-side h3 i{color:var(--tomato);font-size:13px}
+.lg-menu{display:flex;flex-direction:column;gap:2px}
+.lg-menu a{display:flex;align-items:center;gap:11px;font-size:13.5px;font-weight:500;color:var(--slate-2);padding:11px 13px;border-radius:var(--radius-md);transition:.18s var(--ease);line-height:1.3}
+.lg-menu a i{width:17px;text-align:center;color:var(--muted);font-size:13px;flex:none;transition:.18s}
+.lg-menu a:hover{background:var(--tomato-tint);color:var(--tomato)}
+.lg-menu a:hover i{color:var(--tomato)}
+.lg-menu a.active{background:var(--tomato);color:#fff;font-weight:700}
+.lg-menu a.active i{color:#fff}
+
+/* ---- metin gövdesi ---- */
+.lg-main{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);box-shadow:var(--sh-sm);padding:38px 42px}
+.lg-main .prose{max-width:none}
+
+/* ---- içindekiler kutusu — PORT DÜŞÜKLÜĞÜ DÜZELTMESİ (2026-08-15) ----
+   `.lg-toc` MARKUP'ı ve üretici JS'i taşınmış ama CSS'i HİÇ taşınmamış (ne
+   yasal.css'te ne tokens.css'te vardı, ölçüldü). Kutu çerçevesiz basılıyor ve
+   `margin-bottom` olmadığı için `.prose__meta` listenin dibine 0px ile
+   yapışıyordu. reference/sayfalar/yasal-v1.html:775-782'den BİREBİR.
+   Numaralandırma CSS counter'ından gelir (`a::before`) — bu yüzden üretici JS
+   başlığın kendi "N." önekini kırpar; o davranış da referansın. */
+.lg-toc{background:var(--bg-cream);border:1px solid var(--line);border-radius:var(--radius-md);padding:18px 22px;margin-bottom:28px}
+.lg-toc b{display:flex;align-items:center;gap:9px;font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:11px}
+.lg-toc b i{color:var(--tomato)}
+.lg-toc ol{list-style:none;counter-reset:toc;display:flex;flex-direction:column;gap:2px}
+.lg-toc li{counter-increment:toc}
+.lg-toc a{display:flex;align-items:baseline;gap:10px;font-size:14px;font-weight:500;color:var(--slate-2);padding:6px 2px;transition:.16s}
+.lg-toc a::before{content:counter(toc)".";flex:none;font-weight:700;color:var(--tomato);font-size:12.5px}
+.lg-toc a:hover{color:var(--tomato)}
+
+/* ---- tanım satırları (KVKK "Tanımlar", Çerez "Türleri") — ref satır 795-799 ---- */
+.lg-defs{border:1px solid var(--line);border-radius:var(--radius-md);overflow:hidden;margin:0 0 16px}
+.lg-defs .dr{display:grid;grid-template-columns:190px minmax(0,1fr);border-bottom:1px solid var(--line)}
+.lg-defs .dr:last-child{border-bottom:none}
+.lg-defs .dr>span{padding:12px 16px;font-size:13.5px;font-weight:700;color:var(--slate);background:var(--bg)}
+.lg-defs .dr>div{padding:12px 16px;font-size:13.5px;font-weight:500;color:var(--slate-2);line-height:1.6}
+/* metin sonu bandı */
+.lg-foot{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-top:32px;padding-top:20px;border-top:1px solid var(--line)}
+.lg-foot .muted{font-size:12.5px}
+.lg-foot .lg-nav{display:flex;gap:9px}
+.lg-foot .lg-nav a{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:var(--slate);border:1px solid var(--line);background:var(--paper);border-radius:var(--radius-md);padding:10px 15px;transition:.2s var(--ease)}
+.lg-foot .lg-nav a:hover{border-color:var(--tomato);color:var(--tomato)}
+
+/* ===== TABLET (≤1024px) ===== */
+@media (max-width:1024px){
+  .lg-layout{grid-template-columns:1fr}
+  .lg-side{position:static;max-height:none;overflow:visible}
+  .lg-menu{flex-direction:row;flex-wrap:wrap;gap:7px;padding:4px 6px 8px}
+  .lg-menu a{border:1px solid var(--line);background:var(--bg);padding:9px 13px;border-radius:var(--radius-sm);font-size:12.5px}
+  .lg-menu a.active{border-color:var(--tomato)}
+  .lg-main{padding:28px 26px}
+}
+/* ===== MOBİL (≤640px) ===== */
+@media (max-width:640px){
+  .lg-top{padding-top:74px}
+  .lg-head h1{font-size:25px}
+  .lg-sec{padding:22px 0 50px}
+  .lg-main{padding:22px 18px}
+  .lg-foot{flex-direction:column;align-items:flex-start}
+}
+
+/* ===== HUB (index) — .lg-main içinde grup başlıkları =====
+   YENİ KURAL DEĞİL: hub, `.lg-menu` kartlarının AYNI dilini kullanır
+   (yukarıdaki `.lg-menu a` bloğu). Grup başlığı `.lg-side h3` ile AYNI
+   bildirimdir, tek farkı sol dizin kutusunun içinde değil metin gövdesinde
+   durmasıdır — bu yüzden ayrı selector, ayrı DEĞER değil. */
+.lg-group{margin-bottom:26px}
+.lg-group:last-child{margin-bottom:0}
+.lg-group h3{display:flex;align-items:center;gap:9px;font-size:14px;padding:14px 0 10px;border-bottom:1px solid var(--line);margin-bottom:6px}
+.lg-group h3 i{color:var(--tomato);font-size:13px}

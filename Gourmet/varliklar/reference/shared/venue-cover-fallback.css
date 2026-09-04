@@ -1,0 +1,84 @@
+/* Mekân kapağı YOKKEN basılan yedek zemin + monogram — TEK KAYNAK.
+ *
+ * Neden burada (2026-08-14): bu kurallar `f3e8a2ed`de İKİ sayfa-yerel
+ * dosyaya (mekan-liste.css, mekan-detay.css) elle kopyalanmıştı. Kart
+ * markup'ı ortak partial olduğu için Gourmet ANA SAYFASI da aynı markup'ı
+ * basıyor, ama o sayfa kesfet.css yüklüyor — kural oraya kopyalanmamıştı.
+ * Sonuç: markup var, CSS yok → çıplak harf + boş kutu (canlıda ölçüldü:
+ * `/` 6 monogram basıyor, kesfet.css'te `mkl-bg-mono` 0 kez geçiyor).
+ *
+ * Bu dosya `layouts/gourmet.blade.php`ten yüklenir, yani HER Gourmet
+ * yüzeyinde vardır. Sayfa-yerel kopyalar SİLİNDİ — iki yerde durdukları
+ * sürece biri güncellenip öbürü unutulabiliyordu, kusurun kökü buydu.
+ *
+ * İki gramer de burada: `.mkl-*` (liste/arama/ana sayfa kartı) ve
+ * `.disc-*` (mekân detayındaki "benzer mekânlar"). İkisi AYNI görünümü
+ * üretir; isimler korundu çünkü canlı markup, testler ve QA betikleri
+ * bu adlara bakıyor — yeniden adlandırma bu turun işi değil.
+ */
+
+.mkl-card .disc-fig .bg.mkl-bg-fallback,
+.disc-fig .bg.disc-bg-fallback {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--cream);
+    background-image: repeating-linear-gradient(135deg, rgba(33, 30, 22, .05) 0 2px, transparent 2px 22px);
+}
+
+.mkl-card .disc-fig .bg.mkl-bg-fallback.mkl-bg-fb-1,
+.disc-fig .bg.disc-bg-fallback.disc-bg-fb-1 {
+    background-color: var(--cream-2);
+}
+
+.mkl-card .disc-fig .bg.mkl-bg-fallback.mkl-bg-fb-2,
+.disc-fig .bg.disc-bg-fallback.disc-bg-fb-2 {
+    background-color: var(--tomato-tint);
+}
+
+/* `.disc-fig .bg` SARMALI OLMAYAN yüzeyler — şubeler (`.bc-fig`, 62px) ve
+ * karşılaştırma (`.cmp-venue-fig`, 56px). Yukarıdaki kurallar (0,3,0) o
+ * sarmalı şart koşuyor, bu kutulara hiç değmez.
+ *
+ * Özgüllük ORDER'a bırakılamaz: bu dosya kabukta, sayfa-yerel CSS ise
+ * @push('styles') ile DAHA SONRA yükleniyor. Eşit özgüllükte sonraki
+ * kazanırdı (`.cmp-venue-fig` kendi `background-color:var(--cream)`ini
+ * geri alırdı). `data-cover-fallback` niteliği partial'ın HER ZAMAN
+ * bastığı işaret — sınıfla birleşince (0,2,0) oluyor ve tek sınıflı
+ * yüzey kurallarını (0,1,0) yükleme sırasından BAĞIMSIZ yeniyor. */
+.mkl-bg-fallback[data-cover-fallback="1"],
+.disc-bg-fallback[data-cover-fallback="1"] {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--cream);
+    background-image: repeating-linear-gradient(135deg, rgba(33, 30, 22, .05) 0 2px, transparent 2px 22px);
+}
+
+.mkl-bg-fb-1[data-cover-fallback="1"],
+.disc-bg-fb-1[data-cover-fallback="1"] {
+    background-color: var(--cream-2);
+}
+
+.mkl-bg-fb-2[data-cover-fallback="1"],
+.disc-bg-fb-2[data-cover-fallback="1"] {
+    background-color: var(--tomato-tint);
+}
+
+.mkl-bg-mono,
+.disc-bg-mono {
+    font-size: 58px;
+    font-weight: 800;
+    color: var(--tomato-deep);
+    opacity: .34;
+    line-height: 1;
+    letter-spacing: -.02em;
+    user-select: none;
+}
+
+/* Küçük kart yüzeylerinde (hesabım, mekân bul, karşılaştırma, şubeler)
+ * kutu daha ufak — 58px harf taşardı. Kapsayıcı genişliğine göre değil
+ * yüzeye göre küçültülür; bu yüzeylerin kutuları sabit ölçülü. */
+.gv-mono-sm {
+    font-size: 34px;
+}

@@ -1,0 +1,243 @@
+/* =====================================================================
+   İŞLETME EKLE — sayfa-lokal CSS (FAZ 5, isletme-ekle-v1.html §"SAYFA CSS"
+   bloğu, satır 739-991, kaynak-transfer). Chrome/token katmanı dokunulmadı
+   (resources/css/gourmet.css içinde zaten yüklü — .fb-kvkk dahil).
+
+   TEK YAPISAL SAPMA (brief zaten "5 bölüm tek form" olarak tarif ediyordu):
+   referansın "İKİ FAZ: temel kayıt → mock geçiş → ekstra detay" mekaniği
+   (`.ol-phase2`/`.ol-reg-cta`/`.ol-reg-ok`/`body.reg-done`/`.sn-lock`/
+   `.sn-extra`) PORT EDİLMEDİ — statik prototipte gerçek auth olmadığı için
+   JS'in taklit ettiği bir "kayıt" adımıydı; bu uygulamada kullanıcı zaten
+   girişli (route `auth` middleware'i) ve tüm alanlar TEK POST'ta gönderiliyor.
+   Geri kalan HER class birebir.
+
+   E-1 (2026-08-07) RENK DÜZELTMESİ: bu dosya ilk portta yanlışlıkla
+   sağlık-bloğu yeşilini (--green/--green-deep/#EAF7F0/rgba(59,183,126,…))
+   kullanıyordu — bu markada baskın renk DadaGourmet MORU'dur
+   (resources/css/gourmet.css :root'ta --tomato'yu #742982'e çevirir).
+   Tüm yeşil referanslar var(--tomato)/var(--tomato-deep)/var(--tomato-tint)
+   ailesine (veya color-mix eşdeğerine) çevrildi. Koyu hero bandındaki
+   #54d39a/#7fe0b0 literal yeşilleri de sibling Gourmet sayfalarının
+   (mekan-liste.css/etkinlikler.css/dada-seckisi.css .ke-head .eyebrow/.accent)
+   ZATEN kurulu mor-üstü-koyu paletiyle (#d5bfda/#ba94c0, rgba(30,20,34,…)
+   overlay) değiştirildi — yeni renk İCAT EDİLMEDİ, var olan Gourmet
+   deseni tekrar kullanıldı.
+   ===================================================================== */
+
+/* ---- giriş bandı ---- */
+.ol-top{position:relative;padding-top:128px;background-image:linear-gradient(90deg,rgba(30,20,34,.94),rgba(30,20,34,.74)),url("../../_dis/images.unsplash.com/photo-1512621776951-a57141f2eefd.avif");background-size:cover;background-position:center}
+.rd-crumb{display:flex;align-items:center;flex-wrap:wrap;gap:9px;padding:18px 0 14px;font-size:13px;font-weight:500;color:var(--muted)}
+.rd-crumb a{color:var(--muted);transition:.18s}
+.rd-crumb a:hover{color:var(--tomato)}
+.rd-crumb i{font-size:9px;color:#c7c7c7}
+.rd-crumb b{color:var(--slate);font-weight:700}
+.ol-intro{padding:6px 0 38px}
+.ol-intro h1{font-size:38px;letter-spacing:-.03em;margin:14px 0 12px;max-width:640px}
+.ol-intro h1 .accent{color:#ba94c0}
+.ol-intro .lead{font-size:16px;color:var(--slate-2);font-weight:500;max-width:600px;line-height:1.65}
+.ol-bene{display:flex;flex-wrap:wrap;gap:14px;margin-top:26px}
+.ol-bene .b{display:flex;align-items:center;gap:12px;background:var(--bg-cream);border:1px solid var(--line);border-radius:var(--radius-md);padding:12px 17px}
+.ol-bene .b i{width:36px;height:36px;border-radius:var(--radius-md);background:color-mix(in srgb, var(--tomato) 13%, transparent);color:var(--tomato-deep);display:grid;place-items:center;font-size:15px;flex:none}
+.ol-bene .b b{font-size:13.5px;color:var(--slate);display:block;line-height:1.2}
+.ol-bene .b span{font-size:11.5px;color:var(--muted);font-weight:500}
+
+/* ---- yerleşim ---- */
+.ol-sec{padding:36px 0 70px;background:var(--bg-cream)}
+.ol-layout{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:28px;align-items:start}
+.ol-main{min-width:0;display:flex;flex-direction:column;gap:16px}
+.ol-formcards{display:flex;flex-direction:column;gap:16px}
+
+/* ---- FORM KARTI + FK ALAN KİTİ (tarif-ekle MİRAS) ---- */
+.form-card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);box-shadow:var(--sh-sm);padding:24px 26px;scroll-margin-top:128px}
+.fc-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid var(--line)}
+.fc-head h2{font-size:20px;display:flex;align-items:center;gap:11px}
+.fc-head h2 i{flex:none;width:38px;height:38px;border-radius:var(--radius-md);background:var(--tomato-tint);color:var(--tomato);display:grid;place-items:center;font-size:15px}
+.fc-head p{font-size:13px;color:var(--muted);font-weight:500;margin-top:5px}
+.fc-step{flex:none;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);background:var(--bg);border:1px solid var(--line);padding:6px 11px;border-radius:var(--radius-sm);white-space:nowrap}
+.fk-field{margin-bottom:18px}
+.fk-field:last-child{margin-bottom:0}
+.fk-label{display:flex;align-items:baseline;gap:7px;font-size:14px;font-weight:700;color:var(--slate);margin-bottom:9px}
+.fk-label .req{color:var(--tomato);font-weight:700}
+.fk-label .opt{font-size:11.5px;color:var(--muted);font-weight:500}
+.fk-label .fk-count{margin-left:auto;font-size:11.5px;color:var(--muted);font-weight:500;letter-spacing:.02em}
+.fk-input,.fk-select,.fk-textarea{
+  width:100%;font-family:inherit;font-size:14px;font-weight:500;color:var(--slate);
+  background:var(--bg);border:1px solid var(--line);border-radius:var(--radius-md);
+  padding:13px 15px;outline:none;transition:border-color .2s var(--ease),box-shadow .2s var(--ease);
+}
+.fk-input::placeholder,.fk-textarea::placeholder{color:#a7a7a7}
+.fk-input:focus,.fk-select:focus,.fk-textarea:focus{border-color:var(--tomato);box-shadow:0 0 0 3px color-mix(in srgb, var(--tomato) 10%, transparent)}
+.fk-textarea{min-height:130px;resize:vertical;line-height:1.6}
+.fk-select{
+  appearance:none;-webkit-appearance:none;cursor:pointer;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%237E7E7E' stroke-width='1.6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 15px center;padding-right:40px;
+}
+.fk-select:invalid{color:#a7a7a7}
+.fk-help{display:flex;align-items:flex-start;gap:7px;font-size:12.5px;color:var(--muted);font-weight:500;margin-top:8px;line-height:1.5}
+.fk-help i{color:var(--tomato);font-size:12px;margin-top:2px;flex:none}
+.fk-help.green i{color:var(--tomato-deep)}
+.fk-grid{display:grid;gap:14px 18px;align-items:start}
+.fk-grid .fk-field{margin-bottom:0}
+.fk-grid.c2{grid-template-columns:1fr 1fr}
+.fk-grid.c3{grid-template-columns:1fr 1fr 1fr}
+.fk-grid+.fk-grid{margin-top:14px}
+.fk-grid+.fk-field,.fk-field+.fk-grid{margin-top:18px}
+/* alan-altı doğrulama hatası (auth/index.blade.php fk-err deseniyle AYNI) */
+.fk-err{display:block;font-size:12px;color:var(--tomato);font-weight:600;margin-top:7px}
+.fk-input[aria-invalid="true"],.fk-select[aria-invalid="true"],.fk-textarea[aria-invalid="true"]{border-color:var(--tomato);box-shadow:0 0 0 3px rgba(225,72,39,.08)}
+
+/* ---- UP YÜKLEME KİTİ (tarif-ekle MİRAS) ---- */
+.up-zone{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;width:100%;
+  border:1.5px dashed color-mix(in srgb, var(--tomato) 45%, transparent);background:var(--tomato-tint);color:var(--tomato);
+  border-radius:var(--radius-lg);padding:22px 18px;text-align:center;cursor:pointer;
+  font-family:inherit;transition:.2s var(--ease);
+}
+.up-zone i{font-size:25px}
+.up-zone b{font-size:14.5px;font-weight:700}
+.up-zone small{font-size:12px;font-weight:500;color:var(--slate-2)}
+.up-zone:hover{background:color-mix(in srgb, var(--tomato) 18%, var(--paper));border-color:var(--tomato)}
+.up-zone[disabled],.up-zone.is-loading{opacity:.6;cursor:wait}
+.up-done{display:flex;align-items:center;gap:11px;background:color-mix(in srgb, var(--tomato) 8%, transparent);border:1px solid color-mix(in srgb, var(--tomato) 30%, transparent);border-radius:var(--radius-md);padding:12px 15px;margin-top:10px;font-size:13px;font-weight:600;color:var(--tomato-deep)}
+.up-done i.fa-file-lines,.up-done i.fa-file-image{color:var(--tomato-deep);font-size:16px}
+.up-done .x{margin-left:auto;color:var(--muted);cursor:pointer;font-size:13px;background:none;border:none}
+.up-done .x:hover{color:var(--tomato)}
+/* çoklu galeri: birden fazla up-done satırı alt alta */
+.up-done-list{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+.up-done-list .up-done{margin-top:0}
+
+/* ---- uzmanlık çoklu seçim chip'leri ---- */
+.uz-grid{display:flex;flex-wrap:wrap;gap:9px}
+.uz-pick{display:inline-flex;align-items:center;gap:8px;font-family:inherit;font-size:13px;font-weight:600;color:var(--slate-2);background:var(--bg);border:1px solid var(--line);border-radius:var(--radius-sm);padding:9px 14px;cursor:pointer;transition:.18s var(--ease)}
+.uz-pick i{font-size:11px;opacity:0;width:0;transition:.18s}
+.uz-pick:hover{border-color:var(--tomato);color:var(--tomato)}
+.uz-pick.on{border-color:var(--tomato);background:var(--tomato-tint);color:var(--tomato)}
+.uz-pick.on i{opacity:1;width:11px}
+
+/* ---- görüşme türü kartları ---- */
+.gor-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.gor-opt{position:relative;display:flex;align-items:center;gap:13px;padding:15px 16px;border:1px solid var(--line);border-radius:var(--radius-md);cursor:pointer;transition:.18s var(--ease)}
+.gor-opt input{position:absolute;opacity:0;pointer-events:none}
+.gor-opt .gi{flex:none;width:42px;height:42px;border-radius:var(--radius-md);background:var(--bg);color:var(--slate-2);display:grid;place-items:center;font-size:16px;transition:.18s}
+.gor-opt .gt{min-width:0}
+.gor-opt .gt b{font-size:14px;color:var(--slate);display:block}
+.gor-opt .gt span{font-size:12px;color:var(--muted);font-weight:500}
+.gor-opt .gck{margin-left:auto;flex:none;width:22px;height:22px;border-radius:var(--radius-sm);border:1.5px solid #d8d8d8;display:grid;place-items:center;transition:.18s}
+.gor-opt .gck::after{content:"\f00c";font-family:"Font Awesome 6 Free";font-weight:900;font-size:10px;color:#fff;transform:scale(0);transition:.15s}
+.gor-opt:hover{border-color:var(--tomato)}
+.gor-opt input:checked~.gck{background:var(--tomato);border-color:var(--tomato)}
+.gor-opt input:checked~.gck::after{transform:scale(1)}
+.gor-opt:has(input:checked){border-color:color-mix(in srgb, var(--tomato) 50%, transparent);background:color-mix(in srgb, var(--tomato) 6%, transparent)}
+.gor-opt:has(input:checked) .gi{background:color-mix(in srgb, var(--tomato) 13%, transparent);color:var(--tomato-deep)}
+
+/* ---- KVKK / onay (shell .fb-kvkk MİRAS) ---- */
+.ol-consents{display:flex;flex-direction:column;gap:13px}
+.ol-consents .fb-kvkk{margin:0}
+.captcha-note{display:flex;align-items:center;gap:9px;font-size:12px;color:var(--muted);font-weight:500;margin-top:18px;padding-top:16px;border-top:1px solid var(--line)}
+.captcha-note i{color:var(--tomato-deep);font-size:13px}
+.ol-submit{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-top:6px}
+.ol-submit .sub-note{font-size:12.5px;color:var(--muted);font-weight:500;max-width:280px}
+.ol-submit .btn{padding:15px 30px;font-size:15px}
+.ol-submit .btn:disabled{opacity:.55;cursor:not-allowed}
+
+/* ---- yan ray: süreç + fayda ---- */
+.ol-side{position:sticky;top:130px;display:flex;flex-direction:column;gap:18px}
+.tips-card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);box-shadow:var(--sh-sm);padding:22px}
+.sn-head,.proc-head{display:flex;align-items:center;gap:9px;font-size:11.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.sn-head i,.proc-head i{color:var(--tomato);font-size:12px}
+.sn-head{margin-bottom:12px}
+.sn-nav{display:flex;flex-direction:column;gap:2px}
+.sn-item{position:relative;display:flex;align-items:center;gap:12px;padding:8px 10px 8px 8px;border-radius:var(--radius-md);text-decoration:none;cursor:pointer;transition:background .18s var(--ease)}
+.sn-item .sn-n{flex:none;width:26px;height:26px;border-radius:var(--radius-circle);background:var(--bg-cream);color:var(--slate-2);border:1.5px solid var(--line);display:grid;place-items:center;font-size:12px;font-weight:700;z-index:2;transition:background .18s var(--ease),color .18s var(--ease),border-color .18s var(--ease),box-shadow .18s var(--ease)}
+.sn-item:not(:last-child)::before{content:"";position:absolute;left:20px;top:30px;height:calc(100% - 22px);width:2px;background:var(--line);transition:background .2s var(--ease)}
+.sn-item .sn-t{font-size:13.5px;font-weight:600;color:var(--slate);line-height:1.25}
+.sn-item .sn-go{margin-left:auto;font-size:11px;color:var(--tomato);opacity:0;transform:translateX(-4px);transition:opacity .18s var(--ease),transform .18s var(--ease)}
+.sn-item:hover{background:var(--bg-cream)}
+.sn-item:hover .sn-n{border-color:var(--tomato);color:var(--tomato)}
+.sn-item:hover .sn-go{opacity:.9;transform:translateX(0)}
+.sn-item.is-done .sn-n{background:var(--tomato);color:#fff;border-color:var(--tomato)}
+.sn-item.is-done::before{background:var(--tomato)}
+.sn-item.is-active{background:var(--tomato-tint)}
+.sn-item.is-active .sn-n{background:var(--tomato);color:#fff;border-color:var(--tomato);box-shadow:0 0 0 4px color-mix(in srgb, var(--tomato) 16%, transparent)}
+.sn-item.is-active .sn-t{color:var(--tomato);font-weight:700}
+.sn-item.is-active .sn-go{opacity:1;transform:translateX(0)}
+.sn-group{display:flex;align-items:center;gap:8px;font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:10px 0 4px;padding:0 8px}
+.sn-group:first-child{margin-top:0}
+.tips-div{height:1px;background:var(--line);margin:16px 0 14px}
+.proc-head{margin-bottom:12px}
+.proc-steps{display:flex;flex-direction:column}
+.proc-step{display:flex;gap:12px;position:relative;padding-bottom:13px}
+.proc-step:last-child{padding-bottom:0}
+.proc-step .pn{flex:none;width:20px;height:20px;border-radius:var(--radius-circle);background:var(--bg-cream);color:var(--muted);display:grid;place-items:center;font-size:10.5px;font-weight:700;z-index:2}
+.proc-step:not(:last-child)::before{content:"";position:absolute;left:9.5px;top:23px;bottom:3px;width:1.5px;background:var(--line)}
+.proc-step b{font-size:12.5px;color:var(--slate-2);display:block;margin-bottom:2px;font-weight:700}
+.proc-step span{font-size:11.5px;color:var(--muted);font-weight:500;line-height:1.45}
+.note-card{background:linear-gradient(160deg,var(--tomato-deep),var(--tomato));color:#fff;border-radius:var(--radius-lg);box-shadow:var(--sh-sm);padding:22px}
+.note-card h4{color:#fff;font-size:15px;display:flex;align-items:center;gap:9px;margin-bottom:13px}
+.note-card ul{list-style:none;display:flex;flex-direction:column;gap:10px}
+.note-card li{display:flex;gap:10px;font-size:13px;font-weight:500;line-height:1.45;color:rgba(255,255,255,.94)}
+.note-card li i{flex:none;margin-top:3px;font-size:12px;color:rgba(255,255,255,.8)}
+
+/* ---- başarı / durum kartı (Pending == başvuru sonrası GERÇEK durum, tek ekran) ---- */
+.ol-success{text-align:center;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);box-shadow:var(--sh-sm);padding:60px 30px;animation:fadeUp .35s var(--ease)}
+.ol-success .ok{width:74px;height:74px;border-radius:var(--radius-circle);background:var(--tomato-tint);color:var(--tomato);display:grid;place-items:center;font-size:30px;margin:0 auto 20px}
+.ol-success h2{font-size:26px;margin-bottom:10px}
+.ol-success p{font-size:15px;color:var(--muted);font-weight:500;max-width:460px;margin:0 auto 26px;line-height:1.65}
+.ol-success .os-steps{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-bottom:0}
+.ol-success .os-steps span{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;font-weight:600;color:var(--slate-2);background:var(--bg-cream);border:1px solid var(--line);padding:9px 14px;border-radius:var(--radius-sm)}
+.ol-success .os-steps i{color:var(--tomato-deep)}
+.ol-success .os-steps span.is-current{color:var(--tomato-deep);border-color:color-mix(in srgb, var(--tomato) 40%, transparent);background:var(--tomato-tint)}
+/* onaylanmış başvuru: dolu mor "ok" yerine mekân linki de aynı kartta */
+.ol-success .ok.approved{background:var(--tomato-deep);color:#fff}
+.ol-success .venue-link{margin-top:22px}
+
+/* ---- reddedilmiş başvuru banner'ı (referansta yok — gerçek bir durum,
+        auth/index.blade.php sbanner ailesiyle AYNI renk dili) ---- */
+.va-rejected{display:flex;align-items:flex-start;gap:12px;background:rgba(225,72,39,.07);border:1px solid rgba(225,72,39,.22);border-radius:var(--radius-md);padding:14px 18px;margin-bottom:22px}
+.va-rejected i{flex:none;width:34px;height:34px;border-radius:var(--radius-circle);background:var(--tomato);color:#fff;display:grid;place-items:center;font-size:14px}
+.va-rejected b{display:block;font-size:14px;color:var(--slate);font-weight:700}
+.va-rejected span{font-size:12.5px;color:var(--muted);font-weight:500}
+
+/* ---- girişsiz kullanıcı uyarısı (brief: form görülür, gönderilemez) ---- */
+.va-guest-note{display:flex;align-items:flex-start;gap:10px;background:var(--bg-cream);border:1px solid var(--line);border-radius:var(--radius-md);padding:13px 16px;margin-top:6px;font-size:12.5px;color:var(--slate-2);font-weight:500;line-height:1.5}
+.va-guest-note i{flex:none;color:var(--tomato-deep);margin-top:2px}
+.va-guest-note a{color:var(--tomato-deep);font-weight:700;text-decoration:underline;text-underline-offset:2px}
+
+/* ===================== TABLET (≤1024px) ===================== */
+@media (max-width:1024px){
+  .ol-layout{grid-template-columns:1fr}
+  .ol-side{position:static;flex-direction:row;flex-wrap:wrap}
+  .ol-side>*{flex:1 1 300px}
+}
+/* ===================== MOBİL (≤640px) ===================== */
+@media (max-width:640px){
+  .ol-top{padding-top:62px}
+  .ol-intro h1{font-size:28px}
+  .ol-intro .lead{font-size:14.5px}
+  .ol-sec{padding:24px 0 50px}
+  .form-card{padding:20px 18px;scroll-margin-top:78px}
+  .fk-grid.c2,.fk-grid.c3{grid-template-columns:1fr}
+  .gor-grid{grid-template-columns:1fr}
+  .ol-side{flex-direction:column}
+  .ol-submit{flex-direction:column;align-items:stretch}
+  .ol-submit .btn{width:100%}
+}
+
+/* HERO ZENGİNLEŞTİRME (referans) */
+.ol-top .wrap{position:relative}
+.ol-top .rd-crumb,.ol-top .rd-crumb a{color:#c9c3b8}
+.ol-top .rd-crumb a:hover{color:#d5bfda}
+.ol-top .rd-crumb i{color:rgba(255,255,255,.4)}
+.ol-top .rd-crumb b{color:#fff}
+.ol-top .eyebrow{color:#d5bfda}
+.ol-top h1{color:#fff;text-shadow:0 2px 24px rgba(0,0,0,.25)}
+.ol-top h1 .accent{color:#ba94c0}
+.ol-top .lead{color:#e3ede7;text-shadow:0 1px 14px rgba(0,0,0,.3)}
+.ol-top .ol-bene .b{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.2)}
+.ol-top .ol-bene .b b{color:#fff}
+.ol-top .ol-bene .b span{color:#cdd8e0}
+.ol-top .ol-bene .b i{background:rgba(255,255,255,.16);color:#fff}
+@media (max-width:640px){.ol-top{padding-top:74px}}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}

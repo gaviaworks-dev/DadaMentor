@@ -1,0 +1,470 @@
+/* kesfet.css — kesfet-v1.html kaynak-transfer (Dalga 1 / B4).
+   Kaynak: reference/gourmet-kesfet/kesfet-v1.html "SAYFA CSS" bloğu
+   (satır 771+). Kabuk katmanı (tokens/topbar/header/footer/drawer/mentor/
+   to-top/overlays — satır 1-770 + 1518-1661) ZATEN resources/css/gourmet.css
+   içinde (Dalga 0 B2, DONDU) — burada TEKRAR edilmedi.
+
+   Bu sayfanın gerçek gövdesi (kesfet-v1.html satır 2011-2287) yalnız 5
+   section kullanır: .ke-top (hero) · .gm-modules · .gm-events ·
+   .gm-concept-teaser · .gm-teaser. Referans dosyasında bunların DIŞINDA
+   kalan geniş CSS blokları (§§: Mekan Bul sihirbazı .mb-sec/.stepper/.pick,
+   Keşfet HUB tab bar + uzun-form makale (art- öneki), .ke-tabbar, .lst-side
+   facet sheet'i, .ke-hero/.ke-head/.ke-stats/.rd-crumb) bu koşunun kapsamındaki
+   DOM'da HİÇ basılmıyor (00-ortak.md §KAPSAM: Mekan Bul/Etkinlikler/Gurme
+   Lezzetler/Dada Seçkisi modülleri bu dalgada inşa edilmiyor) — BİLEREK
+   taşınmadı (tarif-detay.css emsali, satır 28-30 "ölü kural" notu).
+
+   Aşağıdaki bloklar satır numarası korunarak (kaynak yorumunda anıldığı
+   gibi) BİREBİR taşındı; yalnız kullanılan seçiciler dahil edildi. */
+
+/* ===== .ke-top / .ke-hero-media — kaynak satır 903-926 (BİREBİR) ===== */
+.ke-top{
+  position:relative;padding-top:128px;
+  min-height:100vh;min-height:100svh;display:flex;align-items:center;overflow:hidden;
+  background:#1e1422;
+}
+.ke-hero-media{
+  position:absolute;inset:0;z-index:0;
+  background:#1e1422 url("../../img/gourmet-kesfet-hero-g4.webp") center/cover no-repeat;
+}
+/* Hero görseli. Eskiden bu bir <video> idi; iki kaynağı da 404 döndüğü ve
+   `data-ready="0"` yüzünden hiç istek atılmadığı için yuva SÖKÜLDÜ (Beyar
+   kararı 2026-08-12). Kural birebir korundu: video `object-fit:cover` +
+   `object-position:center 42%` + `filter:saturate(.8)` taşıyordu, bu div de
+   aynılarını taşıyor — kare ekranda AYNI görünür. Filtre kasten burada,
+   `.ke-hero-media`nın kendisinde değil: orada olsaydı ::after overlay'ini de
+   soldururdu (video da bir çocuktu, overlay ondan etkilenmiyordu). */
+.ke-hero-media .gm-hero-img{
+  position:absolute;inset:0;
+  background-size:cover;background-position:center 42%;background-repeat:no-repeat;
+  filter:saturate(.8);
+}
+.ke-hero-media::after{
+  content:"";position:absolute;inset:0;
+  background:
+    radial-gradient(820px 360px at 84% 14%, rgba(116,41,130,.20), transparent 62%),
+    linear-gradient(90deg, rgba(30,20,34,.93) 0%, rgba(30,20,34,.80) 46%, rgba(30,20,34,.56) 100%),
+    linear-gradient(180deg, rgba(24,16,28,0) 0 56%, rgba(24,16,28,.9) 100%);
+}
+.ke-top .wrap{position:relative;z-index:2;width:100%}
+@media (max-width:640px){
+  .ke-top{padding-top:74px;align-items:flex-start}
+}
+
+/* ===== disc-card ailesi — kaynak satır 981-1010 (BİREBİR, gm-events/gm-concept-teaser kartları bunu kullanır) ===== */
+.disc-meta .disc-where{color:var(--slate);font-weight:600}
+.disc-meta .disc-where i{color:var(--tomato)}
+.disc-card{cursor:pointer}
+.disc-fig{position:relative;aspect-ratio:16/10;border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--sh-sm);margin-bottom:16px}
+.disc-fig .bg{width:100%;height:100%;background-size:cover;background-position:center;transition:.5s var(--ease)}
+.disc-card:hover .disc-fig .bg{transform:scale(1.05)}
+/* Kapaksız etkinlik yedeği — kural ve gerekçe `gourmet-etkinlikler/etkinlikler.css`
+   §147'de; burada TEKRARLANIYOR çünkü etkinlik kartı bu sayfada da basılıyor
+   (kesfet/index.blade.php @include) ve sayfa-yerel CSS'ler birbirini görmüyor.
+   Değerler BİREBİR aynı. */
+.disc-fig .bg.ev-fig-ico{background:var(--tomato-tint);display:grid;place-items:center;color:var(--tomato);font-size:34px}
+.disc-card:hover .disc-fig .bg.ev-fig-ico{transform:none}
+.disc-badges{position:absolute;bottom:13px;left:13px;display:flex;gap:6px;z-index:2}
+.disc-fig .m-types{z-index:2}
+.m-types{position:absolute;bottom:13px;right:13px;display:flex;gap:6px}
+.mt{display:inline-flex;align-items:center;gap:5px;background:rgba(20,18,12,.72);color:#fff;font-size:11px;font-weight:700;padding:6px 10px;border-radius:var(--radius-sm);backdrop-filter:blur(4px)}
+.disc-cat{display:inline-block;margin:0 0 7px;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--tomato)}
+.disc-card h3{font-size:18px;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:8px;transition:color .2s var(--ease)}
+.disc-card:hover h3{color:var(--tomato)}
+.disc-card p{font-size:13.5px;color:var(--muted);font-weight:500;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.disc-meta{display:flex;align-items:center;gap:16px;font-size:12.5px;color:var(--muted);font-weight:500;margin-top:13px;padding-top:12px;border-top:1px solid var(--line)}
+.disc-meta span{display:inline-flex;align-items:center;gap:6px}
+.disc-meta i{font-size:12px}
+.disc-meta .disc-stats{margin-left:auto;display:inline-flex;align-items:center;gap:12px;flex:none}
+.disc-meta .disc-rate i{color:var(--yellow)}
+.disc-badge{background:var(--tomato);color:#fff;font-size:11px;font-weight:700;padding:6px 11px;border-radius:var(--radius-sm);letter-spacing:.02em;display:inline-flex;align-items:center;gap:6px}
+.disc-badge.soft{background:rgba(255,255,255,.94);color:var(--slate)}
+
+/* ===== ev-card ek alanlar (RV4 A5, gerçek Etkinlikler kartı @include) —
+   reference/gourmet-etkinlikler/etkinlikler.css satır 126-208 BİREBİR
+   (yalnız bu sayfada kullanılan seçiciler: disc-grid, disc-card-link,
+   disc-status, disc-price-pill, ev-meta ailesi, disc-card-foot, disc-save;
+   ev-filter, ev-cal, disc-feature vb. bu sayfada YOK — DİKKAT: yorum
+   içinde yıldız + eğik çizgi dizisi YAZILMAZ, comment erken kapanır).
+   .disc-grid burada GRID DEĞİL — Beyar kararı (2026-07-29): "Yaklaşan
+   Etkinlikler" tek satır ray olacak, A1/A2/A3'ün AYNI flex-track
+   mekaniğine döndü (kart alt satıra düşmez). KRİTİK: `.ev-card`in kendisi
+   ve `.ev-card .disc-card-link` HÂLÂ flex — bu bağlam `.disc-cat`'i
+   blockify eder ve liste sayfasıyla (.disc-grid.ke-stops) AYNI 40px
+   görsel→başlık boşluğunu üretir (lead ölçümü); yalnız DIŞ kapsayıcı
+   grid'ten track'e döndü, iç flex bağlamı KORUNDU. ===== */
+.disc-grid{display:flex;gap:26px;overflow-x:auto;scroll-behavior:smooth;padding:6px 2px 14px;scrollbar-width:none;align-items:stretch}
+.disc-grid::-webkit-scrollbar{display:none}
+.disc-grid > .disc-card{flex:0 0 min(380px,84vw)}
+.disc-card{position:relative}
+.ev-card{display:flex;flex-direction:column}
+.ev-card .disc-card-link{display:flex;flex-direction:column;flex:1}
+.ev-card .disc-card-link .disc-meta:last-of-type{margin-top:auto}
+.disc-card h3{min-height:2.6em}
+.disc-card p{line-height:1.55;min-height:3.1em}
+.disc-meta{flex-wrap:wrap}
+/* .ke-stop — gurme-lezzetler.css satır 950-952 BİREBİR (dada-seckisi/
+   .sk-stops emsali). RV4 gurme ray düzeltmesi: anasayfa teaser'ında
+   $stretch=true ile @include edilen kart bu class'ı alır — .disc-card-link
+   flex bağlamına girer, .disc-cat blockify olur, liste sayfasındaki AYNI
+   40px görsel→başlık boşluğunu üretir (yeni CSS icat edilmedi, kartın
+   KENDİ parametresi kullanıldı). */
+.ke-stop{display:flex;flex-direction:column}
+.ke-stop .disc-card-link{display:flex;flex-direction:column;flex:1;min-height:0}
+.ke-stop .disc-meta{margin-top:auto}
+.disc-status{position:absolute;top:13px;left:13px;z-index:2;display:flex}
+.disc-status .st-closed{background:rgba(40,34,46,.76);color:#ddd4e2;font-size:11px;font-weight:700;padding:6px 11px;border-radius:var(--radius-sm);display:inline-flex;align-items:center;gap:6px}
+.disc-status .st-closed i{color:#c6b6cf;font-size:10.5px}
+.disc-card.is-closed .disc-fig .bg{filter:grayscale(.45) brightness(.94)}
+.disc-price-pill{letter-spacing:.06em;font-size:11.5px;background:rgba(20,18,12,.62);color:#fff;padding:6px 10px;border-radius:var(--radius-sm);display:inline-flex;align-items:center;gap:4px}
+.disc-price-pill b{color:#fff;font-weight:700}
+.disc-price-pill span{color:rgba(255,255,255,.72)}
+.ev-meta{flex-wrap:nowrap;gap:9px}
+.ev-meta > span{min-width:0}
+.ev-meta .dw-txt{display:block;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ev-meta .ev-when{flex:0 0 auto}
+.ev-meta .ev-when i{color:var(--tomato)}
+.ev-meta .disc-where{flex:1 1 auto}
+.ev-meta-sep{color:var(--line);font-weight:700;flex:0 0 auto}
+.disc-card-foot{display:flex;gap:9px;margin-top:12px}
+.disc-card-foot .btn{flex:1;font-size:12.5px;padding:10px 12px;white-space:nowrap}
+.disc-save{position:absolute;top:10px;right:10px;z-index:3;width:34px;height:34px;border-radius:var(--radius-circle);border:none;background:rgba(255,255,255,.92);color:var(--slate);display:grid;place-items:center;font-size:14px;cursor:pointer;transition:.2s var(--ease)}
+.disc-save:hover{background:#fff;color:var(--tomato)}
+.disc-save.saved i{color:var(--tomato)}
+@media (max-width:640px){
+  .disc-card-foot{flex-direction:column}
+}
+
+/* ===== .catstrip — RV4 A1, gastro anasayfanın kategori şeridi kaynak-
+   transferi (gastro/partials/catstrip.blade.php + portal.css satır
+   87+424-442, BİREBİR — .cat-head/.sec-tools/.see-all/.eyebrow grid'i
+   ZATEN gourmet.css kabuğunda VAR, burada yalnız EKSİK olan ray/kart
+   görselleri taşındı). Konsept kartının görseli STOCK (bkz. KesfetController
+   ::CONCEPT_IMAGES) — her zaman dolu, portal.css'teki @if coşullu
+   background-image burada koşulsuz. ===== */
+/* R1 (2026-07-30 lead brifi) — hero'dan sonraki bölüm zemin sırası:
+   Mekân Konseptleri(beyaz)→Keşfet(mor)→Yaklaşan Etkinlikler(beyaz)→Editörün
+   Rotası(mor). Önceki tur bu ikisi TERSTİ (catstrip mor, gm-modules beyaz);
+   `var(--tomato)` bu kabukta (resources/css/gourmet.css :root) GASTRO'nun
+   domates kırmızısı DEĞİL, DadaGourmet'in kurumsal MORU (#742982) — token
+   adı `--tomato` kalsa da rengi mor, bkz. gourmet.css satır 44 yorumu.
+
+   R2 (ritim düzeltmesi, 2026-08-08) — bu dört section'ın `background`
+   bildirimi buradan ALINDI; zemin artık index.blade.php'de GERÇEKTEN
+   basılan ritim-section'lar üzerinden hesaplanıp `.gm-sec--light` /
+   `.gm-sec--tint` sınıflarından biri section'a eklenerek verilir (bkz.
+   $rhythmBg, index.blade.php). Böylece gm-events/gm-concept-teaser veri
+   boşluğundan düşerse komşu zeminler otomatik kayar, iki bitişik section
+   asla aynı zemini taşımaz. Tam sette (dördü de basılıyorsa) hesap bu
+   dosyanın önceki sabit atamasıyla (beyaz/mor/beyaz/mor) BİREBİR aynı
+   sonucu üretir — 2bc22199'un görsel kararı (catstrip beyaz, gm-modules
+   mor) DEĞİŞMEDİ, yalnız kaynağı sabit CSS'ten hesaplanan sınıfa taşındı. */
+.gm-sec--light{background:var(--bg-white)}
+.gm-sec--tint{background:var(--tomato-tint)}
+.catstrip{padding:64px 0}
+.cat-nav{flex:none;display:flex;gap:8px}
+.cat-nav button{width:42px;height:42px;font-size:13px;border-radius:var(--radius-md);border:1px solid var(--line);background:var(--paper);color:var(--slate);cursor:pointer;transition:.2s var(--ease)}
+.cat-nav button:hover{background:var(--tomato);border-color:var(--tomato);color:#fff}
+.cat-track{display:flex;gap:16px;overflow-x:auto;scroll-behavior:smooth;padding:6px 2px 10px;scrollbar-width:none}
+.cat-track::-webkit-scrollbar{display:none}
+.cat-card{flex:none;width:150px;text-align:center;cursor:pointer}
+.cat-thumb{
+  width:150px;height:150px;border-radius:var(--radius-lg);background-size:cover;background-position:center;position:relative;
+  box-shadow:var(--sh-sm);transition:.3s var(--ease);overflow:hidden;border:1px solid var(--line);
+}
+.cat-thumb::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 45%,rgba(33,30,22,.55));}
+.cat-card:hover .cat-thumb{transform:translateY(-6px)}
+.cat-card b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-top:13px;font-size:15px;font-weight:700;color:var(--slate);line-height:1.25;min-height:2.5em}
+.cat-card span{font-size:12.5px;color:var(--muted);font-weight:500}
+@media (max-width:640px){
+  .catstrip{padding:42px 0 38px}
+}
+
+/* =========================================================================
+   A5 LANDING GÖVDESİ — Gourmet mor (.gm-* namespace) — kaynak satır 1315-1516
+   BİREBİR (Signature: hero rota-çizgi draw + sıralı pin pulse).
+   ========================================================================= */
+
+/* ---- 1. HERO rota motifi (signature) ---- */
+.gm-hero-route{position:absolute;inset:0;z-index:1;pointer-events:none;overflow:hidden;opacity:.5}
+.gm-hero-route svg{position:absolute;inset:0;width:100%;height:100%}
+.gm-route-line{
+  fill:none;stroke:var(--tomato);stroke-width:2.5;stroke-linecap:round;opacity:.4;
+  stroke-dasharray:3200;stroke-dashoffset:3200;
+  animation:gmDraw 5.6s var(--ease) forwards;
+  filter:drop-shadow(0 0 7px rgba(116,41,130,.4));
+}
+.gm-pin-ring{transform-box:fill-box;transform-origin:center;opacity:0;
+  animation:gmPinPulse 2.9s ease-in-out infinite;animation-delay:calc(var(--d,1s) + 1s)}
+.gm-pin-core{transform-box:fill-box;transform-origin:center;opacity:0;
+  animation:gmPinIn .8s var(--ease) forwards;animation-delay:var(--d,1s)}
+.gm-pin-core.glow{filter:drop-shadow(0 0 6px rgba(186,148,192,.7))}
+@keyframes gmDraw{to{stroke-dashoffset:0}}
+@keyframes gmPinIn{0%{opacity:0;transform:scale(.2)}55%{opacity:1;transform:scale(1.28)}100%{opacity:1;transform:scale(1)}}
+@keyframes gmPinPulse{0%{transform:scale(.7);opacity:.5}70%,100%{transform:scale(2.5);opacity:0}}
+
+/* hero içerik kolonu — tipografik imza: ağırlık sıçraması (.bd 800 ↔ .sf 300) */
+.gm-hero-inner{position:relative;z-index:2;max-width:640px;padding:6px 0 40px}
+.gm-hero-inner .eyebrow{color:#c7a9cd;margin-bottom:20px}
+.gm-hero-inner .eyebrow::before{background:var(--tomato)}
+.gm-hero-h1{font-size:clamp(40px,6.4vw,68px);line-height:1.02;letter-spacing:-.03em;color:#fff;margin-bottom:20px;text-shadow:0 2px 24px rgba(0,0,0,.28)}
+.gm-hero-h1 .bd{display:block;color:#fff}
+.gm-hero-h1 .sf{display:block;color:#d5bfda;letter-spacing:-.01em}
+.gm-hero-inner .lead{font-size:17px;line-height:1.6;color:#e3d4e6;font-weight:500;max-width:46ch;margin-bottom:30px;text-shadow:0 1px 14px rgba(0,0,0,.32)}
+.gm-hero-cta{display:flex;gap:14px;flex-wrap:wrap}
+
+/* ---- ortak gm butonları ---- */
+.gm-btn{display:inline-flex;align-items:center;gap:10px;font-family:inherit;font-weight:700;font-size:14.5px;padding:14px 26px;border-radius:var(--radius-md);cursor:pointer;transition:.2s var(--ease);border:1px solid transparent;text-decoration:none}
+.gm-btn i{font-size:13px}
+.gm-btn-primary{background:var(--tomato);color:#fff;border-color:var(--tomato)}
+.gm-btn-primary:hover{background:var(--tomato-deep);border-color:var(--tomato-deep);transform:translateY(-2px)}
+.gm-btn-outline{background:transparent;color:#d5bfda;border-color:rgba(186,148,192,.55)}
+.gm-btn-outline:hover{border-color:var(--tomato);background:rgba(116,41,130,.14);color:#fff;transform:translateY(-2px)}
+.gm-btn:focus-visible{outline:3px solid var(--tomato-tint);outline-offset:2px}
+
+/* ===== 3a HERO: 2-kolon grid + cam "Bugünün Rotası" bilet + nitel check-row + scroll cue ===== */
+.gm-hero-grid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:48px;align-items:center;width:100%;padding:6px 0 40px}
+.gm-hero-grid > .gm-hero-inner{padding:0;max-width:none}
+/* nitel check-row — sayısal sahte istatistik YOK */
+.gm-checkrow{display:flex;flex-wrap:wrap;gap:11px 22px;margin-top:26px}
+.gm-check{display:inline-flex;align-items:center;gap:9px;font-size:13.5px;font-weight:600;color:#e3d4e6;text-shadow:0 1px 10px rgba(0,0,0,.35)}
+.gm-check i{width:26px;height:26px;flex:none;display:grid;place-items:center;border-radius:var(--radius-circle);background:rgba(116,41,130,.24);color:#c7a9cd;font-size:12px}
+/* cam imza bilet */
+.gm-hero-ticket{position:relative;z-index:2;background:rgba(28,18,32,.58);backdrop-filter:blur(16px) saturate(1.1);-webkit-backdrop-filter:blur(16px) saturate(1.1);border:1px solid rgba(186,148,192,.30);border-radius:var(--radius-xl);box-shadow:0 24px 60px rgba(0,0,0,.44);padding:24px 24px 22px;max-width:400px;margin-left:auto;width:100%}
+.gt-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:20px}
+.gt-title{display:flex;align-items:center;gap:11px}
+.gt-title > i{width:34px;height:34px;flex:none;display:grid;place-items:center;border-radius:var(--radius-md);background:rgba(116,41,130,.26);color:#c7a9cd;font-size:14px}
+.gt-title b{display:block;font-size:15px;color:#fff;font-weight:700;line-height:1.2}
+.gt-title small{display:block;font-size:11.5px;color:#c9b6d3;font-weight:500;margin-top:2px}
+.gt-badge{display:inline-flex;align-items:center;gap:6px;font-size:10.5px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;color:#e3d4e6;background:rgba(116,41,130,.28);border:1px solid rgba(186,148,192,.45);padding:5px 10px;border-radius:var(--radius-pill);white-space:nowrap;flex:none}
+.gt-badge i{font-size:10px}
+/* rota — terminal/istasyon dili (CLAUDE.md rota dersi) */
+.gt-route{position:relative;padding-left:4px}
+.gt-line{position:absolute;left:15px;top:14px;bottom:14px;width:2px;background:linear-gradient(180deg,rgba(186,148,192,.6),rgba(186,148,192,.28));z-index:0}
+.gt-node{position:relative;z-index:1;display:flex;align-items:center;gap:14px;padding:6px 0}
+.gt-node .gt-dot{flex:none}
+/* terminal uç — sessiz, hollow, numarasız */
+.gt-term .gt-dot{width:22px;height:22px;border-radius:var(--radius-circle);border:2px solid rgba(186,148,192,.72);background:#1e1422}
+.gt-role{font-size:10.5px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:#b7a3c2}
+/* numaralı istasyon durak */
+.gt-stop .gt-dot{width:22px;height:22px;border-radius:var(--radius-circle);background:var(--tomato);color:#fff;display:grid;place-items:center;font-size:11px;font-weight:800;box-shadow:0 4px 12px rgba(116,41,130,.42)}
+.gt-info b{display:block;font-size:14px;color:#fff;font-weight:700;line-height:1.25}
+.gt-info small{display:block;font-size:11.5px;color:#c9b6d3;font-weight:500;margin-top:1px}
+.gt-cta{display:flex;align-items:center;justify-content:center;gap:9px;width:100%;margin-top:18px;padding:13px;border-radius:var(--radius-md);background:var(--tomato);color:#fff;font-family:inherit;font-weight:700;font-size:14px;border:1px solid var(--tomato);cursor:pointer;transition:.2s var(--ease);text-decoration:none}
+.gt-cta:hover{background:var(--tomato-deep);border-color:var(--tomato-deep);transform:translateY(-2px)}
+/* scroll cue */
+.gm-scroll{position:absolute;left:50%;bottom:22px;transform:translateX(-50%);z-index:3;color:rgba(255,255,255,.72);font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;display:flex;flex-direction:column;align-items:center;gap:7px;pointer-events:none}
+.gm-scroll i{font-size:14px;animation:gmbob 1.8s var(--ease) infinite}
+@keyframes gmbob{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
+@media (prefers-reduced-motion:reduce){.gm-scroll i{animation:none}}
+@media(max-width:900px){
+  .gm-hero-grid{grid-template-columns:1fr;gap:26px;padding-bottom:30px}
+  .gm-hero-ticket{max-width:none;margin-left:0}
+  .gm-scroll{display:none}
+}
+
+/* ---- ortak section başlığı ---- */
+.gm-sec-head{margin-bottom:38px}
+.gm-sec-head .eyebrow{margin-bottom:14px}
+.gm-sec-head h2{font-size:clamp(27px,3.4vw,38px);letter-spacing:-.02em;color:var(--slate)}
+
+/* ---- 2. MODÜL KARTLARI (beyaz) — fotoğrafsız, yapısal ---- */
+.gm-modules{padding:84px 0}
+/* RV4 A2 — 3 kart 2 sütuna sığmıyordu (Beyar şikâyeti, ikinci satırda tek
+   kart yetim kalıyordu). Yatay ray'a çevrildi; ray mekaniği A1'in .cat-track
+   deseniyle AYNI (overflow-x:auto + scroll-behavior:smooth + gizli
+   scrollbar) — yeni desen icat edilmedi. Kart iç kompozisyonu (yatay
+   medya + gövde) DOKUNULMADI, yalnız kapsayıcı + genişlik değişti. */
+.gm-modules .gm-ev-head{align-items:center}
+.gm-modules .gm-ev-head .gm-sec-head{margin-bottom:0}
+.gm-mod-grid{display:flex;gap:20px;overflow-x:auto;scroll-behavior:smooth;padding:6px 2px 14px;scrollbar-width:none}
+.gm-mod-grid::-webkit-scrollbar{display:none}
+/* A — yatay indeks: foto sol tile / metin sağ · eşit yükseklik · sıkı kompozisyon */
+.gm-mod{flex:0 0 min(440px,84vw);display:flex;flex-direction:row;align-items:stretch;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);overflow:hidden;padding:0;transition:border-color .22s var(--ease),box-shadow .22s var(--ease),transform .22s var(--ease)}
+.gm-mod:hover{border-color:var(--tomato);box-shadow:var(--sh-md);transform:translateY(-3px)}
+.gm-mod:focus-visible{outline:3px solid var(--tomato-tint);outline-offset:3px;border-color:var(--tomato)}
+.gm-mod-media{position:relative;flex:0 0 40%;min-height:158px;background:#2a1e30 center/cover no-repeat;overflow:hidden}
+.gm-mod-media::after{content:"";position:absolute;inset:0;background:linear-gradient(155deg,rgba(30,20,34,.04) 0%,rgba(30,20,34,.10) 55%,rgba(30,20,34,.34) 100%)}
+.gm-mod-ico{position:absolute;z-index:1;left:14px;bottom:14px;width:44px;height:44px;border-radius:var(--radius-md);background:rgba(116,41,130,.94);color:#fff;display:grid;place-items:center;font-size:18px;box-shadow:0 6px 16px rgba(30,20,34,.42);transition:.22s var(--ease)}
+.gm-mod:hover .gm-mod-ico{background:var(--tomato-deep);transform:translateY(-2px)}
+.gm-mod-body{display:flex;flex-direction:column;align-items:flex-start;flex:1;padding:22px 24px;min-width:0}
+.gm-mod-tag{font-size:10.5px;font-weight:800;letter-spacing:.13em;text-transform:uppercase;color:var(--tomato);margin-bottom:9px}
+.gm-mod h3{font-size:20px;letter-spacing:-.01em;color:var(--slate);margin-bottom:7px}
+.gm-mod p{font-size:14px;line-height:1.5;color:var(--muted);font-weight:500;margin-bottom:16px}
+.gm-mod-cta{display:inline-flex;align-items:center;gap:8px;font-size:13.5px;font-weight:700;color:var(--tomato);margin-top:auto}
+.gm-mod-cta i{transition:transform .2s var(--ease)}
+.gm-mod:hover .gm-mod-cta i{transform:translateX(4px)}
+
+/* ---- 3. ETKİNLİK ŞERİDİ — zamansal içerik ----
+   G1 (2026-07-30) — Beyar bulgusu: zemin çok koyu MOR okunuyordu; --tomato-
+   tint token'ının kendisi (mor fısıltısı zemin) değişmedi. Zemin artık R2
+   (yukarıda .gm-sec--light/.gm-sec--tint notu) ile hesaplanan ritim sınıfından
+   gelir — tam sette (events dolu) bu section beyaz çıkar, 2bc22199 ile AYNI. */
+.gm-events{padding:64px 0}
+.gm-ev-head{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:28px;flex-wrap:wrap}
+.gm-ev-head .eyebrow{margin-bottom:0}
+.gm-ev-all{display:inline-flex;align-items:center;gap:8px;font-size:13.5px;font-weight:700;color:var(--tomato-deep)}
+.gm-ev-all:hover{color:var(--slate)}
+.gm-ev-all i{transition:transform .2s var(--ease)}
+.gm-ev-all:hover i{transform:translateX(4px)}
+/* RV4 A5 — Etkinlikler modülü artık CANLI, gerçek kart
+   (etkinlikler/_card.blade.php) @include ediliyor; kapsayıcı kartın KENDİ
+   deseni olan .disc-grid'e geçti (ev-card/disc-status/disc-price-pill/
+   disc-save CSS'i yukarıda "ev-card ek alanlar" bloğunda BİREBİR taşındı) —
+   eski bespoke .gm-ev-row grid'i ve aria-disabled kuralları KALDIRILDI
+   (markup'ı olmayan kuralın CSS'i borç değil, çöptür). */
+/* G1 (2026-07-30) devam — kart içindeki İKİ solid-mor yüzey (rozet +
+   birincil buton) 3× tekrarınca zeminle üst üste "fazla mor" izlenimi
+   veriyordu (Beyar bulgusu). Kart component'i (_card.blade.php) hem bu
+   teaser'da hem gerçek /etkinlikler listesinde @include edildiği için
+   ORADA değiştirilmedi — yalnız BU BÖLÜMÜN kapsamında, seçici
+   özgüllüğüyle override edildi (liste sayfası etkilenmez). Rozet zaten
+   kartın kendi "soft" varyantını (.disc-badge.soft, yukarıda §disc-card
+   ailesi) kullanıyor — yeni renk icat edilmedi, mevcut tarif yeniden
+   kullanıldı; buton --tomato-tint/--tomato-deep ikilisi tokens.css'teki
+   yerleşik "soft accent" tarifiyle (fk-chip/status-chip ailesi) AYNI. */
+.gm-events .disc-badge{background:rgba(255,255,255,.94);color:var(--slate)}
+.gm-events .disc-card-foot .btn-primary{background:var(--tomato-tint);color:var(--tomato-deep);border:1px solid color-mix(in srgb, var(--tomato) 22%, transparent)}
+.gm-events .disc-card-foot .btn-primary:hover{background:var(--tomato);color:#fff}
+
+/* ---- 4. GURME LEZZETLER TEASER ----
+   R2 — zemin ritim sınıfından gelir (yukarıda .gm-sec--light/.gm-sec--tint
+   notu); tam sette (gurme dolu) bu section mor çıkar, 2bc22199 ile AYNI. */
+.gm-concept{padding:74px 0}
+.gm-concept-teaser .gm-ev-head{margin-bottom:24px}
+/* RV4 A3 — Gurme Lezzetler modülü artık CANLI, gerçek kart (gurme-lezzetler/
+   _card.blade.php) @include ediliyor. 3 kart 3 sütuna sabitken taşma riski
+   taşıyordu (A2 ile AYNI sorun sınıfı) — A1/A2'nin .cat-track ray
+   mekaniğiyle AYNI desen kullanılarak yatay kaydırılabilir raya çevrildi;
+   kart İÇİ (gurme-lezzetler/_card.blade.php) DOKUNULMADI. Eski aria-disabled
+   kuralı KALDIRILDI (markup'ı yok, çöp). */
+.gl-teaser-grid{display:flex;gap:22px;overflow-x:auto;scroll-behavior:smooth;padding:6px 2px 14px;scrollbar-width:none}
+.gl-teaser-grid::-webkit-scrollbar{display:none}
+.gl-teaser-grid > .disc-card{flex:0 0 min(360px,84vw)}
+
+/* ---- 5. MEKAN-BUL TEASER (koyu band + foto zemin, koyu scrim korunur) ---- */
+.gm-teaser{position:relative;overflow:hidden;background:#1e1422;padding:56px 0}
+.gm-teaser-media{position:absolute;inset:0;z-index:0;background-size:cover;background-position:center}
+.gm-teaser-media::after{content:"";position:absolute;inset:0;background:
+  linear-gradient(90deg,rgba(30,20,34,.95) 0%,rgba(30,20,34,.88) 44%,rgba(30,20,34,.70) 100%),
+  radial-gradient(680px 300px at 88% 24%,rgba(116,41,130,.22),transparent 60%)}
+.gm-teaser>.wrap{position:relative;z-index:1}
+.gm-teaser-inner{display:flex;align-items:center;justify-content:space-between;gap:34px;flex-wrap:wrap}
+.gm-teaser-txt{min-width:260px;flex:1}
+.gm-teaser-txt h2{font-size:clamp(22px,2.6vw,28px);color:#fff;letter-spacing:-.02em;margin-bottom:8px}
+.gm-teaser-txt p{font-size:15px;color:#d9c7e2;font-weight:500;margin-bottom:16px}
+.gm-facets{display:flex;gap:10px;flex-wrap:wrap}
+.gm-facet{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:#d5bfda;background:rgba(116,41,130,.16);border:1px solid rgba(186,148,192,.4);padding:9px 15px;border-radius:var(--radius-sm);transition:.18s var(--ease)}
+.gm-facet i{font-size:12px;color:#ba94c0}
+.gm-facet:hover{background:var(--tomato);border-color:var(--tomato);color:#fff}
+.gm-facet:hover i{color:#fff}
+.gm-facet:focus-visible{outline:3px solid rgba(186,148,192,.5);outline-offset:2px}
+.gm-teaser-cta{flex:none}
+
+/* ---- reduced motion: rota son-kare statik + pin görünür ---- */
+@media (prefers-reduced-motion:reduce){
+  .gm-route-line{animation:none;stroke-dashoffset:0}
+  .gm-pin-core{animation:none;opacity:1;transform:none}
+  .gm-pin-ring{animation:none;opacity:0}
+  .gm-mod:hover,.gm-ev:hover,.gm-btn:hover,.gm-facet:hover,.gm-btn-outline:hover{transform:none}
+}
+
+/* ---- responsive ---- */
+@media (max-width:640px){
+  .gm-hero-inner{padding-bottom:24px}
+  .gm-hero-cta .gm-btn{padding:13px 20px;font-size:14px}
+  .gm-modules{padding:56px 0}
+  .gm-mod{flex-basis:88vw}
+  .gm-mod-media{flex-basis:38%;min-height:128px}
+  .gm-mod-body{padding:18px 18px}
+  .gm-events{padding:46px 0}
+  .gm-concept{padding:50px 0}
+  .gm-teaser{padding:42px 0}
+  .gm-teaser-inner{flex-direction:column;align-items:flex-start;gap:20px}
+  .gm-teaser-cta{width:100%}
+  .gm-teaser-cta .gm-btn{width:100%;justify-content:center}
+}
+
+/* =====================================================================
+   MEKÂN KARTI — mekan-liste.css satır 446-529'dan BAYT-ÖZDEŞ taşındı
+   (2026-08-11, Beyar madde C: kart mekân listesindekiyle AYNI olmalı,
+   yeni tasarım icat edilmedi — bkz. KesfetController::previewVenues()
+   docblock). `.mkl-*` sınıfları yalnız `mekan-liste/_card.blade.php`
+   partial'ı @include edildiğinde devreye girer; sayfa zaten sahip olduğu
+   `.disc-*` temel kurallarını (yukarıda) miras alır, bu blok onun ÜZERİNE
+   eklenen kart-özel katmandır. `.disc-*` TEMEL kuralları BURADAN
+   KOPYALANMADI — iki dosyada `.disc-grid` çakışıyor (mekan-liste.css:
+   3 sütun grid / burada: yatay ray), wholesale import bu sayfadaki diğer
+   ray bölümlerini (etkinlikler/gurme) kırardı.
+   ===================================================================== */
+.mkl-grid,.mkl-sponsored-grid{align-items:stretch}
+.mkl-card{display:flex;flex-direction:column;height:100%;background:transparent}
+.mkl-card-link{display:flex;flex-direction:column;flex:1 1 auto;text-decoration:none;color:inherit}
+
+/* Görsel katmanı: yalnız açık/kapalı durumu + (varsa) TEK etiket rozeti.
+   Fiyat pill'i ile fotoğraf sayacı kaldırıldı — fiyat puan satırına indi. */
+.mkl-card .disc-fig{flex:none}
+/* Etiket rozeti kırpılmasın: kutuya left+right verilerek KESİN genişlik
+   kazandırılır (yalnız `left` varken shrink-to-fit genişliğe göre çözülen
+   yüzdelik max-width rozeti "Editör Öner…" diye kesiyordu). */
+.mkl-card .disc-badges{bottom:11px;left:11px;right:11px}
+.mkl-card .disc-badge.soft{border:1px solid rgba(33,30,22,.08);box-shadow:var(--sh-sm);max-width:100%;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* "Doğrulanmış İşletme" — mavi tik ikonu (A2-LISTE m3, Beyar kararı).
+   R2 (2026-07-30 lead brifi) — görselin sağ üstünden başlığın SONUNA taşındı
+   (Instagram mavi tik deseni: başlık metninin hemen sağında, satır içinde);
+   artık görsel üstünde MUTLAK KONUMLANDIRILMIŞ bir rozet değil, `.sef-verify`
+   (sefler/sefler.css) İLE AYNI aile — adın yanına gömülü, satır akışı içinde
+   ikon. Referansta kalıbı yok (eski 5-imza zinciri metin rozetiydi); site
+   token'larında "mavi" tanımlı değil çünkü Gourmet paleti mora kayıtlı
+   (--tomato). Bu ikon TÜM platformlarda evrensel "doğrulanmış hesap"
+   yakınsamasını taşıdığı için (Beyar'ın kendi ifadesiyle "mavi tik"),
+   tokens.css'teki amaca-özel renk kalıbı izlenerek (--green "yalnız sağlık
+   bloğu", --yellow "yalnız puan") SAYFA-YEREL, TEK amaçlı bir token eklendi:
+   yalnız bu rozet kullanır, kabuğa (gourmet.css) sızmaz. */
+:root{--mkl-verified-blue:#1877F2}
+.mkl-verified{display:inline-flex;flex:none;align-items:center;justify-content:center;margin-left:6px;color:var(--mkl-verified-blue);font-size:15px;vertical-align:middle}
+
+/* Ad: iki satırlık yer ayrılır ki tek satırlık adlar altındaki satırları
+   yukarı çekip kart ritmini bozmasın. İkon `.disc-card h3`'ün kendi
+   -webkit-line-clamp:2 akışının İÇİNDE (satır içi element) — kutu taşmaz:
+   metin 2 satırı tam dolduran uç durumda clamp ikonu ellipsis'e çevirir
+   (görünmez olur), ama kart yüksekliği/genişliği ASLA bozulmaz. */
+.mkl-card h3{margin:15px 0 9px;min-height:calc(18px * 1.3 * 2)}
+
+/* RV3 madde 8 — İKİ meta satırı (konum · puan). Üçüncü satır (özellikler +
+   rezervasyon, .mkl-line-feat) karttan kaldırıldı, kuralı da silindi:
+   /tarifler kartı gövdede üç metin bloğu taşıyor, mekân kartı dört
+   taşıyordu. Son satırın alt boşluğu artık aksiyon şeridinin padding'inden
+   gelir, çift boşluk oluşmaz.
+   .disc-card p'nin 2-satır clamp'ini ezer (tek satır). */
+.mkl-card .mkl-line{display:block;-webkit-line-clamp:unset;min-height:20px;margin:0 0 5px;font-size:13px;font-weight:600;color:var(--slate-2,var(--slate));line-height:1.5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mkl-card .mkl-line-where{color:var(--muted)}
+.mkl-card .mkl-line:last-of-type{margin-bottom:0}
+.mkl-sep{color:var(--muted);font-weight:700;margin:0 3px;opacity:.65}
+.mkl-rate{font-weight:700;color:var(--slate)}
+.mkl-rate i{color:var(--yellow);font-size:12px;margin-right:3px}
+.mkl-dist{color:var(--tomato);font-weight:700}
+.mkl-price{font-weight:800;color:var(--slate);letter-spacing:.02em}
+
+/* Dört aksiyon TEK satırda. 1440'ta 3 sütunlu grid kartı 275px'e düşürüyor;
+   ölçtük: dört metinli düğme 336px istiyor, yani metin KIRPILIYORDU. Çözüm
+   container query — kart dar olduğunda yardımcı aksiyonlar ikon düğmesine
+   iner (etiket aria-label/title'da yaşar), kart genişleyince (768/390'da tek
+   ve iki sütunlu grid) etiket geri gelir. Birincil CTA hiçbir genişlikte
+   kırpılmaz. */
+.mkl-card{container-type:inline-size}
+.mkl-actions{display:flex;flex-wrap:nowrap;align-items:stretch;gap:8px;margin-top:auto;padding-top:13px;border-top:1px solid var(--line)}
+.mkl-save-form{flex:none;display:flex}
+/* Dört düğme AYNI boyda: hepsi 36px yükseklik, aynı radius, aynı tipografi.
+   Birincil CTA yalnız renkle ayrışır — boyutla değil. */
+.mkl-actions .btn{height:36px;min-height:36px;padding:0 12px;font-size:12.5px;font-weight:700;border-radius:var(--radius-md);display:inline-flex;align-items:center;justify-content:center;line-height:1}
+.mkl-actions .mkl-act-ico{flex:none;width:36px;padding:0}
+.mkl-actions .mkl-act-txt{flex:1 1 auto;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mkl-act-lbl{display:none}
+@container (min-width:380px){
+  .mkl-actions .mkl-act-detay{flex:1 1 auto;width:auto;padding:0 11px;display:inline-flex;align-items:center;justify-content:center;gap:7px}
+  .mkl-act-lbl{display:inline}
+}
+.mkl-save.saved i{color:var(--tomato)}
+.mkl-save.saved{border-color:rgba(116,41,130,.4);color:var(--tomato)}

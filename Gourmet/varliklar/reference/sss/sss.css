@@ -1,0 +1,117 @@
+/* ============ F-SSS — SIKÇA SORULAN SORULAR ============
+   Kaynak: sss-v1.html (satır 741-846) — kaynak-transfer, chrome hariç.
+   .rd-crumb/.search-row/.search-input global tokens/portal.css'te CANLI,
+   burada yeniden tanımlanmaz (yalnız bu sayfanın koyu-hero rengi override'ı).
+   .pf-tabbar/.pf-tabs/.dt ailesi tokens.css'te "profil sekmeleri (server-side
+   ?tab=)" için CANLI ve DOM şekli farklı (.pf-tab çapa, burada JS-filtre
+   butonu) — çakışmayı önlemek için .faq-tabbar/.faq-tabs/.faq-tab olarak
+   yeniden adlandırıldı (rapor: sss teslim raporu §3). */
+
+/* ---- üst bölge: lst-top koyu-overlay hero (ref VERBATIM foto) ---- */
+.lst-top{
+  position:relative;padding-top:128px;
+  background-image:linear-gradient(90deg,rgba(28,25,18,.93),rgba(33,30,22,.72)),
+    url("../../_dis/images.unsplash.com/photo-1556909114-f6e7ad7d3136.avif");
+  background-size:cover;background-position:center;
+}
+.lst-top .wrap{position:relative}
+.lst-top .rd-crumb{color:#c9c3b8}
+.lst-top .rd-crumb a{color:#c9c3b8}
+.lst-top .rd-crumb a:hover{color:#ff8763}
+.lst-top .rd-crumb i{color:rgba(255,255,255,.4)}
+.lst-top .rd-crumb b{color:#fff}
+
+.lst-hero{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:44px;align-items:end;padding:10px 0 42px}
+.lst-hero .lh-main{min-width:0}
+/* rev-sweep MADDE 7 (2026-07-20): admin gövdesi (.lead içindeki gerçek <p>)
+   akan metin — global .lead kısayolu (tokens.css) DOKUNULMADI (onlarca
+   sayfada tek-satır hero cümlesi olarak kullanılıyor), yalnız bu sayfadaki
+   gövde-uzunluğundaki içerik justify. */
+.lh-main .lead p{text-align:justify;-webkit-hyphens:auto;hyphens:auto;overflow-wrap:break-word}
+.lst-hero .eyebrow{color:#ffd9cf}
+.lst-hero .eyebrow::before{background:var(--tomato)}
+.lst-hero h1{color:#fff;font-size:44px;margin:14px 0 12px;letter-spacing:-.03em;text-shadow:0 2px 24px rgba(0,0,0,.25)}
+.lst-hero .lead{color:#e7edf1;font-weight:500;font-size:15.5px;max-width:600px;text-shadow:0 1px 14px rgba(0,0,0,.3)}
+
+/* SSS içi canlı arama — v3a .search-input dili (kutu burada sayfa-özel) */
+.faq-search{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);box-shadow:var(--sh-sm);padding:10px;max-width:560px;margin-top:22px}
+.faq-search .sx{flex:none;align-self:center;width:38px;height:38px;border-radius:var(--radius-md);border:1px solid var(--line);background:var(--paper);color:var(--muted);font-size:14px;cursor:pointer;display:none;place-items:center;transition:.2s var(--ease)}
+.faq-search .sx.show{display:grid}
+.faq-search .sx:hover{border-color:var(--tomato);color:var(--tomato)}
+
+/* ---- kategori şeridi — pf-tabbar/pf-tabs deseninden türetilmiş sayfa-özel
+   .faq-tabbar/.faq-tabs (isim çakışması nedeniyle yeniden adlandırıldı) ---- */
+.faq-tabbar{position:sticky;top:112px;z-index:40;background:rgba(255,255,255,.93);-webkit-backdrop-filter:blur(10px) saturate(150%);backdrop-filter:blur(10px) saturate(150%);padding:12px 0}
+.faq-tabs{display:flex;gap:4px;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-md);padding:4px;overflow-x:auto;scrollbar-width:none}
+.faq-tabs::-webkit-scrollbar{display:none}
+.faq-tab{font-family:inherit;font-weight:700;font-size:13px;color:var(--muted);background:transparent;border:none;border-radius:var(--radius-sm);padding:9px 16px;cursor:pointer;display:inline-flex;align-items:center;gap:7px;transition:.2s var(--ease);white-space:nowrap;flex:none}
+.faq-tab:hover{color:var(--tomato)}
+.faq-tab.is-active{background:var(--tomato);color:#fff}
+.faq-tab .cnt{font-size:11px;font-weight:700;opacity:.6}
+.faq-tabs.searching .faq-tab{opacity:.45;pointer-events:none}
+
+/* ---- akordeon listesi (beyaz zemin) ---- */
+.faq-sec{padding:30px 0 64px;background:var(--bg-white)}
+.faq-list{max-width:860px;margin:0 auto;display:flex;flex-direction:column;gap:12px}
+.faq-kat-note{max-width:860px;margin:0 auto 18px;font-size:13.5px;color:var(--muted);font-weight:500}
+.faq-kat-note b{color:var(--slate);font-weight:700}
+/* soru kartı — .fct aç/kapa deseni + kart kabuğu */
+.qa{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);overflow:hidden;transition:border-color .25s var(--ease),box-shadow .25s var(--ease)}
+/* =====================================================================
+   🔴 F5/T5.2 — AÇIK SORU KUTUSUNUN KENARLIĞI KAYNAK MARKANIN DOMATESİYDİ.
+
+   ÖLÇÜM (`scripts/t52-renk-tarama.mjs`): `.qa.open` rgb(225,72,39) basıyordu.
+   Değer TOKEN DEĞİL, `rgba()` LİTERALİ olduğu için kabuğun `--tomato` mor
+   ikamesinin dışında kalıyordu — komşu kurallar (`.qa:hover` vb.) doğru moru
+   basarken yalnız açık kutunun çerçevesi kırmızı kalıyordu.
+
+   🔴 YENİ RENK İCAT EDİLMEDİ: aynı opaklık, bu markanın kendi `--tomato`
+   değerinin (#742982) RGB üçlüsüyle yazıldı. `color-mix` yerine düz `rgba`
+   korundu — satırın biçimi de kaynağınki gibi kaldı.
+
+   ⚠ Referansa karşı bilinçli sapma; kayıt `docs/parite/T5.2-sapma.md §3`.
+   ===================================================================== */
+.qa.open{border-color:rgba(116,41,130,.35);box-shadow:var(--sh-sm)}
+.qa[hidden]{display:none}
+.qa-head{display:flex;align-items:center;gap:14px;width:100%;background:none;border:none;font-family:inherit;font-size:15.5px;font-weight:700;color:var(--slate);padding:18px 22px;cursor:pointer;text-align:left;transition:color .2s var(--ease)}
+.qa-head:hover{color:var(--tomato)}
+.qa.open .qa-head{color:var(--tomato)}
+.qa-ico{flex:none;width:34px;height:34px;border-radius:var(--radius-md);background:var(--tomato-tint);color:var(--tomato);display:grid;place-items:center;font-size:14px}
+.qa-car{margin-left:auto;flex:none;font-size:12px;color:var(--muted);transition:transform .25s var(--ease)}
+.qa.open .qa-car{transform:rotate(180deg);color:var(--tomato)}
+.qa-body{max-height:0;overflow:hidden;transition:max-height .32s var(--ease)}
+.qa-body p{padding:0 24px 20px 70px;font-size:14.5px;color:var(--slate-2);font-weight:500;line-height:1.7;text-align:justify;-webkit-hyphens:auto;hyphens:auto;overflow-wrap:break-word}
+.qa-body p+p{padding-top:0;margin-top:-8px}
+.qa-body a{color:var(--tomato);font-weight:700;text-decoration:underline;text-underline-offset:2px}
+/* arama boş durumu — mutfak-defteri .pf-empty dili */
+.faq-none{display:none;max-width:860px;margin:0 auto;text-align:center;padding:56px 20px 50px;background:var(--paper);border:1.5px dashed #ddd;border-radius:var(--radius-lg)}
+.faq-none.show{display:block}
+.faq-none .pe-ico{width:64px;height:64px;border-radius:var(--radius-md);background:var(--tomato-tint);color:var(--tomato);display:grid;place-items:center;font-size:25px;margin:0 auto 18px}
+.faq-none h3{font-size:20px;margin-bottom:8px}
+.faq-none p{font-size:14px;color:var(--muted);font-weight:500;max-width:400px;margin:0 auto 22px;line-height:1.55}
+
+/* ---- CTA bandı — koleksiyon .coll-cta VERBATIM (gri zemin section) ---- */
+.faq-cta-sec{padding:0 0 74px;background:var(--bg-cream)}
+.faq-cta-sec .wrap{padding-top:56px}
+.coll-cta{text-align:center;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);padding:38px 30px;max-width:860px;margin:0 auto}
+.coll-cta .cc-ico{width:62px;height:62px;border-radius:var(--radius-lg);background:var(--tomato-tint);color:var(--tomato);display:grid;place-items:center;font-size:25px;margin:0 auto 16px}
+.coll-cta h3{font-size:21px;margin-bottom:8px}
+.coll-cta p{font-size:14px;color:var(--muted);font-weight:500;max-width:420px;margin:0 auto 20px;line-height:1.6}
+.coll-cta .cc-btns{display:flex;gap:11px;justify-content:center;flex-wrap:wrap}
+
+/* ===================== MOBİL (≤640px) — F-SSS ===================== */
+@media (max-width:640px){
+  .lst-top{padding-top:74px}
+  .faq-tabbar{top:62px;padding:10px 0}
+  .faq-tab{padding:9px 13px}
+  .lst-hero{grid-template-columns:1fr;align-items:start;gap:22px;padding:2px 0 26px}
+  .lst-hero h1{font-size:30px}
+  .faq-search{margin-top:16px}
+  .qa-head{font-size:14.5px;padding:15px 16px;gap:11px}
+  .qa-ico{width:30px;height:30px;font-size:12.5px}
+  .qa-body p{padding:0 16px 18px 57px;font-size:14px}
+  .faq-sec{padding:22px 0 48px}
+  .faq-cta-sec{padding-bottom:52px}
+  .faq-cta-sec .wrap{padding-top:38px}
+  .coll-cta .cc-btns .btn{flex:1;min-width:0}
+}

@@ -1,0 +1,66 @@
+/* DadaGastro — paylaşılan otomatik tamamlama paneli (kanon: Dada Route).
+ *
+ * KAPANIŞ TURU R5 Madde 3 (2026-08-08) — panel+satır CSS'i üç ayrı kopyada
+ * yaşıyordu:
+ *   - `dada-route.css` `.yg-ac` ailesi (kanon — Beyar'ın onayladığı ekran).
+ *   - `gourmet-mekan-liste/mekan-liste.css` `.ac-panel`/`.ac-item` ailesi —
+ *     GÖRSEL OLARAK farklı bir dil konuşuyordu: tür rozeti (`.ac-item__type`)
+ *     satırın SOLUNDA, büyük/kalın/mor — Beyar'ın şikayeti tam bu.
+ *   - `resources/css/tokens.css` içinde bu ikinci kopyanın ÜÇÜNCÜ tekrarı
+ *     (sitewide token dosyasında, hiçbir canlı markup tarafından tüketilmiyordu
+ *     — grep ile doğrulandı, bkz. rapor).
+ *
+ * Değerler `dada-route.css`nin "autocomplete açılır" bloğundan (kanon,
+ * referans ekran Beyar onaylı) BİREBİR taşındı — yeni renk/radius/gölge/punto
+ * İCAT EDİLMEDİ. `--sh-pop` yalnız dada-route.css'te tanımlı olduğu için
+ * `var(--sh-pop, <literal>)` fallback'iyle verildi — gourmet.css bu token'ı
+ * tanımlamıyor, fallback olmadan mekân listesinde gölge tamamen kaybolurdu.
+ *
+ * LEAD DÜZELTMESİ (2026-08-08) — wrapper class'ı da tekilleştirildi: panel
+ * artık İKİ çağıranda da `.ac-panel` (Dada Route'un panel'i oluşturan
+ * `dada-route.js`'i, 3 geçiş: markup + 2 querySelector, `.yg-ac`'tan
+ * `.ac-panel`'e çevrildi). Aşağıdaki kuralda `.yg-ac` seçicisi artık
+ * KALMADI — ikinci bir sınıf ailesi yok, tek wrapper adı.
+ *
+ * İki çağıran da (`resources/views/dada-route/index.blade.php`,
+ * `resources/views/gourmet/mekan-liste/_hero.blade.php`) bu dosyayı
+ * `dada-autocomplete.js`nin yanında düz `<link>` ile yükler — Vite paketine
+ * dahil DEĞİL (ikisi de "kopuk mod" sayfa/partial).
+ *
+ * Görünürlük: panel `hidden` attribute'iyle açılır/kapanır (JS çekirdeği
+ * `panel.hidden` toggler, bkz. dada-autocomplete.js `close()`/`openPanel()`).
+ * İki çağıranın da başlangıç markup'ı artık `hidden` attribute'üyle basılıyor
+ * (Dada Route'un JS şablonu zaten öyleydi; mekân listesi hero'su bu turda
+ * eklendi) — bu yüzden ayrı bir `display:none` varsayılanına gerek yok.
+ *
+ * max-height + overflow-y:auto: Beyar madde 3 — "içeride sıkışıp kalmış
+ * gibi... liste uzunsa kendi içinde kaysın". Mekân listesinde zaten vardı
+ * (sayfa-yerel kopya, H1 2026-08-08 notu); burada KANONA taşındı, Dada
+ * Route'a da uygulandı (aynı bileşen aynı davranışı paylaşır). Kısa
+ * listelerde (mevcut render-diff testindeki gibi) içerik zaten sınırın
+ * altında kaldığı için görünüm DEĞİŞMEDİ — yalnız uzun listede taşma
+ * önleniyor.
+ */
+.ac-panel{position:absolute;left:0;right:0;top:calc(100% + 6px);z-index:40;
+  background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-md);
+  box-shadow:var(--sh-pop,0 12px 34px rgba(33,30,22,.16));overflow-y:auto;overflow-x:hidden;
+  max-height:min(60vh,420px);padding:5px}
+.ac-panel[hidden]{display:none}
+
+.ac-item{display:flex;align-items:center;gap:10px;width:100%;text-align:left;border:0;background:none;
+  padding:10px 11px;border-radius:var(--radius-sm);font-size:14px;font-weight:600;color:var(--slate);
+  cursor:pointer;transition:.12s var(--ease)}
+.ac-item i{color:var(--tomato);font-size:13px;width:14px;text-align:center}
+/* Klavye seçimi (.is-active) ile fare üzerinde durma AYNI görünür — tek kural
+   ikisini de kapsar (Dada Route'un mevcut deseni). */
+.ac-item:hover,.ac-item.is-active{background:var(--tomato-tint)}
+
+/* Birincil satır: kalem adı — koyu, normal punto. */
+.ac-item__label{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* İkincil satır: sağ uçta, küçük, sönük — Dada Route'ta "ilçede ilin adı /
+   ilde bölge", mekân listesinde tür rozeti (İl/İlçe/Semt/Mutfak/Menü). Bu
+   satır olmadan "Merkez" yazan 60+ ilçe önerisi birbirinden ayırt
+   edilemezdi (Dada Route'un asıl gerekçesi, aynen geçerli). */
+.ac-item__sub{margin-left:auto;padding-left:10px;flex:none;font-size:12px;font-weight:600;color:var(--muted)}
+
+.ac-empty{padding:10px 11px;font-size:13.5px;font-weight:600;color:var(--muted)}

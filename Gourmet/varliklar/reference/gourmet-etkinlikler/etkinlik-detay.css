@@ -1,0 +1,308 @@
+/* =====================================================================
+   ETKİNLİK DETAY — sayfa-yerel CSS (public/reference/gourmet-etkinlikler/).
+   Kaynak: reference/gourmet-etkinlikler/etkinlik-detay-v1.html "SAYFA CSS"
+   bloğu (satır 1401-1459) BİREBİR + bu turda eklenen genişletmeler (yalnız
+   kurumsal token'lardan; hardcoded renk/px/gölge icat edilmedi).
+   DİKKAT: yorum içinde yıldız + eğik çizgi dizisi YAZILMAZ (CSS yorum
+   tuzağı, 00-ortak tuzak #12) — açma/kapama sayısı eşit tutulur.
+   ===================================================================== */
+
+/* D1 (lead revizyonu) — .rd-crumb HİÇ TANIMLANMAMIŞTI (`etkinlik-detay.css`
+   ve `resources/css/gourmet.css`'te 0 kural, ölçüldü) — breadcrumb tamamen
+   stilsiz render oluyordu. Kanonik blok mekan-detay.css/gurme-lezzetler.css
+   ile BİREBİR (sayfa-yerel kopya, her sayfa kendi taşıyor — kurulu desen),
+   yeni desen icat edilmedi. ---- */
+.rd-crumb{display:flex;align-items:center;flex-wrap:wrap;gap:9px;padding:18px 0 14px;font-size:13px;font-weight:500;color:var(--muted)}
+.rd-crumb a{color:var(--muted);transition:.18s}
+.rd-crumb a:hover{color:var(--tomato)}
+.rd-crumb i{font-size:9px;color:#c7c7c7}
+.rd-crumb b{color:var(--slate);font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:360px}
+
+/* ---- REFERANSTAN BİREBİR (etkinlik-detay-v1.html satır 1402-1458) ---- */
+.evd-top{padding-bottom:6px}
+.evd-stage{position:relative;height:440px;border-radius:var(--radius-xl);overflow:hidden;background-size:cover;background-position:center;background-color:#2a2430;box-shadow:var(--sh-md)}
+.evd-stage::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(22,15,26,.88) 0%,rgba(22,15,26,.44) 44%,rgba(22,15,26,.06) 72%,rgba(22,15,26,0) 100%)}
+.evd-stage-info{position:absolute;left:0;right:0;bottom:0;z-index:2;padding:26px 30px}
+.evd-stage-info .disc-badges{position:static;display:inline-flex}
+.evd-stage-info h1{font-size:38px;line-height:1.14;letter-spacing:-.025em;color:#fff;margin:13px 0 15px;text-shadow:0 2px 22px rgba(0,0,0,.4);max-width:24ch}
+.evd-meta{display:flex;gap:10px;flex-wrap:wrap}
+.evd-chip{display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,.14);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.24);color:#fff;font-size:13px;font-weight:600;padding:8px 14px;border-radius:var(--radius-pill)}
+.evd-chip i{color:#c7a9cd;font-size:12px}
+.evd-sec{padding:42px 0 8px}
+.evd-layout{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:44px;align-items:start}
+.evd-about h2{font-size:26px;letter-spacing:-.02em;margin:7px 0 15px}
+/* G1 (Beyar revize paketi, 2026-08-11) — `max-width:70ch` KALDIRILDI.
+   GERİ KOYMA: bu bir eksiklik değil, açık talep. Ölçüldü (Playwright,
+   computed style, 1440px): paragraf 661,5px (=70ch) iken kapsayıcı 772px'ti;
+   aradaki 111px, "iki yana yaslı metinle sağ sütun arasında fazla boşluk"
+   şikâyetinin TAM kaynağıydı. Justify'ın kendisi kusursuz çalışıyordu —
+   satır kutusu genişliği paragraf genişliğine BİREBİR eşitti (662=662, fark 0),
+   yani sorun hizalama değil, kapsayıcıyı doldurmayan `max-width`ti.
+   Şerh: 70ch bilinçli bir OKUNABİLİRLİK sınırıydı (uzun satır göz takibini
+   zorlaştırır); Beyar "metin sağa kadar yayılsın, justify kalsın" dediği için
+   ödün bilerek verildi. Sınır geri konursa boşluk da geri gelir. */
+.evd-about p{font-size:15px;line-height:1.75;color:var(--slate-2);font-weight:500;margin:0 0 14px}
+/* D2 (lead revizyonu) — blok arası ritim. Ölçtüm (Playwright, canlı DOM,
+   1440/768/390, 2 farklı etkinlik — "Etiyopya Kahve" ve "Ekmek Atölyesi"):
+   HER blok çifti arası ZATEN 28px (her .evd-program kendi margin-top:28px
+   taşıyordu, hepsi aynı değeri kullanıyordu — canlı ölçümde bozukluk
+   BULAMADIM). Yine de kalıcı garanti için TEK KAYNAKLI hale getirildi:
+   her blok kendi margin-top'unu tek tek tekrar etmek yerine, `.evd-main`ın
+   doğrudan çocukları arasında TEK bir bitişik-kardeş kuralı (28px, aynı
+   ölçülen değer) — yeni bir blok eklenirse spacing'i unutmak/yanlış
+   yazmak mümkün değil. .evd-about (ilk çocuk) zaten margin-top gerektirmiyor
+   (:first-child hariç tutulur). */
+.evd-main > * + *{margin-top:28px}
+.evd-program{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);padding:22px 24px}
+.evd-program h3{font-size:16.5px;display:flex;align-items:center;gap:9px;margin-bottom:10px}
+.evd-program h3 i{color:var(--tomato)}
+.evd-program p{font-size:14px;line-height:1.7;color:var(--muted);font-weight:500}
+.evd-status{display:inline-flex;align-items:center;gap:8px;margin-top:15px;background:var(--tomato-tint);color:#481950;font-size:12.5px;font-weight:700;padding:9px 14px;border-radius:var(--radius-pill)}
+.evd-status i{color:var(--tomato)}
+.evd-side{position:sticky;top:132px}
+.evd-card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);padding:22px 24px;box-shadow:var(--sh-sm)}
+.evd-card h4{font-size:15px;margin-bottom:6px}
+.evd-card + .evd-card{margin-top:18px}
+.evd-row{display:flex;gap:13px;align-items:center;padding:13px 0;border-bottom:1px solid var(--line)}
+.evd-row:last-of-type{border-bottom:none}
+.evd-row i{flex:none;width:36px;height:36px;border-radius:var(--radius-sm);background:var(--tomato-tint);color:var(--tomato);display:grid;place-items:center;font-size:14px}
+.evd-row b{display:block;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:2px}
+.evd-row span{font-size:14.5px;font-weight:600;color:var(--slate);line-height:1.35}
+.evd-card .btn{width:100%;margin-top:16px;font-size:14px;padding:13px 20px}
+.evd-bridge-sec{padding:36px 0 4px}
+.evd-bridge{display:flex;align-items:center;justify-content:space-between;gap:26px;flex-wrap:wrap;background:linear-gradient(135deg,var(--tomato-deep),var(--tomato));border-radius:var(--radius-xl);padding:32px 36px}
+.evd-bridge h3{font-size:21px;color:#fff;margin-bottom:7px}
+.evd-bridge p{font-size:14px;color:rgba(255,255,255,.88);font-weight:500;max-width:54ch;line-height:1.6}
+.evd-bridge-acts{display:flex;gap:11px;flex-wrap:wrap}
+.evd-bridge-acts .btn-light{background:#fff;color:var(--tomato-deep)}
+.evd-bridge-acts .btn-light:hover{transform:translateY(-2px)}
+.evd-bridge-acts .btn-glass{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.38)}
+.evd-bridge-acts .btn-glass:hover{background:rgba(255,255,255,.2);transform:translateY(-2px)}
+.evd-others{padding:40px 0 74px}
+.evd-others .disc-when{color:var(--tomato);font-weight:600}
+.evd-missing{padding-bottom:110px;text-align:center}
+.evd-missing .mi-ico{width:64px;height:64px;border-radius:50%;background:var(--tomato-tint);color:var(--tomato);display:grid;place-items:center;font-size:24px;margin:34px auto 20px}
+.evd-missing h1{font-size:30px;letter-spacing:-.02em;margin-bottom:10px}
+.evd-missing p{font-size:15px;color:var(--muted);font-weight:500;max-width:52ch;margin:0 auto 24px}
+@media (max-width:960px){
+  .evd-layout{grid-template-columns:1fr;gap:30px}
+  .evd-side{position:static}
+}
+@media (max-width:640px){
+  .evd-stage{height:320px;border-radius:var(--radius-lg)}
+  .evd-stage-info{padding:18px}
+  .evd-stage-info h1{font-size:26px}
+  .evd-sec{padding:30px 0 4px}
+  .evd-bridge{padding:26px 22px}
+  .evd-others{padding:32px 0 60px}
+}
+
+/* ---- disc-card/disc-grid ailesi ("Takvimdeki diğer etkinlikler" bloğu
+   için) — anasayfa-portal-v3a VERBATIM, etkinlikler.css/gurme-lezzetler.css
+   ile AYNI (sayfa-yerel kopya, Vite hattı yok). ---- */
+.disc-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:26px;align-items:stretch}
+.disc-card{cursor:pointer;position:relative}
+.ev-card{display:flex;flex-direction:column}
+.ev-card .disc-card-link{display:flex;flex-direction:column;flex:1}
+.ev-card .disc-card-link .disc-meta:last-of-type{margin-top:auto}
+.disc-fig{position:relative;aspect-ratio:16/10;border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--sh-sm)}
+.disc-fig .bg{width:100%;height:100%;background-size:cover;background-position:center;transition:.5s var(--ease)}
+.disc-card:hover .disc-fig .bg{transform:scale(1.05)}
+/* Kapaksız etkinlik yedeği — kural ve gerekçe `etkinlikler.css` §147'de;
+   burada TEKRARLANIYOR çünkü etkinlik kartı (etkinlikler/_card.blade.php)
+   bu sayfada da basılıyor ("Benzer etkinlikler") ve sayfa-yerel CSS
+   dosyaları birbirini görmüyor. Değerler BİREBİR aynı. */
+.disc-fig .bg.ev-fig-ico{background:var(--tomato-tint);display:grid;place-items:center;color:var(--tomato);font-size:34px}
+.disc-card:hover .disc-fig .bg.ev-fig-ico{transform:none}
+.disc-badges{position:absolute;bottom:13px;left:13px;display:flex;gap:6px;z-index:2}
+.disc-badge{background:var(--tomato);color:#fff;font-size:11px;font-weight:700;padding:6px 11px;border-radius:var(--radius-sm);letter-spacing:.02em;display:inline-flex;align-items:center;gap:6px}
+.disc-fig .m-types{z-index:2}
+.m-types{position:absolute;bottom:13px;right:13px;display:flex;gap:6px}
+.disc-cat{display:inline-block;margin:16px 0 7px;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--tomato)}
+.disc-card h3{font-size:18px;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:8px;transition:color .2s var(--ease)}
+.disc-card:hover h3{color:var(--tomato)}
+.disc-card p{font-size:13.5px;color:var(--muted);font-weight:500;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.disc-meta{display:flex;align-items:center;gap:16px;font-size:12.5px;color:var(--muted);font-weight:500;margin-top:13px;padding-top:12px;border-top:1px solid var(--line);flex-wrap:wrap}
+.disc-meta span{display:inline-flex;align-items:center;gap:6px}
+.disc-meta i{font-size:12px}
+.disc-meta .disc-where{color:var(--slate);font-weight:600}
+.disc-meta .disc-where i{color:var(--tomato)}
+.disc-meta.disc-meta-sub{gap:14px;font-size:11.5px;padding-top:0;border-top:none;margin-top:8px;flex-wrap:nowrap}
+.disc-meta.disc-meta-sub span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.disc-meta.disc-meta-sub i{color:var(--tomato);opacity:.7}
+.disc-status{position:absolute;top:13px;left:13px;z-index:2;display:flex}
+.disc-status .st-closed{background:rgba(40,34,46,.76);color:#ddd4e2;font-size:11px;font-weight:700;padding:6px 11px;border-radius:var(--radius-sm);display:inline-flex;align-items:center;gap:6px}
+.disc-status .st-closed i{color:#c6b6cf;font-size:10.5px}
+.disc-card.is-closed .disc-fig .bg{filter:grayscale(.45) brightness(.94)}
+.disc-price-pill{letter-spacing:.06em;font-size:11.5px;background:rgba(20,18,12,.62);color:#fff;padding:6px 10px;border-radius:var(--radius-sm);display:inline-flex;align-items:center;gap:4px}
+.disc-save{position:absolute;top:10px;right:10px;z-index:3;width:34px;height:34px;border-radius:var(--radius-circle);border:none;background:rgba(255,255,255,.92);color:var(--slate);display:grid;place-items:center;font-size:14px;cursor:pointer;transition:.2s var(--ease)}
+.disc-save:hover{background:#fff;color:var(--tomato)}
+.disc-save.saved i{color:var(--tomato)}
+.disc-card-foot{display:flex;gap:9px;margin-top:12px}
+.disc-card-foot .btn{flex:1;font-size:12.5px;padding:10px 12px;white-space:nowrap}
+@media (max-width:1024px){ .disc-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:22px} }
+@media (max-width:640px){ .disc-grid{grid-template-columns:minmax(0,1fr);gap:20px} .disc-card-foot{flex-direction:column} }
+
+/* ---- §19 etkinlik-sonrası durum rozeti — "silinmez" kuralının görsel
+   izi (referansta yok, minimal ek: evd-chip ailesinden türetildi). ---- */
+.evd-chip.evd-past{background:rgba(30,20,34,.55);border-color:rgba(255,255,255,.3)}
+.evd-chip.evd-past i{color:#c2b1c5}
+
+/* ---- §6 katılımcıya sunulanlar / getirmesi gerekenler / kimler
+   katılabilir / alerjen / iptal koşulları — .evd-card/.evd-row/.chip
+   ailesinden, genuinely yeni yalnız liste düzeni (renk/radius icat
+   edilmedi). ---- */
+.evd-list{list-style:none;display:flex;flex-direction:column;gap:10px;margin:0}
+.evd-list li{display:flex;align-items:flex-start;gap:10px;font-size:14.5px;line-height:1.5;color:var(--slate-2);font-weight:500}
+.evd-list li i{flex:none;margin-top:3px;color:var(--tomato);font-size:12px}
+.evd-tag-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.evd-tag-row .chip{background:var(--tomato-tint);color:#481950;border:none;font-size:12.5px;padding:7px 13px;font-weight:700}
+.evd-allergen-note{display:flex;align-items:flex-start;gap:10px;background:var(--bg-cream);border:1px dashed rgba(33,30,22,.18);border-radius:var(--radius-md);padding:13px 15px;font-size:13px;color:var(--muted);margin-bottom:14px;line-height:1.55}
+.evd-allergen-note i{flex:none;color:var(--tomato);margin-top:2px}
+
+/* ---- §6 program zaman çizelgesi — bu turun genuinely yeni parçalarından
+   (frontend-design skill danışıldı); .evd-program içine gömülü, saat
+   sütunu + bağlayıcı çizgi. Program yoksa referansın kendi dürüst
+   placeholder'ı (.evd-status) korunur — bu blok YALNIZ program varsa render
+   edilir. ---- */
+/* RV3 madde 9 — KÖK NEDEN: .evd-tl-row grid'i İKİ kolon tanımlıyordu
+   (64px 1fr) ama satırın ÜÇ çocuğu var (tl-time · tl-line · evd-tl-label).
+   Üçüncü çocuk örtük bir SONRAKİ satıra, yani 64px'lik SAAT kolonuna
+   düşüyordu: metin 64px'e sıkışıp kelime kelime kırılıyor, sağdaki 1fr
+   kolonu boş kalıyor, çizgi de metinden kopuk ortada duruyordu. Kolon
+   sayısı üçe çıkarıldı — saat (sabit dar, tabular-nums) → nokta/çizgi
+   (ince) → içerik (kalan tüm genişlik, min-width:0 ile AKAR, taşmaz). */
+.evd-timeline{display:flex;flex-direction:column;margin-top:4px}
+.evd-tl-row{display:grid;grid-template-columns:56px 16px minmax(0,1fr);column-gap:14px;position:relative}
+.evd-tl-row .tl-time{font-size:13px;font-weight:800;color:var(--tomato);padding-top:2px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.evd-tl-row .tl-line{position:relative;display:flex;justify-content:center}
+.evd-tl-row .tl-dot{width:9px;height:9px;border-radius:50%;background:var(--tomato);margin-top:6px;flex:none;z-index:1}
+/* çizgi noktanın altından satırın SONUNA kadar — satırlar arası boşluk artık
+   grid gap'inden değil label'ın padding-bottom'undan geldiği için bar da
+   satırın tabanına (bottom:0) kadar iner, kesinti kalmaz. */
+.evd-tl-row .tl-bar{position:absolute;top:14px;bottom:0;width:2px;background:var(--line)}
+.evd-tl-row:last-child .tl-bar{display:none}
+.evd-tl-label{min-width:0;padding-bottom:22px;font-size:14.5px;font-weight:600;color:var(--slate);line-height:1.4}
+/* son adımda ritim kapanır — alttaki nota ile arada çift boşluk oluşmaz. */
+.evd-tl-row:last-child .evd-tl-label{padding-bottom:6px}
+.evd-timeline-note{font-size:12.5px;color:var(--muted);margin-top:2px}
+/* Mobil: tek kolon — saat üstte, içerik altta; dikey çizgi kolonu düşer. */
+@media (max-width:640px){
+  .evd-tl-row{grid-template-columns:minmax(0,1fr)}
+  .evd-tl-row .tl-line{display:none}
+  .evd-tl-row .tl-time{padding-top:0;margin-bottom:2px}
+  .evd-tl-label{padding-bottom:16px}
+}
+
+/* ---- §10 hatırlatma seçim arayüzü — genuinely yeni, küçük panel (buton
+   tıklayınca açılır, form YOK — visual only + lg-gate). ---- */
+.evd-reminder{position:relative}
+.evd-reminder-panel{display:none;position:absolute;left:0;right:0;top:calc(100% + 8px);background:#fff;border:1px solid var(--line);border-radius:var(--radius-lg);box-shadow:var(--sh-lg);padding:16px;z-index:5}
+.evd-reminder.open .evd-reminder-panel{display:block}
+.evd-reminder-panel .rm-title{font-size:12.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px}
+.evd-reminder-panel .rm-opt{display:flex;align-items:center;gap:10px;padding:8px 4px;font-size:14px;font-weight:600;color:var(--slate-2);cursor:pointer}
+.evd-reminder-panel .rm-opt input{accent-color:var(--tomato)}
+.evd-reminder-panel .rm-opt:hover{color:var(--tomato)}
+.evd-reminder-panel .btn{width:100%;margin-top:10px}
+
+/* ---- RV3 madde 11 — ALT STICKY PILL. Kaynak: tarif-detay.css .rd-actbar
+   (satır 486-517 + @media 729-744) — ölçüler, cam efekti, gösterim/gizlenme
+   geçişi, mobil kolon düzeni BİREBİR; yalnız sınıf adı sayfa ailesine
+   uyarlandı. Sağ kolondaki eski .evd-act-row şeridi karşılığı KALMADIĞI için
+   onun kuralları da silindi (markup'ı olmayan sınıfın CSS'i çöptür). ---- */
+/* F2/W2.3 (2026-08-21, ölçüldü) — `bottom`a yerleştiricinin `--bc-lift`i eklendi.
+   Çerez bandı (z 95) bu barı (z 88) 1440'ta 25/25 noktada örtüyordu; bant
+   gizlenince 0/25 (izolasyon ölçümü). z DEĞİŞMEDİ, 22px DEĞİŞMEDİ — bar
+   `actbar.blade.php`de `data-bc-clear` alarak kabuğun kurulu iki aşamalı
+   yerleştiricisine kaydoldu (`.to-top` emsali). */
+.evd-actbar{
+  position:fixed;left:50%;bottom:calc(22px + var(--bc-lift, 0px));z-index:88;transform:translateX(-50%) translateY(130%);
+  display:flex;align-items:center;gap:6px;
+  background:rgba(255,255,255,.72);
+  -webkit-backdrop-filter:blur(28px) saturate(180%);backdrop-filter:blur(28px) saturate(180%);
+  border:1px solid rgba(255,255,255,.65);border-radius:var(--radius-lg);
+  box-shadow:0 14px 40px rgba(33,30,22,.18),0 2px 8px rgba(33,30,22,.08);
+  padding:8px 10px;opacity:0;visibility:hidden;
+  transition:transform .35s var(--ease),opacity .3s var(--ease),visibility .35s;
+  max-width:calc(100vw - 24px);overflow-x:auto;scrollbar-width:none;
+}
+.evd-actbar::-webkit-scrollbar{display:none}
+.evd-actbar.show{transform:translateX(-50%) translateY(0);opacity:1;visibility:visible}
+.evd-actbar .evd-actbar__name{
+  display:flex;align-items:center;gap:10px;padding:0 14px 0 6px;max-width:280px;
+  border-right:1px solid rgba(33,30,22,.12);margin-right:4px;
+}
+.evd-actbar .evd-actbar__thumb{flex:none;width:38px;height:38px;border-radius:var(--radius-md);background-size:cover;background-position:center}
+.evd-actbar .evd-actbar__name b{font-size:13px;font-weight:700;color:var(--slate);line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.evd-actbar .evd-actbar__act{
+  display:inline-flex;align-items:center;gap:8px;font-family:inherit;font-size:12.5px;font-weight:700;
+  color:var(--slate);background:transparent;border:none;border-radius:var(--radius-md);
+  padding:11px 14px;cursor:pointer;white-space:nowrap;transition:.2s var(--ease);
+}
+.evd-actbar .evd-actbar__act i{font-size:14px}
+.evd-actbar .evd-actbar__act:hover{background:rgba(225,72,39,.1);color:var(--tomato)}
+.evd-actbar .evd-actbar__act.saved{color:var(--tomato)}
+.evd-actbar .evd-actbar__act.saved i{font-weight:900}
+/* pill görünürken kabuğun alt gezinme şeridi ve mentor paneli çekilir —
+   tarif detayın body:has(.rd-actbar.show) kuralının birebir karşılığı. */
+body:has(.evd-actbar.show) .bottom-nav{display:none}
+body:has(.evd-actbar.show) .mentor-panel{display:none}
+
+/* Hatırlatma paneli pill'in ÜSTÜNDE, pill'in DIŞINDA (kırpılmaması için —
+   bkz. _actbar.blade.php notu): sabit konumlu, pill ile aynı eksende. */
+.evd-reminder--float{position:fixed;left:50%;transform:translateX(-50%);bottom:96px;width:min(320px,calc(100vw - 28px));z-index:89}
+.evd-reminder--float .evd-reminder-panel{position:static;left:auto;right:auto;top:auto}
+
+@media (max-width:640px){
+  .evd-actbar{
+    left:12px;right:12px;transform:translateY(130%);width:auto;
+/* F2/W2.3 — mobil override de `--bc-lift`i okumalı; yoksa yerleştirici lift'i
+     hesaplıyor ama bu kural onu ezip çubuğu yerinde bırakıyor (ölçüldü: 390'da
+     lift=263px hesaplandı, kutu kımıldamadı, örtülme 25/25 kaldı). */
+    bottom:calc(78px + env(safe-area-inset-bottom,0px) + var(--bc-lift, 0px));
+    justify-content:space-around;padding:6px 8px;
+  }
+  .evd-actbar.show{transform:translateY(0)}
+  .evd-actbar .evd-actbar__name{display:none}
+  /* tarif detayın ölçülmüş mobil düzeni: dikey ikon+etiket, dar yatay padding
+     (5 buton 390px'e scroll'suz sığsın diye). */
+  .evd-actbar .evd-actbar__act{padding:10px 6px;font-size:11.5px;flex-direction:column;gap:4px}
+  .evd-actbar .evd-actbar__act i{font-size:16px}
+  .evd-reminder--float{bottom:calc(150px + env(safe-area-inset-bottom,0px))}
+}
+
+/* ============================================================
+   C2 (2026-08-11) — GÖVDE METNİ İKİ YANA YASLI
+   Gurme Lezzetler'de A2 ile kurulan kuralın AYNISI, tireleme
+   dahil (kaynak: gurme-lezzetler.css, "A2 - GOVDE METNI IKI
+   YANA YASLI" bloğu). Bildirim kümesi birebir kopyalandı; yeni
+   değer/teknik türetilmedi.
+
+   Yalnız OKUMA METNİ hizalanır: "Etkinlik hakkında" gövdesi
+   (.evd-about) ve program/koşul kartlarının açıklama paragrafları
+   (.evd-program). Başlıklar, çipler (.evd-tag-row .chip), durum
+   şeridi (.evd-status), zaman çizelgesi satırları (.evd-tl-label)
+   ve ikonlu madde listesi (.evd-list li, display:flex) KAPSAM
+   DIŞI - kısa bloklar, justify orada boşluk kusuru üretir.
+
+   SEÇİCİ DOĞRUDAN-ÇOCUK - gurme tarafında ölçülmüş sapmanın
+   tekrarını önler: torun seçici (.evd-main p gibi) sağ kolonu,
+   köprü şeridini ve alt aksiyon barını da yakalardı. Makale
+   metni ilgili kartın DOĞRUDAN çocuğu olarak basıldığı için
+   ">" hem yeterli hem kesin.
+
+   Tireleme sözlüğü kök html lang değerinden gelir
+   (layouts/gourmet.blade.php gerçek locale'i basar) - dile özel
+   hard-code YOK. overflow-wrap uzun URL/kelime taşmasına karşı
+   emniyet subabı.
+   ============================================================ */
+.evd-about > p,
+.evd-about > ul > li,
+.evd-about > ol > li,
+.evd-program > p {
+  text-align: justify;
+  text-justify: inter-word;
+  -webkit-hyphens: auto;
+  hyphens: auto;
+  overflow-wrap: break-word;
+}

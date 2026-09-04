@@ -1,0 +1,204 @@
+/* ============================================================
+   DadaGourmet — Konum/Ülke seçim pop-up'ı (A5) — sayfa-yerel CSS.
+   Kalıp: modal ÇATISI resources/css/gourmet.css'teki paylaşılan
+   .fb-overlay/.fb-modal/.fb-panel/.fb-head/.fb-close/.fb-body
+   BİREBİR reuse edilir (Görüş Bildir/Mekan Öner modallarıyla AYNI
+   şablon, kabuk zaten her sayfada yüklü — burada TEKRAR TANIMLANMAZ).
+   Bu dosya yalnız o kalıpta KARŞILIĞI OLMAYAN yeni parçaları içerir:
+   konum satırı listesi, "Konumumu Kullan" düğmesi, blur backdrop.
+   (00-ortak.md §3 madde 2: kalıp yoksa yalnız token'lardan inşa.)
+   ============================================================ */
+
+/* Beyar kararı (2026-07-27): "arkası blur, kaliteli". Referans
+   .fb-overlay'de backdrop-filter YOK — token setinde de blur değeri
+   tanımlı değil (tek kullanım yeri, yeni token açmaya değmez; sabit
+   6px kullanıldı). */
+.lk-overlay {
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+}
+
+.lk-panel {
+    width: min(460px, 100%);
+    /* mobil sanal klavye: .fb-panel'in paylaşılan max-height'ı (100vh - 40px)
+       KİLİTLİ dosyada — burada override'lanamaz, ama dvh destekleyen
+       tarayıcılarda klavye açıldığında `100vh` SABİT kalıp panel'i klavyenin
+       ALTINA iter (görünmez alan, "kapandı" hissi verir); dvh ise gerçek
+       görünür yüksekliği izler. Desteklemeyen tarayıcı bu satırı yok sayar,
+       kilitli dosyadaki vh değeri geçerli kalır. */
+    max-height: calc(100dvh - 40px);
+}
+
+/* "Konumumu Kullan" — .btn-primary'nin tam-genişlik varyantı (yeni
+   renk/gölge icat edilmedi, mevcut --tomato/--radius-md/--ease). */
+.lk-geo {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background: var(--tomato);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-md);
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    padding: 14px 18px;
+    cursor: pointer;
+    transition: .2s var(--ease);
+}
+.lk-geo:hover:not(:disabled) { background: var(--tomato-dark); transform: translateY(-1px); }
+.lk-geo:disabled { opacity: .7; cursor: progress; }
+.lk-geo.busy i { animation: lk-spin 1s linear infinite; }
+@keyframes lk-spin { to { transform: rotate(360deg); } }
+
+.lk-divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 18px 0;
+    color: var(--muted);
+    font-size: 11.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+}
+.lk-divider::before, .lk-divider::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+
+/* Arama kutusu — kalıp: .mo-field input (gourmet.css, Mekan Öner formu)
+   BİREBİR reuse edildi (aynı border/radius/padding/focus rengi), yalnız
+   sol tarafa büyüteç ikonu için boşluk eklendi. */
+.lk-search {
+    position: relative;
+    margin-bottom: 12px;
+}
+.lk-search-ico {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted);
+    font-size: 13px;
+    pointer-events: none;
+}
+.lk-search-input {
+    width: 100%;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--slate);
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    padding: 12px 14px 12px 38px;
+    outline: none;
+    transition: border-color .2s var(--ease);
+}
+.lk-search-input::placeholder { color: #a7a7a7; }
+.lk-search-input:focus { border-color: var(--tomato); }
+
+.lk-list {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    max-height: 300px;
+    overflow-y: auto;
+    margin-bottom: 16px;
+    padding-right: 2px;
+    /* dvh destekleyen tarayıcılarda mobil klavye açıkken daha gerçekçi
+       yükseklik — desteklemeyen tarayıcı bu satırı yok sayar (aşağıdaki
+       @media içindeki vh değeri geçerli kalır). */
+    max-height: min(300px, 46dvh);
+}
+/* [hidden] UA-stylesheet kuralı `.lk-list{display:flex}` ile AYNI
+   özgüllükte (0,1,0) ve YAZAR stili UA'yı her zaman ezer — bu satır
+   olmadan JS'in `list.hidden=true`'su görsel olarak ETKİSİZ kalır. */
+.lk-list[hidden] { display: none; }
+
+.lk-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    text-align: left;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    padding: 11px 14px;
+    cursor: pointer;
+    font-family: inherit;
+    scroll-margin-block: 6px;
+    transition: .18s var(--ease);
+}
+.lk-row:hover, .lk-row.is-active { border-color: var(--tomato); background: var(--tomato-tint); }
+.lk-row.is-selected { border-color: var(--tomato); background: var(--tomato-tint); }
+.lk-flag {
+    flex: none;
+    width: 24px;
+    height: 17px;
+    border-radius: 3px;
+    object-fit: cover;
+    box-shadow: var(--sh-sm);
+}
+.lk-name { flex: 1; min-width: 0; font-size: 14px; font-weight: 600; color: var(--slate); }
+.lk-check {
+    flex: none;
+    font-size: 13px;
+    color: var(--tomato);
+    opacity: 0;
+    transform: scale(.6);
+    transition: .18s var(--ease);
+}
+.lk-row.is-selected .lk-check { opacity: 1; transform: scale(1); }
+
+/* Arama sonucu boş — Altın Kural: sahte/pasif seçenek YOK, yalnız net bilgi. */
+.lk-empty {
+    text-align: center;
+    padding: 28px 16px;
+    color: var(--muted);
+    font-size: 13.5px;
+    font-weight: 500;
+    line-height: 1.55;
+}
+.lk-empty i {
+    display: block;
+    font-size: 20px;
+    color: var(--line);
+    margin-bottom: 10px;
+}
+
+.lk-skip {
+    display: block;
+    width: 100%;
+    background: none;
+    border: none;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--muted);
+    padding: 8px;
+    cursor: pointer;
+    text-align: center;
+    transition: .18s var(--ease);
+}
+.lk-skip:hover { color: var(--slate); }
+
+/* odak tuzağı ölçümü için klavye gezinme belirgin olsun (mevcut
+   token'lardan — yeni renk yok, --tomato reuse) */
+.lk-row:focus-visible,
+.lk-geo:focus-visible,
+.lk-skip:focus-visible,
+#lkModal .fb-close:focus-visible {
+    outline: 2px solid var(--tomato);
+    outline-offset: 2px;
+}
+
+@media (max-width: 640px) {
+    .lk-list {
+        max-height: 46vh;
+        /* dvh destekleyen mobil tarayıcı: sanal klavye açıkken gerçek
+           görünür yükseklik izlenir, panel klavyenin altında kaybolmaz. */
+        max-height: 46dvh;
+    }
+}

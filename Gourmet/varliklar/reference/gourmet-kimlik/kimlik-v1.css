@@ -1,0 +1,803 @@
+/* ===== SAYFA CSS — kabuk CSS'i resources/css/gourmet.css'te ===== */
+/* =====================================================================
+   F2/T2.4 — KİMLİK EKRANLARI (giriş · kayıt · şifremi unuttum ·
+   şifre sıfırlama · e-posta doğrulama)
+
+   🔴 BU EKRANLARIN REFERANSI YOKTUR. `15 §9.2` ölçtü: eski sistemde bu
+   markanın login/logout/register/password/verification/two-factor/auth
+   karşılığı **0 rotaydı**; kimlik yüzeyi kardeş markanındı ve `09 §1`
+   gereği devralınmaz. Kopyalanacak bir ekran olmadığı için `09 §2` md.5'in
+   hakemi de yoktur.
+
+   🔴 TASARIM KAYNAĞI — BEYAR KARARI (2026-08-18):
+   *"kardeş marka'le aynı mockup ailesi. Yapı oradan, marka Gourmet'in kendi
+   rengi/ambleminin."* Dosya kardeş marka projesinin `kimlik-v1.css`inden
+   BAYT KOPYA olarak alındı; değişen tek şey MARKA KATMANIDIR.
+
+   🔴 BU DOSYADA TEK SATIR YENİ TASARIM YOKTUR. `09 §2` md.3 bağlayıcı:
+   *"Yeni renk, yeni tipografi, yeni spacing, yeni radius/gölge, yeni
+   component ismi, yeni sınıf adı — hiçbiri üretilmez."*
+
+   ═══ İKAME TABLOSU — her satırın kaynağı bu markanın KENDİ dosyasıdır ═══
+
+     kardeş marka değeri → bu markanın değeri   ← ölçüldüğü yer
+     ------------------------------------------------------------------
+     #7fe0b0  →  #AC7FB4    koyu zemin üstü açık marka rengi
+                            ← resources/css/gourmet.css:1099 (--b-gourmet-l)
+     #54d39a  →  #ba94c0    başlık vurgusu
+                            ← gourmet.css:1070 (.bs-gourmet --bs-ic)
+     #e3ede7  →  #e9e2d6    koyu zemin üstü gövde metni
+                            ← gourmet.css:225 (.topbar color)
+     #cfe6da  →  #cfc7ba    koyu zemin üstü ikincil metin
+                            ← gourmet.css:262 (.tb-util)
+     #15241c  →  #211E16    koyu zemin
+                            ← gourmet.css:81 (--slate)
+     #c3e4d3  →  #ECECEC    devre dışı buton zemini
+                            ← gourmet.css:87 (--line)
+     #EAF7F0  →  #ECE2EE    fk-eye hover zemini
+                            ← gourmet.css:80 (--tomato-tint)
+     var(--green) → var(--tomato)   fk-eye hover metni
+                            ← gourmet.css:77 (--tomato, bu markada MOR)
+     unsplash dış URL → /img/gourmet-kesfet-hero-g4.webp
+                            ← kaynak repodaki bu markanın KENDİ hero görseli;
+                              dış bağımlılık da böylece düştü
+
+   ⚠ TOKEN'LAR İKAME EDİLMEDİ ve edilmemeliydi: `var(--tomato)`,
+   `var(--slate)`, `var(--radius-*)`, `var(--sh-*)` bu markanın kendi
+   `gourmet.css`inde TANIMLI (ölçüldü: 21 token'ın 21'i). Yani dosya
+   taşındığı an bu markanın kendi paletine döner — `--tomato` burada
+   MOR'dur (#742982), domates değil.
+
+   ═══ 🔴 R3 (Beyar, 2026-08-18) — YUKARIDAKİ ŞERH EKSİKTİ, ÖLÇÜLDÜ ═══
+
+   Beyar: *"'Parolamı unuttum' YEŞİL basıyor — kardeş markanın rengi.
+   Hesaplanan stil taraması koş ve bu markaya ait olmayan her aksanı bul,
+   kök nedeni düzelt."*
+
+   ÖLÇÜM (`scripts/t24r-kimlik-renk-tarama.mjs`, getComputedStyle):
+   giriş + kayıt + şifremi-unuttum · 1440 ve 390px · **58 görünür yabancı
+   aksan**, üç renk: `#2C9963` (×48) · `#3BB77E` (×6) · `#52CD94` (×4).
+
+   KÖK NEDEN — ve neden yukarıdaki şerh onu yakalamadı: ikame tablosu
+   yalnız **LİTERAL HEX**leri çevirdi. Kaynak dosyada marka aksanı
+   `var(--green-deep)` / `var(--green)` **TOKEN'IYLA** yazılıydı ve o iki ad
+   bu markanın `gourmet.css`inde de TANIMLI — ama burada **marka aksanı
+   değil, "yalnız sağlık bloğu" semantiğidir** (`gourmet.css:83` kendi
+   yorumunda yazıyor). Yani token taşındı, ANLAMI taşınmadı: dosya
+   "kendi paletine döner" varsayımı bu iki token için YANLIŞTI.
+
+   DÜZELTME — marka aksanı rolündeki her token bu markanın aksanına bağlandı
+   (15 satır; hiçbiri yeni renk değil, hepsi `gourmet.css:77-80`):
+     var(--green-deep) → var(--tomato)      (dinlenme hâli)
+     var(--tomato)     → var(--tomato-dark) (o satırların :hover hâli)
+     rgba(59,183,126,…)→ rgba(116,41,130,…) (.fk-input:focus halkası)
+     rgba(225,72,39,…) → rgba(116,41,130,…) (hata ailesinin LİTERAL kardeş
+        marka turuncusu; zemini zaten `--tomato-tint`ti, kenarlık uyumsuzdu)
+
+   ⚠ Hata/uyarı ailesinin ROLÜ değişmedi: `.fk-error` ve `.sbanner.rejected`
+   hâlâ "domates ailesi"ndedir — bu markada o aile MOR'dur. Değişen tek şey,
+   ailenin içinde kalmış kardeş marka LİTERALİdir.
+
+   ═══ KARDEŞ MARKA PROJESİNİN KENDİ NOTLARI AŞAĞIDA KORUNDU ═══
+   (blok yapısı ve gerekçeleri o projenin ölçümüdür; bayt sadakati için
+   silinmedi, yalnız marka adları yer tutucuya çevrildi.)
+/* ---- FORM KİTİ (tarif-ekle-v1.html VERBATIM — miras) ---- */
+.fk-field{margin-bottom:22px}
+.fk-field:last-child{margin-bottom:0}
+.fk-label{display:flex;align-items:baseline;gap:7px;font-size:14px;font-weight:700;color:var(--slate);margin-bottom:9px}
+.fk-label .req{color:var(--tomato);font-weight:700}
+.fk-label .opt{font-size:11.5px;color:var(--muted);font-weight:500}
+.fk-label .fk-count{margin-left:auto;font-size:11.5px;color:var(--muted);font-weight:500;letter-spacing:.02em}
+.fk-input,.fk-select,.fk-textarea{
+  width:100%;font-family:inherit;font-size:14px;font-weight:500;color:var(--slate);
+  background:var(--bg);border:1px solid var(--line);border-radius:var(--radius-md);
+  padding:13px 15px;outline:none;transition:border-color .2s var(--ease),box-shadow .2s var(--ease);
+}
+.fk-input::placeholder,.fk-textarea::placeholder{color:#a7a7a7}
+.fk-input:focus,.fk-select:focus,.fk-textarea:focus{border-color:var(--tomato);box-shadow:0 0 0 3px rgba(116,41,130,.12)}
+.fk-select{
+  appearance:none;-webkit-appearance:none;cursor:pointer;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%237E7E7E' stroke-width='1.6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 15px center;padding-right:40px;
+}
+.fk-select:invalid{color:#a7a7a7}
+.fk-help{display:flex;align-items:flex-start;gap:7px;font-size:12.5px;color:var(--muted);font-weight:500;margin-top:8px;line-height:1.5}
+.fk-help i{color:var(--tomato);font-size:12px;margin-top:2px;flex:none}
+.fk-grid{display:grid;gap:16px 18px}
+.fk-grid .fk-field{margin-bottom:0}
+.fk-grid.c2{grid-template-columns:1fr 1fr}
+/* 🔴 IZGARANIN KOMŞUSUYLA ARASINDAKİ NEFES — ÖLÇÜLDÜ, EKSİKTİ (2026-08-31).
+
+   Kusur: `/kayit`ta **Ad+Soyad ızgarası ile E-posta alanı BİTİŞİK duruyordu.**
+   Ölçüm (Playwright, 1440px, iki sayfa yan yana):
+
+     prototip  `.fk-grid.c2` → sonraki blok arası **22px**
+     bu depo   `.fk-grid.c2` → sonraki blok arası **0px**
+
+   KÖK NEDEN: sıradan bir `.fk-field` kendi `margin-bottom:22px`ini taşır ama
+   ızgaranın İÇİNDEKİ alanlarda o margin bir üstteki satırda sıfırlanıyor
+   (`.fk-grid .fk-field{margin-bottom:0}`) — çünkü satır aralığını `gap`
+   veriyor. Sıfırlanan margin ızgaranın KENDİSİNE geri konmamıştı, yani
+   ızgaradan sonra hiç boşluk kalmıyordu.
+
+   Kaynak bunu iki komşuluk kuralıyla çözüyor ve ikisi de bu dosyaya
+   ALINMAMIŞTI (BLOK 1 kiti kaynağın yalnız bir aralığını taşımıştı — aynı
+   sebeple ≤640px kırılımı da dışarıda kalmıştı, aşağıdaki nota bak).
+   Satırlar kaynağından okunarak alındı; ölçü (22px) KAYNAĞINKİDİR, bu
+   dosyanın `.fk-field{margin-bottom:22px}` değeriyle de aynı — yeni bir
+   boşluk ritmi üretilmedi.
+
+   ⚠ `margin-top` KULLANILIYOR, `margin-bottom` DEĞİL — ve bu fark önemli:
+   ızgaraya alt margin vermek onu formun SONUNDA da iterdi. Komşuluk seçicisi
+   yalnız gerçekten bir komşu VARKEN boşluk açar. */
+.fk-grid+.fk-grid{margin-top:22px}
+.fk-grid+.fk-field,.fk-field+.fk-grid{margin-top:22px}
+/* 🔴 T5.0d — `.fk-grid.c2` DAR EKRANDA TEK SÜTUNA DÜŞER.
+   Beyar (2026-08-18): *".fk-grid.c2'nin 390px'te tek sütuna düşmemesi de bu
+   turda kapansın — kaynak formunda karşılığı nasılsa öyle."*
+   ÖLÇÜM: kaynağın kendi `tokens.css:345` satırı zaten bunu yazıyor —
+     @media (max-width: 640px) { .fk-grid { grid-template-columns: 1fr; } }
+   bu ailenin kendi kiti (BLOK 1, `beden-kutle-endeksi-v1.css:9-41`) o dosyanın
+   yalnız 9-41 aralığını taşıdığı için kırılım DIŞARIDA kalmıştı; kusurun
+   kaynağı buydu. Satır kaynağından alındı, ölçü UYDURULMADI ve kırılım noktası
+   bu dosyanın kendi ≤640px eşiğiyle aynı. */
+@media (max-width:640px){.fk-grid,.fk-grid.c2{grid-template-columns:1fr}}
+.fk-suffix{position:relative}
+.fk-suffix .fk-input{padding-right:64px}
+.fk-suffix>span{position:absolute;right:15px;top:50%;transform:translateY(-50%);font-size:12px;font-weight:700;color:var(--muted);pointer-events:none}
+/* segment toggle (cinsiyet) — token dili, sağlık yeşili aktif */
+.fk-seg{display:flex;background:var(--bg);border:1px solid var(--line);border-radius:var(--radius-md);padding:4px;gap:4px}
+.fk-seg button{flex:1;border:none;background:transparent;font-family:inherit;font-weight:700;font-size:14px;color:var(--muted);padding:11px 14px;border-radius:var(--radius-sm);cursor:pointer;transition:.2s var(--ease);display:inline-flex;align-items:center;justify-content:center;gap:8px}
+.fk-seg button i{font-size:14px}
+.fk-seg button.active{background:var(--tomato-deep);color:#fff}
+
+/* ---- ekran okuyucu metni (`.sr-only`) — BAYT KOPYA, YENİ KURAL DEĞİL ----
+   🔴 `09 §2` md.3 yeni sınıf üretmeyi yasaklıyor; bu kural ZATEN BU DEPODA VAR
+   ve iki sayfa CSS'inde BİREBİR AYNI bayttadır (ölçüldü, shasum):
+     public/reference/gourmet-hesap/hesap.css:378
+     public/reference/gourmet-mekan-liste/mekan-liste.css:274
+   İkisi de SAYFA CSS'idir ve kimlik ekranlarında YÜKLENMEZ; bu yüzden satır
+   buraya da gerekti. Blade tarafında beş yerde zaten kullanılıyor
+   (`mekan-liste/_hero`, `etkinlikler/index`, `gurme-lezzetler/index`,
+   `components/account/avatar-cover-row`).
+
+   ⚠ Mockup'ın kendi adı `.vh`tir; O AD ALINMADI — bu depoda ekran okuyucu
+   metninin adı `sr-only`dir. Yeni ad üretmek yerine var olan sözleşme kullanıldı.
+
+   Kullanımı: zorunluluk yıldızı göze `aria-hidden` ile gösterilir, ekran
+   okuyucuya `(zorunlu)` diye okunur — yıldız tek başına "zorunlu" demez. */
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+/* =====================================================================
+   BLOK 2 — ORTALANMIŞ KART KABUĞU + AYAK
+   Kaynak: public/reference/gourmet-kimlik/css/pages/bana-uygun-olani-bul-v1.css
+           satır 51-52 (.wz-sec/.wz-card) · 80 (.wz-body) · 83-85 (.wz-q) ·
+           112-125 (.wz-nav/.wz-back/.wz-progress-txt/.wz-next) · 162 (.wz-disc)
+   (bu ailenin KENDİ sihirbaz kabuğu — tek sütun, ortalanmış kart. Bu markanın
+    "tek form, tek kart" deseninin yerleşik hâli.)
+   BAYT KOPYA — tek karakter değiştirilmedi. Blok içindeki adım yolu
+   (.wz-steps/.wz-step/.wz-num/.wz-lbl) ve seçenek kutucukları (.wz-opt…)
+   ALINMADI: kimlik ekranları çok adımlı değil, karşılığı olmayan kural
+   taşınmaz.
+   ===================================================================== */
+.wz-sec{padding:6px 0 70px;background:var(--bg-cream)}
+.wz-card{max-width:820px;margin:0 auto;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-xl);box-shadow:var(--sh-md);overflow:hidden}
+.wz-body{padding:32px 34px 6px}
+.wz-q{text-align:center;margin-bottom:24px}
+.wz-q h2{font-size:24px;letter-spacing:-.02em}
+.wz-q p{font-size:14px;color:var(--muted);font-weight:500;margin-top:6px}
+.wz-nav{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:18px 34px 28px}
+.wz-back{display:inline-flex;align-items:center;gap:9px;font-family:inherit;font-weight:700;font-size:14px;color:var(--slate);background:none;border:none;cursor:pointer;padding:12px 6px;transition:.18s var(--ease)}
+.wz-back i{font-size:12px;transition:transform .2s var(--ease)}
+.wz-back:hover{color:var(--tomato)}
+.wz-back:hover i{transform:translateX(-3px)}
+.wz-back:focus-visible{outline:3px solid var(--tomato-tint);outline-offset:2px;border-radius:var(--radius-sm)}
+.wz-back[hidden]{visibility:hidden;display:inline-flex}
+.wz-progress-txt{font-size:12.5px;font-weight:600;color:var(--muted)}
+.wz-next{display:inline-flex;align-items:center;gap:10px;font-family:inherit;font-weight:700;font-size:14.5px;color:#fff;background:var(--tomato);border:none;border-radius:var(--radius-md);padding:14px 28px;cursor:pointer;transition:.2s var(--ease)}
+.wz-next i{font-size:13px;transition:transform .2s var(--ease)}
+.wz-next:hover{background:var(--tomato-dark);transform:translateY(-2px)}
+.wz-next:hover i{transform:translateX(3px)}
+.wz-next:focus-visible{outline:3px solid var(--tomato-tint);outline-offset:2px}
+.wz-next:disabled{background:#ECECEC;cursor:not-allowed;transform:none}
+.wz-disc{max-width:820px;margin:26px auto 0}
+
+/* Kaynağın kendi ≤640px kırılımından, ALINAN sınıflara düşen üç satır
+   (bana-uygun-olani-bul-v1.css:175, :181, :182 — BAYT KOPYA). Adım yoluna
+   ait satırlar alınmadı çünkü o sınıflar bu dosyada yok. */
+@media (max-width:640px){
+  .wz-sec{padding:2px 0 46px}
+  .wz-body{padding:24px 18px 4px}
+  .wz-q h2{font-size:20px}
+}
+
+
+
+/* =====================================================================
+   BLOK 3 — HESAP YÜZEYİNİN KENDİ DİLİ (kardeş marka projesinden BAYT KOPYA)
+   =====================================================================
+
+   🔴 `.pf-tabs`ın İKİ VARYANTI VAR VE BURADA YEŞİL OLANI ALINDI — ölçüm:
+
+     public/reference/gourmet-kimlik/css/pages/besin-kutuphanesi-v1.css:38
+       .pf-tabs .dt.active{background:var(--tomato-deep)}   ← içerik sayfaları
+     public/reference/gourmet-kimlik/css/planim.css:191  ·  panel.css:418
+       .pf-tabs .dt.active{background:var(--tomato)}          ← HESAP yüzeyi
+
+   Giriş ve kayıt hesap yüzeyidir; bu ailenin kendi hesap ekranları (Planım ve
+   ikinci rol paneli) bu sekmeyi kendi aksanıyla basar. Yani buradaki renk bir tercih
+   değil, bu markanın kendi ölçülmüş kuralıdır — ve Beyar'ın *"bu ailenin kendi
+   yeşilinin içinde kurulacak"* talimatıyla aynı yere düşer.
+
+   Kaynak: planim.css 187-192 (sekme) · 410-411 (yeşil buton) ·
+           pages/<kaynak-mockup>-v1.css 113-116 (onay grubu + captcha şerhi)
+   ===================================================================== */
+/* ---- KART PARİTESİ (2026-08-31) — BEŞ KURAL, HEPSİ ÖLÇÜ/YERLEŞİM ----
+   Beyar: *"görselin sağındaki panel tam parite."* Kartın 24 kuralı kaynakla
+   karşılaştırıldı; 19'u zaten özdeşti, fark bu beşteydi ve dördü aynı temadan:
+   **44px dokunma hedefi**. 🔴 Beşinde de MARKA RENGİ YOK — ikame gerekmedi,
+   yeni değer üretilmedi; hepsi kaynağın kendi ölçüsü.
+
+   1/5 — `.pf-tabs`: dört bildirim eksikti. `margin-left/right:auto` sekme
+   hapını içeriğine sarıp ORTALAR (görsel olarak en belirgin fark buydu:
+   burada hap kartın enine yayılıyordu). `flex-wrap:nowrap` sekmelerin alt
+   satıra kaçmasını, `-webkit-overflow-scrolling:touch` da dokunmatikte
+   kaydırmanın takılmasını engeller. */
+.pf-tabs{display:flex;flex-wrap:nowrap;gap:4px;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-md);padding:4px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;margin-left:auto;margin-right:auto}
+.pf-tabs::-webkit-scrollbar{display:none}
+/* 2/5 — sekmenin kendisi: tek fark `min-height:44px` (dokunma hedefi). */
+.pf-tabs .dt{font-family:inherit;font-weight:700;font-size:13px;color:var(--muted);background:transparent;border:none;border-radius:var(--radius-sm);padding:9px 16px;min-height:44px;cursor:pointer;display:inline-flex;align-items:center;gap:7px;transition:.2s var(--ease);white-space:nowrap;flex:none}
+.pf-tabs .dt:hover{color:var(--tomato)}
+.pf-tabs .dt.active{background:var(--tomato);color:#fff}
+.pf-pane[hidden]{display:none}
+.btn-green{background:var(--tomato);color:#fff}
+.btn-green:hover{background:var(--tomato-dark);transform:translateY(-2px)}
+.ol-consents{display:flex;flex-direction:column;gap:13px}
+.ol-consents .fb-kvkk{margin:0}
+.captcha-note{display:flex;align-items:center;gap:9px;font-size:12px;color:var(--muted);font-weight:500;margin-top:18px;padding-top:16px;border-top:1px solid var(--line)}
+.captcha-note i{color:var(--tomato);font-size:13px}
+
+/* ---- sifre kurali canli kontrol listesi (fk-pwrules) ----
+   🔴 T5.0d — KAYNAK FORMDAN ALINDI, UYDURULMADI.
+   Beyar (2026-08-18) kayit formunun YAPISINI kaynak forma hizalamayı istedi;
+   o formda sifre alanının altında canli bir kural listesi var:
+     <ul class="fk-pwrules" data-pw-rules>
+       <li data-pw-rule="len|case|num|sym">…
+   Kural tanimi `tokens.css:434-438` (= paketin `sa-form-kit.css:351-355`,
+   bayt-ozdes). Davranisi `pages/kimlik-v1.js`e port edildi; panel kiti bu
+   ekranlarda YUKLENMEZ (T5.0 §6.1: kapi ekranlarina fazladan kit binmesi
+   olculmus bir parite kusuru yaratmisti).
+
+   ⚠ TEK IKAME — ve degeri kaynaktan cozuldu:
+     kaynak: gap: var(--sp-2)     →  burada: gap: 8px
+   `--sp-2` PANEL token'idir (`sa-form-kit.css:184` `--sp-2: 8px`) ve bu ailenin
+   PUBLIC dilinde tanimli DEGILDIR (olculdu: 0 sonuc). Degisken adiyla
+   kopyalamak `gap:0` verirdi — yani gorunmez bir kusur. Cozulmus deger yazildi;
+   yeni bir olcu uretilmedi. Renkler zaten bu ailenin kendi token'lari
+   (`--muted` · `--green-deep` · `--green` · `--ease`, hepsi gourmet.css'te). */
+.fk-pwrules{display:grid;gap:8px;margin-top:2px;list-style:none}
+.fk-pwrules li{display:flex;align-items:center;gap:8px;font-size:.82rem;color:var(--muted);transition:color .15s var(--ease)}
+.fk-pwrules li i{font-size:.78rem;flex:none}
+.fk-pwrules li.is-ok{color:var(--tomato)}
+.fk-pwrules li.is-ok i{color:var(--tomato)}
+
+/* =====================================================================
+   BLOK 4 — `au-*` KİMLİK YERLEŞİMİ
+   Kaynak: Beyar'ın tasarım kaynağı (mockup) `giris-v1.html`, SAYFA CSS bloğu
+   =====================================================================
+
+   ALINAN: sayfa bandı · iki sütunlu yerleşim · sol görsel paneli (vaat +
+   sayı şeridi) · sağ form kartı · sekme barı · sosyal buton · ayraç ·
+   şifre göster-gizle · beni-hatırla satırı · alt köprü · hata bandı ·
+   alan düzeyinde hata · hesap türü segmenti · rol açıklaması · responsive.
+
+   ALINMAYAN ve gerekçesi:
+     · `.fk-tel` / `.fk-tel-cc`  → ⚠ BU SATIR ARTIK GEÇERSİZ. Beyar kararı
+                                   (2026-08-31) aileyi GERİ ALDI; kurallar
+                                   bu dosyanın sonunda BLOK 5'tedir.
+     · `.au-rolefields` alan setleri (rol başvuru
+       alanları) → Beyar: yalnız iki sekme; rol başvurusu o projede
+       AYRI bir ekrandır (T5.7) ve kayıt formuna gömülmez.
+     · Antrenör ve İşletme rol renkleri (`--c-green`, `--c-petrol`)
+       → Beyar: *"onlar başka markanın."* Token'lar bu projeye hiç girmedi.
+     · Mockup'ın `fk-*` kiti → bu ailenin KENDİ kiti (BLOK 1) zaten var ve odak
+       halkası yeşil; ikinci bir kit yüklemek çakışırdı.
+
+   🔴 MARKA İKAME TABLOSU — her satırın kaynağı bu ailenin kendi dosyasıdır
+   -------------------------------------------------------------------------
+   mockup                                   bu projede            kaynak
+   .au-visual .eyebrow{color:#ffd9cf}        #AC7FB4              <kaynak-mockup>-detay-v1.css:39
+   .au-visual .eyebrow::before{--tomato}     var(--tomato)         <kaynak-mockup>-detay-v1.css:40
+   .au-visual h2 .accent{color:#ff7a5c}      #ba94c0              <kaynak-mockup>-detay-v1.css:42
+   .au-visual .lead{color:#e7edf1}           #e9e2d6              <kaynak-mockup>-detay-v1.css:43
+   .au-perks i{background:rgba(225,72,39,.9)} var(--tomato)        planim.css:296 (yesil dolu rozet)
+   .au-stats .st span{color:#aebcc6}         #cfc7ba              <kaynak-mockup>-detay-v1.css:46
+   .au-seg-btn:hover{color:var(--tomato)}    var(--tomato)         R3 duzeltmesi (asagi)
+   .au-seg-btn.active{background:--tomato}   var(--tomato)         planim.css:191
+   .au-rseg-lead i{color:var(--tomato)}      var(--tomato)         beden-kutle-endeksi-v1.css:30
+   .au-forgot{color:var(--tomato)}           var(--tomato)         R3 duzeltmesi (asagi)
+   .au-alt button{color:var(--tomato)}       var(--tomato)         R3 duzeltmesi (asagi)
+   .au-back:hover{color:var(--tomato)}       var(--tomato)         R3 duzeltmesi (asagi)
+   .fk-eye:hover{color:--tomato;bg:--tomato-tint}  var(--tomato) / #ECE2EE   <kaynak-mockup>-v1.css:96 (.uz-pick.on)
+   .au-top / .au-visual gorsel URL'i         bu ailenin KENDI hero gorseli    <kaynak-mockup>-detay-v1.css:31
+
+   ⚠ DEGISMEYEN IKI AKSAN — ve neden:
+     `.fk-error` ve `.sbanner.rejected` domates ailesinde KALDI. O renk burada
+     marka aksani degil HATA rolu tasir; bu ailenin kendi mesaj yuzeyi de
+     (kardes marka projesinin flash partial'i) hatayi ayni aileyle basar. Rengi cevirmek
+     hatayi basari gibi gosterirdi.
+     `.fk-label .req` de ayni sebeple domates kaldi — bu ailenin kendi kitinin
+     satiri (BLOK 1, beden-kutle-endeksi-v1.css:13).
+
+   🔴 BEYAR'IN IKI YERLESIM DEGISIKLIGI (mockuptan bilerek sapildi):
+     1. Sosyal butonlar ALT ALTA degil YAN YANA. `.soc-col` sinif ADI
+        korundu ki mockupla yapisal kiyas 1:1 kalsin; yalnizca yonu degisti
+        ve bu satirin yaninda yazili.
+     2. Hesap turu segmenti — bu markada HIC YOK (asagidaki cikarma notu).
+   ===================================================================== */
+
+/* ---- breadcrumb TABAN KURALI (`.rd-crumb`) — BAYT KOPYA ----
+   🔴 `au-remember` ile aynı aileden sessiz kusur, ölçüldü: kabuk
+   (`layouts/kimlik-au.blade.php`) breadcrumb'ı İKİ EKRANDA DA basıyor ama bu
+   dosyada yalnız RENK ezmeleri vardı (aşağıdaki `.au-top .rd-crumb` satırları);
+   flex/gap/padding/font'u veren TABAN kural yoktu (`grep -c "^\.rd-crumb{"` → 0).
+   Yani breadcrumb rengi doğru, yerleşimi yoktu.
+
+   Kaynak: public/reference/gourmet-etkinlikler/etkinlikler.css:63-66
+   (aynı dört satır etkinlik-detay.css:15-18'de de BİREBİR AYNI bayttadır —
+   yani bu, bu markanın kendi yerleşmiş breadcrumb sözleşmesidir, yeni kural
+   değil.) Satırlar kaynak dosyadan OKUNARAK alındı; bayt özdeşliği ölçüldü.
+
+   ⚠ `etkinlikler.css:67-71`deki `.ke-top .rd-crumb` varyantı ALINMADI: o,
+   etkinlik sayfasının kendi koyu banner'ına ait. Bu ekranın koyu banner
+   karşılığı zaten aşağıda (`.au-top .rd-crumb`) ve BURADAN SONRA gelir —
+   özgüllüğü de (0,2,0) daha yüksek olduğu için taban kuralı doğru şekilde ezer.
+   ⚠ `.rd-crumb b` ALINMADI: bu ekranların breadcrumb'ı `<b>` basmıyor
+   (karşılığı olmayan kural taşınmaz). */
+.rd-crumb{display:flex;align-items:center;flex-wrap:wrap;gap:9px;padding:18px 0 14px;font-size:13px;font-weight:500;color:var(--muted)}
+.rd-crumb a{color:var(--muted);transition:.18s}
+.rd-crumb a:hover{color:var(--tomato)}
+.rd-crumb i{font-size:9px;color:#c7c7c7}
+
+/* ---- sayfa bandi (mockup .au-top) — gorsel bu ailenin kendi hero'sundan ---- */
+.au-top{position:relative;background-color:#211E16;background-image:linear-gradient(90deg,rgba(18,28,22,.94),rgba(20,32,25,.74)),url("../../img/gourmet-kesfet-hero-g4.webp");background-size:cover;background-position:center;padding-top:128px;padding-bottom:74px}
+.au-top .wrap{position:relative;z-index:5}
+.au-top .au-card{position:relative;z-index:6}
+.au-top .rd-crumb,.au-top .rd-crumb a{color:#bcd0c4}
+.au-top .rd-crumb a:hover{color:#AC7FB4}
+.au-top .rd-crumb i{color:rgba(255,255,255,.4)}
+.au-top .rd-crumb b{color:#fff}
+@media (max-width:640px){.au-top{padding-top:74px}}
+.au-layout{display:grid;grid-template-columns:minmax(0,1fr) 520px;gap:28px;align-items:stretch;margin-top:6px}
+
+/* ---- sol gorsel paneli ----
+
+   ═══ 🔴 A11 (2026-08-31) — YÜKSEKLİK ARTIK KARTA DEĞİL PENCEREYE BAĞLI ═══
+
+   Önceki hâl `min-height:624px` + `.au-layout{align-items:stretch}` idi:
+   panel form kartıyla EŞİT boyda uzuyordu. Uzun kayıt formunda bu, 900px'lik
+   bir pencerede 926px'lik bir görsel demekti (ölçüldü, 1440×900) — kullanıcı
+   formu doldururken görsel de birlikte kayıyordu.
+
+   Kaynak yerine `clamp` + `sticky` kullanıyor: panel görüntü alanına sığar ve
+   form kaydırılırken YERİNDE DURUR. Taban (624px) ve tavan (1036px)
+   kaynağınkidir.
+
+   🔴 `--au-kabuk-h` BU DOSYANIN KENDİ ÖLÇÜMÜDÜR, kaynaktan kopyalanmadı.
+   Kaynak `var(--fit-header-h)` diyor; o değişken BU DEPODA YOK (ölçüldü,
+   0 sonuç) ve değişken adıyla kopyalamak `calc()`i geçersiz kılıp kuralın
+   TAMAMINI düşürürdü — `au-remember` ailesinden sessiz bir kusur.
+
+   Değer tarayıcıda ölçüldü (Playwright, 1440×900, `/giris`, 2026-08-31):
+     `.topbar`  position:fixed  top:0   height:40
+     `.header`  position:fixed  top:40  height:73
+   İkisi de 600px kaydırıldıktan SONRA da aynı yerde — yani kabuk 113px'tir
+   ve küçülmüyor. `24px` payı kaynağınkidir.
+   ⚠ Bu değer kabuğun yüksekliği değişirse bayatlar; `.au-top{padding-top:128px}`
+   (aşağıda) aynı gerçeği zaten sabit sayıyla taşıyor, yani dosya bu konuda
+   bugün de tek kaynaklı değil. Kayıtlı borç. */
+.au-visual{
+  --au-kabuk-h:113px;
+  position:relative;display:flex;flex-direction:column;justify-content:flex-end;
+  height:clamp(624px, calc(100vh - var(--au-kabuk-h) - 120px), 1036px);
+  position:sticky;top:calc(var(--au-kabuk-h) + 24px);
+  border-radius:var(--radius-xl);overflow:hidden;box-shadow:var(--sh-md);
+  background-color:#211E16;
+  background-image:linear-gradient(180deg,rgba(18,28,22,.30) 0%,rgba(20,32,25,.55) 55%,rgba(16,26,20,.86) 100%),
+    url("../../img/gourmet-kesfet-hero-g4.webp");
+  background-size:cover;background-position:center;
+  padding:38px 40px;
+}
+.au-visual .eyebrow{color:#AC7FB4}
+.au-visual .eyebrow::before{background:var(--tomato)}
+.au-visual h2{color:#fff;font-size:36px;letter-spacing:-.03em;margin:14px 0 10px;max-width:420px;text-shadow:0 2px 24px rgba(0,0,0,.25)}
+.au-visual h2 .accent{color:#ba94c0}
+.au-visual .lead{color:#e9e2d6;font-weight:500;font-size:15px;max-width:420px;text-shadow:0 1px 14px rgba(0,0,0,.3);line-height:1.6}
+.au-perks{display:flex;flex-direction:column;gap:11px;margin-top:22px}
+.au-perks span{display:inline-flex;align-items:center;gap:11px;font-size:13.5px;font-weight:600;color:#e9e2d6}
+.au-perks i{flex:none;width:26px;height:26px;border-radius:var(--radius-circle);background:var(--tomato);color:#fff;display:grid;place-items:center;font-size:11px}
+.au-stats{display:flex;gap:34px;margin-top:26px;padding-top:22px;border-top:1px solid rgba(255,255,255,.18)}
+.au-stats .st b{display:block;font-size:25px;font-weight:700;color:#fff;letter-spacing:-.02em;line-height:1.1}
+.au-stats .st span{font-size:12px;color:#cfc7ba;font-weight:500}
+
+/* ---- sag form karti ---- */
+.au-card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-xl);box-shadow:var(--sh-sm);padding:34px 38px 36px;display:flex;flex-direction:column}
+.au-head{margin-bottom:20px}
+.au-head h1{font-size:25px;letter-spacing:-.02em}
+.au-head p{font-size:13.5px;color:var(--muted);font-weight:500;margin-top:5px}
+.au-card .pf-tabs{margin-bottom:24px}
+.au-card .pf-tabs .dt{flex:1;justify-content:center}
+.au-pane{animation:fadeUp .35s var(--ease)}
+
+/* ---- sosyal giris ----
+   🔴 BEYAR KARARI: mockupta ALT ALTA, burada YAN YANA. Sinif adi mockup'in
+   (`.soc-col`) korundu ki yapisal kiyas 1:1 kalsin. */
+.soc-col{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.soc-btn{display:flex;align-items:center;justify-content:center;gap:11px;width:100%;font-family:inherit;font-size:14px;font-weight:700;color:var(--slate);background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-md);padding:13px 16px;cursor:pointer;transition:.2s var(--ease)}
+.soc-btn i{font-size:17px}
+.soc-btn:hover{border-color:var(--slate);transform:translateY(-1px);box-shadow:var(--sh-sm)}
+/* pasif hal — anahtar gelene kadar. Deger bu ailenin KENDI "kullanilamaz"
+   dilinden: gourmet.css:863 (.fb-emoji button) grayscale + .65 opaklik. */
+/* 🔴 T5.0e — PASIF HAL ARTIK `<span>`, `<button disabled>` DEGIL.
+   Beyar: "rozetsiz, href'siz" (mağaza butonuyla AYNI karar). `<span>`
+   `:disabled` sozde-sinifini ALAMAZ, bu yuzden secici `[aria-disabled]`e
+   cevrildi — DEGERLER DEGISMEDI, yalnizca neye tutundugu degisti.
+   Emsal bu ailenin kendi footer'i: `gourmet.css:1206-1207` de tam olarak bu
+   deseni kullaniyor — `a.foot-app-store:hover` etkin hal, `span.foot-app-store
+   {cursor:default}` pasif hal. `.soon` kurali kaldirildi cunku rozet artik
+   hic basilmiyor (bu ekranlarda; kabugun kendi `.soon`u yerinde durur). */
+.soc-btn[aria-disabled="true"]{filter:grayscale(1);opacity:.65;cursor:default}
+/* A5 (2026-08-31) — sağlayıcı işareti artık satır içi SVG. Ölçü kaynağınkidir
+   (18×18); gerekçesi `auth/_p/soc-ikon.blade.php`de. `filter:grayscale(1)`
+   yukarıdaki kuralla SVG'ye de uygulanır — kapalı buton için ikinci bir
+   işaret seti gerekmedi. */
+.soc-ico{width:18px;height:18px;flex:none;display:block}
+.soc-btn[aria-disabled="true"]:hover{border-color:var(--line);transform:none;box-shadow:none}
+@media (max-width:640px){.soc-col{grid-template-columns:1fr}}
+.au-div{display:flex;align-items:center;gap:14px;margin:20px 0;font-size:12px;font-weight:600;color:var(--muted);letter-spacing:.03em}
+.au-div::before,.au-div::after{content:"";flex:1;height:1px;background:var(--line)}
+
+/* ---- sifre goster/gizle ---- */
+.fk-pass{position:relative}
+/* 4/5 — parola gözü 36px'ti, dokunma hedefinin altında. Kaynağın ölçüsü:
+   44×44, `right:4px`.
+   🔴 `padding-right` DE DEĞİŞMEK ZORUNDA, ölçüldü — varsayılmadı: göz artık
+   sağdan 4+44=48px yer kaplıyor, eski 50px yalnız 2px boşluk bırakırdı ve
+   uzun parolada metin ikonun altına girerdi. Kaynağın değeri 56px (8px pay)
+   ve tarayıcıda ölçülerek doğrulandı. */
+.fk-pass .fk-input{padding-right:56px}
+.fk-eye{position:absolute;right:4px;top:50%;transform:translateY(-50%);width:44px;height:44px;border:none;border-radius:var(--radius-sm);background:transparent;color:var(--muted);font-size:14px;cursor:pointer;display:grid;place-items:center;transition:.18s var(--ease)}
+.fk-eye:hover{color:var(--tomato);background:#ECE2EE}
+
+/* ---- beni hatirla satiri ---- */
+.au-row{display:flex;align-items:center;justify-content:space-between;gap:14px;margin:16px 0 20px}
+.au-row .fb-kvkk{margin:0;font-size:13px;align-items:center}
+.au-row .fb-kvkk input{margin-top:0}
+.au-forgot{font-size:13px;font-weight:700;color:var(--tomato);transition:.18s;background:none;border:none;font-family:inherit;cursor:pointer;padding:0}
+.au-forgot:hover{color:var(--tomato-dark);text-decoration:underline;text-underline-offset:2px}
+/* 5/5 — "Parolamı unuttum" cümle içi metin-buton, yüksekliği 16px'ti.
+   🔴 ÖLÇÜLDÜ, BRIEF'TEN SAPILDI: bu kural kaynakta DAR EKRAN MEDYA SORGUSUNDA
+   DEĞİL, üst düzeydedir (parantez derinliği izlenerek doğrulandı; kaba "en
+   yakın önceki @media" taraması yanlışlıkla `min-width:560px` gösteriyor).
+   Yani hedef HER ENDE 44px'tir ve kural buraya da öyle kondu — medya
+   sorgusuna gömmek kaynaktan sapma olurdu.
+   `inline-flex` satır akışını bozmadan kutuyu büyütür (kaynağın kendi
+   şerhi: 390px'te ölçülmüş). */
+.au-forgot{min-height:44px;display:inline-flex;align-items:center}
+
+/* ---- gonder + alt kopru ---- */
+.au-card .ol-consents{margin:18px 0 20px}
+.au-submit{width:100%;padding:15px 26px;font-size:15px}
+.au-alt{text-align:center;font-size:13.5px;color:var(--muted);font-weight:500;margin-top:20px;padding-top:18px;border-top:1px solid var(--line)}
+.au-alt button,.au-alt a{background:none;border:none;font-family:inherit;font-size:13.5px;font-weight:700;color:var(--tomato);cursor:pointer;padding:0;transition:.18s}
+.au-alt button:hover,.au-alt a:hover{color:var(--tomato-dark);text-decoration:underline;text-underline-offset:2px}
+.au-back{display:inline-flex;align-items:center;gap:8px;background:none;border:none;font-family:inherit;font-size:13px;font-weight:700;color:var(--muted);cursor:pointer;padding:0;margin-bottom:16px;transition:.18s}
+.au-back:hover{color:var(--tomato)}
+.au-back i{font-size:11px}
+
+/* ---- KART PARİTESİ, İKİNCİ TUR: KALAN İKİ DOKUNMA HEDEFİ ----
+   Önceki turda beş kural kapandı; kaynağın 44px ailesinde iki kardeş daha
+   vardı ve ikisi de BU MARKADA GERÇEKTEN BASILIYOR:
+
+     `.au-alt`  → "Zaten hesabın var mı? **Giriş yap**" (kayıt) ve
+                  "Hesabın yok mu? **Kayıt ol**" (giriş) — iki ekranda da var.
+     `.au-back` → "Girişe dön" (şifremi-unuttum) ve "Çıkış yap"
+                  (e-posta-doğrula) — aynı kimlik CSS'i o ekranları da servis
+                  ediyor.
+
+   🔴 `.au-alt` KURALI KAYNAKTAN AYNEN ALINAMAZDI — VE BU ÖNEMLİ.
+   Kaynak yalnız `.au-alt button` yazar; o markup metin-butonu `<button>`la
+   kurar. BU MARKANIN markup'ı `<a>` kullanıyor
+   (`auth/kayit.blade.php:197` · `auth/giris.blade.php:104`). Kural birebir
+   kopyalansaydı basılan öğeye HİÇ TUTUNMAZ, dosyada duran ama hiçbir şeyi
+   değiştirmeyen bir satır olurdu — `au-remember` kusurunun aynısı.
+   Bu yüzden seçici bu dosyanın KENDİ desenine uyduruldu: 432 ve 433. satırlar
+   zaten `.au-alt button,.au-alt a` diye ikisini birden ele alıyor; yeni kural
+   da aynı çifti kullanıyor. Yapı korundu, ölçü kaynağınki.
+
+   ⚠ `inline-flex` satır akışını BOZMAZ: bağlantı cümlenin içinde kalır,
+   yalnız kutusu 44px'e çıkar (kaynağın kendi şerhi de bunu 390px'te ölçmüş).
+   `.au-back` zaten `inline-flex`ti, ona yalnız yükseklik eklendi ve kuralı
+   öğeden bağımsız olduğu için `<a>`ye de `<button>`a da tutunuyor.
+
+   ⚠ `.ol-consents-min` NOTU ARTIK GEÇERSİZ: o gün *"bu marka o sınıfı
+   HİÇBİR YERDE basmıyor"* diye alınmamıştı ve bu DOĞRUYDU. 2026-08-31'de
+   `kayit.blade.php` sarmalı basmaya başladı (A7), yani karşılığı doğdu;
+   kuralları BLOK 6'da. */
+.au-alt button,.au-alt a{min-height:44px;display:inline-flex;align-items:center}
+.au-back{min-height:44px}
+
+/* ---- durum izleri ---- */
+.sbanner{display:none;align-items:flex-start;gap:14px;border:1px solid;border-radius:var(--radius-lg);padding:16px 18px;margin-bottom:22px;animation:fadeUp .35s var(--ease)}
+.sbanner.show{display:flex}
+.sb-ico{flex:none;width:42px;height:42px;border-radius:var(--radius-md);display:grid;place-items:center;font-size:17px}
+.sb-body{flex:1;min-width:0}
+.sb-body h4{font-size:15.5px;margin-bottom:4px;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.sb-body p{font-size:13.5px;color:var(--slate-2);font-weight:500;line-height:1.6}
+.sb-body p b{color:var(--slate)}
+.sbanner.rejected{background:var(--tomato-tint);border-color:rgba(116,41,130,.35)}
+.sbanner.rejected .sb-ico{background:rgba(116,41,130,.14);color:var(--tomato)}
+.fk-error{display:none;align-items:center;gap:7px;font-size:12.5px;font-weight:700;color:var(--tomato);margin-top:8px}
+.fk-error i{font-size:12px}
+.fk-field.has-error .fk-input{border-color:var(--tomato);box-shadow:0 0 0 3px rgba(116,41,130,.10)}
+.fk-field.has-error .fk-error{display:flex}
+
+/* ---- hesap turu segmenti (mockup .au-seg / .au-rseg — IKI sekme) ----
+   🔴 R1 (Beyar, 2026-08-18): SEGMENT GERI ALINDI.
+
+   Onceki surumde bu blok CIKARILMISTI ve gerekcesi *"kayit aninda secilecek
+   bir hesap turu yok"* idi. Beyar o olcumu dogruladi ama sonucunu duzeltti:
+   *"T2.4'te 'hesap turu sekmesi yok' diye yazdigin olcum DOGRUYDU ama
+   sonucu yanlis cikardi: sekme kalkmaz, HEDEFI degisir."*
+
+   Kural, cikarma notunun kendi cumlesindeki yoldan geri alindi — *"segment
+   bir gun dogarsa kural kardes marka projesinin ayni dosyasindan geri
+   alinir"* — ve o dosyadan (`pages/kimlik-v1.css:358-373`) BAYT KOPYA
+   olarak geldi. Degisen tek sey MARKA KATMANIDIR:
+     var(--green-deep) -> var(--tomato)      (sekme hover)
+     var(--green)      -> var(--tomato)      (secili sekme zemini + lead ikonu)
+   `.au-rolenote` kurallari ALINMADI: bu markada rol aciklamasi basilmiyor
+   (`09 §6` — karsiligi olmayan kuralin CSS'i tasinmaz). ---- */
+.au-seg{display:flex;gap:4px;background:var(--bg);border:1px solid var(--line);border-radius:var(--radius-md);padding:4px;margin-bottom:18px}
+/* 3/5 — hesap türü sekmesi: `min-height:44px`.
+   ⚠ `text-decoration:none` BU MARKADA FAZLADAN VAR VE KALIR: burada köprü
+   AYNI sınıfı taşıyan bir `<a>`dir (kaynakta köprü ayrı bir sınıfta), yani
+   kural burada karşılığı olan bir iş yapıyor. */
+.au-seg-btn{flex:1;min-height:44px;font-family:inherit;font-weight:700;font-size:13px;color:var(--muted);background:transparent;border:none;border-radius:var(--radius-sm);padding:9px 14px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:7px;transition:.2s var(--ease);text-decoration:none}
+.au-seg-btn:hover{color:var(--tomato)}
+.au-seg-btn.active{background:var(--tomato);color:#fff}
+.au-seg-btn.active i{color:#fff}
+.au-seg-btn i{font-size:12px}
+.au-rseg{margin-bottom:8px}
+/* ---- segmentin İÇİNDEKİ KÖPRÜ (`au-seg-link` + `au-seg-go`) ----
+   🔴 OK SÜS DEĞİL, BİLGİ. İkinci sekme bir form modu değil: başka bir sayfaya
+   gidiyor (`gourmet.isletme.ekle` — işletme hesabı kendi kendine açılmaz,
+   başvurudan geçer; gerekçenin tamamı `App\Support\HesapTuru` docblock'unda).
+   Ok, kutunun kardeşiyle aynı görünüp farklı davranmasını kullanıcıya söyler.
+
+   Kaynak: tasarım kaynağı mockup'ın aynı iki kuralı. Kutu (`.au-seg-btn`)
+   PAYLAŞILIR, farkı yalnız link davranışı ve ok.
+
+   ═══ İKAME — dosyanın kendi tablosunun biçiminde ═══
+   mockup                          bu projede              kaynak
+   :hover{color:var(--<mockup>)}    var(--tomato)           gourmet.css:81
+   :hover{background:rgba(0,157,79,.08)}  rgba(116,41,130,.08)
+                                   ← `--tomato` (#742982 = rgb(116,41,130))
+                                     .08 alfa MOCKUP'IN kendi değeri; bu dosya
+                                     aynı ikameyi zaten iki yerde yapıyor
+                                     (.12 odak halkası :97 · .10 hata :383).
+                                     Yeni renk ÜRETİLMEDİ. */
+.au-seg-link{text-decoration:none}
+.au-seg-link:hover{color:var(--tomato);background:rgba(116,41,130,.08)}
+.au-seg-go{font-size:11px;opacity:.75;transition:transform .2s var(--ease)}
+.au-seg-link:hover .au-seg-go{transform:translateX(3px)}
+
+/* 🔴 SEGMENT JS'SIZ CALISIR — mockup `<button>` + JS kullaniyor, burada
+   `<label>` + gizli radyo, kopru modunda duz `<a>`. Gerekce: deger formla
+   POST edilmeli ve secim JS kapaliyken de tutmali. */
+.au-seg-btn input{position:absolute;opacity:0;pointer-events:none}
+.au-seg-btn:has(input:checked){background:var(--tomato);color:#fff}
+.au-seg-btn:has(input:checked) i{color:#fff}
+.au-rseg-lead{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);font-weight:600;margin:0 0 16px}
+.au-rseg-lead i{color:var(--tomato);font-size:12px}
+
+/* ===================== TABLET (<=1024px) ===================== */
+@media (max-width:1024px){
+  .au-layout{grid-template-columns:1fr;gap:20px}
+  .au-card{order:1;padding:28px 26px 30px}
+  .au-visual{order:2;height:auto;min-height:0;padding:30px 28px}
+  .au-visual h2{font-size:29px}
+  .au-perks{display:none}
+}
+
+/* ===================== MOBIL (<=640px) ===================== */
+@media (max-width:640px){
+  .au-top{padding-bottom:50px}
+  .au-card{padding:22px 18px 26px;border-radius:var(--radius-lg)}
+  .au-head h1{font-size:22px}
+  .au-visual{padding:24px 20px;border-radius:var(--radius-lg)}
+  .au-visual h2{font-size:24px}
+  .au-stats{gap:22px;margin-top:18px;padding-top:16px}
+  .au-stats .st b{font-size:21px}
+  .au-row{flex-wrap:wrap;gap:10px}
+}
+
+/* =====================================================================
+   BLOK 5 — ÜLKE KODLU TELEFON (`.fk-tel` / `.fk-cc*`)
+   Kaynak: Beyar'ın tasarım kaynağı, ortak kabuk CSS'i §C
+   =====================================================================
+
+   🔴 BU BLOK ÖNCEDEN BİLEREK ALINMAMIŞTI. Bu dosyanın BLOK 4 "ALINMAYAN"
+   listesi şunu yazıyordu:
+       `.fk-tel` / `.fk-tel-cc` → Beyar: telefonla giriş KURULMAYACAK
+                                  (SMS altyapısı yok).
+   O satır ARTIK GEÇERSİZDİR. Beyar kararı (2026-08-31): kimlik ekranları
+   prototiple ARAYÜZ OLARAK BİREBİR olacak; *"backend karşılığı olmayan
+   alanlar da arayüzde yer alacak, arka uç sonra eklenecek."*
+
+   ⚠ SMS/OTP HÂLÂ YOK — değişen şey ARAYÜZ kararıdır, altyapı değil. Alan
+   numarayı toplar, sahipliğini doğrulamaz. Kolonlar
+   `2026_08_31_100000_add_phone_to_users_table`ta açıldı.
+
+   VERİ VE DAVRANIŞ BURADA DEĞİL: `ulke-v1.js`. Bu blok yalnız görünümdür.
+
+   ═══ İKAME — dosyanın kendi tablosunun biçiminde ═══
+   kaynak                       bu projede        gerekçe
+   var(--fit)                   var(--tomato)     BLOK 4 ikame tablosu
+   var(--fit-tint)              var(--tomato-tint)  gourmet.css `--tomato-tint`
+   var(--fit-deep)              var(--tomato-deep)  gourmet.css `--tomato-deep`
+   Kalan her ölçü (96px · 104px · 44px · 264px · 6px) KAYNAĞINKİDİR —
+   yeni değer üretilmedi.
+   ===================================================================== */
+.fk-tel{position:relative}
+.fk-tel .fk-input{padding-left:104px}
+
+/* `top/bottom:0` KAYNAĞIN KENDİ ÖLÇÜMÜ: `1px` içeriden oturunca düğme
+   96×43 çıkıyor (alan 45px) ve dokunma hedefi 1px eksik kalıyordu
+   (WCAG 2.5.5). Kenardan kenara oturunca 96×45. */
+.fk-cc{
+  position:absolute;left:1px;top:0;bottom:0;width:96px;z-index:2;
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  font-family:inherit;font-size:13px;font-weight:700;color:var(--slate);
+  background:var(--bg-cream);border:0;border-right:1px solid var(--line);
+  border-radius:var(--radius-md) 0 0 var(--radius-md);cursor:pointer;
+  transition:background .2s var(--ease);
+}
+.fk-cc:hover{background:var(--tomato-tint)}
+.fk-cc:focus-visible{outline:3px solid var(--tomato);outline-offset:-3px}
+.fk-cc-flag{font-size:16px;line-height:1}
+.fk-cc i{font-size:10px;color:var(--muted);transition:transform .2s var(--ease)}
+.fk-cc[aria-expanded="true"] i{transform:rotate(180deg)}
+
+.fk-cc-pop{
+  position:absolute;top:calc(100% + 6px);left:0;z-index:60;width:min(360px,100%);
+  background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-md);
+  box-shadow:var(--sh-lg);overflow:hidden;
+}
+/* Kural AÇIKÇA yazılır: `.fk-cc-pop` kendi `display`ini bildirmediği için
+   bugün tarayıcının `[hidden]` kuralı geçiyor — ama bir gün bu seçiciye
+   `display` eklenirse açılır sessizce AÇIK kalırdı. */
+.fk-cc-pop[hidden]{display:none}
+
+.fk-cc-search{display:flex;align-items:center;gap:9px;padding:10px 12px;border-bottom:1px solid var(--line)}
+.fk-cc-search i{color:var(--muted);font-size:12.5px;flex:none}
+.fk-cc-search input{flex:1;min-width:0;border:0;background:transparent;font-family:inherit;font-size:14px;font-weight:500;color:var(--slate);padding:4px 0}
+.fk-cc-search input:focus{outline:none}
+/* Kaynağın kendi kontrast düzeltmesi: `#a7a7a7` 2.28:1'de kalıyordu. */
+.fk-cc-search input::placeholder{color:#6f6f6f}
+
+.fk-cc-list{list-style:none;margin:0;padding:6px;max-height:264px;overflow-y:auto}
+/* satır en az 44px (WCAG 2.5.5) — kaynağın ölçüsü */
+.fk-cc-list li{display:flex;align-items:center;gap:11px;padding:0 10px;min-height:44px;border-radius:var(--radius-sm);font-size:14px;font-weight:500;color:var(--slate);cursor:pointer}
+.fk-cc-list li .bay{font-size:17px;line-height:1;flex:none}
+.fk-cc-list li .ad{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fk-cc-list li .kod{color:var(--slate-2);font-weight:700;font-size:13px;flex:none}
+.fk-cc-list li:hover,.fk-cc-list li.on{background:var(--tomato-tint)}
+.fk-cc-list li[aria-selected="true"]{font-weight:700}
+.fk-cc-list li[aria-selected="true"] .kod{color:var(--tomato-deep)}
+/* Boş durum: liste boşalınca "Eşleşen ülke yok." görünür — `hidden`ı
+   `ulke-v1.js` sürer, blade değil. */
+.fk-cc-bos{padding:18px 14px;font-size:13.5px;color:var(--slate-2);font-weight:500;text-align:center}
+
+/* =====================================================================
+   BLOK 6 — ONAY GRUBU İNCE VARYANTI (`.ol-consents-min`)
+   Kaynak: Beyar'ın tasarım kaynağı, R15 sadeleştirmesi
+   =====================================================================
+
+   Taban `.ol-consents` bu dosyada ZATEN vardı (BLOK 3) ama hiçbir şeye
+   tutunmuyordu — `kayit.blade.php` iki onay `<label>`ını çıplak basıyordu.
+   A7 sarmalı geri koydu; bu blok da kaynağın ince varyantını getiriyor.
+
+   Kaynağın kendi şerhi: sadeleşen BİÇİMDİR, metin değil — tipografi
+   12.5px/500, kutucuk 20 → 16px. DOKUNMA HEDEFİ DÜŞMEZ çünkü tıklanan şey
+   `<label>`ın kendisidir ve satır 44px taşır (WCAG 2.5.8).
+
+   ⚠ ÖZGÜLLÜK — kaynağın ölçtüğü tuzak aynen geçerli: `.au-card .fb-kvkk
+   input[type="checkbox"]{width:20px;height:20px}` (BLOK 7) aynı ağırlıkta
+   (0,3,1). Bu yüzden kutucuk kuralı `.au-card` ile bir kademe yükseltildi
+   (0,4,1); `!important` gerekmedi.
+
+   ═══ İKAME ═══
+   kaynak                bu projede           gerekçe
+   var(--fit-deep)       var(--tomato-deep)   BLOK 4 ikame tablosu
+   accent-color:--fit    var(--tomato)        aynı
+   var(--au-danger)      var(--tomato)        🔴 `--au-danger` BU DEPODA YOK
+                                              (ölçüldü, 0 sonuç). Bu ailenin
+                                              hata/zorunluluk rengi zaten
+                                              `--tomato`dur — `.fk-label .req`
+                                              (:88) ve `.fk-error` (:485) ikisi
+                                              de o token'ı kullanıyor. Yeni
+                                              renk üretilmedi.
+   ===================================================================== */
+.ol-consents-min .fb-kvkk{font-size:12.5px;font-weight:500;color:var(--slate-2);line-height:1.5}
+.ol-consents-min .fb-kvkk a{font-weight:700;color:var(--tomato-deep)}
+.ol-consents-min .fb-kvkk .req{margin-left:3px}
+.ol-consents .req{color:var(--tomato);font-weight:700}
+.au-card .ol-consents-min .fb-kvkk{min-height:44px;padding:2px 0}
+.au-card .ol-consents-min .fb-kvkk input[type="checkbox"]{
+  width:16px;height:16px;flex:none;margin-top:2px;accent-color:var(--tomato);cursor:pointer;
+}
+
+/* =====================================================================
+   BLOK 7 — ERİŞİLEBİLİRLİK KATMANI (A10)
+   Kaynak: Beyar'ın tasarım kaynağı, "ERİŞİLEBİLİRLİK KATMANI" bloğu
+   =====================================================================
+
+   Kaynağın bu ailesi YARIM ALINMIŞTI. Ölçüldü (2026-08-31): dört kural
+   zaten buradaydı — `.pf-tabs .dt` 44px (:223) · `.au-forgot` 44px (:425) ·
+   `.au-alt button,.au-alt a` 44px (:466) · `.au-back` 44px (:467) — ama
+   ONAY KUTULARI, SOSYAL BUTONLAR ve KLAVYE ODAK HALKASI eksikti.
+
+   Onay kutusunun boyutu bu dosyada HİÇ tanımlı değildi: taban kural
+   `resources/css/gourmet.css:1234-1236` ve orada kutucuğa ölçü VERİLMİYOR,
+   yani tarayıcı varsayılanı (~13px) basılıyordu — 44px hedefin çok altında.
+
+   🔴 İKİ SEÇİCİ KAYNAKTAN AYNEN ALINAMADI — ve bu, bu dosyanın kendi
+   kayıtlı dersinin (`au-alt button` → `au-alt a`, :450-460) aynısıdır:
+
+     1. `.au-alt button:focus-visible` → bu markanın markup'ı `<a>` kullanıyor
+        (`giris.blade.php` · `kayit.blade.php`). Seçici çifte çevrildi.
+
+     2. `.au-seg-btn:focus-visible` → bu markanın segmenti JS'siz çalışsın
+        diye `<label>` + GİZLİ RADYO. `<label>` odak ALMAZ; odağı radyo alır.
+        Kural birebir kopyalansaydı HİÇBİR ZAMAN tetiklenmezdi — kuralsız
+        sınıfın tersi: sınıfsız kural. Bu yüzden `:has(input:focus-visible)`.
+        ⚠ Aynı dosya `.au-seg-btn:has(input:checked)`i zaten kullanıyor
+        (:315), yani `:has()` bu ekranların yerleşmiş deseni.
+
+   ⚠ `html.reduce-motion` KURALI ALINMADI: o sınıfı basan bir kabuk
+   ("Hareketi azalt" tercihi) bu depoda YOK (ölçüldü, 0 sonuç). Kuralı
+   taşımak `au-remember`ın aynısını üretirdi. Medya sorgusu alındı —
+   tarayıcı tercihi her yerde çalışır.
+
+   Ölçüler kaynağınkidir (44px · 20px · 3px halka · 2px offset · 5px pay);
+   renk `--tomato` (BLOK 4 ikame tablosu).
+   ===================================================================== */
+
+/* ---- onay kutuları: satır 44px, kutucuk 20px ---- */
+.au-card .fb-kvkk{min-height:44px;align-items:center}
+.au-card .fb-kvkk input[type="checkbox"]{width:20px;height:20px;margin-top:0;flex:none}
+/* Onay GRUBUNDA metin iki satıra çıkabilir → kutucuk yukarı hizalanır. */
+.au-card .ol-consents .fb-kvkk{align-items:flex-start;padding:4px 0}
+.au-card .ol-consents .fb-kvkk input[type="checkbox"]{margin-top:1px}
+
+/* ---- cümle içi yasal bağlantılar: satır arasında kalmaları gerektiği için
+        inline bırakıldı; dikey padding tıklama alanını büyütür
+        (WCAG 2.5.8 satır içi bağlantı istisnası). ---- */
+.ol-consents a{padding:5px 0}
+
+/* ---- klavye odak halkası ---- */
+.au-forgot:focus-visible,
+.au-alt a:focus-visible,
+.au-alt button:focus-visible,
+.au-back:focus-visible,
+.fk-eye:focus-visible,
+.soc-btn:focus-visible,
+.au-seg-btn:has(input:focus-visible){
+  outline:3px solid var(--tomato);outline-offset:2px;border-radius:var(--radius-sm);
+}
+
+/* ---- hareketi azalt: pane ve hata bandının girişi kapanır ---- */
+@media (prefers-reduced-motion:reduce){
+  .au-pane,.sbanner{animation:none}
+}

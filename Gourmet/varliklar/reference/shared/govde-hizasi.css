@@ -1,0 +1,177 @@
+/* =====================================================================
+   GÖVDE METNİ HİZASI — İKİ YANA YASLAMA, TEK KAYNAK
+   =====================================================================
+
+   Beyar kararı 2026-08-17: gövde paragrafı iki yana yaslıdır. Bu dosya o
+   kararın BU MARKADAKİ tek kaynağıdır.
+
+   🔴 NEDEN AYRI BİR DOSYA VE NEDEN EN SONDA YÜKLENİR
+
+   Karar bu projede TEK YERDE değil, DOKUZ AYRI sayfa CSS'inde duruyordu
+   (ölçüldü, 2026-08-20 — `grep -rn "text-align *: *justify"`):
+
+     public/reference/gourmet-yasal/gourmet-yasal.css:41   .prose__body p
+     public/reference/sss/sss.css:30                       .lh-main .lead p
+     public/reference/sss/sss.css:83                       .qa-body p
+     public/reference/hakkimizda/hakkimizda.css:42         .lst-hero .lead p
+     public/reference/iletisim/iletisim.css:114            .con-intro .lead p
+     public/reference/gourmet-hesap/hesap.css:542          .pf-bio
+     public/reference/gourmet-mekan-detay/mekan-detay.css:1032   .md-about > …
+     public/reference/gourmet-etkinlikler/etkinlik-detay.css:295 .evd-about > …
+     public/reference/gurme-lezzetler/gurme-lezzetler.css:1115   .art-col > …
+
+   O dokuz dosya REFERANSTAN BAYT KOPYADIR ve `09 §2` md.1 gereği yeniden
+   yazılmaz. Bu yüzden karar onlardan SÖKÜLMEDİ; üstlerine TEK bir kaynak
+   kondu. Dosya kabuğun en sonunda yüklenir ve seçicileri `#pageMain` ile
+   başlar — yani özgüllüğü (1,x,y), sayfa kurallarının hepsinden yüksektir.
+   Sonuç: kırılım, aile listesi ve aç/kapa TEK yerden yönetilir; sayfa
+   CSS'lerine bir daha dokunulmaz.
+
+   ⚠ ÖZGÜLLÜK `:where()` DEĞİL `#pageMain` — bilerek. Kardeş marka
+   `:where(#pageMain)` kullanıp özgüllüğü sıfırlıyor, çünkü orada kural
+   BÜTÜN `<p>`lere varsayılan kuruyor ve sayfanın kendi hizası kazanmalı.
+   Burada kural bütün `<p>`lere değil, ADI GEÇEN AİLELERE uygulanıyor;
+   listelenen aile zaten bilinçli seçilmiş, dolayısıyla kazanması GEREKİR —
+   aksi hâlde bu dosya sayfa kurallarını mobilde KAPATAMAZDI.
+
+   =====================================================================
+   KAPSAM — YALNIZ UZUN PARAGRAF
+   =====================================================================
+
+   Kart içi, buton, etiket, tablo hücresi, form yardım metni ve kısa
+   metinler KAPSAM DIŞIDIR. Bu bir tercih değil ölçüm sonucudur; dar ölçüde
+   justify kelime aralarını görünür biçimde açar. 1440px'te ölçülen
+   kart aileleri (`scripts/gourmet-hiza-tarama.mjs`):
+
+     .disc-card-link p   375px ölçü   medyan 2,08x   (51 paragraf)
+     .disc-card p        375px        medyan 2,67x
+     .val-card p         323px        medyan 2,16x
+     .rv-card .rv-scope  329px        medyan 2,02x
+
+   Hepsi yaslı DEĞİL ve yaslı YAPILMADI — listede yokturlar.
+
+   =====================================================================
+   EKSİK KALMIŞ TEK AİLE — `.seo-prose > p`
+   =====================================================================
+
+   Tarama (24 public adres × 1440/768/390) uzun paragraf taşıyıp yaslı
+   OLMAYAN tek gerçek gövde ailesini buldu:
+
+     .seo-prose > p   702px ölçü   1440'ta medyan 1,89x   /hakkimizda · /basin-medya
+
+   Ölçüsü ve esneme oranı, ZATEN yaslı olan `.prose__body p` (788px, 1,58x)
+   ve `.md-about > p` (772px, 1,43x) ile aynı bantta. Kurumsal sayfaların
+   asıl gövde nesri buydu ve karar ona hiç uygulanmamıştı. Listeye eklendi.
+
+   ⚠ `.art-quote > p` (677px, 1,62x) BİLEREK DIŞARIDA: alıntı bloğudur,
+   `.seo-prose`un çocuğu değil torunudur ve `> p` birleştiricisi onu zaten
+   elemektedir — sayfa CSS'lerindeki `.art-col > p` deseninin aynısı.
+
+   🔴 BU EKSİK "LİSTE EKSİK KALDI"NIN KENDİSİDİR. Kardeş marka turunda
+   ölçülen ders aynen geçerli: *bir istisna listesi, listelediği şeye göre
+   değil, listenin YAZILDIĞI ANA göre eksik kalır.* `.seo-prose` kurumsal
+   sayfa turunda doğdu, dokuz sayfa kuralının hiçbiri ona bakmadı ve kimse
+   listeye geri dönmedi. Bu turda çözüm listeyi uzatmak DEĞİL, listenin
+   eksik kalmasını GÜRÜLTÜLÜ hâle getirmek oldu:
+   `tests/Feature/Kurumsal/GovdeHizasiTest.php` yeni bir uzun-paragraf
+   ailesi sınıflandırılmadan doğduğunda KIRMIZI düşer.
+
+   =====================================================================
+   🔴 MOBİLDE KAPALI — ÖLÇÜM, TERCİH DEĞİL
+   =====================================================================
+
+   Beyar'ın sorusu: *"Türkçe'de justify kelime aralarını açar, dar ekranda
+   çirkin boşluk oluşuyor mu ÖLÇ."* Ölçüldü — oluşuyor.
+
+   Yaslı ailelerin MEDYAN esneme oranı, genişliğe göre
+   (`scripts/gourmet-hiza-tarama.mjs`, canlı gövde):
+
+     genişlik   .prose__body   .md-about   .lead   .evd-program   .qa-body
+       1440         1,58x        1,43x     1,66x      1,64x        3,59x
+        768         1,43x        1,53x     1,66x      1,62x        4,44x
+        640         1,73x        1,80x     2,64x      2,26x        4,31x
+        480         2,43x        1,90x     1,85x      3,49x        5,16x
+        390         2,84x        2,30x     1,89x      1,08x        6,86x
+
+   DİZ 768 İLE 640 ARASINDA. 768'de her aile 1,66x'in altında; 640'ta iki
+   aile birden 2,26x ve 2,64x'e sıçrıyor. Kırılım bu yüzden **767px**tir —
+   yuvarlak bir sayı değil, ölçülen dizin kendisi.
+
+   Eklenen piksel (kelime arası başına), 390px'te:
+     .qa-body p       medyan +20,52px   tepe +37,24px
+     .prose__body p   medyan  +7,35px   tepe +35,50px
+
+   +20px'lik bir kelime arası okunabilirliği bozar; karar mobilde KAPANIR.
+   TR/EN ayrımı yapılmaz — esneme dilin değil ÖLÇÜNÜN sonucudur.
+
+   =====================================================================
+   🔴 `.qa-body p` — HER GENİŞLİKTE KAPALI (Beyar kararı, 2026-08-20)
+   =====================================================================
+
+   SSS cevapları yaslı nüfusun HER genişlikte dışında:
+
+     genişlik   1440    768     640     480     390
+     medyan     3,59x   4,44x   4,31x   5,16x   6,86x
+     tepe       4,23x   4,86x   4,67x   6,04x  11,64x
+
+   Yaslı kalan ailelerin bandı 1,43x-1,66x; `.qa-body p` masaüstünde bile
+   iki katından fazla esniyor. 390px'te kelime arası başına +20,52px medyan.
+
+   SEBEBİ ÖLÇÜLDÜ — CEVAPLAR KISA. 1440px'te 9 paragrafın ürettiği esneyen
+   satır toplamı yalnız **3**; çoğu paragraf TEK SATIR ve tek satır zaten
+   yaslanmaz. Az sayıda satırın biri kısa düşünce medyanı tek başına
+   yukarı çekiyor. Yani bu aile `09 §2` md.4'ün *"justify yalnız uzun
+   paragraf içindir"* tanımının dışında: kısa metin.
+
+   Bu yüzden aile listesinde DEĞİL; aşağıda AÇIKÇA `start`a çekilir —
+   `sss.css:83` referanstan bayt kopyadır ve sökülmez, üzerine yazılır.
+
+   ⚠ BU REFERANSTAN BİLİNÇLİ SAPMADIR (`09 §2` md.4-5) ve Beyar onayıyla
+   girdi. Kayıt: `docs/parite/govde-hizasi-sapma.md`.
+   ===================================================================== */
+
+:root {
+    /* Kararın TEK anahtarı. Kırılım bunu çevirir; aile listesi değişmez. */
+    --tx-body-align: justify;
+}
+
+@media (max-width: 767px) {
+    :root {
+        --tx-body-align: start;
+    }
+}
+
+#pageMain :is(
+    .prose__body p,
+    .lh-main .lead p,
+    .con-intro .lead p,
+    .lst-hero .lead p,
+    .pf-bio,
+    .md-about > p,
+    .md-about > ul > li,
+    .md-about > ol > li,
+    .evd-about > p,
+    .evd-about > ul > li,
+    .evd-about > ol > li,
+    .evd-program > p,
+    .art-col > p,
+    .art-col > ul > li,
+    .art-col > ol > li,
+    .art-lead,
+    .seo-prose > p,
+    .seo-prose > ul > li,
+    .seo-prose > ol > li
+) {
+    text-align: var(--tx-body-align);
+    text-justify: inter-word;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+    overflow-wrap: break-word;
+}
+
+/* 🔴 KISA METİN — HER GENİŞLİKTE YASLI DEĞİL. Gerekçe ve ölçüm yukarıda.
+   Token OKUNMAZ: bu aile mobilde değil, HER YERDE kapalıdır; token'a
+   bağlansaydı masaüstünde geri açılırdı. */
+#pageMain .qa-body p {
+    text-align: start;
+}
