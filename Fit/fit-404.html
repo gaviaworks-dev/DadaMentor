@@ -19113,13 +19113,29 @@ body{ background:var(--zemin); font-family:var(--yuz); }
   /* çekmece · perde · alt kalem — `max-height` ile açılır (§64 şerhi:
      `display` ile açmak geçişi öldürür) */
   var hb=d.getElementById('hamburger'), dr=d.getElementById('drawer'), dro=d.getElementById('drawerOverlay');
-  function drKapa(){ if(!dr)return; dr.classList.remove('open','acik');
-    if(dro)dro.classList.remove('open','acik'); d.body.style.overflow=''; }
+  /* 🔴 ODAK ÇEKMECEYE GİRER — ÖLÇÜLDÜ 2026-09-04, @390, 64 sayfa.
+     Çekmece 64/64 açılıyor, örtü 64/64, gövde kilidi 64/64, ESC 64/64 —
+     ama odak yalnız 42 sayfada içeri giriyordu. Giren 42'nin hepsi
+     `assets/js/fit-shell.js` yükleyen YÜZEY sayfası (`focusIn`, satır
+     2188); girmeyen 22'nin hepsi bu satır içi kabuğu taşıyan KANON
+     ekranı. Yani kusur bir sayfanın değil, İKİ KABUK ARASINDAKİ FARKIN
+     kusuru: klavye kullanıcısı çekmeceyi açıyor, odak hamburgerde
+     kalıyor ve Tab arkadaki sayfada geziyor.
+     Davranış uydurulmadı — yüzey kabuğunun kendi davranışı yazıldı:
+     açılışta çekmecenin ilk odaklanabiliri, kapanışta hamburger. */
+  function drOdak(){ if(!dr)return;
+    var i=dr.querySelector('a[href],button:not([disabled]),input:not([disabled]),select,[tabindex]:not([tabindex="-1"])');
+    if(i) i.focus(); }
+  function drKapa(){ if(!dr)return; var acikti=dr.classList.contains('open');
+    dr.classList.remove('open','acik');
+    if(dro)dro.classList.remove('open','acik'); d.body.style.overflow='';
+    if(acikti && hb && dr.contains(d.activeElement)) hb.focus(); }
   if(hb&&dr){ hb.addEventListener('click',function(){
       var a=!dr.classList.contains('open');
       dr.classList.toggle('open',a); dr.classList.toggle('acik',a);
       if(dro){dro.classList.toggle('open',a); dro.classList.toggle('acik',a);}
-      d.body.style.overflow=a?'hidden':''; }); }
+      d.body.style.overflow=a?'hidden':'';
+      if(a) requestAnimationFrame(drOdak); }); }
   if(dro)dro.addEventListener('click',drKapa);
   d.querySelectorAll('.drawer-close').forEach(function(x){ x.addEventListener('click',drKapa); });
   d.querySelectorAll('.d-toggle').forEach(function(t){

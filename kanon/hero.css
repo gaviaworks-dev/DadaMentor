@@ -110,6 +110,9 @@
   :root{
     --banner-h-liste:587px;
     --banner-h-detay:726px;   /* yasal buna bağlı (--banner-h-yasal) */
+    /* Kırıntı ofsetinin mobil karşılığı — 45 banner sayfasının ORTAK
+       ölçüsü (@390). Uydurulmadı, sayıldı. */
+    --banner-crumb-ofset:96px;
   }
 }
 
@@ -122,12 +125,64 @@
       kırıntı satırın BAŞINA çekilir (`order:-1`), yatayda sola yaslanır.
    ⚠ Yeni ofset uydurulmadı; 128px referansın kendi değeri ve zaten
      30 sayfanın ortak ölçüsü. */
-:where(body[data-fit-hero-kind]) .lib-top > .wrap{
-  display:flex; flex-direction:column; align-items:stretch;
+
+/* 🔴 KURAL YALNIZ `.lib-top`A İNİYORDU — GENİŞLETİLDİ, 2026-09-04.
+   ÖLÇÜLDÜ (64 sayfa, iki genişlik): kırıntı ofseti banner ailesinde
+   45 sayfada 128/96, BİR sayfada sapıyordu:
+       fit-antrenor-ol (`section.ol-top`)   @1440 152.3   @390 126.1
+   Kök: `.ol-top` bu kuralın seçicisine girmiyordu; kırıntısı akışta
+   (`position:static`) kalıyor ve `.wrap`ın üstünden 24.3 / 49.1 px
+   aşağı düşüyordu. Kardeşlerinde (`lib-top` · `bant`) kırıntı `.wrap`ın
+   üstüne raptiyeli.
+   AİLE LİSTESİ UYDURULMADI — kabuğun KENDİ banner bildirimidir
+   (`fit-shell.js` · OVER_MODE seçicisi: `.lib-top, .cp-top, .kp-top,
+   .chl-hero, .pd-hero, .fs-top, .ol-top, .ed-top`), üstüne bu üç ekran
+   ailesi eklendi: `.bant` (7 hata/durum sayfası) · `.arama-hero` ·
+   `.giris-hero` — üçü de zaten 128/96'da, yani onlar için BAYT-NÖTR.
+   ⚠ Profil kimlik bandı (`.kimlik-bant` · `.fp-profil` · `.pf-top`)
+     LİSTEYE ALINMADI: ayrı bileşen, kendi ofseti 113/63 ve 15 sayfada
+     tutarlı (ölçüldü). Onu bu kurala sokmak bileşen kararıdır. */
+/* 🔴 KIRINTI OFSETİ ARTIK TOKENA BAĞLI — 2026-09-04.
+   `--banner-crumb-ofset` dosyanın ilk sürümünde tanımlıydı ama HİÇBİR
+   kural onu okumuyordu; ofset her sayfanın kendi `padding-top`undan
+   kazara doğuyordu. Ölçüldü: aile 45 sayfada 128/96'da buluşuyor, İKİ
+   sayfa kendi ölçüsünde kalıyordu —
+       fit-antrenor-ol (`.ol-top`)     @390 padding-top 77
+       fit-giris       (`.giris-hero`) @390 padding-top 74
+   Değer UYDURULMADI: 128 ve 96 ailenin kendi ortak ölçüleri (45 sayfa).
+   45 sayfa için BAYT-NÖTR; yalnız iki sapan sayfa aileye oturuyor.
+   ⚠ `padding-top` yazılıyor, `top` değil: kırıntı `.wrap`a raptiyeli ve
+     `.wrap`ın üstü hero'nun üst dolgusudur — ofseti orada tutmak, iki
+     kolonun da aynı çizgiden başlamasını korur. */
+:where(body[data-fit-hero-kind])
+  :is(.lib-top,.bant,.cp-top,.kp-top,.chl-hero,.pd-hero,.fs-top,.ol-top,.ed-top,.arama-hero,.giris-hero){
+  padding-top:var(--banner-crumb-ofset, 128px);
 }
-:where(body[data-fit-hero-kind]) .lib-top > .wrap > [class*="crumb"]{
+:where(body[data-fit-hero-kind])
+  :is(.lib-top,.bant,.cp-top,.kp-top,.chl-hero,.pd-hero,.fs-top,.ol-top,.ed-top,.arama-hero,.giris-hero) > .wrap{
+  display:flex; flex-direction:column; align-items:stretch;
+  position:relative;
+}
+:where(body[data-fit-hero-kind])
+  :is(.lib-top,.bant,.cp-top,.kp-top,.chl-hero,.pd-hero,.fs-top,.ol-top,.ed-top,.arama-hero,.giris-hero) > .wrap
+  > :is([class*="crumb"],[class*="kirinti"]){
   order:-1; align-self:flex-start; width:auto; flex:none;
-  margin-right:auto;
+  margin-right:auto; margin-top:0;
+  /* 🔴 `.wrap`ın ÜST kenarına raptiye. `order:-1` tek başına yetmedi —
+     ölçüldü: `.ol-top`un `.wrap`ı `justify-content:center` taşıyor ve
+     kolonu dikeyde ortalıyor, kırıntı satırın BAŞINDA olduğu hâlde
+     24.3px (@1440) / 49.1px (@390) aşağı düşüyordu. Sütun akışında
+     "en üstte" olmak yeterli değil; kap ortalıyorsa baş da kayar.
+     Mutlak yerleşim BU AİLENİN KENDİ MEKANİZMASIDIR, icat değil:
+     `.lib-crumb` (28 sayfa) ve `.bant .kirinti` (7 sayfa) zaten
+     `position:absolute; top:0` ile duruyor — kural yalnız aynı
+     davranışı ailenin kalanına yayıyor.
+     🔴 `left` YAZILMAZ. İlk denemede `left:0` yazdım ve 47 sayfada
+     kırıntı 32px SOLA kaydı (@1440 132→100, @390 16→0): `.wrap`ın
+     yatay dolgusu kayboldu, "sol üst" şartı bozuldu. `left:auto`
+     bırakılınca kutu YATAYDA statik konumunda kalır — yani kırıntı
+     kolonun kendi sol kenarında durur, dikeyde raptiyelenir. */
+  position:absolute; top:0;
 }
 /* Kaydet düğmesi gibi mutlak yerleşimli süsler kırıntıyı İTMEZ. */
 :where(body[data-fit-hero-kind]) .lib-top > .wrap > .kyt-btn{

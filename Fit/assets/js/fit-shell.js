@@ -225,9 +225,24 @@ var BOTTOM = [
        BOŞ YUVA bırakıyordu (Beyar canlı ekranda gördü; ölçüldü: 44 sayfada
        görünür kalem 4/5). Rol tablosunda boş yuva yok. */
   {label:'Hareketler',     href:'egzersiz-kutuphane-v1.html', icon:'fa-solid fa-person-running', match:['egzersiz-kutuphane-v1','egzersiz-detay-v1','hareket-rehberi-v1','hareket-yeni-baslayanlar-v1','hareket-dogru-form-v1','hareket-sureye-gore-v1','hareket-hedefe-gore-v1','hareket-bolgeye-gore-v1','hareket-masa-basi-v1','hareket-isinma-soguma-v1','hareket-sozluk-v1','sozluk-v1','sozluk-detay-v1','anatomi-v1','antrenman-olusturucu-v1']},
-  {label:'Programını Bul', href:'programini-bul-v1.html', icon:'fa-solid fa-wand-magic-sparkles', center:true, match:['programini-bul-v1','programlar-merkezi-v1','program-liste-v1','program-detay-v1','challenge-merkezi-v1','challenge-v1']},
+  /* 🔴 ALAN = NAV'IN KENDİ MATCH DİZİLERİNİN BİRLEŞİMİ, uydurma değil.
+     poz 3 üst menüde ÜÇ kaleme karşılık geliyor ve üçünün de `match`i
+     yukarıda yazılı: `programlar` (7 slug) · `challenge` (2) ·
+     `antrenorler` (3). Footer da aynı üçünü TEK kolonda topluyor
+     ("Programlar ve Uzman Desteği"). Eksik olan yalnız fit testleri ve
+     antrenör sayfalarıydı; ikisi de o kolonun kalemi. */
+  {label:'Programını Bul', href:'programini-bul-v1.html', icon:'fa-solid fa-wand-magic-sparkles', center:true, match:['programini-bul-v1','programlar-merkezi-v1','program-liste-v1','program-detay-v1','fit-testleri-v1','fit-testi-detay-v1','fit-testi-sonuc-v1','challenge-merkezi-v1','challenge-v1','antrenorler-v1','antrenor-detay-v1','antrenor-ol-v1']},
   {label:'Programlarım',   href:'fit-programlarim.html', icon:'fa-solid fa-list-check', match:['programlarim-v1','fit-programlarim','fit-egzersizlerim','fit-challengelarim','fit-rozetlerim','bagli-uygulamalar-v1','fit-planim-veri-izin-v1']},
-  {label:'Profil',         href:'fit-hesabim.html', icon:'fa-solid fa-user', id:'bnAccount'}
+  /* 🔴 poz 5'in `match`i YOKTU — kalem HİÇBİR sayfada yanmıyordu
+     (ölçüldü 2026-09-04: 65 sayfada Profil aktif 0). Alan ACCOUNT
+     menüsünün kendi GRUPLARINDAN okundu: "Hesabım" grubu (Paketlerim ·
+     Ödemelerim · Hesap Ayarları · Çözüm Merkezi) + hesap yüzeyleri.
+     ⚠ "Modüllerim" ve "Gelişimim" grupları poz 4'ün alanıdır (§67.2 rol
+       tablosu: poz 4 KİŞİSEL, poz 5 HESAP) — ikisi karıştırılmaz.
+     ⚠ `bildirimler` ve `mesajlarim-v1` ACCOUNT dizisinde YOK; header
+       yüzeyleri oldukları için hesap alanına bağlandılar. Rapora kalem
+       olarak yazıldı, karar Beyar'ın. */
+  {label:'Profil',         href:'fit-hesabim.html', icon:'fa-solid fa-user', id:'bnAccount', match:['hesabim','profil','paketlerim-v1','odemelerim-v1','destek-v1','destek-talebi-detay','bildirimler','mesajlarim-v1','pro-odeme','pro-odeme-3d-v1']}
 ];
 
 /* ============================================================
