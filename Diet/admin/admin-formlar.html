@@ -1,0 +1,1583 @@
+<!doctype html>
+<html lang="tr"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Formlar &amp; Başvurular · DadaDiet Yönetim</title>
+<link rel="stylesheet" href="../../kanon/tokenlar.css">
+<link rel="stylesheet" href="../../kanon/markalar/diet.css">
+<link rel="stylesheet" href="../../kanon/bilesenler.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body class="yetkili">
+<!-- ═══════════════════════════════════════════════════════════════════
+     DIET ADMIN · KANONİK KABUK — FIT kabuğundan TÜRETİLDİ, elle değiştirilmez
+     ───────────────────────────────────────────────────────────────────
+     Her ekran bu kabuğu BİREBİR taşır. Ekrandan ekrana değişen TEK şey:
+       · aktif menü kaleminde `aktif` sınıfı ve `aria-current="page"`
+       · <title> ve <h1>
+     Kabuk dört markada AYNI; yalnız markalar/<marka>.css değişir.
+
+     🔴 İKONLAR: 33 ortak modülün ikonu FIT kabuğundan BİREBİR alındı —
+        dört markada aynı olmak zorunda. 11 marka modülünün 5'i donörde
+        rol karşılığı olduğu için onun ikonunu taşır (Programlar
+        fa-clipboard-list · Diyetisyenler fa-user-check · Testler
+        fa-clipboard-check · Rehber fa-compass · Hizmetler
+        fa-basket-shopping); kalan 6'sı seçimdir ve raporda bildirilir
+        (Besin Kütüphanesi fa-apple-whole · Hesaplayıcılar fa-calculator
+        · İpuçları fa-lightbulb · Kaç Kalori fa-fire · Püf Noktaları
+        fa-wand-magic-sparkles · Makro Rehberi fa-chart-pie).
+
+     🔴 KABUK DEĞİŞTİRME. Bir eksik görürsen lead'e bildir.
+     ═══════════════════════════════════════════════════════════════════ -->
+
+<!-- ── SOL EKOSİSTEM RAYI ─────────────────────────────────────────── -->
+<aside class="panel-ray" aria-label="Marka rayı">
+  <a class="panel-ray-ikon aktif" href="#" style="--eko:var(--eko-diet)"
+     aria-current="true" title="DadaDiet" aria-label="DadaDiet"><i class="fa-solid fa-leaf"></i></a>
+  <span class="panel-ray-ayrac" role="presentation"></span>
+  <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-gastro)"  title="DadaGastro"  aria-label="DadaGastro"><i class="fa-solid fa-utensils"></i></a>
+  <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-fit)"     title="DadaFit"     aria-label="DadaFit"><i class="fa-solid fa-dumbbell"></i></a>
+  <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-gourmet)" title="DadaGourmet" aria-label="DadaGourmet"><i class="fa-solid fa-wine-glass"></i></a>
+  <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-campus)"  title="DadaCampus"  aria-label="DadaCampus"><i class="fa-solid fa-graduation-cap"></i></a>
+  <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-mentor)"  title="DadaMentor"  aria-label="DadaMentor"><i class="fa-solid fa-compass"></i></a>
+  <span class="panel-ray-ikon kilitli" title="DadaStore — erişimin yok" aria-label="DadaStore, erişim yok"><i class="fa-solid fa-lock"></i></span>
+  <div class="panel-ray-alt">
+    <a class="panel-ray-ikon" href="#" title="Yardım" aria-label="Yardım"><i class="fa-solid fa-circle-question"></i></a>
+  </div>
+</aside>
+
+<!-- ── MODÜL MENÜSÜ · DÖRT KATEGORİ ───────────────────────────────── -->
+<nav class="panel-menu" id="panelMenu" aria-label="Modüller">
+  <div class="panel-menu-bas">
+    <b>DadaDiet</b><span>Yönetim paneli</span>
+  </div>
+  <div class="panel-menu-govde">
+
+    <div class="panel-menu-bolum">01 Genel</div>
+    <a class="panel-menu-link" href="admin-genel-bakis.html"><i class="fa-solid fa-gauge-high"></i>Genel Bakış</a>
+    <a class="panel-menu-link" href="admin-sayfalar.html"><i class="fa-solid fa-file-lines"></i>Sayfalar &amp; SEO</a>
+    <a class="panel-menu-link" href="admin-taksonomi.html"><i class="fa-solid fa-tags"></i>Taksonomi</a>
+    <a class="panel-menu-link" href="admin-medya.html"><i class="fa-solid fa-photo-film"></i>Medya Kütüphanesi</a>
+    <a class="panel-menu-link" href="admin-arama-yonetimi.html"><i class="fa-solid fa-magnifying-glass"></i>Arama Yönetimi</a>
+    <a class="panel-menu-link" href="admin-yonlendirmeler.html"><i class="fa-solid fa-shuffle"></i>Yönlendirmeler</a>
+
+    <div class="panel-menu-bolum">Marka modülleri</div>
+    <a class="panel-menu-link" href="admin-besinler.html"><i class="fa-solid fa-apple-whole"></i>Besin Kütüphanesi</a>
+    <a class="panel-menu-link" href="admin-programlar.html"><i class="fa-solid fa-clipboard-list"></i>Beslenme Programları</a>
+    <a class="panel-menu-link" href="admin-diyetisyenler.html"><i class="fa-solid fa-user-check"></i>Diyetisyenler<span class="sayac">3</span></a>
+    <a class="panel-menu-link" href="admin-testler.html"><i class="fa-solid fa-clipboard-check"></i>Beslenme Testleri</a>
+    <a class="panel-menu-link" href="admin-hesaplayicilar.html"><i class="fa-solid fa-calculator"></i>Hesaplayıcılar</a>
+    <a class="panel-menu-link" href="admin-rehber.html"><i class="fa-solid fa-compass"></i>Beslenme Rehberi</a>
+    <a class="panel-menu-link" href="admin-ipuclari.html"><i class="fa-solid fa-lightbulb"></i>Beslenme İpuçları</a>
+    <a class="panel-menu-link" href="admin-kac-kalori.html"><i class="fa-solid fa-fire"></i>Kaç Kalori</a>
+    <a class="panel-menu-link" href="admin-puf-noktalari.html"><i class="fa-solid fa-wand-magic-sparkles"></i>Diyetin Püf Noktaları</a>
+    <a class="panel-menu-link" href="admin-makro.html"><i class="fa-solid fa-chart-pie"></i>Makro Rehberi</a>
+    <a class="panel-menu-link" href="admin-hizmetler.html"><i class="fa-solid fa-basket-shopping"></i>Hizmetler ve Satışlar</a>
+
+    <div class="panel-menu-bolum">02 Operasyon</div>
+    <a class="panel-menu-link" href="admin-uyeler.html"><i class="fa-solid fa-users"></i>Üyeler &amp; Yetkiler</a>
+    <a class="panel-menu-link" href="admin-abonelikler.html"><i class="fa-solid fa-credit-card"></i>Abonelikler</a>
+    <a class="panel-menu-link" href="admin-odemeler.html"><i class="fa-solid fa-money-bill-wave"></i>Ödemeler</a>
+    <a class="panel-menu-link" href="admin-faturalar.html"><i class="fa-solid fa-file-invoice"></i>Faturalar<span class="sayac">7</span></a>
+    <a class="panel-menu-link" href="admin-destek.html"><i class="fa-solid fa-life-ring"></i>Destek Talepleri<span class="sayac">12</span></a>
+    <a class="panel-menu-link" href="admin-sss.html"><i class="fa-solid fa-circle-question"></i>Sıkça Sorulan Sorular</a>
+    <a class="panel-menu-link" href="admin-moderasyon.html"><i class="fa-solid fa-shield-halved"></i>Moderasyon<span class="sayac">5</span></a>
+    <a class="panel-menu-link" href="admin-rozetler.html"><i class="fa-solid fa-medal"></i>Rozetler &amp; Kademeler</a>
+    <a class="panel-menu-link" href="admin-log.html"><i class="fa-solid fa-list-check"></i>Log Kayıtları</a>
+    <a class="panel-menu-link aktif" aria-current="page" href="admin-formlar.html"><i class="fa-solid fa-rectangle-list"></i>Formlar &amp; Başvurular</a>
+    <a class="panel-menu-link" href="admin-icerik-onaylari.html"><i class="fa-solid fa-circle-check"></i>İçerik Onayları<span class="sayac">4</span></a>
+    <a class="panel-menu-link" href="admin-duyurular.html"><i class="fa-solid fa-tower-broadcast"></i>Duyurular</a>
+    <a class="panel-menu-link" href="admin-iletisim-kayitlari.html"><i class="fa-solid fa-envelope"></i>E-posta &amp; İletişim Kayıtları</a>
+
+    <div class="panel-menu-bolum">03 Yapılandırma</div>
+    <a class="panel-menu-link" href="admin-menu.html"><i class="fa-solid fa-bars"></i>Menü &amp; Navigasyon</a>
+    <a class="panel-menu-link" href="admin-paketler.html"><i class="fa-solid fa-layer-group"></i>Paketler &amp; Özellikler</a>
+    <a class="panel-menu-link" href="admin-kuponlar.html"><i class="fa-solid fa-ticket"></i>Kuponlar</a>
+    <a class="panel-menu-link" href="admin-bildirim.html"><i class="fa-solid fa-bell"></i>Bildirim Şablonları</a>
+    <a class="panel-menu-link" href="admin-reklam.html"><i class="fa-solid fa-bullhorn"></i>Reklam &amp; Sponsorluk</a>
+    <a class="panel-menu-link" href="admin-raporlar.html"><i class="fa-solid fa-chart-line"></i>Raporlar</a>
+    <a class="panel-menu-link" href="admin-yasal.html"><i class="fa-solid fa-scale-balanced"></i>Yasal Metinler</a>
+    <a class="panel-menu-link" href="admin-ayarlar.html"><i class="fa-solid fa-sliders"></i>Ayarlar</a>
+    <a class="panel-menu-link" href="admin-dil-ceviri.html"><i class="fa-solid fa-language"></i>Dil &amp; Çeviri Yönetimi</a>
+    <a class="panel-menu-link" href="admin-entegrasyonlar.html"><i class="fa-solid fa-plug"></i>Entegrasyonlar</a>
+    <a class="panel-menu-link" href="admin-ice-disa-aktarim.html"><i class="fa-solid fa-file-import"></i>İçe / Dışa Aktarım</a>
+    <a class="panel-menu-link" href="admin-sistem-bildirimleri.html"><i class="fa-solid fa-triangle-exclamation"></i>Sistem Bildirimleri<span class="sayac">2</span></a>
+    <a class="panel-menu-link" href="admin-gorevler.html"><i class="fa-solid fa-clock"></i>Görevler &amp; Zamanlanmış İşlemler</a>
+    <a class="panel-menu-link" href="admin-sistem-durumu.html"><i class="fa-solid fa-heart-pulse"></i>Sistem Durumu</a>
+
+  </div>
+  <div class="panel-menu-alt">
+    <a class="panel-menu-link" href="#"><i class="fa-solid fa-arrow-up-right-from-square"></i>Siteyi gör</a>
+  </div>
+</nav>
+
+<!-- ── ÜST ÇUBUK ──────────────────────────────────────────────────── -->
+<header class="panel-ust">
+  <!-- 🔴 Menünün dar ekrandaki TEK kapısı. ≤1100px'te görünür, geniş
+       ekranda basılmaz (menü zaten orada). -->
+  <button class="panel-ust-dugme panel-ac" type="button"
+          aria-expanded="false" aria-controls="panelMenu" aria-label="Modül menüsünü aç">
+    <i class="fa-solid fa-bars" aria-hidden="true"></i>
+  </button>
+  <div class="panel-arama">
+    <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+    <input type="search" class="panel-arama-girdi" placeholder="Ekran, kayıt ya da kişi ara"
+           role="combobox" autocomplete="off" aria-label="Yönetimde ara"
+           aria-expanded="false" aria-controls="ustAramaAcilir">
+    <div class="acilir-yuzey" id="ustAramaAcilir" role="listbox" aria-label="Arama sonuçları" hidden>
+      <div class="acilir-bas">Sonuçlar</div>
+      <a class="acilir-kalem" href="admin-uyeler.html" role="option"><i class="fa-solid fa-users"></i>Üyeler &amp; Yetkiler<span class="yan">Modül</span></a>
+      <a class="acilir-kalem" href="admin-odemeler.html" role="option"><i class="fa-solid fa-credit-card"></i>Ödemeler<span class="yan">Modül</span></a>
+    </div>
+  </div>
+  <div class="panel-ust-sag">
+    <a class="panel-ust-dugme" href="admin-sistem-bildirimleri.html" aria-label="Bildirimler, 2 okunmamış">
+      <i class="fa-solid fa-bell"></i><span class="benek" aria-hidden="true"></span>
+    </a>
+    <a class="panel-ust-dugme" href="#" aria-label="Yardım"><i class="fa-solid fa-circle-question"></i></a>
+    <div class="acilir-kap">
+      <button class="panel-ust-ben" type="button" aria-expanded="false" aria-controls="hesapAcilir">
+        <span class="kisi-avatar" aria-hidden="true">BY</span>
+        <span><span class="ad">Beyar Yavuz</span><span class="rol">Sistem yöneticisi</span></span>
+        <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+      </button>
+      <!-- 🔴 BU YÜZEY EKSİKTİ. Düğme `aria-controls="hesapAcilir"` bildiriyordu
+           ama öyle bir eleman yoktu: ekran okuyucuya var olmayan bir açılır
+           vaat ediliyordu. Davranış sınaması yakaladı. -->
+      <div class="acilir-yuzey saga" id="hesapAcilir" role="menu" aria-label="Hesap" hidden>
+        <div class="acilir-bas">Beyar Yavuz</div>
+        <a class="acilir-kalem" href="#" role="menuitem"><i class="fa-solid fa-user"></i>Profilim</a>
+        <a class="acilir-kalem" href="#" role="menuitem"><i class="fa-solid fa-sliders"></i>Panel tercihleri</a>
+        <a class="acilir-kalem" href="#" role="menuitem"><i class="fa-solid fa-right-from-bracket"></i>Çıkış yap</a>
+      </div>
+    </div>
+  </div>
+</header>
+<main class="panel-govde">
+<div class="panel-sayfa">
+
+  <div class="panel-bas">
+    <div>
+      <h1>Formlar &amp; Başvurular</h1>
+      <p>Sistemdeki ortak iletişim, talep ve başvuru formlarını tek yerden yönet: formun alanları burada tanımlanır, gelen başvurular buradan atanır ve karara bağlanır. Diyetisyen başvurusu bu yöneticinin bir <b>örneğidir</b> — ayrı bir yönetici yoktur.</p>
+    </div>
+    <div class="eylem-satiri">
+      <button class="dugme hayalet" type="button" data-yetki="disa-aktar"><i class="fa-solid fa-file-arrow-down" aria-hidden="true"></i>Dışa aktar</button>
+      <a class="dugme birincil" href="admin-form-tasarim.html"><i class="fa-solid fa-plus" aria-hidden="true"></i>Yeni form</a>
+    </div>
+  </div>
+
+  <div class="kart-izgara c4" style="margin-bottom:var(--bosluk-24)">
+    <div class="kart kpi">
+      <span class="ikon" aria-hidden="true"><i class="fa-solid fa-rectangle-list"></i></span>
+      <div class="govde">
+        <span class="etiket">Yayındaki form</span>
+        <span class="sayi">5</span>
+        <span class="kpi-degisim"><i class="fa-solid fa-minus" aria-hidden="true"></i>7 formun 5'i yayında</span>
+      </div>
+    </div>
+    <div class="kart kpi">
+      <span class="ikon" aria-hidden="true"><i class="fa-solid fa-inbox"></i></span>
+      <div class="govde">
+        <span class="etiket">Açık başvuru</span>
+        <span class="sayi">46</span>
+        <span class="kpi-degisim kotu"><i class="fa-solid fa-arrow-down" aria-hidden="true"></i>%12 · son 30 gün</span>
+      </div>
+    </div>
+    <div class="kart kpi">
+      <span class="ikon" aria-hidden="true"><i class="fa-solid fa-user-clock"></i></span>
+      <div class="govde">
+        <span class="etiket">Atanmamış</span>
+        <span class="sayi">9</span>
+        <span class="kpi-degisim"><i class="fa-solid fa-minus" aria-hidden="true"></i>İlk yanıt süresini bekletiyor</span>
+      </div>
+    </div>
+    <div class="kart kpi">
+      <span class="ikon" aria-hidden="true"><i class="fa-solid fa-clock-rotate-left"></i></span>
+      <div class="govde">
+        <span class="etiket">Ortalama karar süresi</span>
+        <span class="sayi">1,8 gün</span>
+        <span class="kpi-degisim"><i class="fa-solid fa-minus" aria-hidden="true"></i>Hedef 2 gün · içinde</span>
+      </div>
+    </div>
+  </div>
+
+    <div class="sekmeler" role="tablist" aria-label="Kuyruklar">
+      <button class="sekme aktif" type="button" role="tab" aria-selected="true" aria-controls="frm-p0" id="frm-t0">Formlar<span class="sekme-sayi">7</span></button>
+      <button class="sekme" type="button" role="tab" aria-selected="false" tabindex="-1" aria-controls="frm-p1" id="frm-t1">Alanlar<span class="sekme-sayi">10</span></button>
+      <button class="sekme" type="button" role="tab" aria-selected="false" tabindex="-1" aria-controls="frm-p2" id="frm-t2">Gelen başvurular<span class="sekme-sayi">46</span></button>
+      <button class="sekme" type="button" role="tab" aria-selected="false" tabindex="-1" aria-controls="frm-p3" id="frm-t3">Değerlendirmede<span class="sekme-sayi">12</span></button>
+      <button class="sekme" type="button" role="tab" aria-selected="false" tabindex="-1" aria-controls="frm-p4" id="frm-t4">Onaylanan<span class="sekme-sayi">118</span></button>
+      <button class="sekme" type="button" role="tab" aria-selected="false" tabindex="-1" aria-controls="frm-p5" id="frm-t5">Reddedilen<span class="sekme-sayi">24</span></button>
+      <button class="sekme" type="button" role="tab" aria-selected="false" tabindex="-1" aria-controls="frm-p6" id="frm-t6">Arşivlenen<span class="sekme-sayi">63</span></button>
+    </div>
+
+    <div id="frm-p0" role="tabpanel" aria-labelledby="frm-t0">
+  <div class="kart panel">
+    <div class="kart-bas">
+      <h2 class="kart-baslik"><i class="fa-solid fa-rectangle-list" aria-hidden="true"></i>Formlar</h2>
+      <div class="eylem-satiri">
+        <div class="coklu-secim">
+          <button class="suzgec-dugme" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="frmFKolon"><i class="fa-solid fa-table-columns" aria-hidden="true"></i>Kolonlar</button>
+          <div class="acilir-yuzey saga kolon-secim" id="frmFKolon" role="group" aria-label="Görünen kolonlar" hidden="">
+            <div class="acilir-bas">Görünen kolonlar<button type="button">Sıfırla</button></div>
+            <label class="acilir-kalem kilitli"><input type="checkbox" checked="" disabled="">Form</label>
+            <label class="acilir-kalem"><input type="checkbox" checked="">Alan</label>
+            <label class="acilir-kalem"><input type="checkbox" checked="">Durum</label>
+            <label class="acilir-kalem"><input type="checkbox" checked="">Gelen başvuru</label>
+            <label class="acilir-kalem"><input type="checkbox" checked="">Son başvuru</label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="suzgec-cubuk">
+      <div class="panel-arama">
+        <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+        <input type="search" class="panel-arama-girdi" id="frmFAra" placeholder="Form adı ya da adres ara" aria-label="Form adı ya da adres ara">
+      </div>
+      <div class="coklu-secim">
+        <button class="suzgec-dugme" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="frmFSuz0">Durum<span class="sayi" data-sayi="0"></span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button>
+        <div class="acilir-yuzey suzgec" id="frmFSuz0" role="group" aria-label="Durum" hidden="">
+          <div class="acilir-bas">Durum<button type="button">Temizle</button></div>
+          <button class="cip suzgec aktif" type="button" aria-pressed="true">Tümü</button>
+          <button class="cip suzgec" type="button" aria-pressed="false">Yayında</button>
+          <button class="cip suzgec" type="button" aria-pressed="false">Taslak</button>
+          <button class="cip suzgec" type="button" aria-pressed="false">İncelemede</button>
+          <button class="cip suzgec" type="button" aria-pressed="false">Pasif</button>
+        </div>
+      </div>
+      <div class="coklu-secim">
+        <button class="suzgec-dugme" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="frmFSuz1">Alan sayısı<span class="sayi" data-sayi="0"></span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button>
+        <div class="acilir-yuzey suzgec" id="frmFSuz1" role="group" aria-label="Alan sayısı" hidden="">
+          <div class="acilir-bas">Alan sayısı<button type="button">Temizle</button></div>
+          <button class="cip suzgec aktif" type="button" aria-pressed="true">Tümü</button>
+          <button class="cip suzgec" type="button" aria-pressed="false">1–5</button>
+          <button class="cip suzgec" type="button" aria-pressed="false">6–10</button>
+          <button class="cip suzgec" type="button" aria-pressed="false">11+</button>
+        </div>
+      </div>
+      <span class="suzgec-sayac"><b>7</b> form</span>
+    </div>
+
+    <div class="toplu-islem" hidden="" role="region" aria-label="Toplu işlem">
+      <b><span data-rol="secim-sayisi">0</span> satır seçildi</b>
+      <div class="eylem-satiri">
+        <button class="dugme hayalet" type="button">Yayınla</button>
+        <button class="dugme hayalet" type="button">Pasif yap</button>
+        <button class="dugme hayalet" type="button">Kopyala</button>
+        <button class="dugme hayalet" type="button">Arşivle</button>
+      </div>
+    </div>
+
+    <div class="kart-govde bosluksuz">
+      <div class="tablo-kap gomulu">
+        <table class="tablo panel" aria-label="Formlar">
+          <thead>
+            <tr><th class="sec" scope="col"><label><input type="checkbox" aria-label="Tümünü seç"></label></th><th class="sirali" scope="col" aria-sort="ascending"><button type="button">Form</button></th><th class="sirali num" scope="col"><button type="button">Alan</button></th><th class="sirali" scope="col"><button type="button">Durum</button></th><th class="sirali num" scope="col"><button type="button">Gelen başvuru</button></th><th class="sirali num" scope="col"><button type="button">Son başvuru</button></th><th class="eylem" scope="col"><span class="yalniz-okuyucu">İşlemler</span></th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="sec"><label><input type="checkbox" aria-label="Diyetisyen başvuru formu satırını seç"></label></td>
+              <td><b>Diyetisyen başvuru formu</b><small>/form/diyetisyen-basvuru</small></td>
+              <td class="num">14</td>
+              <td><span class="rozet olumlu">Yayında</span></td>
+              <td class="num">38</td>
+              <td class="num">28 Ağu 2026</td>
+              <td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" href="admin-form-tasarim.html" aria-label="Diyetisyen başvuru formu formunu düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a><button class="ikon-dugme" type="button" aria-label="Diyetisyen başvuru formu formunu önizle"><i class="fa-solid fa-eye" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="Diyetisyen başvuru formu formunu kopyala"><i class="fa-solid fa-copy" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" aria-label="Diyetisyen başvuru formu formunu sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
+            </tr>
+            <tr>
+              <td class="sec"><label><input type="checkbox" aria-label="İletişim formu satırını seç"></label></td>
+              <td><b>İletişim formu</b><small>/form/iletisim</small></td>
+              <td class="num">6</td>
+              <td><span class="rozet olumlu">Yayında</span></td>
+              <td class="num">212</td>
+              <td class="num">30 Ağu 2026</td>
+              <td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" href="admin-form-tasarim.html" aria-label="İletişim formu formunu düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a><button class="ikon-dugme" type="button" aria-label="İletişim formu formunu önizle"><i class="fa-solid fa-eye" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="İletişim formu formunu kopyala"><i class="fa-solid fa-copy" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" aria-label="İletişim formu formunu sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
+            </tr>
+            <tr>
+              <td class="sec"><label><input type="checkbox" aria-label="Kurumsal iş birliği satırını seç"></label></td>
+              <td><b>Kurumsal iş birliği</b><small>/form/is-birligi</small></td>
+              <td class="num">11</td>
+              <td><span class="rozet olumlu">Yayında</span></td>
+              <td class="num">17</td>
+              <td class="num">26 Ağu 2026</td>
+              <td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" href="admin-form-tasarim.html" aria-label="Kurumsal iş birliği formunu düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a><button class="ikon-dugme" type="button" aria-label="Kurumsal iş birliği formunu önizle"><i class="fa-solid fa-eye" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="Kurumsal iş birliği formunu kopyala"><i class="fa-solid fa-copy" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" aria-label="Kurumsal iş birliği formunu sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
+            </tr>
+            <tr>
+              <td class="sec"><label><input type="checkbox" aria-label="Sponsorluk başvurusu satırını seç"></label></td>
+              <td><b>Sponsorluk başvurusu</b><small>/form/sponsorluk</small></td>
+              <td class="num">9</td>
+              <td><span class="rozet pasif">Taslak</span></td>
+              <td class="num">0</td>
+              <td class="num">—</td>
+              <td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" href="admin-form-tasarim.html" aria-label="Sponsorluk başvurusu formunu düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a><button class="ikon-dugme" type="button" aria-label="Sponsorluk başvurusu formunu önizle"><i class="fa-solid fa-eye" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="Sponsorluk başvurusu formunu kopyala"><i class="fa-solid fa-copy" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" aria-label="Sponsorluk başvurusu formunu sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
+            </tr>
+            <tr>
+              <td class="sec"><label><input type="checkbox" aria-label="Hata bildirimi satırını seç"></label></td>
+              <td><b>Hata bildirimi</b><small>/form/hata-bildirimi</small></td>
+              <td class="num">7</td>
+              <td><span class="rozet olumlu">Yayında</span></td>
+              <td class="num">64</td>
+              <td class="num">31 Ağu 2026</td>
+              <td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" href="admin-form-tasarim.html" aria-label="Hata bildirimi formunu düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a><button class="ikon-dugme" type="button" aria-label="Hata bildirimi formunu önizle"><i class="fa-solid fa-eye" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="Hata bildirimi formunu kopyala"><i class="fa-solid fa-copy" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" aria-label="Hata bildirimi formunu sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
+            </tr>
+            <tr>
+              <td class="sec"><label><input type="checkbox" aria-label="İçerik öneri formu satırını seç"></label></td>
+              <td><b>İçerik öneri formu</b><small>/form/icerik-oneri</small></td>
+              <td class="num">5</td>
+              <td><span class="rozet pasif">Pasif</span></td>
+              <td class="num">9</td>
+              <td class="num">12 Ağu 2026</td>
+              <td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" href="admin-form-tasarim.html" aria-label="İçerik öneri formu formunu düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a><button class="ikon-dugme" type="button" aria-label="İçerik öneri formu formunu önizle"><i class="fa-solid fa-eye" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="İçerik öneri formu formunu kopyala"><i class="fa-solid fa-copy" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" aria-label="İçerik öneri formu formunu sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
+            </tr>
+            <tr>
+              <td class="sec"><label><input type="checkbox" aria-label="Diyetisyen hizmet paketi başvurusu satırını seç"></label></td>
+              <td><b>Diyetisyen hizmet paketi başvurusu</b><small>/form/hizmet-paketi</small></td>
+              <td class="num">12</td>
+              <td><span class="rozet bekleme">İncelemede</span></td>
+              <td class="num">6</td>
+              <td class="num">29 Ağu 2026</td>
+              <td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" href="admin-form-tasarim.html" aria-label="Diyetisyen hizmet paketi başvurusu formunu düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a><button class="ikon-dugme" type="button" aria-label="Diyetisyen hizmet paketi başvurusu formunu önizle"><i class="fa-solid fa-eye" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="Diyetisyen hizmet paketi başvurusu formunu kopyala"><i class="fa-solid fa-copy" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" aria-label="Diyetisyen hizmet paketi başvurusu formunu sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="tablo-kap gomulu" data-durum="yukleniyor" aria-busy="true" hidden="">
+        <table class="tablo panel" aria-label="Formlar yükleniyor">
+          <tbody>
+            <tr><td class="sec"></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td></tr>
+            <tr><td class="sec"></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td></tr>
+            <tr><td class="sec"></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td></tr>
+            <tr><td class="sec"></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td></tr>
+          </tbody>
+        </table>
+        <p class="yalniz-okuyucu" role="status">Formlar yükleniyor.</p>
+      </div>
+      <div class="bos-durum kart-ici" data-durum="bos-ilk" hidden="">
+        <div class="bos-ikon" aria-hidden="true"><i class="fa-solid fa-rectangle-list"></i></div>
+        <h3>Henüz form yok</h3>
+        <p>İlk formu tasarlayarak başla.</p>
+        <a class="dugme birincil" href="admin-form-tasarim.html">Form oluştur</a>
+      </div>
+      <div class="bos-durum kart-ici" data-durum="bos" hidden="">
+        <div class="bos-ikon" aria-hidden="true"><i class="fa-solid fa-filter-circle-xmark"></i></div>
+        <h3>Bu süzgeçle sonuç yok</h3>
+        <p>Süzgeci genişlet ya da aramayı değiştir.</p>
+        <button class="dugme hayalet" type="button">Süzgeci temizle</button>
+      </div>
+      <div class="bos-durum kart-ici yetkisiz" data-durum="yetkisiz" hidden="">
+        <div class="bos-ikon" aria-hidden="true"><i class="fa-solid fa-lock"></i></div>
+        <h3>Bu modüle erişimin yok</h3>
+        <p>Erişim istemek için yöneticinle görüş.</p>
+      </div>
+      <div class="alan-ozet" data-durum="dogrulama" role="alert">
+        <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>
+        <span><b>2 satır kaydedilemedi</b> — zorunlu alanlar eksik.</span>
+      </div>
+      <div class="bos-durum kart-ici servis-hatasi" data-durum="servis" hidden="">
+        <div class="bos-ikon" aria-hidden="true"><i class="fa-solid fa-triangle-exclamation"></i></div>
+        <h3>Formlar yüklenemedi</h3>
+        <p>Bağlantı kurulamadı. Birkaç saniye sonra yeniden dene.</p>
+        <button class="dugme hayalet" type="button"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i>Yeniden dene</button>
+        <p class="hata-izi">Referans: <code>FRM-7C41-1001</code></p>
+      </div>
+    </div>
+
+      <div class="sayfalama kart-ayagi">
+        <span class="sayfalama-bilgi"><b>7</b> form · tümü tek sayfada</span>
+        <div class="dugmeler">
+          <button class="sayfa-dugme sade ok" type="button" disabled="" aria-label="Önceki sayfa"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i></button>
+          <button class="sayfa-dugme aktif" type="button" aria-current="page">1</button>
+          <button class="sayfa-dugme sade ok" type="button" disabled="" aria-label="Sonraki sayfa"><i class="fa-solid fa-chevron-right" aria-hidden="true"></i></button>
+        </div>
+      </div>
+  </div>
+    </div>
+
+    <div id="frm-p1" role="tabpanel" aria-labelledby="frm-t1" hidden="">
+  <div class="kart panel">
+    <div class="kart-bas">
+      <h2 class="kart-baslik"><i class="fa-solid fa-list-ul" aria-hidden="true"></i>Alanlar — Diyetisyen başvuru formu</h2>
+      <div class="eylem-satiri">
+        <div class="coklu-secim">
+          <button class="suzgec-dugme" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="frmAKolon"><i class="fa-solid fa-table-columns" aria-hidden="true"></i>Kolonlar</button>
+          <div class="acilir-yuzey saga kolon-secim" id="frmAKolon" role="group" aria-label="Görünen kolonlar" hidden="">
+            <div class="acilir-bas">Görünen kolonlar<button type="button">Sıfırla</button></div>
+            <label class="acilir-kalem kilitli"><input type="checkbox" checked="" disabled="">Alan adı</label>
+            <label class="acilir-kalem"><input type="checkbox" checked="">Alan türü</label>
+            <label class="acilir-kalem"><input type="checkbox" checked="">Zorunluluk</label>
+            <label class="acilir-kalem"><input type="checkbox" checked="">Seçenekler</label>
+            <label class="acilir-kalem"><input type="checkbox" checked="">Doğrulama kuralı</label>
+            <label class="acilir-kalem"><input type="checkbox" checked="">Sıra</label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="suzgec-cubuk">
+      <div class="panel-arama">
+        <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+        <input type="search" class="panel-arama-girdi" id="frmAAra" placeholder="Alan adı ara" aria-label="Alan adı ara">
+      </div>
+      <div class="coklu-secim">
+        <button class="suzgec-dugme" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="frmASuz0">Alan türü<span class="sayi" data-sayi="0"></span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button>
+        <div class="acilir-yuzey suzgec" id="frmASuz0" role="group" aria-label="Alan türü" hidden="">
+          <div class="acilir-bas">Alan türü<button type="button">Temizle</button></div>
+          <button class="cip suzgec aktif" type="button" aria-pressed="true">Tümü</button>
+          <button class="cip suzgec" type="button" aria-pressed="false">Metin</button>
+          <button class="cip suzgec" type="button" aria-pressed="false">Uzun metin</button>
+          <button class="cip suzgec" type="button" aria-pressed="false">Sayı</button>
+          <button class="cip suzgec" type="button" aria-pressed="false">E-posta</button>
+          <button class="cip suzgec" type="button" aria-pressed="false">Telefon</button>
+          <button class="cip suzgec" type="button" aria-pressed="false">Açılır liste</button>
+          <button class="cip suzgec" type="button" aria-pressed="false">Çoklu seçim</button>
+          <button class="cip suzgec" type="button" aria-pressed="false">Dosya</button>
+          <button class="cip suzgec" type="button" aria-pressed="false">Onay kutusu</button>
+        </div>
+      </div>
+      <div class="coklu-secim">
+        <button class="suzgec-dugme" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="frmASuz1">Zorunluluk<span class="sayi" data-sayi="0"></span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button>
+        <div class="acilir-yuzey suzgec" id="frmASuz1" role="group" aria-label="Zorunluluk" hidden="">
+          <div class="acilir-bas">Zorunluluk<button type="button">Temizle</button></div>
+          <button class="cip suzgec aktif" type="button" aria-pressed="true">Tümü</button>
+          <button class="cip suzgec" type="button" aria-pressed="false">Zorunlu</button>
+          <button class="cip suzgec" type="button" aria-pressed="false">İsteğe bağlı</button>
+        </div>
+      </div>
+      <span class="suzgec-sayac"><b>10</b> alan</span>
+    </div>
+
+    <div class="toplu-islem" hidden="" role="region" aria-label="Toplu işlem">
+      <b><span data-rol="secim-sayisi">0</span> satır seçildi</b>
+      <div class="eylem-satiri">
+        <button class="dugme hayalet" type="button">Zorunlu yap</button>
+        <button class="dugme hayalet" type="button">İsteğe bağlı yap</button>
+        <button class="dugme hayalet" type="button">Sırala</button>
+        <button class="dugme hayalet tehlike" type="button">Sil</button>
+      </div>
+    </div>
+
+    <div class="kart-govde bosluksuz">
+      <div class="tablo-kap gomulu">
+        <table class="tablo panel" aria-label="Alanlar — Diyetisyen başvuru formu">
+          <thead>
+            <tr><th class="sec" scope="col"><label><input type="checkbox" aria-label="Tümünü seç"></label></th><th class="sirali" scope="col"><button type="button">Alan adı</button></th><th class="sirali" scope="col"><button type="button">Alan türü</button></th><th scope="col">Zorunluluk</th><th scope="col">Seçenekler</th><th scope="col">Doğrulama kuralı</th><th class="sirali num" scope="col"><button type="button">Sıra</button></th><th class="eylem" scope="col"><span class="yalniz-okuyucu">İşlemler</span></th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="sec"><label><input type="checkbox" aria-label="Ad soyad satırını seç"></label></td>
+              <td><b>Ad soyad</b></td>
+              <td><span class="tur-rozeti notr">Metin</span></td>
+              <td><span class="rozet olumlu">Zorunlu</span></td>
+              <td>—</td>
+              <td>En az 3 karakter</td>
+              <td class="num">1</td>
+              <td class="eylem"><div class="satir-eylem"><button class="ikon-dugme" type="button" aria-label="Ad soyad alanının sırasını değiştir"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><a class="ikon-dugme" href="admin-form-tasarim.html" aria-label="Ad soyad alanını düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a><button class="ikon-dugme yikici" type="button" aria-label="Ad soyad alanını sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
+            </tr>
+            <tr>
+              <td class="sec"><label><input type="checkbox" aria-label="E-posta satırını seç"></label></td>
+              <td><b>E-posta</b></td>
+              <td><span class="tur-rozeti notr">E-posta</span></td>
+              <td><span class="rozet olumlu">Zorunlu</span></td>
+              <td>—</td>
+              <td>Geçerli e-posta biçimi</td>
+              <td class="num">2</td>
+              <td class="eylem"><div class="satir-eylem"><button class="ikon-dugme" type="button" aria-label="E-posta alanının sırasını değiştir"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><a class="ikon-dugme" href="admin-form-tasarim.html" aria-label="E-posta alanını düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a><button class="ikon-dugme yikici" type="button" aria-label="E-posta alanını sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
+            </tr>
+            <tr>
+              <td class="sec"><label><input type="checkbox" aria-label="Telefon satırını seç"></label></td>
+              <td><b>Telefon</b></td>
+              <td><span class="tur-rozeti notr">Telefon</span></td>
+              <td><span class="rozet olumlu">Zorunlu</span></td>
+              <td>Ülke kodu seçici</td>
+              <td>10 hane</td>
+              <td class="num">3</td>
+              <td class="eylem"><div class="satir-eylem"><button class="ikon-dugme" type="button" aria-label="Telefon alanının sırasını değiştir"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><a class="ikon-dugme" href="admin-form-tasarim.html" aria-label="Telefon alanını düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a><button class="ikon-dugme yikici" type="button" aria-label="Telefon alanını sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
+            </tr>
+            <tr>
+              <td class="sec"><label><input type="checkbox" aria-label="Şehir satırını seç"></label></td>
+              <td><b>Şehir</b></td>
+              <td><span class="tur-rozeti notr">Açılır liste</span></td>
+              <td><span class="rozet olumlu">Zorunlu</span></td>
+              <td>81 il</td>
+              <td>—</td>
+              <td class="num">4</td>
+              <td class="eylem"><div class="satir-eylem"><button class="ikon-dugme" type="button" aria-label="Şehir alanının sırasını değiştir"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><a class="ikon-dugme" href="admin-form-tasarim.html" aria-label="Şehir alanını düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a><button class="ikon-dugme yikici" type="button" aria-label="Şehir alanını sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
+            </tr>
+            <tr>
+              <td class="sec"><label><input type="checkbox" aria-label="Uzmanlık alanları satırını seç"></label></td>
+              <td><b>Uzmanlık alanları</b></td>
+              <td><span class="tur-rozeti notr">Çoklu seçim</span></td>
+              <td><span class="rozet olumlu">Zorunlu</span></td>
+              <td>12 seçenek</td>
+              <td>En az 1 seçim</td>
+              <td class="num">5</td>
+              <td class="eylem"><div class="satir-eylem"><button class="ikon-dugme" type="button" aria-label="Uzmanlık alanları alanının sırasını değiştir"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><a class="ikon-dugme" href="admin-form-tasarim.html" aria-label="Uzmanlık alanları alanını düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a><button class="ikon-dugme yikici" type="button" aria-label="Uzmanlık alanları alanını sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
+            </tr>
+            <tr>
+              <td class="sec"><label><input type="checkbox" aria-label="Deneyim — yıl satırını seç"></label></td>
+              <td><b>Deneyim — yıl</b></td>
+              <td><span class="tur-rozeti notr">Sayı</span></td>
+              <td><span class="rozet pasif">İsteğe bağlı</span></td>
+              <td>0–50</td>
+              <td>Tam sayı</td>
+              <td class="num">6</td>
+              <td class="eylem"><div class="satir-eylem"><button class="ikon-dugme" type="button" aria-label="Deneyim — yıl alanının sırasını değiştir"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><a class="ikon-dugme" href="admin-form-tasarim.html" aria-label="Deneyim — yıl alanını düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a><button class="ikon-dugme yikici" type="button" aria-label="Deneyim — yıl alanını sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
+            </tr>
+            <tr>
+              <td class="sec"><label><input type="checkbox" aria-label="Sertifika satırını seç"></label></td>
+              <td><b>Sertifika</b></td>
+              <td><span class="tur-rozeti notr">Dosya</span></td>
+              <td><span class="rozet olumlu">Zorunlu</span></td>
+              <td>PDF · JPG · en çok 5 MB</td>
+              <td>En çok 3 dosya</td>
+              <td class="num">7</td>
+              <td class="eylem"><div class="satir-eylem"><button class="ikon-dugme" type="button" aria-label="Sertifika alanının sırasını değiştir"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><a class="ikon-dugme" href="admin-form-tasarim.html" aria-label="Sertifika alanını düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a><button class="ikon-dugme yikici" type="button" aria-label="Sertifika alanını sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
+            </tr>
+            <tr>
+              <td class="sec"><label><input type="checkbox" aria-label="Kısa tanıtım satırını seç"></label></td>
+              <td><b>Kısa tanıtım</b></td>
+              <td><span class="tur-rozeti notr">Uzun metin</span></td>
+              <td><span class="rozet olumlu">Zorunlu</span></td>
+              <td>—</td>
+              <td>80–600 karakter</td>
+              <td class="num">8</td>
+              <td class="eylem"><div class="satir-eylem"><button class="ikon-dugme" type="button" aria-label="Kısa tanıtım alanının sırasını değiştir"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><a class="ikon-dugme" href="admin-form-tasarim.html" aria-label="Kısa tanıtım alanını düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a><button class="ikon-dugme yikici" type="button" aria-label="Kısa tanıtım alanını sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
+            </tr>
+            <tr>
+              <td class="sec"><label><input type="checkbox" aria-label="KVKK aydınlatma onayı satırını seç"></label></td>
+              <td><b>KVKK aydınlatma onayı</b></td>
+              <td><span class="tur-rozeti notr">Onay kutusu</span></td>
+              <td><span class="rozet olumlu">Zorunlu</span></td>
+              <td>—</td>
+              <td>İşaretlenmeli</td>
+              <td class="num">9</td>
+              <td class="eylem"><div class="satir-eylem"><button class="ikon-dugme" type="button" aria-label="KVKK aydınlatma onayı alanının sırasını değiştir"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><a class="ikon-dugme" href="admin-form-tasarim.html" aria-label="KVKK aydınlatma onayı alanını düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a><button class="ikon-dugme yikici" type="button" aria-label="KVKK aydınlatma onayı alanını sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
+            </tr>
+            <tr>
+              <td class="sec"><label><input type="checkbox" aria-label="Ticari ileti izni satırını seç"></label></td>
+              <td><b>Ticari ileti izni</b></td>
+              <td><span class="tur-rozeti notr">Onay kutusu</span></td>
+              <td><span class="rozet pasif">İsteğe bağlı</span></td>
+              <td>—</td>
+              <td>—</td>
+              <td class="num">10</td>
+              <td class="eylem"><div class="satir-eylem"><button class="ikon-dugme" type="button" aria-label="Ticari ileti izni alanının sırasını değiştir"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><a class="ikon-dugme" href="admin-form-tasarim.html" aria-label="Ticari ileti izni alanını düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a><button class="ikon-dugme yikici" type="button" aria-label="Ticari ileti izni alanını sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="tablo-kap gomulu" data-durum="yukleniyor" aria-busy="true" hidden="">
+        <table class="tablo panel" aria-label="Alanlar — Diyetisyen başvuru formu yükleniyor">
+          <tbody>
+            <tr><td class="sec"></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td></tr>
+            <tr><td class="sec"></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td></tr>
+            <tr><td class="sec"></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td></tr>
+            <tr><td class="sec"></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td></tr>
+          </tbody>
+        </table>
+        <p class="yalniz-okuyucu" role="status">Alanlar — Diyetisyen başvuru formu yükleniyor.</p>
+      </div>
+      <div class="bos-durum kart-ici" data-durum="bos-ilk" hidden="">
+        <div class="bos-ikon" aria-hidden="true"><i class="fa-solid fa-list-ul"></i></div>
+        <h3>Bu formda alan yok</h3>
+        <p>Form tasarımına gidip ilk alanı ekle.</p>
+        <a class="dugme birincil" href="admin-form-tasarim.html">Form tasarımı</a>
+      </div>
+      <div class="bos-durum kart-ici" data-durum="bos" hidden="">
+        <div class="bos-ikon" aria-hidden="true"><i class="fa-solid fa-filter-circle-xmark"></i></div>
+        <h3>Bu süzgeçle sonuç yok</h3>
+        <p>Süzgeci genişlet ya da aramayı değiştir.</p>
+        <button class="dugme hayalet" type="button">Süzgeci temizle</button>
+      </div>
+      <div class="bos-durum kart-ici yetkisiz" data-durum="yetkisiz" hidden="">
+        <div class="bos-ikon" aria-hidden="true"><i class="fa-solid fa-lock"></i></div>
+        <h3>Bu modüle erişimin yok</h3>
+        <p>Erişim istemek için yöneticinle görüş.</p>
+      </div>
+      <div class="alan-ozet" data-durum="dogrulama" role="alert">
+        <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>
+        <span><b>2 satır kaydedilemedi</b> — zorunlu alanlar eksik.</span>
+      </div>
+      <div class="bos-durum kart-ici servis-hatasi" data-durum="servis" hidden="">
+        <div class="bos-ikon" aria-hidden="true"><i class="fa-solid fa-triangle-exclamation"></i></div>
+        <h3>Alanlar — Diyetisyen başvuru formu yüklenemedi</h3>
+        <p>Bağlantı kurulamadı. Birkaç saniye sonra yeniden dene.</p>
+        <button class="dugme hayalet" type="button"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i>Yeniden dene</button>
+        <p class="hata-izi">Referans: <code>FRM-7C41-1002</code></p>
+      </div>
+    </div>
+
+      <div class="sayfalama kart-ayagi">
+        <span class="sayfalama-bilgi"><b>10</b> alan · tümü tek sayfada</span>
+        <div class="dugmeler">
+          <button class="sayfa-dugme sade ok" type="button" disabled="" aria-label="Önceki sayfa"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i></button>
+          <button class="sayfa-dugme aktif" type="button" aria-current="page">1</button>
+          <button class="sayfa-dugme sade ok" type="button" disabled="" aria-label="Sonraki sayfa"><i class="fa-solid fa-chevron-right" aria-hidden="true"></i></button>
+        </div>
+      </div>
+  </div>
+    </div>
+
+    <div id="frm-p2" role="tabpanel" aria-labelledby="frm-t2" hidden="">
+  <div class="kart panel">
+    <div class="kart-bas">
+      <h2 class="kart-baslik"><i class="fa-solid fa-inbox" aria-hidden="true"></i>Gelen başvurular</h2>
+      <div class="eylem-satiri">
+        <div class="coklu-secim">
+          <button class="suzgec-dugme" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="frmBKolon"><i class="fa-solid fa-table-columns" aria-hidden="true"></i>Kolonlar</button>
+          <div class="acilir-yuzey saga kolon-secim" id="frmBKolon" role="group" aria-label="Görünen kolonlar" hidden="">
+            <div class="acilir-bas">Görünen kolonlar<button type="button">Sıfırla</button></div>
+            <label class="acilir-kalem kilitli"><input type="checkbox" checked="" disabled="">Başvuru no</label>
+            <label class="acilir-kalem"><input type="checkbox" checked="">Form</label>
+            <label class="acilir-kalem"><input type="checkbox" checked="">Başvuran</label>
+            <label class="acilir-kalem"><input type="checkbox" checked="">Atanan</label>
+            <label class="acilir-kalem"><input type="checkbox" checked="">Durum</label>
+            <label class="acilir-kalem"><input type="checkbox" checked="">Tarih</label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="suzgec-cubuk">
+      <div class="panel-arama">
+        <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+        <input type="search" class="panel-arama-girdi" id="frmBAra" placeholder="Başvuru no, ad ya da e-posta ara" aria-label="Başvuru no, ad ya da e-posta ara">
+      </div>
+      <div class="coklu-secim">
+        <button class="suzgec-dugme" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="frmBSuz0">Form<span class="sayi" data-sayi="0"></span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button>
+        <div class="acilir-yuzey suzgec" id="frmBSuz0" role="group" aria-label="Form" hidden="">
+          <div class="acilir-bas">Form<button type="button">Temizle</button></div>
+          <button class="cip suzgec aktif" type="button" aria-pressed="true">Tümü</button>
+          <button class="cip suzgec" type="button" aria-pressed="false">Diyetisyen başvuru formu</button>
+          <button class="cip suzgec" type="button" aria-pressed="false">İletişim formu</button>
+          <button class="cip suzgec" type="button" aria-pressed="false">Kurumsal iş birliği</button>
+          <button class="cip suzgec" type="button" aria-pressed="false">Hata bildirimi</button>
+        </div>
+      </div>
+      <div class="coklu-secim">
+        <button class="suzgec-dugme" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="frmBSuz1">Atanan<span class="sayi" data-sayi="0"></span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button>
+        <div class="acilir-yuzey suzgec" id="frmBSuz1" role="group" aria-label="Atanan" hidden="">
+          <div class="acilir-bas">Atanan<button type="button">Temizle</button></div>
+          <button class="cip suzgec aktif" type="button" aria-pressed="true">Tümü</button>
+          <button class="cip suzgec" type="button" aria-pressed="false">Atanmamış</button>
+          <button class="cip suzgec" type="button" aria-pressed="false">Yasin Yavuz</button>
+          <button class="cip suzgec" type="button" aria-pressed="false">Deniz Korkmaz</button>
+          <button class="cip suzgec" type="button" aria-pressed="false">Ela Bozkurt</button>
+          <button class="cip suzgec" type="button" aria-pressed="false">Elif Demir</button>
+        </div>
+      </div>
+      <span class="suzgec-sayac"><b>46</b> başvuru</span>
+    </div>
+
+    <div class="toplu-islem" hidden="" role="region" aria-label="Toplu işlem">
+      <b><span data-rol="secim-sayisi">0</span> satır seçildi</b>
+      <div class="eylem-satiri">
+        <button class="dugme hayalet" type="button">Ata</button>
+        <button class="dugme hayalet" type="button">Ek belge iste</button>
+        <button class="dugme hayalet" type="button">Onayla</button>
+        <button class="dugme hayalet" type="button">Reddet</button>
+        <button class="dugme hayalet" type="button">Arşivle</button>
+      </div>
+    </div>
+
+    <div class="kart-govde bosluksuz">
+      <div class="tablo-kap gomulu">
+        <table class="tablo panel" aria-label="Gelen başvurular">
+          <thead>
+            <tr><th class="sec" scope="col"><label><input type="checkbox" aria-label="Tümünü seç"></label></th><th class="sirali" scope="col"><button type="button">Başvuru no</button></th><th class="sirali" scope="col"><button type="button">Form</button></th><th class="sirali" scope="col"><button type="button">Başvuran</button></th><th scope="col">Atanan</th><th class="sirali" scope="col"><button type="button">Durum</button></th><th class="sirali num" scope="col"><button type="button">Tarih</button></th><th class="eylem" scope="col"><span class="yalniz-okuyucu">İşlemler</span></th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="sec"><label><input type="checkbox" aria-label="Naz Erdem satırını seç"></label></td>
+              <td><code>BV-2041</code></td>
+              <td><b>Diyetisyen başvuru formu</b></td>
+              <td><a class="kisi-hucre" href="admin-uyeler.html"><span class="kisi-avatar" aria-hidden="true">NE</span><span class="kisi-bilgi"><span class="kisi-ad">Naz Erdem</span><span class="kisi-alt">naz.erdem@eposta.com</span></span></a></td>
+              <td>Deniz Korkmaz</td>
+              <td><span class="rozet bekleme">Yeni</span></td>
+              <td class="num">28 Ağu 2026</td>
+              <td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" href="admin-diyetisyen-basvuru.html" aria-label="BV-2041 başvurusunu incele"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i></a><button class="ikon-dugme" type="button" aria-label="BV-2041 başvurusunu ata"><i class="fa-solid fa-user-plus" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="BV-2041 için ek belge iste"><i class="fa-solid fa-file-circle-question" aria-hidden="true"></i></button></div></td>
+            </tr>
+            <tr>
+              <td class="sec"><label><input type="checkbox" aria-label="Onur Kılıç satırını seç"></label></td>
+              <td><code>BV-2039</code></td>
+              <td><b>Diyetisyen başvuru formu</b></td>
+              <td><a class="kisi-hucre" href="admin-uyeler.html"><span class="kisi-avatar" aria-hidden="true">OK</span><span class="kisi-bilgi"><span class="kisi-ad">Onur Kılıç</span><span class="kisi-alt">onur.kilic@eposta.com</span></span></a></td>
+              <td>—</td>
+              <td><span class="rozet bekleme">Yeni</span></td>
+              <td class="num">27 Ağu 2026</td>
+              <td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" href="admin-diyetisyen-basvuru.html" aria-label="BV-2039 başvurusunu incele"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i></a><button class="ikon-dugme" type="button" aria-label="BV-2039 başvurusunu ata"><i class="fa-solid fa-user-plus" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="BV-2039 için ek belge iste"><i class="fa-solid fa-file-circle-question" aria-hidden="true"></i></button></div></td>
+            </tr>
+            <tr>
+              <td class="sec"><label><input type="checkbox" aria-label="Ece Yalçın satırını seç"></label></td>
+              <td><code>BV-2036</code></td>
+              <td><b>Kurumsal iş birliği</b></td>
+              <td><a class="kisi-hucre" href="admin-uyeler.html"><span class="kisi-avatar" aria-hidden="true">EY</span><span class="kisi-bilgi"><span class="kisi-ad">Ece Yalçın</span><span class="kisi-alt">ece@beslenmestudyo.com</span></span></a></td>
+              <td>Ela Bozkurt</td>
+              <td><span class="rozet bekleme">Yeni</span></td>
+              <td class="num">26 Ağu 2026</td>
+              <td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" href="admin-diyetisyen-basvuru.html" aria-label="BV-2036 başvurusunu incele"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i></a><button class="ikon-dugme" type="button" aria-label="BV-2036 başvurusunu ata"><i class="fa-solid fa-user-plus" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="BV-2036 için ek belge iste"><i class="fa-solid fa-file-circle-question" aria-hidden="true"></i></button></div></td>
+            </tr>
+            <tr>
+              <td class="sec"><label><input type="checkbox" aria-label="Pelin Yalçın satırını seç"></label></td>
+              <td><code>BV-2034</code></td>
+              <td><b>Diyetisyen başvuru formu</b></td>
+              <td><a class="kisi-hucre" href="admin-uyeler.html"><span class="kisi-avatar" aria-hidden="true">PY</span><span class="kisi-bilgi"><span class="kisi-ad">Pelin Yalçın</span><span class="kisi-alt">pelin.y@eposta.com</span></span></a></td>
+              <td>Yasin Yavuz</td>
+              <td><span class="rozet bekleme">Yeni</span></td>
+              <td class="num">25 Ağu 2026</td>
+              <td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" href="admin-diyetisyen-basvuru.html" aria-label="BV-2034 başvurusunu incele"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i></a><button class="ikon-dugme" type="button" aria-label="BV-2034 başvurusunu ata"><i class="fa-solid fa-user-plus" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="BV-2034 için ek belge iste"><i class="fa-solid fa-file-circle-question" aria-hidden="true"></i></button></div></td>
+            </tr>
+            <tr>
+              <td class="sec"><label><input type="checkbox" aria-label="Mert Uysal satırını seç"></label></td>
+              <td><code>BV-2031</code></td>
+              <td><b>Hata bildirimi</b></td>
+              <td><a class="kisi-hucre" href="admin-uyeler.html"><span class="kisi-avatar" aria-hidden="true">MU</span><span class="kisi-bilgi"><span class="kisi-ad">Mert Uysal</span><span class="kisi-alt">mert.uysal@eposta.com</span></span></a></td>
+              <td>Elif Demir</td>
+              <td><span class="rozet bekleme">Yeni</span></td>
+              <td class="num">24 Ağu 2026</td>
+              <td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" href="admin-diyetisyen-basvuru.html" aria-label="BV-2031 başvurusunu incele"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i></a><button class="ikon-dugme" type="button" aria-label="BV-2031 başvurusunu ata"><i class="fa-solid fa-user-plus" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="BV-2031 için ek belge iste"><i class="fa-solid fa-file-circle-question" aria-hidden="true"></i></button></div></td>
+            </tr>
+            <tr>
+              <td class="sec"><label><input type="checkbox" aria-label="Zeynep Arı satırını seç"></label></td>
+              <td><code>BV-2028</code></td>
+              <td><b>İletişim formu</b></td>
+              <td><a class="kisi-hucre" href="admin-uyeler.html"><span class="kisi-avatar" aria-hidden="true">ZA</span><span class="kisi-bilgi"><span class="kisi-ad">Zeynep Arı</span><span class="kisi-alt">zeynep.ari@eposta.com</span></span></a></td>
+              <td>—</td>
+              <td><span class="rozet bekleme">Yeni</span></td>
+              <td class="num">23 Ağu 2026</td>
+              <td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" href="admin-diyetisyen-basvuru.html" aria-label="BV-2028 başvurusunu incele"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i></a><button class="ikon-dugme" type="button" aria-label="BV-2028 başvurusunu ata"><i class="fa-solid fa-user-plus" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="BV-2028 için ek belge iste"><i class="fa-solid fa-file-circle-question" aria-hidden="true"></i></button></div></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="tablo-kap gomulu" data-durum="yukleniyor" aria-busy="true" hidden="">
+        <table class="tablo panel" aria-label="Gelen başvurular yükleniyor">
+          <tbody>
+            <tr><td class="sec"></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td></tr>
+            <tr><td class="sec"></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td></tr>
+            <tr><td class="sec"></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td></tr>
+            <tr><td class="sec"></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td></tr>
+          </tbody>
+        </table>
+        <p class="yalniz-okuyucu" role="status">Gelen başvurular yükleniyor.</p>
+      </div>
+      <div class="bos-durum kart-ici" data-durum="bos-ilk" hidden="">
+        <div class="bos-ikon" aria-hidden="true"><i class="fa-solid fa-inbox"></i></div>
+        <h3>Gelen başvuru yok</h3>
+        <p>Formlar yayına alınınca başvurular bu kuyruğa düşer.</p>
+        <a class="dugme birincil" href="#">Formlara dön</a>
+      </div>
+      <div class="bos-durum kart-ici" data-durum="bos" hidden="">
+        <div class="bos-ikon" aria-hidden="true"><i class="fa-solid fa-filter-circle-xmark"></i></div>
+        <h3>Bu süzgeçle sonuç yok</h3>
+        <p>Süzgeci genişlet ya da aramayı değiştir.</p>
+        <button class="dugme hayalet" type="button">Süzgeci temizle</button>
+      </div>
+      <div class="bos-durum kart-ici yetkisiz" data-durum="yetkisiz" hidden="">
+        <div class="bos-ikon" aria-hidden="true"><i class="fa-solid fa-lock"></i></div>
+        <h3>Bu modüle erişimin yok</h3>
+        <p>Erişim istemek için yöneticinle görüş.</p>
+      </div>
+      <div class="alan-ozet" data-durum="dogrulama" role="alert">
+        <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>
+        <span><b>2 satır kaydedilemedi</b> — zorunlu alanlar eksik.</span>
+      </div>
+      <div class="bos-durum kart-ici servis-hatasi" data-durum="servis" hidden="">
+        <div class="bos-ikon" aria-hidden="true"><i class="fa-solid fa-triangle-exclamation"></i></div>
+        <h3>Gelen başvurular yüklenemedi</h3>
+        <p>Bağlantı kurulamadı. Birkaç saniye sonra yeniden dene.</p>
+        <button class="dugme hayalet" type="button"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i>Yeniden dene</button>
+        <p class="hata-izi">Referans: <code>FRM-7C41-22A8</code></p>
+      </div>
+    </div>
+
+      <div class="sayfalama kart-ayagi">
+        <span class="sayfalama-bilgi"><b>1–6</b> / 46 başvuru</span>
+        <div class="dugmeler">
+          <button class="sayfa-dugme sade ok" type="button" disabled="" aria-label="Önceki sayfa"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i></button>
+          <button class="sayfa-dugme aktif" type="button" aria-current="page">1</button>
+          <button class="sayfa-dugme sade" type="button">2</button>
+          <button class="sayfa-dugme sade" type="button">3</button>
+          <button class="sayfa-dugme sade" type="button">4</button>
+          <button class="sayfa-dugme sade" type="button">5</button>
+          <button class="sayfa-dugme sade" type="button">6</button>
+          <button class="sayfa-dugme sade" type="button">7</button>
+          <button class="sayfa-dugme sade" type="button">8</button>
+          <button class="sayfa-dugme sade ok" type="button" aria-label="Sonraki sayfa"><i class="fa-solid fa-chevron-right" aria-hidden="true"></i></button>
+        </div>
+      </div>
+  </div>
+    </div>
+    <div id="frm-p3" role="tabpanel" aria-labelledby="frm-t3" hidden="">
+  <div class="kart panel">
+    <div class="kart-bas">
+      <h2 class="kart-baslik"><i class="fa-solid fa-inbox" aria-hidden="true"></i>Değerlendirmede</h2>
+      <div class="eylem-satiri">
+        <div class="coklu-secim">
+          <button class="suzgec-dugme" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="frmDKolon"><i class="fa-solid fa-table-columns" aria-hidden="true"></i>Kolonlar</button>
+          <div class="acilir-yuzey saga kolon-secim" id="frmDKolon" role="group" aria-label="Görünen kolonlar" hidden="">
+            <div class="acilir-bas">Görünen kolonlar<button type="button">Sıfırla</button></div>
+            <label class="acilir-kalem kilitli"><input type="checkbox" checked="" disabled="">Başvuru no</label>
+            <label class="acilir-kalem"><input type="checkbox" checked="">Form</label>
+            <label class="acilir-kalem"><input type="checkbox" checked="">Başvuran</label>
+            <label class="acilir-kalem"><input type="checkbox" checked="">Atanan</label>
+            <label class="acilir-kalem"><input type="checkbox" checked="">Durum</label>
+            <label class="acilir-kalem"><input type="checkbox" checked="">Tarih</label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="suzgec-cubuk">
+      <div class="panel-arama">
+        <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+        <input type="search" class="panel-arama-girdi" id="frmDAra" placeholder="Başvuru no, ad ya da e-posta ara" aria-label="Başvuru no, ad ya da e-posta ara">
+      </div>
+      <div class="coklu-secim">
+        <button class="suzgec-dugme" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="frmDSuz0">Form<span class="sayi" data-sayi="0"></span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button>
+        <div class="acilir-yuzey suzgec" id="frmDSuz0" role="group" aria-label="Form" hidden="">
+          <div class="acilir-bas">Form<button type="button">Temizle</button></div>
+          <button class="cip suzgec aktif" type="button" aria-pressed="true">Tümü</button>
+          <button class="cip suzgec" type="button" aria-pressed="false">Diyetisyen başvuru formu</button>
+          <button class="cip suzgec" type="button" aria-pressed="false">İletişim formu</button>
+          <button class="cip suzgec" type="button" aria-pressed="false">Kurumsal iş birliği</button>
+          <button class="cip suzgec" type="button" aria-pressed="false">Hata bildirimi</button>
+        </div>
+      </div>
+      <div class="coklu-secim">
+        <button class="suzgec-dugme" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="frmDSuz1">Atanan<span class="sayi" data-sayi="0"></span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button>
+        <div class="acilir-yuzey suzgec" id="frmDSuz1" role="group" aria-label="Atanan" hidden="">
+          <div class="acilir-bas">Atanan<button type="button">Temizle</button></div>
+          <button class="cip suzgec aktif" type="button" aria-pressed="true">Tümü</button>
+          <button class="cip suzgec" type="button" aria-pressed="false">Atanmamış</button>
+          <button class="cip suzgec" type="button" aria-pressed="false">Yasin Yavuz</button>
+          <button class="cip suzgec" type="button" aria-pressed="false">Deniz Korkmaz</button>
+          <button class="cip suzgec" type="button" aria-pressed="false">Ela Bozkurt</button>
+          <button class="cip suzgec" type="button" aria-pressed="false">Elif Demir</button>
+        </div>
+      </div>
+      <span class="suzgec-sayac"><b>12</b> başvuru</span>
+    </div>
+
+    <div class="toplu-islem" hidden="" role="region" aria-label="Toplu işlem">
+      <b><span data-rol="secim-sayisi">0</span> satır seçildi</b>
+      <div class="eylem-satiri">
+        <button class="dugme hayalet" type="button">Ata</button>
+        <button class="dugme hayalet" type="button">Ek belge iste</button>
+        <button class="dugme hayalet" type="button">Onayla</button>
+        <button class="dugme hayalet" type="button">Reddet</button>
+        <button class="dugme hayalet" type="button">Arşivle</button>
+      </div>
+    </div>
+
+    <div class="kart-govde bosluksuz">
+      <div class="tablo-kap gomulu">
+        <table class="tablo panel" aria-label="Değerlendirmede">
+          <thead>
+            <tr><th class="sec" scope="col"><label><input type="checkbox" aria-label="Tümünü seç"></label></th><th class="sirali" scope="col"><button type="button">Başvuru no</button></th><th class="sirali" scope="col"><button type="button">Form</button></th><th class="sirali" scope="col"><button type="button">Başvuran</button></th><th scope="col">Atanan</th><th class="sirali" scope="col"><button type="button">Durum</button></th><th class="sirali num" scope="col"><button type="button">Tarih</button></th><th class="eylem" scope="col"><span class="yalniz-okuyucu">İşlemler</span></th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="sec"><label><input type="checkbox" aria-label="Naz Erdem satırını seç"></label></td>
+              <td><code>BV-2041</code></td>
+              <td><b>Diyetisyen başvuru formu</b></td>
+              <td><a class="kisi-hucre" href="admin-uyeler.html"><span class="kisi-avatar" aria-hidden="true">NE</span><span class="kisi-bilgi"><span class="kisi-ad">Naz Erdem</span><span class="kisi-alt">naz.erdem@eposta.com</span></span></a></td>
+              <td>Deniz Korkmaz</td>
+              <td><span class="rozet bekleme">Değerlendirmede</span></td>
+              <td class="num">28 Ağu 2026</td>
+              <td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" href="admin-diyetisyen-basvuru.html" aria-label="BV-2041 başvurusunu incele"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i></a><button class="ikon-dugme" type="button" aria-label="BV-2041 başvurusunu ata"><i class="fa-solid fa-user-plus" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="BV-2041 için ek belge iste"><i class="fa-solid fa-file-circle-question" aria-hidden="true"></i></button></div></td>
+            </tr>
+            <tr>
+              <td class="sec"><label><input type="checkbox" aria-label="Onur Kılıç satırını seç"></label></td>
+              <td><code>BV-2039</code></td>
+              <td><b>Diyetisyen başvuru formu</b></td>
+              <td><a class="kisi-hucre" href="admin-uyeler.html"><span class="kisi-avatar" aria-hidden="true">OK</span><span class="kisi-bilgi"><span class="kisi-ad">Onur Kılıç</span><span class="kisi-alt">onur.kilic@eposta.com</span></span></a></td>
+              <td>—</td>
+              <td><span class="rozet bekleme">Değerlendirmede</span></td>
+              <td class="num">27 Ağu 2026</td>
+              <td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" href="admin-diyetisyen-basvuru.html" aria-label="BV-2039 başvurusunu incele"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i></a><button class="ikon-dugme" type="button" aria-label="BV-2039 başvurusunu ata"><i class="fa-solid fa-user-plus" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="BV-2039 için ek belge iste"><i class="fa-solid fa-file-circle-question" aria-hidden="true"></i></button></div></td>
+            </tr>
+            <tr>
+              <td class="sec"><label><input type="checkbox" aria-label="Ece Yalçın satırını seç"></label></td>
+              <td><code>BV-2036</code></td>
+              <td><b>Kurumsal iş birliği</b></td>
+              <td><a class="kisi-hucre" href="admin-uyeler.html"><span class="kisi-avatar" aria-hidden="true">EY</span><span class="kisi-bilgi"><span class="kisi-ad">Ece Yalçın</span><span class="kisi-alt">ece@beslenmestudyo.com</span></span></a></td>
+              <td>Ela Bozkurt</td>
+              <td><span class="rozet bekleme">Değerlendirmede</span></td>
+              <td class="num">26 Ağu 2026</td>
+              <td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" href="admin-diyetisyen-basvuru.html" aria-label="BV-2036 başvurusunu incele"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i></a><button class="ikon-dugme" type="button" aria-label="BV-2036 başvurusunu ata"><i class="fa-solid fa-user-plus" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="BV-2036 için ek belge iste"><i class="fa-solid fa-file-circle-question" aria-hidden="true"></i></button></div></td>
+            </tr>
+            <tr>
+              <td class="sec"><label><input type="checkbox" aria-label="Pelin Yalçın satırını seç"></label></td>
+              <td><code>BV-2034</code></td>
+              <td><b>Diyetisyen başvuru formu</b></td>
+              <td><a class="kisi-hucre" href="admin-uyeler.html"><span class="kisi-avatar" aria-hidden="true">PY</span><span class="kisi-bilgi"><span class="kisi-ad">Pelin Yalçın</span><span class="kisi-alt">pelin.y@eposta.com</span></span></a></td>
+              <td>Yasin Yavuz</td>
+              <td><span class="rozet bekleme">Değerlendirmede</span></td>
+              <td class="num">25 Ağu 2026</td>
+              <td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" href="admin-diyetisyen-basvuru.html" aria-label="BV-2034 başvurusunu incele"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i></a><button class="ikon-dugme" type="button" aria-label="BV-2034 başvurusunu ata"><i class="fa-solid fa-user-plus" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="BV-2034 için ek belge iste"><i class="fa-solid fa-file-circle-question" aria-hidden="true"></i></button></div></td>
+            </tr>
+            <tr>
+              <td class="sec"><label><input type="checkbox" aria-label="Mert Uysal satırını seç"></label></td>
+              <td><code>BV-2031</code></td>
+              <td><b>Hata bildirimi</b></td>
+              <td><a class="kisi-hucre" href="admin-uyeler.html"><span class="kisi-avatar" aria-hidden="true">MU</span><span class="kisi-bilgi"><span class="kisi-ad">Mert Uysal</span><span class="kisi-alt">mert.uysal@eposta.com</span></span></a></td>
+              <td>Elif Demir</td>
+              <td><span class="rozet bekleme">Değerlendirmede</span></td>
+              <td class="num">24 Ağu 2026</td>
+              <td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" href="admin-diyetisyen-basvuru.html" aria-label="BV-2031 başvurusunu incele"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i></a><button class="ikon-dugme" type="button" aria-label="BV-2031 başvurusunu ata"><i class="fa-solid fa-user-plus" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="BV-2031 için ek belge iste"><i class="fa-solid fa-file-circle-question" aria-hidden="true"></i></button></div></td>
+            </tr>
+            <tr>
+              <td class="sec"><label><input type="checkbox" aria-label="Zeynep Arı satırını seç"></label></td>
+              <td><code>BV-2028</code></td>
+              <td><b>İletişim formu</b></td>
+              <td><a class="kisi-hucre" href="admin-uyeler.html"><span class="kisi-avatar" aria-hidden="true">ZA</span><span class="kisi-bilgi"><span class="kisi-ad">Zeynep Arı</span><span class="kisi-alt">zeynep.ari@eposta.com</span></span></a></td>
+              <td>—</td>
+              <td><span class="rozet bekleme">Değerlendirmede</span></td>
+              <td class="num">23 Ağu 2026</td>
+              <td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" href="admin-diyetisyen-basvuru.html" aria-label="BV-2028 başvurusunu incele"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i></a><button class="ikon-dugme" type="button" aria-label="BV-2028 başvurusunu ata"><i class="fa-solid fa-user-plus" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="BV-2028 için ek belge iste"><i class="fa-solid fa-file-circle-question" aria-hidden="true"></i></button></div></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="tablo-kap gomulu" data-durum="yukleniyor" aria-busy="true" hidden="">
+        <table class="tablo panel" aria-label="Değerlendirmede yükleniyor">
+          <tbody>
+            <tr><td class="sec"></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td></tr>
+            <tr><td class="sec"></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td></tr>
+            <tr><td class="sec"></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td></tr>
+            <tr><td class="sec"></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td></tr>
+          </tbody>
+        </table>
+        <p class="yalniz-okuyucu" role="status">Değerlendirmede yükleniyor.</p>
+      </div>
+      <div class="bos-durum kart-ici" data-durum="bos-ilk" hidden="">
+        <div class="bos-ikon" aria-hidden="true"><i class="fa-solid fa-inbox"></i></div>
+        <h3>Değerlendirmede başvuru yok</h3>
+        <p>Bir başvuruyu üzerine aldığında burada görünür.</p>
+        <a class="dugme birincil" href="#">Formlara dön</a>
+      </div>
+      <div class="bos-durum kart-ici" data-durum="bos" hidden="">
+        <div class="bos-ikon" aria-hidden="true"><i class="fa-solid fa-filter-circle-xmark"></i></div>
+        <h3>Bu süzgeçle sonuç yok</h3>
+        <p>Süzgeci genişlet ya da aramayı değiştir.</p>
+        <button class="dugme hayalet" type="button">Süzgeci temizle</button>
+      </div>
+      <div class="bos-durum kart-ici yetkisiz" data-durum="yetkisiz" hidden="">
+        <div class="bos-ikon" aria-hidden="true"><i class="fa-solid fa-lock"></i></div>
+        <h3>Bu modüle erişimin yok</h3>
+        <p>Erişim istemek için yöneticinle görüş.</p>
+      </div>
+      <div class="alan-ozet" data-durum="dogrulama" role="alert">
+        <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>
+        <span><b>2 satır kaydedilemedi</b> — zorunlu alanlar eksik.</span>
+      </div>
+      <div class="bos-durum kart-ici servis-hatasi" data-durum="servis" hidden="">
+        <div class="bos-ikon" aria-hidden="true"><i class="fa-solid fa-triangle-exclamation"></i></div>
+        <h3>Değerlendirmede yüklenemedi</h3>
+        <p>Bağlantı kurulamadı. Birkaç saniye sonra yeniden dene.</p>
+        <button class="dugme hayalet" type="button"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i>Yeniden dene</button>
+        <p class="hata-izi">Referans: <code>FRM-7C41-22A8</code></p>
+      </div>
+    </div>
+
+      <div class="sayfalama kart-ayagi">
+        <span class="sayfalama-bilgi"><b>1–6</b> / 12 başvuru</span>
+        <div class="dugmeler">
+          <button class="sayfa-dugme sade ok" type="button" disabled="" aria-label="Önceki sayfa"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i></button>
+          <button class="sayfa-dugme aktif" type="button" aria-current="page">1</button>
+          <button class="sayfa-dugme sade" type="button">2</button>
+          <button class="sayfa-dugme sade ok" type="button" aria-label="Sonraki sayfa"><i class="fa-solid fa-chevron-right" aria-hidden="true"></i></button>
+        </div>
+      </div>
+  </div>
+    </div>
+    <div id="frm-p4" role="tabpanel" aria-labelledby="frm-t4" hidden="">
+  <div class="kart panel">
+    <div class="kart-bas">
+      <h2 class="kart-baslik"><i class="fa-solid fa-inbox" aria-hidden="true"></i>Onaylanan</h2>
+      <div class="eylem-satiri">
+        <div class="coklu-secim">
+          <button class="suzgec-dugme" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="frmOKolon"><i class="fa-solid fa-table-columns" aria-hidden="true"></i>Kolonlar</button>
+          <div class="acilir-yuzey saga kolon-secim" id="frmOKolon" role="group" aria-label="Görünen kolonlar" hidden="">
+            <div class="acilir-bas">Görünen kolonlar<button type="button">Sıfırla</button></div>
+            <label class="acilir-kalem kilitli"><input type="checkbox" checked="" disabled="">Başvuru no</label>
+            <label class="acilir-kalem"><input type="checkbox" checked="">Form</label>
+            <label class="acilir-kalem"><input type="checkbox" checked="">Başvuran</label>
+            <label class="acilir-kalem"><input type="checkbox" checked="">Atanan</label>
+            <label class="acilir-kalem"><input type="checkbox" checked="">Durum</label>
+            <label class="acilir-kalem"><input type="checkbox" checked="">Tarih</label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="suzgec-cubuk">
+      <div class="panel-arama">
+        <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+        <input type="search" class="panel-arama-girdi" id="frmOAra" placeholder="Başvuru no, ad ya da e-posta ara" aria-label="Başvuru no, ad ya da e-posta ara">
+      </div>
+      <div class="coklu-secim">
+        <button class="suzgec-dugme" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="frmOSuz0">Form<span class="sayi" data-sayi="0"></span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button>
+        <div class="acilir-yuzey suzgec" id="frmOSuz0" role="group" aria-label="Form" hidden="">
+          <div class="acilir-bas">Form<button type="button">Temizle</button></div>
+          <button class="cip suzgec aktif" type="button" aria-pressed="true">Tümü</button>
+          <button class="cip suzgec" type="button" aria-pressed="false">Diyetisyen başvuru formu</button>
+          <button class="cip suzgec" type="button" aria-pressed="false">İletişim formu</button>
+          <button class="cip suzgec" type="button" aria-pressed="false">Kurumsal iş birliği</button>
+          <button class="cip suzgec" type="button" aria-pressed="false">Hata bildirimi</button>
+        </div>
+      </div>
+      <div class="coklu-secim">
+        <button class="suzgec-dugme" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="frmOSuz1">Atanan<span class="sayi" data-sayi="0"></span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button>
+        <div class="acilir-yuzey suzgec" id="frmOSuz1" role="group" aria-label="Atanan" hidden="">
+          <div class="acilir-bas">Atanan<button type="button">Temizle</button></div>
+          <button class="cip suzgec aktif" type="button" aria-pressed="true">Tümü</button>
+          <button class="cip suzgec" type="button" aria-pressed="false">Atanmamış</button>
+          <button class="cip suzgec" type="button" aria-pressed="false">Yasin Yavuz</button>
+          <button class="cip suzgec" type="button" aria-pressed="false">Deniz Korkmaz</button>
+          <button class="cip suzgec" type="button" aria-pressed="false">Ela Bozkurt</button>
+          <button class="cip suzgec" type="button" aria-pressed="false">Elif Demir</button>
+        </div>
+      </div>
+      <span class="suzgec-sayac"><b>118</b> başvuru</span>
+    </div>
+
+    <div class="toplu-islem" hidden="" role="region" aria-label="Toplu işlem">
+      <b><span data-rol="secim-sayisi">0</span> satır seçildi</b>
+      <div class="eylem-satiri">
+        <button class="dugme hayalet" type="button">Ata</button>
+        <button class="dugme hayalet" type="button">Ek belge iste</button>
+        <button class="dugme hayalet" type="button">Onayla</button>
+        <button class="dugme hayalet" type="button">Reddet</button>
+        <button class="dugme hayalet" type="button">Arşivle</button>
+      </div>
+    </div>
+
+    <div class="kart-govde bosluksuz">
+      <div class="tablo-kap gomulu">
+        <table class="tablo panel" aria-label="Onaylanan">
+          <thead>
+            <tr><th class="sec" scope="col"><label><input type="checkbox" aria-label="Tümünü seç"></label></th><th class="sirali" scope="col"><button type="button">Başvuru no</button></th><th class="sirali" scope="col"><button type="button">Form</button></th><th class="sirali" scope="col"><button type="button">Başvuran</button></th><th scope="col">Atanan</th><th class="sirali" scope="col"><button type="button">Durum</button></th><th class="sirali num" scope="col"><button type="button">Tarih</button></th><th class="eylem" scope="col"><span class="yalniz-okuyucu">İşlemler</span></th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="sec"><label><input type="checkbox" aria-label="Naz Erdem satırını seç"></label></td>
+              <td><code>BV-2041</code></td>
+              <td><b>Diyetisyen başvuru formu</b></td>
+              <td><a class="kisi-hucre" href="admin-uyeler.html"><span class="kisi-avatar" aria-hidden="true">NE</span><span class="kisi-bilgi"><span class="kisi-ad">Naz Erdem</span><span class="kisi-alt">naz.erdem@eposta.com</span></span></a></td>
+              <td>Deniz Korkmaz</td>
+              <td><span class="rozet olumlu">Onaylandı</span></td>
+              <td class="num">28 Ağu 2026</td>
+              <td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" href="admin-diyetisyen-basvuru.html" aria-label="BV-2041 başvurusunu incele"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i></a><button class="ikon-dugme" type="button" aria-label="BV-2041 başvurusunu ata"><i class="fa-solid fa-user-plus" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="BV-2041 için ek belge iste"><i class="fa-solid fa-file-circle-question" aria-hidden="true"></i></button></div></td>
+            </tr>
+            <tr>
+              <td class="sec"><label><input type="checkbox" aria-label="Onur Kılıç satırını seç"></label></td>
+              <td><code>BV-2039</code></td>
+              <td><b>Diyetisyen başvuru formu</b></td>
+              <td><a class="kisi-hucre" href="admin-uyeler.html"><span class="kisi-avatar" aria-hidden="true">OK</span><span class="kisi-bilgi"><span class="kisi-ad">Onur Kılıç</span><span class="kisi-alt">onur.kilic@eposta.com</span></span></a></td>
+              <td>—</td>
+              <td><span class="rozet olumlu">Onaylandı</span></td>
+              <td class="num">27 Ağu 2026</td>
+              <td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" href="admin-diyetisyen-basvuru.html" aria-label="BV-2039 başvurusunu incele"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i></a><button class="ikon-dugme" type="button" aria-label="BV-2039 başvurusunu ata"><i class="fa-solid fa-user-plus" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="BV-2039 için ek belge iste"><i class="fa-solid fa-file-circle-question" aria-hidden="true"></i></button></div></td>
+            </tr>
+            <tr>
+              <td class="sec"><label><input type="checkbox" aria-label="Ece Yalçın satırını seç"></label></td>
+              <td><code>BV-2036</code></td>
+              <td><b>Kurumsal iş birliği</b></td>
+              <td><a class="kisi-hucre" href="admin-uyeler.html"><span class="kisi-avatar" aria-hidden="true">EY</span><span class="kisi-bilgi"><span class="kisi-ad">Ece Yalçın</span><span class="kisi-alt">ece@beslenmestudyo.com</span></span></a></td>
+              <td>Ela Bozkurt</td>
+              <td><span class="rozet olumlu">Onaylandı</span></td>
+              <td class="num">26 Ağu 2026</td>
+              <td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" href="admin-diyetisyen-basvuru.html" aria-label="BV-2036 başvurusunu incele"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i></a><button class="ikon-dugme" type="button" aria-label="BV-2036 başvurusunu ata"><i class="fa-solid fa-user-plus" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="BV-2036 için ek belge iste"><i class="fa-solid fa-file-circle-question" aria-hidden="true"></i></button></div></td>
+            </tr>
+            <tr>
+              <td class="sec"><label><input type="checkbox" aria-label="Pelin Yalçın satırını seç"></label></td>
+              <td><code>BV-2034</code></td>
+              <td><b>Diyetisyen başvuru formu</b></td>
+              <td><a class="kisi-hucre" href="admin-uyeler.html"><span class="kisi-avatar" aria-hidden="true">PY</span><span class="kisi-bilgi"><span class="kisi-ad">Pelin Yalçın</span><span class="kisi-alt">pelin.y@eposta.com</span></span></a></td>
+              <td>Yasin Yavuz</td>
+              <td><span class="rozet olumlu">Onaylandı</span></td>
+              <td class="num">25 Ağu 2026</td>
+              <td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" href="admin-diyetisyen-basvuru.html" aria-label="BV-2034 başvurusunu incele"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i></a><button class="ikon-dugme" type="button" aria-label="BV-2034 başvurusunu ata"><i class="fa-solid fa-user-plus" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="BV-2034 için ek belge iste"><i class="fa-solid fa-file-circle-question" aria-hidden="true"></i></button></div></td>
+            </tr>
+            <tr>
+              <td class="sec"><label><input type="checkbox" aria-label="Mert Uysal satırını seç"></label></td>
+              <td><code>BV-2031</code></td>
+              <td><b>Hata bildirimi</b></td>
+              <td><a class="kisi-hucre" href="admin-uyeler.html"><span class="kisi-avatar" aria-hidden="true">MU</span><span class="kisi-bilgi"><span class="kisi-ad">Mert Uysal</span><span class="kisi-alt">mert.uysal@eposta.com</span></span></a></td>
+              <td>Elif Demir</td>
+              <td><span class="rozet olumlu">Onaylandı</span></td>
+              <td class="num">24 Ağu 2026</td>
+              <td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" href="admin-diyetisyen-basvuru.html" aria-label="BV-2031 başvurusunu incele"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i></a><button class="ikon-dugme" type="button" aria-label="BV-2031 başvurusunu ata"><i class="fa-solid fa-user-plus" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="BV-2031 için ek belge iste"><i class="fa-solid fa-file-circle-question" aria-hidden="true"></i></button></div></td>
+            </tr>
+            <tr>
+              <td class="sec"><label><input type="checkbox" aria-label="Zeynep Arı satırını seç"></label></td>
+              <td><code>BV-2028</code></td>
+              <td><b>İletişim formu</b></td>
+              <td><a class="kisi-hucre" href="admin-uyeler.html"><span class="kisi-avatar" aria-hidden="true">ZA</span><span class="kisi-bilgi"><span class="kisi-ad">Zeynep Arı</span><span class="kisi-alt">zeynep.ari@eposta.com</span></span></a></td>
+              <td>—</td>
+              <td><span class="rozet olumlu">Onaylandı</span></td>
+              <td class="num">23 Ağu 2026</td>
+              <td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" href="admin-diyetisyen-basvuru.html" aria-label="BV-2028 başvurusunu incele"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i></a><button class="ikon-dugme" type="button" aria-label="BV-2028 başvurusunu ata"><i class="fa-solid fa-user-plus" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="BV-2028 için ek belge iste"><i class="fa-solid fa-file-circle-question" aria-hidden="true"></i></button></div></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="tablo-kap gomulu" data-durum="yukleniyor" aria-busy="true" hidden="">
+        <table class="tablo panel" aria-label="Onaylanan yükleniyor">
+          <tbody>
+            <tr><td class="sec"></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td></tr>
+            <tr><td class="sec"></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td></tr>
+            <tr><td class="sec"></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td></tr>
+            <tr><td class="sec"></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td></tr>
+          </tbody>
+        </table>
+        <p class="yalniz-okuyucu" role="status">Onaylanan yükleniyor.</p>
+      </div>
+      <div class="bos-durum kart-ici" data-durum="bos-ilk" hidden="">
+        <div class="bos-ikon" aria-hidden="true"><i class="fa-solid fa-inbox"></i></div>
+        <h3>Onaylanan başvuru yok</h3>
+        <p>Onayladığın başvurular burada arşivlenir.</p>
+        <a class="dugme birincil" href="#">Formlara dön</a>
+      </div>
+      <div class="bos-durum kart-ici" data-durum="bos" hidden="">
+        <div class="bos-ikon" aria-hidden="true"><i class="fa-solid fa-filter-circle-xmark"></i></div>
+        <h3>Bu süzgeçle sonuç yok</h3>
+        <p>Süzgeci genişlet ya da aramayı değiştir.</p>
+        <button class="dugme hayalet" type="button">Süzgeci temizle</button>
+      </div>
+      <div class="bos-durum kart-ici yetkisiz" data-durum="yetkisiz" hidden="">
+        <div class="bos-ikon" aria-hidden="true"><i class="fa-solid fa-lock"></i></div>
+        <h3>Bu modüle erişimin yok</h3>
+        <p>Erişim istemek için yöneticinle görüş.</p>
+      </div>
+      <div class="alan-ozet" data-durum="dogrulama" role="alert">
+        <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>
+        <span><b>2 satır kaydedilemedi</b> — zorunlu alanlar eksik.</span>
+      </div>
+      <div class="bos-durum kart-ici servis-hatasi" data-durum="servis" hidden="">
+        <div class="bos-ikon" aria-hidden="true"><i class="fa-solid fa-triangle-exclamation"></i></div>
+        <h3>Onaylanan yüklenemedi</h3>
+        <p>Bağlantı kurulamadı. Birkaç saniye sonra yeniden dene.</p>
+        <button class="dugme hayalet" type="button"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i>Yeniden dene</button>
+        <p class="hata-izi">Referans: <code>FRM-7C41-22A8</code></p>
+      </div>
+    </div>
+
+      <div class="sayfalama kart-ayagi">
+        <span class="sayfalama-bilgi"><b>1–6</b> / 118 başvuru</span>
+        <div class="dugmeler">
+          <button class="sayfa-dugme sade ok" type="button" disabled="" aria-label="Önceki sayfa"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i></button>
+          <button class="sayfa-dugme aktif" type="button" aria-current="page">1</button>
+          <button class="sayfa-dugme sade" type="button">2</button>
+          <button class="sayfa-dugme sade" type="button">3</button>
+          <button class="sayfa-dugme sade" type="button">4</button>
+          <button class="sayfa-dugme sade" type="button">5</button>
+          <button class="sayfa-dugme sade" type="button">6</button>
+          <button class="sayfa-dugme sade" type="button">7</button>
+          <button class="sayfa-dugme sade" type="button">8</button>
+          <button class="sayfa-dugme sade" type="button">9</button>
+          <button class="sayfa-dugme sade" type="button">10</button>
+          <button class="sayfa-dugme sade" type="button">11</button>
+          <button class="sayfa-dugme sade" type="button">12</button>
+          <button class="sayfa-dugme sade" type="button">13</button>
+          <button class="sayfa-dugme sade" type="button">14</button>
+          <button class="sayfa-dugme sade" type="button">15</button>
+          <button class="sayfa-dugme sade" type="button">16</button>
+          <button class="sayfa-dugme sade" type="button">17</button>
+          <button class="sayfa-dugme sade" type="button">18</button>
+          <button class="sayfa-dugme sade" type="button">19</button>
+          <button class="sayfa-dugme sade" type="button">20</button>
+          <button class="sayfa-dugme sade ok" type="button" aria-label="Sonraki sayfa"><i class="fa-solid fa-chevron-right" aria-hidden="true"></i></button>
+        </div>
+      </div>
+  </div>
+    </div>
+    <div id="frm-p5" role="tabpanel" aria-labelledby="frm-t5" hidden="">
+  <div class="kart panel">
+    <div class="kart-bas">
+      <h2 class="kart-baslik"><i class="fa-solid fa-inbox" aria-hidden="true"></i>Reddedilen</h2>
+      <div class="eylem-satiri">
+        <div class="coklu-secim">
+          <button class="suzgec-dugme" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="frmRKolon"><i class="fa-solid fa-table-columns" aria-hidden="true"></i>Kolonlar</button>
+          <div class="acilir-yuzey saga kolon-secim" id="frmRKolon" role="group" aria-label="Görünen kolonlar" hidden="">
+            <div class="acilir-bas">Görünen kolonlar<button type="button">Sıfırla</button></div>
+            <label class="acilir-kalem kilitli"><input type="checkbox" checked="" disabled="">Başvuru no</label>
+            <label class="acilir-kalem"><input type="checkbox" checked="">Form</label>
+            <label class="acilir-kalem"><input type="checkbox" checked="">Başvuran</label>
+            <label class="acilir-kalem"><input type="checkbox" checked="">Atanan</label>
+            <label class="acilir-kalem"><input type="checkbox" checked="">Durum</label>
+            <label class="acilir-kalem"><input type="checkbox" checked="">Tarih</label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="suzgec-cubuk">
+      <div class="panel-arama">
+        <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+        <input type="search" class="panel-arama-girdi" id="frmRAra" placeholder="Başvuru no, ad ya da e-posta ara" aria-label="Başvuru no, ad ya da e-posta ara">
+      </div>
+      <div class="coklu-secim">
+        <button class="suzgec-dugme" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="frmRSuz0">Form<span class="sayi" data-sayi="0"></span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button>
+        <div class="acilir-yuzey suzgec" id="frmRSuz0" role="group" aria-label="Form" hidden="">
+          <div class="acilir-bas">Form<button type="button">Temizle</button></div>
+          <button class="cip suzgec aktif" type="button" aria-pressed="true">Tümü</button>
+          <button class="cip suzgec" type="button" aria-pressed="false">Diyetisyen başvuru formu</button>
+          <button class="cip suzgec" type="button" aria-pressed="false">İletişim formu</button>
+          <button class="cip suzgec" type="button" aria-pressed="false">Kurumsal iş birliği</button>
+          <button class="cip suzgec" type="button" aria-pressed="false">Hata bildirimi</button>
+        </div>
+      </div>
+      <div class="coklu-secim">
+        <button class="suzgec-dugme" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="frmRSuz1">Atanan<span class="sayi" data-sayi="0"></span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button>
+        <div class="acilir-yuzey suzgec" id="frmRSuz1" role="group" aria-label="Atanan" hidden="">
+          <div class="acilir-bas">Atanan<button type="button">Temizle</button></div>
+          <button class="cip suzgec aktif" type="button" aria-pressed="true">Tümü</button>
+          <button class="cip suzgec" type="button" aria-pressed="false">Atanmamış</button>
+          <button class="cip suzgec" type="button" aria-pressed="false">Yasin Yavuz</button>
+          <button class="cip suzgec" type="button" aria-pressed="false">Deniz Korkmaz</button>
+          <button class="cip suzgec" type="button" aria-pressed="false">Ela Bozkurt</button>
+          <button class="cip suzgec" type="button" aria-pressed="false">Elif Demir</button>
+        </div>
+      </div>
+      <span class="suzgec-sayac"><b>24</b> başvuru</span>
+    </div>
+
+    <div class="toplu-islem" hidden="" role="region" aria-label="Toplu işlem">
+      <b><span data-rol="secim-sayisi">0</span> satır seçildi</b>
+      <div class="eylem-satiri">
+        <button class="dugme hayalet" type="button">Ata</button>
+        <button class="dugme hayalet" type="button">Ek belge iste</button>
+        <button class="dugme hayalet" type="button">Onayla</button>
+        <button class="dugme hayalet" type="button">Reddet</button>
+        <button class="dugme hayalet" type="button">Arşivle</button>
+      </div>
+    </div>
+
+    <div class="kart-govde bosluksuz">
+      <div class="tablo-kap gomulu">
+        <table class="tablo panel" aria-label="Reddedilen">
+          <thead>
+            <tr><th class="sec" scope="col"><label><input type="checkbox" aria-label="Tümünü seç"></label></th><th class="sirali" scope="col"><button type="button">Başvuru no</button></th><th class="sirali" scope="col"><button type="button">Form</button></th><th class="sirali" scope="col"><button type="button">Başvuran</button></th><th scope="col">Atanan</th><th class="sirali" scope="col"><button type="button">Durum</button></th><th class="sirali num" scope="col"><button type="button">Tarih</button></th><th class="eylem" scope="col"><span class="yalniz-okuyucu">İşlemler</span></th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="sec"><label><input type="checkbox" aria-label="Naz Erdem satırını seç"></label></td>
+              <td><code>BV-2041</code></td>
+              <td><b>Diyetisyen başvuru formu</b></td>
+              <td><a class="kisi-hucre" href="admin-uyeler.html"><span class="kisi-avatar" aria-hidden="true">NE</span><span class="kisi-bilgi"><span class="kisi-ad">Naz Erdem</span><span class="kisi-alt">naz.erdem@eposta.com</span></span></a></td>
+              <td>Deniz Korkmaz</td>
+              <td><span class="rozet durdu">Reddedildi</span></td>
+              <td class="num">28 Ağu 2026</td>
+              <td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" href="admin-diyetisyen-basvuru.html" aria-label="BV-2041 başvurusunu incele"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i></a><button class="ikon-dugme" type="button" aria-label="BV-2041 başvurusunu ata"><i class="fa-solid fa-user-plus" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="BV-2041 için ek belge iste"><i class="fa-solid fa-file-circle-question" aria-hidden="true"></i></button></div></td>
+            </tr>
+            <tr>
+              <td class="sec"><label><input type="checkbox" aria-label="Onur Kılıç satırını seç"></label></td>
+              <td><code>BV-2039</code></td>
+              <td><b>Diyetisyen başvuru formu</b></td>
+              <td><a class="kisi-hucre" href="admin-uyeler.html"><span class="kisi-avatar" aria-hidden="true">OK</span><span class="kisi-bilgi"><span class="kisi-ad">Onur Kılıç</span><span class="kisi-alt">onur.kilic@eposta.com</span></span></a></td>
+              <td>—</td>
+              <td><span class="rozet durdu">Reddedildi</span></td>
+              <td class="num">27 Ağu 2026</td>
+              <td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" href="admin-diyetisyen-basvuru.html" aria-label="BV-2039 başvurusunu incele"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i></a><button class="ikon-dugme" type="button" aria-label="BV-2039 başvurusunu ata"><i class="fa-solid fa-user-plus" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="BV-2039 için ek belge iste"><i class="fa-solid fa-file-circle-question" aria-hidden="true"></i></button></div></td>
+            </tr>
+            <tr>
+              <td class="sec"><label><input type="checkbox" aria-label="Ece Yalçın satırını seç"></label></td>
+              <td><code>BV-2036</code></td>
+              <td><b>Kurumsal iş birliği</b></td>
+              <td><a class="kisi-hucre" href="admin-uyeler.html"><span class="kisi-avatar" aria-hidden="true">EY</span><span class="kisi-bilgi"><span class="kisi-ad">Ece Yalçın</span><span class="kisi-alt">ece@beslenmestudyo.com</span></span></a></td>
+              <td>Ela Bozkurt</td>
+              <td><span class="rozet durdu">Reddedildi</span></td>
+              <td class="num">26 Ağu 2026</td>
+              <td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" href="admin-diyetisyen-basvuru.html" aria-label="BV-2036 başvurusunu incele"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i></a><button class="ikon-dugme" type="button" aria-label="BV-2036 başvurusunu ata"><i class="fa-solid fa-user-plus" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="BV-2036 için ek belge iste"><i class="fa-solid fa-file-circle-question" aria-hidden="true"></i></button></div></td>
+            </tr>
+            <tr>
+              <td class="sec"><label><input type="checkbox" aria-label="Pelin Yalçın satırını seç"></label></td>
+              <td><code>BV-2034</code></td>
+              <td><b>Diyetisyen başvuru formu</b></td>
+              <td><a class="kisi-hucre" href="admin-uyeler.html"><span class="kisi-avatar" aria-hidden="true">PY</span><span class="kisi-bilgi"><span class="kisi-ad">Pelin Yalçın</span><span class="kisi-alt">pelin.y@eposta.com</span></span></a></td>
+              <td>Yasin Yavuz</td>
+              <td><span class="rozet durdu">Reddedildi</span></td>
+              <td class="num">25 Ağu 2026</td>
+              <td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" href="admin-diyetisyen-basvuru.html" aria-label="BV-2034 başvurusunu incele"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i></a><button class="ikon-dugme" type="button" aria-label="BV-2034 başvurusunu ata"><i class="fa-solid fa-user-plus" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="BV-2034 için ek belge iste"><i class="fa-solid fa-file-circle-question" aria-hidden="true"></i></button></div></td>
+            </tr>
+            <tr>
+              <td class="sec"><label><input type="checkbox" aria-label="Mert Uysal satırını seç"></label></td>
+              <td><code>BV-2031</code></td>
+              <td><b>Hata bildirimi</b></td>
+              <td><a class="kisi-hucre" href="admin-uyeler.html"><span class="kisi-avatar" aria-hidden="true">MU</span><span class="kisi-bilgi"><span class="kisi-ad">Mert Uysal</span><span class="kisi-alt">mert.uysal@eposta.com</span></span></a></td>
+              <td>Elif Demir</td>
+              <td><span class="rozet durdu">Reddedildi</span></td>
+              <td class="num">24 Ağu 2026</td>
+              <td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" href="admin-diyetisyen-basvuru.html" aria-label="BV-2031 başvurusunu incele"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i></a><button class="ikon-dugme" type="button" aria-label="BV-2031 başvurusunu ata"><i class="fa-solid fa-user-plus" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="BV-2031 için ek belge iste"><i class="fa-solid fa-file-circle-question" aria-hidden="true"></i></button></div></td>
+            </tr>
+            <tr>
+              <td class="sec"><label><input type="checkbox" aria-label="Zeynep Arı satırını seç"></label></td>
+              <td><code>BV-2028</code></td>
+              <td><b>İletişim formu</b></td>
+              <td><a class="kisi-hucre" href="admin-uyeler.html"><span class="kisi-avatar" aria-hidden="true">ZA</span><span class="kisi-bilgi"><span class="kisi-ad">Zeynep Arı</span><span class="kisi-alt">zeynep.ari@eposta.com</span></span></a></td>
+              <td>—</td>
+              <td><span class="rozet durdu">Reddedildi</span></td>
+              <td class="num">23 Ağu 2026</td>
+              <td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" href="admin-diyetisyen-basvuru.html" aria-label="BV-2028 başvurusunu incele"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i></a><button class="ikon-dugme" type="button" aria-label="BV-2028 başvurusunu ata"><i class="fa-solid fa-user-plus" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="BV-2028 için ek belge iste"><i class="fa-solid fa-file-circle-question" aria-hidden="true"></i></button></div></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="tablo-kap gomulu" data-durum="yukleniyor" aria-busy="true" hidden="">
+        <table class="tablo panel" aria-label="Reddedilen yükleniyor">
+          <tbody>
+            <tr><td class="sec"></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td></tr>
+            <tr><td class="sec"></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td></tr>
+            <tr><td class="sec"></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td></tr>
+            <tr><td class="sec"></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td></tr>
+          </tbody>
+        </table>
+        <p class="yalniz-okuyucu" role="status">Reddedilen yükleniyor.</p>
+      </div>
+      <div class="bos-durum kart-ici" data-durum="bos-ilk" hidden="">
+        <div class="bos-ikon" aria-hidden="true"><i class="fa-solid fa-inbox"></i></div>
+        <h3>Reddedilen başvuru yok</h3>
+        <p>Gerekçesiyle reddettiğin başvurular burada durur; başvuran düzeltip yeniden başvurabilir.</p>
+        <a class="dugme birincil" href="#">Formlara dön</a>
+      </div>
+      <div class="bos-durum kart-ici" data-durum="bos" hidden="">
+        <div class="bos-ikon" aria-hidden="true"><i class="fa-solid fa-filter-circle-xmark"></i></div>
+        <h3>Bu süzgeçle sonuç yok</h3>
+        <p>Süzgeci genişlet ya da aramayı değiştir.</p>
+        <button class="dugme hayalet" type="button">Süzgeci temizle</button>
+      </div>
+      <div class="bos-durum kart-ici yetkisiz" data-durum="yetkisiz" hidden="">
+        <div class="bos-ikon" aria-hidden="true"><i class="fa-solid fa-lock"></i></div>
+        <h3>Bu modüle erişimin yok</h3>
+        <p>Erişim istemek için yöneticinle görüş.</p>
+      </div>
+      <div class="alan-ozet" data-durum="dogrulama" role="alert">
+        <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>
+        <span><b>2 satır kaydedilemedi</b> — zorunlu alanlar eksik.</span>
+      </div>
+      <div class="bos-durum kart-ici servis-hatasi" data-durum="servis" hidden="">
+        <div class="bos-ikon" aria-hidden="true"><i class="fa-solid fa-triangle-exclamation"></i></div>
+        <h3>Reddedilen yüklenemedi</h3>
+        <p>Bağlantı kurulamadı. Birkaç saniye sonra yeniden dene.</p>
+        <button class="dugme hayalet" type="button"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i>Yeniden dene</button>
+        <p class="hata-izi">Referans: <code>FRM-7C41-22A8</code></p>
+      </div>
+    </div>
+
+      <div class="sayfalama kart-ayagi">
+        <span class="sayfalama-bilgi"><b>1–6</b> / 24 başvuru</span>
+        <div class="dugmeler">
+          <button class="sayfa-dugme sade ok" type="button" disabled="" aria-label="Önceki sayfa"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i></button>
+          <button class="sayfa-dugme aktif" type="button" aria-current="page">1</button>
+          <button class="sayfa-dugme sade" type="button">2</button>
+          <button class="sayfa-dugme sade" type="button">3</button>
+          <button class="sayfa-dugme sade" type="button">4</button>
+          <button class="sayfa-dugme sade ok" type="button" aria-label="Sonraki sayfa"><i class="fa-solid fa-chevron-right" aria-hidden="true"></i></button>
+        </div>
+      </div>
+  </div>
+    </div>
+    <div id="frm-p6" role="tabpanel" aria-labelledby="frm-t6" hidden="">
+  <div class="kart panel">
+    <div class="kart-bas">
+      <h2 class="kart-baslik"><i class="fa-solid fa-inbox" aria-hidden="true"></i>Arşivlenen</h2>
+      <div class="eylem-satiri">
+        <div class="coklu-secim">
+          <button class="suzgec-dugme" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="frmArKolon"><i class="fa-solid fa-table-columns" aria-hidden="true"></i>Kolonlar</button>
+          <div class="acilir-yuzey saga kolon-secim" id="frmArKolon" role="group" aria-label="Görünen kolonlar" hidden="">
+            <div class="acilir-bas">Görünen kolonlar<button type="button">Sıfırla</button></div>
+            <label class="acilir-kalem kilitli"><input type="checkbox" checked="" disabled="">Başvuru no</label>
+            <label class="acilir-kalem"><input type="checkbox" checked="">Form</label>
+            <label class="acilir-kalem"><input type="checkbox" checked="">Başvuran</label>
+            <label class="acilir-kalem"><input type="checkbox" checked="">Atanan</label>
+            <label class="acilir-kalem"><input type="checkbox" checked="">Durum</label>
+            <label class="acilir-kalem"><input type="checkbox" checked="">Tarih</label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="suzgec-cubuk">
+      <div class="panel-arama">
+        <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+        <input type="search" class="panel-arama-girdi" id="frmArAra" placeholder="Başvuru no, ad ya da e-posta ara" aria-label="Başvuru no, ad ya da e-posta ara">
+      </div>
+      <div class="coklu-secim">
+        <button class="suzgec-dugme" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="frmArSuz0">Form<span class="sayi" data-sayi="0"></span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button>
+        <div class="acilir-yuzey suzgec" id="frmArSuz0" role="group" aria-label="Form" hidden="">
+          <div class="acilir-bas">Form<button type="button">Temizle</button></div>
+          <button class="cip suzgec aktif" type="button" aria-pressed="true">Tümü</button>
+          <button class="cip suzgec" type="button" aria-pressed="false">Diyetisyen başvuru formu</button>
+          <button class="cip suzgec" type="button" aria-pressed="false">İletişim formu</button>
+          <button class="cip suzgec" type="button" aria-pressed="false">Kurumsal iş birliği</button>
+          <button class="cip suzgec" type="button" aria-pressed="false">Hata bildirimi</button>
+        </div>
+      </div>
+      <div class="coklu-secim">
+        <button class="suzgec-dugme" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="frmArSuz1">Atanan<span class="sayi" data-sayi="0"></span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button>
+        <div class="acilir-yuzey suzgec" id="frmArSuz1" role="group" aria-label="Atanan" hidden="">
+          <div class="acilir-bas">Atanan<button type="button">Temizle</button></div>
+          <button class="cip suzgec aktif" type="button" aria-pressed="true">Tümü</button>
+          <button class="cip suzgec" type="button" aria-pressed="false">Atanmamış</button>
+          <button class="cip suzgec" type="button" aria-pressed="false">Yasin Yavuz</button>
+          <button class="cip suzgec" type="button" aria-pressed="false">Deniz Korkmaz</button>
+          <button class="cip suzgec" type="button" aria-pressed="false">Ela Bozkurt</button>
+          <button class="cip suzgec" type="button" aria-pressed="false">Elif Demir</button>
+        </div>
+      </div>
+      <span class="suzgec-sayac"><b>63</b> başvuru</span>
+    </div>
+
+    <div class="toplu-islem" hidden="" role="region" aria-label="Toplu işlem">
+      <b><span data-rol="secim-sayisi">0</span> satır seçildi</b>
+      <div class="eylem-satiri">
+        <button class="dugme hayalet" type="button">Ata</button>
+        <button class="dugme hayalet" type="button">Ek belge iste</button>
+        <button class="dugme hayalet" type="button">Onayla</button>
+        <button class="dugme hayalet" type="button">Reddet</button>
+        <button class="dugme hayalet" type="button">Arşivle</button>
+      </div>
+    </div>
+
+    <div class="kart-govde bosluksuz">
+      <div class="tablo-kap gomulu">
+        <table class="tablo panel" aria-label="Arşivlenen">
+          <thead>
+            <tr><th class="sec" scope="col"><label><input type="checkbox" aria-label="Tümünü seç"></label></th><th class="sirali" scope="col"><button type="button">Başvuru no</button></th><th class="sirali" scope="col"><button type="button">Form</button></th><th class="sirali" scope="col"><button type="button">Başvuran</button></th><th scope="col">Atanan</th><th class="sirali" scope="col"><button type="button">Durum</button></th><th class="sirali num" scope="col"><button type="button">Tarih</button></th><th class="eylem" scope="col"><span class="yalniz-okuyucu">İşlemler</span></th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="sec"><label><input type="checkbox" aria-label="Naz Erdem satırını seç"></label></td>
+              <td><code>BV-2041</code></td>
+              <td><b>Diyetisyen başvuru formu</b></td>
+              <td><a class="kisi-hucre" href="admin-uyeler.html"><span class="kisi-avatar" aria-hidden="true">NE</span><span class="kisi-bilgi"><span class="kisi-ad">Naz Erdem</span><span class="kisi-alt">naz.erdem@eposta.com</span></span></a></td>
+              <td>Deniz Korkmaz</td>
+              <td><span class="rozet pasif">Arşivlendi</span></td>
+              <td class="num">28 Ağu 2026</td>
+              <td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" href="admin-diyetisyen-basvuru.html" aria-label="BV-2041 başvurusunu incele"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i></a><button class="ikon-dugme" type="button" aria-label="BV-2041 başvurusunu ata"><i class="fa-solid fa-user-plus" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="BV-2041 için ek belge iste"><i class="fa-solid fa-file-circle-question" aria-hidden="true"></i></button></div></td>
+            </tr>
+            <tr>
+              <td class="sec"><label><input type="checkbox" aria-label="Onur Kılıç satırını seç"></label></td>
+              <td><code>BV-2039</code></td>
+              <td><b>Diyetisyen başvuru formu</b></td>
+              <td><a class="kisi-hucre" href="admin-uyeler.html"><span class="kisi-avatar" aria-hidden="true">OK</span><span class="kisi-bilgi"><span class="kisi-ad">Onur Kılıç</span><span class="kisi-alt">onur.kilic@eposta.com</span></span></a></td>
+              <td>—</td>
+              <td><span class="rozet pasif">Arşivlendi</span></td>
+              <td class="num">27 Ağu 2026</td>
+              <td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" href="admin-diyetisyen-basvuru.html" aria-label="BV-2039 başvurusunu incele"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i></a><button class="ikon-dugme" type="button" aria-label="BV-2039 başvurusunu ata"><i class="fa-solid fa-user-plus" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="BV-2039 için ek belge iste"><i class="fa-solid fa-file-circle-question" aria-hidden="true"></i></button></div></td>
+            </tr>
+            <tr>
+              <td class="sec"><label><input type="checkbox" aria-label="Ece Yalçın satırını seç"></label></td>
+              <td><code>BV-2036</code></td>
+              <td><b>Kurumsal iş birliği</b></td>
+              <td><a class="kisi-hucre" href="admin-uyeler.html"><span class="kisi-avatar" aria-hidden="true">EY</span><span class="kisi-bilgi"><span class="kisi-ad">Ece Yalçın</span><span class="kisi-alt">ece@beslenmestudyo.com</span></span></a></td>
+              <td>Ela Bozkurt</td>
+              <td><span class="rozet pasif">Arşivlendi</span></td>
+              <td class="num">26 Ağu 2026</td>
+              <td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" href="admin-diyetisyen-basvuru.html" aria-label="BV-2036 başvurusunu incele"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i></a><button class="ikon-dugme" type="button" aria-label="BV-2036 başvurusunu ata"><i class="fa-solid fa-user-plus" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="BV-2036 için ek belge iste"><i class="fa-solid fa-file-circle-question" aria-hidden="true"></i></button></div></td>
+            </tr>
+            <tr>
+              <td class="sec"><label><input type="checkbox" aria-label="Pelin Yalçın satırını seç"></label></td>
+              <td><code>BV-2034</code></td>
+              <td><b>Diyetisyen başvuru formu</b></td>
+              <td><a class="kisi-hucre" href="admin-uyeler.html"><span class="kisi-avatar" aria-hidden="true">PY</span><span class="kisi-bilgi"><span class="kisi-ad">Pelin Yalçın</span><span class="kisi-alt">pelin.y@eposta.com</span></span></a></td>
+              <td>Yasin Yavuz</td>
+              <td><span class="rozet pasif">Arşivlendi</span></td>
+              <td class="num">25 Ağu 2026</td>
+              <td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" href="admin-diyetisyen-basvuru.html" aria-label="BV-2034 başvurusunu incele"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i></a><button class="ikon-dugme" type="button" aria-label="BV-2034 başvurusunu ata"><i class="fa-solid fa-user-plus" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="BV-2034 için ek belge iste"><i class="fa-solid fa-file-circle-question" aria-hidden="true"></i></button></div></td>
+            </tr>
+            <tr>
+              <td class="sec"><label><input type="checkbox" aria-label="Mert Uysal satırını seç"></label></td>
+              <td><code>BV-2031</code></td>
+              <td><b>Hata bildirimi</b></td>
+              <td><a class="kisi-hucre" href="admin-uyeler.html"><span class="kisi-avatar" aria-hidden="true">MU</span><span class="kisi-bilgi"><span class="kisi-ad">Mert Uysal</span><span class="kisi-alt">mert.uysal@eposta.com</span></span></a></td>
+              <td>Elif Demir</td>
+              <td><span class="rozet pasif">Arşivlendi</span></td>
+              <td class="num">24 Ağu 2026</td>
+              <td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" href="admin-diyetisyen-basvuru.html" aria-label="BV-2031 başvurusunu incele"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i></a><button class="ikon-dugme" type="button" aria-label="BV-2031 başvurusunu ata"><i class="fa-solid fa-user-plus" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="BV-2031 için ek belge iste"><i class="fa-solid fa-file-circle-question" aria-hidden="true"></i></button></div></td>
+            </tr>
+            <tr>
+              <td class="sec"><label><input type="checkbox" aria-label="Zeynep Arı satırını seç"></label></td>
+              <td><code>BV-2028</code></td>
+              <td><b>İletişim formu</b></td>
+              <td><a class="kisi-hucre" href="admin-uyeler.html"><span class="kisi-avatar" aria-hidden="true">ZA</span><span class="kisi-bilgi"><span class="kisi-ad">Zeynep Arı</span><span class="kisi-alt">zeynep.ari@eposta.com</span></span></a></td>
+              <td>—</td>
+              <td><span class="rozet pasif">Arşivlendi</span></td>
+              <td class="num">23 Ağu 2026</td>
+              <td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" href="admin-diyetisyen-basvuru.html" aria-label="BV-2028 başvurusunu incele"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i></a><button class="ikon-dugme" type="button" aria-label="BV-2028 başvurusunu ata"><i class="fa-solid fa-user-plus" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="BV-2028 için ek belge iste"><i class="fa-solid fa-file-circle-question" aria-hidden="true"></i></button></div></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="tablo-kap gomulu" data-durum="yukleniyor" aria-busy="true" hidden="">
+        <table class="tablo panel" aria-label="Arşivlenen yükleniyor">
+          <tbody>
+            <tr><td class="sec"></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td></tr>
+            <tr><td class="sec"></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td></tr>
+            <tr><td class="sec"></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td></tr>
+            <tr><td class="sec"></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td></tr>
+          </tbody>
+        </table>
+        <p class="yalniz-okuyucu" role="status">Arşivlenen yükleniyor.</p>
+      </div>
+      <div class="bos-durum kart-ici" data-durum="bos-ilk" hidden="">
+        <div class="bos-ikon" aria-hidden="true"><i class="fa-solid fa-inbox"></i></div>
+        <h3>Arşivlenen başvuru yok</h3>
+        <p>Saklama süresi dolan başvurular buraya taşınır.</p>
+        <a class="dugme birincil" href="#">Formlara dön</a>
+      </div>
+      <div class="bos-durum kart-ici" data-durum="bos" hidden="">
+        <div class="bos-ikon" aria-hidden="true"><i class="fa-solid fa-filter-circle-xmark"></i></div>
+        <h3>Bu süzgeçle sonuç yok</h3>
+        <p>Süzgeci genişlet ya da aramayı değiştir.</p>
+        <button class="dugme hayalet" type="button">Süzgeci temizle</button>
+      </div>
+      <div class="bos-durum kart-ici yetkisiz" data-durum="yetkisiz" hidden="">
+        <div class="bos-ikon" aria-hidden="true"><i class="fa-solid fa-lock"></i></div>
+        <h3>Bu modüle erişimin yok</h3>
+        <p>Erişim istemek için yöneticinle görüş.</p>
+      </div>
+      <div class="alan-ozet" data-durum="dogrulama" role="alert">
+        <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>
+        <span><b>2 satır kaydedilemedi</b> — zorunlu alanlar eksik.</span>
+      </div>
+      <div class="bos-durum kart-ici servis-hatasi" data-durum="servis" hidden="">
+        <div class="bos-ikon" aria-hidden="true"><i class="fa-solid fa-triangle-exclamation"></i></div>
+        <h3>Arşivlenen yüklenemedi</h3>
+        <p>Bağlantı kurulamadı. Birkaç saniye sonra yeniden dene.</p>
+        <button class="dugme hayalet" type="button"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i>Yeniden dene</button>
+        <p class="hata-izi">Referans: <code>FRM-7C41-22A8</code></p>
+      </div>
+    </div>
+
+      <div class="sayfalama kart-ayagi">
+        <span class="sayfalama-bilgi"><b>1–6</b> / 63 başvuru</span>
+        <div class="dugmeler">
+          <button class="sayfa-dugme sade ok" type="button" disabled="" aria-label="Önceki sayfa"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i></button>
+          <button class="sayfa-dugme aktif" type="button" aria-current="page">1</button>
+          <button class="sayfa-dugme sade" type="button">2</button>
+          <button class="sayfa-dugme sade" type="button">3</button>
+          <button class="sayfa-dugme sade" type="button">4</button>
+          <button class="sayfa-dugme sade" type="button">5</button>
+          <button class="sayfa-dugme sade" type="button">6</button>
+          <button class="sayfa-dugme sade" type="button">7</button>
+          <button class="sayfa-dugme sade" type="button">8</button>
+          <button class="sayfa-dugme sade" type="button">9</button>
+          <button class="sayfa-dugme sade" type="button">10</button>
+          <button class="sayfa-dugme sade" type="button">11</button>
+          <button class="sayfa-dugme sade ok" type="button" aria-label="Sonraki sayfa"><i class="fa-solid fa-chevron-right" aria-hidden="true"></i></button>
+        </div>
+      </div>
+  </div>
+    </div>
+
+</div>
+</main>
+<script src="_ortak/panel.js" defer></script>
+</body></html>

@@ -1,0 +1,492 @@
+<!doctype html>
+<html lang="tr"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Faturalar — DadaDiet Yönetim</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
+<link rel="stylesheet" href="../../kanon/tokenlar.css">
+<link rel="stylesheet" href="../../kanon/markalar/diet.css">
+<link rel="stylesheet" href="../../kanon/bilesenler.css">
+</head>
+<body class="yetkili">
+<!-- ═══════════════════════════════════════════════════════════════════
+     DIET ADMIN · KANONİK KABUK — FIT kabuğundan TÜRETİLDİ, elle değiştirilmez
+     ───────────────────────────────────────────────────────────────────
+     Her ekran bu kabuğu BİREBİR taşır. Ekrandan ekrana değişen TEK şey:
+       · aktif menü kaleminde `aktif` sınıfı ve `aria-current="page"`
+       · <title> ve <h1>
+     Kabuk dört markada AYNI; yalnız markalar/<marka>.css değişir.
+
+     🔴 İKONLAR: 33 ortak modülün ikonu FIT kabuğundan BİREBİR alındı —
+        dört markada aynı olmak zorunda. 11 marka modülünün 5'i donörde
+        rol karşılığı olduğu için onun ikonunu taşır (Programlar
+        fa-clipboard-list · Diyetisyenler fa-user-check · Testler
+        fa-clipboard-check · Rehber fa-compass · Hizmetler
+        fa-basket-shopping); kalan 6'sı seçimdir ve raporda bildirilir
+        (Besin Kütüphanesi fa-apple-whole · Hesaplayıcılar fa-calculator
+        · İpuçları fa-lightbulb · Kaç Kalori fa-fire · Püf Noktaları
+        fa-wand-magic-sparkles · Makro Rehberi fa-chart-pie).
+
+     🔴 KABUK DEĞİŞTİRME. Bir eksik görürsen lead'e bildir.
+     ═══════════════════════════════════════════════════════════════════ -->
+
+<!-- ── SOL EKOSİSTEM RAYI ─────────────────────────────────────────── -->
+<aside class="panel-ray" aria-label="Marka rayı">
+  <a class="panel-ray-ikon aktif" href="#" style="--eko:var(--eko-diet)"
+     aria-current="true" title="DadaDiet" aria-label="DadaDiet"><i class="fa-solid fa-leaf"></i></a>
+  <span class="panel-ray-ayrac" role="presentation"></span>
+  <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-gastro)"  title="DadaGastro"  aria-label="DadaGastro"><i class="fa-solid fa-utensils"></i></a>
+  <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-fit)"     title="DadaFit"     aria-label="DadaFit"><i class="fa-solid fa-dumbbell"></i></a>
+  <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-gourmet)" title="DadaGourmet" aria-label="DadaGourmet"><i class="fa-solid fa-wine-glass"></i></a>
+  <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-campus)"  title="DadaCampus"  aria-label="DadaCampus"><i class="fa-solid fa-graduation-cap"></i></a>
+  <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-mentor)"  title="DadaMentor"  aria-label="DadaMentor"><i class="fa-solid fa-compass"></i></a>
+  <span class="panel-ray-ikon kilitli" title="DadaStore — erişimin yok" aria-label="DadaStore, erişim yok"><i class="fa-solid fa-lock"></i></span>
+  <div class="panel-ray-alt">
+    <a class="panel-ray-ikon" href="#" title="Yardım" aria-label="Yardım"><i class="fa-solid fa-circle-question"></i></a>
+  </div>
+</aside>
+
+<!-- ── MODÜL MENÜSÜ · DÖRT KATEGORİ ───────────────────────────────── -->
+<nav class="panel-menu" id="panelMenu" aria-label="Modüller">
+  <div class="panel-menu-bas">
+    <b>DadaDiet</b><span>Yönetim paneli</span>
+  </div>
+  <div class="panel-menu-govde">
+
+    <div class="panel-menu-bolum">01 Genel</div>
+    <a class="panel-menu-link" href="admin-genel-bakis.html"><i class="fa-solid fa-gauge-high"></i>Genel Bakış</a>
+    <a class="panel-menu-link" href="admin-sayfalar.html"><i class="fa-solid fa-file-lines"></i>Sayfalar &amp; SEO</a>
+    <a class="panel-menu-link" href="admin-taksonomi.html"><i class="fa-solid fa-tags"></i>Taksonomi</a>
+    <a class="panel-menu-link" href="admin-medya.html"><i class="fa-solid fa-photo-film"></i>Medya Kütüphanesi</a>
+    <a class="panel-menu-link" href="admin-arama-yonetimi.html"><i class="fa-solid fa-magnifying-glass"></i>Arama Yönetimi</a>
+    <a class="panel-menu-link" href="admin-yonlendirmeler.html"><i class="fa-solid fa-shuffle"></i>Yönlendirmeler</a>
+
+    <div class="panel-menu-bolum">Marka modülleri</div>
+    <a class="panel-menu-link" href="admin-besinler.html"><i class="fa-solid fa-apple-whole"></i>Besin Kütüphanesi</a>
+    <a class="panel-menu-link" href="admin-programlar.html"><i class="fa-solid fa-clipboard-list"></i>Beslenme Programları</a>
+    <a class="panel-menu-link" href="admin-diyetisyenler.html"><i class="fa-solid fa-user-check"></i>Diyetisyenler<span class="sayac">3</span></a>
+    <a class="panel-menu-link" href="admin-testler.html"><i class="fa-solid fa-clipboard-check"></i>Beslenme Testleri</a>
+    <a class="panel-menu-link" href="admin-hesaplayicilar.html"><i class="fa-solid fa-calculator"></i>Hesaplayıcılar</a>
+    <a class="panel-menu-link" href="admin-rehber.html"><i class="fa-solid fa-compass"></i>Beslenme Rehberi</a>
+    <a class="panel-menu-link" href="admin-ipuclari.html"><i class="fa-solid fa-lightbulb"></i>Beslenme İpuçları</a>
+    <a class="panel-menu-link" href="admin-kac-kalori.html"><i class="fa-solid fa-fire"></i>Kaç Kalori</a>
+    <a class="panel-menu-link" href="admin-puf-noktalari.html"><i class="fa-solid fa-wand-magic-sparkles"></i>Diyetin Püf Noktaları</a>
+    <a class="panel-menu-link" href="admin-makro.html"><i class="fa-solid fa-chart-pie"></i>Makro Rehberi</a>
+    <a class="panel-menu-link" href="admin-hizmetler.html"><i class="fa-solid fa-basket-shopping"></i>Hizmetler ve Satışlar</a>
+
+    <div class="panel-menu-bolum">02 Operasyon</div>
+    <a class="panel-menu-link" href="admin-uyeler.html"><i class="fa-solid fa-users"></i>Üyeler &amp; Yetkiler</a>
+    <a class="panel-menu-link" href="admin-abonelikler.html"><i class="fa-solid fa-credit-card"></i>Abonelikler</a>
+    <a class="panel-menu-link" href="admin-odemeler.html"><i class="fa-solid fa-money-bill-wave"></i>Ödemeler</a>
+    <a class="panel-menu-link aktif" aria-current="page" href="admin-faturalar.html"><i class="fa-solid fa-file-invoice"></i>Faturalar<span class="sayac">7</span></a>
+    <a class="panel-menu-link" href="admin-destek.html"><i class="fa-solid fa-life-ring"></i>Destek Talepleri<span class="sayac">12</span></a>
+    <a class="panel-menu-link" href="admin-sss.html"><i class="fa-solid fa-circle-question"></i>Sıkça Sorulan Sorular</a>
+    <a class="panel-menu-link" href="admin-moderasyon.html"><i class="fa-solid fa-shield-halved"></i>Moderasyon<span class="sayac">5</span></a>
+    <a class="panel-menu-link" href="admin-rozetler.html"><i class="fa-solid fa-medal"></i>Rozetler &amp; Kademeler</a>
+    <a class="panel-menu-link" href="admin-log.html"><i class="fa-solid fa-list-check"></i>Log Kayıtları</a>
+    <a class="panel-menu-link" href="admin-formlar.html"><i class="fa-solid fa-rectangle-list"></i>Formlar &amp; Başvurular</a>
+    <a class="panel-menu-link" href="admin-icerik-onaylari.html"><i class="fa-solid fa-circle-check"></i>İçerik Onayları<span class="sayac">4</span></a>
+    <a class="panel-menu-link" href="admin-duyurular.html"><i class="fa-solid fa-tower-broadcast"></i>Duyurular</a>
+    <a class="panel-menu-link" href="admin-iletisim-kayitlari.html"><i class="fa-solid fa-envelope"></i>E-posta &amp; İletişim Kayıtları</a>
+
+    <div class="panel-menu-bolum">03 Yapılandırma</div>
+    <a class="panel-menu-link" href="admin-menu.html"><i class="fa-solid fa-bars"></i>Menü &amp; Navigasyon</a>
+    <a class="panel-menu-link" href="admin-paketler.html"><i class="fa-solid fa-layer-group"></i>Paketler &amp; Özellikler</a>
+    <a class="panel-menu-link" href="admin-kuponlar.html"><i class="fa-solid fa-ticket"></i>Kuponlar</a>
+    <a class="panel-menu-link" href="admin-bildirim.html"><i class="fa-solid fa-bell"></i>Bildirim Şablonları</a>
+    <a class="panel-menu-link" href="admin-reklam.html"><i class="fa-solid fa-bullhorn"></i>Reklam &amp; Sponsorluk</a>
+    <a class="panel-menu-link" href="admin-raporlar.html"><i class="fa-solid fa-chart-line"></i>Raporlar</a>
+    <a class="panel-menu-link" href="admin-yasal.html"><i class="fa-solid fa-scale-balanced"></i>Yasal Metinler</a>
+    <a class="panel-menu-link" href="admin-ayarlar.html"><i class="fa-solid fa-sliders"></i>Ayarlar</a>
+    <a class="panel-menu-link" href="admin-dil-ceviri.html"><i class="fa-solid fa-language"></i>Dil &amp; Çeviri Yönetimi</a>
+    <a class="panel-menu-link" href="admin-entegrasyonlar.html"><i class="fa-solid fa-plug"></i>Entegrasyonlar</a>
+    <a class="panel-menu-link" href="admin-ice-disa-aktarim.html"><i class="fa-solid fa-file-import"></i>İçe / Dışa Aktarım</a>
+    <a class="panel-menu-link" href="admin-sistem-bildirimleri.html"><i class="fa-solid fa-triangle-exclamation"></i>Sistem Bildirimleri<span class="sayac">2</span></a>
+    <a class="panel-menu-link" href="admin-gorevler.html"><i class="fa-solid fa-clock"></i>Görevler &amp; Zamanlanmış İşlemler</a>
+    <a class="panel-menu-link" href="admin-sistem-durumu.html"><i class="fa-solid fa-heart-pulse"></i>Sistem Durumu</a>
+
+  </div>
+  <div class="panel-menu-alt">
+    <a class="panel-menu-link" href="#"><i class="fa-solid fa-arrow-up-right-from-square"></i>Siteyi gör</a>
+  </div>
+</nav>
+
+<!-- ── ÜST ÇUBUK ──────────────────────────────────────────────────── -->
+<header class="panel-ust">
+  <!-- 🔴 Menünün dar ekrandaki TEK kapısı. ≤1100px'te görünür, geniş
+       ekranda basılmaz (menü zaten orada). -->
+  <button class="panel-ust-dugme panel-ac" type="button"
+          aria-expanded="false" aria-controls="panelMenu" aria-label="Modül menüsünü aç">
+    <i class="fa-solid fa-bars" aria-hidden="true"></i>
+  </button>
+  <div class="panel-arama">
+    <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+    <input type="search" class="panel-arama-girdi" placeholder="Ekran, kayıt ya da kişi ara"
+           role="combobox" autocomplete="off" aria-label="Yönetimde ara"
+           aria-expanded="false" aria-controls="ustAramaAcilir">
+    <div class="acilir-yuzey" id="ustAramaAcilir" role="listbox" aria-label="Arama sonuçları" hidden>
+      <div class="acilir-bas">Sonuçlar</div>
+      <a class="acilir-kalem" href="admin-uyeler.html" role="option"><i class="fa-solid fa-users"></i>Üyeler &amp; Yetkiler<span class="yan">Modül</span></a>
+      <a class="acilir-kalem" href="admin-odemeler.html" role="option"><i class="fa-solid fa-credit-card"></i>Ödemeler<span class="yan">Modül</span></a>
+    </div>
+  </div>
+  <div class="panel-ust-sag">
+    <a class="panel-ust-dugme" href="admin-sistem-bildirimleri.html" aria-label="Bildirimler, 2 okunmamış">
+      <i class="fa-solid fa-bell"></i><span class="benek" aria-hidden="true"></span>
+    </a>
+    <a class="panel-ust-dugme" href="#" aria-label="Yardım"><i class="fa-solid fa-circle-question"></i></a>
+    <div class="acilir-kap">
+      <button class="panel-ust-ben" type="button" aria-expanded="false" aria-controls="hesapAcilir">
+        <span class="kisi-avatar" aria-hidden="true">BY</span>
+        <span><span class="ad">Beyar Yavuz</span><span class="rol">Sistem yöneticisi</span></span>
+        <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+      </button>
+      <!-- 🔴 BU YÜZEY EKSİKTİ. Düğme `aria-controls="hesapAcilir"` bildiriyordu
+           ama öyle bir eleman yoktu: ekran okuyucuya var olmayan bir açılır
+           vaat ediliyordu. Davranış sınaması yakaladı. -->
+      <div class="acilir-yuzey saga" id="hesapAcilir" role="menu" aria-label="Hesap" hidden>
+        <div class="acilir-bas">Beyar Yavuz</div>
+        <a class="acilir-kalem" href="#" role="menuitem"><i class="fa-solid fa-user"></i>Profilim</a>
+        <a class="acilir-kalem" href="#" role="menuitem"><i class="fa-solid fa-sliders"></i>Panel tercihleri</a>
+        <a class="acilir-kalem" href="#" role="menuitem"><i class="fa-solid fa-right-from-bracket"></i>Çıkış yap</a>
+      </div>
+    </div>
+  </div>
+</header>
+<main class="panel-govde">
+    <div class="panel-sayfa">
+      <div class="panel-bas">
+        <div>
+          <h1>Faturalar</h1>
+          <p>Abonelik ve hizmet belgeleri tek defterde. Tutarlar kuruş tamsayısı olarak tutulur, ekranda
+             biçimlenir; KDV ara toplamdan <b>ayrıştırılır</b>, üstüne eklenmez.</p>
+        </div>
+        <div class="eylem-satiri">
+          <button class="dugme hayalet" type="button" data-yetki="disa-aktar"><i class="fa-solid fa-file-export" aria-hidden="true"></i> Dışa aktar</button>
+          <button class="dugme birincil" type="button"><i class="fa-solid fa-plus" aria-hidden="true"></i> Fatura oluştur</button>
+        </div>
+      </div>
+
+      <div class="kart-izgara c4">
+        <div class="kart kpi">
+          <span class="ikon"><i class="fa-solid fa-file-invoice" aria-hidden="true"></i></span>
+          <div class="govde"><span class="etiket">Bu ay kesilen</span><span class="sayi">1.902</span>
+            <span class="kpi-degisim iyi"><i class="fa-solid fa-arrow-up" aria-hidden="true"></i> %5,6 · geçen aya göre</span></div>
+        </div>
+        <div class="kart kpi">
+          <span class="ikon"><i class="fa-solid fa-lira-sign" aria-hidden="true"></i></span>
+          <div class="govde"><span class="etiket">Defter toplamı</span><span class="sayi">173.252 ₺</span>
+            <span class="kpi-degisim iyi"><i class="fa-solid fa-arrow-up" aria-hidden="true"></i> %6,1 · geçen aya göre</span></div>
+        </div>
+        <div class="kart kpi">
+          <span class="ikon"><i class="fa-solid fa-hourglass-half" aria-hidden="true"></i></span>
+          <div class="govde"><span class="etiket">Ödemesi beklenen</span><span class="sayi">38</span>
+            <span class="kpi-degisim kotu"><i class="fa-solid fa-arrow-up" aria-hidden="true"></i> %9,3 · geçen aya göre</span></div>
+        </div>
+        <div class="kart kpi">
+          <span class="ikon"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i></span>
+          <div class="govde"><span class="etiket">Gecikmiş</span><span class="sayi">11</span>
+            <span class="kpi-degisim kotu"><i class="fa-solid fa-arrow-up" aria-hidden="true"></i> %22,2 · geçen aya göre</span></div>
+        </div>
+      </div>
+
+      <div class="sekmeler" role="tablist" aria-label="Fatura durumu">
+        <button class="sekme aktif" type="button" role="tab" aria-selected="true" data-sekme="ft-tumu">Tümü <span class="sekme-sayi">1.902</span></button>
+        <button class="sekme" type="button" role="tab" aria-selected="false" data-sekme="ft-taslak">Taslak <span class="sekme-sayi">6</span></button>
+        <button class="sekme" type="button" role="tab" aria-selected="false" data-sekme="ft-bekleyen">Kesilmeyi bekleyen <span class="sekme-sayi">9</span></button>
+        <button class="sekme" type="button" role="tab" aria-selected="false" data-sekme="ft-odenmis">Ödenmiş <span class="sekme-sayi">1.826</span></button>
+        <button class="sekme" type="button" role="tab" aria-selected="false" data-sekme="ft-odeme-bekleyen">Ödemesi beklenen <span class="sekme-sayi">38</span></button>
+        <button class="sekme" type="button" role="tab" aria-selected="false" data-sekme="ft-gecikmis">Gecikmiş <span class="sekme-sayi">11</span></button>
+        <button class="sekme" type="button" role="tab" aria-selected="false" data-sekme="ft-iptal">İptal edilen <span class="sekme-sayi">7</span></button>
+        <button class="sekme" type="button" role="tab" aria-selected="false" data-sekme="ft-iade">İade faturaları <span class="sekme-sayi">5</span></button>
+      </div>
+
+      <div class="kart panel" id="ftListe">
+        <div class="suzgec-cubuk">
+          <div class="panel-arama">
+            <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+            <label class="yalniz-okuyucu" for="ftAra">Fatura ara</label>
+            <input class="panel-arama-girdi" type="search" id="ftAra" placeholder="Fatura numarası, ETTN, firma ya da üye ara" autocomplete="off">
+          </div>
+          <div class="sag">
+            <div class="coklu-secim">
+              <button class="suzgec-dugme" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="ftSuzDurum">
+                Durum <span class="sayi" data-sayi="0"></span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+              </button>
+              <div class="acilir-yuzey suzgec" id="ftSuzDurum" role="group" aria-label="Durum" hidden="">
+                <div class="acilir-bas">Durum <button type="button">Temizle</button></div>
+                <button class="cip suzgec" type="button" aria-pressed="false">Taslak</button>
+                <button class="cip suzgec" type="button" aria-pressed="false">Oluşturuluyor</button>
+                <button class="cip suzgec" type="button" aria-pressed="false">Kesildi</button>
+                <button class="cip suzgec" type="button" aria-pressed="false">Gönderildi</button>
+                <button class="cip suzgec" type="button" aria-pressed="false">Ödenmiş</button>
+                <button class="cip suzgec" type="button" aria-pressed="false">Beklemede</button>
+                <button class="cip suzgec" type="button" aria-pressed="false">Gecikmiş</button>
+                <button class="cip suzgec" type="button" aria-pressed="false">İptal</button>
+                <button class="cip suzgec" type="button" aria-pressed="false">İade edildi</button>
+              </div>
+            </div>
+            <div class="coklu-secim">
+              <button class="suzgec-dugme" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="ftSuzTur">
+                Tür <span class="sayi" data-sayi="0"></span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+              </button>
+              <div class="acilir-yuzey suzgec" id="ftSuzTur" role="group" aria-label="Belge türü" hidden="">
+                <div class="acilir-bas">Belge türü <button type="button">Temizle</button></div>
+                <button class="cip suzgec" type="button" aria-pressed="false">Abonelik</button>
+                <button class="cip suzgec" type="button" aria-pressed="false">Hizmet</button>
+                <button class="cip suzgec" type="button" aria-pressed="false">İade</button>
+              </div>
+            </div>
+            <div class="coklu-secim">
+              <button class="suzgec-dugme" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="ftKolon" aria-label="Kolon seçimi">
+                <i class="fa-solid fa-table-columns" aria-hidden="true"></i> Kolonlar
+              </button>
+              <div class="acilir-yuzey saga kolon-secim" id="ftKolon" role="group" aria-label="Görünecek kolonlar" hidden="">
+                <div class="acilir-bas">Kolonlar <button type="button">Sıfırla</button></div>
+                <label class="acilir-kalem kilitli"><input type="checkbox" checked="" disabled=""> Fatura no <span class="yan">zorunlu</span></label>
+                <label class="acilir-kalem"><input type="checkbox" checked=""> Kullanıcı / firma</label>
+                <label class="acilir-kalem"><input type="checkbox"> Tür</label>
+                <label class="acilir-kalem"><input type="checkbox"> Ara toplam</label>
+                <label class="acilir-kalem"><input type="checkbox"> KDV</label>
+                <label class="acilir-kalem"><input type="checkbox" checked=""> Genel toplam</label>
+                <label class="acilir-kalem"><input type="checkbox" checked=""> Durum</label>
+                <label class="acilir-kalem"><input type="checkbox" checked=""> Kesim tarihi</label>
+                <label class="acilir-kalem"><input type="checkbox" checked=""> Vade</label>
+                <label class="acilir-kalem"><input type="checkbox"> Vergi dairesi</label>
+                <label class="acilir-kalem"><input type="checkbox"> ETTN</label>
+                <label class="acilir-kalem"><input type="checkbox"> Ödeme tarihi</label>
+              </div>
+            </div>
+            <span class="suzgec-sayac"><b>12</b> / 1.902 belge</span>
+          </div>
+        </div>
+
+        <div class="toplu-islem" id="ftToplu" hidden="">
+          <b>0 kayıt seçildi</b>
+          <div class="eylem-satiri">
+            <button class="dugme hayalet kucuk" type="button"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i> Yeniden oluştur</button>
+            <button class="dugme hayalet kucuk" type="button"><i class="fa-solid fa-envelope" aria-hidden="true"></i> E-posta gönder</button>
+            <button class="dugme hayalet kucuk" type="button"><i class="fa-solid fa-circle-check" aria-hidden="true"></i> Ödendi işaretle</button>
+            <button class="dugme hayalet kucuk" type="button"><i class="fa-solid fa-ban" aria-hidden="true"></i> İptal başlat</button>
+          </div>
+
+        <!-- DURUM 5 · doğrulama hatası — toplu işlem kuralı geçmedi -->
+        <div class="alan-ozet" id="ftTopluHata" role="alert">
+          <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>
+          <span><b>2 belge</b> ödendi işaretlenemedi: taslak fatura ödeme kaydı taşıyamaz.</span>
+        </div>
+        </div>
+
+        <div class="kart-govde bosluksuz" id="ftYukleniyor" aria-busy="true" role="status" hidden="">
+          <div class="tablo-kap gomulu">
+            <table class="tablo panel" aria-label="Fatura defteri yükleniyor">
+              <thead><tr><th class="sec"></th><th>Fatura</th><th>Kullanıcı</th><th class="num">Genel toplam</th><th>Durum</th><th>Kesim</th><th class="eylem">İşlem</th></tr></thead>
+              <tbody>
+                <tr><td class="sec"></td><td><span class="iskelet orta"></span></td><td><span class="kisi-hucre"><span class="iskelet daire"></span><span class="kisi-bilgi"><span class="iskelet orta"></span></span></span></td><td><span class="iskelet kisa"></span></td><td class="num"><span class="iskelet kisa"></span></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet kisa"></span></td><td class="eylem"><span class="iskelet kisa"></span></td></tr>
+                <tr><td class="sec"></td><td><span class="iskelet orta"></span></td><td><span class="kisi-hucre"><span class="iskelet daire"></span><span class="kisi-bilgi"><span class="iskelet orta"></span></span></span></td><td><span class="iskelet kisa"></span></td><td class="num"><span class="iskelet kisa"></span></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet kisa"></span></td><td class="eylem"><span class="iskelet kisa"></span></td></tr>
+                <tr><td class="sec"></td><td><span class="iskelet orta"></span></td><td><span class="kisi-hucre"><span class="iskelet daire"></span><span class="kisi-bilgi"><span class="iskelet orta"></span></span></span></td><td><span class="iskelet kisa"></span></td><td class="num"><span class="iskelet kisa"></span></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet kisa"></span></td><td class="eylem"><span class="iskelet kisa"></span></td></tr>
+                <tr><td class="sec"></td><td><span class="iskelet orta"></span></td><td><span class="kisi-hucre"><span class="iskelet daire"></span><span class="kisi-bilgi"><span class="iskelet orta"></span></span></span></td><td><span class="iskelet kisa"></span></td><td class="num"><span class="iskelet kisa"></span></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet kisa"></span></td><td class="eylem"><span class="iskelet kisa"></span></td></tr>
+                <tr><td class="sec"></td><td><span class="iskelet orta"></span></td><td><span class="kisi-hucre"><span class="iskelet daire"></span><span class="kisi-bilgi"><span class="iskelet orta"></span></span></span></td><td><span class="iskelet kisa"></span></td><td class="num"><span class="iskelet kisa"></span></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet kisa"></span></td><td class="eylem"><span class="iskelet kisa"></span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="bos-durum kart-ici" id="ftBos" hidden="">
+          <span class="bos-ikon"><i class="fa-solid fa-file-invoice" aria-hidden="true"></i></span>
+          <h3>Bu süzgeçle sonuç yok</h3>
+          <p>Süzgeci genişlet ya da tarih aralığını değiştir.</p>
+          <button class="dugme hayalet" type="button"><i class="fa-solid fa-rotate-left" aria-hidden="true"></i> Süzgeci temizle</button>
+        </div>
+        <div class="bos-durum kart-ici yetkisiz" id="ftYetkisiz" hidden="">
+          <span class="bos-ikon"><i class="fa-solid fa-lock" aria-hidden="true"></i></span>
+          <h3>Bu modüle erişimin yok</h3>
+          <p>Fatura defteri finans rolüne açıktır. Erişim istemek için yöneticinle görüş.</p>
+        </div>
+        <div class="bos-durum kart-ici servis-hatasi" id="ftHata" hidden="">
+          <span class="bos-ikon"><i class="fa-solid fa-plug-circle-xmark" aria-hidden="true"></i></span>
+          <h3>Defter yüklenemedi</h3>
+          <p>Bağlantı kurulamadı. Yeniden dene.</p>
+          <button class="dugme hayalet" type="button"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i> Yeniden dene</button>
+          <p class="hata-izi">Referans <code>FTR-6D18-0A92</code></p>
+        </div>
+
+        <div class="kart-govde bosluksuz" id="ftVeri">
+          <div class="tablo-kap gomulu">
+            <table class="tablo panel">
+              <caption class="yalniz-okuyucu">Fatura defteri — 12 belge, sayfa 1 / 159</caption>
+              <thead>
+                <tr>
+                  <th class="sec" scope="col"><label><input type="checkbox" aria-label="Sayfadaki tüm faturaları seç"></label></th>
+                  <th class="sirali" scope="col"><button type="button">Fatura</button></th>
+                  <th class="sirali" scope="col"><button type="button">Kullanıcı</button></th>
+                  <th class="sirali sag num" scope="col"><button type="button">Genel toplam</button></th>
+                  <th class="sirali" scope="col"><button type="button">Durum</button></th>
+                  <th class="sirali" scope="col" aria-sort="descending"><button type="button">Kesim</button></th>
+                  <th class="eylem" scope="col">İşlem</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="sec"><label><input type="checkbox" data-sec="" aria-label="DDT-2026-004150 satırını seç"></label></td>
+                  <td><code>DDT-2026-004150</code></td>
+                  <td><a class="kisi-hucre" href="admin-uye-detay.html"><span class="kisi-avatar" aria-hidden="true">EŞ</span><span class="kisi-bilgi"><span class="kisi-ad">Elif Şahin</span><span class="kisi-alt">Bireysel · TCKN maskeli</span></span></a></td>
+                  <td class="num">450,00 ₺</td>
+                  <td><span class="durum-hapi cozulen">Ödenmiş</span></td>
+                  <td>22.08.2026<small>Vade 22.08.2026</small></td>
+                  <td class="eylem"><span class="satir-eylem">
+                    <a class="ikon-dugme" href="admin-fatura-detay.html" title="Belgeyi aç" aria-label="DDT-2026-004150 belgesini aç"><i class="fa-solid fa-eye" aria-hidden="true"></i></a>
+                    <button class="ikon-dugme" type="button" title="PDF görüntüle" aria-label="DDT-2026-004150 PDF belgesini görüntüle"><i class="fa-solid fa-file-pdf" aria-hidden="true"></i></button>
+                  </span></td>
+                </tr>
+                <tr>
+                  <td class="sec"><label><input type="checkbox" data-sec="" aria-label="DDT-2026-004128 satırını seç"></label></td>
+                  <td><code>DDT-2026-004128</code></td>
+                  <td><a class="kisi-hucre" href="admin-uye-detay.html"><span class="kisi-avatar" aria-hidden="true">EŞ</span><span class="kisi-bilgi"><span class="kisi-ad">Elif Şahin</span><span class="kisi-alt">Bireysel · TCKN maskeli</span></span></a></td>
+                  <td class="num">99,00 ₺</td>
+                  <td><span class="durum-hapi cozulen">Ödenmiş</span></td>
+                  <td>15.08.2026<small>Vade 15.08.2026</small></td>
+                  <td class="eylem"><span class="satir-eylem">
+                    <a class="ikon-dugme" href="admin-fatura-detay.html" title="Belgeyi aç" aria-label="DDT-2026-004128 belgesini aç"><i class="fa-solid fa-eye" aria-hidden="true"></i></a>
+                    <button class="ikon-dugme" type="button" title="PDF görüntüle" aria-label="DDT-2026-004128 PDF belgesini görüntüle"><i class="fa-solid fa-file-pdf" aria-hidden="true"></i></button>
+                  </span></td>
+                </tr>
+                <tr>
+                  <td class="sec"><label><input type="checkbox" data-sec="" aria-label="DDT-2026-004119 satırını seç"></label></td>
+                  <td><code>DDT-2026-004119</code></td>
+                  <td><a class="kisi-hucre" href="admin-uye-detay.html"><span class="kisi-avatar" aria-hidden="true">SK</span><span class="kisi-bilgi"><span class="kisi-ad">Uzm. Dyt. Selin Korkmaz</span><span class="kisi-alt">Bireysel · TCKN maskeli</span></span></a></td>
+                  <td class="num">79,20 ₺</td>
+                  <td><span class="durum-hapi cozulen">Ödenmiş</span></td>
+                  <td>14.08.2026<small>Vade 14.08.2026</small></td>
+                  <td class="eylem"><span class="satir-eylem">
+                    <a class="ikon-dugme" href="admin-fatura-detay.html" title="Belgeyi aç" aria-label="DDT-2026-004119 belgesini aç"><i class="fa-solid fa-eye" aria-hidden="true"></i></a>
+                    <button class="ikon-dugme" type="button" title="PDF görüntüle" aria-label="DDT-2026-004119 PDF belgesini görüntüle"><i class="fa-solid fa-file-pdf" aria-hidden="true"></i></button>
+                  </span></td>
+                </tr>
+                <tr>
+                  <td class="sec"><label><input type="checkbox" data-sec="" aria-label="DDT-2026-004077 satırını seç"></label></td>
+                  <td><code>DDT-2026-004077</code></td>
+                  <td><a class="kisi-hucre" href="admin-uye-detay.html"><span class="kisi-avatar" aria-hidden="true">PD</span><span class="kisi-bilgi"><span class="kisi-ad">Polat Danışmanlık Ltd.</span><span class="kisi-alt">Kadıköy VD · 4870••••21</span></span></a></td>
+                  <td class="num">1.990,00 ₺</td>
+                  <td><span class="durum-hapi cozulen">Ödenmiş</span></td>
+                  <td>02.03.2026<small>Vade 09.03.2026</small></td>
+                  <td class="eylem"><span class="satir-eylem">
+                    <a class="ikon-dugme" href="admin-fatura-detay.html" title="Belgeyi aç" aria-label="DDT-2026-004077 belgesini aç"><i class="fa-solid fa-eye" aria-hidden="true"></i></a>
+                    <button class="ikon-dugme" type="button" title="PDF görüntüle" aria-label="DDT-2026-004077 PDF belgesini görüntüle"><i class="fa-solid fa-file-pdf" aria-hidden="true"></i></button>
+                  </span></td>
+                </tr>
+                <tr>
+                  <td class="sec"><label><input type="checkbox" data-sec="" aria-label="DDT-2026-004003 satırını seç"></label></td>
+                  <td><code>DDT-2026-004003</code></td>
+                  <td><a class="kisi-hucre" href="admin-uye-detay.html"><span class="kisi-avatar" aria-hidden="true">CA</span><span class="kisi-bilgi"><span class="kisi-ad">Ceren Aktaş</span><span class="kisi-alt">Bireysel · TCKN maskeli</span></span></a></td>
+                  <td class="num">-49,50 ₺</td>
+                  <td><span class="durum-hapi kapali">İade edildi</span></td>
+                  <td>21.08.2026<small>Vade —</small></td>
+                  <td class="eylem"><span class="satir-eylem">
+                    <a class="ikon-dugme" href="admin-fatura-detay.html" title="Belgeyi aç" aria-label="DDT-2026-004003 belgesini aç"><i class="fa-solid fa-eye" aria-hidden="true"></i></a>
+                    <button class="ikon-dugme" type="button" title="PDF görüntüle" aria-label="DDT-2026-004003 PDF belgesini görüntüle"><i class="fa-solid fa-file-pdf" aria-hidden="true"></i></button>
+                  </span></td>
+                </tr>
+                <tr>
+                  <td class="sec"><label><input type="checkbox" data-sec="" aria-label="DDT-2026-004166 satırını seç"></label></td>
+                  <td><code>DDT-2026-004166</code></td>
+                  <td><a class="kisi-hucre" href="admin-uye-detay.html"><span class="kisi-avatar" aria-hidden="true">EŞ</span><span class="kisi-bilgi"><span class="kisi-ad">Emre Şen</span><span class="kisi-alt">Bireysel · TCKN maskeli</span></span></a></td>
+                  <td class="num">99,00 ₺</td>
+                  <td><span class="durum-hapi bekleyen">Gecikmiş</span></td>
+                  <td>28.08.2026<small>Vade 04.09.2026</small></td>
+                  <td class="eylem"><span class="satir-eylem">
+                    <a class="ikon-dugme" href="admin-fatura-detay.html" title="Belgeyi aç" aria-label="DDT-2026-004166 belgesini aç"><i class="fa-solid fa-eye" aria-hidden="true"></i></a>
+                  </span></td>
+                </tr>
+                <tr>
+                  <td class="sec"><label><input type="checkbox" data-sec="" aria-label="DDT-2026-004171 satırını seç"></label></td>
+                  <td><code>DDT-2026-004171</code></td>
+                  <td><a class="kisi-hucre" href="admin-uye-detay.html"><span class="kisi-avatar" aria-hidden="true">KA</span><span class="kisi-bilgi"><span class="kisi-ad">Kerem Aslan</span><span class="kisi-alt">Bireysel · TCKN maskeli</span></span></a></td>
+                  <td class="num">49,00 ₺</td>
+                  <td><span class="durum-hapi acik">Kesilmeyi bekliyor</span></td>
+                  <td>—<small>Vade 10.09.2026</small></td>
+                  <td class="eylem"><span class="satir-eylem">
+                    <a class="ikon-dugme" href="admin-fatura-detay.html" title="Belgeyi aç" aria-label="DDT-2026-004171 belgesini aç"><i class="fa-solid fa-eye" aria-hidden="true"></i></a>
+                    <button class="ikon-dugme yikici" type="button" title="İptal başlat" aria-label="DDT-2026-004171 belgesini iptal et"><i class="fa-solid fa-ban" aria-hidden="true"></i></button>
+                  </span></td>
+                </tr>
+                <tr>
+                  <td class="sec"><label><input type="checkbox" data-sec="" aria-label="DDT-2026-004180 satırını seç"></label></td>
+                  <td><code>DDT-2026-004180</code></td>
+                  <td><a class="kisi-hucre" href="admin-uye-detay.html"><span class="kisi-avatar" aria-hidden="true">NE</span><span class="kisi-bilgi"><span class="kisi-ad">Naz Erdem</span><span class="kisi-alt">Bireysel · TCKN maskeli</span></span></a></td>
+                  <td class="num">300,00 ₺</td>
+                  <td><span class="durum-hapi bekleyen">Taslak</span></td>
+                  <td>—<small>Vade —</small></td>
+                  <td class="eylem"><span class="satir-eylem">
+                    <a class="ikon-dugme" href="admin-fatura-detay.html" title="Belgeyi aç" aria-label="DDT-2026-004180 belgesini aç"><i class="fa-solid fa-eye" aria-hidden="true"></i></a>
+                    <button class="ikon-dugme yikici" type="button" title="Sil" aria-label="DDT-2026-004180 taslağını sil"><i class="fa-solid fa-trash" aria-hidden="true"></i></button>
+                  </span></td>
+                </tr>
+                <tr>
+                  <td class="sec"><label><input type="checkbox" data-sec="" aria-label="DDT-2026-003960 satırını seç"></label></td>
+                  <td><code>DDT-2026-003960</code></td>
+                  <td><a class="kisi-hucre" href="admin-uye-detay.html"><span class="kisi-avatar" aria-hidden="true">İD</span><span class="kisi-bilgi"><span class="kisi-ad">İpek Doğan</span><span class="kisi-alt">Bireysel · TCKN maskeli</span></span></a></td>
+                  <td class="num">1.691,50 ₺</td>
+                  <td><span class="durum-hapi cozulen">Ödenmiş</span></td>
+                  <td>07.01.2026<small>Vade 07.01.2026</small></td>
+                  <td class="eylem"><span class="satir-eylem">
+                    <a class="ikon-dugme" href="admin-fatura-detay.html" title="Belgeyi aç" aria-label="DDT-2026-003960 belgesini aç"><i class="fa-solid fa-eye" aria-hidden="true"></i></a>
+                    <button class="ikon-dugme" type="button" title="PDF görüntüle" aria-label="DDT-2026-003960 PDF belgesini görüntüle"><i class="fa-solid fa-file-pdf" aria-hidden="true"></i></button>
+                  </span></td>
+                </tr>
+                <tr>
+                  <td class="sec"><label><input type="checkbox" data-sec="" aria-label="DDT-2026-002995 satırını seç"></label></td>
+                  <td><code>DDT-2026-002995</code></td>
+                  <td><a class="kisi-hucre" href="admin-uye-detay.html"><span class="kisi-avatar" aria-hidden="true">EŞ</span><span class="kisi-bilgi"><span class="kisi-ad">Elif Şahin</span><span class="kisi-alt">Bireysel · TCKN maskeli</span></span></a></td>
+                  <td class="num">-99,00 ₺</td>
+                  <td><span class="durum-hapi kapali">İade edildi</span></td>
+                  <td>20.02.2026<small>Vade —</small></td>
+                  <td class="eylem"><span class="satir-eylem">
+                    <a class="ikon-dugme" href="admin-fatura-detay.html" title="Belgeyi aç" aria-label="DDT-2026-002995 belgesini aç"><i class="fa-solid fa-eye" aria-hidden="true"></i></a>
+                    <button class="ikon-dugme" type="button" title="PDF görüntüle" aria-label="DDT-2026-002995 PDF belgesini görüntüle"><i class="fa-solid fa-file-pdf" aria-hidden="true"></i></button>
+                  </span></td>
+                </tr>
+                <tr>
+                  <td class="sec"><label><input type="checkbox" data-sec="" aria-label="DDT-2026-004142 satırını seç"></label></td>
+                  <td><code>DDT-2026-004142</code></td>
+                  <td><a class="kisi-hucre" href="admin-uye-detay.html"><span class="kisi-avatar" aria-hidden="true">HU</span><span class="kisi-bilgi"><span class="kisi-ad">Hakan Uçar</span><span class="kisi-alt">Bireysel · TCKN maskeli</span></span></a></td>
+                  <td class="num">99,00 ₺</td>
+                  <td><span class="durum-hapi kapali">İptal</span></td>
+                  <td>04.07.2026<small>Vade —</small></td>
+                  <td class="eylem"><span class="satir-eylem">
+                    <a class="ikon-dugme" href="admin-fatura-detay.html" title="Belgeyi aç" aria-label="DDT-2026-004142 belgesini aç"><i class="fa-solid fa-eye" aria-hidden="true"></i></a>
+                  </span></td>
+                </tr>
+                <tr>
+                  <td class="sec"><label><input type="checkbox" data-sec="" aria-label="DDT-2025-009044 satırını seç"></label></td>
+                  <td><code>DDT-2025-009044</code></td>
+                  <td><a class="kisi-hucre" href="admin-uye-detay.html"><span class="kisi-avatar" aria-hidden="true">ZA</span><span class="kisi-bilgi"><span class="kisi-ad">Zeynep Arı</span><span class="kisi-alt">Bireysel · TCKN maskeli</span></span></a></td>
+                  <td class="num">990,00 ₺</td>
+                  <td><span class="durum-hapi cozulen">Ödenmiş</span></td>
+                  <td>12.09.2025<small>Vade 12.09.2025</small></td>
+                  <td class="eylem"><span class="satir-eylem">
+                    <a class="ikon-dugme" href="admin-fatura-detay.html" title="Belgeyi aç" aria-label="DDT-2025-009044 belgesini aç"><i class="fa-solid fa-eye" aria-hidden="true"></i></a>
+                    <button class="ikon-dugme" type="button" title="PDF görüntüle" aria-label="DDT-2025-009044 PDF belgesini görüntüle"><i class="fa-solid fa-file-pdf" aria-hidden="true"></i></button>
+                  </span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="sayfalama kart-ayagi">
+          <div class="sayfalama-bilgi"><b>1–12</b> / 1.902 belge</div>
+          <div class="dugmeler">
+            <button class="sayfa-dugme sade" type="button" disabled="" aria-label="Önceki sayfa"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i></button>
+            <button class="sayfa-dugme sade aktif" type="button" aria-current="page">1</button>
+            <button class="sayfa-dugme sade" type="button">2</button>
+            <button class="sayfa-dugme sade" type="button">3</button>
+            <button class="sayfa-dugme sade" type="button" aria-label="Sonraki sayfa"><i class="fa-solid fa-chevron-right" aria-hidden="true"></i></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+<script src="_ortak/panel.js" defer></script>
+</body></html>

@@ -1,0 +1,529 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ayarlar · DadaDiet Yönetim</title>
+<link rel="stylesheet" href="../../kanon/tokenlar.css">
+<link rel="stylesheet" href="../../kanon/markalar/diet.css">
+<link rel="stylesheet" href="../../kanon/bilesenler.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body class="yetkili">
+<!-- ═══════════════════════════════════════════════════════════════════
+     DIET ADMIN · KANONİK KABUK — FIT kabuğundan TÜRETİLDİ, elle değiştirilmez
+     ───────────────────────────────────────────────────────────────────
+     Her ekran bu kabuğu BİREBİR taşır. Ekrandan ekrana değişen TEK şey:
+       · aktif menü kaleminde `aktif` sınıfı ve `aria-current="page"`
+       · <title> ve <h1>
+     Kabuk dört markada AYNI; yalnız markalar/<marka>.css değişir.
+
+     🔴 İKONLAR: 33 ortak modülün ikonu FIT kabuğundan BİREBİR alındı —
+        dört markada aynı olmak zorunda. 11 marka modülünün 5'i donörde
+        rol karşılığı olduğu için onun ikonunu taşır (Programlar
+        fa-clipboard-list · Diyetisyenler fa-user-check · Testler
+        fa-clipboard-check · Rehber fa-compass · Hizmetler
+        fa-basket-shopping); kalan 6'sı seçimdir ve raporda bildirilir
+        (Besin Kütüphanesi fa-apple-whole · Hesaplayıcılar fa-calculator
+        · İpuçları fa-lightbulb · Kaç Kalori fa-fire · Püf Noktaları
+        fa-wand-magic-sparkles · Makro Rehberi fa-chart-pie).
+
+     🔴 KABUK DEĞİŞTİRME. Bir eksik görürsen lead'e bildir.
+     ═══════════════════════════════════════════════════════════════════ -->
+
+<!-- ── SOL EKOSİSTEM RAYI ─────────────────────────────────────────── -->
+<aside class="panel-ray" aria-label="Marka rayı">
+  <a class="panel-ray-ikon aktif" href="#" style="--eko:var(--eko-diet)"
+     aria-current="true" title="DadaDiet" aria-label="DadaDiet"><i class="fa-solid fa-leaf"></i></a>
+  <span class="panel-ray-ayrac" role="presentation"></span>
+  <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-gastro)"  title="DadaGastro"  aria-label="DadaGastro"><i class="fa-solid fa-utensils"></i></a>
+  <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-fit)"     title="DadaFit"     aria-label="DadaFit"><i class="fa-solid fa-dumbbell"></i></a>
+  <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-gourmet)" title="DadaGourmet" aria-label="DadaGourmet"><i class="fa-solid fa-wine-glass"></i></a>
+  <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-campus)"  title="DadaCampus"  aria-label="DadaCampus"><i class="fa-solid fa-graduation-cap"></i></a>
+  <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-mentor)"  title="DadaMentor"  aria-label="DadaMentor"><i class="fa-solid fa-compass"></i></a>
+  <span class="panel-ray-ikon kilitli" title="DadaStore — erişimin yok" aria-label="DadaStore, erişim yok"><i class="fa-solid fa-lock"></i></span>
+  <div class="panel-ray-alt">
+    <a class="panel-ray-ikon" href="#" title="Yardım" aria-label="Yardım"><i class="fa-solid fa-circle-question"></i></a>
+  </div>
+</aside>
+
+<!-- ── MODÜL MENÜSÜ · DÖRT KATEGORİ ───────────────────────────────── -->
+<nav class="panel-menu" id="panelMenu" aria-label="Modüller">
+  <div class="panel-menu-bas">
+    <b>DadaDiet</b><span>Yönetim paneli</span>
+  </div>
+  <div class="panel-menu-govde">
+
+    <div class="panel-menu-bolum">01 Genel</div>
+    <a class="panel-menu-link" href="admin-genel-bakis.html"><i class="fa-solid fa-gauge-high"></i>Genel Bakış</a>
+    <a class="panel-menu-link" href="admin-sayfalar.html"><i class="fa-solid fa-file-lines"></i>Sayfalar &amp; SEO</a>
+    <a class="panel-menu-link" href="admin-taksonomi.html"><i class="fa-solid fa-tags"></i>Taksonomi</a>
+    <a class="panel-menu-link" href="admin-medya.html"><i class="fa-solid fa-photo-film"></i>Medya Kütüphanesi</a>
+    <a class="panel-menu-link" href="admin-arama-yonetimi.html"><i class="fa-solid fa-magnifying-glass"></i>Arama Yönetimi</a>
+    <a class="panel-menu-link" href="admin-yonlendirmeler.html"><i class="fa-solid fa-shuffle"></i>Yönlendirmeler</a>
+
+    <div class="panel-menu-bolum">Marka modülleri</div>
+    <a class="panel-menu-link" href="admin-besinler.html"><i class="fa-solid fa-apple-whole"></i>Besin Kütüphanesi</a>
+    <a class="panel-menu-link" href="admin-programlar.html"><i class="fa-solid fa-clipboard-list"></i>Beslenme Programları</a>
+    <a class="panel-menu-link" href="admin-diyetisyenler.html"><i class="fa-solid fa-user-check"></i>Diyetisyenler<span class="sayac">3</span></a>
+    <a class="panel-menu-link" href="admin-testler.html"><i class="fa-solid fa-clipboard-check"></i>Beslenme Testleri</a>
+    <a class="panel-menu-link" href="admin-hesaplayicilar.html"><i class="fa-solid fa-calculator"></i>Hesaplayıcılar</a>
+    <a class="panel-menu-link" href="admin-rehber.html"><i class="fa-solid fa-compass"></i>Beslenme Rehberi</a>
+    <a class="panel-menu-link" href="admin-ipuclari.html"><i class="fa-solid fa-lightbulb"></i>Beslenme İpuçları</a>
+    <a class="panel-menu-link" href="admin-kac-kalori.html"><i class="fa-solid fa-fire"></i>Kaç Kalori</a>
+    <a class="panel-menu-link" href="admin-puf-noktalari.html"><i class="fa-solid fa-wand-magic-sparkles"></i>Diyetin Püf Noktaları</a>
+    <a class="panel-menu-link" href="admin-makro.html"><i class="fa-solid fa-chart-pie"></i>Makro Rehberi</a>
+    <a class="panel-menu-link" href="admin-hizmetler.html"><i class="fa-solid fa-basket-shopping"></i>Hizmetler ve Satışlar</a>
+
+    <div class="panel-menu-bolum">02 Operasyon</div>
+    <a class="panel-menu-link" href="admin-uyeler.html"><i class="fa-solid fa-users"></i>Üyeler &amp; Yetkiler</a>
+    <a class="panel-menu-link" href="admin-abonelikler.html"><i class="fa-solid fa-credit-card"></i>Abonelikler</a>
+    <a class="panel-menu-link" href="admin-odemeler.html"><i class="fa-solid fa-money-bill-wave"></i>Ödemeler</a>
+    <a class="panel-menu-link" href="admin-faturalar.html"><i class="fa-solid fa-file-invoice"></i>Faturalar<span class="sayac">7</span></a>
+    <a class="panel-menu-link" href="admin-destek.html"><i class="fa-solid fa-life-ring"></i>Destek Talepleri<span class="sayac">12</span></a>
+    <a class="panel-menu-link" href="admin-sss.html"><i class="fa-solid fa-circle-question"></i>Sıkça Sorulan Sorular</a>
+    <a class="panel-menu-link" href="admin-moderasyon.html"><i class="fa-solid fa-shield-halved"></i>Moderasyon<span class="sayac">5</span></a>
+    <a class="panel-menu-link" href="admin-rozetler.html"><i class="fa-solid fa-medal"></i>Rozetler &amp; Kademeler</a>
+    <a class="panel-menu-link" href="admin-log.html"><i class="fa-solid fa-list-check"></i>Log Kayıtları</a>
+    <a class="panel-menu-link" href="admin-formlar.html"><i class="fa-solid fa-rectangle-list"></i>Formlar &amp; Başvurular</a>
+    <a class="panel-menu-link" href="admin-icerik-onaylari.html"><i class="fa-solid fa-circle-check"></i>İçerik Onayları<span class="sayac">4</span></a>
+    <a class="panel-menu-link" href="admin-duyurular.html"><i class="fa-solid fa-tower-broadcast"></i>Duyurular</a>
+    <a class="panel-menu-link" href="admin-iletisim-kayitlari.html"><i class="fa-solid fa-envelope"></i>E-posta &amp; İletişim Kayıtları</a>
+
+    <div class="panel-menu-bolum">03 Yapılandırma</div>
+    <a class="panel-menu-link" href="admin-menu.html"><i class="fa-solid fa-bars"></i>Menü &amp; Navigasyon</a>
+    <a class="panel-menu-link" href="admin-paketler.html"><i class="fa-solid fa-layer-group"></i>Paketler &amp; Özellikler</a>
+    <a class="panel-menu-link" href="admin-kuponlar.html"><i class="fa-solid fa-ticket"></i>Kuponlar</a>
+    <a class="panel-menu-link" href="admin-bildirim.html"><i class="fa-solid fa-bell"></i>Bildirim Şablonları</a>
+    <a class="panel-menu-link" href="admin-reklam.html"><i class="fa-solid fa-bullhorn"></i>Reklam &amp; Sponsorluk</a>
+    <a class="panel-menu-link" href="admin-raporlar.html"><i class="fa-solid fa-chart-line"></i>Raporlar</a>
+    <a class="panel-menu-link" href="admin-yasal.html"><i class="fa-solid fa-scale-balanced"></i>Yasal Metinler</a>
+    <a class="panel-menu-link aktif" aria-current="page" href="admin-ayarlar.html"><i class="fa-solid fa-sliders"></i>Ayarlar</a>
+    <a class="panel-menu-link" href="admin-dil-ceviri.html"><i class="fa-solid fa-language"></i>Dil &amp; Çeviri Yönetimi</a>
+    <a class="panel-menu-link" href="admin-entegrasyonlar.html"><i class="fa-solid fa-plug"></i>Entegrasyonlar</a>
+    <a class="panel-menu-link" href="admin-ice-disa-aktarim.html"><i class="fa-solid fa-file-import"></i>İçe / Dışa Aktarım</a>
+    <a class="panel-menu-link" href="admin-sistem-bildirimleri.html"><i class="fa-solid fa-triangle-exclamation"></i>Sistem Bildirimleri<span class="sayac">2</span></a>
+    <a class="panel-menu-link" href="admin-gorevler.html"><i class="fa-solid fa-clock"></i>Görevler &amp; Zamanlanmış İşlemler</a>
+    <a class="panel-menu-link" href="admin-sistem-durumu.html"><i class="fa-solid fa-heart-pulse"></i>Sistem Durumu</a>
+
+  </div>
+  <div class="panel-menu-alt">
+    <a class="panel-menu-link" href="#"><i class="fa-solid fa-arrow-up-right-from-square"></i>Siteyi gör</a>
+  </div>
+</nav>
+
+<!-- ── ÜST ÇUBUK ──────────────────────────────────────────────────── -->
+<header class="panel-ust">
+  <!-- 🔴 Menünün dar ekrandaki TEK kapısı. ≤1100px'te görünür, geniş
+       ekranda basılmaz (menü zaten orada). -->
+  <button class="panel-ust-dugme panel-ac" type="button"
+          aria-expanded="false" aria-controls="panelMenu" aria-label="Modül menüsünü aç">
+    <i class="fa-solid fa-bars" aria-hidden="true"></i>
+  </button>
+  <div class="panel-arama">
+    <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+    <input type="search" class="panel-arama-girdi" placeholder="Ekran, kayıt ya da kişi ara"
+           role="combobox" autocomplete="off" aria-label="Yönetimde ara"
+           aria-expanded="false" aria-controls="ustAramaAcilir">
+    <div class="acilir-yuzey" id="ustAramaAcilir" role="listbox" aria-label="Arama sonuçları" hidden>
+      <div class="acilir-bas">Sonuçlar</div>
+      <a class="acilir-kalem" href="admin-uyeler.html" role="option"><i class="fa-solid fa-users"></i>Üyeler &amp; Yetkiler<span class="yan">Modül</span></a>
+      <a class="acilir-kalem" href="admin-odemeler.html" role="option"><i class="fa-solid fa-credit-card"></i>Ödemeler<span class="yan">Modül</span></a>
+    </div>
+  </div>
+  <div class="panel-ust-sag">
+    <a class="panel-ust-dugme" href="admin-sistem-bildirimleri.html" aria-label="Bildirimler, 2 okunmamış">
+      <i class="fa-solid fa-bell"></i><span class="benek" aria-hidden="true"></span>
+    </a>
+    <a class="panel-ust-dugme" href="#" aria-label="Yardım"><i class="fa-solid fa-circle-question"></i></a>
+    <div class="acilir-kap">
+      <button class="panel-ust-ben" type="button" aria-expanded="false" aria-controls="hesapAcilir">
+        <span class="kisi-avatar" aria-hidden="true">BY</span>
+        <span><span class="ad">Beyar Yavuz</span><span class="rol">Sistem yöneticisi</span></span>
+        <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+      </button>
+      <!-- 🔴 BU YÜZEY EKSİKTİ. Düğme `aria-controls="hesapAcilir"` bildiriyordu
+           ama öyle bir eleman yoktu: ekran okuyucuya var olmayan bir açılır
+           vaat ediliyordu. Davranış sınaması yakaladı. -->
+      <div class="acilir-yuzey saga" id="hesapAcilir" role="menu" aria-label="Hesap" hidden>
+        <div class="acilir-bas">Beyar Yavuz</div>
+        <a class="acilir-kalem" href="#" role="menuitem"><i class="fa-solid fa-user"></i>Profilim</a>
+        <a class="acilir-kalem" href="#" role="menuitem"><i class="fa-solid fa-sliders"></i>Panel tercihleri</a>
+        <a class="acilir-kalem" href="#" role="menuitem"><i class="fa-solid fa-right-from-bracket"></i>Çıkış yap</a>
+      </div>
+    </div>
+  </div>
+</header>
+<main class="panel-govde">
+    <div class="panel-sayfa">
+      <div class="panel-bas">
+        <div>
+          <h1>Ayarlar</h1>
+          <p>Projenin ortak kimlik, iletişim, yerelleştirme ve çalışma ayarları. Harici servis bağlantıları burada değil, Entegrasyonlar modülünde yönetilir.</p>
+        </div>
+        <div class="eylem-satiri">
+          <a class="dugme hayalet" href="admin-entegrasyonlar.html"><i class="fa-solid fa-plug" aria-hidden="true"></i>Entegrasyonlar</a>
+          <button class="dugme hayalet" type="button" data-yetki="disa-aktar"><i class="fa-solid fa-file-export" aria-hidden="true"></i>Ayarları dışa aktar</button>
+          <button class="dugme hayalet" type="button"><i class="fa-solid fa-clock-rotate-left" aria-hidden="true"></i>Değişiklik geçmişi</button>
+        </div>
+      </div>
+      <div class="sekmeler" role="tablist" aria-label="Kuyruklar">
+          <button class="sekme aktif" type="button" role="tab" id="ay-s0" aria-controls="ay-p0" aria-selected="true">Genel</button>
+          <button class="sekme" type="button" role="tab" id="ay-s1" aria-controls="ay-p1" aria-selected="false">Marka</button>
+          <button class="sekme" type="button" role="tab" id="ay-s2" aria-controls="ay-p2" aria-selected="false">Üyelik</button>
+          <button class="sekme" type="button" role="tab" id="ay-s3" aria-controls="ay-p3" aria-selected="false">Finans</button>
+          <button class="sekme" type="button" role="tab" id="ay-s4" aria-controls="ay-p4" aria-selected="false">Sistem</button>
+        </div>
+
+      <div id="ay-p0" role="tabpanel" aria-labelledby="ay-s0">
+        <div class="alan-ozet" role="alert">
+          <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>
+          <span>Ayarlar kaydedilmedi: sistem e-postası geçerli bir adres değil.</span>
+        </div>
+        <div class="kart panel">
+          <div class="kart-bas"><h2 class="kart-baslik"><i class="fa-solid fa-circle-info" aria-hidden="true"></i>Site bilgileri</h2></div>
+          <div class="kart-govde">
+            <div class="alan-izgara c2">
+            <div class="alan">
+              <label class="alan-etiket" for="ayAd">Proje adı <span class="zorunlu" aria-hidden="true">*</span></label>
+              <input class="alan-girdi" id="ayAd" type="text" value="DadaDiet" placeholder="">
+            </div>
+            <div class="alan">
+              <label class="alan-etiket" for="ayDomain">Alan adı <span class="zorunlu" aria-hidden="true">*</span></label>
+              <input class="alan-girdi" id="ayDomain" type="text" value="dadadiet.com" placeholder="">
+            </div>
+            </div>
+            <div class="alan-izgara">
+            <div class="alan">
+              <label class="alan-etiket" for="aySlogan">Slogan</label>
+              <input class="alan-girdi" id="aySlogan" type="text" value="Besin etmeye bugün başla" placeholder="">
+            </div>
+            <div class="alan">
+              <label class="alan-etiket" for="ayAciklama">Kısa açıklama</label>
+              <textarea class="alan-metin" id="ayAciklama" rows="3" placeholder="">Program, ölçüm ve diyetisyen katmanını tek yerde toplayan beslenme platformu.</textarea>
+              <p class="alan-yardim"><i class="fa-solid fa-circle-info" aria-hidden="true"></i><span>Arama motoru ve paylaşım kartlarında bu metin kullanılır.</span></p>
+            </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="kart panel">
+          <div class="kart-bas"><h2 class="kart-baslik"><i class="fa-solid fa-envelope" aria-hidden="true"></i>İletişim</h2></div>
+          <div class="kart-govde">
+            <div class="alan-izgara c2">
+            <div class="alan">
+              <label class="alan-etiket" for="ayMail">Sistem e-postası <span class="zorunlu" aria-hidden="true">*</span></label>
+              <input class="alan-girdi" id="ayMail" type="email" value="sistem@dadadiet.com" placeholder="">
+              <p class="alan-yardim"><i class="fa-solid fa-circle-info" aria-hidden="true"></i><span>Otomatik bildirimler bu adresten gider.</span></p>
+            </div>
+            <div class="alan">
+              <label class="alan-etiket" for="ayDestek">Destek e-postası</label>
+              <input class="alan-girdi" id="ayDestek" type="email" value="destek@dadadiet.com" placeholder="">
+            </div>
+            </div>
+            <div class="alan-izgara c2">
+            <div class="alan">
+              <label class="alan-etiket" for="ayTel">Telefon</label>
+              <input class="alan-girdi" id="ayTel" type="text" value="+90 212 000 00 00" placeholder="">
+            </div>
+            <div class="alan">
+              <label class="alan-etiket" for="ayAdres">Adres</label>
+              <input class="alan-girdi" id="ayAdres" type="text" value="Kadıköy / İstanbul" placeholder="">
+            </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="kart panel">
+          <div class="kart-bas"><h2 class="kart-baslik"><i class="fa-solid fa-globe" aria-hidden="true"></i>Yerelleştirme</h2></div>
+          <div class="kart-govde">
+            <div class="alan-izgara c3">
+            <div class="alan">
+              <label class="alan-etiket" for="ayTz">Saat dilimi</label>
+              <select class="alan-secim" id="ayTz"><option selected>Europe/Istanbul (UTC+3)</option><option>UTC</option><option>Europe/Berlin (UTC+2)</option></select>
+            </div>
+            <div class="alan">
+              <label class="alan-etiket" for="ayTarih">Tarih biçimi</label>
+              <select class="alan-secim" id="ayTarih"><option selected>gg.aa.yyyy</option><option>yyyy-aa-gg</option><option>aa/gg/yyyy</option></select>
+            </div>
+            <div class="alan">
+              <label class="alan-etiket" for="aySaat">Saat biçimi</label>
+              <select class="alan-secim" id="aySaat"><option selected>24 saat</option><option>12 saat</option></select>
+            </div>
+            </div>
+          </div>
+          <div class="kart-alt form-eylem">
+            <span class="not">Biçimler tüm modüllerde merkezden okunur.</span>
+            <div class="eylem-satiri">
+              <button class="dugme hayalet" type="button">Değişiklik geçmişi</button>
+              <button class="dugme birincil" type="button">Kaydet</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="ay-p1" role="tabpanel" aria-labelledby="ay-s1" hidden>
+        <div class="kart panel">
+          <div class="kart-bas"><h2 class="kart-baslik"><i class="fa-solid fa-image" aria-hidden="true"></i>Logo ve favicon</h2></div>
+          <div class="kart-govde">
+            <div class="birak-alani">
+              <i class="fa-solid fa-cloud-arrow-up" aria-hidden="true"></i>
+              <b>Logoyu buraya bırak</b>
+              <span>SVG önerilir · PNG en az 512×512 · en çok 500 KB</span>
+              <button class="dugme hayalet kucuk dosya-sec" type="button">Dosya seç</button>
+            </div>
+            <div class="alan-izgara c3">
+            <div class="alan">
+              <label class="alan-etiket" for="ayFavicon">Favicon</label>
+              <input class="alan-girdi" id="ayFavicon" type="text" value="favicon-dadadiet.ico" placeholder="" disabled>
+              <p class="alan-yardim"><i class="fa-solid fa-circle-info" aria-hidden="true"></i><span>ICO veya PNG · 32×32 ve 180×180.</span></p>
+            </div>
+            <div class="alan">
+              <label class="alan-etiket" for="ayMailLogo">E-posta logosu</label>
+              <input class="alan-girdi" id="ayMailLogo" type="text" value="logo-mail.png" placeholder="" disabled>
+              <p class="alan-yardim"><i class="fa-solid fa-circle-info" aria-hidden="true"></i><span>Koyu zeminli e-postalarda kullanılır.</span></p>
+            </div>
+            <div class="alan">
+              <label class="alan-etiket" for="ayOg">Varsayılan paylaşım görseli</label>
+              <input class="alan-girdi" id="ayOg" type="text" value="og-dadadiet.png" placeholder="" disabled>
+              <p class="alan-yardim"><i class="fa-solid fa-circle-info" aria-hidden="true"></i><span>1200×630 · sosyal medya kartı.</span></p>
+            </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="kart panel">
+          <div class="kart-bas"><h2 class="kart-baslik"><i class="fa-solid fa-palette" aria-hidden="true"></i>Kurumsal renkler</h2></div>
+          <div class="kart-govde">
+            <div class="alan-izgara c3">
+            <div class="alan">
+              <label class="alan-etiket" for="ayRenk1">Marka rengi</label>
+              <input class="alan-girdi" id="ayRenk1" type="text" data-token="--marka" value="#009A44" placeholder="">
+              <p class="alan-yardim"><i class="fa-solid fa-circle-info" aria-hidden="true"></i><span>Pantone 299 C</span></p>
+            </div>
+            <div class="alan">
+              <label class="alan-etiket" for="ayRenk2">Koyu ton</label>
+              <input class="alan-girdi" id="ayRenk2" type="text" data-token="--marka-koyu" value="#1c7a4e" placeholder="">
+            </div>
+            <div class="alan">
+              <label class="alan-etiket" for="ayRenk3">Vurgu</label>
+              <input class="alan-girdi" id="ayRenk3" type="text" data-token="--uyari" value="#8A4B00" placeholder="">
+            </div>
+            </div>
+            <div class="bilgi-notu"><i class="fa-solid fa-circle-info" aria-hidden="true"></i><p>Panel ayrı bir renk sistemi kullanmaz: buradaki marka rengi hem üye yüzünü hem yönetim panelini döndürür.</p></div>
+          </div>
+          <div class="kart-alt form-eylem">
+            <span class="not">Renk değişikliği önbelleği tazeler.</span>
+            <div class="eylem-satiri">
+              <button class="dugme hayalet" type="button">Önizle</button>
+              <button class="dugme birincil" type="button">Kaydet</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="ay-p2" role="tabpanel" aria-labelledby="ay-s2" hidden>
+        <div class="kart panel">
+          <div class="kart-bas"><h2 class="kart-baslik"><i class="fa-solid fa-user-plus" aria-hidden="true"></i>Kayıt ve doğrulama</h2></div>
+          <div class="kart-govde">
+            <div class="alan-izgara">
+            <div class="alan">
+              <label class="alan-etiket">Yeni üye kaydı açık</label>
+              <span class="anahtar"><input type="checkbox" checked aria-label="Yeni üye kaydı açık"><span class="anahtar-ray"></span></span>
+              <p class="alan-yardim"><i class="fa-solid fa-circle-info" aria-hidden="true"></i><span>Kapalıyken kayıt formu "Kayıtlar geçici olarak kapalı" der.</span></p>
+            </div>
+            <div class="alan">
+              <label class="alan-etiket">E-posta doğrulaması zorunlu</label>
+              <span class="anahtar"><input type="checkbox" checked aria-label="E-posta doğrulaması zorunlu"><span class="anahtar-ray"></span></span>
+            </div>
+            <div class="alan">
+              <label class="alan-etiket">Telefon doğrulaması zorunlu</label>
+              <span class="anahtar"><input type="checkbox" aria-label="Telefon doğrulaması zorunlu"><span class="anahtar-ray"></span></span>
+              <p class="alan-yardim"><i class="fa-solid fa-circle-info" aria-hidden="true"></i><span>Açıkken SMS entegrasyonu bağlı olmalıdır.</span></p>
+            </div>
+            <div class="alan">
+              <label class="alan-etiket">Yönetici girişinde iki faktör zorunlu</label>
+              <span class="anahtar"><input type="checkbox" checked aria-label="Yönetici girişinde iki faktör zorunlu"><span class="anahtar-ray"></span></span>
+              <p class="alan-yardim"><i class="fa-solid fa-circle-info" aria-hidden="true"></i><span>Panel erişimi olan her rolde geçerlidir.</span></p>
+            </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="kart panel">
+          <div class="kart-bas"><h2 class="kart-baslik"><i class="fa-solid fa-key" aria-hidden="true"></i>Şifre ve oturum</h2></div>
+          <div class="kart-govde">
+            <div class="alan-izgara c3">
+            <div class="alan">
+              <label class="alan-etiket" for="ayPwLen">En az şifre uzunluğu</label>
+              <input class="alan-girdi" id="ayPwLen" type="text" value="10" placeholder="">
+            </div>
+            <div class="alan">
+              <label class="alan-etiket" for="ayPwKar">Şifre karmaşıklığı</label>
+              <select class="alan-secim" id="ayPwKar"><option selected>Harf + rakam</option><option>Harf + rakam + sembol</option><option>Sınır yok</option></select>
+            </div>
+            <div class="alan">
+              <label class="alan-etiket" for="ayOturum">Oturum süresi</label>
+              <select class="alan-secim" id="ayOturum"><option selected>30 gün</option><option>7 gün</option><option>24 saat</option><option>2 saat</option></select>
+            </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="kart panel">
+          <div class="kart-bas"><h2 class="kart-baslik"><i class="fa-solid fa-user-slash" aria-hidden="true"></i>Hesap silme süreci</h2></div>
+          <div class="kart-govde">
+            <div class="alan-izgara c2">
+            <div class="alan">
+              <label class="alan-etiket" for="aySilme">Silme talebi bekleme süresi</label>
+              <input class="alan-girdi" id="aySilme" type="text" value="30 gün" placeholder="">
+              <p class="alan-yardim"><i class="fa-solid fa-circle-info" aria-hidden="true"></i><span>Bu süre içinde üye vazgeçebilir; sonrasında veri kalıcı silinir.</span></p>
+            </div>
+            <div class="alan">
+              <label class="alan-etiket" for="aySaklama">Silme sonrası saklanan</label>
+              <select class="alan-secim" id="aySaklama"><option selected>Yalnız fatura kaydı</option><option>Fatura + destek kaydı</option><option>Hiçbiri</option></select>
+              <p class="alan-yardim"><i class="fa-solid fa-circle-info" aria-hidden="true"></i><span>Mevzuat gereği saklanması zorunlu kayıtlar bu seçimden bağımsızdır.</span></p>
+            </div>
+            </div>
+          </div>
+          <div class="kart-alt form-eylem">
+            <span class="not">Değişiklik <b>Log Kayıtları</b>'na yazılır.</span>
+            <div class="eylem-satiri">
+              <button class="dugme birincil" type="button">Kaydet</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="ay-p3" role="tabpanel" aria-labelledby="ay-s3" hidden>
+        <div class="kart panel">
+          <div class="kart-bas"><h2 class="kart-baslik"><i class="fa-solid fa-sack-dollar" aria-hidden="true"></i>Para ve vergi</h2></div>
+          <div class="kart-govde">
+            <div class="alan-izgara c3">
+            <div class="alan">
+              <label class="alan-etiket" for="ayPara">Varsayılan para birimi</label>
+              <select class="alan-secim" id="ayPara"><option selected>₺ Türk lirası</option><option>$ Amerikan doları</option><option>€ Euro</option></select>
+            </div>
+            <div class="alan">
+              <label class="alan-etiket" for="ayKdv">KDV oranı</label>
+              <input class="alan-girdi" id="ayKdv" type="text" value="%20" placeholder="">
+            </div>
+            <div class="alan">
+              <label class="alan-etiket" for="ayVade">Ödeme vadesi</label>
+              <input class="alan-girdi" id="ayVade" type="text" value="7 gün" placeholder="">
+              <p class="alan-yardim"><i class="fa-solid fa-circle-info" aria-hidden="true"></i><span>Kurumsal faturalar için geçerli.</span></p>
+            </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="kart panel">
+          <div class="kart-bas"><h2 class="kart-baslik"><i class="fa-solid fa-file-invoice" aria-hidden="true"></i>Fatura bilgileri</h2></div>
+          <div class="kart-govde">
+            <div class="alan-izgara c2">
+            <div class="alan">
+              <label class="alan-etiket" for="ayUnvan">Unvan <span class="zorunlu" aria-hidden="true">*</span></label>
+              <input class="alan-girdi" id="ayUnvan" type="text" value="Dada Dijital Beslenme A.Ş." placeholder="">
+            </div>
+            <div class="alan">
+              <label class="alan-etiket" for="ayVergi">Vergi dairesi / no <span class="zorunlu" aria-hidden="true">*</span></label>
+              <input class="alan-girdi" id="ayVergi" type="text" value="Kadıköy · 123 456 7890" placeholder="">
+            </div>
+            </div>
+            <div class="alan-izgara c2">
+            <div class="alan">
+              <label class="alan-etiket" for="ayOnek">Fatura ön eki</label>
+              <input class="alan-girdi" id="ayOnek" type="text" value="DF" placeholder="">
+              <p class="alan-yardim"><i class="fa-solid fa-circle-info" aria-hidden="true"></i><span>Numaralandırma: DD-2026-000001</span></p>
+            </div>
+            <div class="alan">
+              <label class="alan-etiket" for="ayNo">Sonraki fatura numarası</label>
+              <input class="alan-girdi" id="ayNo" type="text" value="000842" placeholder="" disabled>
+              <p class="alan-yardim"><i class="fa-solid fa-circle-info" aria-hidden="true"></i><span>Numara elle değiştirilemez; sıra atlaması denetimde sorulur.</span></p>
+            </div>
+            </div>
+          </div>
+          <div class="kart-alt form-eylem">
+            <span class="not">Fatura künyesi çıktılarda birebir basılır.</span>
+            <div class="eylem-satiri">
+              <button class="dugme hayalet" type="button">Örnek fatura üret</button>
+              <button class="dugme birincil" type="button">Kaydet</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="ay-p4" role="tabpanel" aria-labelledby="ay-s4" hidden>
+        <div class="kart panel">
+          <div class="kart-bas"><h2 class="kart-baslik"><i class="fa-solid fa-screwdriver-wrench" aria-hidden="true"></i>Bakım modu</h2></div>
+          <div class="kart-govde">
+            <div class="alan-izgara">
+            <div class="alan">
+              <label class="alan-etiket">Bakım modu açık</label>
+              <span class="anahtar"><input type="checkbox" aria-label="Bakım modu açık"><span class="anahtar-ray"></span></span>
+              <p class="alan-yardim"><i class="fa-solid fa-circle-info" aria-hidden="true"></i><span>Açıkken üye yüzü bakım ekranına düşer; panel erişimi sürer.</span></p>
+            </div>
+            <div class="alan">
+              <label class="alan-etiket" for="ayBakimMsg">Bakım mesajı</label>
+              <textarea class="alan-metin" id="ayBakimMsg" rows="3" placeholder="">Kısa bir bakımdayız, birazdan buradayız. Öğün kayıtların yerinde duruyor.</textarea>
+            </div>
+            <div class="alan">
+              <label class="alan-etiket" for="ayBakimBitis">Tahmini bitiş</label>
+              <input class="alan-girdi" id="ayBakimBitis" type="datetime-local" value="2026-09-06T04:00" placeholder="">
+            </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="kart panel">
+          <div class="kart-bas"><h2 class="kart-baslik"><i class="fa-solid fa-gauge-high" aria-hidden="true"></i>Sınırlar</h2></div>
+          <div class="kart-govde">
+            <div class="alan-izgara c3">
+            <div class="alan">
+              <label class="alan-etiket" for="aySayfalama">Varsayılan sayfalama</label>
+              <select class="alan-secim" id="aySayfalama"><option selected>20 kayıt</option><option>50 kayıt</option><option>100 kayıt</option></select>
+            </div>
+            <div class="alan">
+              <label class="alan-etiket" for="ayDosya">Azami dosya boyutu</label>
+              <input class="alan-girdi" id="ayDosya" type="text" value="10 MB" placeholder="">
+            </div>
+            <div class="alan">
+              <label class="alan-etiket" for="aySaklamaSure">Veri saklama süresi</label>
+              <select class="alan-secim" id="aySaklamaSure"><option selected>24 ay</option><option>12 ay</option><option>36 ay</option></select>
+              <p class="alan-yardim"><i class="fa-solid fa-circle-info" aria-hidden="true"></i><span>Log kayıtları bu süre sonunda özetlenip arşivlenir.</span></p>
+            </div>
+            </div>
+          </div>
+          <div class="kart-alt form-eylem">
+            <span class="not">Değişiklikler <b>anında</b> yürürlüğe girer.</span>
+            <div class="eylem-satiri">
+              <button class="dugme hayalet" type="button">Önceki ayara dön</button>
+              <button class="dugme birincil" type="button">Kaydet</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="bos-durum kart-ici yetkisiz" hidden data-durum="yetkisiz">
+        <span class="bos-ikon"><i class="fa-solid fa-lock" aria-hidden="true"></i></span>
+        <h3>Bu modüle erişimin yok</h3>
+        <p>Erişim istemek için yöneticinle görüş.</p>
+      </div>
+      <div class="bos-durum kart-ici servis-hatasi" hidden data-durum="servis">
+        <span class="bos-ikon"><i class="fa-solid fa-plug-circle-xmark" aria-hidden="true"></i></span>
+        <h3>Ayarlar yüklenemedi</h3>
+        <p>Bağlantı kurulamadı. Yeniden dene.</p>
+        <button class="dugme birincil" type="button"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i>Yeniden dene</button>
+        <p class="hata-izi">Destek referansı <code>DIET-AYR-3004</code></p>
+      </div>
+      <div class="bos-durum kart-ici" hidden data-durum="bos">
+        <span class="bos-ikon"><i class="fa-solid fa-sliders" aria-hidden="true"></i></span>
+        <h3>Bu sekmede ayar yok</h3>
+        <p>Modül kurulduğunda ayarları burada görünür.</p>
+        <button class="dugme birincil" type="button">Modülleri gör</button>
+      </div>
+      <div class="kart panel" aria-busy="true" hidden data-durum="yukleniyor">
+        <div class="kart-govde"><span class="iskelet baslik kisa"></span><span class="iskelet tam"></span><span class="iskelet orta"></span><span class="iskelet tam"></span></div>
+      </div>
+
+    </div>
+  </main>
+<script src="_ortak/panel.js" defer></script>
+</body>
+</html>

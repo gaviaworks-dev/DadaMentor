@@ -1,0 +1,536 @@
+<!doctype html>
+<html lang="tr"><head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Taksonomi · DadaDiet Yönetim</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="../../kanon/tokenlar.css">
+<link rel="stylesheet" href="../../kanon/markalar/diet.css">
+<link rel="stylesheet" href="../../kanon/bilesenler.css">
+</head>
+<body class="yetkili">
+<!-- ═══════════════════════════════════════════════════════════════════
+     DIET ADMIN · KANONİK KABUK — FIT kabuğundan TÜRETİLDİ, elle değiştirilmez
+     ───────────────────────────────────────────────────────────────────
+     Her ekran bu kabuğu BİREBİR taşır. Ekrandan ekrana değişen TEK şey:
+       · aktif menü kaleminde `aktif` sınıfı ve `aria-current="page"`
+       · <title> ve <h1>
+     Kabuk dört markada AYNI; yalnız markalar/<marka>.css değişir.
+
+     🔴 İKONLAR: 33 ortak modülün ikonu FIT kabuğundan BİREBİR alındı —
+        dört markada aynı olmak zorunda. 11 marka modülünün 5'i donörde
+        rol karşılığı olduğu için onun ikonunu taşır (Programlar
+        fa-clipboard-list · Diyetisyenler fa-user-check · Testler
+        fa-clipboard-check · Rehber fa-compass · Hizmetler
+        fa-basket-shopping); kalan 6'sı seçimdir ve raporda bildirilir
+        (Besin Kütüphanesi fa-apple-whole · Hesaplayıcılar fa-calculator
+        · İpuçları fa-lightbulb · Kaç Kalori fa-fire · Püf Noktaları
+        fa-wand-magic-sparkles · Makro Rehberi fa-chart-pie).
+
+     🔴 KABUK DEĞİŞTİRME. Bir eksik görürsen lead'e bildir.
+     ═══════════════════════════════════════════════════════════════════ -->
+
+<!-- ── SOL EKOSİSTEM RAYI ─────────────────────────────────────────── -->
+<aside class="panel-ray" aria-label="Marka rayı">
+  <a class="panel-ray-ikon aktif" href="#" style="--eko:var(--eko-diet)"
+     aria-current="true" title="DadaDiet" aria-label="DadaDiet"><i class="fa-solid fa-leaf"></i></a>
+  <span class="panel-ray-ayrac" role="presentation"></span>
+  <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-gastro)"  title="DadaGastro"  aria-label="DadaGastro"><i class="fa-solid fa-utensils"></i></a>
+  <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-fit)"     title="DadaFit"     aria-label="DadaFit"><i class="fa-solid fa-dumbbell"></i></a>
+  <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-gourmet)" title="DadaGourmet" aria-label="DadaGourmet"><i class="fa-solid fa-wine-glass"></i></a>
+  <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-campus)"  title="DadaCampus"  aria-label="DadaCampus"><i class="fa-solid fa-graduation-cap"></i></a>
+  <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-mentor)"  title="DadaMentor"  aria-label="DadaMentor"><i class="fa-solid fa-compass"></i></a>
+  <span class="panel-ray-ikon kilitli" title="DadaStore — erişimin yok" aria-label="DadaStore, erişim yok"><i class="fa-solid fa-lock"></i></span>
+  <div class="panel-ray-alt">
+    <a class="panel-ray-ikon" href="#" title="Yardım" aria-label="Yardım"><i class="fa-solid fa-circle-question"></i></a>
+  </div>
+</aside>
+
+<!-- ── MODÜL MENÜSÜ · DÖRT KATEGORİ ───────────────────────────────── -->
+<nav class="panel-menu" id="panelMenu" aria-label="Modüller">
+  <div class="panel-menu-bas">
+    <b>DadaDiet</b><span>Yönetim paneli</span>
+  </div>
+  <div class="panel-menu-govde">
+
+    <div class="panel-menu-bolum">01 Genel</div>
+    <a class="panel-menu-link" href="admin-genel-bakis.html"><i class="fa-solid fa-gauge-high"></i>Genel Bakış</a>
+    <a class="panel-menu-link" href="admin-sayfalar.html"><i class="fa-solid fa-file-lines"></i>Sayfalar &amp; SEO</a>
+    <a class="panel-menu-link aktif" aria-current="page" href="admin-taksonomi.html"><i class="fa-solid fa-tags"></i>Taksonomi</a>
+    <a class="panel-menu-link" href="admin-medya.html"><i class="fa-solid fa-photo-film"></i>Medya Kütüphanesi</a>
+    <a class="panel-menu-link" href="admin-arama-yonetimi.html"><i class="fa-solid fa-magnifying-glass"></i>Arama Yönetimi</a>
+    <a class="panel-menu-link" href="admin-yonlendirmeler.html"><i class="fa-solid fa-shuffle"></i>Yönlendirmeler</a>
+
+    <div class="panel-menu-bolum">Marka modülleri</div>
+    <a class="panel-menu-link" href="admin-besinler.html"><i class="fa-solid fa-apple-whole"></i>Besin Kütüphanesi</a>
+    <a class="panel-menu-link" href="admin-programlar.html"><i class="fa-solid fa-clipboard-list"></i>Beslenme Programları</a>
+    <a class="panel-menu-link" href="admin-diyetisyenler.html"><i class="fa-solid fa-user-check"></i>Diyetisyenler<span class="sayac">3</span></a>
+    <a class="panel-menu-link" href="admin-testler.html"><i class="fa-solid fa-clipboard-check"></i>Beslenme Testleri</a>
+    <a class="panel-menu-link" href="admin-hesaplayicilar.html"><i class="fa-solid fa-calculator"></i>Hesaplayıcılar</a>
+    <a class="panel-menu-link" href="admin-rehber.html"><i class="fa-solid fa-compass"></i>Beslenme Rehberi</a>
+    <a class="panel-menu-link" href="admin-ipuclari.html"><i class="fa-solid fa-lightbulb"></i>Beslenme İpuçları</a>
+    <a class="panel-menu-link" href="admin-kac-kalori.html"><i class="fa-solid fa-fire"></i>Kaç Kalori</a>
+    <a class="panel-menu-link" href="admin-puf-noktalari.html"><i class="fa-solid fa-wand-magic-sparkles"></i>Diyetin Püf Noktaları</a>
+    <a class="panel-menu-link" href="admin-makro.html"><i class="fa-solid fa-chart-pie"></i>Makro Rehberi</a>
+    <a class="panel-menu-link" href="admin-hizmetler.html"><i class="fa-solid fa-basket-shopping"></i>Hizmetler ve Satışlar</a>
+
+    <div class="panel-menu-bolum">02 Operasyon</div>
+    <a class="panel-menu-link" href="admin-uyeler.html"><i class="fa-solid fa-users"></i>Üyeler &amp; Yetkiler</a>
+    <a class="panel-menu-link" href="admin-abonelikler.html"><i class="fa-solid fa-credit-card"></i>Abonelikler</a>
+    <a class="panel-menu-link" href="admin-odemeler.html"><i class="fa-solid fa-money-bill-wave"></i>Ödemeler</a>
+    <a class="panel-menu-link" href="admin-faturalar.html"><i class="fa-solid fa-file-invoice"></i>Faturalar<span class="sayac">7</span></a>
+    <a class="panel-menu-link" href="admin-destek.html"><i class="fa-solid fa-life-ring"></i>Destek Talepleri<span class="sayac">12</span></a>
+    <a class="panel-menu-link" href="admin-sss.html"><i class="fa-solid fa-circle-question"></i>Sıkça Sorulan Sorular</a>
+    <a class="panel-menu-link" href="admin-moderasyon.html"><i class="fa-solid fa-shield-halved"></i>Moderasyon<span class="sayac">5</span></a>
+    <a class="panel-menu-link" href="admin-rozetler.html"><i class="fa-solid fa-medal"></i>Rozetler &amp; Kademeler</a>
+    <a class="panel-menu-link" href="admin-log.html"><i class="fa-solid fa-list-check"></i>Log Kayıtları</a>
+    <a class="panel-menu-link" href="admin-formlar.html"><i class="fa-solid fa-rectangle-list"></i>Formlar &amp; Başvurular</a>
+    <a class="panel-menu-link" href="admin-icerik-onaylari.html"><i class="fa-solid fa-circle-check"></i>İçerik Onayları<span class="sayac">4</span></a>
+    <a class="panel-menu-link" href="admin-duyurular.html"><i class="fa-solid fa-tower-broadcast"></i>Duyurular</a>
+    <a class="panel-menu-link" href="admin-iletisim-kayitlari.html"><i class="fa-solid fa-envelope"></i>E-posta &amp; İletişim Kayıtları</a>
+
+    <div class="panel-menu-bolum">03 Yapılandırma</div>
+    <a class="panel-menu-link" href="admin-menu.html"><i class="fa-solid fa-bars"></i>Menü &amp; Navigasyon</a>
+    <a class="panel-menu-link" href="admin-paketler.html"><i class="fa-solid fa-layer-group"></i>Paketler &amp; Özellikler</a>
+    <a class="panel-menu-link" href="admin-kuponlar.html"><i class="fa-solid fa-ticket"></i>Kuponlar</a>
+    <a class="panel-menu-link" href="admin-bildirim.html"><i class="fa-solid fa-bell"></i>Bildirim Şablonları</a>
+    <a class="panel-menu-link" href="admin-reklam.html"><i class="fa-solid fa-bullhorn"></i>Reklam &amp; Sponsorluk</a>
+    <a class="panel-menu-link" href="admin-raporlar.html"><i class="fa-solid fa-chart-line"></i>Raporlar</a>
+    <a class="panel-menu-link" href="admin-yasal.html"><i class="fa-solid fa-scale-balanced"></i>Yasal Metinler</a>
+    <a class="panel-menu-link" href="admin-ayarlar.html"><i class="fa-solid fa-sliders"></i>Ayarlar</a>
+    <a class="panel-menu-link" href="admin-dil-ceviri.html"><i class="fa-solid fa-language"></i>Dil &amp; Çeviri Yönetimi</a>
+    <a class="panel-menu-link" href="admin-entegrasyonlar.html"><i class="fa-solid fa-plug"></i>Entegrasyonlar</a>
+    <a class="panel-menu-link" href="admin-ice-disa-aktarim.html"><i class="fa-solid fa-file-import"></i>İçe / Dışa Aktarım</a>
+    <a class="panel-menu-link" href="admin-sistem-bildirimleri.html"><i class="fa-solid fa-triangle-exclamation"></i>Sistem Bildirimleri<span class="sayac">2</span></a>
+    <a class="panel-menu-link" href="admin-gorevler.html"><i class="fa-solid fa-clock"></i>Görevler &amp; Zamanlanmış İşlemler</a>
+    <a class="panel-menu-link" href="admin-sistem-durumu.html"><i class="fa-solid fa-heart-pulse"></i>Sistem Durumu</a>
+
+  </div>
+  <div class="panel-menu-alt">
+    <a class="panel-menu-link" href="#"><i class="fa-solid fa-arrow-up-right-from-square"></i>Siteyi gör</a>
+  </div>
+</nav>
+
+<!-- ── ÜST ÇUBUK ──────────────────────────────────────────────────── -->
+<header class="panel-ust">
+  <!-- 🔴 Menünün dar ekrandaki TEK kapısı. ≤1100px'te görünür, geniş
+       ekranda basılmaz (menü zaten orada). -->
+  <button class="panel-ust-dugme panel-ac" type="button"
+          aria-expanded="false" aria-controls="panelMenu" aria-label="Modül menüsünü aç">
+    <i class="fa-solid fa-bars" aria-hidden="true"></i>
+  </button>
+  <div class="panel-arama">
+    <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+    <input type="search" class="panel-arama-girdi" placeholder="Ekran, kayıt ya da kişi ara"
+           role="combobox" autocomplete="off" aria-label="Yönetimde ara"
+           aria-expanded="false" aria-controls="ustAramaAcilir">
+    <div class="acilir-yuzey" id="ustAramaAcilir" role="listbox" aria-label="Arama sonuçları" hidden>
+      <div class="acilir-bas">Sonuçlar</div>
+      <a class="acilir-kalem" href="admin-uyeler.html" role="option"><i class="fa-solid fa-users"></i>Üyeler &amp; Yetkiler<span class="yan">Modül</span></a>
+      <a class="acilir-kalem" href="admin-odemeler.html" role="option"><i class="fa-solid fa-credit-card"></i>Ödemeler<span class="yan">Modül</span></a>
+    </div>
+  </div>
+  <div class="panel-ust-sag">
+    <a class="panel-ust-dugme" href="admin-sistem-bildirimleri.html" aria-label="Bildirimler, 2 okunmamış">
+      <i class="fa-solid fa-bell"></i><span class="benek" aria-hidden="true"></span>
+    </a>
+    <a class="panel-ust-dugme" href="#" aria-label="Yardım"><i class="fa-solid fa-circle-question"></i></a>
+    <div class="acilir-kap">
+      <button class="panel-ust-ben" type="button" aria-expanded="false" aria-controls="hesapAcilir">
+        <span class="kisi-avatar" aria-hidden="true">BY</span>
+        <span><span class="ad">Beyar Yavuz</span><span class="rol">Sistem yöneticisi</span></span>
+        <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+      </button>
+      <!-- 🔴 BU YÜZEY EKSİKTİ. Düğme `aria-controls="hesapAcilir"` bildiriyordu
+           ama öyle bir eleman yoktu: ekran okuyucuya var olmayan bir açılır
+           vaat ediliyordu. Davranış sınaması yakaladı. -->
+      <div class="acilir-yuzey saga" id="hesapAcilir" role="menu" aria-label="Hesap" hidden>
+        <div class="acilir-bas">Beyar Yavuz</div>
+        <a class="acilir-kalem" href="#" role="menuitem"><i class="fa-solid fa-user"></i>Profilim</a>
+        <a class="acilir-kalem" href="#" role="menuitem"><i class="fa-solid fa-sliders"></i>Panel tercihleri</a>
+        <a class="acilir-kalem" href="#" role="menuitem"><i class="fa-solid fa-right-from-bracket"></i>Çıkış yap</a>
+      </div>
+    </div>
+  </div>
+</header>
+<main class="panel-govde">
+    <div class="panel-sayfa">
+      <div class="panel-bas">
+        <div>
+          <h1>Taksonomi</h1>
+          <p>İçeriklerin ortak kategori, etiket ve sınıflandırma yapısı. Her terim için iki soru
+             sorulur: nerede ilan edilmiş, kaç kayıtta kullanılıyor.</p>
+        </div>
+        <div class="eylem-satiri">
+          <button class="dugme hayalet" type="button" data-yetki="disa-aktar"><i class="fa-solid fa-file-arrow-down" aria-hidden="true"></i> Dışa aktar</button>
+          <button class="dugme hayalet" type="button"><i class="fa-solid fa-code-merge" aria-hidden="true"></i> Terimleri birleştir</button>
+          <button class="dugme birincil" type="button"><i class="fa-solid fa-plus" aria-hidden="true"></i> Yeni terim</button>
+        </div>
+      </div>
+
+      <div class="alan-ozet" role="alert">
+        <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>
+        <span><b>Terimler birleştirilemedi.</b> Birleştirme için en az iki terim seçilmeli ve ikisi de aynı sözlükte olmalı.</span>
+      </div>
+
+      <div class="kart-izgara c4">
+        <div class="kart kpi">
+          <span class="ikon"><i class="fa-solid fa-folder-tree" aria-hidden="true"></i></span>
+          <div class="govde">
+            <span class="etiket">Sınıflandırma yapısı</span>
+            <span class="sayi">4</span>
+            <span class="kpi-degisim"><i class="fa-solid fa-minus" aria-hidden="true"></i> Kategori · alt kategori · etiket · özel</span>
+          </div>
+        </div>
+        <div class="kart kpi">
+          <span class="ikon"><i class="fa-solid fa-list-ul" aria-hidden="true"></i></span>
+          <div class="govde">
+            <span class="etiket">İlan edilmiş terim</span>
+            <span class="sayi">108</span>
+            <span class="kpi-degisim iyi"><i class="fa-solid fa-arrow-trend-up" aria-hidden="true"></i> 9 tanesi son 30 günde eklendi</span>
+          </div>
+        </div>
+        <div class="kart kpi">
+          <span class="ikon"><i class="fa-solid fa-circle-minus" aria-hidden="true"></i></span>
+          <div class="govde">
+            <span class="etiket">Hiç kullanılmayan</span>
+            <span class="sayi">11</span>
+            <span class="kpi-degisim kotu"><i class="fa-solid fa-arrow-trend-down" aria-hidden="true"></i> %10,2 · süzgeçte 0 sonuç veriyor</span>
+          </div>
+        </div>
+        <div class="kart kpi">
+          <span class="ikon"><i class="fa-solid fa-language" aria-hidden="true"></i></span>
+          <div class="govde">
+            <span class="etiket">Çevrilmemiş terim</span>
+            <span class="sayi">23</span>
+            <span class="kpi-degisim"><i class="fa-solid fa-minus" aria-hidden="true"></i> İngilizce karşılığı girilmemiş</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="uyari-kutu">
+        <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>
+        <span><b>Taksonomi boşluğu:</b> 108 ilan edilmiş terimin 11 tanesi bugün hiçbir kayıtta geçmiyor —
+          süzgeçte 0 sonuç veren bir çip demek. Terim silmek de kayıt etiketlemek de bir ürün kararıdır;
+          liste burada bildirilir, kendiliğinden temizlenmez.</span>
+      </div>
+
+      
+
+      <!-- İKİ KOLON — donörün '.tx-split'i (dar seçici + geniş tablo).
+           🔴 KOLONLAR AYNADA: kanonun iki kolonlu kabı (§75h .form-duzen)
+              GENİŞ kolonu ÖNE, yardımcı kolonu (.form-yan) ARKAYA koyuyor;
+              donörün dar-sol/geniş-sağ dizilişini basacak kanon adı YOK.
+              Yeni sınıf icat etmek yerine kolonlar aynalandı: kip (dar
+              seçici listesi + geniş tablo) korundu, yeri değişti.
+              LEAD'e bildirildi. -->
+      <div class="form-duzen">
+
+        <div class="kart panel">
+          <div class="kart-bas">
+            <div>
+              <h2 class="kart-baslik"><i class="fa-solid fa-folder-tree" aria-hidden="true"></i> Kategoriler</h2>
+              <p>Hareket kütüphanesinin ve program listelerinin grup süzgecini besler. Buradaki her
+                 terim public tarafta bir çip olur.</p>
+            </div>
+          </div>
+
+          <div class="suzgec-cubuk" role="group" aria-label="Terim süzgeçleri">
+            <form class="panel-arama" role="search" action="#">
+              <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+              <input class="panel-arama-girdi" type="search" placeholder="Terim ya da anahtar ara…" aria-label="Terim ara">
+            </form>
+          <div class="coklu-secim">
+            <button class="suzgec-dugme" type="button" id="txDurum" aria-haspopup="true" aria-expanded="false" aria-controls="txDurum-yuzey">
+              <span>Durum</span><span class="sayi" data-sayi="0"></span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+            </button>
+            <div class="acilir-yuzey suzgec" id="txDurum-yuzey" role="group" aria-label="Durum süzgeci" hidden="">
+              <div class="acilir-bas"><span>Durum</span><button type="button">Temizle</button></div>
+              <button class="cip suzgec aktif" type="button" aria-pressed="true">Tümü</button>
+              <button class="cip suzgec" type="button" aria-pressed="false">Aktif</button>
+              <button class="cip suzgec" type="button" aria-pressed="false">Pasif</button>
+              <button class="cip suzgec" type="button" aria-pressed="false">Arşivlendi</button>
+            </div>
+          </div>
+          <div class="coklu-secim">
+            <button class="suzgec-dugme" type="button" id="txUst" aria-haspopup="true" aria-expanded="false" aria-controls="txUst-yuzey">
+              <span>Üst kayıt</span><span class="sayi" data-sayi="0"></span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+            </button>
+            <div class="acilir-yuzey suzgec" id="txUst-yuzey" role="group" aria-label="Üst kayıt süzgeci" hidden="">
+              <div class="acilir-bas"><span>Üst kayıt</span><button type="button">Temizle</button></div>
+              <button class="cip suzgec aktif" type="button" aria-pressed="true">Tümü</button>
+              <button class="cip suzgec" type="button" aria-pressed="false">Kök kategoriler</button>
+              <button class="cip suzgec" type="button" aria-pressed="false">Besin grubu</button>
+              <button class="cip suzgec" type="button" aria-pressed="false">Öğün</button>
+              <button class="cip suzgec" type="button" aria-pressed="false">Hazırlık</button>
+            </div>
+          </div>
+          <div class="coklu-secim">
+            <button class="suzgec-dugme" type="button" id="txDil" aria-haspopup="true" aria-expanded="false" aria-controls="txDil-yuzey">
+              <span>Dil</span><span class="sayi" data-sayi="0"></span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+            </button>
+            <div class="acilir-yuzey suzgec" id="txDil-yuzey" role="group" aria-label="Dil süzgeci" hidden="">
+              <div class="acilir-bas"><span>Dil</span><button type="button">Temizle</button></div>
+              <button class="cip suzgec aktif" type="button" aria-pressed="true">Tümü</button>
+              <button class="cip suzgec" type="button" aria-pressed="false">Türkçe</button>
+              <button class="cip suzgec" type="button" aria-pressed="false">İngilizce</button>
+              <button class="cip suzgec" type="button" aria-pressed="false">Çevrilmemiş</button>
+            </div>
+          </div>
+            <div class="sag">
+          <div class="coklu-secim">
+            <button class="suzgec-dugme" type="button" id="txKolon" aria-haspopup="true" aria-expanded="false" aria-controls="txKolon-yuzey">
+              <i class="fa-solid fa-table-columns" aria-hidden="true"></i><span>Kolonlar</span>
+            </button>
+            <div class="acilir-yuzey saga kolon-secim" id="txKolon-yuzey" role="group" aria-label="Görünen kolonlar" hidden="">
+              <div class="acilir-bas"><span>Görünen kolonlar</span><button type="button">Sıfırla</button></div>
+              <label class="acilir-kalem kilitli"><input type="checkbox" checked="" disabled=""> Terim</label>
+              <label class="acilir-kalem"><input type="checkbox" checked=""> Kullanım</label>
+              <label class="acilir-kalem kilitli"><input type="checkbox" checked="" disabled=""> Durum</label>
+              <label class="acilir-kalem"><input type="checkbox"> Üst kayıt</label>
+              <label class="acilir-kalem"><input type="checkbox"> Dil</label>
+              <label class="acilir-kalem"><input type="checkbox"> Sıra</label>
+              <label class="acilir-kalem"><input type="checkbox"> Açıklama</label>
+              <label class="acilir-kalem"><input type="checkbox"> SEO başlığı</label>
+              <label class="acilir-kalem"><input type="checkbox"> İkon</label>
+            </div>
+          </div>
+              <span class="suzgec-sayac"><b>12</b> terim</span>
+            </div>
+          </div>
+
+          <div class="toplu-islem" role="status" hidden="">
+        <b>3 kayıt seçildi</b>
+        <div class="eylem-satiri">
+          <button class="dugme hayalet kucuk" type="button">Aktif yap</button>
+          <button class="dugme hayalet kucuk" type="button">Pasif yap</button>
+          <button class="dugme hayalet kucuk" type="button">Üst kayda taşı</button>
+          <button class="dugme hayalet kucuk" type="button">Birleştir</button>
+          <button class="dugme hayalet kucuk" type="button">Arşivle</button>
+        </div>
+      </div><div class="kart-govde bosluksuz">
+            <div class="tablo-kap gomulu">
+              <table class="tablo panel" aria-label="Kategoriler">
+            <thead>
+              <tr>
+                <th class="sec" scope="col"><label><input type="checkbox" aria-label="Görünen tüm satırları seç"></label></th>
+                <th class="sirali" scope="col" aria-sort="ascending"><button type="button">Terim</button></th>
+                <th class="sirali sag" scope="col"><button type="button">Kullanım</button></th>
+                <th scope="col">Durum</th>
+                <th scope="col">İşlem</th>
+              </tr>
+            </thead>
+                <tbody>
+                  <tr>
+                    <td class="sec"><label><input type="checkbox" aria-label="Besin grubu terimini seç"></label></td>
+                    <td><b>Besin grubu</b><small>besin-grubu · üst: kök</small></td>
+                    <td class="num">42 kayıt</td>
+                    <td><span class="durum-hapi ikonlu cozulen"><i class="fa-solid fa-circle-check" aria-hidden="true"></i> Aktif</span></td>
+                    <td class="eylem"><div class="satir-eylem"><button class="ikon-dugme" type="button" aria-label="Besin grubu terimini düzenle" title="Besin grubu terimini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="Besin grubu teriminin kullanıldığı içerikleri gör" title="Besin grubu teriminin kullanıldığı içerikleri gör"><i class="fa-solid fa-list" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" aria-label="Besin grubu terimini sil" title="Besin grubu terimini sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
+                  </tr>
+                  <tr>
+                    <td class="sec"><label><input type="checkbox" aria-label="Öğün terimini seç"></label></td>
+                    <td><b>Öğün</b><small>ogun · üst: kök</small></td>
+                    <td class="num">38 kayıt</td>
+                    <td><span class="durum-hapi ikonlu cozulen"><i class="fa-solid fa-circle-check" aria-hidden="true"></i> Aktif</span></td>
+                    <td class="eylem"><div class="satir-eylem"><button class="ikon-dugme" type="button" aria-label="Öğün terimini düzenle" title="Öğün terimini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="Öğün teriminin kullanıldığı içerikleri gör" title="Öğün teriminin kullanıldığı içerikleri gör"><i class="fa-solid fa-list" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" aria-label="Öğün terimini sil" title="Öğün terimini sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
+                  </tr>
+                  <tr>
+                    <td class="sec"><label><input type="checkbox" aria-label="Hazırlık terimini seç"></label></td>
+                    <td><b>Hazırlık</b><small>hazirlik · üst: kök</small></td>
+                    <td class="num">17 kayıt</td>
+                    <td><span class="durum-hapi ikonlu cozulen"><i class="fa-solid fa-circle-check" aria-hidden="true"></i> Aktif</span></td>
+                    <td class="eylem"><div class="satir-eylem"><button class="ikon-dugme" type="button" aria-label="Hazırlık terimini düzenle" title="Hazırlık terimini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="Hazırlık teriminin kullanıldığı içerikleri gör" title="Hazırlık teriminin kullanıldığı içerikleri gör"><i class="fa-solid fa-list" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" aria-label="Hazırlık terimini sil" title="Hazırlık terimini sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
+                  </tr>
+                  <tr>
+                    <td class="sec"><label><input type="checkbox" aria-label="Pişirme terimini seç"></label></td>
+                    <td><b>Pişirme</b><small>pisirme · üst: Hazırlık</small></td>
+                    <td class="num">9 kayıt</td>
+                    <td><span class="durum-hapi ikonlu cozulen"><i class="fa-solid fa-circle-check" aria-hidden="true"></i> Aktif</span></td>
+                    <td class="eylem"><div class="satir-eylem"><button class="ikon-dugme" type="button" aria-label="Pişirme terimini düzenle" title="Pişirme terimini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="Pişirme teriminin kullanıldığı içerikleri gör" title="Pişirme teriminin kullanıldığı içerikleri gör"><i class="fa-solid fa-list" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" aria-label="Pişirme terimini sil" title="Pişirme terimini sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
+                  </tr>
+                  <tr>
+                    <td class="sec"><label><input type="checkbox" aria-label="Hedef terimini seç"></label></td>
+                    <td><b>Hedef</b><small>hedef · üst: kök</small></td>
+                    <td class="num">6 kayıt</td>
+                    <td><span class="durum-hapi ikonlu cozulen"><i class="fa-solid fa-circle-check" aria-hidden="true"></i> Aktif</span></td>
+                    <td class="eylem"><div class="satir-eylem"><button class="ikon-dugme" type="button" aria-label="Hedef terimini düzenle" title="Hedef terimini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="Hedef teriminin kullanıldığı içerikleri gör" title="Hedef teriminin kullanıldığı içerikleri gör"><i class="fa-solid fa-list" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" aria-label="Hedef terimini sil" title="Hedef terimini sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
+                  </tr>
+                  <tr>
+                    <td class="sec"><label><input type="checkbox" aria-label="Ara öğün terimini seç"></label></td>
+                    <td><b>Ara öğün</b><small>ara-ogun · üst: Öğün</small></td>
+                    <td class="num">14 kayıt</td>
+                    <td><span class="durum-hapi ikonlu cozulen"><i class="fa-solid fa-circle-check" aria-hidden="true"></i> Aktif</span></td>
+                    <td class="eylem"><div class="satir-eylem"><button class="ikon-dugme" type="button" aria-label="Ara öğün terimini düzenle" title="Ara öğün terimini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="Ara öğün teriminin kullanıldığı içerikleri gör" title="Ara öğün teriminin kullanıldığı içerikleri gör"><i class="fa-solid fa-list" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" aria-label="Ara öğün terimini sil" title="Ara öğün terimini sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
+                  </tr>
+                  <tr>
+                    <td class="sec"><label><input type="checkbox" aria-label="Yaklaşım terimini seç"></label></td>
+                    <td><b>Yaklaşım</b><small>yaklasim · üst: kök</small></td>
+                    <td class="num">3 kayıt</td>
+                    <td><span class="durum-hapi ikonlu kapali"><i class="fa-solid fa-circle-minus" aria-hidden="true"></i> Pasif</span></td>
+                    <td class="eylem"><div class="satir-eylem"><button class="ikon-dugme" type="button" aria-label="Yaklaşım terimini düzenle" title="Yaklaşım terimini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="Yaklaşım teriminin kullanıldığı içerikleri gör" title="Yaklaşım teriminin kullanıldığı içerikleri gör"><i class="fa-solid fa-list" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" aria-label="Yaklaşım terimini sil" title="Yaklaşım terimini sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
+                  </tr>
+                  <tr>
+                    <td class="sec"><label><input type="checkbox" aria-label="Saklama terimini seç"></label></td>
+                    <td><b>Saklama</b><small>saklama · üst: Hazırlık</small></td>
+                    <td class="num">11 kayıt</td>
+                    <td><span class="durum-hapi ikonlu cozulen"><i class="fa-solid fa-circle-check" aria-hidden="true"></i> Aktif</span></td>
+                    <td class="eylem"><div class="satir-eylem"><button class="ikon-dugme" type="button" aria-label="Saklama terimini düzenle" title="Saklama terimini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="Saklama teriminin kullanıldığı içerikleri gör" title="Saklama teriminin kullanıldığı içerikleri gör"><i class="fa-solid fa-list" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" aria-label="Saklama terimini sil" title="Saklama terimini sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
+                  </tr>
+                  <tr>
+                    <td class="sec"><label><input type="checkbox" aria-label="Ölçü terimini seç"></label></td>
+                    <td><b>Ölçü</b><small>olcu · üst: Hazırlık</small></td>
+                    <td class="num">8 kayıt</td>
+                    <td><span class="durum-hapi ikonlu cozulen"><i class="fa-solid fa-circle-check" aria-hidden="true"></i> Aktif</span></td>
+                    <td class="eylem"><div class="satir-eylem"><button class="ikon-dugme" type="button" aria-label="Ölçü terimini düzenle" title="Ölçü terimini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="Ölçü teriminin kullanıldığı içerikleri gör" title="Ölçü teriminin kullanıldığı içerikleri gör"><i class="fa-solid fa-list" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" aria-label="Ölçü terimini sil" title="Ölçü terimini sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
+                  </tr>
+                  <tr>
+                    <td class="sec"><label><input type="checkbox" aria-label="Baklagil terimini seç"></label></td>
+                    <td><b>Baklagil</b><small>baklagil · üst: Besin grubu</small></td>
+                    <td class="num">5 kayıt</td>
+                    <td><span class="durum-hapi ikonlu cozulen"><i class="fa-solid fa-circle-check" aria-hidden="true"></i> Aktif</span></td>
+                    <td class="eylem"><div class="satir-eylem"><button class="ikon-dugme" type="button" aria-label="Baklagil terimini düzenle" title="Baklagil terimini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="Baklagil teriminin kullanıldığı içerikleri gör" title="Baklagil teriminin kullanıldığı içerikleri gör"><i class="fa-solid fa-list" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" aria-label="Baklagil terimini sil" title="Baklagil terimini sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
+                  </tr>
+                  <tr>
+                    <td class="sec"><label><input type="checkbox" aria-label="Deniz ürünü terimini seç"></label></td>
+                    <td><b>Deniz ürünü</b><small>deniz-urunu · üst: Besin grubu</small></td>
+                    <td class="num"><span class="rozet durdu">Kullanımda değil</span></td>
+                    <td><span class="durum-hapi ikonlu kapali"><i class="fa-solid fa-circle-minus" aria-hidden="true"></i> Pasif</span></td>
+                    <td class="eylem"><div class="satir-eylem"><button class="ikon-dugme" type="button" aria-label="Deniz ürünü terimini düzenle" title="Deniz ürünü terimini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="Deniz ürünü teriminin kullanıldığı içerikleri gör" title="Deniz ürünü teriminin kullanıldığı içerikleri gör"><i class="fa-solid fa-list" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" aria-label="Deniz ürünü terimini sil" title="Deniz ürünü terimini sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
+                  </tr>
+                  <tr>
+                    <td class="sec"><label><input type="checkbox" aria-label="Fermente terimini seç"></label></td>
+                    <td><b>Fermente</b><small>fermente · üst: kök</small></td>
+                    <td class="num"><span class="rozet durdu">Kullanımda değil</span></td>
+                    <td><span class="durum-hapi ikonlu kapali"><i class="fa-solid fa-box-archive" aria-hidden="true"></i> Arşivlendi</span></td>
+                    <td class="eylem"><div class="satir-eylem"><button class="ikon-dugme" type="button" aria-label="Fermente terimini düzenle" title="Fermente terimini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="Fermente teriminin kullanıldığı içerikleri gör" title="Fermente teriminin kullanıldığı içerikleri gör"><i class="fa-solid fa-list" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" aria-label="Fermente terimini sil" title="Fermente terimini sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+        <!-- 1 · YÜKLENİYOR — iskelet GERÇEK tablonun içinde; düzen tek olduğu için kayamaz -->
+        <div class="tablo-kap gomulu" aria-busy="true" role="status" aria-label="Liste yükleniyor" hidden="">
+          <table class="tablo panel" aria-label="Liste yükleniyor">
+            <thead>
+              <tr>
+                <th class="sec" scope="col"><label><input type="checkbox" aria-label="Görünen tüm satırları seç"></label></th>
+                <th scope="col">Terim</th>
+                <th class="sag" scope="col">Kullanım</th>
+                <th scope="col">Durum</th>
+                <th scope="col">İşlem</th>
+              </tr>
+            </thead>
+            <tbody>
+                <tr>
+                  <td class="sec"></td>
+                  <td><span class="iskelet orta"></span></td>
+                  <td><span class="iskelet kisa"></span></td>
+                  <td><span class="iskelet orta"></span></td>
+                  <td><span class="iskelet orta"></span></td>
+                </tr>
+                <tr>
+                  <td class="sec"></td>
+                  <td><span class="iskelet orta"></span></td>
+                  <td><span class="iskelet kisa"></span></td>
+                  <td><span class="iskelet orta"></span></td>
+                  <td><span class="iskelet orta"></span></td>
+                </tr>
+                <tr>
+                  <td class="sec"></td>
+                  <td><span class="iskelet orta"></span></td>
+                  <td><span class="iskelet kisa"></span></td>
+                  <td><span class="iskelet orta"></span></td>
+                  <td><span class="iskelet orta"></span></td>
+                </tr>
+                <tr>
+                  <td class="sec"></td>
+                  <td><span class="iskelet orta"></span></td>
+                  <td><span class="iskelet kisa"></span></td>
+                  <td><span class="iskelet orta"></span></td>
+                  <td><span class="iskelet orta"></span></td>
+                </tr>
+                <tr>
+                  <td class="sec"></td>
+                  <td><span class="iskelet orta"></span></td>
+                  <td><span class="iskelet kisa"></span></td>
+                  <td><span class="iskelet orta"></span></td>
+                  <td><span class="iskelet orta"></span></td>
+                </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- 2 · BOŞ SONUÇ -->
+        <div class="bos-durum kart-ici" hidden="">
+          <span class="bos-ikon"><i class="fa-solid fa-inbox" aria-hidden="true"></i></span>
+          <h3>Bu süzgeçle sonuç yok</h3>
+          <p>Süzgeci genişlet ya da aramayı değiştir.</p>
+          <button class="dugme hayalet" type="button">Süzgeci temizle</button>
+        </div>
+
+        <!-- 3 · YETKİSİZ ERİŞİM — düğme YOK, sınır bir hata değildir -->
+        <div class="bos-durum kart-ici yetkisiz" hidden="">
+          <span class="bos-ikon"><i class="fa-solid fa-lock" aria-hidden="true"></i></span>
+          <h3>Bu modüle erişimin yok</h3>
+          <p>Erişim istemek için yöneticinle görüş.</p>
+        </div>
+
+        <!-- 4 · SERVİS HATASI — eylem zorunlu, yığın izi asla -->
+        <div class="bos-durum kart-ici servis-hatasi" hidden="">
+          <span class="bos-ikon"><i class="fa-solid fa-plug-circle-xmark" aria-hidden="true"></i></span>
+          <h3>Liste yüklenemedi</h3>
+          <p>Bağlantı kurulamadı. Yeniden dene.</p>
+          <button class="dugme hayalet" type="button"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i> Yeniden dene</button>
+          <p class="hata-izi">Destek talebine ekle: <code>TX-3391-LST</code></p>
+        </div>
+          </div>
+
+        <div class="sayfalama kart-ayagi">
+          <div class="sayfalama-bilgi"><b>1–12</b> / 12 terim</div>
+          <div class="dugmeler">
+            <button class="sayfa-dugme sade ok" type="button" disabled="" aria-label="Önceki sayfa"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i></button>
+            <button class="sayfa-dugme sade aktif" type="button" aria-current="page">1</button>
+            <button class="sayfa-dugme sade ok" type="button" aria-label="Sonraki sayfa"><i class="fa-solid fa-chevron-right" aria-hidden="true"></i></button>
+          </div>
+        </div>
+        </div>
+
+        <aside class="form-yan">
+          <div class="kart panel">
+            <div class="kart-bas"><h2 class="kart-baslik"><i class="fa-solid fa-sitemap" aria-hidden="true"></i> Sınıflandırma yapıları</h2></div>
+            <div class="kart-govde bosluksuz">
+              <div class="ayar-liste" role="tablist" aria-label="Sınıflandırma yapıları">
+                <a class="ayar-satir" href="#" role="tab" aria-selected="true" aria-current="page">
+                  <span class="as-ikon"><i class="fa-solid fa-folder-tree" aria-hidden="true"></i></span>
+                  <span class="as-metin"><b>Kategoriler</b><span>12 kayıt · 5 kök · en derin 2 kademe</span></span>
+                  <span class="as-eylem"><i class="fa-solid fa-chevron-right" aria-hidden="true"></i></span>
+                </a>
+                <a class="ayar-satir" href="#" role="tab" aria-selected="false">
+                  <span class="as-ikon"><i class="fa-solid fa-folder-open" aria-hidden="true"></i></span>
+                  <span class="as-metin"><b>Alt kategoriler</b><span>7 kayıt · 5 üst kayda bağlı</span></span>
+                  <span class="as-eylem"><i class="fa-solid fa-chevron-right" aria-hidden="true"></i></span>
+                </a>
+                <a class="ayar-satir" href="#" role="tab" aria-selected="false">
+                  <span class="as-ikon"><i class="fa-solid fa-tag" aria-hidden="true"></i></span>
+                  <span class="as-metin"><b>Etiketler</b><span>84 kayıt · 11 tanesi hiç kullanılmıyor</span></span>
+                  <span class="as-eylem"><i class="fa-solid fa-chevron-right" aria-hidden="true"></i></span>
+                </a>
+                <a class="ayar-satir" href="#" role="tab" aria-selected="false">
+                  <span class="as-ikon"><i class="fa-solid fa-diagram-project" aria-hidden="true"></i></span>
+                  <span class="as-metin"><b>Özel sınıflandırmalar</b><span>5 sözlük · besin grubu · porsiyon · öğün · zorluk · hedef</span></span>
+                  <span class="as-eylem"><i class="fa-solid fa-chevron-right" aria-hidden="true"></i></span>
+                </a>
+              </div>
+            </div>
+            <div class="kart-alt">
+              <button class="satir-ekle" type="button"><i class="fa-solid fa-plus" aria-hidden="true"></i> Yeni sınıflandırma</button>
+            </div>
+          </div>
+        </aside>
+
+      </div>
+    </div>
+  </main>
+<script src="_ortak/panel.js" defer></script>
+</body></html>
