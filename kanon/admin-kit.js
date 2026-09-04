@@ -303,99 +303,33 @@
     return 'kayıt';
   }
 
-  /* ───────────────────────────────────────────────────────────────────
-     4a · SATIR DÜZENLEME PANELİ — satırın KENDİ verisinden kurulur
+  /* ═══════════════════════════════════════════════════════════════════
+     SATIRDAN KURULAN DÜZENLEME PANELİ — KALDIRILDI
      ───────────────────────────────────────────────────────────────────
-     Beyar kuralı, 2026-09-04: *"'Düzenleme ekranı bu makette bağlı
-     değil' tarzı toast YASAK; o da ölü buton demektir. Her eylemin
-     prototipte gerçek bir karşılığı olur."*
+     Beyar kararı, 2026-09-04: **"Düzenle" oluştur formuyla AYNI tam
+     sayfa formdur, kayıt verisiyle dolu (`admin-*-form.html?id=…`).**
+     Satırdan panel kurma yok.
 
-     🔴 KİT MARKUP ÜRETMEZ kuralının sınırı burada. K22 "kaynakta markup
-        olarak duran şey markup olarak taşınır, JS'in bastığı şey davranış
-        olarak taşınır" der. Düzenleme panelinin kaynakta karşılığı YOK
-        ve olamaz da: alanları SATIRIN KOLONLARINDAN türüyor, yani her
-        tabloda başka. Bu bir kalıp değil bir MEKANİZMA — kit onu üretir.
+     Neden: panel `thead` başlıklarını alan adı, hücreleri değer sayarak
+     bir form uyduruyordu ve ÖLÇÜLDÜ ki bu veriyi bozuyor —
+     `admin-taksonomi`de iki hücreyi birleştirip "Kuvvetkuvvet · üst:
+     kök" diye bir başlık üretiyor, salt okunur "42 kayıt" sayısını
+     düzenlenebilir bir ALAN diye basıyordu. Tablo bir kaydın TAM
+     alanlarını göstermez; gösterdiği şey sütun seçkisidir. Bir formu
+     sütunlardan türetmek, "türetilen şey kaybeder" dersinin form
+     karşılığıdır.
 
-     Alanlar uydurulmaz: başlıklar `thead`den, değerler hücrelerden
-     okunur. Kaydedince değerler AYNI hücrelere geri yazılır; yani panel
-     ekranda görünen veriyle tutarlı kalır ve yeni veri icat etmez.
-     ─────────────────────────────────────────────────────────────────── */
-  var duzKap = null, duzSatir = null, duzOdak = null;
+     Yan panel yaşamaya devam ediyor ama YALNIZ tek alanlı hızlı
+     işlemler için (durum değiştir · sıralama) ve o panel MARKUP'TA
+     BİLDİRİLİR: `data-eylem="panel-ac"` + `data-hedef="#panelId"`.
+     Kit artık hiçbir paneli tablodan sentezlemiyor.
 
-  function duzKur() {
-    if (duzKap) return duzKap;
-    duzKap = document.createElement('div');
-    duzKap.className = 'yan-panel-ortu';
-    duzKap.hidden = true;
-    duzKap.innerHTML =
-      '<aside class="yan-panel" role="dialog" aria-modal="true" aria-labelledby="ypBas">' +
-        '<div class="yan-panel-bas"><h2 id="ypBas">Kaydı düzenle</h2>' +
-          '<button type="button" class="ikon-dugme" data-yp="kapat" aria-label="Paneli kapat">' +
-          '<i class="fa-solid fa-xmark" aria-hidden="true"></i></button></div>' +
-        '<div class="yan-panel-govde"></div>' +
-        '<div class="yan-panel-ayak">' +
-          '<button type="button" class="dugme hayalet" data-yp="kapat">Vazgeç</button>' +
-          '<button type="button" class="dugme birincil" data-yp="kaydet">Kaydet</button>' +
-        '</div>' +
-      '</aside>';
-    document.body.appendChild(duzKap);
-    duzKap.addEventListener('click', function (e) {
-      if (e.target === duzKap || e.target.closest('[data-yp="kapat"]')) return duzKapat();
-      if (e.target.closest('[data-yp="kaydet"]')) return duzKaydet();
-    });
-    return duzKap;
-  }
-  function duzKapat() {
-    if (!duzKap || duzKap.hidden) return;
-    duzKap.hidden = true; duzSatir = null;
-    if (duzOdak && document.contains(duzOdak)) duzOdak.focus();
-  }
-  function duzKaydet() {
-    if (!duzSatir) return duzKapat();
-    var alanlar = duzKap.querySelectorAll('[data-hucre]');
-    alanlar.forEach(function (g) {
-      var i = Number(g.getAttribute('data-hucre'));
-      var h = duzSatir.cells[i]; if (!h) return;
-      /* Hücrenin ilk METİN düğümü güncellenir; içindeki rozet, çip ve
-         bağlantı yapısı KORUNUR — hücreyi düz metinle ezmek satırın
-         bileşenlerini siler. */
-      var hedef = h.querySelector('b, strong, a, span:not(.kunye)') || h;
-      if (hedef === h && h.firstChild && h.firstChild.nodeType === 3) h.firstChild.nodeValue = g.value;
-      else hedef.textContent = g.value;
-    });
-    var ad = satirAdi(duzSatir);
-    duzSatir.classList.add('guncellendi');
-    duzKapat();
-    toast('“' + ad + '” kaydedildi.');
-  }
-  function duzAc(tr) {
-    var tablo = tr.closest('table'); if (!tablo) return;
-    var basliklar = [].slice.call(tablo.querySelectorAll('thead th'))
-      .map(function (t) { return (t.textContent || '').trim().replace(/\s+/g, ' '); });
-    var k = duzKur();
-    var govde = k.querySelector('.yan-panel-govde');
-    govde.innerHTML = '';
-    [].forEach.call(tr.cells, function (h, i) {
-      var ad = basliklar[i] || '';
-      if (!ad || h.classList.contains('sec')) return;
-      if (h.querySelector('.satir-islem, button, [data-islem]')) return;   /* işlem sütunu */
-      var deger = (h.textContent || '').trim().replace(/\s+/g, ' ');
-      var alan = document.createElement('div');
-      alan.className = 'alan';
-      var id = 'yp-' + i;
-      alan.innerHTML = '<label for="' + id + '">' + ad + '</label>' +
-        '<input class="alan-girdi" id="' + id + '" data-hucre="' + i + '">';
-      alan.querySelector('input').value = deger;
-      govde.appendChild(alan);
-    });
-    k.querySelector('#ypBas').textContent = satirAdi(tr) + ' — düzenle';
-    duzSatir = tr; duzOdak = document.activeElement;
-    k.hidden = false;
-    var ilk = govde.querySelector('input'); if (ilk) { ilk.focus(); ilk.select(); }
-  }
-  document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape' && duzKap && !duzKap.hidden) { e.preventDefault(); duzKapat(); }
-  });
+     Ölü kod bırakılmadı: `duzKur` · `duzKapat` · `duzKaydet` · `duzAc`
+     ve `window.DM_DUZENLE` birlikte gitti. Kaldırılan bir davranışın
+     işlevi dosyada durursa bir sonraki tur onu "var, öyleyse
+     kullanılabilir" diye geri bağlar.
+     ═══════════════════════════════════════════════════════════════ */
+
 
   document.addEventListener('click', function (e) {
     var d = e.target.closest('[data-islem]');
@@ -408,7 +342,8 @@
       /* Sıra: bildirilen panel → gerçek detay sayfası → satırdan kurulan
          panel. Üçüncü basamak sayesinde "bağlı değil" hâli YOK. */
       var hedefId = d.getAttribute('data-hedef');
-      var yuzey = hedefId && document.getElementById(hedefId);
+      var yuzey = hedefId && (document.getElementById(hedefId.replace(/^#/, '')) ||
+                              (/^[#.\[]/.test(hedefId) ? document.querySelector(hedefId) : null));
       if (yuzey) {
         yuzey.hidden = false;
         yuzey.classList.add('acik');
@@ -416,14 +351,107 @@
         if (ilk) ilk.focus();
         return;
       }
-      var bag = d.getAttribute('href') && !/^#/.test(d.getAttribute('href')) ? d
-              : (tr && tr.querySelector('a[href]:not([href^="#"])'));
+      /* 🔴 GERİ DÜŞÜŞ PANELDEN ÇIKAMAZ — 2026-09-04'te TIKLANARAK ölçüldü.
+         `admin-anatomi` ve `admin-challenge`in satır "Düzenle"si basınca
+         `../anatomi-v1.html?kas=…` ve `../challenge-v1.html?slug=…` açıyordu:
+         yönetici düzenlemeye basıp ÜYE YÜZÜNE düşüyordu. Sebep bu satırdı —
+         düğme kendi hedefini taşımayınca SATIRIN İLK BAĞLANTISINA düşülüyor,
+         o bağlantı da "Sitede gör". Kusur ölü buton tarayıcısına GÖRÜNMÜYOR:
+         düğme çalışıyor, adres değişiyor, kapı yeşil veriyor. Kapı "bir şey
+         oldu mu" diye soruyor, "DOĞRU şey mi oldu" diye değil.
+         Kural: düğmenin KENDİ href'i açık niyettir, olduğu gibi izlenir;
+         satırdan TÜREtilen bağ ise paneli terk ediyorsa kullanılmaz —
+         o durumda satırdan kurulan panele düşülür (üçüncü basamak zaten var). */
+      function panelIci(a) {
+        if (!a) return false;
+        if (a.hasAttribute('target')) return false;        /* yeni sekme = "sitede gör" */
+        var h = a.getAttribute('href') || '';
+        if (!h || h.charAt(0) === '#') return false;
+        if (/^[a-z][a-z0-9+.-]*:/i.test(h)) return false;  /* http: · mailto: · javascript: */
+        if (h.charAt(0) === '/') return false;             /* kök-mutlak: panelin dışı olabilir */
+        if (h.indexOf('../') === 0) return false;          /* bir dizin yukarısı = üye yüzü */
+        return true;
+      }
+      var kendi = d.getAttribute('href');
+      if (kendi && kendi.charAt(0) !== '#') { window.location.href = kendi; return; }
+      /* ⚠ İLK BAĞI ALIP ELEMEK YETMEZ. Gerçek satırların çoğu ÖNCE dışa
+         açılan "Sitede gör"ü, SONRA panel içi bağı taşıyor; ilkini alıp
+         reddeden bir savunma geçerli bağı hiç görmeden panele düşerdi.
+         (Olumsuz sınamanın C örneği tam bunu yakaladı.) Satırın BÜTÜN
+         bağlarına bakılır, panel içi OLAN İLKİ izlenir. */
+      var bag = null;
+      if (tr) {
+        var adaylar = tr.querySelectorAll('a[href]:not([href^="#"])');
+        for (var bi = 0; bi < adaylar.length; bi++) {
+          if (panelIci(adaylar[bi])) { bag = adaylar[bi]; break; }
+        }
+      }
       if (bag) { window.location.href = bag.getAttribute('href'); return; }
-      if (tr) { duzAc(tr); return; }
+
+      /* 🔴 SATIRDAN PANEL KURMA DALI KALDIRILDI — Beyar kararı 2026-09-04.
+         "Düzenle" oluştur formuyla AYNI tam sayfa formdur, kayıt
+         verisiyle dolu (`admin-*-form.html?id=…`). Satırdan kurulan
+         panel bunun yerine geçemez ve ÖLÇÜLDÜ ki geçmeye çalışınca
+         veriyi bozuyor: `admin-taksonomi`de iki hücreyi birleştirip
+         "Kuvvetkuvvet · üst: kök" diye bir başlık uyduruyor, salt
+         okunur "42 kayıt" sayısını düzenlenebilir bir ALAN diye basıyordu.
+         Yan panel yalnız TEK ALANLI hızlı işlemler içindir (durum
+         değiştir, sıralama) — düzenleme için değil.
+
+         Yerine geçen: sayfanın KENDİ bildirdiği form. Liste ekranının
+         sayfa başındaki "Yeni …" düğmesi o modülün formunu zaten
+         gösteriyor; düzenleme aynı forma kaydın anahtarıyla gider.
+         Bu bir TAHMİN değil, sayfadan OKUMA — uydurulan tek şey yok. */
+      var yeniDugme = document.querySelector('.panel-bas [href*="-form.html"]');
+      if (yeniDugme && tr) {
+        var anahtar = d.getAttribute('data-duzenle')
+                   || tr.getAttribute('data-id')
+                   || tr.getAttribute('data-slug');
+        var hedefYol = yeniDugme.getAttribute('href');
+        if (anahtar) hedefYol += (hedefYol.indexOf('?') === -1 ? '?' : '&') + 'id=' + encodeURIComponent(anahtar);
+        window.location.href = hedefYol;
+        return;
+      }
+      /* Buraya düşen satırın hedefi markup'ta BİLDİRİLMEMİŞTİR. Kit
+         uydurma bir yüzey açmaz; kusur `adm-duzenle-form.mjs` kapısında
+         "düzenle denetimi hedefsiz" diye sayılır ve markup'ta kapatılır. */
       return;
     }
 
     if (islem === 'sil') {
+      /* 🔴 TEKRARLAYAN SATIR SİLİNEMİYORDU. Bu dal yalnız `<tr>` ile
+         çalışıyordu; form tekrarlayıcılarının satırı `.adim-karti`.
+         Ölçüldü: silme onayı VERİLİYOR, sonra hiçbir şey olmuyordu —
+         onay modalı çıktığı için kapıya "canlı" görünüyordu.
+         Tekrarlayıcı satırı onay SORMADAN gider: geri alma çipi yok ama
+         satır boş bir form satırıdır, yıkıcılık eşiğinin altında; yerine
+         toast + `Geri al` verilir, silme kuralının kendisi korunur. */
+      var tekrar = !tr && d.closest('.adim-karti, .kalem-satiri');
+      if (tekrar) {
+        e.preventDefault();
+        var listeT = tekrar.parentElement;
+        var komsuT = tekrar.nextElementSibling;
+        tekrar.remove();
+        /* ⚠ `listeTazele` BAŞKA IIFE'DE. Bu dosyada birden çok IIFE var
+           (kayıtlı vaka: `duzAc` 1.'de, `panel-ac` 2.'de) ve doğrudan
+           çağrı burada ReferenceError atıyordu: satır siliniyor, sonra
+           işleyici patlıyor, numara ve toast hiç gelmiyordu. Ölçümde
+           çıktı — silme "çalışıyor" görünüp numaraları 2,3,4,5 bırakmıştı.
+           Pencere kancasından çağrılır; kanca IIFE 2 koşarken kuruluyor,
+           yani ilk tıklamadan çok önce hazır. */
+        if (window.DM_LISTE_TAZELE) window.DM_LISTE_TAZELE(listeT);
+        var tT = toast('Satır silindi.');
+        var gT = document.createElement('button');
+        gT.type = 'button'; gT.className = 'toast-geri'; gT.textContent = 'Geri al';
+        gT.addEventListener('click', function () {
+          if (komsuT && komsuT.parentNode === listeT) listeT.insertBefore(tekrar, komsuT);
+          else listeT.appendChild(tekrar);
+          if (window.DM_LISTE_TAZELE) window.DM_LISTE_TAZELE(listeT);
+          tT.remove(); toast('Satır geri alındı.');
+        });
+        var spT = tT.querySelector('span'); if (spT) spT.insertAdjacentElement('afterend', gT);
+        return;
+      }
       var ad = tr ? satirAdi(tr) : (d.getAttribute('data-ad') || 'kayıt');
       onaySor('Silinsin mi?', '“' + ad + '” listeden kaldırılacak.',
         'Sil', function (evet) {
@@ -552,13 +580,6 @@
     return true;
   }
   window.DM_ALAN_DENETLE = alanDenetle;
-  /* 🔴 KAPSAM KUSURU — C kulvarı ölçtü, 21 düğmeyi tek başına öldürüyordu.
-     `panel-ac`ın yedeği İKİNCİ IIFE'de ve `duzAc`ı çağırıyor; `duzAc`
-     BİRİNCİ IIFE'de tanımlı. Her tıklamada `duzAc is not defined`.
-     Aynı sayfadaki `data-islem="duzenle"` çalışıyordu — mekanizma
-     sağlamdı, yalnız kapsam yanlıştı. Kitin kendi kalıbıyla dışa
-     veriliyor (`DM_TOAST` · `DM_ONAY` · `DM_SECIM_TAZELE` gibi). */
-  window.DM_DUZENLE = duzAc;
 
   /* Yazarken hatayı temizle — kullanıcı düzeltirken kırmızı durmasın. */
   document.addEventListener('input', function (e) {
@@ -594,7 +615,7 @@
     var metin = eylem === 'yayinla' ? 'Yayınlandı.'
               : eylem === 'taslak'  ? 'Taslak kaydedildi.'
                                     : 'Kaydedildi.';
-    toast(metin + ' (maket — sunucuya gitmedi)');
+    toast(metin + '');
   });
 
   /* Silme düğmesi form içinde de olabilir (ör. "Sayfayı sil"). */
@@ -605,7 +626,7 @@
     var ad = d.getAttribute('data-ad') ||
       (document.querySelector('.panel-bas h1') || {}).textContent || 'kayıt';
     onaySor('Silinsin mi?', '“' + String(ad).trim() + '” kalıcı olarak kaldırılacak. Bu işlem geri alınamaz.',
-      'Sil', function (evet) { if (evet) toast('Silindi. (maket — sunucuya gitmedi)'); });
+      'Sil', function (evet) { if (evet) toast('Silindi.'); });
   });
 
   /* ───────────────────────────────────────────────────────────────────
@@ -672,7 +693,7 @@
       e.preventDefault();
       var kk = u.closest('.form-gorsel');
       var c = kk && kk.querySelector('.kirpma-cerceve');
-      if (c) toast('Kırpma uygulandı — ' + Math.round(c.offsetWidth) + '×' + Math.round(c.offsetHeight) + ' px. (maket)');
+      if (c) toast('Kırpma uygulandı — ' + Math.round(c.offsetWidth) + '×' + Math.round(c.offsetHeight) + ' px.');
       return;
     }
   });
@@ -876,11 +897,217 @@
     suzgecTazele();
   });
 
+  /* ═══════════════════════════════════════════════════════════════════
+     21 · SATIR EYLEMİ BİR SONUÇ ÜRETİR
+     ───────────────────────────────────────────────────────────────────
+     Beyar kuralı, 2026-09-04: *"Play'in karşılığı yok — sadece toast."*
+     Bir satır eylemi tıklanınca ekranda GÖRÜNÜR bir karşılık doğar:
+     durum çipi döner, sonuç bloğu açılır, sayaçlar ve tarihler güncellenir.
+     Maket ve "bağlanmadı" ibareleri toast metinlerinden kalkar;
+     söylenen şey OLAN şeydir.
+
+     🔴 SONUÇ UYDURULMAZ, HESAPLANIR. Yönlendirme testi sayfanın kendi
+        tablosundan gerçek bir doğrulama yapar: zinciri izler, DÖNGÜ ve
+        KENDİNE YÖNLENDİRME arar, adım sayar. Bunlar bir yönlendirme
+        tablosunun asıl kusurlarıdır; uydurma bir "200 OK" basmaktan
+        kıyas kabul etmez üstündür.
+     ⚠ Süre ölçülen gerçek süredir (`performance.now()`), yazılmış bir
+       sayı değil.
+     ═══════════════════════════════════════════════════════════════ */
+  function hucreMetni(h) { return (h.textContent || '').replace(/\s+/g, ' ').trim(); }
+
+  /* Satırdaki YOL taşıyan hücreler — "/ile başlayan tek jeton". */
+  function satirYollari(tr) {
+    var y = [];
+    [].forEach.call(tr.cells || [], function (h, i) {
+      var t = hucreMetni(h);
+      if (/^\/[^\s]*$/.test(t)) y.push({ i: i, yol: t });
+    });
+    return y;
+  }
+
+  /* Durum çipini bul ve çevir — çip yoksa bir şey yapılmaz. */
+  function satirDurumu(d, yeni) {
+    var tr = d.closest && d.closest('tr');
+    if (!tr) return null;
+    var cip = tr.querySelector('.durum-hapi, .fp-badge, .rozet, .cip');
+    if (!cip) return null;
+    if (!cip.dataset.eskiDurum) cip.dataset.eskiDurum = cip.textContent.replace(/\s+/g, ' ').trim();
+    var ikon = cip.querySelector('i');
+    cip.textContent = '';
+    if (ikon) { ikon.className = 'fa-solid fa-rotate'; cip.appendChild(ikon); }
+    cip.insertAdjacentText('beforeend', ' ' + yeni);
+    return cip;
+  }
+
+  function sonucSatiriYaz(tr, ic, iyi) {
+    var eski = tr.nextElementSibling;
+    if (eski && eski.classList.contains('sonuc-satiri')) eski.remove();
+    var kolon = (tr.cells && tr.cells.length) || 1;
+    var s = document.createElement('tr');
+    s.className = 'sonuc-satiri' + (iyi ? '' : ' hatali');
+    s.innerHTML = '<td colspan="' + kolon + '"><div class="sonuc-kutu">' + ic + '</div></td>';
+    tr.insertAdjacentElement('afterend', s);
+    return s;
+  }
+
+  /* ── YÖNLENDİRME TESTİ ───────────────────────────────────────────
+     Zincir sayfanın KENDİ tablosundan izlenir: bir hedef başka bir
+     satırın kaynağıysa zincir uzar. Döngü ve kendine yönlendirme
+     yakalanır — tablonun gerçek kusurları bunlar. */
+  function yonlendirmeTesti(tr, gecen) {
+    var yollar = satirYollari(tr);
+    if (yollar.length < 2) return null;
+    var kaynak = yollar[0].yol, hedef = yollar[1].yol;
+    var tur = '';
+    [].forEach.call(tr.cells, function (h) {
+      var t = hucreMetni(h);
+      if (/^(30[1278]|30[0-9])$/.test(t)) tur = t;
+    });
+
+    /* Tablodaki bütün kaynak → hedef eşlemesi */
+    var harita = {};
+    var govde = tr.parentNode;
+    [].forEach.call(govde.rows, function (r) {
+      var y = satirYollari(r);
+      if (y.length >= 2) harita[y[0].yol] = y[1].yol;
+    });
+
+    var adimlar = [kaynak], su = kaynak, dongu = false, kendine = (kaynak === hedef);
+    for (var i = 0; i < 8; i++) {
+      var sonraki = harita[su];
+      if (!sonraki) break;
+      if (adimlar.indexOf(sonraki) !== -1) { dongu = true; adimlar.push(sonraki); break; }
+      adimlar.push(sonraki); su = sonraki;
+    }
+    var iyi = !dongu && !kendine;
+    var sure = Math.max(1, Math.round(gecen)) + ' ms';
+    var ic =
+      '<span class="sonuc-bas">' +
+        '<i class="fa-solid fa-' + (iyi ? 'circle-check' : 'circle-xmark') + '" aria-hidden="true"></i> ' +
+        (iyi ? 'Yönlendirme çözüldü' : (dongu ? 'DÖNGÜ — zincir kendine dönüyor' : 'Kaynak ve hedef aynı')) +
+      '</span>' +
+      '<span class="sonuc-zincir">' + adimlar.map(function (a, n) {
+        return '<code>' + a + '</code>' + (n < adimlar.length - 1 ? ' <i class="fa-solid fa-arrow-right" aria-hidden="true"></i> ' : '');
+      }).join('') + '</span>' +
+      '<span class="sonuc-kunye">' +
+        (tur ? '<b>' + tur + '</b> · ' : '') +
+        (adimlar.length - 1) + ' adım · ' + sure +
+      '</span>';
+    sonucSatiriYaz(tr, ic, iyi);
+
+    /* İsabet sayacı +1 — sayı taşıyan hücre (binlik ayraçlı). */
+    [].forEach.call(tr.cells, function (h) {
+      var t = hucreMetni(h);
+      if (/^\d{1,3}(\.\d{3})*$/.test(t) && h.querySelector('*') === null) {
+        var n = Number(t.replace(/\./g, '')) + 1;
+        h.textContent = n.toLocaleString('tr-TR');
+      }
+    });
+    return (iyi ? 'Yönlendirme çözüldü' : 'Yönlendirme kusurlu') +
+           ' — ' + (adimlar.length - 1) + ' adım, ' + sure + '.';
+  }
+
+  /* ── GÖREV ÇALIŞTIRMA ────────────────────────────────────────────
+     Sonuç: durum çipi, son çalışma tarihi ve varsa çalışma logu. */
+  function gorevCalistir(tr, gecen) {
+    var simdi = new Date();
+    var iki = function (n) { return ('0' + n).slice(-2); };
+    var damga = iki(simdi.getDate()) + '.' + iki(simdi.getMonth() + 1) + '.' + simdi.getFullYear() +
+                ' ' + iki(simdi.getHours()) + ':' + iki(simdi.getMinutes());
+    /* "Son çalışma" hücresi: tarih kalıbı taşıyan ilk hücre. */
+    [].forEach.call(tr.cells, function (h) {
+      var b = h.querySelector('b, strong, .satir-kunye') || h;
+      var t = hucreMetni(b);
+      if (/^\d{2}\.\d{2}\.\d{4}/.test(t)) {
+        if (b.firstChild && b.firstChild.nodeType === 3) b.firstChild.textContent = damga;
+        else b.textContent = damga;
+      }
+    });
+    var sure = (gecen / 1000).toFixed(1).replace('.', ',') + ' sn';
+    var ic = '<span class="sonuc-bas"><i class="fa-solid fa-circle-check" aria-hidden="true"></i> Çalışma tamamlandı</span>' +
+             '<span class="sonuc-kunye">Başlangıç <b>' + damga + '</b> · süre <b>' + sure + '</b></span>';
+    sonucSatiriYaz(tr, ic, true);
+    /* Çalışma logu — sayfada ikinci bir tablo varsa başına satır düşer. */
+    var tablolar = document.querySelectorAll('table tbody');
+    if (tablolar.length > 1) {
+      var log = tablolar[tablolar.length - 1];
+      if (log !== tr.parentNode && log.rows.length) {
+        var yeni = log.rows[0].cloneNode(true);
+        [].forEach.call(yeni.cells, function (h, i) {
+          if (i === 0) h.textContent = damga;
+          else if (i === 1) h.textContent = sure;
+          else h.textContent = '—';
+        });
+        yeni.classList.add('yeni');
+        log.insertBefore(yeni, log.firstElementChild);
+      }
+    }
+    return 'Çalışma tamamlandı — ' + sure + '.';
+  }
+
+  function satirSonucu(d, baslangic) {
+    var tr = d.closest && d.closest('tr');
+    var gecen = performance.now() - baslangic;
+    if (!tr) return null;
+    var cip = tr.querySelector('.durum-hapi, .fp-badge, .rozet, .cip');
+    var sonuc = yonlendirmeTesti(tr, gecen);
+    if (!sonuc) sonuc = gorevCalistir(tr, gecen);
+    if (cip && cip.dataset.eskiDurum) {
+      var ikon = cip.querySelector('i');
+      cip.textContent = '';
+      if (ikon) { ikon.className = 'fa-solid fa-circle-check'; cip.appendChild(ikon); }
+      cip.insertAdjacentText('beforeend', ' ' + cip.dataset.eskiDurum);
+      delete cip.dataset.eskiDurum;
+    }
+    return sonuc;
+  }
+
+  /* ── TEKRARLAYAN LİSTE TAZELEME ────────────────────────────────────
+     🔴 KLON KENDİ SIRASINI TAŞIYORDU. Satır eklemek son satırı
+     kopyalıyor; kopya `.adim-no` metnini ("4") ve gizli
+     `[data-field="position"]` değerini ("3") olduğu gibi getiriyordu.
+     Bölüm başlığındaki `.alan-sayac` ("4 adım") da hiç güncellenmiyordu.
+     Yani listede iki "4" oluyor ve sayaç yalan söylüyordu.
+     Silmede de aynı: kalan satırların numarası boşluklu kalıyordu.
+     Numara ve sıra LİSTENİN durumudur, satırın değil — her değişimde
+     baştan hesaplanır (artan sayaç yerine yeniden hesap; kayıtlı ders). */
+  function listeTazele(liste) {
+    if (!liste) return;
+    var satirlar = [].filter.call(liste.children, function (c) {
+      return c.nodeType === 1 && !c.hidden;
+    });
+    satirlar.forEach(function (sa, i) {
+      var no = sa.querySelector('.adim-no');
+      if (no) no.textContent = String(i + 1);
+      var poz = sa.querySelector('[data-field="position"]');
+      if (poz) poz.value = String(i);
+    });
+    /* Sayaç: SAYIYI değiştir, BİRİMİ koru ("4 adım" · "1 bölüm" · "3 bant"). */
+    var bolum = liste.closest('.form-bolum') || liste.parentElement;
+    var sayac = bolum && bolum.querySelector('.alan-sayac');
+    if (sayac) {
+      var birim = (sayac.textContent || '').replace(/^\s*\d+\s*/, '').trim();
+      sayac.textContent = satirlar.length + (birim ? ' ' + birim : '');
+    }
+    return satirlar.length;
+  }
+  window.DM_LISTE_TAZELE = listeTazele;
+
   /* ── DAĞITICI ──────────────────────────────────────────────────────── */
   document.addEventListener('click', function (e) {
     var d = e.target.closest('[data-eylem]');
     if (!d) return;
     var eylem = d.getAttribute('data-eylem');
+
+    /* 🔴 SINIF EYLEM ADINI YENER — `.satir-ekle` için. 2026-09-04'te
+       ölçüldü: 63 "… ekle" düğmesinin 56'sı `data-eylem="satir-ekle"`
+       diyor, YEDİSİ `panel-ac`. O yedisinde tıklama hiçbir şey
+       yapmıyordu (admin-hareket-form'da ölçüldü: satır 4 → 4).
+       Sınıf o denetimin sözleşmesidir ve etiketi de "Adım ekle" diyor;
+       niyet belirsiz değil. Markup'taki yanlış ad ayrıca düzeltilecek
+       ama kit yanlış ada rağmen DOĞRU İŞİ yapar. */
+    if (d.classList.contains('satir-ekle')) eylem = 'satir-ekle';
 
     /* Birinci blokta ele alınanlar burada atlanır — çift işlem olmasın. */
     if (['kaydet', 'yayinla', 'taslak', 'sil'].indexOf(eylem) !== -1) return;
@@ -889,11 +1116,17 @@
 
       case 'disa-aktar': {
         e.preventDefault();
-        secimSor('Dışa aktarma biçimi', 'Ekranda görünen kayıtlar dışa aktarılır.', [
-          { deger: 'csv',  ad: 'CSV',  ikon: 'fa-file-csv',   not: 'Excel · Sheets' },
-          { deger: 'xlsx', ad: 'XLSX', ikon: 'fa-file-excel', not: 'Excel çalışma kitabı' },
-          { deger: 'pdf',  ad: 'PDF',  ikon: 'fa-file-pdf',   not: 'Yazdırmaya hazır' },
-        ], function (bicimAdi) {
+        /* 🔴 DÜĞME BİÇİMİ ZATEN SÖYLÜYORSA BİR DAHA SORMA.
+           B kulvarı ölçtü: `admin-raporlar` sayfa başında ÜÇ düğme var —
+           "CSV" · "Excel" · "PDF olarak indir" — ve üçü de aynı
+           `data-eylem="disa-aktar"`ı taşıyor. Kit her birinde biçim
+           soruyordu; yani üç ayrı düğme aynı diyaloğu açıp aynı işi
+           yapıyordu. Üçü ayrı iş değil, tek işin ÜÇ BİÇİMİ.
+           Düğme `data-bicim` bildiriyorsa seçim adımı ATLANIR ve doğrudan
+           o biçim üretilir. Markup'tan bir şey silmek gerekmiyor; iki
+           fazla düğme birer kısayola dönüşüyor. */
+        var bildirilenBicim = d.getAttribute('data-bicim');
+        var uret = function (bicimAdi) {
           var t = toast('Dosya hazırlanıyor…');
           setTimeout(function () {
             var satirlar = tabloVerisi(d.closest('.kart') || document);
@@ -914,10 +1147,18 @@
                      csvUret(satirlar), 'text/csv;charset=utf-8', t2);
             if (bicimAdi !== 'csv') {
               var s = t2.querySelector('span');
-              if (s) s.insertAdjacentText('beforeend', ' — maket: içerik CSV');
+              /* İbare kaldırılmadı, DÜRÜSTLEŞTİRİLDİ: dosya gerçekten
+                 CSV içerikli. "maket" demek yerine NE OLDUĞU yazılıyor. */
+              if (s) s.insertAdjacentText('beforeend', ' — içerik CSV biçiminde');
             }
           }, 900);
-        });
+        };
+        if (bildirilenBicim) { uret(bildirilenBicim); return; }
+        secimSor('Dışa aktarma biçimi', 'Ekranda görünen kayıtlar dışa aktarılır.', [
+          { deger: 'csv',  ad: 'CSV',  ikon: 'fa-file-csv',   not: 'Excel · Sheets' },
+          { deger: 'xlsx', ad: 'XLSX', ikon: 'fa-file-excel', not: 'Excel çalışma kitabı' },
+          { deger: 'pdf',  ad: 'PDF',  ikon: 'fa-file-pdf',   not: 'Yazdırmaya hazır' },
+        ], uret);
         return;
       }
 
@@ -951,7 +1192,7 @@
               k.checked = false;
             });
             if (tablo && window.DM_SECIM_TAZELE) window.DM_SECIM_TAZELE(tablo);
-            toast(secili.length + ' satır güncellendi — ' + ad.toLocaleLowerCase('tr') + '. (maket)');
+            toast(secili.length + ' satır güncellendi — ' + ad.toLocaleLowerCase('tr') + '.');
           });
         });
         return;
@@ -1018,8 +1259,12 @@
         var ad2 = (d.getAttribute('data-ad') || d.getAttribute('title') ||
                    (d.textContent || '').trim() || 'İşlem').trim();
         if (ad2.length > 42) ad2 = ad2.slice(0, 41).trim() + '…';
+        var baslangic = performance.now();
         d.setAttribute('data-calisiyor', '1');
         d.setAttribute('aria-busy', 'true');
+        /* Satır eyleminin görünür karşılığı ANINDA başlar: durum çipi
+           "Çalışıyor"a döner. Sonuç 1400 ms sonra yazılır. */
+        satirDurumu(d, 'Çalışıyor');
         var ikon = d.querySelector('i');
         if (ikonlu && ikon) ikon.className = 'fa-solid fa-rotate';
         else d.innerHTML = '<i class="fa-solid fa-rotate" aria-hidden="true"></i> Çalışıyor…';
@@ -1037,24 +1282,33 @@
             dmg.textContent = ('0' + n.getDate()).slice(-2) + '.' + ('0' + (n.getMonth() + 1)).slice(-2) + '.' +
               n.getFullYear() + ' ' + ('0' + n.getHours()).slice(-2) + ':' + ('0' + n.getMinutes()).slice(-2);
           }
-          toast(ad2 + ' tamamlandı. (maket)');
+          var sonucMetni = satirSonucu(d, baslangic);
+          toast(sonucMetni || (ad2 + ' tamamlandı.'));
         }, 1400);
         return;
       }
 
       case 'panel-ac': {
         e.preventDefault();
+        /* 🔴 SÖZLEŞME "#id" DİYOR, KİT ÇIPLAK id OKUYORDU — E kulvarı ölçtü
+           ve sonucu ağır: panelde bugüne dek ÇALIŞAN TEK BİR `panel-ac`
+           hedefi yoktu. `getElementById("#sdServis")` null döner, düğme
+           `!p` dalına düşüp sayfanın birincil eylemine kaçardı.
+           İki biçim de kabul ediliyor; sözleşmeye uyan markup da,
+           çıplak id yazan da çalışır. Ölçüldü: "#sdServis" ile panel
+           açılmıyordu (h=0), "sdServis" ile açılıyordu (h=350). */
         var pid = d.getAttribute('data-hedef');
-        var p = pid && document.getElementById(pid);
+        var p = pid && (document.getElementById(pid.replace(/^#/, '')) ||
+                        (/^[#.\[]/.test(pid) ? document.querySelector(pid) : null));
         /* Hedefi bildirilmemiş panel açma isteği: satır bağlamındaysa
            satır panelini açar, değilse sayfa başındaki birincil eyleme
            düşer. Hiçbir dalda "bağlı değil" denmez. */
         if (!p) {
-          var trP = d.closest('tr');
-          if (trP && window.DM_DUZENLE) { window.DM_DUZENLE(trP); return; }
-          var bir = document.querySelector('.panel-bas .dugme.birincil[href]');
+          /* ⚠ Bu yedek de satır paneli kuruyordu; aynı kararla kaldırıldı.
+             Hedefsiz `panel-ac` sayfanın birincil eylemine düşer. */
+          var bir = document.querySelector('.panel-bas .dugme.birincil[href]')
+                 || document.querySelector('.panel-bas [href*="-form.html"]');
           if (bir) { window.location.href = bir.getAttribute('href'); return; }
-          toast('Bu eylem için bir hedef bildirilmemiş.', 'hata');
           return;
         }
         p.hidden = false; p.classList.add('acik');
@@ -1089,7 +1343,7 @@
         });
         var bilgi = document.querySelector('[data-rol="sayfa-bilgi"]');
         if (bilgi) bilgi.textContent = 'Sayfa ' + (hedefD.textContent || '').trim();
-        toast('Sayfa ' + (hedefD.textContent || '').trim() + '. (maket — tek sayfa veri var)');
+        toast('Sayfa ' + (hedefD.textContent || '').trim() + '.');
         return;
       }
 
@@ -1107,12 +1361,12 @@
       if (!hapKap) {
         d.classList.add('aktif');
         d.setAttribute('aria-pressed', 'true');
-        toast('Durum "' + yeniDurum + '" olarak güncellendi. (maket)');
+        toast('Durum "' + yeniDurum + '" olarak güncellendi.');
         return;
       }
         hapKap.textContent = yeniDurum;
         d.setAttribute('aria-pressed', 'true');
-        toast('Durum "' + yeniDurum + '" olarak güncellendi. (maket)');
+        toast('Durum "' + yeniDurum + '" olarak güncellendi.');
         return;
       }
 
@@ -1125,7 +1379,7 @@
         var adY = (d.getAttribute('data-ad') || d.textContent || 'Bu işlem').trim();
         onaySor(adY + '?', (d.getAttribute('data-uyari') ||
           'Bu işlem geri alınamaz.'), adY, function (evet) {
-          if (evet) toast(adY + ' uygulandı. (maket — sunucuya gitmedi)');
+          if (evet) toast(adY + ' uygulandı.');
         });
         return;
       }
@@ -1136,8 +1390,18 @@
          (K22'nin "kabuk davranış sürer, markup üretmez" kuralı). */
       case 'satir-ekle': {
         e.preventDefault();
+        /* 🔴 LİSTE ARAMASI TEKRARLAYAN LİSTEYİ TANIMIYORDU. Kit yalnız
+           `.tablo tbody` ve `.kalem-listesi`ye bakıyordu; form
+           tekrarlayıcıları `.adim-liste` (`#hfAdimlar` · `#tfSorular` …).
+           Bulamayınca "kalıp yok" dalına düşüp KARTIN DİBİNE alakasız
+           tek alanlı bir satır açıyordu — ölçümde liste 4 → 4 kalıyor,
+           kullanıcı eklediği satırı listede göremiyordu.
+           Arama önce EN YAKIN bölümde yapılır: aynı `.form-bolum`
+           içindeki tekrarlayıcı, düğmenin kendi kardeşi olandır. */
+        var yakin = d.closest('.form-bolum') || d.closest('.kart') || document;
         var liste = (d.getAttribute('data-hedef') && document.querySelector(d.getAttribute('data-hedef')))
-                  || (d.closest('.kart') || document).querySelector('.tablo tbody, .kalem-listesi');
+                  || yakin.querySelector('.adim-liste, .kalem-listesi, .tablo tbody')
+                  || (d.closest('.kart') || document).querySelector('.adim-liste, .kalem-listesi, .tablo tbody');
         var son = liste && liste.lastElementChild;
         /* Kalıp yoksa TEK ALANLI bir satır açılır: eylem yine bir şey
            yapar, kullanıcı bir şey yazabilir. */
@@ -1152,12 +1416,101 @@
           return;
         }
         var yeniSatir = son.cloneNode(true);
+        yeniSatir.querySelectorAll('.alan-hata, .alan-ozet').forEach(function (x) {
+          x.classList.remove('goster');
+        });
+        /* 🔴 BİLDİRİLMİŞ TEMİZLİK — sezgiden önce gelir (E kulvarının önerisi).
+           Kit neyin "kimlik" neyin "veri" olduğunu tahmin edemez: aynı
+           `.tur-rozeti` bir ekranda "Adım" (kimlik) yazarken ötekinde
+           "Soru · sağlık dalı" (kimlik + KAYIT VERİSİ) yazıyor ve ölçümde
+           klon o veriyi taşımaya devam etti. Markup bildirir:
+             `data-klon-sil`   → klonda o eleman KALDIRILIR
+             `data-klon-metin` → klonda o elemanın metni boşalır
+           Bildirim yoksa aşağıdaki sezgi koşar. */
+        yeniSatir.querySelectorAll('[data-klon-sil]').forEach(function (x) { x.remove(); });
+        yeniSatir.querySelectorAll('[data-klon-metin]').forEach(function (x) { x.textContent = ''; });
+        /* 🔴 STATİK TABLODA KLON SON KAYDIN METNİNİ TAŞIYORDU — B kulvarı
+           8 ekranda tıklayarak ölçtü. Alanları boşaltmak yetmiyor: bir
+           liste satırında değer `<input>`ta değil `<td>`nin METNİNDE
+           duruyor, yani "yeni satır" son kaydın adıyla, tarihiyle,
+           durumuyla doğuyordu. Sahte veri üretmek boş satırdan kötüdür.
+           Boşaltılan yalnız METİN düğümleri; düğmeler, ikonlar, seçim
+           kutuları ve `data-*` nitelikleri YERİNDE kalır (EKSİ BİRİNCİ
+           MADDE: eleman silinmez). Değeri taşıyan rozet/çip gibi kalemler
+           de metinsiz bırakılır, kapları durur. */
+        /* 🔴 TABLO OLMAYAN TEKRARLAYICIDA DA METİN TAŞINIYORDU — E kulvarı
+           ölçtü: yeni doğan soru `SORU · SAĞLIK DALI` rozetiyle ve önceki
+           sorunun sağlık paragrafıyla geliyordu. İlk yazımım yalnız
+           `yeniSatir.cells` (yani `<tr>`) dalını temizliyordu; form
+           tekrarlayıcısı `<div class="adim-karti">` ve `cells` yok.
+           Aynı gezinme her iki kap için de koşar. */
+        var metinBosalt = function (kok) {
+          var denetim = 'input, select, textarea, button, a, .satir-islem';
+          (function gez(n) {
+            [].forEach.call(n.childNodes, function (c) {
+              if (c.nodeType === 3) { c.textContent = ''; return; }
+              if (c.nodeType !== 1) return;
+              if (c.matches && c.matches(denetim)) return;
+              gez(c);
+            });
+          })(kok);
+        };
+        if (!yeniSatir.cells || !yeniSatir.cells.length) {
+          /* Form tekrarlayıcısı: sıra numarası ve tür rozeti KORUNUR —
+             ikisi de kalemin kimliği, önceki kaydın verisi değil. */
+          [].forEach.call(yeniSatir.children, function (c) {
+            if (c.classList.contains('adim-no') || c.classList.contains('adim-yan')) return;
+            [].forEach.call(c.children, function (x) {
+              if (x.classList && x.classList.contains('tur-rozeti')) return;
+              metinBosalt(x);
+            });
+            [].forEach.call(c.childNodes, function (n) {
+              if (n.nodeType === 3) n.textContent = '';
+            });
+          });
+        }
+        if (yeniSatir.cells) {
+          /* ⚠ İLK YAZIMIM YETMEDİ: yalnız hücrenin DOĞRUDAN metnini ve
+             çocuksuz elemanları boşaltıyordum. Durum hapı
+             `<span class="durum-hapi"><i></i>Arşivlendi</span>` biçiminde —
+             çocuğu var, o yüzden atlanıyordu ve klon "Arşivlendi"yi
+             taşımaya devam etti (ölçümde çıktı). Metin düğümü NEREDE
+             olursa olsun boşaltılır; gezinme denetimlerin İÇİNE girmez. */
+          var denetim = 'input, select, textarea, button, a, .satir-islem';
+          [].forEach.call(yeniSatir.cells, function (h) {
+            (function gez(kok) {
+              [].forEach.call(kok.childNodes, function (n) {
+                if (n.nodeType === 3) { n.textContent = ''; return; }
+                if (n.nodeType !== 1) return;
+                if (n.matches && n.matches(denetim)) return;   /* denetimin içine girme */
+                gez(n);
+              });
+            })(h);
+          });
+        }
+        /* 🔴 DEĞER SIFIRLAMASI GERİ GELDİ — E kulvarı yakaladı.
+           `9562dae` metin temizliğini eklerken bu satırları DÜŞÜRMÜŞTÜ
+           (`git log -S` ile izlendi): yeni doğan soru önceki kaydın
+           anahtarını, metnini, seçimlerini ve İŞARETLİ onay kutusunu
+           taşıyordu. Kural yarısında kalmıştı — metin ✅, denetim 🔴.
+           ⚠ Sayım kapısı bu farkı GÖREMEZ: satır sayısı iki hâlde de
+             artıyor. Ölçüt "yeni satırın BÜTÜN denetimleri boş mu".
+           ⚠ Gizli alanlar muaf: `[data-field="position"]` sırayı,
+             `.coklu-secim`in `[data-cs]`i seçim değerini taşır; onları
+             boşaltmak `listeTazele`nin ve çoklu seçimin işini bozar. */
         yeniSatir.querySelectorAll('input, textarea').forEach(function (x) {
-          if (x.type === 'checkbox' || x.type === 'radio') x.checked = false; else x.value = '';
+          if (x.type === 'hidden') return;
+          if (x.type === 'checkbox' || x.type === 'radio') x.checked = false;
+          else x.value = '';
         });
         yeniSatir.querySelectorAll('select').forEach(function (x) { x.selectedIndex = 0; });
+        /* Çoklu seçim çipleri de kaydın verisidir — kap durur, içi boşalır. */
+        yeniSatir.querySelectorAll('.coklu-secim .cipler').forEach(function (c) { c.innerHTML = ''; });
+        yeniSatir.querySelectorAll('.coklu-secim input[data-cs]').forEach(function (g) { g.value = ''; });
+
         yeniSatir.classList.add('yeni');
         liste.appendChild(yeniSatir);
+        listeTazele(liste);
         var ilkG = yeniSatir.querySelector('input, select, textarea');
         if (ilkG) ilkG.focus();
         toast('Yeni satır eklendi.');
@@ -1224,5 +1577,672 @@
     var kayit = document.querySelector('.suzgec-sayac b');
     if (kayit) kayit.textContent = String(n);
   });
+
+
+  /* ═══════════════════════════════════════════════════════════════════
+     18 · ÇOKLU SEÇİM — `.coklu-secim`
+     ───────────────────────────────────────────────────────────────────
+     🔴 BU KALIP TAMAMEN ÖLÜYDÜ. 2026-09-04'te TIKLANARAK ölçüldü:
+     beş örneğin beşinde arama kutusuna yazıldı, `.acilir-yuzey`
+     `hidden` kaldı ve sıfır seçenek doğdu (admin-hareket-form 3 ·
+     admin-program-form 1 · admin-rehber-form 1). Ne `admin-kit.js`te
+     ne `_ortak/panel.js`te sürücüsü vardı — markup bir açılır VAAT
+     ediyor, hiçbir şey o vaadi tutmuyordu.
+
+     ⚠ Ölü buton tarayıcısına da görünmüyordu: aday bir `<button>`
+     değil, bir `<input>`. Kapının nüfusu düğmelerdi; bu yüzey o
+     nüfusun dışında kaldı. (Kayıtlı ders: denetimin öznesi kayar.)
+
+     ── SEÇENEK KAYNAĞI — üç yol, bu sırayla ────────────────────────
+       1 · `data-secenek='["Quadriceps","Gluteus"]'`  (JSON dizi)
+           ya da `data-secenek="Quadriceps, Gluteus"` (virgüllü)
+       2 · `data-kaynak="#birSelect"` → o `<select>`/`<datalist>`in
+           seçeneklerini okur (tek kaynak, kopya doğmaz)
+       3 · kaynak YOKSA → serbest etiket girişi (yaz + Enter)
+
+     🔴 ÜÇÜNCÜ BASAMAK SAYESİNDE "BAĞLI DEĞİL" HÂLİ YOK. Kaynağı
+        bildirilmemiş bir alan maket bir açılır göstermez; gerçekten
+        çalışan bir etiket girişi olur. "Bu özellik bağlanmadı" diyen
+        bir yüzey basılmaz (Beyar kuralı).
+
+     Değer `<input type="hidden">`da toplanır; adı `data-ad`dan gelir,
+     yoksa kabın `id`sinden türetilir. Çipler `.cipler` kabına yazılır,
+     kap yoksa kit onu açar.
+     ═══════════════════════════════════════════════════════════════ */
+  function csKap(el) { return el && el.closest ? el.closest('.coklu-secim') : null; }
+
+  function csSecenekler(kap) {
+    var ham = kap.getAttribute('data-secenek');
+    if (ham) {
+      var t = ham.trim();
+      if (t.charAt(0) === '[') { try { return JSON.parse(t); } catch (h) { /* virgüle düş */ } }
+      return t.split(',').map(function (x) { return x.trim(); }).filter(Boolean);
+    }
+    var sec = kap.getAttribute('data-kaynak') && document.querySelector(kap.getAttribute('data-kaynak'));
+    if (sec) {
+      return [].map.call(sec.querySelectorAll('option'), function (o) {
+        return (o.textContent || o.value || '').trim();
+      }).filter(Boolean);
+    }
+    return null;                       /* kaynak yok → serbest giriş */
+  }
+
+  function csCipKap(kap) {
+    var c = kap.querySelector('.cipler');
+    if (!c) { c = document.createElement('div'); c.className = 'cipler'; kap.appendChild(c); }
+    return c;
+  }
+
+  function csGizliAlan(kap) {
+    var g = kap.querySelector('input[type=hidden][data-cs]');
+    if (!g) {
+      g = document.createElement('input');
+      g.type = 'hidden'; g.setAttribute('data-cs', '');
+      g.name = kap.getAttribute('data-ad') || ((kap.id || 'coklu') + '[]');
+      kap.appendChild(g);
+    }
+    return g;
+  }
+
+  function csDegerler(kap) {
+    return [].map.call(csCipKap(kap).querySelectorAll('[data-deger]'), function (c) {
+      return c.getAttribute('data-deger');
+    });
+  }
+
+  function csYaz(kap) { csGizliAlan(kap).value = csDegerler(kap).join(','); }
+
+  function csEkle(kap, deger) {
+    deger = (deger || '').trim();
+    if (!deger) return false;
+    /* 🔴 TEK DEĞER KİPİ — A1 ölçtü: bir rozet TEK ikon taşır, ama kap
+       sınırsız çip alıyordu. `data-tek` bildiren kapta yeni seçim
+       eskisinin YERİNE geçer; çoklu kap olduğu gibi kalır. */
+    if (kap.hasAttribute('data-tek')) {
+      csCipKap(kap).innerHTML = '';
+    }
+    /* Aynı değer iki kez eklenmez — sessizce yutmaz, var olanı yanıp söndürür. */
+    var varOlan = csCipKap(kap).querySelector('[data-deger="' + deger.replace(/"/g, '\\"') + '"]');
+    if (varOlan) {
+      varOlan.classList.add('vurgu');
+      setTimeout(function () { varOlan.classList.remove('vurgu'); }, 700);
+      return false;
+    }
+    var cip = document.createElement('span');
+    /* ⚠ YENİ SINIF AÇILMADI: seçilmiş çip kanonun `.cip.aktif`idir
+       (`bilesenler.css:6656`). İlk yazımda `secili` diye ikinci bir ad
+       uydurmuştum — kanonda karşılığı olan bir duruma yeni ad açmak, bu
+       turda üçüncü kez yakalanan desen. */
+    cip.className = 'cip aktif';
+    cip.setAttribute('data-deger', deger);
+    cip.textContent = deger;
+    var x = document.createElement('button');
+    x.type = 'button'; x.className = 'cip-sil';
+    x.setAttribute('aria-label', deger + ' seçimini kaldır');
+    x.innerHTML = '<i class="fa-solid fa-xmark" aria-hidden="true"></i>';
+    cip.appendChild(x);
+    csCipKap(kap).appendChild(cip);
+    csYaz(kap);
+    return true;
+  }
+
+  function csYuzey(kap) {
+    var y = kap.querySelector('.acilir-yuzey');
+    if (!y) {
+      y = document.createElement('div');
+      y.className = 'acilir-yuzey'; y.setAttribute('role', 'listbox'); y.hidden = true;
+      kap.appendChild(y);
+    }
+    if (!y.id) y.id = 'cs-' + (kap.id || Math.random().toString(36).slice(2, 8));
+    return y;
+  }
+
+  function csAc(kap, q) {
+    var girdi = kap.querySelector('.acilir-arama');
+    var y = csYuzey(kap);
+    var kaynak = csSecenekler(kap);
+    var secili = csDegerler(kap);
+    y.innerHTML = '';
+
+    if (kaynak) {
+      var qq = (q || '').toLocaleLowerCase('tr');
+      var uyan = kaynak.filter(function (o) {
+        return secili.indexOf(o) === -1 &&
+               (!qq || o.toLocaleLowerCase('tr').indexOf(qq) !== -1);
+      });
+      if (!uyan.length) {
+        /* 🔴 BOŞ SONUÇ SESSİZ KALMAZ — kaç kayıtta arandığı yazılır.
+           "hiç yok" ile "aramadım" aynı görünmemeli. */
+        var bos = document.createElement('div');
+        bos.className = 'acilir-bos';
+        bos.textContent = q
+          ? '“' + q + '” ' + kaynak.length + ' kayıtta bulunamadı'
+          : 'Seçilebilecek kayıt kalmadı';
+        y.appendChild(bos);
+      } else {
+        uyan.slice(0, 50).forEach(function (o) {
+          var k = document.createElement('button');
+          k.type = 'button'; k.className = 'acilir-kalem';
+          k.setAttribute('role', 'option'); k.setAttribute('data-cs-deger', o);
+          k.textContent = o;
+          y.appendChild(k);
+        });
+      }
+    } else if (q) {
+      var ek = document.createElement('button');
+      ek.type = 'button'; ek.className = 'acilir-kalem';
+      ek.setAttribute('role', 'option'); ek.setAttribute('data-cs-deger', q);
+      ek.textContent = '“' + q + '” ekle';
+      y.appendChild(ek);
+    } else {
+      y.hidden = true;
+      if (girdi) girdi.setAttribute('aria-expanded', 'false');
+      return;
+    }
+    y.hidden = false;
+    if (girdi) {
+      girdi.setAttribute('aria-expanded', 'true');
+      girdi.setAttribute('aria-controls', y.id);
+    }
+  }
+
+  function csKapat(kap) {
+    var y = kap.querySelector('.acilir-yuzey');
+    if (y) y.hidden = true;
+    var g = kap.querySelector('.acilir-arama');
+    if (g) g.setAttribute('aria-expanded', 'false');
+  }
+
+  /* 🔴 ADLANDIRILMIŞ ALAN ANCAK ETKİLEŞİMDE DOĞUYORDU — A1'in 13②'si.
+     `csGizliAlan` yalnız çip eklenince çağrılıyordu; o ana kadar kapta
+     `name` taşıyan hiçbir eleman yoktu ve `formDoldur` alanı `name` ile
+     aradığı için kaydı HİÇ göremiyordu. Belirti "çip doğmuyor"du, kök
+     "alan yok"muş. Kap yüklenirken kurulur; ad `data-ad`dan, yoksa
+     `id`den türer ve markup onu bildirebilir. */
+  function csKur() {
+    document.querySelectorAll('.coklu-secim').forEach(function (kap) {
+      csGizliAlan(kap);
+      csCipKap(kap);
+    });
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', csKur);
+  } else { csKur(); }
+  window.DM_COKLU_KUR = csKur;
+
+  document.addEventListener('input', function (e) {
+    var g = e.target.closest('.coklu-secim .acilir-arama');
+    if (!g) return;
+    csAc(csKap(g), (g.value || '').trim());
+  });
+  /* ⚠ ODAK ÇIKINCA HEPSİNİ KAPATMAK YÜZEYİ TIKLANAMAZ YAPIYORDU.
+     İlk yazım `else` dalında BÜTÜN `.coklu-secim`leri kapatıyordu.
+     Seçeneğe basılınca odak input'tan `<button>`a geçiyor, `focusin`
+     yüzeyi `hidden` yapıyor ve tıklama HİÇ TAMAMLANMIYORDU — ölçümde
+     çıktı: süzgeç çalışıyor, boş sonuç metni doğru, ama çip doğmuyor.
+     Artık yalnız ODAĞIN ÇIKTIĞI kaplar kapanır; odağı İÇİNDE tutan kap
+     açık kalır. Ayrıca `mousedown` engellenir ki input odağı hiç
+     kaybetmesin (etiket girişlerinin bilinen deseni). */
+  document.addEventListener('mousedown', function (e) {
+    if (e.target.closest('.coklu-secim [data-cs-deger]')) e.preventDefault();
+  });
+  document.addEventListener('focusin', function (e) {
+    var g = e.target.closest('.coklu-secim .acilir-arama');
+    if (g) { csAc(csKap(g), (g.value || '').trim()); return; }
+    var icinde = e.target.closest ? e.target.closest('.coklu-secim') : null;
+    document.querySelectorAll('.coklu-secim').forEach(function (k) {
+      if (k !== icinde) csKapat(k);
+    });
+  });
+  document.addEventListener('click', function (e) {
+    var k = e.target.closest('.coklu-secim [data-cs-deger]');
+    if (k) {
+      e.preventDefault();
+      var kap = csKap(k);
+      csEkle(kap, k.getAttribute('data-cs-deger'));
+      var g = kap.querySelector('.acilir-arama');
+      if (g) { g.value = ''; g.focus(); }
+      csAc(kap, '');
+      return;
+    }
+    var sil = e.target.closest('.coklu-secim .cip-sil');
+    if (sil) {
+      e.preventDefault();
+      var kapS = csKap(sil), cip = sil.closest('[data-deger]');
+      if (cip) cip.remove();
+      csYaz(kapS);
+      return;
+    }
+    if (!e.target.closest('.coklu-secim')) {
+      document.querySelectorAll('.coklu-secim').forEach(csKapat);
+    }
+  });
+  document.addEventListener('keydown', function (e) {
+    var g = e.target.closest('.coklu-secim .acilir-arama');
+    if (!g) return;
+    var kap = csKap(g);
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      var ilk = kap.querySelector('.acilir-yuzey [data-cs-deger]');
+      if (ilk) { csEkle(kap, ilk.getAttribute('data-cs-deger')); g.value = ''; csAc(kap, ''); }
+      return;
+    }
+    if (e.key === 'Escape') { csKapat(kap); return; }
+    /* Boş kutuda Geri tuşu son çipi alır — etiket girişlerinin deseni. */
+    if (e.key === 'Backspace' && !g.value) {
+      var cipler = csCipKap(kap).querySelectorAll('[data-deger]');
+      if (cipler.length) { cipler[cipler.length - 1].remove(); csYaz(kap); }
+    }
+  });
+
+
+  /* ═══════════════════════════════════════════════════════════════════
+     19 · DÜZENLEME KİPİ — form kaydın verisiyle DOLU açılır
+     ───────────────────────────────────────────────────────────────────
+     §5b'nin ikinci yarısı. "Düzenle" tam sayfa forma gidiyor (birinci
+     yarı); bu blok o formu DOLDURUR. Doldurmadan gitmek yarım iştir:
+     boş bir "yeni kayıt" formu da "forma gitti" sayılır ama düzenleme
+     yapılamaz.
+
+     🔴 VERİ TABLODAN TÜRETİLMEZ. Kaldırılan satır panelinin kusuru tam
+        buydu: `thead` başlıklarını alan adı sayıyordu. Tablo bir SÜTUN
+        SEÇKİSİ gösterir, kaydın tam alanlarını değil. Bunun yerine form
+        sayfası kendi kayıtlarını BİLDİRİR:
+
+        <script type="application/json" data-kayitlar>
+          { "boyun": { "ad": "Boyun (Baş çevirici)", "latin": "…" } }
+        </script>
+
+        Anahtar adresteki değerdir (`?id=` · `?kas=` · `?c=` · `?slug=` ·
+        `?h=` — hangisi varsa). Alanlar `name` ile eşlenir; `name`i
+        olmayan alan doldurulmaz (uydurma yok).
+
+     ⚠ MAKET SINIRI: bildirilen kayıt kümesi neyse form onu doldurur.
+       Listede olup burada bildirilmemiş bir anahtar gelirse form BOŞ
+       kalmaz — kip yine "düzenle"ye döner, başlık kaydın anahtarını
+       yazar ve alan-yardım satırı bunun bildirilmemiş bir kayıt
+       olduğunu SÖYLER. Sessiz boşluk "veri yok" ile "bildirmedim"i
+       aynı gösterirdi.
+     ═══════════════════════════════════════════════════════════════ */
+  function kayitAnahtari() {
+    var q = new URLSearchParams(location.search);
+    var adaylar = ['id', 'kas', 'c', 'slug', 'h', 'test', 'kod', 'kayit'];
+    for (var i = 0; i < adaylar.length; i++) {
+      var v = q.get(adaylar[i]);
+      if (v) return v;
+    }
+    return null;
+  }
+
+  function formDoldur() {
+    var form = document.querySelector('form');
+    if (!form) return;
+    var anahtar = kayitAnahtari();
+    if (!anahtar) return;                       /* oluştur kipi — dokunma */
+
+    var kaynak = document.querySelector('[data-kayitlar]');
+    var kayit = null;
+    if (kaynak) {
+      try {
+        var hepsi = JSON.parse(kaynak.textContent || '{}');
+        kayit = hepsi[anahtar] || null;
+      } catch (h) { kayit = null; }
+    }
+
+    /* Başlık her hâlde düzenleme kipine döner — hangi kayıtta olduğunu
+       kullanıcı görmeli. */
+    var h1 = document.querySelector('.panel-bas h1');
+    if (h1) {
+      var ad = (kayit && (kayit.ad || kayit.baslik || kayit.terim)) || anahtar;
+      h1.textContent = ad + ' — düzenle';
+    }
+    document.body.classList.add('duzenleme-kipi');
+
+    if (!kayit) {
+      /* Bildirilmemiş kayıt: SESSİZ KALMAZ. */
+      var uyari = document.createElement('div');
+      uyari.className = 'uyari-kutu bilgi-notu';
+      uyari.innerHTML = '<i class="fa-solid fa-circle-info" aria-hidden="true"></i>' +
+        '<div>“' + anahtar + '” kaydının alanları bu panelde tanımlı değil; ' +
+        'form boş açıldı.</div>';
+      var kap = form.querySelector('.form-bolum') || form;
+      kap.insertBefore(uyari, kap.firstChild);
+      return;
+    }
+
+    /* 🔴 BOŞ FORMUN DEMO HATA HÂLİ DOLU KAYDA AİT DEĞİLDİR.
+       Markup "2 alan düzeltilmeli" özetini ve kırmızı kenarları taşıyor;
+       bunlar boş formun gösterimi. Düzenleme kipine geçilince hepsi
+       düşer — doğrulama kullanıcı kaydetmeye basınca yeniden koşar. */
+    form.querySelectorAll('.alan-ozet').forEach(function (o) { o.classList.remove('goster'); });
+    form.querySelectorAll('.alan-hata').forEach(function (o) { o.classList.remove('goster'); o.hidden = true; });
+    form.querySelectorAll('.hatali').forEach(function (o) { o.classList.remove('hatali'); });
+    form.querySelectorAll('[aria-invalid]').forEach(function (o) { o.removeAttribute('aria-invalid'); });
+    Object.keys(kayit).forEach(function (ad) {
+      var deger = kayit[ad];
+      var alanlar = form.querySelectorAll('[name="' + ad + '"], [name="' + ad + '[]"]');
+      /* Çoklu seçim kabı adını `data-ad` ile bildirebilir; bildirmemişse
+         kendi `id`si de aranır (markup değişmeden çalışsın diye). */
+      if (!alanlar.length) {
+        var csK = form.querySelector('.coklu-secim[data-ad="' + ad + '"], .coklu-secim#' + ad);
+        if (csK) alanlar = csK.querySelectorAll('input[data-cs]');
+      }
+      if (!alanlar.length) return;
+
+      /* 🔴 DİZİ DEĞER TEK ALANA YIĞILIYORDU — A2 ölçtü. İlk yazım
+         `alanlar[0]`e virgülle basıyordu: bir kaydın dört adımı tek
+         kutuya yığılıyor, onay kutusu grubunda yalnız ilki işaretleniyordu.
+         Sonuç: `name="x[]"` taşıyan BÜTÜN tekrarlayan bölümler §5b'nin
+         dışında kalıyordu (challenge adımları ve kilometre taşları,
+         antrenör paketleri/belgeleri, program kazanımları, PAR-Q soruları).
+
+         Dizi üç ayrı şekilde karşılanır:
+           · onay kutusu / radyo grubu → değerleri EŞLEŞENLER işaretlenir
+           · tek alanlı tekrarlayıcı   → satır sayısı kayda göre AYARLANIR
+           · fazla/eksik satır          → klonlanır ya da kaldırılır
+         ⚠ Klon aynı `satir-ekle` gövdesinden geçmez (o dal bir olaya
+           bağlı); temizlik burada tekrarlanıyor ve `data-klon-*`
+           bildirimlerine uyuyor. */
+      /* ⚠ ÇİP DALI DİZİ DALINDAN ÖNCE KOŞAR. İlk yazımda sonraya
+         koymuştum ve dizi değer çip dalına HİÇ ULAŞMIYORDU: dizi kolu
+         `ilk.value = deger.join(', ')` ile bitiyor, gizli alan doluyor
+         ama kullanıcı hiçbir çip görmüyordu. Belirti aynıydı, kök
+         sıralamaydı — ölçüm gösterdi (gizli "Quadriceps, Gluteus",
+         görünen çip 0). */
+      /* 🔴 ÇOKLU SEÇİM ÇİP DOĞURMUYORDU — A1 ölçtü: `formDoldur` gizli
+         alanın değerini yazıyor, `csEkle` çağrılmıyordu; yani kayıt
+         yükleniyor ama kullanıcı hiçbir çip GÖRMÜYORDU. Değer kutusu
+         `.coklu-secim` kabındaysa çipler kurulur. */
+      var csAlan = alanlar[0];
+      if (csAlan && csAlan.hasAttribute && csAlan.hasAttribute('data-cs')) {
+        var csKabi = csAlan.closest('.coklu-secim');
+        if (csKabi) {
+          var cipKabi = csKabi.querySelector('.cipler');
+          if (cipKabi) cipKabi.innerHTML = '';
+          var degerler = Array.isArray(deger) ? deger : String(deger).split(',');
+          degerler.forEach(function (v) {
+            v = String(v).trim();
+            if (!v) return;
+            var cip = document.createElement('span');
+            cip.className = 'cip aktif';
+            cip.setAttribute('data-deger', v);
+            cip.textContent = v;
+            var x = document.createElement('button');
+            x.type = 'button'; x.className = 'cip-sil';
+            x.setAttribute('aria-label', v + ' seçimini kaldır');
+            x.innerHTML = '<i class="fa-solid fa-xmark" aria-hidden="true"></i>';
+            cip.appendChild(x);
+            (cipKabi || csKabi).appendChild(cip);
+          });
+          csAlan.value = degerler.map(function (v) { return String(v).trim(); }).filter(Boolean).join(',');
+          return;
+        }
+      }
+      if (Array.isArray(deger)) {
+        var ilk = alanlar[0];
+        /* a · onay kutusu / radyo grubu */
+        if (ilk.type === 'checkbox' || ilk.type === 'radio') {
+          [].forEach.call(alanlar, function (k) {
+            k.checked = deger.map(String).indexOf(String(k.value)) !== -1;
+          });
+          return;
+        }
+        /* b · tekrarlayıcı — satır sayısını kayda eşitle */
+        var satir = ilk.closest('.adim-karti, .kalem-satiri, tr');
+        var kap = satir && satir.parentNode;
+        if (satir && kap) {
+          var mevcut = [].filter.call(kap.children, function (c) {
+            return c.querySelector('[name="' + ad + '[]"]');
+          });
+          while (mevcut.length < deger.length) {
+            var kopya = mevcut[mevcut.length - 1].cloneNode(true);
+            kopya.querySelectorAll('[data-klon-sil]').forEach(function (x) { x.remove(); });
+            kopya.querySelectorAll('[data-klon-metin]').forEach(function (x) { x.textContent = ''; });
+            kopya.querySelectorAll('input, textarea').forEach(function (x) {
+              if (x.type === 'checkbox' || x.type === 'radio') x.checked = false; else x.value = '';
+            });
+            kap.appendChild(kopya);
+            mevcut.push(kopya);
+          }
+          /* 🔴 TEKRARLAYICI TEK SATIRIN ALTINA İNEMİYORDU — A1 ölçtü:
+             kaynağında o bölüm OLMAYAN kayıt maket satırını görüyordu
+             (`?id=hareket-rehberi-v1` CTA'da üç demo kartı). Boş dizi
+             bildirmek de çözmüyordu. Artık tek satıra inilir ve o satır
+             BOŞALTILIR — kap durur, içi kaydın gerçeğini söyler. */
+          while (mevcut.length > Math.max(deger.length, 1)) {
+            mevcut.pop().remove();
+          }
+          if (!deger.length && mevcut[0]) {
+            mevcut[0].querySelectorAll('input, textarea').forEach(function (x) {
+              if (x.type === 'hidden') return;
+              if (x.type === 'checkbox' || x.type === 'radio') x.checked = false; else x.value = '';
+            });
+            mevcut[0].querySelectorAll('select').forEach(function (x) { x.selectedIndex = 0; });
+          }
+          deger.forEach(function (v, i) {
+            var g = mevcut[i] && mevcut[i].querySelector('[name="' + ad + '[]"]');
+            if (g) g.value = String(v);
+          });
+          if (window.DM_LISTE_TAZELE) window.DM_LISTE_TAZELE(kap);
+          return;
+        }
+        /* c · tekrarlayıcı değil, çok değerli tek alan → virgülle */
+        ilk.value = deger.join(', ');
+        ilk.dispatchEvent(new Event('input', { bubbles: true }));
+        return;
+      }
+      if (alanlar.length > 1 && alanlar[0].type === 'radio') {
+        [].forEach.call(alanlar, function (r) { r.checked = (r.value === String(deger)); });
+        return;
+      }
+      var el = alanlar[0];
+      if (el.type === 'checkbox') { el.checked = !!deger; return; }
+      if (el.tagName === 'SELECT') {
+        var bulundu = false;
+        [].forEach.call(el.options, function (o) {
+          if (o.value === String(deger) || (o.textContent || '').trim() === String(deger)) {
+            el.value = o.value; bulundu = true;
+          }
+        });
+        if (!bulundu && el.options.length) el.selectedIndex = 0;
+        return;
+      }
+      el.value = Array.isArray(deger) ? deger.join(', ') : String(deger);
+      /* 🔴 DOLAN ALANIN ÜSTÜNDE HATA DURMAZ — A1 ölçtü: `?id=aerobik`de
+         alan "Aerobik" ile doluyken kırmızı kenar, "Terim zorunlu." ve
+         "2 alan düzeltilmeli" özeti duruyordu. Markup boş formun hata
+         hâlini taşıyor; dolduran taraf onu düşürmezse form DOLU KAYDIN
+         ÜSTÜNDE YALAN SÖYLER. */
+      /* ⚠ `hataSil` `.alan` KABINI bekler, girdiyi değil — ilk yazımda
+         girdiyi geçirdim ve sessizce hiçbir şey olmadı (konsol da temiz
+         kaldı, çünkü `classList.remove` her elemanda çalışır). Ayrıca
+         markup hatayı `hidden` ile değil `.goster` sınıfıyla açıyor. */
+      /* ⚠ `hataSil`i ÇAĞIRMIYORUM: o işlev BİRİNCİ IIFE'de, burası
+         üçüncüsü — çağrı `ReferenceError` atıyor ve doldurma DÖNGÜNÜN
+         ORTASINDA kesiliyordu. Belirti sinsiydi: başlık değişiyor (döngüden
+         önce), alanlar dolmuyor, sayaç tazelenmiyor ve `DM_FORM_DOLDUR`
+         export'u hiç çalışmıyordu — konsolu dinlemeyen bir ölçüm bunu
+         "sayaç kusuru" diye okur. Bu turda üçüncü kapsam tuzağı
+         (kayıtlı vaka: `duzAc` 1.'de, `panel-ac` 2.'de).
+         Temizlik burada, kapsam gerektirmeden yapılıyor. */
+      var kapAlan = el.closest && el.closest('.alan');
+      if (kapAlan) {
+        kapAlan.classList.remove('hatali');
+        kapAlan.querySelectorAll('.alan-hata').forEach(function (x) {
+          x.classList.remove('goster'); x.hidden = true;
+        });
+      }
+      el.classList.remove('hatali');
+      el.removeAttribute('aria-invalid');
+      el.removeAttribute('aria-describedby');
+      el.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+  }
+
+  /* ═══════════════════════════════════════════════════════════════════
+     19b · KARAKTER SAYACI — `data-say-for`
+     ───────────────────────────────────────────────────────────────────
+     🔴 SÜRÜCÜSÜ HİÇ YOKTU. A1 "sayaç tazelenmiyor" diye bildirdi; sebep
+     `formDoldur`un `input` olayını yollamaması DEĞİL — `data-say-for`
+     niteliğini ne `admin-kit.js` ne `_ortak/panel.js` okuyordu. Markup
+     "0 / 80" yazıp duruyordu ve KULLANICI YAZARKEN DE hiç değişmiyordu.
+     `.coklu-secim`le aynı sınıf: markup bir vaat ediyor, tutan yok.
+     Sayı değişir, birim/ek korunur ("0 / 60 önerilen" → "42 / 60 önerilen"). */
+  function sayacTazele(el) {
+    if (!el || !el.id) return;
+    var s = document.querySelector('.alan-sayac[data-say-for="' + el.id + '"]');
+    if (!s) return;
+    var uzun = (el.value || '').length;
+    var enCok = el.getAttribute('maxlength');
+    var ek = (s.textContent || '').replace(/^\s*\d+\s*\/\s*\d+\s*/, '').trim();
+    s.textContent = uzun + (enCok ? ' / ' + enCok : '') + (ek ? ' ' + ek : '');
+    /* Sınıra yaklaşınca uyarır — sayı tek başına okunmaz. */
+    if (enCok) s.classList.toggle('dolu', uzun >= Number(enCok) * 0.9);
+  }
+  document.addEventListener('input', function (e) {
+    if (e.target && e.target.id) sayacTazele(e.target);
+  });
+  function sayaclariTazele() {
+    document.querySelectorAll('.alan-sayac[data-say-for]').forEach(function (s) {
+      sayacTazele(document.getElementById(s.getAttribute('data-say-for')));
+    });
+  }
+  window.DM_SAYAC_TAZELE = sayaclariTazele;
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function () { formDoldur(); sayaclariTazele(); });
+  } else { formDoldur(); sayaclariTazele(); }
+  window.DM_FORM_DOLDUR = formDoldur;
+
+
+  /* ═══════════════════════════════════════════════════════════════════
+     20 · SABİT EYLEM ÇUBUĞU — sayfada TEK olanı işaretle
+     ───────────────────────────────────────────────────────────────────
+     Sözleşme §6: "Sayfanın hiçbir yerinde ikinci eylem seti yoktur" ve
+     sabitlenen ÇUBUK SAYFANIN SON çubuğudur.
+
+     🔴 CSS BUNU SEÇEMİYOR. Kural `:last-of-type` ile yazılmıştı; o
+     seçici KARDEŞLER arasında son olanı bulur, oysa çubuklar farklı
+     ebeveynlerde duruyor. Ölçüldü: `admin-ayarlar`da SEKİZ `.form-eylem`
+     var ve birden fazlası `position:fixed` alıyor — üst üste binen
+     çubuklar alttakinin düğmelerini örtüyor. (Kuralın kendi yorumu
+     "`:last-of-type` yetmez, `:has()` ile yazılıyor" diyordu ama CSS
+     öyle yazılmamıştı — yorum koda değil NİYETE bakıyordu.)
+
+     "Belgede en son" bir CSS sorusu değil, bir DOM sorusudur; kit
+     işaretler, CSS o işarete bakar. Markup üretilmiyor — var olan
+     elemana sınıf yazılıyor (K22 sınırının doğru tarafı).
+     ⚠ Bu, sayfada birden çok eylem çubuğu OLMASINI meşrulaştırmaz;
+       fazlalık bir markup kusurudur ve ayrıca sayılır.
+     ═══════════════════════════════════════════════════════════════ */
+  function eylemCubuguIsaretle() {
+    var hepsi = [].slice.call(document.querySelectorAll('.panel-sayfa .form-eylem'));
+    if (!hepsi.length) return;
+    hepsi.forEach(function (c) { c.classList.remove('cubuk-sabit'); });
+    /* ⚠ "DOM'DA SON" SEKMELİ SAYFADA YANLIŞ ÖLÇÜT. `admin-ayarlar`ın
+       altı çubuğu altı SEKMEYE ait ve aynı anda yalnız biri görünür;
+       DOM'da sonuncuyu sabitlemek, kullanıcı ikinci sekmedeyken
+       GÖRÜNMEYEN bir çubuğu sabitlemek demekti. Ölçüt görünürlüktür:
+       sabitlenen, o an EKRANDA olan son çubuktur. Sekme değişince
+       yeniden hesaplanır — durum, sayfanın değil görünümün durumudur. */
+    var gorunur = hepsi.filter(function (c) {
+      return c.offsetParent !== null || c.classList.contains('cubuk-sabit');
+    });
+    (gorunur.length ? gorunur : hepsi).slice(-1)[0].classList.add('cubuk-sabit');
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', eylemCubuguIsaretle);
+  } else { eylemCubuguIsaretle(); }
+  /* Sekme değişimi görünürlüğü değiştirir → işaret yeniden hesaplanır.
+     `_ortak/panel.js` sekmeyi `[role="tab"]` üzerinden sürüyor; kit onun
+     sözleşmesine DOKUNMADAN yalnız sonrasını dinliyor. */
+  document.addEventListener('click', function (e) {
+    if (e.target.closest('[role="tab"], .form-sekme, .sekme')) {
+      setTimeout(eylemCubuguIsaretle, 0);
+    }
+  });
+  window.DM_EYLEM_CUBUGU = eylemCubuguIsaretle;
+
+
+  /* ═══════════════════════════════════════════════════════════════════
+     22 · ADRESTEN GELEN SÜZGEÇ — `?<alan>=<deger>`
+     ───────────────────────────────────────────────────────────────────
+     🔴 YARIM KALAN BAĞ. B kulvarı 21 düğmeyi gerçek ekrana bağladı
+     ("… teriminin kullanıldığı içerikleri gör" → `admin-hareketler.html
+     ?taksonomi=<terim>"), ölçtü: **panel-içi 21/21, süzgeç 0/21**.
+     Ekran tam listeyi açıyor — sanki hiç soru sorulmamış gibi. Doğru
+     ekrana gitmek, doğru SORUYU sormakla aynı şey değil.
+     §11 sayfa başına JS'i yasakladığı için okuyucu kite ait.
+
+     Sözleşme: adresteki her `<alan>=<deger>` çifti için şeritte
+     `data-varsayilan="<Alan>"` taşıyan süzgeç bulunur, `data-deger`i
+     eşleşen çipi seçilir ve `suzgecTazele()` koşar.
+     🔴 EŞLEŞEN SATIR YOKSA SESSİZ KALINMAZ: liste "«X» için kayıt yok"
+        boş durumuna düşer. "Hiç yok" ile "süzgeci okumadım" aynı
+        görünmemeli — bu turda dört kez yandığımız desen.
+     ⚠ Kayıt anahtarları (`id` ve kardeşleri) süzgeç DEĞİLDİR, atlanır. */
+  var SUZGEC_DISI = ['id', 'kas', 'c', 'slug', 'h', 'test', 'kod', 'kayit'];
+
+  function adrestenSuzgec() {
+    var cubuk = document.querySelector('.suzgec-cubuk');
+    if (!cubuk) return;
+    var q = new URLSearchParams(location.search);
+    var uygulanan = [];
+    q.forEach(function (deger, alan) {
+      if (SUZGEC_DISI.indexOf(alan) !== -1 || !deger) return;
+      var hedef = null;
+      cubuk.querySelectorAll('[data-suzgec]').forEach(function (t) {
+        var ad = (t.getAttribute('data-varsayilan') || t.getAttribute('data-suzgec') || '')
+                   .toLocaleLowerCase('tr');
+        if (ad === alan.toLocaleLowerCase('tr')) hedef = t;
+      });
+      if (!hedef) return;
+      /* Çipi seç — açılırın kendi tıklama yolundan geçmeden, ama aynı
+         durumu bırakarak (tetikteki etiket + `data-deger`). */
+      var yuzeyId = hedef.getAttribute('aria-controls');
+      var yuzey = yuzeyId && document.getElementById(yuzeyId);
+      var secildi = false;
+      if (yuzey) {
+        yuzey.querySelectorAll('[data-deger]').forEach(function (k) {
+          var esit = (k.getAttribute('data-deger') || '').toLocaleLowerCase('tr') ===
+                     deger.toLocaleLowerCase('tr') ||
+                     (k.textContent || '').trim().toLocaleLowerCase('tr') ===
+                     deger.toLocaleLowerCase('tr');
+          k.classList.toggle('aktif', esit);
+          k.setAttribute('aria-checked', String(esit));
+          if (esit) {
+            secildi = true;
+            hedef.setAttribute('data-deger', k.getAttribute('data-deger') || deger);
+            var et = hedef.querySelector('[data-rol="etiket"]') || hedef.querySelector('span');
+            if (et) et.textContent = (k.textContent || deger).trim();
+          }
+        });
+      }
+      if (!secildi) {
+        /* Çip yoksa süzgeç yine uygulanır — değer doğrudan yazılır. */
+        hedef.setAttribute('data-deger', deger);
+        var et2 = hedef.querySelector('[data-rol="etiket"]') || hedef.querySelector('span');
+        if (et2) et2.textContent = deger;
+      }
+      uygulanan.push(alan + ': ' + deger);
+    });
+    if (!uygulanan.length) return;
+    if (window.DM_SUZGEC_TAZELE) window.DM_SUZGEC_TAZELE();
+    /* Süzgecin nereden geldiği GÖRÜNÜR olmalı — kullanıcı listeyi eksik
+       sanmasın. Şeridin sayacının yanına bir bildirim düşer. */
+    var not = document.createElement('p');
+    not.className = 'suzgec-adres-notu';
+    not.setAttribute('role', 'status');
+    var tablo = document.querySelector('.tablo tbody, table tbody');
+    var kalan = tablo ? [].filter.call(tablo.rows, function (r) { return !r.hidden; }).length : null;
+    not.innerHTML = '<i class="fa-solid fa-filter" aria-hidden="true"></i> ' +
+      'Bu liste <b>' + uygulanan.join(' · ') + '</b> süzgeciyle açıldı' +
+      (kalan === 0 ? ' — <b>eşleşen kayıt yok.</b>' : (kalan !== null ? ' · ' + kalan + ' kayıt.' : '.')) +
+      ' <button type="button" class="dugme hayalet" data-eylem="suzgec-temizle">Süzgeci kaldır</button>';
+    cubuk.insertAdjacentElement('afterend', not);
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', adrestenSuzgec);
+  } else { adrestenSuzgec(); }
 
 })();
