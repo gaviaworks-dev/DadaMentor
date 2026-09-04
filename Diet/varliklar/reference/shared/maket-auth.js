@@ -24,7 +24,7 @@
     if (!uyeGorunum) return;
 
     b.classList.add('is-auth');
-    if (!b.getAttribute('data-roles')) b.setAttribute('data-roles', 'kullanici');
+    if (!b.getAttribute('data-roles')) b.setAttribute('data-roles', 'kullanici hizmet');
 
     /* Avatar — canlının misafir render'ında BOŞ. Sitenin kendi geleneği:
        fotoğrafsız avatar baş harf gösterir (kanon ekranında da "D").
