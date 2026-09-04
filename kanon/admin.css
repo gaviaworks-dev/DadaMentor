@@ -1812,12 +1812,40 @@
      3.9182:1 (patron dosyasının kaydıyla birebir), Gavia izi 0.9180:1.
    ─────────────────────────────────────────────────────────────────────── */
 
+/* 🔴 YOL SATIR İÇİ DEĞİŞKENDE TUTULAMAZ — canlıda ölçüldü, 2026-09-04.
+   Kelime markası `style="--marka-logo:url('../../kanon/varlik/…')"`
+   ile veriliyordu. Göreli `url()` bir ÖZEL DEĞİŞKENDE taşındığında
+   BELGEYE göre değil, değişkeni KULLANAN STİL DOSYASINA göre çözülüyor:
+
+       yerel   belge /deneme/admin-fit/  ·  css /kanon/admin.css
+               ikisi de → /kanon/varlik/…            ✅ TESADÜFEN AYNI
+       canlı   belge /DadaMentor/Fit/admin/ · css /DadaMentor/kanon/admin.css
+               belgeye göre → /DadaMentor/kanon/varlik/…   (doğru)
+               css'e göre   → /kanon/varlik/…              404 🔴
+
+   Ölçüldü: canlı sayfa `https://…/kanon/varlik/dadafit-kelime.svg`
+   istiyor ve 404 alıyor; Gavia imzası AYNI SAYFADA çalışıyor çünkü onun
+   `url()`i zaten admin.css'in İÇİNDE.
+   ⚠ Kusur yerelde GÖRÜNMEZ — iki taban aynı adrese çıkıyor. "Yerelde
+     çalışıyor" bir yol kanıtı değildir.
+
+   ÇÖZÜM: yol admin.css'in içinde yaşar (orada `varlik/…` her iki
+   ortamda da doğru çözülür), marka `<body data-marka>` ile seçilir. */
 .yetkili .panel-marka::before{
   content:""; display:block;
   height:20px; width:calc(20px * 3.9182);      /* ölçülen en/boy */
   background:currentColor;
-  -webkit-mask:var(--marka-logo) no-repeat center / contain;
-          mask:var(--marka-logo) no-repeat center / contain;
+  -webkit-mask-repeat:no-repeat; mask-repeat:no-repeat;
+  -webkit-mask-position:center;  mask-position:center;
+  -webkit-mask-size:contain;     mask-size:contain;
+}
+.yetkili[data-marka="fit"]     .panel-marka::before{ -webkit-mask-image:url(varlik/dadafit-kelime.svg);     mask-image:url(varlik/dadafit-kelime.svg); }
+.yetkili[data-marka="gastro"]  .panel-marka::before{ -webkit-mask-image:url(varlik/dadagastro-kelime.svg);  mask-image:url(varlik/dadagastro-kelime.svg); }
+.yetkili[data-marka="diet"]    .panel-marka::before{ -webkit-mask-image:url(varlik/dadadiet-kelime.svg);    mask-image:url(varlik/dadadiet-kelime.svg); }
+.yetkili[data-marka="gourmet"] .panel-marka::before{ -webkit-mask-image:url(varlik/dadagourmet-kelime.svg); mask-image:url(varlik/dadagourmet-kelime.svg); }
+/* Geçiş: `data-marka` henüz yazılmamış ekranlar eski değişkeni kullanır. */
+.yetkili:not([data-marka]) .panel-marka::before{
+  -webkit-mask-image:var(--marka-logo); mask-image:var(--marka-logo);
 }
 .yetkili .panel-ray-imza::before{
   content:""; display:block;
