@@ -8,7 +8,7 @@
   var overlay=document.getElementById('fbOverlay');
   if(!tab||!modal)return;
   var form=document.getElementById('fbForm');
-  var success=document.getElementById('fbSuccess');
+  var success=document.getElementById('fbBasari');
   var release=null;
   /* 🔴 BAŞLANGIÇ DURUMU ZORLANIR — ölçülmüş kusur.
      Maket sayfalarında modal ACILIYOR ama ICI BOS geliyordu: panel 131px,
