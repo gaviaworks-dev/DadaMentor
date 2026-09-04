@@ -1,0 +1,1645 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8" />
+  <meta name="robots" content="noindex, nofollow" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>DadaFit — Ana Sayfa · Beslenme ve Hareket Köprüsü</title>
+<link rel="icon" type="image/svg+xml" href="../kanon/varlik/dadafit-isaret.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="../kanon/varlik/dadafit-isaret-32.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="../kanon/varlik/dadafit-isaret-180.png" />
+<!-- FontAwesome 6.5.2 (kilitli ikon seti) -->
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+      integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+      crossorigin="anonymous" referrerpolicy="no-referrer" />
+<!-- DadaFit ortak kabuk (tek kaynak) -->
+<!-- KANON · yukleme sirasi: tokenlar -> markalar/fit (bilesenler YUKLENMEZ) -->
+<link rel="stylesheet" href="../kanon/tokenlar.css" />
+<link rel="stylesheet" href="../kanon/markalar/fit.css" />
+<link rel="stylesheet" href="assets/css/fit-shell.css" />
+<link rel="stylesheet" href="assets/css/fit-mesaj.css" />
+<style>
+/* =====================================================================
+ _SHELL.HTML — KANONİK İSKELET (anasayfa-portal-v3a.html'den BİREBİR)
+ Token + tipografi + utilities + topbar + header + mega menü (KİLİTLİ)
+ + footer + drawer/bottom-nav + çerez/görüş modal + ortak JS.
+ Yeni sayfa = bu dosyanın kopyası; SAYFA İÇERİĞİ bloğu doldurulur,
+ sayfa-spesifik CSS "SAYFA CSS" işaretinin altına eklenir.
+ Header varsayılan KATI; hero'lu sayfa ?hdr=hero benzeri davranış için
+ JS'teki heroMode bayrağını açar.
+ ===================================================================== */
+
+/* ============ GERÇEK SİTE FONTU: Gilroy-Medium — TEK YÜZ (eski site DNA'sı) ============
+ Eski site (main.css): @font-face myBrandFont = Gilroy-Medium.ttf, universal reset ile
+ başlık/gövde/buton dahil HER eleman bu tek yüzle render olur; 600/700 bold'lar
+ tarayıcının sentetik bold'udur. Light/ExtraBold dosyaları klasörde var ama
+ eski site CSS'i hiç yüklemez — bu yüzden burada da yalnız Medium yüklenir. */
+
+   
+    
+
+            
+
+ 
+
+/* sayfa genel: yeşil eyebrow (fit bölümleri) */
+.sec-fit .eyebrow{color:var(--fit-deep)}
+.sec-fit .eyebrow::before{background:var(--fit)}
+/* ----- Sayfa-içi hareket/program arama (DadaFit yeşili) ----- */
+.df-search{margin:0 0 22px;display:flex;align-items:center;gap:12px;max-width:560px;background:var(--paper);border:1px solid var(--fit-line);border-radius:var(--radius-md);padding:0 16px;transition:border-color .2s var(--ease),box-shadow .2s var(--ease)}
+.df-search:focus-within{border-color:var(--fit);box-shadow:0 0 0 3px var(--fit-tint)}
+.df-search>i{color:var(--fit-deep);font-size:15px}
+.df-search input{flex:1;border:none;background:transparent;font-family:inherit;font-weight:500;font-size:15px;color:var(--slate);padding:14px 0;outline:none}
+.df-search input::placeholder{color:#a7a7a7;font-weight:500}
+.df-search .dfs-clear{flex:none;width:28px;height:28px;border:none;background:transparent;color:var(--muted);font-size:14px;cursor:pointer;border-radius:var(--radius-circle);display:none;place-items:center;transition:.16s var(--ease)}
+.df-search .dfs-clear:hover{background:var(--fit-tint);color:var(--fit-deep)}
+.df-search.has-q .dfs-clear{display:grid}
+.df-scount{margin:0 0 22px;font-size:13.5px;font-weight:500;color:var(--muted);display:none}
+.df-scount.show{display:block}
+.df-scount b{color:var(--fit-deep);font-weight:700}
+/* arama aktifken kart/bölüm süzme + dekoratif filtre/kategori gizle */
+.hub-card.dfs-hide{display:none}
+.df-searchable.dfs-sec-hide{display:none}
+body.df-searching .df-searchable .sec-tools{visibility:hidden}
+body.df-searching #kutuphane .df-filterbar,body.df-searching #kutuphane .df-fcards{display:none}
+.df-noresult{display:none;padding:46px 20px 4px;text-align:center;color:var(--muted)}
+.df-noresult.show{display:block}
+.df-noresult i{font-size:32px;color:var(--fit);opacity:.62;margin-bottom:13px;display:block}
+.df-noresult b{display:block;font-size:18px;color:var(--slate);margin-bottom:5px}
+.df-noresult span{font-size:14px}
+
+/* ============ 1 · HERO — koyu band, yeşil aksan, sağda Enerji Defteri ============ */
+/* hero zemini: gerçek video (autoplay/muted/loop) + koyu #211E16 overlay.
+ Video .df-hero-media içinde absolute; overlay'lar ::after ile video ÜSTÜNDE;
+ içerik .wrap z-index:2 ile en üstte. Poster = foto (video gelene kadar). */
+/* BANNER KURALI: min-height:100vh kaldirildi — bant icerik yuksekliginde, %50 sinirinin altinda */
+.df-top{position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:center;padding-top:112px;padding-bottom:24px;background:linear-gradient(180deg,#211E16,#1b1913)}
+.df-hero-media{position:absolute;inset:0;z-index:0;background:#1b1913}
+.df-hero-media video{width:100%;height:100%;object-fit:cover;object-position:center 28%;filter:saturate(.68) contrast(1.02);display:block}
+.df-hero-media::after{content:"";position:absolute;inset:0;background:
+  radial-gradient(820px 360px at 84% 14%,color-mix(in srgb, var(--marka) 20%, transparent),transparent 62%),
+  linear-gradient(90deg,rgba(33,30,22,.93) 0%,rgba(29,26,20,.80) 46%,rgba(27,25,19,.56) 100%),
+  linear-gradient(180deg,rgba(33,30,22,0) 56%,rgba(24,22,16,.9) 100%);}
+.df-top .wrap{position:relative;z-index:2}
+/* R26 — dikiş binmesi ekran sınırına denk geliyordu: kabuk `#kopru`yü
+ `.fit-seam.is-onbanner{margin-top:calc(var(--seam-r) * -1)}` ile 22px yukarı
+ çekiyor (assets/css/fit-shell.css); hero tam viewport (`--hero-full:100dvh`)
+ olduğunda o 22px'lik binme ekranın dibinde beyaz şerit olarak görünüyordu.
+ Dikiş kuralına DOKUNULMADI (50 sayfada ortak) — yalnız BU sayfada hero'nun
+ tabanı binmeyi kapsayacak kadar uzatıldı, aynı özgüllükte (KARARLAR K-c). */
+body[data-fit-hero="1"] .df-top{
+  min-height:calc(100vh + var(--seam-r));    /* yedek: dvh bilmeyen tarayıcı */
+  min-height:calc(100dvh + var(--seam-r));   /* dinamik görüntü alanı */
+}
+/* ince üst nefes + breadcrumb */
+.df-crumb{display:flex;align-items:center;gap:9px;font-size:12.5px;font-weight:600;color:#a99;margin-top:16px}
+.df-crumb a{color:#b8afa3;transition:.2s}
+.df-crumb a:hover{color:var(--fit-bright)}
+.df-crumb i{font-size:9px;color:rgba(255,255,255,.32)}
+.df-crumb b{color:#fff;font-weight:700}
+.df-hero{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:54px;align-items:center;padding:30px 0 56px}
+.df-hmain{min-width:0}
+.df-hmain .eyebrow{color:var(--fit-bright)}
+.df-hmain .eyebrow::before{background:var(--fit)}
+.df-hmain h1{color:#fff;font-size:46px;line-height:1.08;letter-spacing:-.03em;margin:16px 0 14px}
+.df-hmain h1 .accent{color:var(--fit-bright)}
+.df-hmain .lead{color:#d9d2c8;font-weight:500;font-size:16px;max-width:520px;line-height:1.6}
+.df-hcta{display:flex;gap:12px;flex-wrap:wrap;margin-top:26px}
+.df-hcta .btn{padding:14px 24px}
+.df-hcta .btn-line{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.26)}
+.df-hcta .btn-line:hover{border-color:#fff;background:rgba(255,255,255,.07);transform:translateY(-2px)}
+.df-htrust{display:flex;align-items:center;gap:18px;margin-top:24px;flex-wrap:wrap}
+.df-htrust span{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:#b7b0a6}
+.df-htrust i{color:var(--fit-bright);font-size:13px}
+
+/* --- SIGNATURE: Enerji Defteri (al↔harca; iki ayrı bağlam, desatüre, etiket baskın) --- */
+.df-ledger{
+  background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.03));
+  border:1px solid rgba(255,255,255,.12);border-radius:var(--radius-xl);
+  padding:26px;box-shadow:0 24px 60px rgba(0,0,0,.34);backdrop-filter:blur(6px);
+}
+.dl-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px}
+.dl-head h3{color:#fff;font-size:16.5px;letter-spacing:-.01em}
+.dl-head .dl-date{font-size:11.5px;font-weight:700;color:#cbb;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);padding:5px 11px;border-radius:var(--radius-sm);letter-spacing:.02em}
+.dl-row{padding:14px 0}
+.dl-row+.dl-row{border-top:1px solid rgba(255,255,255,.08)}
+.dl-rowtop{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.dl-tag{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+.dl-tag i{width:24px;height:24px;border-radius:var(--radius-sm);display:grid;place-items:center;font-size:12px}
+.dl-row.in .dl-tag{color:#f0b3a4}
+.dl-row.in .dl-tag i{background:rgba(225,72,39,.16);color:#ef7d63}
+.dl-row.out .dl-tag{color:var(--marka-parlak-3)}
+.dl-row.out .dl-tag i{background:color-mix(in srgb, var(--marka) 18%, transparent);color:var(--marka-parlak-2)}
+.dl-val{margin-left:auto;font-size:21px;font-weight:700;color:#fff;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.dl-val small{font-size:11px;font-weight:600;color:#9a9389;margin-left:4px}
+.dl-bar{height:9px;border-radius:var(--radius-pill);background:rgba(255,255,255,.07);overflow:hidden}
+.dl-fill{height:100%;border-radius:var(--radius-pill)}
+.dl-row.in .dl-fill{background:linear-gradient(90deg,rgba(225,72,39,.42),rgba(225,72,39,.62))}
+.dl-row.out .dl-fill{background:linear-gradient(90deg,color-mix(in srgb, var(--marka) 55%, transparent),color-mix(in srgb, var(--marka) 85%, transparent))}
+.dl-net{display:flex;align-items:center;gap:12px;margin-top:18px;padding:14px 16px;border-radius:var(--radius-lg);background:color-mix(in srgb, var(--marka) 12%, transparent);border:1px solid color-mix(in srgb, var(--marka) 28%, transparent)}
+.dl-net i{flex:none;width:34px;height:34px;border-radius:var(--radius-md);background:color-mix(in srgb, var(--marka) 22%, transparent);color:var(--marka-parlak-2);display:grid;place-items:center;font-size:14px}
+.dl-net b{display:block;font-size:13.5px;color:#fff;font-weight:700}
+.dl-net span{display:block;font-size:12px;color:#aeb8af;font-weight:500;margin-top:1px}
+
+/* ============ 2 · KÖPRÜ (kalp) — beyaz bölüm + tek koyu feature kart ============ */
+.df-bridge-card{
+  position:relative;overflow:hidden;border-radius:var(--radius-xl);padding:44px;
+  background:
+    radial-gradient(620px 280px at 88% 10%,color-mix(in srgb, var(--marka) 22%, transparent),transparent 58%),
+    linear-gradient(110deg,rgba(33,30,22,.97) 42%,rgba(33,30,22,.74) 100%),
+    linear-gradient(180deg,rgba(33,30,22,.6),rgba(27,25,19,.85)),
+    url('https://images.unsplash.com/photo-1574680096145-d05b474e2155?w=1200&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-14');
+  background-size:cover;background-position:right center;
+  display:grid;grid-template-columns:1.05fr .95fr;gap:48px;align-items:center;
+}
+.df-bc-main .eyebrow{color:var(--fit-bright)}
+.df-bc-main .eyebrow::before{background:var(--fit)}
+.df-bc-main h2{color:#fff;font-size:30px;letter-spacing:-.02em;margin:14px 0 12px}
+.df-bc-main p{color:#cfc8be;font-weight:500;font-size:15px;line-height:1.65;max-width:440px;margin-bottom:24px}
+.df-bc-steps{display:flex;flex-direction:column;gap:12px}
+.df-bc-step{display:flex;align-items:center;gap:14px}
+.df-bc-step .n{flex:none;width:34px;height:34px;border-radius:var(--radius-md);background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);display:grid;place-items:center;color:var(--fit-bright);font-size:13px}
+.df-bc-step b{font-size:14px;color:#fff;font-weight:700;display:block}
+.df-bc-step span{font-size:12.5px;color:#a9a297;font-weight:500}
+/* sağ taraf: yemek↔hareket köprü çağrısı (tomato CTA = yemek ucu) */
+.df-bc-side{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:var(--radius-lg);padding:22px}
+.df-bc-side .sd-q{font-size:14px;font-weight:700;color:#fff;display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.df-bc-side .sd-q i{color:#ef7d63}
+.df-bc-side .sd-d{font-size:13px;color:#b3aca2;font-weight:500;line-height:1.6;margin-bottom:18px}
+.df-bc-side .btn{width:100%}
+.df-bc-side .btn-food{background:var(--food);color:#fff}
+.df-bc-side .btn-food:hover{background:#c93d20;transform:translateY(-2px)}
+.df-bc-side .sd-alt{display:block;text-align:center;margin-top:12px;font-size:13px;font-weight:700;color:var(--fit-bright)}
+.df-bc-side .sd-alt:hover{text-decoration:underline;text-underline-offset:3px}
+
+/* ============ 3 · EGZERSİZ KÜTÜPHANESİ — filtre + örnek kartlar ============ */
+.df-filterbar{display:flex;align-items:center;flex-wrap:wrap;gap:9px;margin-bottom:24px}
+/* ---- R8/21: filtre satiri + arama tek hizada (arama SAGDA) ----
+ align-items:flex-start → iki kutunun UST KENARI ayni y'de (kabul olcutu: fark 0).
+ Filtre satirina min-height veriyoruz ki 35 px'lik cip serisi 48 px'lik arama
+ kutusuna gorsel olarak ortalansin — hiza olcumu bozulmadan. */
+/* ================= R8/24 · ANTRENMAN OLUSTURUCU ONIZLEMESI =================
+ Koyu band bilerek: sayfadaki tek CALISAN motor bu: katalog degil arac.
+ Ustundeki §3 beyaz, altindaki §4 krem — koyu band ikisini de ayirir,
+ ayrica hero'nun (#211E16 → #1b1913) dilini geri getirir.
+ Numaralandirma burada mesru: adimlar GERCEKTEN sirali (motor bu sirayla soruyor). */
+#olusturucu{background:linear-gradient(180deg,#211E16,#1b1913)}
+.ao-prev{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:44px;align-items:center}
+.ao-main .eyebrow{color:var(--fit-bright,var(--marka-parlak-2))}
+.ao-main h2{color:#fff;font-size:34px;letter-spacing:-.01em;line-height:1.16}
+.ao-main .lead{color:rgba(255,255,255,.76);max-width:560px;margin-top:12px}
+.ao-steps{list-style:none;display:flex;flex-wrap:wrap;gap:9px;margin:22px 0 24px;padding:0;counter-reset:none}
+.ao-steps li{display:inline-flex;align-items:center;gap:8px;padding:7px 13px 7px 7px;
+  border:1px solid rgba(255,255,255,.16);border-radius:var(--radius-pill);
+  color:rgba(255,255,255,.86);font-size:12.5px;font-weight:600;line-height:1}
+.ao-steps .n{display:grid;place-items:center;width:20px;height:20px;border-radius:var(--radius-circle);
+  background:color-mix(in srgb, var(--marka) 26%, transparent);color:#75d4ff;font-size:11px;font-weight:800}
+
+.ao-cikti{display:block;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.15);
+  border-radius:var(--radius-lg);padding:20px;color:#fff}
+.ao-cikti-top{display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding-bottom:14px;margin-bottom:14px;border-bottom:1px solid rgba(255,255,255,.13)}
+.ao-cikti-top b{font-size:13.5px;color:rgba(255,255,255,.9)}
+.ao-rozet{display:inline-flex;align-items:center;gap:6px;font-size:10.5px;font-weight:800;
+  letter-spacing:.07em;text-transform:uppercase;color:#75d4ff}
+.ao-gunler{display:grid;gap:9px}
+.ao-gun{display:block;background:rgba(255,255,255,.05);border-radius:var(--radius-md);
+  padding:11px 14px;font-size:14px;font-weight:700;color:#fff}
+.ao-gun i{display:block;font-style:normal;font-size:10.5px;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:rgba(255,255,255,.46);margin-bottom:3px}
+.ao-gun small{display:block;font-size:12px;font-weight:500;color:rgba(255,255,255,.6);margin-top:2px}
+@media (max-width:900px){ .ao-prev{grid-template-columns:minmax(0,1fr);gap:26px} }
+@media (max-width:640px){ .ao-main h2{font-size:26px} .ao-steps{gap:7px} }
+
+/* ---- R8/22: "Kopru Is Basinda" ustune DadaGastro marka kilidi ----
+ Renk kabuktan degil, DadaGastro'nun literal marka rengi (#E14827) —
+ bu sayfada --fit YESIL'e swap'li, var(--fit) kullanilsaydi amblem yesil cikardi
+ (ayni gerekce fit-shell.css:1211 .bs-gastro'da yazili). */
+.eyebrow-gastro{display:inline-flex;align-items:center;gap:9px;flex-wrap:wrap}
+.dg-mark{display:inline-flex;align-items:center;gap:6px;padding:3px 9px;border-radius:var(--radius-sm);
+  background:rgba(225,72,39,.10);border:1px solid rgba(225,72,39,.30);color:#E14827;line-height:1}
+.dg-mark i{font-size:11.5px}
+.dg-wm{font-size:11.5px;letter-spacing:.01em;text-transform:none}
+.dg-wm b{font-weight:800}
+.dg-wm em{font-style:normal;font-weight:400}
+@media (max-width:640px){ .eyebrow-gastro{gap:7px} .dg-mark{padding:3px 7px} }
+.df-toolrow{display:flex;align-items:flex-start;gap:20px;margin:0 0 24px}
+.df-toolrow .df-filterbar{flex:1 1 auto;min-width:0;min-height:48px;margin:0}
+.df-toolrow .df-search{flex:0 0 clamp(260px,30%,380px);margin:0}
+/* arama aktifken filtre gizlenince kutu saga yapisik kalsin */
+body.df-searching #kutuphane .df-toolrow{justify-content:flex-end}
+.df-filterbar .lbl{font-size:13px;font-weight:600;color:var(--muted);margin-right:4px}
+.df-fchip{font-size:13px;font-weight:600;color:var(--slate);background:var(--paper);border:1px solid var(--line);padding:9px 16px;border-radius:var(--radius-sm);cursor:pointer;transition:.18s var(--ease)}
+.df-fchip:hover{border-color:var(--fit);color:var(--fit-deep);background:var(--fit-tint)}
+.df-fchip.on{border-color:var(--fit);color:#fff;background:var(--fit)}
+/* filtre kategori kısayolları — calc-card dili, ikon tile (fotosuz) */
+.df-fcards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:34px}
+.df-fcard{display:flex;align-items:center;gap:14px;padding:18px;background:var(--paper);border:1px solid var(--fit-line);border-radius:var(--radius-lg);cursor:pointer;transition:.25s var(--ease)}
+.df-fcard:hover{transform:translateY(-4px);border-color:var(--fit);box-shadow:var(--sh-md)}
+.df-fcard .fc-ico{flex:none;width:50px;height:50px;border-radius:var(--radius-lg);background:var(--fit-tint);display:grid;place-items:center;color:var(--fit-deep);font-size:21px}
+.df-fcard h4{font-size:16px;margin-bottom:2px}
+.df-fcard p{font-size:12.5px;color:var(--muted);font-weight:500}
+.df-fcard .go{margin-left:auto;color:var(--fit-deep);font-size:13px;transition:.2s var(--ease)}
+.df-fcard:hover .go{transform:translateX(3px)}
+
+/* HUB KARTLARI (egzersiz + program) — saglik hub-card dili, yeşil aksan */
+.hub-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px}
+.hub-grid.cols3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.hub-media{position:relative;height:168px;background-size:cover;background-position:center}
+.hub-media::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(33,30,22,0) 50%,rgba(20,18,12,.55))}
+/* fotosuz ikon-tile varyant (egzersiz fallback) */
+.hub-media.icon{display:grid;place-items:center;background:linear-gradient(160deg,var(--marka-yikama-koyu),#e6f3ec)}
+.hub-media.icon::after{display:none}
+.hub-media.icon i{font-size:46px;color:var(--fit);opacity:.85}
+.hub-cat{position:absolute;top:12px;left:12px;z-index:2;background:rgba(255,255,255,.94);color:var(--slate);font-size:11.5px;font-weight:700;padding:6px 12px;border-radius:var(--radius-sm);letter-spacing:.02em}
+.hub-cat.fit{background:var(--fit);color:#fff}
+.hub-tags{position:absolute;bottom:12px;left:12px;z-index:2;display:flex;gap:6px;flex-wrap:wrap}
+.hub-tag{display:inline-flex;align-items:center;gap:5px;background:rgba(20,18,12,.72);color:#fff;font-size:11px;font-weight:700;padding:6px 10px;border-radius:var(--radius-sm);backdrop-filter:blur(4px)}
+/* .hub-pro kopyası S1 ile kaldırıldı: bu sayfada Pro rozeti taşıyan kart kalmadı,
+   kural ölü kalıyordu. Kabuktaki tek kaynak (fit-shell.css) duruyor — onu
+   video-seans-detay-v1 hâlâ kullanıyor. */
+.hub-body{padding:18px;display:flex;flex-direction:column;flex:1}
+.hub-body h4{font-size:16.5px;margin-bottom:8px;letter-spacing:-.01em}
+.hub-card:hover .hub-body h4{color:var(--fit-deep)}
+.hub-body p{font-size:13.5px;color:var(--muted);font-weight:500;line-height:1.55}
+.hub-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:auto;padding-top:14px;margin-top:16px;border-top:1px solid var(--line);font-size:12.5px;color:var(--muted);font-weight:500}
+.hub-foot .go{display:inline-flex;align-items:center;gap:7px;color:var(--fit-deep);font-weight:700}
+.hub-card:hover .hub-foot .go i{transform:translateX(3px)}
+.hub-foot .go i{transition:.2s var(--ease)}
+
+/* ============ 5 · CHALLENGE — koyu panel (diet-panel dili, yeşil) ============ */
+.df-chal{
+  position:relative;overflow:hidden;border-radius:var(--radius-xl);padding:46px;color:#fff;
+  background:
+    radial-gradient(560px 300px at 90% 0%,color-mix(in srgb, var(--marka) 26%, transparent),transparent 60%),
+    linear-gradient(110deg,rgba(33,30,22,.96) 46%,rgba(33,30,22,.64) 100%),
+    linear-gradient(180deg,rgba(33,30,22,.5),rgba(27,25,19,.86)),
+    url('https://images.unsplash.com/photo-1487956382158-bb926046304a?w=1280&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-14');
+  background-size:cover;background-position:right center;
+  display:grid;grid-template-columns:1fr .9fr;gap:48px;align-items:center;
+}
+.df-chal .eyebrow{color:var(--fit-bright)}
+.df-chal .eyebrow::before{background:var(--fit)}
+.df-chal h2{color:#fff;font-size:30px;letter-spacing:-.02em;margin:14px 0 12px}
+.df-chal p{color:#cfc8be;font-weight:500;font-size:15px;line-height:1.65;max-width:430px;margin-bottom:24px}
+.df-chal-meta{display:flex;gap:28px;margin-bottom:26px}
+.df-chal-meta .cm b{display:block;font-size:23px;font-weight:700;color:#fff;font-variant-numeric:tabular-nums;line-height:1.1}
+.df-chal-meta .cm span{font-size:12px;color:#a9a297;font-weight:500}
+.df-chal .btn-fit{box-shadow:0 10px 26px color-mix(in srgb, var(--marka) 32%, transparent)}
+/* sağ: 30 gün rozet ızgarası (rozet/XP bağı) */
+.df-days{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:var(--radius-lg);padding:22px}
+.df-days .dd-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;font-size:12.5px;font-weight:600;color:#b3aca2}
+.df-days .dd-top b{color:var(--fit-bright);font-weight:700}
+.df-daygrid{display:grid;grid-template-columns:repeat(10,1fr);gap:7px}
+.df-day{aspect-ratio:1;border-radius:var(--radius-sm);background:rgba(255,255,255,.07);display:grid;place-items:center;font-size:10px;font-weight:700;color:#857e74}
+.df-day.done{background:var(--fit);color:#fff}
+.df-day.today{background:color-mix(in srgb, var(--marka) 20%, transparent);color:#fff;border:1.5px solid var(--fit-bright)}
+
+/* ============ 6 · TDEE KÖPRÜ KARTI — kcal-bands + bridge satırları ============ */
+.df-tdee{position:relative;overflow:hidden;display:grid;grid-template-columns:1fr 1fr;gap:32px;color:#fff;border:none;border-radius:var(--radius-xl);padding:40px;box-shadow:var(--sh-md);
+  background:
+    radial-gradient(560px 260px at 92% 6%,color-mix(in srgb, var(--marka) 26%, transparent),transparent 60%),
+    linear-gradient(110deg,rgba(33,30,22,.96) 44%,rgba(33,30,22,.66) 100%),
+    linear-gradient(180deg,rgba(33,30,22,.5),rgba(27,25,19,.86)),
+    url('https://images.unsplash.com/photo-1502224562085-639556652f33?w=1280&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-14');
+  background-size:cover;background-position:right center}
+.df-tdee>div{position:relative;z-index:2}
+.df-tdee-l h3{font-size:22px;letter-spacing:-.02em;margin:12px 0 10px}
+.df-tdee-l p{font-size:14px;color:var(--muted);font-weight:500;line-height:1.6;margin-bottom:18px;max-width:380px}
+.res-num{font-size:46px;font-weight:700;color:var(--slate);font-variant-numeric:tabular-nums;letter-spacing:-.03em;line-height:1}
+.res-num small{font-size:15px;font-weight:600;color:var(--muted);margin-left:6px}
+.res-cap{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;font-weight:700;color:var(--fit-deep);background:var(--fit-tint);padding:7px 13px;border-radius:var(--radius-sm);margin-top:14px}
+.kcal-bands{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:20px}
+.kb{padding:14px 12px;border:1px solid var(--line);border-radius:var(--radius-md);text-align:center;background:var(--bg-white);transition:.2s var(--ease)}
+.kb i{font-size:14px;color:var(--muted)}
+.kb b{display:block;font-size:18px;font-weight:700;color:var(--slate);font-variant-numeric:tabular-nums;margin:5px 0 2px}
+.kb b small{font-size:10px;font-weight:600;color:var(--muted);margin-left:2px}
+.kb span{font-size:11px;color:var(--muted);font-weight:600}
+.kb.on{border-color:var(--fit);background:var(--fit-tint)}
+.kb.on i,.kb.on span{color:var(--fit-deep)}
+.df-tdee-r{display:flex;flex-direction:column;gap:12px;justify-content:center}
+.df-burnadd{display:flex;align-items:center;gap:13px;padding:15px 16px;border:1px dashed var(--fit-line);border-radius:var(--radius-md);background:var(--fit-tint)}
+.df-burnadd i{flex:none;width:40px;height:40px;border-radius:var(--radius-md);background:#fff;color:var(--fit-deep);display:grid;place-items:center;font-size:16px}
+.df-burnadd b{display:block;font-size:14px;color:var(--slate);font-weight:700}
+.df-burnadd span{display:block;font-size:12px;color:var(--slate-2);font-weight:500;margin-top:1px}
+.bridge{display:flex;align-items:center;gap:14px;padding:14px 16px;border:1px solid var(--line);border-radius:var(--radius-md);background:var(--bg-white);transition:.2s var(--ease)}
+.bridge:hover{border-color:var(--fit);transform:translateX(3px)}
+.br-ico{flex:none;width:40px;height:40px;border-radius:var(--radius-md);background:var(--fit-tint);color:var(--fit-deep);display:grid;place-items:center;font-size:16px}
+.br-txt{flex:1;min-width:0}
+.br-txt b{display:block;font-size:14px;color:var(--slate);font-weight:700}
+.br-txt span{display:block;font-size:12px;color:var(--muted);font-weight:500;margin-top:1px}
+.br-go{flex:none;color:var(--fit-deep);font-weight:700;font-size:13px;display:inline-flex;align-items:center;gap:7px}
+.bridge:hover .br-go i{transform:translateX(3px)}
+.br-go i{transition:.2s var(--ease)}
+
+/* ============ 7 · ANTRENÖR teaser (P1) — sertifika rozeti ============ */
+/* R11/M3 · 4'lü antrenör kartı ızgarası (Beyar: "4'lü yani").
+   Kartlar artık dizindeki full-görsel portre kart; ızgara ona göre. */
+.df-coach-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
+/* Etiket şeridi — M12'deki deyimin aynısı (tek satır + yatay kaydırma).
+   Dizin sayfasında taşan etiketi "+2" rozetine çeviren `data-tagrow` motoru
+   var; hub teaser'ında o motor YOK, bu yüzden `.coach-tags{height:30px}`
+   kutusunda çift satırlık çip sıkışıyordu. Kabuktaki kural DEĞİŞTİRİLMEDİ
+   (dizini bozmamak için) — özgüllük sayfa tarafında yükseltildi. */
+#antrenor .coach-tags{
+  flex-wrap:nowrap;overflow-x:auto;scroll-snap-type:x proximity;
+  scrollbar-width:none;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;
+  -webkit-mask-image:linear-gradient(to right,#000 calc(100% - 22px),transparent);
+  mask-image:linear-gradient(to right,#000 calc(100% - 22px),transparent);
+}
+#antrenor .coach-tags::-webkit-scrollbar{display:none}
+#antrenor .coach-tags span{flex:none;scroll-snap-align:start;white-space:nowrap}
+.df-coach{display:flex;flex-direction:column;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);padding:22px;transition:.25s var(--ease)}
+.df-coach:hover{border-color:var(--fit-line);box-shadow:var(--sh-md);transform:translateY(-4px)}
+.df-coach-top{display:flex;align-items:center;gap:14px;margin-bottom:14px}
+.df-coach-av{flex:none;width:56px;height:56px;border-radius:var(--radius-circle);background-size:cover;background-position:center;border:2px solid var(--fit-line)}
+.df-coach-top b{display:block;font-size:16px;color:var(--slate);font-weight:700}
+.df-coach-top span{display:block;font-size:12.5px;color:var(--muted);font-weight:500;margin-top:1px}
+.df-cert{display:inline-flex;align-items:center;gap:7px;font-size:11.5px;font-weight:700;color:var(--fit-deep);background:var(--fit-tint);border:1px solid var(--fit-line);padding:6px 11px;border-radius:var(--radius-sm);align-self:flex-start;margin-bottom:13px}
+.df-coach-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
+.df-coach-tags span{font-size:11.5px;font-weight:600;color:var(--slate-2);background:var(--bg);border:1px solid var(--line);padding:5px 11px;border-radius:var(--radius-sm)}
+.df-coach .btn{margin-top:auto}
+.df-coach-join{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;background:var(--fit-tint);border:1px solid var(--fit-line);border-radius:var(--radius-lg);padding:22px 26px;margin-top:4px}
+.df-coach-join b{font-size:16px;color:var(--slate)}
+.df-coach-join p{font-size:13px;color:var(--slate-2);font-weight:500;margin-top:2px}
+
+/* ============ 8 · PRO-GATE teaser — free vs Pro (pro-v1 dili) ============ */
+.df-pro-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.demo-card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);padding:24px;box-shadow:var(--sh-sm)}
+.dc-tag{display:inline-flex;align-items:center;gap:7px;font-size:11.5px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;padding:5px 11px;border-radius:var(--radius-sm);margin-bottom:14px}
+.dc-tag.free{background:var(--fit-tint);color:var(--fit-deep)}
+.dc-tag.paid{background:var(--fit-wash);color:var(--fit)}
+.demo-card h3{font-size:17px;color:var(--slate);margin-bottom:6px}
+.demo-card>p{font-size:13.5px;color:var(--muted);font-weight:500;line-height:1.6;margin-bottom:18px}
+.demo-list{display:flex;flex-direction:column;gap:10px}
+.free-row{display:flex;align-items:center;gap:12px;padding:13px 15px;border:1px solid var(--fit-line);border-radius:var(--radius-md);background:var(--bg-white)}
+.free-row i{flex:none;width:38px;height:38px;border-radius:var(--radius-md);background:var(--fit-tint);color:var(--fit-deep);display:grid;place-items:center;font-size:15px}
+.free-row b{display:block;font-size:14px;color:var(--slate);font-weight:700}
+.free-row span{display:block;font-size:12px;color:var(--muted);font-weight:500;margin-top:1px}
+.locked-row{display:flex;align-items:center;gap:14px;padding:14px 15px;border:1px dashed #d8cfc6;border-radius:var(--radius-md);background:linear-gradient(180deg,#fff,#fdf8f5);cursor:pointer;transition:.2s var(--ease);width:100%;text-align:left;font:inherit}
+.locked-row:hover{border-color:var(--fit);box-shadow:var(--sh-sm)}
+.locked-ico{flex:none;width:38px;height:38px;border-radius:var(--radius-md);background:var(--fit-wash);color:var(--fit);display:grid;place-items:center;font-size:15px}
+.locked-body{flex:1;min-width:0}
+.locked-body b{display:block;font-size:14px;color:var(--slate);font-weight:700}
+.locked-body span{display:block;font-size:12px;color:var(--muted);font-weight:500;margin-top:1px}
+.pro-pill{flex:none;display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:800;letter-spacing:.03em;text-transform:uppercase;color:#8a6410;background:linear-gradient(180deg,#fbe6b4,#f3d178);border:1px solid #e0bc63;padding:5px 10px;border-radius:var(--radius-sm)}
+.demo-note{font-size:12px;color:var(--muted);font-weight:500;line-height:1.55;margin-top:14px;display:flex;gap:8px}
+.demo-note i{margin-top:2px;flex:none;color:var(--fit-deep)}
+
+/* ============ 9 · KAPANIŞ CTA — ince koyu bookend ============ */
+.df-cta{
+  position:relative;overflow:hidden;text-align:center;color:#fff;
+  background:
+    radial-gradient(640px 300px at 50% 0%,color-mix(in srgb, var(--marka) 30%, transparent),transparent 62%),
+    linear-gradient(180deg,rgba(33,30,22,.86) 0%,rgba(29,26,20,.9) 55%,rgba(24,22,16,.95) 100%),
+    url('https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=1600&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-14');
+  background-size:cover;background-position:center 35%;
+}
+.df-cta>.wrap{position:relative;z-index:2}
+.df-cta .eyebrow{color:var(--fit-bright);justify-content:center}
+.df-cta .eyebrow::before{background:var(--fit)}
+.df-cta h2{color:#fff;font-size:30px;letter-spacing:-.02em;margin:14px 0 12px}
+.df-cta p{color:#cfc8be;font-weight:500;font-size:15px;max-width:480px;margin:0 auto 24px;line-height:1.6}
+.df-cta-acts{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.df-cta-acts .btn-line{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.26)}
+.df-cta-acts .btn-line:hover{border-color:#fff;background:rgba(255,255,255,.07);transform:translateY(-2px)}
+
+/* ---- PRO-GATE modal (pro-v1 F1 — ücretli kilit) ---- */
+
+/* ============ İMZA DİLİ YAYILIMI — full görsel + yeşil gradient + cam panel ============ */
+
+/* --- TDEE köprü kartı: imza koyu-yeşil-görsel-cam varyantı (gunluk-kalori bağı) --- */
+.df-tdee .eyebrow{color:var(--fit-bright)}
+.df-tdee .eyebrow::before{background:var(--fit)}
+.df-tdee .res-num{color:#fff}
+.df-tdee .res-num small{color:#b9c2ba}
+.df-tdee .res-cap{background:color-mix(in srgb, var(--marka) 20%, transparent);color:var(--marka-parlak-3)}
+.df-tdee .kb{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.12)}
+.df-tdee .kb b{color:#fff}
+.df-tdee .kb i,.df-tdee .kb b small,.df-tdee .kb span{color:#c7cfc8}
+.df-tdee .kb.on{background:color-mix(in srgb, var(--marka) 20%, transparent);border-color:var(--fit)}
+.df-tdee .kb.on i,.df-tdee .kb.on span{color:var(--marka-parlak-3)}
+.df-tdee .df-burnadd{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.16)}
+.df-tdee .df-burnadd i{background:color-mix(in srgb, var(--marka) 22%, transparent);color:var(--marka-parlak-3)}
+.df-tdee .df-burnadd b{color:#fff}
+.df-tdee .df-burnadd span{color:#b9c2ba}
+.df-tdee .bridge{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.12)}
+.df-tdee .bridge:hover{border-color:var(--fit-bright);transform:translateX(3px)}
+.df-tdee .br-ico{background:color-mix(in srgb, var(--marka) 22%, transparent);color:var(--marka-parlak-3)}
+.df-tdee .br-txt b{color:#fff}
+.df-tdee .br-txt span{color:#b9c2ba}
+.df-tdee .br-go{color:var(--marka-parlak-3)}
+
+/* --- "Hedefin ne?" hedef seçici — full görsel kartlar + yeşil gradient --- */
+.df-goals{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.df-goal{position:relative;display:flex;align-items:flex-end;min-height:290px;border-radius:var(--radius-lg);overflow:hidden;background-size:cover;background-position:center;cursor:pointer;transition:.3s var(--ease)}
+.df-goal::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(33,30,22,.12) 28%,rgba(0,74,112,.6) 70%,rgba(0,52,80,.86));transition:.3s var(--ease)}
+.df-goal:hover{transform:translateY(-6px);box-shadow:var(--sh-lg)}
+.df-goal:hover::after{background:linear-gradient(180deg,rgba(33,30,22,.12) 18%,rgba(0,106,161,.62) 64%,rgba(0,77,118,.92))}
+.df-goal-in{position:relative;z-index:2;padding:22px;width:100%}
+.df-goal .gl-ico{width:44px;height:44px;border-radius:var(--radius-md);background:color-mix(in srgb, var(--marka) 92%, transparent);display:grid;place-items:center;color:#fff;font-size:18px;margin-bottom:13px}
+.df-goal h4{color:#fff;font-size:19px;letter-spacing:-.01em;margin-bottom:4px}
+.df-goal p{color:rgba(255,255,255,.84);font-size:12.5px;font-weight:500;line-height:1.45}
+.df-goal .gl-go{display:inline-flex;align-items:center;gap:7px;margin-top:13px;font-size:12.5px;font-weight:700;color:var(--marka-parlak-3)}
+.df-goal .gl-go i{transition:.2s var(--ease)}
+.df-goal:hover .gl-go i{transform:translateX(3px)}
+
+/* --- Beslenme × Hareket combo — spor görseli + yeşil gradient + cam yemek paneli --- */
+/* ---- R11/M2+M16 · TARİF BANDI: sabit görselli parallax bölüm ----
+   Kabuk yalnız düzeneği kuruyor (fit-shell.css/js "PARALLAX BAND");
+   hangi görsel ve hangi perde olacağını band burada bildiriyor.
+
+   R11/M16 · Beyar: "burada DadaGastro'nun rengi olması lazım, burada Fit
+   rengi var." Bölüm DadaGastro köprüsü; perde ve vurgular Fit yeşilinden
+   Gastro'nun marka rengine (#E14827) çevrildi.
+   Perdenin kendisi koyu KALIYOR — metin beyaz, kontrast şart; yeşil yerine
+   sıcak koyu (kavrulmuş) tona geçti, üstündeki turuncu vurgu onunla oturuyor.
+   `--gs` = bu bölümün marka rengi; tek yerden döner. */
+.df-recipe-band{
+  position:relative;
+  --gs:#E14827;                       /* DadaGastro marka rengi (literal —
+                                         bu sayfada --fit YEŞİL'e swap'lı) */
+  --gs-light:#ff8a68;                 /* koyu zeminde okunan açık tonu */
+  background:#241611;                 /* görsel yüklenene kadarki zemin */
+  --px-img:url('https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=1800&q=80&auto=format&fit=crop&sat=-14');
+  --px-veil:linear-gradient(180deg,rgba(30,17,12,.88) 0%,rgba(36,22,15,.74) 46%,rgba(24,14,10,.92) 100%);
+  --px-y:42%;
+}
+.df-recipe-band .sec-head h2{color:#fff}
+.df-recipe-band .sec-head .lead{color:rgba(255,255,255,.80)}
+.df-recipe-band .eyebrow-gastro{color:#fff}
+/* R11/M16 · Beyar: "etiket DadaGastro zaten ama FILLED TAG CHIP ile yapılmış,
+   taglı olmasın DÜZ olsun." Zemin/kenarlık/dolgu kalktı; marka kilidi
+   (Dada kalın + Gastro ince) duruyor, koyu bandda okunan açık tona geçti. */
+.df-recipe-band .dg-mark{
+  background:none;border:none;padding:0;border-radius:0;
+  color:var(--gs-light);
+}
+/* ---- R13/K16 · MARKA LOCKUP'I: ayraç rengi + hiyerarşi ----
+   (a) Ayraç çizgisi. Kabuktaki taban `.eyebrow::before{background:currentColor}`
+   idi; bu sayfanın 43. satırındaki `.sec-fit .eyebrow::before{background:var(--fit)}`
+   onu eziyordu → çizgi FİT YEŞİLİ çıkıyordu (ölçüldü: rgb(0,157,79)).
+   Beyar: "ayraç çizgisi DadaGastro renginde olsun (yeşil değil)" ve
+   "marka rengini kardeş markanın canlı sitesinden ölç".
+   ÖLÇÜM (iki bağımsız yöntem, dadagastro.com/tarifler canlı):
+     1) hesaplanmış stil `.r-facts i` → rgb(225,72,39)
+     2) `build/assets/tokens-CKdF8VGW.css` → `:root{--tomato:#E14827}`
+   İkisi de #E14827. Depodaki `--gs` literali zaten bu; yeni renk uydurulmadı.
+   Beyar açık tonu (#ff8a68, kontrast 6.18:1) değil SAF marka rengini seçti
+   (S13); koyu bandda ölçülen kontrast 3.51:1 — metin değil, dekoratif
+   çizgi olduğu için WCAG 1.4.11'in metin-dışı 3:1 eşiğinin üstünde.
+   (b) Hiyerarşi. Ölçüm: "DadaGastro" 11.5px, "KÖPRÜ İŞ BAŞINDA" 12px —
+   yani marka yazısı komşusundan KÜÇÜKTÜ. Beyar: marka büyük ve belirgin,
+   kuyruk yazısı ondan küçük. Marka 16px'e çıktı, kuyruk 10.5px'e indi
+   (oran 1 : 1.52). "Gastro" ağırlığı 400 → 300: referansın kendi
+   amblemiyle parite (`dadagastro.com` `.brand-word` → Dada 800 / Gastro 300,
+   canlıdan ölçüldü). */
+.df-recipe-band .eyebrow-gastro::before{background:var(--gs)}
+.df-recipe-band .eyebrow-gastro{gap:12px}
+.df-recipe-band .dg-mark i{font-size:15px}
+.df-recipe-band .dg-wm{font-size:16px;letter-spacing:-.01em}
+.df-recipe-band .dg-wm em{font-weight:300}
+.df-recipe-band .eb-tail{font-size:10.5px;letter-spacing:.18em;color:rgba(255,255,255,.72)}
+/* .see-all kabukta DOLU BEYAZ hap (`background:var(--paper)`); koyu bandın
+   üstünde beyaz kutu içinde beyaz metin = görünmez düğme oldu. Banner CTA'sı
+   için kabuğun kendi camsı dili var (`.lib-cta-ghost`) — aynı dil burada da
+   kullanıldı, yeni bir görünüm uydurulmadı. */
+.df-recipe-band .see-all{
+  color:#fff;background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.26);
+  -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
+}
+.df-recipe-band .see-all:hover{
+  background:rgba(225,72,39,.92);border-color:var(--gs);color:#fff;
+}
+/* wrap içeriği sabit görselin ÜSTÜNDE kalsın (.px-clip z-index:-1) */
+.df-recipe-band>.wrap{position:relative;z-index:1}
+/* ---- R11/M16 · TARİF KARTI (R27'de zemin opak beyaza çevrildi) ----
+   Yapı kardeş markadan ÖLÇÜLEREK alındı (dadagastro.com `.r-card`,
+   REVIZYON-12.md R27'de canlıdan tekrar ölçüldü, 2026-08-24):
+     .r-card {border:1px solid var(--line);border-radius:var(--radius-lg);
+              overflow:hidden;box-shadow:var(--sh-sm)}    -- R27: --line/--sh-sm zaten referansla birebir
+     .r-media{height:200px;background-size:cover}
+     .r-chip {position:absolute;top:13px;left:13px;background:#fffffff0;
+              font-size:11.5px;font-weight:700;padding:6px 12px}
+     .r-body {padding:17px 18px 19px}
+     .r-body h4{font-size:18px;margin-bottom:11px}
+     .r-facts{font-size:12.5px;color:var(--muted);margin-bottom:13px}
+     .r-foot {margin-top:auto;padding-top:13px;border-top:1px solid var(--line)}
+   R27 · Lead K-a: bant koyu KALIYOR, kart camsıdan OPAK BEYAZA döndü —
+   zemin/kenarlık/gölge artık --bg-white/--line/--sh-sm (ÜÇÜ DE referansla
+   birebir), metin renkleri koyu zemine göre --slate/--muted'e çevrildi.
+   "Tarifi Gör" ve hover Fit paletinde kaldı (--fit-deep/--fit) — bandın
+   Gastro turuncusu (`--gs`) karta sızmadı (K-a: renk DadaFit paletinde).
+   Süre/zorluk/porsiyon/yazar/puan/görüntülenme referansta var ama bu
+   depoda YOK; R11/M16'da uydurulmadığı gibi R27'de de uydurulmadı — gerçek
+   veri (protein/kcal) korundu. */
+/* ---- R13/K15 · KART YAPISI REFERANSA ÇEKİLDİ ----
+   Beyar: "tarif kartları kardeş markanın kalıbına geçsin". Yapı
+   `dadagastro.com/tarifler` CANLIDAN ölçüldü (@1440, 30 kart, hepsi
+   birebir aynı) — hem hesaplanmış stil hem `kart-fMfp465y.css` kaynağıyla:
+     .r-save   38×38 daire · abs 11/11 · rgba(255,255,255,.94) · ikon 15px · z2
+     h4        18px/700 · line-clamp 2 · min/max-height 2lh (kart yüksekliği eşitlenir)
+     h4 a::after inset:0 · z1  → tüm kart tıklanır (stretched link)
+     .r-facts  tek satır nowrap · 12px/500 · ikon 12px · ikon-metin gap 5
+               ayraç: ilk kalemden sonra margin-left:8 + padding-left:8 + border-left 1px
+     .r-foot   margin-top:auto · pt 13 · border-top 1px · space-between · gap 10
+     .av 28×28 daire · ad 12.5px/700 · puan 13px/700 · görüntülenme 12px/500
+     ızgara 3 kolon · gap 24 (@1024 2 · @640 1)
+   RENK DADAFIT PALETİNDE: referans künye ikonlarını ve dolu ₺ işaretini
+   `--tomato` ile boyuyor; burada `--fit-deep`e çevrildi — bandın Gastro
+   turuncusu (`--gs`) karta SİZMEDI. Yıldız `--yellow` (#FAC045): bu DadaFit'in
+   kendi "yalnız puan" token'ı (fit-shell.css:94), Gastro'dan alınma değil. */
+.rc-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px}
+.rc-card{
+  position:relative;                 /* stretched link (`h4 a::after`) için */
+  display:flex;flex-direction:column;overflow:hidden;
+  background:var(--bg-white);border:1px solid var(--line);
+  border-radius:var(--radius-lg);
+  box-shadow:var(--sh-sm);
+  transition:.3s var(--ease);
+}
+.rc-card:hover{transform:translateY(-6px);box-shadow:var(--sh-lg)}
+.rc-media{position:relative;height:200px;background-size:cover;background-position:center;transition:.5s var(--ease)}
+.rc-card:hover .rc-media{transform:scale(1.04)}
+/* kategori çipi — referansın `.r-chip`'i: beyaz hap, sol üst, 6/12 dolgu (opak kartta da değişmedi) */
+.rc-chip{
+  position:absolute;top:13px;left:13px;
+  background:#fffffff0;color:var(--slate);
+  font-size:11.5px;font-weight:700;letter-spacing:.02em;
+  padding:6px 12px;border-radius:var(--radius-sm);
+}
+/* kaydet düğmesi — referansın `.r-save`'i. Referansta POST + `data-lg-gate`;
+   DadaFit'in kendi giriş kapısı zaten aynı kancayı kullanıyor
+   (fit-shell.js `[data-lg-gate]`, 10 sayfada canlı), yeni mekanizma
+   UYDURULMADI. z-index:2 → stretched link'in üstünde kalır. */
+.rc-save{
+  position:absolute;top:11px;right:11px;z-index:2;
+  width:38px;height:38px;border:0;border-radius:var(--radius-circle);
+  background:#fffffff0;color:var(--slate);font-size:15px;
+  display:grid;place-items:center;cursor:pointer;
+  transition:background .2s var(--ease),transform .2s var(--ease);
+}
+.rc-save:hover{background:#fff;transform:scale(1.06)}
+.rc-save:focus-visible{outline:3px solid var(--fit);outline-offset:2px}
+.rc-body{padding:17px 18px 19px;display:flex;flex-direction:column;flex:1}
+/* başlık iki satıra sabitlenir — referansın kart yükseklikleri bu yüzden
+   tek değer (363px). `2lh` desteklenmeyen tarayıcıda em karşılığına düşer. */
+/* Kırpma: referansta kural İKİ yerde — h4'te ve içindeki `a`da. Çalışan
+   `a`dakidir: `.rc-body` bir flex kabı olduğu için h4 flex kalemidir ve
+   tarayıcı onun `-webkit-box` değerini bloka çeviriyor (ölçüldü: h4'ün
+   hesaplanmış `display`i hem burada hem Gastro'da `flow-root`). Burada
+   yalnız `overflow:hidden` + 2lh vardı: iki satırı aşan başlık üç nokta
+   OLMADAN kesiliyordu. Kartın referanstan sapan tek özelliği buydu. */
+.rc-body h4{
+  font-size:18px;color:var(--slate);letter-spacing:-.01em;margin-bottom:11px;
+  overflow:hidden;min-height:2.24em;max-height:2.24em;
+}
+@supports (height:1lh){ .rc-body h4{min-height:2lh;max-height:2lh} }
+.rc-body h4 a{color:inherit;text-decoration:none;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.rc-body h4 a::after{content:"";position:absolute;inset:0;z-index:1}
+.rc-body h4 a:focus-visible{outline:3px solid var(--fit);outline-offset:3px;border-radius:4px}
+/* künye — tek satır, kalemler arası dikey ayraç (referansta gap YOK,
+   ayraç margin-left:8 + padding-left:8 + border-left ile kuruluyor) */
+.rc-facts{display:flex;align-items:center;flex-wrap:nowrap;
+  font-size:12px;font-weight:500;color:var(--muted);margin-bottom:13px}
+.rc-facts>*{display:flex;align-items:center;gap:5px;flex:none;white-space:nowrap}
+.rc-facts>*+*{margin-left:8px;padding-left:8px;border-left:1px solid var(--line)}
+.rc-facts i{font-size:12px;color:var(--fit-deep)}
+.rc-cost{gap:1px;font-weight:700;letter-spacing:-.02em}
+.rc-cost .rc-on{color:var(--fit-deep)}
+.rc-cost .rc-off{color:#d6d6d6}
+/* alt satır — referansın `.r-foot`'u: yazar solda, puan/görüntülenme sağda */
+.rc-foot{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  margin-top:auto;padding-top:13px;border-top:1px solid var(--line);
+}
+/* referansta `.r-author` bir BAĞLANTI (şef profili) olduğu için z-index:2
+   taşıyor; DadaFit'te şef profili yok, yazar düz metin. z-index verilseydi
+   stretched link'in üstünde kalır ve kartın alt satırı ölü bölge olurdu —
+   ölçüldü (elementFromPoint yazar noktasında <b> döndü, bağlantı değil). */
+.rc-author{display:flex;align-items:center;gap:9px;min-width:0}
+.rc-av{flex:none;width:28px;height:28px;border-radius:var(--radius-circle);
+  background-size:cover;background-position:center;background-color:var(--bg)}
+.rc-author b{font-size:12.5px;font-weight:700;color:var(--slate);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rc-stats{display:flex;align-items:center;gap:12px;flex:none}
+.rc-rate{display:flex;align-items:center;gap:5px;font-size:13px;font-weight:700;color:var(--slate)}
+.rc-rate i{font-size:13px;color:var(--yellow)}
+.rc-views{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:500;color:var(--muted)}
+.rc-views i{font-size:12px}
+/* ÖLÜ KURALLAR — R13/K15'te kartın alt satırı "Tarifi Gör" bağlantısından
+   referansın yazar+puan satırına geçti; kartın kendisi artık stretched link.
+   Kurallar SİLİNMEDİ (kabuk sözleşmesi), geri istenirse hazır dursun. */
+.rc-macro b{color:var(--slate);font-weight:800}
+.rc-go{
+  display:inline-flex;align-items:center;gap:8px;margin-top:auto;padding-top:13px;
+  border-top:1px solid var(--line);
+  font-size:13px;font-weight:700;color:var(--fit-deep);
+}
+.rc-go i{font-size:11px;transition:transform .2s var(--ease)}
+.rc-card:hover .rc-go i{transform:translateX(3px)}
+/* ÖLÜ KURALLAR — R11/M16'da `.df-combo-*` kartları tarif kartına
+   (`.rc-card`) dönüştü. Kurallar SİLİNMEDİ, kütüğe yazıldı
+   (tasks/REVIZYON-11.md M16); combo dili geri istenirse hazır dursun. */
+.df-combo-meal b{font-size:13px;color:#fff;font-weight:700;display:block;line-height:1.2}
+.df-combo-meal span{font-size:11px;color:rgba(255,255,255,.78);font-weight:500}
+.df-combo-meal .cm-go{margin-left:auto;color:var(--marka-parlak-3);font-size:13px;flex:none}
+
+/* --- Kadın sporu / döngüne uyumlu — full görsel kapsayıcı band --- */
+.df-women{position:relative;overflow:hidden;border-radius:var(--radius-xl);min-height:400px;display:flex;align-items:center;
+  background:
+    linear-gradient(100deg,rgba(33,30,22,.95) 36%,rgba(15,48,66,.62) 78%,rgba(0,63,95,.4) 100%),
+    url('https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=1500&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-12');
+  background-size:cover;background-position:center}
+.df-women-in{position:relative;z-index:2;max-width:560px;padding:50px}
+.df-women .eyebrow{color:var(--fit-bright)}
+.df-women .eyebrow::before{background:var(--fit)}
+.df-women h2{color:#fff;font-size:31px;letter-spacing:-.02em;margin:14px 0 12px}
+.df-women p{color:#dfe6e0;font-weight:500;font-size:15px;line-height:1.65;margin-bottom:22px}
+.df-women-tags{display:flex;flex-wrap:wrap;gap:9px;margin-bottom:26px}
+.df-women-tags span{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;font-weight:600;color:var(--marka-yikama-koyu);background:rgba(255,255,255,.1);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.16);padding:9px 14px;border-radius:var(--radius-sm)}
+.df-women-tags i{color:var(--marka-parlak-3)}
+
+/* ============ ESTETİK RAFİNE — gölge/lift tutarlılığı + premium his ============ */
+.df-fcard,.df-coach,.demo-card{box-shadow:var(--sh-sm)}
+.df-fcard:hover,.df-coach:hover{box-shadow:var(--sh-lg)}
+
+/* ============ RESPONSIVE ============ */
+@media (max-width:1024px){
+  .df-hero{grid-template-columns:1fr;gap:30px;padding-bottom:40px}
+  .df-bridge-card,.df-chal,.df-tdee{grid-template-columns:1fr;gap:28px;padding:32px}
+  .hub-grid{grid-template-columns:1fr 1fr}
+  .df-fcards,.df-coach-grid{grid-template-columns:1fr 1fr}   /* R11/M3: 4 → 2 */
+  .df-pro-grid{grid-template-columns:1fr}
+  .df-goals{grid-template-columns:1fr 1fr}
+  .rc-grid{grid-template-columns:1fr 1fr}   /* R11/M16 */
+  .df-women{min-height:340px}
+  .df-women-in{padding:36px;max-width:none}
+}
+@media (max-width:640px){
+  .df-goals,.rc-grid{grid-template-columns:1fr}   /* R11/M16 */
+  .df-goal{min-height:200px}
+  .df-women h2{font-size:23px}
+  .df-women-in{padding:28px}
+  .df-top{padding-top:62px}   /* BANNER KURALI: mobil min-height:100vh kaldirildi */
+  .df-hero{padding:18px 0 34px}
+  .df-hmain h1{font-size:30px}
+  .df-hmain .lead{font-size:14.5px}
+  .df-ledger,.df-bridge-card,.df-chal,.df-tdee{padding:24px}
+  .df-bc-main h2,.df-chal h2,.df-cta h2{font-size:23px}
+  .hub-grid,.hub-grid.cols3,.df-fcards,.df-coach-grid{grid-template-columns:1fr}
+  .df-daygrid{grid-template-columns:repeat(10,1fr)}
+  .df-chal-meta{gap:20px}
+  .res-num{font-size:38px}
+  /* R8/21: @640 alti alt alta — arama once, filtre sonra */
+  .df-toolrow{flex-direction:column;align-items:stretch;gap:14px}
+  /* ÖZ ELEŞTİRİ 1: burada `order:-1` vardı — @390'da arama görsel olarak
+     filtreden ÖNCE geliyordu ama DOM'da SONRA. Ekran okuyucu ile gören
+     kullanıcı farklı sıra duyuyordu ve masaüstündeki soldan-sağa okuma
+     (filtre → arama) mobilde yukarıdan-aşağıya karşılığını kaybediyordu.
+     order kaldırıldı: her genişlikte DOM sırası = görsel sıra. */
+  .df-toolrow .df-search{flex:1 1 auto;max-width:none}
+  .df-toolrow .df-filterbar{min-height:0}
+  .df-filterbar{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;padding-bottom:4px}
+  .df-filterbar::-webkit-scrollbar{display:none}
+  .df-fchip{flex:none;white-space:nowrap}
+}
+
+</style>
+<style>
+/* w3-nav-sweep */
+
+</style>
+<style>
+/* ===== Footer marka hizalama (Gastro footer dili; marka-nötr, sızma yok) ===== */
+
+</style>
+<!-- Metin yaslama katmani (tek kaynak) — sayfa stillerinden SONRA yuklenir,
+     boylece sayfa ici text-align kurallari yaslamayi geri alamaz -->
+<link rel="stylesheet" href="assets/css/fit-type.css" />
+</head>
+<body data-brand="fit" data-fit-page="dadafit-hub-v1" data-fit-hero="1">
+
+<!-- KABUK: ust katman (topbar+header+drawer+alt bar+gorus+cerez) — ortak kabuk JS basar -->
+<div id="fitShellTop"></div>
+
+<main class="page-main" id="pageMain">
+<!-- SAYFA İÇERİĞİ — WAVE 4: DADAFIT HAREKET MERKEZİ HUB -->
+
+<!-- DADAFİT ALT-NAV BANDI KALDIRILDI → tam DadaFit header'ına yükseldi (redundans giderildi). -->
+
+<!-- ===== 1 · HERO: video band + Enerji Defteri (signature) ===== -->
+<section class="df-top">
+  <div class="df-hero-media" aria-hidden="true">
+    <video autoplay muted loop playsinline preload="auto" poster="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=1680&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-16&high=8&vib=3">
+      <!-- 2026-08-11 referans kıyaslaması: kaynak videoya geri dönüldü.
+ 797KB'lık yeniden kodlama "canlıda 404" gerekçesiyle üretilmişti; ölçüm
+ bu gerekçenin yanlış olduğunu gösterdi — dadafit-hero.mp4 zaten 12289a1'de
+ takip ediliyordu ve canlıda yayındaydı. Yeniden kodlama aynı çözünürlükte
+ (1280x720) bit hızını 2614→503 kbps düşürüyordu (PSNR 40,6 dB / SSIM 0,984). -->
+      <source src="../dump/fit-prototip/assets/video/dadafit-hero.mp4" type="video/mp4" />
+    </video>
+  </div>
+  <div class="wrap">
+    <!-- BREADCRUMB KALKTI — Beyar, 2026-08-29. Burası DadaFit'in KENDİ ana
+         sayfası; ana sayfada breadcrumb olmaz.
+         Emsal ölçüldü (canlı, 2026-08-29): dadagastro.com ana sayfasında
+         breadcrumb sayısı 0; `/tarifler` ve `/hakkimizda` sayfalarında 1
+         (`.rd-crumb`). Yani kural kardeş markada zaten böyle uygulanıyor.
+         Buradaki kırıntı sayfa yolu değil EKOSİSTEM yoluydu
+         ("Dada Gastro › DadaFit"); o geçiş üst siyah bantta duruyor (§O,
+         yedi marka kalemi), yani kapı kapanmadı, tekrarı kalktı.
+         Alt sayfalar (liste · detay · kurumsal · Planım ailesi) kırıntılarını
+         KORUR, çünkü onlarınki üç kademeli gerçek bir sayfa yoludur. -->
+    <div class="df-hero">
+      <div class="df-hmain">
+        <span class="eyebrow"><i class="fa-solid fa-bolt"></i> DadaFit · Beslenme ve hareket bir arada</span>
+        <h1>Tabağındaki yemek ile bedenindeki hareket, <span class="accent">aynı çatı altında</span>.</h1>
+        <!-- R16 · Beyar: "tek cümleye indir, iki satırı geçmesin; beslenme ve
+             hareket birlikteliği kalsın". Ölçüldü: eski metin 1440'ta 520px
+             kapta 16px/25.6px ile ÜÇ satırdı. Yeni cümle 93 karakter —
+             iki yarım fikir ("değil…" tanımı ve üç maddelik sayım) düştü,
+             kalan tek fikir ikisinin bir arada olması. -->
+        <p class="lead">Ne yediğin ve ne harcadığın aynı ekranda: DadaFit beslenme ile hareketi tek akışta buluşturur.</p>
+        <div class="df-hcta">
+          <!-- R13 — sihirbaz pop-up değil, kendi sayfası: düğme düz bağlantı oldu -->
+          <a class="btn btn-fit" href="programini-bul-v1.html"><i class="fa-solid fa-wand-magic-sparkles"></i> Programını Bul</a>
+          <a class="btn btn-line" href="egzersiz-kutuphane-v1.html"><i class="fa-solid fa-dumbbell"></i> Hareketleri Keşfet</a>
+          <!-- 🔴 Hero'nun üçüncü düğmesi KALDIRILDI — Beyar, 2026-08-29 (§W2: eski
+               karar silinmez, üstüne yazılır). Önceki karar "hero tam ekran, üç
+               düğmeye yer var" diyordu; hero şimdi iki düğme taşıyor.
+               2026-08-30 · Beyar: o düğmenin hedefi olan Enerji Köprüsü sayfası
+               tamamen kaldırıldı. İşlevsel mirasçısı Enerji Defteri
+               (`egzersizlerim-v1.html#defter`); artık ölü hedef kalmadı. -->
+        </div>
+        <div class="df-htrust">
+          <span><i class="fa-solid fa-circle-check"></i> 25 hareket</span>
+          <span><i class="fa-solid fa-circle-check"></i> 8 hazır program</span>
+          <span><i class="fa-solid fa-circle-check"></i> Herkes için, her seviyeye</span>
+        </div>
+      </div>
+
+      <!-- SIGNATURE: Enerji Defteri — aldığın (yemek) ↔ yaktığın (hareket) iki ayrı bağlam -->
+      
+    </div>
+  </div>
+  <!-- HERO KAYDIRMA İŞARETİ — kardeş markadan taşındı (ölçüm ve gerekçe:
+       assets/css/fit-shell.css `.hero-scroll`). Gastro'da <div>, yani
+       tıklanmıyor; burada <a>, çünkü deponun dürüstlük kuralı "tıklanan her
+       şey ya çalışsın ya maket olduğu belli olsun" diyor — chevron aşağıyı
+       gösteriyorsa aşağı İNMELİ.
+       🔴 HEDEF AÇIK KALEM: brief `egzersiz-kutuphane-v1.html` ya da
+       `programlar-merkezi-v1.html` diyordu; ikisi de sayfa hedefi. Ama
+       `egzersiz-kutuphane-v1.html` hero'nun kendi "Hareketleri Keşfet"
+       düğmesinin hedefi (23 satır yukarıda) — aynı hedefe farklı adla
+       ikinci kapı açılmaz (deponun kendi kuralı, drawer notunda yazılı).
+       O yüzden işaret şimdilik emsalin işini yapıyor: hero'nun altındaki
+       ilk bölüme (#kopru — "Yediğini hareketle dengele", modülün kalbi)
+       iniyor. Enerji Defteri paneli hedef OLAMAZ: kabuk onu her genişlikte
+       hero'nun İÇİNE taşıyor (fit-shell.css §"ANA SAYFA HERO'SU TAM EKRAN"),
+       ölçüldü — belge içi konumu 0, yani aşağı inmiyordu.
+       Beyar sayfa hedefi isterse tek satır: href `#kopru` yerine
+       `programlar-merkezi-v1.html` olur. -->
+  <a class="hero-scroll" href="#kopru"><span>Keşfet</span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i></a>
+</section>
+
+<!-- BANNER KURALI: ikincil panel bandın dışına alındı (banner ≤ %50 ekran) -->
+<div class="wrap fit-band-panel">
+<aside class="df-ledger" aria-label="Bugünün enerji defteri">
+        <div class="dl-head">
+          <h3>Bugünün Enerji Defteri</h3>
+          <span class="dl-date">Bugün</span>
+        </div>
+        <div class="dl-row in">
+          <div class="dl-rowtop">
+            <span class="dl-tag"><i class="fa-solid fa-utensils"></i> Aldığın</span>
+            <span class="dl-val">1.840<small>kcal</small></span>
+          </div>
+          <div class="dl-bar"><div class="dl-fill" style="width:77%"></div></div>
+        </div>
+        <div class="dl-row out">
+          <div class="dl-rowtop">
+            <span class="dl-tag"><i class="fa-solid fa-fire-flame-curved"></i> Yaktığın</span>
+            <span class="dl-val">520<small>kcal</small></span>
+          </div>
+          <div class="dl-bar"><div class="dl-fill" style="width:22%"></div></div>
+        </div>
+        <div class="dl-net">
+          <i class="fa-solid fa-arrow-trend-up"></i>
+          <div>
+            <b>Bugünkü hareketin +520 kcal alan açtı</b>
+            <span>Antrenmanını ekledikçe günlük bütçen büyür — yasak değil, denge.</span>
+          </div>
+        </div>
+      </aside>
+</div>
+
+
+<!-- ===== 2 · KÖPRÜ (kalp): yediğini hareketle dengele ===== -->
+<section class="sec sec-fit" id="kopru" style="background:var(--bg-white)">
+  <div class="wrap">
+    <div class="df-bridge-card">
+      <div class="df-bc-main">
+        <span class="eyebrow"><i class="fa-solid fa-link"></i> Modülün Kalbi</span>
+        <h2>Yediğini hareketle dengele</h2>
+        <p>Tek yönlü kalori saymak yorar. DadaFit çift yönlü çalışır: hareket bütçeni büyütür, yemek harcar — ve her ikisi de Dada Gastro'daki tariflere bağlanır.</p>
+        <div class="df-bc-steps">
+          <div class="df-bc-step"><span class="n">1</span><div><b>Ne yedin</b><span>Günlük alımını gör</span></div></div>
+          <div class="df-bc-step"><span class="n">2</span><div><b>Ne harcadın</b><span>Antrenmanını ekle, bütçeni aç</span></div></div>
+          <div class="df-bc-step"><span class="n">3</span><div><b>Ne pişireceksin</b><span>Dengene uygun tarif önerisi</span></div></div>
+        </div>
+      </div>
+      <div class="df-bc-side">
+        <div class="sd-q"><i class="fa-solid fa-utensils"></i> Spor yaptım, ne yiyeyim?</div>
+        <div class="sd-d">Antrenman sonrası protein ağırlıklı, dengene oturan tarifleri Dada Gastro'dan getiriyoruz.</div>
+        <a class="btn btn-food" href="https://by4r.github.io/dadamutfak-view/v7-6cu356/tarif-liste-v1.html?filtre=protein"><i class="fa-solid fa-drumstick-bite"></i> Bu Yakıma Uygun Tarifler</a>
+        <a class="sd-alt" href="https://by4r.github.io/dadamutfak-view/v7-6cu356/gunluk-kalori-v1.html">Önce enerjini hesapla <i class="fa-solid fa-arrow-right"></i></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== HEDEF SEÇİCİ: "Hedefin ne?" — full görsel + yeşil gradient ===== -->
+<section class="sec sec-fit" style="background:var(--bg-cream)">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <span class="eyebrow"><i class="fa-solid fa-bullseye"></i> Sana Göre</span>
+        <h2>Hedefin ne?</h2>
+        <p class="lead">Nereden başlayacağını seç — gerisini birlikte kuralım. Her hedefin kendine göre bir yolu var.</p>
+      </div>
+    </div>
+    <div class="df-goals">
+      <a class="df-goal" href="program-liste-v1.html" style="background-image:url('https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=700&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-12')">
+        <div class="df-goal-in">
+          <span class="gl-ico"><i class="fa-solid fa-dumbbell"></i></span>
+          <h4>Güçlen</h4><p>Kas kuvveti ve sağlam duruş</p>
+          <span class="gl-go">Programa Bak <i class="fa-solid fa-arrow-right"></i></span>
+        </div>
+      </a>
+      <a class="df-goal" href="program-liste-v1.html" style="background-image:url('https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=700&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-12')">
+        <div class="df-goal-in">
+          <span class="gl-ico"><i class="fa-solid fa-spa"></i></span>
+          <h4>Esne</h4><p>Mobilite ve günlük rahatlık</p>
+          <span class="gl-go">Programa Bak <i class="fa-solid fa-arrow-right"></i></span>
+        </div>
+      </a>
+      <a class="df-goal" href="program-liste-v1.html" style="background-image:url('https://images.unsplash.com/photo-1571008887538-b36bb32f4571?w=700&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-12')">
+        <div class="df-goal-in">
+          <span class="gl-ico"><i class="fa-solid fa-heart-pulse"></i></span>
+          <h4>Dayan</h4><p>Nefes ve dayanıklılık</p>
+          <span class="gl-go">Programa Bak <i class="fa-solid fa-arrow-right"></i></span>
+        </div>
+      </a>
+      <a class="df-goal" href="program-liste-v1.html" style="background-image:url('https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?w=700&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-12')">
+        <div class="df-goal-in">
+          <span class="gl-ico"><i class="fa-solid fa-calendar-check"></i></span>
+          <h4>Alışkanlık Kur</h4><p>Küçük adımlarla süreklilik</p>
+          <span class="gl-go">Programa Bak <i class="fa-solid fa-arrow-right"></i></span>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 3 · EGZERSİZ KÜTÜPHANESİ girişi ===== -->
+<section class="sec sec-fit df-searchable" id="kutuphane" style="background:var(--bg-white)">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <span class="eyebrow"><i class="fa-solid fa-dumbbell"></i> DadaFit Egzersizleri</span>
+        <h2>Hareketini seç, nasıl yapılacağını öğren</h2>
+        <p class="lead">Kas grubu, ekipman ya da seviyeye göre filtrele — her harekette görsel ve adım adım anlatım.</p>
+      </div>
+      <div class="sec-tools"><a class="see-all" href="egzersiz-kutuphane-v1.html" style="color:var(--fit-deep)">Tüm Egzersizler <i class="fa-solid fa-arrow-right"></i></a></div>
+    </div>
+
+    <!-- R8/21: filtre satiri ile arama TEK SATIR — arama sagda, ust kenarlar ayni y'de -->
+    <div class="df-toolrow">
+      <div class="df-filterbar" role="group" aria-label="Hızlı filtre">
+        <span class="lbl">Seviye:</span>
+        <button class="df-fchip on" type="button">Tümü</button>
+        <button class="df-fchip" type="button">Başlangıç</button>
+        <button class="df-fchip" type="button">Orta</button>
+        <button class="df-fchip" type="button">İleri</button>
+      </div>
+      <label class="df-search" id="dfSearch">
+        <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+        <input type="text" id="dfSearchInput" placeholder="Hareket veya program ara…" aria-label="Hareket ve programlarda ara" autocomplete="off" />
+        <button type="button" class="dfs-clear" id="dfSearchClear" aria-label="Aramayı temizle"><i class="fa-solid fa-xmark"></i></button>
+      </label>
+    </div>
+    <p class="df-scount" id="dfCount" role="status" aria-live="polite"></p>
+    <div class="df-noresult" id="dfNoResult" role="status" aria-live="polite">
+      <i class="fa-regular fa-face-frown" aria-hidden="true"></i>
+      <b>Eşleşen hareket bulunamadı</b>
+      <span>Farklı bir kelime dene — hareket adı, kas grubu ya da program.</span>
+    </div>
+
+    <div class="df-fcards">
+      <a class="df-fcard" href="egzersiz-kutuphane-v1.html"><span class="fc-ico"><i class="fa-solid fa-person"></i></span><div><h4>Kas Grubuna Göre</h4><p>Bacak, sırt, göğüs, karın…</p></div><span class="go"><i class="fa-solid fa-arrow-right"></i></span></a>
+      <a class="df-fcard" href="egzersiz-kutuphane-v1.html"><span class="fc-ico"><i class="fa-solid fa-dumbbell"></i></span><div><h4>Ekipmana Göre</h4><p>Vücut ağırlığı, dambıl, bant</p></div><span class="go"><i class="fa-solid fa-arrow-right"></i></span></a>
+      <a class="df-fcard" href="egzersiz-kutuphane-v1.html"><span class="fc-ico"><i class="fa-solid fa-signal"></i></span><div><h4>Seviyeye Göre</h4><p>Yeni başlayandan ileriye</p></div><span class="go"><i class="fa-solid fa-arrow-right"></i></span></a>
+    </div>
+
+    <div class="hub-grid">
+      <a class="hub-card" href="egzersiz-detay-v1.html">
+        <div class="hub-media" style="background-image:url('https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=600&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-12&high=8&vib=4')">
+          <span class="hub-cat fit">Bacak</span>
+          <div class="hub-tags"><span class="hub-tag"><i class="fa-solid fa-signal"></i> Başlangıç</span><span class="hub-tag"><i class="fa-solid fa-person"></i> Ekipmansız</span></div>
+        </div>
+        <div class="hub-body">
+          <h4>Hava Squat (Bodyweight Squat)</h4>
+          <p>Bacak ve kalçanın temel hareketi — doğru form ve yaygın hatalar.</p>
+          <div class="hub-foot"><span><i class="fa-regular fa-clock"></i> 3 dk anlatım</span><span class="go">İncele <i class="fa-solid fa-arrow-right"></i></span></div>
+        </div>
+      </a>
+      <a class="hub-card" href="egzersiz-detay-v1.html">
+        <div class="hub-media" style="background-image:url('https://images.unsplash.com/photo-1552196563-55cd4e45efb3?w=600&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-12&high=8&vib=4')">
+          <span class="hub-cat fit">Mobilite</span>
+          <div class="hub-tags"><span class="hub-tag"><i class="fa-solid fa-signal"></i> Başlangıç</span><span class="hub-tag"><i class="fa-solid fa-person"></i> Ekipmansız</span></div>
+        </div>
+        <div class="hub-body">
+          <h4>Kalça Açıcı Esneme</h4>
+          <p>Masa başı sertliğini çözen, sakatlık riski düşük günlük hareket.</p>
+          <div class="hub-foot"><span><i class="fa-regular fa-clock"></i> 2 dk anlatım</span><span class="go">İncele <i class="fa-solid fa-arrow-right"></i></span></div>
+        </div>
+      </a>
+      <a class="hub-card" href="egzersiz-detay-v1.html">
+        <div class="hub-media" style="background-image:url('https://images.unsplash.com/photo-1591258370814-01609b341790?w=600&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-12&high=8&vib=4')">
+          <span class="hub-cat fit">Karın</span>
+          <div class="hub-tags"><span class="hub-tag"><i class="fa-solid fa-signal"></i> Orta</span><span class="hub-tag"><i class="fa-solid fa-person"></i> Ekipmansız</span></div>
+        </div>
+        <div class="hub-body">
+          <h4>Plank (Şınav Duruşu)</h4>
+          <p>Tüm gövde merkezini çalıştıran izometrik temel — süreyi kademeli artır.</p>
+          <div class="hub-foot"><span><i class="fa-regular fa-clock"></i> 2 dk anlatım</span><span class="go">İncele <i class="fa-solid fa-arrow-right"></i></span></div>
+        </div>
+      </a>
+      <a class="hub-card" href="egzersiz-detay-v1.html">
+        <div class="hub-media" style="background-image:url('https://images.unsplash.com/photo-1526506118085-60ce8714f8c5?w=600&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-12&high=8&vib=4')">
+          <span class="hub-cat fit">Sırt</span>
+          <div class="hub-tags"><span class="hub-tag"><i class="fa-solid fa-signal"></i> Orta</span><span class="hub-tag"><i class="fa-solid fa-dumbbell"></i> Dambıl</span></div>
+        </div>
+        <div class="hub-body">
+          <h4>Dambıl Kürek Çekme</h4>
+          <p>Sırt ve postür için temel çekme hareketi — tek dambılla evde yapılır.</p>
+          <div class="hub-foot"><span><i class="fa-regular fa-clock"></i> 3 dk anlatım</span><span class="go">İncele <i class="fa-solid fa-arrow-right"></i></span></div>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== R8/24 · ANTRENMAN OLUŞTURUCU — ÖNİZLEME =====
+     Sayfada oluşturucuya giden hiçbir gövde bağlantısı yoktu (yalnız kabuk
+     menüsünde vardı — ölçüldü). Burası doğru yer: hareketi seçtin (§3),
+     hazır program da var (§4); arada "kendin kur" yolu duruyor.
+     Önizlemedeki BEŞ ADIM ve DÖRT GÜN uydurma değil — motorun kendi verisi:
+     antrenman-olusturucu-v1.html ADIMLAR (satır 683) ve KURALLAR.bolunme['4']
+     "Üst / Alt" (satır 442). Sayı değişirse önizleme de güncellenmeli. -->
+<section class="sec sec-fit df-searchable" id="olusturucu">
+  <div class="wrap">
+    <div class="ao-prev">
+      <div class="ao-main">
+        <span class="eyebrow"><i class="fa-solid fa-wand-magic-sparkles"></i> Kendin Kur</span>
+        <h2>Hazır program uymuyorsa, planı sana göre kuralım</h2>
+        <p class="lead">Altı soru cevapla; ekipmanına, seviyene ve haftada ayırabildiğin güne göre
+          gün gün antrenman planı çıksın. Her hareketin neden o günde olduğu da yazılı.</p>
+        <ol class="ao-steps">
+          <li><span class="n">1</span>Vücut modeli</li>
+          <li><span class="n">2</span>Hedefin</li>
+          <li><span class="n">3</span>Seviyen</li>
+          <li><span class="n">4</span>Ekipman ve odak</li>
+          <li><span class="n">5</span>Haftan</li>
+        </ol>
+        <a class="btn btn-fit" href="antrenman-olusturucu-v1.html">
+          <i class="fa-solid fa-play"></i> Antrenman Oluşturucuyu Aç</a>
+      </div>
+
+      <!-- ÖZ ELEŞTİRİ 3: bu kutu <a> idi ve butonla AYNI sayfaya gidiyordu,
+           ama adı farklıydı ("Kendi planını kur" · "Antrenman Oluşturucuyu Aç").
+           Aynı eylem iki adla iki kez sunuluyor + fazladan bir sekme durağı.
+           Kutu artık numune: tıklanmıyor, tek eylem tek adla butonda. -->
+      <div class="ao-cikti" role="group"
+         aria-label="Antrenman Oluşturucu örnek çıktısı — haftada 4 gün, Üst / Alt bölünmesi">
+        <div class="ao-cikti-top">
+          <span class="ao-rozet"><i class="fa-solid fa-eye"></i> Örnek çıktı</span>
+          <b>4 gün · Üst / Alt</b>
+        </div>
+        <div class="ao-gunler">
+          <span class="ao-gun"><i>Gün 1</i>Üst Vücut A<small>itiş ağırlıklı</small></span>
+          <span class="ao-gun"><i>Gün 2</i>Alt Vücut A<small>bacak ağırlıklı</small></span>
+          <span class="ao-gun"><i>Gün 3</i>Üst Vücut B<small>çekiş ağırlıklı</small></span>
+          <span class="ao-gun"><i>Gün 4</i>Alt Vücut B<small>core ağırlıklı</small></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 4 · PROGRAMLAR showcase ===== -->
+<section class="sec sec-fit df-searchable" id="programlar" style="background:var(--bg-cream)">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <span class="eyebrow"><i class="fa-solid fa-layer-group"></i> Hazır Programlar</span>
+        <h2>Hedefine göre, adım adım plan</h2>
+        <p class="lead">Hedef × seviye × ekipman × süreye göre düzenlenmiş, takip etmesi kolay programlar.</p>
+      </div>
+      <div class="sec-tools"><a class="see-all" href="program-liste-v1.html" style="color:var(--fit-deep)">Tüm Programlar <i class="fa-solid fa-arrow-right"></i></a></div>
+    </div>
+    <div class="hub-grid">
+      <a class="hub-card" href="program-detay-v1.html">
+        <div class="hub-media" style="background-image:url('https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?w=600&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-12&high=8&vib=4')">
+          <span class="hub-cat fit">Güç</span>
+          <div class="hub-tags"><span class="hub-tag"><i class="fa-regular fa-calendar"></i> 8 hafta</span><span class="hub-tag"><i class="fa-solid fa-signal"></i> Orta</span></div>
+        </div>
+        <div class="hub-body"><h4>8 Haftalık Güç Temeli</h4><p>Dambılla kademeli güç gelişimi.</p>
+          <div class="hub-foot"><span><i class="fa-solid fa-calendar-week"></i> Haftada 3 gün</span><span class="go">Programı Aç <i class="fa-solid fa-arrow-right"></i></span></div></div>
+      </a>
+      <a class="hub-card" href="program-detay-v1.html">
+        <div class="hub-media" style="background-image:url('https://images.unsplash.com/photo-1599058917212-d750089bc07e?w=600&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-12&high=8&vib=4')">
+          <span class="hub-cat fit">HIIT</span>
+          <div class="hub-tags"><span class="hub-tag"><i class="fa-regular fa-calendar"></i> 4 hafta</span><span class="hub-tag"><i class="fa-solid fa-house"></i> Evde</span></div>
+        </div>
+        <div class="hub-body"><h4>Evde HIIT</h4><p>Ekipmansız, kısa ve yoğun seanslar.</p>
+          <div class="hub-foot"><span><i class="fa-solid fa-calendar-week"></i> Haftada 4 gün</span><span class="go">Programı Aç <i class="fa-solid fa-arrow-right"></i></span></div></div>
+      </a>
+      <a class="hub-card" href="program-detay-v1.html">
+        <div class="hub-media" style="background-image:url('https://images.unsplash.com/photo-1518310383802-640c2de311b2?w=600&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-12&high=8&vib=4')">
+          <span class="hub-cat fit">Başlangıç</span>
+          <div class="hub-tags"><span class="hub-tag"><i class="fa-regular fa-calendar"></i> 4 hafta</span><span class="hub-tag"><i class="fa-solid fa-signal"></i> Başlangıç</span></div>
+        </div>
+        <div class="hub-body"><h4>Yeni Başlayan 4 Hafta</h4><p>Hareketle ilk tanışma, baskısız.</p>
+          <div class="hub-foot"><span><i class="fa-solid fa-calendar-week"></i> Haftada 3 gün</span><span class="go">Programı Aç <i class="fa-solid fa-arrow-right"></i></span></div></div>
+      </a>
+      <a class="hub-card" href="program-detay-v1.html">
+        <div class="hub-media" style="background-image:url('https://images.unsplash.com/photo-1545205597-3d9d02c29597?w=600&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-12&high=8&vib=4')">
+          <span class="hub-cat fit">Esneklik</span>
+          <div class="hub-tags"><span class="hub-tag"><i class="fa-regular fa-calendar"></i> 3 hafta</span><span class="hub-tag"><i class="fa-solid fa-house"></i> Evde</span></div>
+        </div>
+        <div class="hub-body"><h4>Mobilite &amp; Esneklik</h4><p>Eklem sağlığı ve günlük rahatlık.</p>
+          <div class="hub-foot"><span><i class="fa-solid fa-calendar-week"></i> Her gün 10 dk</span><span class="go">Programı Aç <i class="fa-solid fa-arrow-right"></i></span></div></div>
+      </a>
+      <a class="hub-card" href="program-detay-v1.html">
+        <div class="hub-media" style="background-image:url('https://images.unsplash.com/photo-1599901860904-17e6ed7083a0?w=600&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-12&high=8&vib=4')">
+          <span class="hub-cat fit">Ofis</span>
+          <div class="hub-tags"><span class="hub-tag"><i class="fa-regular fa-clock"></i> 5 dk</span><span class="hub-tag"><i class="fa-solid fa-chair"></i> Masada</span></div>
+        </div>
+        <div class="hub-body"><h4>Ofis Molası Serisi</h4><p>Masa başında 5 dakikalık canlandırma.</p>
+          <div class="hub-foot"><span><i class="fa-solid fa-calendar-week"></i> Gün içi mola</span><span class="go">Programı Aç <i class="fa-solid fa-arrow-right"></i></span></div></div>
+      </a>
+      <a class="hub-card" href="program-detay-v1.html">
+        <div class="hub-media" style="background-image:url('https://images.unsplash.com/photo-1574680096145-d05b474e2155?w=600&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-12&high=8&vib=4')">
+          <span class="hub-cat fit">Postür</span>
+          <div class="hub-tags"><span class="hub-tag"><i class="fa-regular fa-calendar"></i> 6 hafta</span><span class="hub-tag"><i class="fa-solid fa-signal"></i> Orta</span></div>
+        </div>
+        <div class="hub-body"><h4>Dik Duruş Programı</h4><p>Masa başı sırt ve boyun için düzeltici plan.</p>
+          <div class="hub-foot"><span><i class="fa-solid fa-calendar-week"></i> Haftada 3 gün</span><span class="go">Programı Aç <i class="fa-solid fa-arrow-right"></i></span></div></div>
+      </a>
+      <a class="hub-card" href="program-detay-v1.html">
+        <div class="hub-media" style="background-image:url('https://images.unsplash.com/photo-1486218119243-13883505764c?w=600&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-12&high=8&vib=4')">
+          <span class="hub-cat fit">Dayanıklılık</span>
+          <div class="hub-tags"><span class="hub-tag"><i class="fa-regular fa-calendar"></i> Süresiz</span><span class="hub-tag"><i class="fa-solid fa-signal"></i> Başlangıç</span></div>
+        </div>
+        <div class="hub-body"><h4>Düşük Tempo Kondisyon</h4><p>Sürdürülebilir tempoda nefes ve dayanıklılık.</p>
+          <div class="hub-foot"><span><i class="fa-solid fa-calendar-week"></i> Haftada 3 gün</span><span class="go">Programı Aç <i class="fa-solid fa-arrow-right"></i></span></div></div>
+      </a>
+      <a class="hub-card" href="program-detay-v1.html">
+        <div class="hub-media" style="background-image:url('https://images.unsplash.com/photo-1605296867304-46d5465a13f1?w=600&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-12&high=8&vib=4')">
+          <span class="hub-cat fit">Kettlebell</span>
+          <div class="hub-tags"><span class="hub-tag"><i class="fa-regular fa-calendar"></i> 6 hafta</span><span class="hub-tag"><i class="fa-solid fa-signal"></i> İleri</span></div>
+        </div>
+        <div class="hub-body"><h4>Kettlebell Temel</h4><p>Tek ağırlıkla tüm vücut — teknik odaklı.</p>
+          <div class="hub-foot"><span><i class="fa-solid fa-calendar-week"></i> Haftada 3 gün</span><span class="go">Programı Aç <i class="fa-solid fa-arrow-right"></i></span></div></div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 5 · CHALLENGE teaser (koyu band) ===== -->
+<section class="sec sec-fit" id="challenge" style="background:var(--bg-white)">
+  <div class="wrap">
+    <div class="df-chal">
+      <div class="df-chal-main">
+        <span class="eyebrow"><i class="fa-solid fa-flag-checkered"></i> Aylık Challenge</span>
+        <h2>30 Günde Hareket Alışkanlığı</h2>
+        <p>Büyük hedef değil, küçük süreklilik. Her gün ufak bir hareket; 30 günün sonunda alışkanlık. Kaçırdığın gün suçluluk yok — kaldığın yerden devam.</p>
+        <div class="df-chal-meta">
+          <div class="cm"><b>30</b><span>gün</span></div>
+          <div class="cm"><b>10-15</b><span>dk / gün</span></div>
+          <div class="cm"><b>2.840</b><span>katılımcı</span></div>
+        </div>
+        <a class="btn btn-fit" href="challenge-v1.html"><i class="fa-solid fa-plus"></i> Challenge'a Katıl</a>
+      </div>
+      <div class="df-days">
+        <div class="dd-top"><span>İlerlemen</span><b>7 / 30 gün</b></div>
+        <div class="df-daygrid">
+          <span class="df-day done">1</span><span class="df-day done">2</span><span class="df-day done">3</span><span class="df-day done">4</span><span class="df-day done">5</span>
+          <span class="df-day done">6</span><span class="df-day today">7</span><span class="df-day">8</span><span class="df-day">9</span><span class="df-day">10</span>
+          <span class="df-day">11</span><span class="df-day">12</span><span class="df-day">13</span><span class="df-day">14</span><span class="df-day">15</span>
+          <span class="df-day">16</span><span class="df-day">17</span><span class="df-day">18</span><span class="df-day">19</span><span class="df-day">20</span>
+          <span class="df-day">21</span><span class="df-day">22</span><span class="df-day">23</span><span class="df-day">24</span><span class="df-day">25</span>
+          <span class="df-day">26</span><span class="df-day">27</span><span class="df-day">28</span><span class="df-day">29</span><span class="df-day">30</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 6 · TDEE KÖPRÜ KARTI ===== -->
+<section class="sec sec-fit" style="background:var(--bg-cream)">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <span class="eyebrow"><i class="fa-solid fa-scale-balanced"></i> Enerji Köprüsü</span>
+        <h2>Enerjini hesapla, antrenmanını ekle</h2>
+        <p class="lead">Dada Diet'in TDEE motoru zaten köprünün yarısı — DadaFit antrenman yakımını üstüne ekler.</p>
+      </div>
+    </div>
+    <div class="df-tdee">
+      <div class="df-tdee-l">
+        <span class="eyebrow"><i class="fa-solid fa-chart-simple"></i> Günlük İhtiyacın</span>
+        <div style="margin-top:12px"><span class="res-num">2.227</span><small>kcal/gün</small></div>
+        <span class="res-cap"><i class="fa-solid fa-circle-check"></i> Mevcut kilonu korumak için</span>
+        <div class="kcal-bands">
+          <div class="kb"><i class="fa-solid fa-arrow-trend-down"></i><b>1.727<small>kcal</small></b><span>Kilo ver</span></div>
+          <div class="kb on"><i class="fa-solid fa-equals"></i><b>2.227<small>kcal</small></b><span>Koru</span></div>
+          <div class="kb"><i class="fa-solid fa-arrow-trend-up"></i><b>2.727<small>kcal</small></b><span>Kilo al</span></div>
+        </div>
+      </div>
+      <div class="df-tdee-r">
+        <div class="df-burnadd">
+          <i class="fa-solid fa-fire-flame-curved"></i>
+          <div><b>Antrenman yakımını ekle</b><span>Hareket ettikçe günlük bütçen büyür</span></div>
+        </div>
+        <a class="bridge" href="https://by4r.github.io/dadamutfak-view/v7-6cu356/gunluk-kalori-v1.html">
+          <span class="br-ico"><i class="fa-solid fa-calculator"></i></span>
+          <div class="br-txt"><b>Enerji İhtiyacını Hesapla</b><span>TDEE motoru — aktivite katsayısıyla</span></div>
+          <span class="br-go">Hesapla <i class="fa-solid fa-arrow-right"></i></span>
+        </a>
+        <a class="bridge" href="https://by4r.github.io/dadamutfak-view/v7-6cu356/tarif-liste-v1.html?filtre=protein">
+          <span class="br-ico"><i class="fa-solid fa-drumstick-bite"></i></span>
+          <div class="br-txt"><b>Dengene Uygun Tarifler</b><span>Protein ağırlıklı öneriler</span></div>
+          <span class="br-go">Tarifleri Gör <i class="fa-solid fa-arrow-right"></i></span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== BESLENME × HAREKET COMBO — köprü tezini somutlaştıran paketler =====
+     R11/M2 · Beyar: "Section'u görselli olsun — Gastro ana sayfadaki Mutfak
+     Sırları gibi, arkası sabit, scroll edildikçe kaydırılabilir."
+     Bileşen kabukta: fit-shell.css "PARALLAX BAND" + fit-shell.js aynı ad.
+     Band yalnız GÖRSELİNİ ve PERDESİNİ bildirir (--px-img / --px-veil);
+     sabitleme ve kırpma işini kabuk yapar. -->
+<section class="sec sec-fit df-recipe-band" data-fit-px>
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <!-- R8/22 · YER TUTUCU — DadaGastro amblemi
+             assets/ altinda DadaGastro amblem dosyasi YOK (arandi: assets/img,
+             assets/svg — yalniz DadaFit'in kendi logo-official.png'si var).
+             Yeni amblem UYDURULMADI. Bunun yerine deponun kendi DadaGastro
+             isareti kullanildi: fit-shell.js:568 brand-switch kilidi —
+             fa-utensils + marka rengi #E14827 + "Dada"(ExtraBold)/"Gastro"(Light).
+             Gercek amblem dosyasi gelince <img alt> ile degistirilecek:
+             docs/icerik-bekleyen.md kalem 10. -->
+        <span class="eyebrow eyebrow-gastro">
+          <span class="dg-mark" data-yer-tutucu="dadagastro-amblemi"
+                role="img" aria-label="DadaGastro — amblem dosyasi henuz yok, marka kilidi gosteriliyor">
+            <i class="fa-solid fa-utensils" aria-hidden="true"></i>
+            <span class="dg-wm"><b>Dada</b><em>Gastro</em></span>
+          </span>
+          <span class="eb-tail">Köprü İş Başında</span>
+        </span>
+        <h2>Antrenmanına uygun tarif</h2>
+        <p class="lead">Her hareketin bir mutfak karşılığı var — ikisini birlikte planla, dengeyi koru.</p>
+      </div>
+      <!-- R11/M2 · Beyar: "tümünü gör dediğimizde Gastro'da belirlenmiş
+           sağlıklı tariflere gitsin". Hedef, deponun Gastro tarafı için
+           kullandığı adres kalıbı (38 bağlantı aynı kalıpta). -->
+      <div class="sec-tools">
+        <a class="see-all" href="https://by4r.github.io/dadamutfak-view/v7-6cu356/tarif-liste-v1.html?filtre=hafif">Tümünü Gör <i class="fa-solid fa-arrow-right"></i></a>
+      </div>
+    </div>
+    <!-- R13/K15 · Beyar: "tarif kartları kardeş markanın kalıbına geçsin …
+         DadaFit'te olmayan veriyi UYDURMA".
+         Yapı `dadagastro.com/tarifler` canlısından ölçüldü (bkz. yukarıdaki
+         CSS notu). VERİ SORUNU VE ÇÖZÜMÜ: referansın künyesi
+         (süre · zorluk · kişi · maliyet) ve alt satırı (yazar · puan ·
+         görüntülenme) DadaFit'te YOK; öncesinde burada protein/kcal vardı.
+         Beyar'ın kararı (S13): uydurma yerine kartların ZATEN gittiği
+         DadaGastro prototipinden GERÇEK tarifler yansıtılsın. Aşağıdaki üç
+         kartın her alanı — ad, görsel, kategori, süre, zorluk, kişi,
+         maliyet (dolu/boş ₺ sayısı ve bütçe etiketi), yazar adı, avatar,
+         puan, görüntülenme — `by4r.github.io/dadamutfak-view/v7-6cu356/
+         tarif-liste-v1.html` kartlarından BİREBİR alındı, tek değer
+         uydurulmadı; kartlar da o listenin tarif detayına gidiyor.
+         Kategori rozeti artık tarifin GERÇEK kategorisi (Salata · Çorba ·
+         Zeytinyağlı). Önceki "HIIT/Yoga/Güç sonrası" eşleştirmesi kaldırıldı:
+         bu tarifler için öyle bir eşleştirme verisi yok, yazılsaydı uydurma
+         olurdu. Bölümün antrenman bağı başlık ve lead'de duruyor.
+         Protein/kcal DÜŞTÜ — bu tariflerin makro verisi kaynakta yok. -->
+    <div class="rc-grid">
+      <article class="rc-card">
+        <div class="rc-media" style="background-image:url('https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=700&q=80&auto=format&fit=crop')">
+          <span class="rc-chip">Salata</span>
+        </div>
+        <!-- kaydet düğmesi kartın DOĞRUDAN çocuğu (referansta da `.r-save`
+             `article`'ın çocuğu). `.rc-media` hover'da `transform` alıyor;
+             transform yeni yığın bağlamı açtığı için düğme oraya konsaydı
+             z-index:2 kart bağlamında geçersiz kalır, stretched link
+             (`h4 a::after`) düğmenin üstünü kapatırdı — ölçüldü, tıklama
+             başlık bağlantısına düşüyordu. -->
+        <button class="rc-save" type="button" aria-label="Tarifi kaydet"
+                data-lg-gate data-lg-title="Kaydetmek için giriş yap"
+                data-lg-desc="Tarifleri kaydetmek ve antrenmanına uygun önerileri takip etmek için DadaFit hesabına giriş yapman gerekiyor.">
+          <i class="fa-regular fa-heart" aria-hidden="true"></i>
+        </button>
+        <div class="rc-body">
+          <h4><a href="https://by4r.github.io/dadamutfak-view/v7-6cu356/tarif-detay-v1.html">Izgara Tavuklu Sezar Salata</a></h4>
+          <div class="rc-facts">
+            <span><i class="fa-solid fa-clock" aria-hidden="true"></i> 20 dk</span>
+            <span><i class="fa-solid fa-gauge-simple" aria-hidden="true"></i> Çok Kolay</span>
+            <span><i class="fa-solid fa-utensils" aria-hidden="true"></i> 2 kişilik</span>
+            <span class="rc-cost" title="Orta bütçe"><b class="rc-on">₺</b><b class="rc-on">₺</b><b class="rc-off">₺</b></span>
+          </div>
+          <div class="rc-foot">
+            <div class="rc-author">
+              <span class="rc-av" style="background-image:url('https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&q=80&auto=format&fit=crop')" role="img" aria-label="Onur T."></span>
+              <span><b>Onur T.</b></span>
+            </div>
+            <div class="rc-stats">
+              <span class="rc-rate"><i class="fa-solid fa-star" aria-hidden="true"></i> 4.5</span>
+              <span class="rc-views" title="73B görüntülenme"><i class="fa-solid fa-eye" aria-hidden="true"></i> 73B</span>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="rc-card">
+        <div class="rc-media" style="background-image:url('https://images.unsplash.com/photo-1547592180-85f173990554?w=700&q=80&auto=format&fit=crop')">
+          <span class="rc-chip">Çorba</span>
+        </div>
+        <!-- kaydet düğmesi kartın DOĞRUDAN çocuğu (referansta da `.r-save`
+             `article`'ın çocuğu). `.rc-media` hover'da `transform` alıyor;
+             transform yeni yığın bağlamı açtığı için düğme oraya konsaydı
+             z-index:2 kart bağlamında geçersiz kalır, stretched link
+             (`h4 a::after`) düğmenin üstünü kapatırdı — ölçüldü, tıklama
+             başlık bağlantısına düşüyordu. -->
+        <button class="rc-save" type="button" aria-label="Tarifi kaydet"
+                data-lg-gate data-lg-title="Kaydetmek için giriş yap"
+                data-lg-desc="Tarifleri kaydetmek ve antrenmanına uygun önerileri takip etmek için DadaFit hesabına giriş yapman gerekiyor.">
+          <i class="fa-regular fa-heart" aria-hidden="true"></i>
+        </button>
+        <div class="rc-body">
+          <h4><a href="https://by4r.github.io/dadamutfak-view/v7-6cu356/tarif-detay-v1.html">Köz Domatesli Ev Çorbası</a></h4>
+          <div class="rc-facts">
+            <span><i class="fa-solid fa-clock" aria-hidden="true"></i> 25 dk</span>
+            <span><i class="fa-solid fa-gauge-simple" aria-hidden="true"></i> Kolay</span>
+            <span><i class="fa-solid fa-utensils" aria-hidden="true"></i> 4 kişilik</span>
+            <span class="rc-cost" title="Ekonomik"><b class="rc-on">₺</b><b class="rc-off">₺</b><b class="rc-off">₺</b></span>
+          </div>
+          <div class="rc-foot">
+            <div class="rc-author">
+              <span class="rc-av" style="background-image:url('https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&q=80&auto=format&fit=crop')" role="img" aria-label="Gül Demir"></span>
+              <span><b>Gül Demir</b></span>
+            </div>
+            <div class="rc-stats">
+              <span class="rc-rate"><i class="fa-solid fa-star" aria-hidden="true"></i> 4.6</span>
+              <span class="rc-views" title="51B görüntülenme"><i class="fa-solid fa-eye" aria-hidden="true"></i> 51B</span>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="rc-card">
+        <div class="rc-media" style="background-image:url('https://images.unsplash.com/photo-1505253716362-afaea1d3d1af?w=700&q=80&auto=format&fit=crop')">
+          <span class="rc-chip">Zeytinyağlı</span>
+        </div>
+        <!-- kaydet düğmesi kartın DOĞRUDAN çocuğu (referansta da `.r-save`
+             `article`'ın çocuğu). `.rc-media` hover'da `transform` alıyor;
+             transform yeni yığın bağlamı açtığı için düğme oraya konsaydı
+             z-index:2 kart bağlamında geçersiz kalır, stretched link
+             (`h4 a::after`) düğmenin üstünü kapatırdı — ölçüldü, tıklama
+             başlık bağlantısına düşüyordu. -->
+        <button class="rc-save" type="button" aria-label="Tarifi kaydet"
+                data-lg-gate data-lg-title="Kaydetmek için giriş yap"
+                data-lg-desc="Tarifleri kaydetmek ve antrenmanına uygun önerileri takip etmek için DadaFit hesabına giriş yapman gerekiyor.">
+          <i class="fa-regular fa-heart" aria-hidden="true"></i>
+        </button>
+        <div class="rc-body">
+          <h4><a href="https://by4r.github.io/dadamutfak-view/v7-6cu356/tarif-detay-v1.html">Zeytinyağlı Enginar Dolması</a></h4>
+          <div class="rc-facts">
+            <span><i class="fa-solid fa-clock" aria-hidden="true"></i> 55 dk</span>
+            <span><i class="fa-solid fa-gauge-simple" aria-hidden="true"></i> Orta</span>
+            <span><i class="fa-solid fa-utensils" aria-hidden="true"></i> 4 kişilik</span>
+            <span class="rc-cost" title="Orta bütçe"><b class="rc-on">₺</b><b class="rc-on">₺</b><b class="rc-off">₺</b></span>
+          </div>
+          <div class="rc-foot">
+            <div class="rc-author">
+              <span class="rc-av" style="background-image:url('https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&q=80&auto=format&fit=crop')" role="img" aria-label="Sevgi Aydın"></span>
+              <span><b>Sevgi Aydın</b></span>
+            </div>
+            <div class="rc-stats">
+              <span class="rc-rate"><i class="fa-solid fa-star" aria-hidden="true"></i> 4.7</span>
+              <span class="rc-views" title="22B görüntülenme"><i class="fa-solid fa-eye" aria-hidden="true"></i> 22B</span>
+            </div>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ===== KADIN SPORU / DÖNGÜNE UYUMLU HAREKET — kapsayıcı full-görsel band ===== -->
+<section class="sec sec-fit" style="background:var(--bg-cream)">
+  <div class="wrap">
+    <div class="df-women">
+      <div class="df-women-in">
+        <span class="eyebrow"><i class="fa-solid fa-venus"></i> Sana Özel</span>
+        <h2>Döngüne ve enerjine uyumlu hareket</h2>
+        <p>Her gün aynı tempo şart değil. Enerjin yüksekken güçlen, düşük olduğu günlerde nazik hareketlerle aktif kal — beden saatine kulak veren, baskısız bir yaklaşım.</p>
+        <div class="df-women-tags">
+          <span><i class="fa-solid fa-battery-full"></i> Enerjine göre plan</span>
+          <span><i class="fa-solid fa-spa"></i> Nazik günler için akış</span>
+          <span><i class="fa-solid fa-scale-balanced"></i> Baskı değil, denge</span>
+        </div>
+        <a class="btn btn-fit" href="fit-enerji-defterim.html">Enerji Defterini Aç <i class="fa-solid fa-arrow-right"></i></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 7 · ANTRENÖR teaser (P1) ===== -->
+<section class="sec sec-fit" id="antrenor" style="background:var(--bg-white)">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <span class="eyebrow"><i class="fa-solid fa-user-check"></i> Antrenör Bul</span>
+        <h2>DadaFit Onaylı antrenörler</h2>
+        <p class="lead">Alanında sertifikalı, platform tarafından onaylanmış antrenörlerle çalış.</p>
+      </div>
+      <div class="sec-tools"><a class="see-all" href="antrenorler-v1.html" style="color:var(--fit-deep)">Tümünü Gör <i class="fa-solid fa-arrow-right"></i></a></div>
+    </div>
+    <!-- R11/M3 · Beyar: "buraya antrenör kartı koyulacak, 4'lü —
+         antrenorler-v1.html'deki kartları istiyorum."
+         Kartlar UYDURULMADI: dizinin ilk dördü birebir alındı (Selin Aksoy ·
+         Derya Yıldız · Ayşe Kaplan · Merve Tan) — isim, uzmanlık, etiket,
+         puan, değerlendirme sayısı ve görsel dizindekiyle aynı, iki sayfa
+         çelişmiyor. Yalnız dizine özel filtre nitelikleri (data-uzmanlik ·
+         data-format · data-durum · data-pop) ve etiket taşırma kancası
+         (data-tagrow) çıkarıldı — hub'da filtre/sıralama yok.
+         Biçim kabuktan geliyor (fit-shell.css → "ANTRENÖR KARTI"). -->
+    <div class="df-coach-grid">
+      <a class="coach-card" href="antrenor-detay-v1.html?slug=selin-aksoy">
+        <div class="coach-media" style="background-image:url('https://images.unsplash.com/photo-1518310383802-640c2de311b2?w=700&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-12')">
+          <div class="coach-badges">
+            <span class="coach-verify"><i class="fa-solid fa-shield-halved"></i> DadaFit Onaylı</span>
+            <span class="coach-status"><span class="dot"></span> Danışan alıyor</span>
+          </div>
+          <div class="coach-id"><b>Selin Aksoy</b><span>Güç &amp; Kondisyon · Evde Antrenman</span></div>
+        </div>
+        <div class="coach-body">
+          <div class="coach-tags"><span>Evde antrenman</span><span>Kilo yönetimi</span><span>Başlangıç dostu</span></div>
+          <div class="coach-meta"><span class="m"><i class="fa-solid fa-star"></i> <b>4.9</b> · 120 değerlendirme</span><span class="m"><i class="fa-solid fa-video"></i> Online</span></div>
+          <div class="coach-foot"><span class="coach-cta">Profili Gör <i class="fa-solid fa-arrow-right"></i></span></div>
+        </div>
+      </a>
+
+      <a class="coach-card" href="antrenor-detay-v1.html?slug=derya-yildiz">
+        <div class="coach-media" style="background-image:url('https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=700&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-12')">
+          <div class="coach-badges">
+            <span class="coach-verify"><i class="fa-solid fa-shield-halved"></i> DadaFit Onaylı</span>
+            <span class="coach-status"><span class="dot"></span> Danışan alıyor</span>
+          </div>
+          <div class="coach-id"><b>Derya Yıldız</b><span>Mobilite &amp; Pilates · Postür</span></div>
+        </div>
+        <div class="coach-body">
+          <div class="coach-tags"><span>Esneklik</span><span>Postür</span><span>Düşük tempo</span></div>
+          <div class="coach-meta"><span class="m"><i class="fa-solid fa-star"></i> <b>5.0</b> · 86 değerlendirme</span><span class="m"><i class="fa-solid fa-arrows-left-right"></i> Hibrit</span></div>
+          <div class="coach-foot"><span class="coach-cta">Profili Gör <i class="fa-solid fa-arrow-right"></i></span></div>
+        </div>
+      </a>
+
+      <a class="coach-card" href="antrenor-detay-v1.html?slug=ayse-kaplan">
+        <div class="coach-media" style="background-image:url('https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=700&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-12')">
+          <div class="coach-badges">
+            <span class="coach-verify"><i class="fa-solid fa-shield-halved"></i> DadaFit Onaylı</span>
+            <span class="coach-status"><span class="dot"></span> Danışan alıyor</span>
+          </div>
+          <div class="coach-id"><b>Ayşe Kaplan</b><span>Kilo Yönetimi · Başlangıç</span></div>
+        </div>
+        <div class="coach-body">
+          <div class="coach-tags"><span>Sürdürülebilir alışkanlık</span><span>Beden-pozitif</span><span>Evde</span></div>
+          <div class="coach-meta"><span class="m"><i class="fa-solid fa-star"></i> <b>4.8</b> · 64 değerlendirme</span><span class="m"><i class="fa-solid fa-video"></i> Online</span></div>
+          <div class="coach-foot"><span class="coach-cta">Profili Gör <i class="fa-solid fa-arrow-right"></i></span></div>
+        </div>
+      </a>
+
+      <a class="coach-card" href="antrenor-detay-v1.html?slug=merve-tan">
+        <div class="coach-media" style="background-image:url('https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=700&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-12')">
+          <div class="coach-badges">
+            <span class="coach-verify"><i class="fa-solid fa-shield-halved"></i> DadaFit Onaylı</span>
+            <span class="coach-status busy"><span class="dot"></span> Liste dolu</span>
+          </div>
+          <div class="coach-id"><b>Merve Tan</b><span>Güç &amp; Kondisyon · Kilo Yönetimi</span></div>
+        </div>
+        <div class="coach-body">
+          <div class="coach-tags"><span>Kuvvet temeli</span><span>Form odaklı</span><span>Stüdyo</span></div>
+          <div class="coach-meta"><span class="m"><i class="fa-solid fa-star"></i> <b>4.9</b> · 142 değerlendirme</span><span class="m"><i class="fa-solid fa-people-group"></i> Yüz yüze</span></div>
+          <div class="coach-foot"><span class="coach-cta">Profili Gör <i class="fa-solid fa-arrow-right"></i></span></div>
+        </div>
+      </a>
+
+      <div class="df-coach-join">
+        <div>
+          <b>Antrenör müsün?</b>
+          <p>Sertifikanı yükle, DadaFit Onaylı rozetini al. (Diploma no gerekmez — sertifika yeterli.)</p>
+        </div>
+        <a class="btn btn-fit" href="fit-antrenor-ol.html"><i class="fa-solid fa-id-badge"></i> Antrenör Ol</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 8 · PRO-GATE teaser ===== -->
+<section class="sec sec-fit" style="background:var(--bg-cream)">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <span class="eyebrow"><i class="fa-solid fa-crown"></i> Ücretsiz &amp; Pro</span>
+        <h2>Temeller herkese açık, derinlik Pro'da</h2>
+        <p class="lead">Hub, temel egzersizler, başlangıç programı ve challenge ücretsiz. Pro yalnız derin içeriği açar — yeni bir üyelik değil, mevcut DadaFit Pro.</p>
+      </div>
+    </div>
+    <div class="df-pro-grid">
+      <div class="demo-card">
+        <span class="dc-tag free"><i class="fa-solid fa-unlock"></i> Ücretsiz</span>
+        <h3>Başlamak için her şey burada</h3>
+        <p>Kapsayıcı bir çekirdek — kayıt olmadan keşfet, hesabınla takip et.</p>
+        <div class="demo-list">
+          <div class="free-row"><i class="fa-solid fa-dumbbell"></i><div><b>DadaFit Egzersizleri — temel</b><span>25 hareket, görsel + anlatım</span></div></div>
+          <div class="free-row"><i class="fa-solid fa-seedling"></i><div><b>Başlangıç programı</b><span>Yeni başlayan 4 hafta</span></div></div>
+          <div class="free-row"><i class="fa-solid fa-flag-checkered"></i><div><b>Aylık challenge</b><span>30 günlük alışkanlık</span></div></div>
+        </div>
+        <div class="demo-note"><i class="fa-solid fa-circle-info"></i> Köprü ve TDEE hesabı da ücretsiz — denge herkesin hakkı.</div>
+      </div>
+      <div class="demo-card">
+        <span class="dc-tag paid"><i class="fa-solid fa-crown"></i> Pro</span>
+        <h3>Daha derine inmek isteyene</h3>
+        <p>İleri içerik mevcut DadaFit Pro üyeliğinle açılır.</p>
+        <div class="demo-list">
+          <button class="locked-row" type="button" data-pro-gate data-pro-title="İleri programlar Pro'da" data-pro-desc="Çok haftalık ileri programlar ve kettlebell serisi DadaFit Pro ile açılır.">
+            <span class="locked-ico"><i class="fa-solid fa-layer-group"></i></span>
+            <span class="locked-body"><b>İleri çok-haftalık programlar</b><span>Postür, kettlebell, güç ileri</span></span>
+            <span class="pro-pill"><i class="fa-solid fa-lock"></i> Pro</span>
+          </button>
+          <button class="locked-row" type="button" data-pro-gate data-pro-title="Video serileri Pro'da" data-pro-desc="Antrenör eşliğinde antrenman video serileri DadaFit Pro ile açılır.">
+            <span class="locked-ico"><i class="fa-solid fa-play"></i></span>
+            <span class="locked-body"><b>Antrenman video serileri</b><span>Antrenör eşliğinde, adım adım</span></span>
+            <span class="pro-pill"><i class="fa-solid fa-lock"></i> Pro</span>
+          </button>
+          <button class="locked-row" type="button" data-pro-gate data-pro-title="Ortak plan Pro'da" data-pro-desc="Diyetisyen + antrenör ortak danışan planı DadaFit Pro ile açılır.">
+            <span class="locked-ico"><i class="fa-solid fa-user-doctor"></i></span>
+            <span class="locked-body"><b>Diyetisyen + antrenör ortak plan</b><span>Menü ve program senkron</span></span>
+            <span class="pro-pill"><i class="fa-solid fa-lock"></i> Pro</span>
+          </button>
+        </div>
+        <div class="demo-note"><i class="fa-solid fa-circle-info"></i> Bir kilide dokun — Pro'nun ne açtığını gör.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 9 · KAPANIŞ CTA (ince koyu bookend) ===== -->
+<section class="sec df-cta">
+  <div class="wrap">
+    <span class="eyebrow"><i class="fa-solid fa-bolt"></i> Hazırsan</span>
+    <h2>Bugün küçük bir hareketle başla</h2>
+    <p>Tabağınla bedenin arasındaki köprü tek tık uzakta. Önce enerjini gör, sonra ilk hareketini seç.</p>
+    <div class="df-cta-acts">
+      <a class="btn btn-fit" href="egzersiz-kutuphane-v1.html"><i class="fa-solid fa-dumbbell"></i> Egzersizleri Keşfet</a>
+      <a class="btn btn-line" href="https://by4r.github.io/dadamutfak-view/v7-6cu356/gunluk-kalori-v1.html"><i class="fa-solid fa-calculator"></i> Enerjini Hesapla</a>
+    </div>
+  </div>
+</section>
+</main><!-- /.page-main -->
+
+<!-- KABUK: alt katman (giris kapisi + footer + basa don) -->
+<div id="fitShellBottom"></div>
+
+<!-- DadaFit ortak kabuk JS (tek kaynak): markup + davranis -->
+<script src="assets/js/fit-shell.js"></script>
+<script src="assets/js/fit-mesaj.js"></script>
+<script>
+/* ===== SAYFA JS — sayfa-spesifik script BU İŞARETİN ALTINA eklenir ===== */
+
+/* ===== DADAFIT HUB — sayfa JS ===== */
+// filtre çipi tek seçim (teaser)
+document.querySelectorAll('.df-filterbar .df-fchip').forEach(function(c){
+  c.addEventListener('click',function(){
+    document.querySelectorAll('.df-filterbar .df-fchip').forEach(function(x){x.classList.remove('on')});
+    c.classList.add('on');
+  });
+});
+// PRO-GATE — data-pro-gate taşıyan kilitli satırlar açar (giriş durumdan bağımsız teaser)
+(function(){
+  var gate=document.getElementById('proGate');
+  var overlay=document.getElementById('pgOverlay');
+  if(!gate)return;
+  function open(title,desc){
+    if(title)document.getElementById('pgTitle').textContent=title;
+    if(desc)document.getElementById('pgDesc').textContent=desc;
+    gate.classList.add('show');overlay.classList.add('show');document.body.style.overflow='hidden';
+  }
+  function close(){gate.classList.remove('show');overlay.classList.remove('show');document.body.style.overflow='';}
+  document.getElementById('pgClose').addEventListener('click',close);
+  overlay.addEventListener('click',close);
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&gate.classList.contains('show'))close();});
+  document.querySelectorAll('[data-pro-gate]').forEach(function(t){
+    t.addEventListener('click',function(e){
+      e.preventDefault();
+      open(t.getAttribute('data-pro-title'),t.getAttribute('data-pro-desc'));
+    });
+  });
+  if(location.search.indexOf('pg=1')>-1){open();}
+})();
+</script>
+
+<script>
+/* ===== DadaFit — sayfa-içi hareket/program arama (canlı süzme, DadaFit yeşili) ===== */
+(function(){
+  var box=document.getElementById('dfSearch');
+  var input=document.getElementById('dfSearchInput');
+  var clear=document.getElementById('dfSearchClear');
+  var count=document.getElementById('dfCount');
+  var noRes=document.getElementById('dfNoResult');
+  if(!input)return;
+ // Türkçe duyarlı normalize
+  function norm(s){
+    return (s||'').toLocaleLowerCase('tr-TR')
+      .replace(/ı/g,'i').replace(/ş/g,'s').replace(/ğ/g,'g')
+      .replace(/ü/g,'u').replace(/ö/g,'o').replace(/ç/g,'c')
+      .replace(/â/g,'a').replace(/î/g,'i').replace(/û/g,'u')
+      .replace(/\s+/g,' ').trim();
+  }
+ // hareket adı (h4) + açıklama (p) + kategori (.hub-cat) + etiketler (.hub-tag)
+  function indexCards(root){
+    return [].slice.call(root.querySelectorAll('.hub-card')).map(function(c){
+      var t=(c.querySelector('h4')||{}).textContent||'';
+      var d=(c.querySelector('p')||{}).textContent||'';
+      var cat=(c.querySelector('.hub-cat')||{}).textContent||'';
+      var tags=[].slice.call(c.querySelectorAll('.hub-tag')).map(function(x){return x.textContent;}).join(' ');
+      return {el:c,key:norm(t+' '+d+' '+cat+' '+tags)};
+    });
+  }
+  var lib=document.getElementById('kutuphane');   // search UI'yi barındırır → section gizlenmez
+  var prog=document.getElementById('programlar'); // 0 eşleşmede komple gizlenir
+  var libCards=indexCards(lib);
+  var progGroup={sec:prog,cards:indexCards(prog)};
+  function apply(){
+    var q=norm(input.value);
+    var searching=input.value.length>0;
+    box.classList.toggle('has-q',searching);
+    document.body.classList.toggle('df-searching',searching);
+    if(!searching){
+      libCards.forEach(function(c){c.el.classList.remove('dfs-hide');});
+      progGroup.sec.classList.remove('dfs-sec-hide');
+      progGroup.cards.forEach(function(c){c.el.classList.remove('dfs-hide');});
+      count.classList.remove('show');count.textContent='';
+      noRes.classList.remove('show');
+      return;
+    }
+    var total=0;
+    libCards.forEach(function(c){
+      var hit=c.key.indexOf(q)>-1;c.el.classList.toggle('dfs-hide',!hit);if(hit)total++;
+    });
+    var pn=0;
+    progGroup.cards.forEach(function(c){
+      var hit=c.key.indexOf(q)>-1;c.el.classList.toggle('dfs-hide',!hit);if(hit)pn++;
+    });
+    progGroup.sec.classList.toggle('dfs-sec-hide',pn===0);
+    total+=pn;
+    count.classList.add('show');
+    count.innerHTML=total>0?'<b>'+total+'</b> sonuç eşleşti':'Sonuç yok';
+    noRes.classList.toggle('show',total===0);
+  }
+  input.addEventListener('input',apply);
+  clear.addEventListener('click',function(){input.value='';apply();input.focus();});
+  input.addEventListener('keydown',function(e){if(e.key==='Escape'&&input.value){input.value='';apply();}});
+})();
+</script>
+<!-- DADAFIT-ACTIVE-NAV — aktif nav item boş-tık feedback'i (aria-current + self smooth-scroll) -->
+
+
+
+
+
+</body>
+</html>

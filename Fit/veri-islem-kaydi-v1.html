@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8" />
+  <meta name="robots" content="noindex, nofollow" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>İşlem Kaydı — Veri ve İzinlerim · DadaFit</title>
+<meta name="description" content="Verine kimin, ne zaman ve hangi amaçla eriştiğinin kaydı. Kendi görüntülemelerin, antrenörünün erişimleri, bağlı uygulama senkronları ve yönetim erişimleri tek listede." />
+<link rel="icon" type="image/svg+xml" href="../kanon/varlik/dadafit-isaret.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="../kanon/varlik/dadafit-isaret-32.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="../kanon/varlik/dadafit-isaret-180.png" />
+<!-- FontAwesome 6.5.2 (kilitli ikon seti) -->
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+      integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+      crossorigin="anonymous" referrerpolicy="no-referrer" />
+<!-- DadaFit ortak kabuk (tek kaynak) -->
+<!-- KANON · yukleme sirasi: tokenlar -> markalar/fit (bilesenler YUKLENMEZ) -->
+<link rel="stylesheet" href="../kanon/tokenlar.css" />
+<link rel="stylesheet" href="../kanon/markalar/fit.css" />
+<link rel="stylesheet" href="assets/css/fit-shell.css" />
+<link rel="stylesheet" href="assets/css/fit-mesaj.css" />
+<style>
+/* =====================================================================
+ KALEM #9 · İŞLEM KAYDI EKRANI  (envanter §4/9)
+ ---------------------------------------------------------------------
+ `fit-planim-veri-izin-v1.html` "İşlem kaydı — verine kimin ne zaman
+ eriştiği tutulur" diyor ve yanında bir "Görüntüle" düğmesi basıyordu;
+ hedef ekran HİÇ ÇİZİLMEMİŞTİ. Envanter bunu "yeni sayfa ya da bölüm"
+ diye bırakmıştı — AYRI SAYFA seçildi, çünkü kayıt bir ARŞİVDİR: kendi
+ süzgeci, kendi sayfalaması ve kendi saklama kuralı var; veri-izin
+ sayfası ise izin ANAHTARLARININ yeri.
+
+ 🔴 SÖZLEŞME UYUMU:
+   §7 · kart kiti Diet kanonu (.pnl-card · .pc-head · .pc-title <h2> · .pc-body)
+   §1.2 ORTAK ŞERH'in ilkesi: SATIRLAR SİLİNMEZ, ekrana basılan satır
+        sayısı sınırlıdır ve bu bir arşiv ekranıdır — "Daha Fazla Göster"
+        ile açılır, sahte sonsuz liste basılmaz.
+   §3.4 · yönetim erişimi de kayda yazılır ("işlem kaydına yazılır").
+ ⚠ BACKEND YOK: kayıtlar sayfanın kendi dizisinden gelir.
+ ===================================================================== */
+.ik-body{background:var(--bg-cream);padding:0 0 var(--sec-pad)}
+.ik-col{max-width:900px;margin:0 auto}
+
+/* kart kiti — KANON DIET (sözleşme §7). `.pc-title i` marka tokeni Fit'in
+   `--fit`i; Diet'in `--green`i bu depoda mint anlamına geliyor. */
+.pnl-card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);box-shadow:var(--sh-sm)}
+.pnl-card+.pnl-card{margin-top:16px}
+.pc-head{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:18px 22px;border-bottom:1px solid var(--line)}
+.pc-title{font-size:16px;font-weight:700;color:var(--slate);display:flex;align-items:center;gap:10px}
+.pc-title i{color:var(--fit);font-size:15px}
+.pc-body{padding:22px}
+.pc-foot{padding:14px 22px;border-top:1px solid var(--line);display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.pc-foot .note{font-size:12.5px;color:var(--muted);font-weight:500}
+/* D-2 · üç kural da `:has(p)` kapısında (sözleşme §7.1) */
+.pc-head:has(p){align-items:flex-start}
+.pc-head:has(p)>:first-child{min-width:0}
+.pc-head p{font-size:13px;color:var(--muted);font-weight:500;margin-top:5px}
+
+.ik-suzgec{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+.ik-chip{display:inline-flex;align-items:center;gap:7px;font-family:inherit;font-size:13px;font-weight:700;color:var(--slate-2);background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-pill);padding:9px 15px;cursor:pointer;transition:.18s var(--ease)}
+.ik-chip:hover{border-color:var(--fit);color:var(--fit-deep)}
+.ik-chip.active{background:var(--fit);border-color:var(--fit);color:#fff}
+.ik-chip .cnt{font-size:11.5px;opacity:.75}
+
+.ik-liste{display:flex;flex-direction:column}
+.ik-satir{display:flex;align-items:flex-start;gap:14px;padding:16px 0;border-bottom:1px solid var(--line)}
+.ik-satir:last-child{border-bottom:none}
+.ik-ico{flex:none;width:38px;height:38px;border-radius:var(--radius-md);display:grid;place-items:center;font-size:14px;background:var(--bg);color:var(--slate-2)}
+.ik-satir[data-kim="ben"] .ik-ico{background:var(--fit-wash);color:var(--fit-deep)}
+.ik-satir[data-kim="antrenor"] .ik-ico{background:rgba(59,183,126,.14);color:var(--green-deep)}
+.ik-satir[data-kim="uygulama"] .ik-ico{background:var(--bg-cream);color:var(--slate-2)}
+.ik-satir[data-kim="yonetim"] .ik-ico{background:#fdf3e4;color:#8a4b00}
+.ik-govde{flex:1;min-width:0}
+.ik-govde b{display:block;font-size:14px;color:var(--slate);font-weight:700}
+.ik-govde span{display:block;font-size:12.5px;color:var(--muted);font-weight:500;margin-top:3px;line-height:1.5}
+.ik-amac{display:inline-flex;align-items:center;gap:6px;margin-top:7px;font-size:11.5px;font-weight:700;color:var(--slate-2);background:var(--bg);border:1px solid var(--line);border-radius:var(--radius-sm);padding:4px 9px}
+.ik-zaman{flex:none;text-align:right;font-size:12.5px;color:var(--muted);font-weight:600;white-space:nowrap}
+.ik-daha{display:flex;justify-content:center;margin-top:18px}
+.ik-bos{padding:44px 24px;text-align:center}
+.ik-bos .pe-ico{width:58px;height:58px;margin:0 auto 14px;border-radius:var(--radius-md);background:var(--fit-wash);color:var(--fit-deep);display:flex;align-items:center;justify-content:center;font-size:22px}
+.ik-bos h3{font-size:15.5px;margin-bottom:5px}
+.ik-bos p{font-size:13px;color:var(--muted);max-width:320px;margin:0 auto}
+
+@media (max-width:640px){
+  .pc-head{flex-direction:column;align-items:flex-start;gap:10px;padding:16px}
+  .pc-body{padding:16px}
+  .pc-foot{padding:14px 16px}
+  .ik-satir{flex-wrap:wrap;gap:10px 14px}
+  .ik-zaman{order:3;flex:1 1 100%;text-align:left;padding-left:52px}
+}
+</style>
+<!-- Metin yaslama katmanı (tek kaynak) — sayfa stillerinden SONRA yüklenir -->
+<link rel="stylesheet" href="assets/css/fit-type.css" />
+</head>
+<body data-brand="fit" data-fit-page="hesabim">
+
+<!-- KABUK: üst katman (üst bant + header + drawer + alt bar + görüş + çerez) -->
+<div id="fitShellTop"></div>
+
+<main class="page-main" id="pageMain">
+
+<!-- ===== BANNER + BREADCRUMB (kabuk .lib-top kiti) ===== -->
+<section class="lib-top">
+  <div class="wrap">
+    <nav class="lib-crumb" aria-label="Sayfa yolu">
+      <a href="dadafit-hub-v1.html" class="crumb-home"><i class="fa-solid fa-house" aria-hidden="true"></i><span class="sr-only">DadaFit ana sayfa</span></a>
+      <i class="fa-solid fa-chevron-right"></i>
+      <a href="fit-hesabim.html">Hesap Ayarları</a>
+      <i class="fa-solid fa-chevron-right"></i>
+      <a href="fit-planim-veri-izin-v1.html">Veri ve İzinlerim</a>
+      <i class="fa-solid fa-chevron-right"></i>
+      <span class="cur">İşlem Kaydı</span>
+    </nav>
+    <span class="eyebrow"><i class="fa-solid fa-clipboard-list"></i> Veri ve İzinlerim</span>
+    <h1>İşlem kaydı</h1>
+    <p class="lib-sub">Verine kimin, ne zaman ve hangi amaçla eriştiğini burada görürsün. Kayıtlar silinmez; izinleri kapatsan bile geçmiş erişimlerin kaydı durur.</p>
+    <div class="chips">
+      <a class="btn btn-ghost" href="fit-planim-veri-izin-v1.html"><i class="fa-solid fa-arrow-left"></i> Veri ve İzinlerime dön</a>
+      <a class="btn btn-ghost" href="fit-planim-veri-izin-v1.html#indir"><i class="fa-solid fa-download"></i> Verimi indir</a>
+    </div>
+  </div>
+</section>
+
+<section class="ik-body">
+  <div class="wrap">
+    <div class="ik-col">
+
+      <div class="pnl-card">
+        <div class="pc-head">
+          <div>
+            <h2 class="pc-title"><i class="fa-solid fa-clipboard-list"></i> Erişim geçmişin</h2>
+            <p>Son 90 günün kaydı. Bağlı uygulama senkronları 90 gün, diğer kayıtlar hesabın açık kaldığı sürece tutulur.</p>
+          </div>
+        </div>
+        <div class="pc-body">
+
+          <div class="ik-suzgec" id="ikSuzgec" role="group" aria-label="Erişim türü süzgeci">
+            <button class="ik-chip active" type="button" data-kim="hepsi" aria-pressed="true">Tümü <span class="cnt" id="ikSayiHepsi">0</span></button>
+            <button class="ik-chip" type="button" data-kim="ben" aria-pressed="false"><i class="fa-regular fa-user"></i> Sen</button>
+            <button class="ik-chip" type="button" data-kim="antrenor" aria-pressed="false"><i class="fa-solid fa-user-tie"></i> Antrenörün</button>
+            <button class="ik-chip" type="button" data-kim="uygulama" aria-pressed="false"><i class="fa-solid fa-plug-circle-check"></i> Bağlı uygulamalar</button>
+            <button class="ik-chip" type="button" data-kim="yonetim" aria-pressed="false"><i class="fa-solid fa-shield-halved"></i> Yönetim</button>
+          </div>
+
+          <!-- YER TUTUCU — üyenin gerçek erişim kaydı gelince değişecek.
+               Dört erişim türü, süzgeç ve "satırlar silinmez" kuralı GERÇEK;
+               yalnız satırların kendisi örnek. -->
+          <div class="ik-liste" id="ikListe" data-yer-tutucu="islem-kaydi-satirlari"></div>
+
+          <div class="ik-bos" id="ikBos" hidden>
+            <span class="pe-ico" aria-hidden="true"><i class="fa-solid fa-clipboard-check"></i></span>
+            <h3>Bu türde kayıt yok</h3>
+            <p>Seçtiğin erişim türünde son 90 günde hiçbir işlem kaydedilmemiş.</p>
+          </div>
+
+          <div class="ik-daha" id="ikDahaKap">
+            <button class="btn btn-ghost" type="button" id="ikDaha"><i class="fa-solid fa-chevron-down"></i> Daha Fazla Göster</button>
+          </div>
+        </div>
+        <div class="pc-foot">
+          <span class="note">Kayıtlar silinemez. Tanımadığın bir erişim görürsen destek talebi açman gerekir.</span>
+          <a class="btn btn-ghost" href="fit-cozum-merkezi.html#taleplerim" style="margin-left:auto;padding:11px 18px;font-size:13.5px"><i class="fa-solid fa-headset"></i> Destek Talebi Aç</a>
+        </div>
+      </div>
+
+      <div class="pnl-card">
+        <div class="pc-head">
+          <div>
+            <h2 class="pc-title"><i class="fa-solid fa-circle-question"></i> Bu kayıt ne işe yarar</h2>
+            <p>Neyin tutulduğu, neyin tutulmadığı ve ne kadar saklandığı.</p>
+          </div>
+        </div>
+        <div class="pc-body">
+          <ul class="ik-liste" style="gap:0">
+            <li class="ik-satir" style="list-style:none"><span class="ik-ico"><i class="fa-solid fa-eye"></i></span>
+              <div class="ik-govde"><b>Ne tutulur</b><span>Erişen taraf, zaman, erişilen veri grubu ve erişim amacı. Verinin kendisi bu kayda kopyalanmaz.</span></div></li>
+            <li class="ik-satir" style="list-style:none"><span class="ik-ico"><i class="fa-solid fa-ban"></i></span>
+              <div class="ik-govde"><b>Ne tutulmaz</b><span>Antrenman içeriğin, ölçümlerin ve mesaj metinlerin bu listede yer almaz; onlar kendi bölümlerinde durur.</span></div></li>
+            <li class="ik-satir" style="list-style:none"><span class="ik-ico"><i class="fa-regular fa-clock"></i></span>
+              <div class="ik-govde"><b>Ne kadar saklanır</b><span>Bağlı uygulama senkron kayıtları 90 gün; diğer erişim kayıtları hesabın açık kaldığı sürece. Hesabını silersen 30 gün içinde silinir.</span></div></li>
+            <li class="ik-satir" style="list-style:none"><span class="ik-ico"><i class="fa-solid fa-user-shield"></i></span>
+              <div class="ik-govde"><b>Yönetim erişimi</b><span>DadaFit ekibinden biri verine eriştiğinde bu listede <b>Yönetim</b> olarak görünür; gerekçesi yazılır ve kayıt silinemez.</span></div></li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- KABUK: alt katman (giriş kapısı + footer + başa dön) -->
+<div id="fitShellBottom"></div>
+
+<!-- DadaFit ortak kabuk JS (tek kaynak) -->
+<script src="assets/js/fit-shell.js"></script>
+<script src="assets/js/fit-mesaj.js"></script>
+<script>
+/* =====================================================================
+ SAYFA JS — işlem kaydı
+ Kayıtlar sayfanın kendi dizisinden gelir (Fit'te sunucu yok). Ekrana
+ sayfa sayfa basılır: sözleşme §1.2'nin ORTAK ŞERHİ "satırlar silinmez,
+ ekranda basılan satır sayısı sınırlıdır" diyor — sonsuz liste basılmaz,
+ "Daha Fazla Göster" ile açılır.
+ ⚠ `?bos=1` boş durumu gösterir (deponun `?empty=1` deyiminin bu sayfadaki
+ karşılığı; süzgeç boş kaldığında da aynı kutu basılır).
+ ===================================================================== */
+(function(){
+  var KAYIT=[
+    ['ben','fa-regular fa-user','Sen','Antrenman geçmişini görüntüledin','Kendi kaydını okuma','Bugün, 08:42'],
+    ['uygulama','fa-brands fa-apple','Apple Health','Adım ve kalp atışı verisi alındı','Aktivite senkronu','Bugün, 07:15'],
+    ['antrenor','fa-solid fa-user-tie','Selin Aksoy','Antrenman geçmişini ve set kayıtlarını görüntüledi','Program hazırlama','Dün, 19:03'],
+    ['ben','fa-regular fa-user','Sen','Sağlık ve hareket profilini güncelledin','Kendi kaydını değiştirme','Dün, 12:20'],
+    ['uygulama','fa-solid fa-stopwatch','Akıllı saat','Antrenman süresi ve nabız verisi alındı','Aktivite senkronu','Dün, 06:58'],
+    ['antrenor','fa-solid fa-user-tie','Selin Aksoy','Randevu notunu okudu','Seans hazırlığı','24 Ağu 2026, 17:41'],
+    ['ben','fa-solid fa-download','Sen','Veri indirme paketi istedin','Veri taşınabilirliği','23 Ağu 2026, 21:10'],
+    ['uygulama','fa-brands fa-android','Health Connect','Uyku ve adım verisi alındı','Aktivite senkronu','23 Ağu 2026, 07:02'],
+    ['yonetim','fa-solid fa-shield-halved','DadaFit Destek','Destek talebindeki ekran görüntüsüne erişti','DF-2026-0412 numaralı talebin incelenmesi','22 Ağu 2026, 14:26'],
+    ['ben','fa-regular fa-user','Sen','Bildirim tercihlerini değiştirdin','Kendi kaydını değiştirme','21 Ağu 2026, 09:33'],
+    ['antrenor','fa-solid fa-user-tie','Selin Aksoy','Ölçüm geçmişini görüntüledi','İlerleme değerlendirmesi','20 Ağu 2026, 18:12'],
+    ['uygulama','fa-brands fa-apple','Apple Health','Adım ve kalp atışı verisi alındı','Aktivite senkronu','20 Ağu 2026, 07:11'],
+    ['ben','fa-regular fa-user','Sen','İki adımlı doğrulamayı açtın','Hesap güvenliği','19 Ağu 2026, 22:47'],
+    ['yonetim','fa-solid fa-shield-halved','DadaFit Destek','Fatura kaydını görüntüledi','Faturalandırma sorusunun yanıtlanması','18 Ağu 2026, 11:05'],
+    ['ben','fa-regular fa-user','Sen','Kayıtlı ödeme yöntemini görüntüledin','Kendi kaydını okuma','15 Ağu 2026, 09:16']
+  ];
+  var SAYFA=6;
+
+  var liste=document.getElementById('ikListe'), bos=document.getElementById('ikBos'),
+      daha=document.getElementById('ikDaha'), dahaKap=document.getElementById('ikDahaKap');
+  var suzgec='hepsi', gosterilen=SAYFA;
+  var bosMod=new URLSearchParams(location.search).get('bos')==='1';
+
+  function esc(t){ return String(t).replace(/[&<>"]/g,function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+
+  function suzulmus(){
+    if(bosMod) return [];
+    return suzgec==='hepsi' ? KAYIT : KAYIT.filter(function(k){ return k[0]===suzgec; });
+  }
+
+  function boya(){
+    var k=suzulmus(), parca=k.slice(0,gosterilen), h='';
+    parca.forEach(function(r){
+      h+='<div class="ik-satir" data-kim="'+r[0]+'">'+
+         '<span class="ik-ico" aria-hidden="true"><i class="'+r[1]+'"></i></span>'+
+         '<div class="ik-govde"><b>'+esc(r[2])+'</b><span>'+esc(r[3])+'</span>'+
+         '<span class="ik-amac"><i class="fa-solid fa-tag" aria-hidden="true"></i> '+esc(r[4])+'</span></div>'+
+         '<span class="ik-zaman">'+esc(r[5])+'</span></div>';
+    });
+    liste.innerHTML=h;
+    liste.hidden = k.length===0;
+    bos.hidden = k.length>0;
+    dahaKap.hidden = gosterilen>=k.length;
+    document.getElementById('ikSayiHepsi').textContent=bosMod?0:KAYIT.length;
+  }
+
+  document.querySelectorAll('#ikSuzgec .ik-chip').forEach(function(c){
+    c.addEventListener('click',function(){
+      document.querySelectorAll('#ikSuzgec .ik-chip').forEach(function(x){
+        x.classList.remove('active'); x.setAttribute('aria-pressed','false');
+      });
+      c.classList.add('active'); c.setAttribute('aria-pressed','true');
+      suzgec=c.getAttribute('data-kim'); gosterilen=SAYFA; boya();
+    });
+  });
+  daha.addEventListener('click',function(){ gosterilen+=SAYFA; boya(); });
+  boya();
+})();
+</script>
+</body>
+</html>

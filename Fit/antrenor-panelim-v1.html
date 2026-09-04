@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8" />
+<meta name="robots" content="noindex, nofollow" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Antrenör Panelim — Paketler, Danışanlar, Randevular ve Kazanç | DadaFit</title>
+<meta name="description" content="DadaFit onaylı antrenörün kendi paneli: sattığın hizmet paketleri, danışanların, randevu takvimin ve hakediş defterin tek ekranda." />
+<link rel="icon" type="image/svg+xml" href="../kanon/varlik/dadafit-isaret.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="../kanon/varlik/dadafit-isaret-32.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="../kanon/varlik/dadafit-isaret-180.png" />
+<!-- FontAwesome 6.5.2 (kilitli ikon seti) -->
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+      integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+      crossorigin="anonymous" referrerpolicy="no-referrer" />
+<!-- DadaFit ortak kabuk (TEK KAYNAK — token, header, footer, kart/çip/banner kitleri) -->
+<!-- KANON · yukleme sirasi: tokenlar -> markalar/fit (bilesenler YUKLENMEZ) -->
+<link rel="stylesheet" href="../kanon/tokenlar.css" />
+<link rel="stylesheet" href="../kanon/markalar/fit.css" />
+<link rel="stylesheet" href="assets/css/fit-shell.css" />
+<link rel="stylesheet" href="assets/css/fit-mesaj.css" />
+<style>
+/* =====================================================================
+ SAYFA CSS — ANTRENÖR PANELİM  (Dalga 5'in Fit payı, maket)
+ ---------------------------------------------------------------------
+ NE BU: Bugün depoda antrenörün ÜYEYE GÖRÜNEN yüzü var
+ (`antrenorler-v1.html` · `antrenor-detay-v1.html` · `antrenor-ol-v1.html`).
+ Bu sayfa antrenörün KENDİ tarafında göreceği yüzdür. Sayfanın varlığını
+ depo zaten vaat ediyordu: `antrenor-ol-v1.html`in SSS'i "ticari detaylar
+ onay sonrası ANTRENÖR PANELİNDE netleşir" diyor.
+
+ 🔴 K4 · K6 · P7 — ABONELİK DEĞİL, HİZMET PAKETİ. Fit'te üyeden üyeye
+ abonelik YOKTUR; üye üreticiden HİZMET SATIN ALIR. Bu yüzden sayfada
+ "abonelik" · "yenileme" · "otomatik tahsilat" sözcükleri geçmez.
+
+ 🔴 YENİ KİT UYDURULMADI. Her kutu depoda var olan bir kitten geliyor:
+   · Sayfa kabuğu + ray  → `hesabim-v1.html`in `.hs-col`/`.hs-sec`/`.hs-rail`
+                            deseni (sözleşme §7 · P12; kart kiti Diet kanonu)
+   · Kart kiti           → `.pnl-card`/`.pc-head`/`.pc-title`/`.pc-body`/`.pc-foot`
+                            (`hesabim-v1.html`ten BİREBİR — D-1 ve D-2 dahil)
+   · Liste satırı        → kabuğun `.fp-list`/`.fp-row`/`.fp-badge` kiti
+                            (`egzersizlerim-v1.html#antrenorum` ile aynı)
+   · Hakediş tablosu     → `fatura-detay-v1.html`in `.fd-tablo`su, BİREBİR
+   · Banner + ekmek kırıntısı → kabuğun `.lib-top` kiti
+ Yeni renk · yarıçap · gölge İCAT EDİLMEDİ.
+
+ 🔴 NÖTRLEYİCİ YOK — ölçüldü, varsayılmadı: `.pc-title` bu sayfada DOĞDUĞU
+ andan beri `<h2>`dir, yani `h1..h4{line-height:1.12}` zaten yürürlükte.
+ Diet'in `line-height:1.55` düzeltmesi buraya KOPYALANMAZ; kopyalansaydı
+ bugün olmayan bir kayma üretilirdi (`hesabim-v1.html`in aynı şerhi).
+ ===================================================================== */
+
+/* ---- banner (kabuk .lib-top kiti; sayfa yalnız görselini bildirir) ---- */
+.lib-top{--lib-img:url('https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=1680&q=80&auto=format&fit=crop&sat=-20');--lib-pos:center 42%}
+
+/* ---- sayfa gövdesi ---- */
+.ap-body{background:var(--bg-cream);padding:0 0 var(--sec-pad)}
+.ap-col{max-width:900px;margin:0 auto}
+
+/* bölüm — çapa hedefi. Sabit header payı BURADA TEKRARLANMAZ: kabuk zaten
+   html{scroll-padding-top} yazıyor. Buradaki değişken YALNIZ sticky bölüm
+   rayının payıdır (hesabim-v1.html'in ölçülmüş şerhi). */
+.ap-sec{scroll-margin-top:var(--ap-anchor-pad,128px)}
+/* Panel gizleme `hidden` niteliğiyle (erişilebilirlik ağacından da düşsün);
+   bazı sıfırlamalar display'i ezdiği için kural açıkça yazıldı.
+   İşaretlemede hiçbir panel `hidden` DOĞMAZ — gizlemeyi JS yapar, böylece
+   JS düşerse hepsi açık kalır ve çapalar çalışmaya devam eder. */
+.ap-sec[hidden]{display:none}
+.ap-sec:focus{outline:none}
+.ap-sec:focus-visible{outline:3px solid var(--fit);outline-offset:6px;border-radius:var(--radius-lg)}
+.ap-rail{margin-bottom:22px}
+.ap-rail .dt{text-decoration:none}
+
+/* =====================================================================
+ KART KİTİ — KANON DIET (sözleşme §7 · P12). hesabim-v1.html'ten BİREBİR.
+ ===================================================================== */
+.pnl-card{
+  background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);
+  box-shadow:var(--sh-sm);
+}
+.pnl-card+.pnl-card{margin-top:16px}
+.pc-head{
+  display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:18px 22px;border-bottom:1px solid var(--line);
+}
+.pc-title{font-size:16px;font-weight:700;color:var(--slate);display:flex;align-items:center;gap:10px}
+.pc-title i{color:var(--fit);font-size:15px}
+.pc-body{padding:22px}
+.pc-body.flush{padding:0}
+.pc-foot{padding:14px 22px;border-top:1px solid var(--line)}
+/* D-2 · açıklama yuvası — üç kural, hepsi `:has(p)` KAPISININ İÇİNDE.
+   Şartsız yazılsaydı açıklamasız kartların başlık hizası da etkilenirdi. */
+.pc-head:has(p){align-items:flex-start}
+.pc-head:has(p)>:first-child{min-width:0}
+.pc-head p{font-size:13px;color:var(--muted);font-weight:500;margin-top:5px}
+/* kart başlığının sağındaki durum/sayaç kalemi */
+.pc-head .pc-end{flex:none;font-size:12.5px;font-weight:700;color:var(--muted);white-space:nowrap}
+
+/* ---- kart içi açıklama ve kural satırları ---- */
+.ap-note{font-size:13px;color:var(--slate-2);font-weight:500;line-height:1.65;margin:0}
+.ap-note+.ap-note{margin-top:10px}
+.ap-note b{color:var(--slate);font-weight:700}
+.ap-kural{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px}
+.ap-kural li{display:flex;gap:11px;font-size:13.5px;color:var(--slate-2);font-weight:500;line-height:1.6}
+.ap-kural i{flex:none;margin-top:4px;font-size:11px;color:var(--fit-deep)}
+.ap-kural b{color:var(--slate);font-weight:700}
+
+/* ---- satır kartındaki ikinci meta satırı (kabuğun .fp-row'u içinde) ---- */
+.ap-row .txt{display:flex;flex-direction:column;gap:4px}
+.ap-row .txt .alt{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:12.5px;color:var(--muted);font-weight:500}
+.ap-row .txt .alt span{display:inline-flex;align-items:center;gap:6px}
+.ap-row .txt .alt i{font-size:11px}
+.ap-row .end{display:flex;flex-direction:column;align-items:flex-end;gap:6px}
+/* K9 · durum geçiş düğmeleri — dokunma hedefi 44px (kit §5/§6 ile aynı karar) */
+.ap-acts{display:flex;flex-wrap:wrap;gap:6px;justify-content:flex-end}
+.ap-act-btn{min-height:44px;padding:0 13px;border-radius:var(--radius-sm);border:1px solid var(--line);background:var(--paper);color:var(--slate);font-size:12px;font-weight:700;font-family:inherit;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:.18s var(--ease)}
+.ap-act-btn:hover{border-color:var(--fit);color:var(--fit-deep)}
+.ap-act-btn i{font-size:11px}
+
+/* =====================================================================
+ HAKEDİŞ TABLOSU — fatura-detay-v1.html'in `.fd-tablo`su, BİREBİR kopya.
+ (Aynı defter iki sayfada aynı görünsün diye tek harf değişmedi.)
+ ===================================================================== */
+.fd-tablo{width:100%;border-collapse:collapse;font-size:13.5px}
+.fd-tablo th{text-align:left;font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);padding:0 0 12px;border-bottom:1px solid var(--line)}
+.fd-tablo th.sag,.fd-tablo td.sag{text-align:right}
+.fd-tablo td{padding:13px 0;border-bottom:1px solid var(--line);color:var(--slate-2);font-weight:500;vertical-align:top}
+.fd-tablo td b{display:block;color:var(--slate);font-weight:700;margin-bottom:2px}
+.fd-tablo td small{display:block;font-size:12px;color:var(--muted)}
+/* geniş tablo kendi kabında kayar — sayfa gövdesi YATAY KAYMAZ */
+.ap-tablo-kap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+
+/* =====================================================================
+ 🔴 YER TUTUCU RAKAM HÜCRESİ  (sözleşme §7.4 · K13)
+ ---------------------------------------------------------------------
+ K13: komisyon oranı · ödeme günü · alt sınır · fatura eşiği · iade kuralı
+ YÖNETİM PANELİNDEN OKUNUR, KODA GÖMÜLMEZ — ve o panel bu turda YOK.
+ Bu yüzden bu sayfada HİÇBİR PARA RAKAMI YAZILMADI: tutar hücreleri
+ `data-yer-tutucu` taşır, ekranda ne beklendiğini TÜRKÇE söyler ve
+ `docs/icerik-bekleyen.md`ye kaydedilmiştir.
+ ⚠ Sahte tutar yazmak, oranın "onaylanmış" olduğu izlenimi verirdi.
+ ===================================================================== */
+.ap-yt{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:600;
+  color:var(--slate-2);background:var(--bg);border:1px dashed var(--line);
+  border-radius:var(--radius-sm);padding:5px 10px;white-space:nowrap}
+.ap-yt i{font-size:11px;color:var(--muted)}
+.fd-tablo td .ap-yt{font-weight:600}
+/* özet hücresi — üç rakamın üçü de yer tutucu */
+.ap-ozet{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.ap-ozet .oz{border:1px solid var(--line);border-radius:var(--radius-md);background:var(--bg);padding:16px}
+.ap-ozet .oz b{display:block;font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);margin-bottom:9px}
+.ap-ozet .oz .ap-yt{white-space:normal}
+
+/* ---- boş durum: kabuğun .lib-empty kiti, yalnız kart içi payı ---- */
+.pc-body .lib-empty{padding:36px 20px 26px}
+
+@media (max-width:760px){
+  .ap-ozet{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:640px){
+  .pc-body{padding:18px 16px}
+  .pc-head{padding:16px}
+  .pc-foot{padding:13px 16px}
+  .ap-row .end{align-items:flex-start}
+}
+</style>
+<!-- Metin yaslama katmanı (tek kaynak) — sayfa stillerinden SONRA yüklenir -->
+<link rel="stylesheet" href="assets/css/fit-type.css" />
+</head>
+<body data-brand="fit" data-fit-page="antrenor-panelim" data-fit-rail="1">
+
+<!-- KABUK: üst katman (üst bant + header + drawer + alt bar + görüş + çerez) -->
+<div id="fitShellTop"></div>
+
+<main class="page-main" id="pageMain">
+
+<!-- ===== BANNER + BREADCRUMB (kabuk .lib-top kiti) ===== -->
+<section class="lib-top">
+  <div class="wrap">
+    <nav class="lib-crumb" aria-label="Sayfa yolu">
+      <a href="dadafit-hub-v1.html" class="crumb-home"><i class="fa-solid fa-house" aria-hidden="true"></i><span class="sr-only">DadaFit ana sayfa</span></a>
+      <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
+      <a href="antrenorler-v1.html">Antrenörler</a>
+      <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
+      <span class="cur">Antrenör Panelim</span>
+    </nav>
+    <span class="eyebrow"><i class="fa-solid fa-user-tie"></i> Antrenör tarafı</span>
+    <h1>Antrenör Panelim</h1>
+    <p class="lib-sub">Sattığın hizmet paketleri, birlikte çalıştığın danışanlar, randevu takvimin ve hakediş defterin. Bu ekranlar yalnız sana görünür; danışanların gördüğü yüz <a href="antrenor-detay-v1.html?slug=selin-aksoy">antrenör profilindir</a>.</p>
+    <div class="chips">
+      <a class="btn btn-fit" href="antrenor-detay-v1.html?slug=selin-aksoy"><i class="fa-solid fa-eye"></i> Profilim danışana nasıl görünüyor</a>
+      <a class="btn btn-ghost" href="fit-cozum-merkezi.html#taleplerim"><i class="fa-solid fa-headset"></i> Destek talebi aç</a>
+    </div>
+    <div class="lib-stats">
+      <div class="lib-stat"><b>3</b><span>hizmet paketi</span></div>
+      <div class="lib-stat"><b>6</b><span>aktif danışan</span></div>
+      <div class="lib-stat"><b id="apLibYaklasan">0</b><span>yaklaşan randevu</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== BÖLÜM RAYI — kabuk .pf-tabbar/.pf-tabs/.dt kiti, kalemler <a>.
+     Desen hesabim-v1.html'in `#hsRail`inden BİREBİR: ARIA tabs (ok tuşları ·
+     Home/End · gezici tabindex · odaklanabilir panel) ve DERİN BAĞLANTI
+     korunur — kalemler `<a href="#id">` kalır, paneller işaretlemede AÇIK
+     doğar, gizlemeyi JS yapar. JS düşerse sayfa tek uzun sayfaya döner ve
+     çapalar yine çalışır. ===== -->
+<div class="pf-tabbar ap-rail">
+  <div class="wrap">
+    <nav class="pf-tabs" id="apRail" role="tablist" aria-label="Antrenör paneli bölümleri">
+      <a class="dt" role="tab" id="tab-paketler"   href="#paketler"   aria-controls="paketler"   aria-selected="false" tabindex="-1"><i class="fa-solid fa-box-open"></i> Paketlerim</a>
+      <a class="dt" role="tab" id="tab-danisanlar" href="#danisanlar" aria-controls="danisanlar" aria-selected="false" tabindex="-1"><i class="fa-solid fa-users"></i> Danışanlarım</a>
+      <a class="dt" role="tab" id="tab-randevular" href="#randevular" aria-controls="randevular" aria-selected="false" tabindex="-1"><i class="fa-solid fa-calendar-check"></i> Randevularım</a>
+      <a class="dt" role="tab" id="tab-kazanc"     href="#kazanc"     aria-controls="kazanc"     aria-selected="false" tabindex="-1"><i class="fa-solid fa-wallet"></i> Kazançlarım</a>
+    </nav>
+  </div>
+</div>
+
+<section class="ap-body">
+  <div class="wrap">
+    <div class="ap-col">
+
+<!-- ================= 1 · PAKETLERİM ================= -->
+<section class="ap-sec" id="paketler" role="tabpanel" tabindex="0" aria-labelledby="tab-paketler">
+
+  <div class="pnl-card">
+    <div class="pc-head">
+      <div>
+        <h2 class="pc-title"><i class="fa-solid fa-box-open"></i> Hizmet paketlerin</h2>
+        <p>Danışanların senden satın aldığı paketler. <b>Bunlar abonelik değildir</b> — kendiliğinden yenilenmez, süresi ya da seansı bitince biter ve danışan yeni bir paket alır.</p>
+      </div>
+      <span class="pc-end">3 paket</span>
+    </div>
+    <div class="pc-body flush">
+      <div class="fp-list" style="padding:0 22px">
+        <div class="fp-row ap-row">
+          <span class="ico"><i class="fa-solid fa-seedling" aria-hidden="true"></i></span>
+          <span class="txt">
+            <b>Başlangıç Paketi</b>
+            <span class="alt">
+              <span><i class="fa-solid fa-repeat" aria-hidden="true"></i> 4 seans</span>
+              <span><i class="fa-regular fa-calendar" aria-hidden="true"></i> 1 ay içinde kullanılır</span>
+              <span><i class="fa-solid fa-video" aria-hidden="true"></i> Online</span>
+              <span><i class="fa-solid fa-users" aria-hidden="true"></i> 3 danışan kullanıyor</span>
+            </span>
+          </span>
+          <span class="end">
+            <span class="fp-badge ok"><i class="fa-solid fa-circle-check"></i> Yayında</span>
+            <!-- YER TUTUCU — paket ücreti gelince değişecek (docs/icerik-bekleyen.md → antrenor-aylik-paket-ucreti) -->
+            <span class="ap-yt" data-yer-tutucu="antrenor-aylik-paket-ucreti" aria-label="Paket ücreti henüz belirlenmedi"><i class="fa-solid fa-tag" aria-hidden="true"></i> Ücret onay bekliyor</span>
+          </span>
+        </div>
+
+        <div class="fp-row ap-row">
+          <span class="ico"><i class="fa-solid fa-arrow-trend-up" aria-hidden="true"></i></span>
+          <span class="txt">
+            <b>Sürdürülebilir Rutin</b>
+            <span class="alt">
+              <span><i class="fa-solid fa-repeat" aria-hidden="true"></i> 12 seans</span>
+              <span><i class="fa-regular fa-calendar" aria-hidden="true"></i> 3 ay içinde kullanılır</span>
+              <span><i class="fa-solid fa-shuffle" aria-hidden="true"></i> Online + yüz yüze</span>
+              <span><i class="fa-solid fa-users" aria-hidden="true"></i> 3 danışan kullanıyor</span>
+            </span>
+          </span>
+          <span class="end">
+            <span class="fp-badge ok"><i class="fa-solid fa-circle-check"></i> Yayında</span>
+            <!-- YER TUTUCU — paket ücreti gelince değişecek -->
+            <span class="ap-yt" data-yer-tutucu="antrenor-aylik-paket-ucreti" aria-label="Paket ücreti henüz belirlenmedi"><i class="fa-solid fa-tag" aria-hidden="true"></i> Ücret onay bekliyor</span>
+          </span>
+        </div>
+
+        <div class="fp-row ap-row">
+          <span class="ico"><i class="fa-solid fa-stopwatch" aria-hidden="true"></i></span>
+          <span class="txt">
+            <b>Tek Seans</b>
+            <span class="alt">
+              <span><i class="fa-solid fa-repeat" aria-hidden="true"></i> 1 seans</span>
+              <span><i class="fa-regular fa-clock" aria-hidden="true"></i> 50 dakika</span>
+              <span><i class="fa-solid fa-video" aria-hidden="true"></i> Online</span>
+              <span><i class="fa-solid fa-eye-slash" aria-hidden="true"></i> Dizinde görünmüyor</span>
+            </span>
+          </span>
+          <span class="end">
+            <span class="fp-badge off"><i class="fa-solid fa-pen"></i> Taslak</span>
+            <!-- YER TUTUCU — paket ücreti gelince değişecek -->
+            <span class="ap-yt" data-yer-tutucu="antrenor-aylik-paket-ucreti" aria-label="Paket ücreti henüz belirlenmedi"><i class="fa-solid fa-tag" aria-hidden="true"></i> Ücret onay bekliyor</span>
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="pc-foot">
+      <!-- 🔴 "YAKINDA" YAZILMADI, GEREKÇE YAZILDI. Paket ekleme/düzenleme
+           yüzeyi bu turda ÇİZİLMEDİ çünkü bir paketin ücreti tek başına
+           antrenörün kararı değildir: komisyon oranı, alt sınır ve fatura
+           eşiği K13 gereği yönetim panelinden okunur ve o panel henüz yok.
+           Form çizmek, o parametrelerin kararlaşmış olduğunu varsaymaktır.
+           Kilitli hücre GEREKÇE + ÇIKIŞ YOLU taşır: çıkış gerçek bir
+           adrestir, ölü bağlantı değil. -->
+      <p class="ap-note">Paket ekleme ve düzenleme bu turda çizilmedi: bir paketin ücreti komisyon oranı, ödeme alt sınırı ve fatura eşiğiyle birlikte anlam kazanıyor; bu değerler yönetim panelinden okunacak ve o panel henüz kurulmadı. Paketlerinde değişiklik gerekiyorsa <a href="fit-cozum-merkezi.html#taleplerim">destek talebi açabilirsin</a>.</p>
+    </div>
+  </div>
+
+  <div class="pnl-card">
+    <div class="pc-head">
+      <div>
+        <h2 class="pc-title"><i class="fa-solid fa-eye"></i> Paketin danışana nasıl görünüyor</h2>
+        <p>Yayındaki paketlerin antrenör profilinde "Seanslar" sekmesinde listelenir; danışan randevu alırken paketi oradan seçer.</p>
+      </div>
+    </div>
+    <div class="pc-body">
+      <p class="ap-note">Profilinde görünen kapsam, süre ve çalışma şekli buradaki paket tanımından gelir. Yayından kaldırdığın bir paket profilde de görünmez, ama <b>o paketi almış danışanların hakkı düşmez</b> — kalan seansları "Danışanlarım" bölümünde durmaya devam eder.</p>
+      <div class="fp-list" style="margin-top:6px">
+        <a class="fp-row" href="antrenor-detay-v1.html?slug=selin-aksoy">
+          <span class="ico"><i class="fa-solid fa-id-badge" aria-hidden="true"></i></span>
+          <span class="txt"><b>Antrenör profilim</b><small>Danışanın gördüğü sayfa — seanslar, yorumlar, çalışma koşulları</small></span>
+          <span class="end"><i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>
+        </a>
+        <a class="fp-row" href="antrenorler-v1.html">
+          <span class="ico"><i class="fa-solid fa-list" aria-hidden="true"></i></span>
+          <span class="txt"><b>Antrenör dizini</b><small>Dizinde nasıl sıralandığını ve süzgeçlerde nerede çıktığını gör</small></span>
+          <span class="end"><i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ================= 2 · DANIŞANLARIM ================= -->
+<section class="ap-sec" id="danisanlar" role="tabpanel" tabindex="0" aria-labelledby="tab-danisanlar">
+
+  <div class="pnl-card">
+    <div class="pc-head">
+      <div>
+        <h2 class="pc-title"><i class="fa-solid fa-users"></i> Aktif danışanların</h2>
+        <p>Paketi devam eden danışanlar. Kalan seans paketin kendi kapsamından düşer; süresi dolan paket "Biten çalışmalar"a iner.</p>
+      </div>
+      <span class="pc-end">6 danışan</span>
+    </div>
+    <div class="pc-body flush">
+      <div class="fp-list" style="padding:0 22px">
+        <div class="fp-row ap-row">
+          <span class="ico"><i class="fa-solid fa-user" aria-hidden="true"></i></span>
+          <span class="txt"><b>Elif Ş.</b>
+            <span class="alt"><span><i class="fa-solid fa-box-open" aria-hidden="true"></i> Sürdürülebilir Rutin</span><span><i class="fa-regular fa-clock" aria-hidden="true"></i> Son etkileşim 2 gün önce</span></span></span>
+          <span class="end"><span class="fp-badge ok"><i class="fa-solid fa-circle-check"></i> 7 / 12 seans kaldı</span></span>
+        </div>
+        <div class="fp-row ap-row">
+          <span class="ico"><i class="fa-solid fa-user" aria-hidden="true"></i></span>
+          <span class="txt"><b>Mert K.</b>
+            <span class="alt"><span><i class="fa-solid fa-box-open" aria-hidden="true"></i> Başlangıç Paketi</span><span><i class="fa-regular fa-clock" aria-hidden="true"></i> Son etkileşim dün</span></span></span>
+          <span class="end"><span class="fp-badge ok"><i class="fa-solid fa-circle-check"></i> 2 / 4 seans kaldı</span></span>
+        </div>
+        <div class="fp-row ap-row">
+          <span class="ico"><i class="fa-solid fa-user" aria-hidden="true"></i></span>
+          <span class="txt"><b>Zeynep A.</b>
+            <span class="alt"><span><i class="fa-solid fa-box-open" aria-hidden="true"></i> Sürdürülebilir Rutin</span><span><i class="fa-regular fa-clock" aria-hidden="true"></i> Son etkileşim 5 gün önce</span></span></span>
+          <span class="end"><span class="fp-badge ok"><i class="fa-solid fa-circle-check"></i> 10 / 12 seans kaldı</span></span>
+        </div>
+        <div class="fp-row ap-row">
+          <span class="ico"><i class="fa-solid fa-user" aria-hidden="true"></i></span>
+          <span class="txt"><b>Burak T.</b>
+            <span class="alt"><span><i class="fa-solid fa-box-open" aria-hidden="true"></i> Başlangıç Paketi</span><span><i class="fa-regular fa-clock" aria-hidden="true"></i> Son etkileşim 3 hafta önce</span></span></span>
+          <span class="end"><span class="fp-badge wait"><i class="fa-solid fa-hourglass-half"></i> 3 / 4 seans kaldı</span></span>
+        </div>
+        <div class="fp-row ap-row">
+          <span class="ico"><i class="fa-solid fa-user" aria-hidden="true"></i></span>
+          <span class="txt"><b>Deniz Y.</b>
+            <span class="alt"><span><i class="fa-solid fa-box-open" aria-hidden="true"></i> Sürdürülebilir Rutin</span><span><i class="fa-regular fa-clock" aria-hidden="true"></i> Son etkileşim bugün</span></span></span>
+          <span class="end"><span class="fp-badge ok"><i class="fa-solid fa-circle-check"></i> 4 / 12 seans kaldı</span></span>
+        </div>
+        <div class="fp-row ap-row">
+          <span class="ico"><i class="fa-solid fa-user" aria-hidden="true"></i></span>
+          <span class="txt"><b>Ayşe D.</b>
+            <span class="alt"><span><i class="fa-solid fa-box-open" aria-hidden="true"></i> Başlangıç Paketi</span><span><i class="fa-regular fa-clock" aria-hidden="true"></i> Son etkileşim 6 gün önce</span></span></span>
+          <span class="end"><span class="fp-badge ok"><i class="fa-solid fa-circle-check"></i> 1 / 4 seans kaldı</span></span>
+        </div>
+      </div>
+    </div>
+    <div class="pc-foot">
+      <p class="ap-note">Danışan adları kısaltılmış görünüyor: tam ad, yalnız randevu detayında ve o danışanla olan yazışmada açılır.</p>
+    </div>
+  </div>
+
+  <div class="pnl-card">
+    <div class="pc-head">
+      <div>
+        <h2 class="pc-title"><i class="fa-solid fa-clock-rotate-left"></i> Biten çalışmalar</h2>
+        <p>Paketi tamamlanan ya da süresi dolan danışanlar. Kayıt silinmez; danışan yeni bir paket alırsa geçmişi üstüne eklenir.</p>
+      </div>
+    </div>
+    <div class="pc-body flush">
+      <div class="fp-list" style="padding:0 22px">
+        <div class="fp-row ap-row">
+          <span class="ico"><i class="fa-solid fa-user-check" aria-hidden="true"></i></span>
+          <span class="txt"><b>Selim O.</b>
+            <span class="alt"><span><i class="fa-solid fa-box-open" aria-hidden="true"></i> Sürdürülebilir Rutin</span><span><i class="fa-regular fa-calendar" aria-hidden="true"></i> 12 / 12 seans · 4 Temmuz 2026</span></span></span>
+          <span class="end"><span class="fp-badge off"><i class="fa-solid fa-flag-checkered"></i> Tamamlandı</span></span>
+        </div>
+        <div class="fp-row ap-row">
+          <span class="ico"><i class="fa-solid fa-user-clock" aria-hidden="true"></i></span>
+          <span class="txt"><b>Gizem V.</b>
+            <span class="alt"><span><i class="fa-solid fa-box-open" aria-hidden="true"></i> Başlangıç Paketi</span><span><i class="fa-regular fa-calendar" aria-hidden="true"></i> 2 / 4 seans · süresi doldu 18 Haziran 2026</span></span></span>
+          <span class="end"><span class="fp-badge off"><i class="fa-solid fa-hourglass-end"></i> Süresi doldu</span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="pnl-card">
+    <div class="pc-head">
+      <div>
+        <h2 class="pc-title"><i class="fa-solid fa-shield-halved"></i> Danışanının verisi</h2>
+        <p>Bir danışanın sağlık ve hareket profilini <b>yalnız o seninle paylaştıysa</b> görürsün; paylaşımı istediği an geri alabilir.</p>
+      </div>
+    </div>
+    <div class="pc-body">
+      <p class="ap-note">Paylaşım kapatıldığında geçmiş görüşme notların sende kalır, ama yeni veri akışı durur. Danışan hangi veriyi kiminle paylaştığını kendi ekranından tek listede görüyor.</p>
+      <div class="fp-list" style="margin-top:6px">
+        <a class="fp-row" href="fit-planim-veri-izin-v1.html">
+          <span class="ico"><i class="fa-solid fa-list-check" aria-hidden="true"></i></span>
+          <span class="txt"><b>Danışanın gördüğü izin listesi</b><small>Veri ve İzinlerim — paylaşımın hangi ekrandan geri alındığı</small></span>
+          <span class="end"><i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>
+        </a>
+        <a class="fp-row" href="saglik-bilgilendirme-v1.html">
+          <span class="ico"><i class="fa-solid fa-heart-pulse" aria-hidden="true"></i></span>
+          <span class="txt"><b>Sağlık bilgilendirmesi</b><small>Antrenörlük ile tıbbi danışmanlığın sınırı</small></span>
+          <span class="end"><i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ================= 3 · RANDEVULARIM ================= -->
+<section class="ap-sec" id="randevular" role="tabpanel" tabindex="0" aria-labelledby="tab-randevular">
+
+  <div class="pnl-card">
+    <div class="pc-head">
+      <div>
+        <h2 class="pc-title"><i class="fa-solid fa-calendar-check"></i> Yaklaşan randevular</h2>
+        <p>Durum her satırda <b>yazıyla</b> duruyor: onaylandı, onay bekliyor, ertelendi. Renk tek başına durum taşımaz.</p>
+      </div>
+      <span class="pc-end" id="apYaklasanSay">0 randevu</span>
+    </div>
+    <div class="pc-body flush">
+      <div class="fp-list" id="apYaklasanList" style="padding:0 22px"></div>
+      <div class="fpx-bos" id="apYaklasanBos" hidden style="margin:0 22px 22px">
+        <span class="pe-ico"><i class="fa-solid fa-calendar-check" aria-hidden="true"></i></span>
+        <h4>Yaklaşan randevu yok</h4>
+        <p>Danışanların antrenör profilinden randevu aldığında burada, onay bekleyen olarak görünür.</p>
+      </div>
+    </div>
+    <div class="pc-foot">
+      <!-- K7/K9 (Ajan 2, 2026-08-30): randevu artık `FIT_SHELL.state.read().randevular`dan
+           okunuyor ve Onayla/Ertele/Tamamlandı/Gelmedi düğmeleri aynı kaydı
+           `randevuDurum(i,d)` ile değiştiriyor — üye tarafı (K7'nin çözdüğü) da
+           AYNI kaydı okuduğu için "tek taraflı düğme" gerekçesi artık geçerli
+           değil; eski gerekçe metni bu yüzden kaldırıldı. -->
+      <p class="ap-note">Onayla, ertele, tamamlandı ve gelmedi düğmeleri aynı kaydı danışanın da gördüğü <b>tek yerden</b> değiştirir; iki taraf da aynı durumu görür. Bir randevuyu bu düğmelerle değiştiremiyorsan danışanınla <a href="fit-antrenorum.html">randevu ekranı üzerinden</a> yazışabilir, gerekirse <a href="fit-cozum-merkezi.html#taleplerim">destek talebi açabilirsin</a>.</p>
+    </div>
+  </div>
+
+  <div class="pnl-card">
+    <div class="pc-head">
+      <div>
+        <h2 class="pc-title"><i class="fa-solid fa-clock-rotate-left"></i> Geçmiş randevular</h2>
+        <p>Tamamlanan, ertelenmiş ve gelinmemiş seanslar. İptal edilen bir seans danışanın paketinden düşmez.</p>
+      </div>
+      <span class="pc-end" id="apGecmisSay">0 randevu</span>
+    </div>
+    <div class="pc-body flush">
+      <div class="fp-list" id="apGecmisList" style="padding:0 22px"></div>
+      <div class="fpx-bos" id="apGecmisBos" hidden style="margin:0 22px 22px">
+        <span class="pe-ico"><i class="fa-solid fa-clock-rotate-left" aria-hidden="true"></i></span>
+        <h4>Geçmiş randevu yok</h4>
+        <p>Bir randevu tamamlandığında, gelinmediğinde ya da iptal olduğunda kaydı buraya taşır ve silmeyiz.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="pnl-card">
+    <div class="pc-head">
+      <div>
+        <h2 class="pc-title"><i class="fa-solid fa-scale-balanced"></i> Erteleme ve iptal koşulların</h2>
+        <p>Bu koşullar antrenör profilinde danışana da görünür; iki taraf aynı metni okur.</p>
+      </div>
+    </div>
+    <div class="pc-body">
+      <ul class="ap-kural">
+        <li><i class="fa-solid fa-circle" aria-hidden="true"></i><span>Seans saatinden <b>24 saat</b> önceye kadar yapılan erteleme seansı pakete geri sayar.</span></li>
+        <li><i class="fa-solid fa-circle" aria-hidden="true"></i><span>Son 24 saat içinde yapılan iptalde seans <b>kullanılmış</b> sayılır.</span></li>
+        <li><i class="fa-solid fa-circle" aria-hidden="true"></i><span>Senin ertelediğin bir seans, ne zaman ertelenirse ertelensin pakete geri sayılır.</span></li>
+      </ul>
+      <p class="ap-note" style="margin-top:14px">Koşulları değiştirmek istersen profil metnini güncellemen gerekir; danışanın gördüğü metinle burası aynı kaynaktan beslenir.</p>
+    </div>
+  </div>
+
+</section>
+
+<!-- ================= 4 · KAZANÇLARIM ================= -->
+<section class="ap-sec" id="kazanc" role="tabpanel" tabindex="0" aria-labelledby="tab-kazanc">
+
+  <!-- 🔴 K13 KAPISI — BU BÖLÜMDE HİÇBİR PARA RAKAMI YAZILMADI.
+       Komisyon oranı · ödeme günü · alt sınır · fatura eşiği · iade kuralı
+       yönetim panelinden okunur ve o panel bu turda YOK. Rakam yazmak,
+       oranın kararlaşmış olduğu izlenimini verirdi. Yapı tam çizildi:
+       hangi satırlar, hangi sütunlar, hangi durumlar görünecek. -->
+  <div class="pnl-card">
+    <div class="pc-head">
+      <div>
+        <h2 class="pc-title"><i class="fa-solid fa-wallet"></i> Bu dönem</h2>
+        <p>Ay içinde biriken hakedişin. Tutarlar, komisyon oranı yönetim panelinde belirlendikten sonra bu hücrelere yazılır.</p>
+      </div>
+      <span class="pc-end">Ağustos 2026</span>
+    </div>
+    <div class="pc-body">
+      <div class="ap-ozet">
+        <div class="oz">
+          <b>Brüt tahsilat</b>
+          <!-- YER TUTUCU — kazanç tutarları gelince değişecek -->
+          <span class="ap-yt" data-yer-tutucu="antrenor-kazanc-tutarlari" aria-label="Brüt tahsilat tutarı henüz hesaplanmıyor"><i class="fa-solid fa-hourglass-half" aria-hidden="true"></i> Tahsilat kaydı henüz yok</span>
+        </div>
+        <div class="oz">
+          <b>Platform komisyonu</b>
+          <!-- YER TUTUCU — komisyon parametreleri panelden gelince değişecek -->
+          <span class="ap-yt" data-yer-tutucu="antrenor-komisyon-parametreleri" aria-label="Komisyon oranı henüz belirlenmedi"><i class="fa-solid fa-percent" aria-hidden="true"></i> Oran panelden okunacak</span>
+        </div>
+        <div class="oz">
+          <b>Sana ödenecek</b>
+          <!-- YER TUTUCU — kazanç tutarları gelince değişecek -->
+          <span class="ap-yt" data-yer-tutucu="antrenor-kazanc-tutarlari" aria-label="Net ödeme tutarı henüz hesaplanmıyor"><i class="fa-solid fa-hourglass-half" aria-hidden="true"></i> Tahsilat kaydı henüz yok</span>
+        </div>
+      </div>
+      <p class="ap-note" style="margin-top:16px">Bu üç hücre boş değil, <b>bekliyor</b>: yapı kuruldu, değerler komisyon oranı ve ödeme alt sınırı yönetim panelinde tanımlandığı gün buraya düşecek. O güne kadar buraya örnek tutar yazılmıyor — yazılsaydı oranın kararlaşmış olduğu izlenimini verirdi.</p>
+    </div>
+  </div>
+
+  <div class="pnl-card">
+    <div class="pc-head">
+      <div>
+        <h2 class="pc-title"><i class="fa-solid fa-book"></i> Hakediş defteri</h2>
+        <p>Her satır bir dönem ve bir paket satışıdır. Durum üç hâlden biridir: <b>bekleyen</b> · <b>ödenen</b> · <b>alt sınır altında birikti</b>.</p>
+      </div>
+    </div>
+    <div class="pc-body">
+      <div class="ap-tablo-kap">
+        <table class="fd-tablo">
+          <caption class="sr-only">Hakediş satırları — dönem, paket, brüt, komisyon, net ve ödeme durumu</caption>
+          <thead>
+            <tr>
+              <th scope="col">Dönem ve paket</th>
+              <th scope="col" class="sag">Brüt</th>
+              <th scope="col" class="sag">Komisyon</th>
+              <th scope="col" class="sag">Net</th>
+              <th scope="col" class="sag">Durum</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><b>Ağustos 2026</b><small>Sürdürülebilir Rutin · 2 satış</small></td>
+              <td class="sag"><span class="ap-yt" data-yer-tutucu="antrenor-kazanc-tutarlari" aria-label="Brüt tutar henüz hesaplanmıyor"><i class="fa-solid fa-minus" aria-hidden="true"></i> Bekliyor</span></td>
+              <td class="sag"><span class="ap-yt" data-yer-tutucu="antrenor-komisyon-parametreleri" aria-label="Komisyon oranı henüz belirlenmedi"><i class="fa-solid fa-percent" aria-hidden="true"></i> Panelden</span></td>
+              <td class="sag"><span class="ap-yt" data-yer-tutucu="antrenor-kazanc-tutarlari" aria-label="Net tutar henüz hesaplanmıyor"><i class="fa-solid fa-minus" aria-hidden="true"></i> Bekliyor</span></td>
+              <td class="sag"><span class="fp-badge wait"><i class="fa-solid fa-hourglass-half"></i> Bekleyen</span></td>
+            </tr>
+            <tr>
+              <td><b>Temmuz 2026</b><small>Sürdürülebilir Rutin · Başlangıç Paketi · 3 satış</small></td>
+              <td class="sag"><span class="ap-yt" data-yer-tutucu="antrenor-kazanc-tutarlari" aria-label="Brüt tutar henüz hesaplanmıyor"><i class="fa-solid fa-minus" aria-hidden="true"></i> Bekliyor</span></td>
+              <td class="sag"><span class="ap-yt" data-yer-tutucu="antrenor-komisyon-parametreleri" aria-label="Komisyon oranı henüz belirlenmedi"><i class="fa-solid fa-percent" aria-hidden="true"></i> Panelden</span></td>
+              <td class="sag"><span class="ap-yt" data-yer-tutucu="antrenor-kazanc-tutarlari" aria-label="Net tutar henüz hesaplanmıyor"><i class="fa-solid fa-minus" aria-hidden="true"></i> Bekliyor</span></td>
+              <td class="sag"><span class="fp-badge ok"><i class="fa-solid fa-check"></i> Ödenen</span></td>
+            </tr>
+            <tr>
+              <td><b>Haziran 2026</b><small>Başlangıç Paketi · 1 satış</small></td>
+              <td class="sag"><span class="ap-yt" data-yer-tutucu="antrenor-kazanc-tutarlari" aria-label="Brüt tutar henüz hesaplanmıyor"><i class="fa-solid fa-minus" aria-hidden="true"></i> Bekliyor</span></td>
+              <td class="sag"><span class="ap-yt" data-yer-tutucu="antrenor-komisyon-parametreleri" aria-label="Komisyon oranı henüz belirlenmedi"><i class="fa-solid fa-percent" aria-hidden="true"></i> Panelden</span></td>
+              <td class="sag"><span class="ap-yt" data-yer-tutucu="antrenor-kazanc-tutarlari" aria-label="Net tutar henüz hesaplanmıyor"><i class="fa-solid fa-minus" aria-hidden="true"></i> Bekliyor</span></td>
+              <td class="sag"><span class="fp-badge off"><i class="fa-solid fa-piggy-bank"></i> Alt sınır altında birikti</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="ap-note" style="margin-top:16px"><b>Haziran satırı neden ödenmedi:</b> o dönemin net tutarı ödeme alt sınırının altında kaldı; bakiye silinmedi, bir sonraki döneme eklendi. Alt sınırın kendisi yönetim panelinden okunacak.</p>
+    </div>
+  </div>
+
+  <div class="pnl-card">
+    <div class="pc-head">
+      <div>
+        <h2 class="pc-title"><i class="fa-solid fa-scale-balanced"></i> Ödeme kuralların</h2>
+        <p>Dört kural da tüm antrenörler için aynıdır; kişiye göre pazarlık edilmez.</p>
+      </div>
+    </div>
+    <div class="pc-body">
+      <ul class="ap-kural">
+        <li><i class="fa-solid fa-circle" aria-hidden="true"></i><span><b>Komisyon oranı herkes için aynıdır.</b> Danışan sayına, kıdemine ya da paket büyüklüğüne göre değişmez.</span></li>
+        <li><i class="fa-solid fa-circle" aria-hidden="true"></i><span><b>Ödeme ay sonunda toplu yapılır.</b> Tek tek satışlar için ayrı ödeme çıkmaz; dönem kapanınca o dönemin neti tek kalemde ödenir.</span></li>
+        <li><i class="fa-solid fa-circle" aria-hidden="true"></i><span><b>Alt sınırın altındaki bakiye silinmez, birikir.</b> Dönem neti alt sınırın altında kalırsa ödeme çıkmaz ve tutar bir sonraki döneme eklenir; eşiği geçtiği ilk dönemde ödenir.</span></li>
+        <li><i class="fa-solid fa-circle" aria-hidden="true"></i><span><b>İade olursa komisyon geri gitmez.</b> Bir paket iade edildiğinde danışana ödenen tutar hakedişinden düşer; platform komisyonu iade edilmez.</span></li>
+      </ul>
+      <p class="ap-note" style="margin-top:16px">Oranın, ödeme alt sınırının ve fatura eşiğinin sayısal değerleri burada yazılı değil — <span class="ap-yt" data-yer-tutucu="antrenor-komisyon-parametreleri" aria-label="Komisyon oranı, alt sınır ve fatura eşiği henüz belirlenmedi"><i class="fa-solid fa-sliders" aria-hidden="true"></i> yönetim panelinden okunacak</span>. Bu bilinçlidir: değerler koda gömülmez, panelde tanımlanır ve değiştiğinde tek yerden değişir.</p>
+    </div>
+  </div>
+
+  <div class="pnl-card">
+    <div class="pc-head">
+      <div>
+        <h2 class="pc-title"><i class="fa-solid fa-file-invoice"></i> Fatura ve belge</h2>
+        <p>Hakediş belgesi, dönem neti fatura eşiğini geçtiğinde üretilir.</p>
+      </div>
+    </div>
+    <div class="pc-body">
+      <div class="lib-empty">
+        <div class="ico"><i class="fa-solid fa-file-invoice"></i></div>
+        <h3>Henüz belge üretilmedi</h3>
+        <p>Bu bölüm boş çünkü fatura eşiği yönetim panelinde tanımlanmadı; eşik olmadan hangi dönemin belge üreteceği belli değil. Eşik tanımlandığı gün geçmiş dönemler de bu listede geriye dönük görünür — kayıt kaybolmaz.</p>
+        <a class="btn btn-ghost" href="fit-odemelerim.html#faturalar"><i class="fa-solid fa-receipt"></i> Kendi faturalarım</a>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+    </div><!-- /.ap-col -->
+  </div><!-- /.wrap -->
+</section>
+
+</main><!-- /.page-main -->
+
+<!-- KABUK: alt katman (giriş kapısı + footer + başa dön) -->
+<div id="fitShellBottom"></div>
+
+<!-- DadaFit ortak kabuk JS (tek kaynak): markup + davranış -->
+<script src="assets/js/fit-shell.js"></script>
+<script src="assets/js/fit-mesaj.js"></script>
+<script>
+/* =====================================================================
+ SAYFA JS — BÖLÜM RAYI
+ ---------------------------------------------------------------------
+ 🔴 KALIP UYDURULMADI. Bu blok `hesabim-v1.html`in `#hsRail` denetleyicisinin
+ aynısıdır (ARIA tabs: ok tuşları · Home/End · gezici tabindex · odaklanabilir
+ panel · pushState ile geri tuşu). Aynı davranışı iki sayfada iki farklı
+ biçimde yazmak, birinin sessizce ayrışması demektir.
+
+ DERİN BAĞLANTI KORUNUR: kalemler `<a href="#id">` kalır ve paneller
+ işaretlemede AÇIK doğar; gizlemeyi bu blok yapar. JS düşerse sayfa tek uzun
+ sayfaya döner, dört bölüm de okunur ve çapalar yine çalışır.
+ ===================================================================== */
+(function(){
+  'use strict';
+  var rail = document.getElementById('apRail');
+  if(!rail) return;
+  var tabs   = [].slice.call(rail.querySelectorAll('.dt[role="tab"]'));
+  var panels = [].slice.call(document.querySelectorAll('.ap-sec[role="tabpanel"]'));
+  if(!tabs.length || !panels.length) return;
+
+  var VARSAYILAN = tabs[0].getAttribute('aria-controls');
+
+  /* Eş anlamlı adresler — bu sayfaya dışarıdan gelen bağlantılar kırılmasın.
+     (`hesabim-v1.html`in ALIAS tablosuyla aynı gerekçe: kırık deep-link
+     bırakılmaz.) */
+  var ALIAS = {
+    paket:'paketler', paketler:'paketler', paketlerim:'paketler',
+    danisan:'danisanlar', danisanlar:'danisanlar', danisanlarim:'danisanlar',
+    randevu:'randevular', randevular:'randevular', randevularim:'randevular',
+    kazanc:'kazanc', kazanclarim:'kazanc', hakedis:'kazanc', odeme:'kazanc'
+  };
+
+  function panelBul(id){
+    for(var i=0;i<panels.length;i++) if(panels[i].id===id) return panels[i];
+    return null;
+  }
+
+  /* Görünür tek panel + rayın tek durağı. `odakla` yalnız gerçek kullanıcı
+     hareketinde true: derin bağlantıyla açılışta odak çalınmaz. */
+  function ac(id, odakla){
+    if(!panelBul(id)) id = VARSAYILAN;
+    tabs.forEach(function(t){
+      var on = t.getAttribute('aria-controls') === id;
+      t.classList.toggle('active', on);
+      t.setAttribute('aria-selected', on ? 'true' : 'false');
+      t.setAttribute('tabindex', on ? '0' : '-1');
+      if(on) t.setAttribute('aria-current','true'); else t.removeAttribute('aria-current');
+    });
+    panels.forEach(function(pn){
+      if(pn.id === id) pn.removeAttribute('hidden'); else pn.setAttribute('hidden','');
+    });
+    if(odakla){
+      var t = rail.querySelector('.dt[aria-controls="' + id + '"]');
+      if(t && t.focus) t.focus();
+      var bar = rail.closest('.pf-tabbar');
+      if(bar){
+        var ust = bar.getBoundingClientRect().top + window.scrollY -
+                  (parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) || 0);
+        if(window.scrollY > ust) window.scrollTo({top:ust, behavior:'smooth'});
+      }
+    }
+    return id;
+  }
+
+  function adresten(){
+    var h = (location.hash || '').slice(1);
+    if(h && panelBul(h)) return h;
+    if(h && ALIAS[h] && panelBul(ALIAS[h])) return ALIAS[h];
+    var t = new URLSearchParams(location.search).get('bolum');
+    if(t && ALIAS[t] && panelBul(ALIAS[t])) return ALIAS[t];
+    return VARSAYILAN;
+  }
+
+  tabs.forEach(function(t){
+    t.addEventListener('click', function(e){
+      e.preventDefault();
+      var id = t.getAttribute('aria-controls');
+      if(location.hash.slice(1) !== id) history.pushState({bolum:id}, '', '#' + id);
+      ac(id, true);
+    });
+  });
+
+  /* Klavye — ARIA tabs deseni */
+  rail.addEventListener('keydown', function(e){
+    var i = tabs.indexOf(document.activeElement);
+    if(i < 0) return;
+    var j = null;
+    if(e.key === 'ArrowRight' || e.key === 'ArrowDown') j = (i + 1) % tabs.length;
+    else if(e.key === 'ArrowLeft' || e.key === 'ArrowUp') j = (i - 1 + tabs.length) % tabs.length;
+    else if(e.key === 'Home') j = 0;
+    else if(e.key === 'End') j = tabs.length - 1;
+    if(j === null) return;
+    e.preventDefault();
+    var id = tabs[j].getAttribute('aria-controls');
+    history.pushState({bolum:id}, '', '#' + id);
+    ac(id, true);
+  });
+
+  window.addEventListener('hashchange', function(){ ac(adresten(), false); });
+  window.addEventListener('popstate',  function(){ ac(adresten(), false); });
+
+  /* Sticky rayın gerçek yüksekliği ölçülüp çapa payına yazılır — ray geniş
+     ekranda tek satıra sığmayıp sarabiliyor (hesabim-v1.html'in ölçümü). */
+  function payOlc(){
+    var bar = rail.closest('.pf-tabbar');
+    if(!bar) return;
+    document.documentElement.style.setProperty('--ap-anchor-pad',
+      Math.round(bar.getBoundingClientRect().height + 16) + 'px');
+  }
+  payOlc();
+  window.addEventListener('resize', payOlc);
+
+  ac(adresten(), false);
+})();
+</script>
+<script>
+/* =====================================================================
+ RANDEVULARIM — K7 / K9 (Ajan 2, 2026-08-30)
+ ---------------------------------------------------------------------
+ Üyenin antrenör-detay-v1.html'de aldığı randevu `dm_fit.randevular`a
+ yazılıyor (`FIT_SHELL.state.randevuAl`); bu panel ÜÇÜNCÜ bir kopya
+ açmadan aynı diziyi okuyup basıyor. Durum geçişleri `randevuDurum(i,d)`
+ API'siyle yapılır; etiket/rozet motorun kendi sözlüklerinden gelir
+ (`randevuEtiket`/`randevuRozet`) — yeni durum ya da renk icat edilmedi.
+
+ ⚠ TEK TARAYICI KISITI: bu prototipte ayrı bir "danışan" hesabı yok,
+ randevu üyenin kendi `dm_fit` kaydından okunuyor. Danışan adı olarak
+ `FIT_USER.ad` kullanılır; uydurma bir danışan listesi kurulmadı.
+ ===================================================================== */
+(function(){
+  'use strict';
+  var S = window.FIT_SHELL && window.FIT_SHELL.state;
+  if(!S) return;
+
+  function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+  function ikon(rozet){ return {ok:'fa-check', wait:'fa-hourglass-half', off:'fa-flag-checkered', stop:'fa-ban'}[rozet] || 'fa-circle'; }
+
+  var YAKLASAN = {'onay-bekliyor':1, 'onaylandi':1, 'ertelendi':1};
+  /* durum → sıradaki mantıklı eylemler (belge §11 yaşam döngüsü) */
+  var EYLEM = {
+    'onay-bekliyor': [['onaylandi','fa-check','Onayla'], ['ertelendi','fa-clock-rotate-left','Ertele']],
+    'onaylandi':     [['tamamlandi','fa-flag-checkered','Tamamlandı'], ['gelmedi','fa-user-xmark','Gelmedi'], ['ertelendi','fa-clock-rotate-left','Ertele']],
+    'ertelendi':     [['onaylandi','fa-check','Onayla'], ['ertelendi','fa-clock-rotate-left','Yeniden ertele']]
+  };
+
+  function satir(r, i){
+    var rozet = S.randevuRozet(r.durum), etiket = S.randevuEtiket(r.durum);
+    var danisan = (window.FIT_USER && FIT_USER.ad) || 'Danışan';
+    var eylemler = EYLEM[r.durum] || [];
+    var acts = eylemler.map(function(e){
+      return '<button class="ap-act-btn" type="button" data-durum-git="'+e[0]+'" data-i="'+i+'">'+
+             '<i class="fa-solid '+e[1]+'" aria-hidden="true"></i> '+e[2]+'</button>';
+    }).join('');
+    return '<div class="fp-row ap-row">'+
+      '<span class="ico"><i class="fa-solid fa-calendar-check" aria-hidden="true"></i></span>'+
+      '<span class="txt"><b>'+esc(danisan)+' · '+esc(r.hizmet)+'</b>'+
+        '<span class="alt"><span><i class="fa-regular fa-calendar" aria-hidden="true"></i> '+esc(r.tarih)+' · '+esc(r.saat)+'</span>'+
+        '<span><i class="fa-solid fa-user-tie" aria-hidden="true"></i> '+esc(r.antrenor)+'</span>'+
+        (r.fiyat ? '<span><i class="fa-solid fa-turkish-lira-sign" aria-hidden="true"></i> '+esc(r.fiyat)+'</span>' : '')+
+        '</span></span>'+
+      '<span class="end"><span class="fp-badge '+rozet+'"><i class="fa-solid '+ikon(rozet)+'" aria-hidden="true"></i> '+esc(etiket)+'</span>'+
+      (acts ? '<span class="ap-acts">'+acts+'</span>' : '')+'</span>'+
+    '</div>';
+  }
+
+  function ciz(){
+    var s = S.read();
+    var liste = s.randevular || [];
+    var yak = [], gec = [];
+    liste.forEach(function(r, i){ (YAKLASAN[r.durum] ? yak : gec).push([r,i]); });
+
+    var yl = document.getElementById('apYaklasanList'), yb = document.getElementById('apYaklasanBos');
+    if(yl){
+      yl.innerHTML = yak.map(function(p){ return satir(p[0], p[1]); }).join('');
+      if(yb) yb.hidden = yak.length > 0;
+    }
+    var gl = document.getElementById('apGecmisList'), gb = document.getElementById('apGecmisBos');
+    if(gl){
+      gl.innerHTML = gec.map(function(p){ return satir(p[0], p[1]); }).join('');
+      if(gb) gb.hidden = gec.length > 0;
+    }
+    var ys = document.getElementById('apYaklasanSay'); if(ys) ys.textContent = yak.length + ' randevu';
+    var gs = document.getElementById('apGecmisSay'); if(gs) gs.textContent = gec.length + ' randevu';
+    var lys = document.getElementById('apLibYaklasan'); if(lys) lys.textContent = String(yak.length);
+  }
+
+  document.addEventListener('click', function(e){
+    var b = e.target.closest && e.target.closest('[data-durum-git]');
+    if(!b) return;
+    var i = parseInt(b.getAttribute('data-i'), 10);
+    var d = b.getAttribute('data-durum-git');
+    S.randevuDurum(i, d);
+    ciz();
+  });
+
+  ciz();
+})();
+</script>
+</body>
+</html>

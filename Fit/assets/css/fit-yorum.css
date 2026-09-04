@@ -1,0 +1,217 @@
+/* =====================================================================
+   DADAFIT — YORUM VE DEĞERLENDİRME BÖLÜMÜ                (R19 · A15)
+   ---------------------------------------------------------------------
+   `assets/js/fit-yorum-veri.js` ekran sürücüsünün bastığı markup'ı
+   biçimlendirir. Dört sayfa (egzersiz detay · program detay · antrenör
+   detay · profil) bu TEK dosyayı okur — aksi hâlde aynı bölüm dört ayrı
+   <style> bloğunda dört kez yaşardı ve birbirinden ayrışırdı.
+
+   KİT DIŞINA ÇIKILMADI. Her renk `fit-shell.css` :root'undan, her ölçü
+   docs/fit-kit.md'den: radius §1 · gölge §1 · kart §2 · tipografi §3 ·
+   düğme §4 · çip §5 (44px) · form §7 · boşluk §8 · boş durum §9.
+   Yeni renk / radius / gölge ÜRETİLMEDİ.
+
+   ÖLÇÜLER Gastro'nun ölçülmüş yorum bölümünden geldi (SALT OKUMA):
+   public/reference/tarif-detay/tarif-detay.css:1070-1172.
+   Gastro'dan bilerek sapılan tek eksen DOKUNMA HEDEFİ: Gastro'nun filtre
+   çipi ~31px, faydalı düğmesi ~19px basıyor; kitin kendi kapısı 44px
+   istiyor (§5/§6/§10 aynı kararı üç kez verdi) — dolgu Gastro'nunki
+   kaldı, `min-height:44px` eklendi.
+   ===================================================================== */
+
+/* ---- bölüm kabı — kit §8 okuma kolonu (860px, ortalı) --------------- */
+.fy-sec{max-width:860px;margin-inline:auto}
+.fy-head{margin-bottom:18px}
+
+/* ---- 1 · PUAN ÖZETİ  (Gastro .rev-summary — :1070) ------------------ */
+.fy-ozet{
+  display:grid;grid-template-columns:210px minmax(0,1fr);gap:24px;
+  background:var(--paper);border:1px solid var(--line);
+  border-radius:var(--radius-lg);padding:16px 22px;box-shadow:var(--sh-sm)
+}
+.fy-avg{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;gap:5px;border-right:1px solid var(--line);padding-right:24px
+}
+.fy-avg>b{font-size:40px;font-weight:700;color:var(--slate);letter-spacing:-.03em;line-height:1}
+.fy-avg .fy-stars{color:var(--yellow);font-size:14px;letter-spacing:2px}
+.fy-avg>span{font-size:12.5px;color:var(--muted);font-weight:500}
+.fy-rec{
+  margin-top:5px;font-size:11.5px;font-weight:700;color:var(--fit-deep);
+  background:var(--fit-tint);padding:4px 10px;border-radius:var(--radius-sm);
+  display:inline-flex;align-items:center;gap:6px
+}
+.fy-bars{display:flex;flex-direction:column;gap:7px;justify-content:center;min-width:0}
+.fy-bar{display:flex;align-items:center;gap:11px;font-size:12.5px;font-weight:500;color:var(--slate-2)}
+.fy-bar .lbl{flex:none;width:32px;display:inline-flex;align-items:center;gap:4px;font-weight:700;color:var(--slate)}
+.fy-bar .lbl i{font-size:10px;color:var(--yellow)}
+.fy-bar .track{flex:1;height:8px;background:var(--bg);border:1px solid var(--line);border-radius:var(--radius-pill);overflow:hidden}
+.fy-bar .track i{display:block;height:100%;background:var(--yellow);border-radius:inherit}
+.fy-bar .cnt{flex:none;width:46px;text-align:right;color:var(--muted);font-size:12px}
+
+/* ---- 2 · YAZMA FORMU  (Gastro .rev-form — :1085) -------------------- */
+.fy-form{
+  display:flex;gap:14px;background:var(--paper);border:1px solid var(--line);
+  border-radius:var(--radius-lg);padding:16px 18px;margin-top:12px;box-shadow:var(--sh-sm)
+}
+.fy-form .rev-av{flex:none;width:44px;height:44px;border-radius:var(--radius-circle);background-size:cover;background-position:center}
+.fy-av-harf{
+  display:grid;place-items:center;background:var(--fit-tint);color:var(--fit-deep);
+  font-size:16px;font-weight:700;border-radius:var(--radius-circle)
+}
+.fy-body{flex:1;min-width:0}
+.fy-top{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:10px}
+.fy-top .t{font-size:14.5px;font-weight:700;color:var(--slate)}
+
+/* Yıldız girişi. Gastro'da düğme ~25×25 (:1094); kitin 44px kapısı için
+   kutu 44×44'e çıktı, YAZI BOYU Gastro'nunki (21px) kaldı — beş yıldız
+   yan yana olduğu için `::before` numarası burada çakışırdı. */
+.fy-input-stars{display:inline-flex;gap:2px}
+.fy-input-stars button{
+  min-width:44px;min-height:44px;display:grid;place-items:center;
+  background:none;border:none;cursor:pointer;font-size:21px;color:var(--star-bos);
+  padding:0;transition:transform .15s var(--ease),color .15s var(--ease)
+}
+.fy-input-stars button.on{color:var(--yellow)}
+.fy-input-stars button:hover{transform:scale(1.12)}
+.fy-input-stars button:focus-visible{outline:2px solid var(--fit);outline-offset:2px;border-radius:var(--radius-sm)}
+.fy-input-stars.shake{animation:fyShake .4s}
+@keyframes fyShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+
+.fy-hint{font-size:12px;color:var(--muted);font-weight:500}
+.fy-hint.ok{color:var(--fit-deep);font-weight:700}
+.fy-hint.err{color:var(--hs-danger);font-weight:700}
+
+.fy-text{
+  width:100%;min-height:92px;border:1px solid var(--line);border-radius:var(--radius-md);
+  padding:12px 14px;font-family:inherit;font-size:14px;font-weight:500;color:var(--ink);
+  resize:vertical;transition:border-color .2s var(--ease)
+}
+.fy-text:focus{outline:none;border-color:var(--fit)}
+
+.fy-foot{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-top:12px}
+.fy-disc{margin:0;flex:1;min-width:220px;font-size:11.5px;color:var(--muted);font-weight:500;line-height:1.5}
+.fy-disc i{color:var(--fit-deep);margin-right:5px}
+.fy-ok{
+  display:flex;align-items:center;gap:12px;margin-top:12px;
+  font-size:14px;font-weight:700;color:var(--fit-deep);
+  background:var(--fit-tint);border:1px solid var(--fit-line);
+  border-radius:var(--radius-md);padding:16px 18px
+}
+.fy-ok[hidden]{display:none}
+.fy-ok i{font-size:18px}
+
+/* ---- 2b · GİRİŞ DAVETİ  (Gastro .rev-login — :1117) ----------------- */
+.fy-login{
+  display:flex;align-items:center;gap:16px;background:var(--paper);
+  border:1px solid var(--line);border-radius:var(--radius-lg);
+  padding:18px 20px;margin-top:12px;box-shadow:var(--sh-sm)
+}
+.fy-login-ico{
+  flex:none;width:46px;height:46px;border-radius:var(--radius-circle);
+  background:var(--fit-tint);color:var(--fit-deep);display:grid;place-items:center;font-size:18px
+}
+.fy-login-body{min-width:0}
+.fy-login-body b{display:block;font-size:15px;color:var(--slate)}
+.fy-login-body p{margin:4px 0 0;font-size:13px;font-weight:500;color:var(--muted);line-height:1.55}
+.fy-login-act{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+
+/* ---- 3 · FİLTRE ÇİPLERİ  (Gastro .rev-filter — :1131) --------------- */
+.fy-filtre{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0 2px}
+.fy-cip{
+  min-height:44px;display:inline-flex;align-items:center;
+  font-family:inherit;font-size:12.5px;font-weight:600;color:var(--slate-2);
+  background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-sm);
+  padding:7px 13px;cursor:pointer;transition:.18s var(--ease)
+}
+.fy-cip:hover{border-color:var(--fit);color:var(--fit-deep)}
+.fy-cip.is-on{background:var(--fit-deep);border-color:var(--fit-deep);color:#fff;font-weight:700}
+.fy-cip:focus-visible{outline:2px solid var(--fit);outline-offset:2px}
+
+.fy-bos{
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  background:var(--paper);border:1px dashed var(--line);border-radius:var(--radius-md);
+  padding:16px 20px;margin-top:12px;font-size:13px;font-weight:500;color:var(--muted)
+}
+.fy-bos[hidden]{display:none}
+.fy-ilk{text-align:center;margin-top:12px}
+
+/* ---- 4 · YORUM KARTI  (Gastro .c-item — :1146) ----------------------
+   Sınıf adları profil-v1'in ZATEN kullandığı `.rev-*` ailesidir; o sayfa
+   kendi <style>'ında aynı adları tanımlar ve orada kendi değerleri geçerli
+   kalır (özgüllük eşit, sayfa stili sonra gelir). Burada tanımlananlar
+   egzersiz · program · antrenör detay içindir. */
+.fy-liste{display:flex;flex-direction:column;gap:14px;margin-top:14px}
+.fy-liste .rev-item{
+  background:var(--paper);border:1px solid var(--line);
+  border-radius:var(--radius-lg);padding:18px 20px
+}
+.fy-liste .rev-item[hidden]{display:none}
+.fy-liste .rev-top{display:flex;align-items:center;gap:13px;margin-bottom:11px}
+.fy-liste .rev-av{flex:none;width:44px;height:44px;border-radius:var(--radius-circle);background-size:cover;background-position:center}
+.fy-liste .rev-who{min-width:0;flex:1}
+.fy-liste .rev-who b{font-size:14.5px;color:var(--slate);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.fy-liste .rev-who>span{display:block;margin-top:2px;font-size:12px;color:var(--muted);font-weight:500}
+.fy-liste .rev-badge{
+  font-size:10px;font-weight:700;color:var(--fit-deep);background:var(--fit-tint);
+  padding:3px 8px;border-radius:var(--radius-sm);display:inline-flex;align-items:center;gap:5px
+}
+.fy-self{
+  font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
+  color:var(--slate-2);background:var(--bg);border:1px solid var(--line);
+  padding:2px 8px;border-radius:var(--radius-sm)
+}
+.fy-denetim{font-style:normal;color:var(--hs-warn);font-weight:700}
+.fy-liste .rev-rate{flex:none;color:var(--yellow);font-size:13px;letter-spacing:1px}
+.fy-liste .rev-text{margin:0;font-size:14px;color:var(--slate-2);font-weight:500;line-height:1.6}
+.fy-liste .rev-tags{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}
+.fy-liste .rev-tag{
+  font-size:11.5px;font-weight:600;color:var(--slate-2);background:var(--bg);
+  border:1px solid var(--line);padding:5px 10px;border-radius:var(--radius-sm)
+}
+.fy-liste .rev-reply{
+  font-size:13px;color:var(--slate-2);font-weight:500;line-height:1.6;
+  margin-top:12px;padding:13px 15px;background:var(--fit-tint);
+  border:1px solid var(--fit-line);border-radius:var(--radius-md)
+}
+.fy-liste .rev-reply b{color:var(--fit-deep);display:flex;align-items:center;gap:7px;font-size:12.5px;margin-bottom:5px}
+
+/* eylem satırı — kitin 44px kapısı (§5/§6/§10) */
+.fy-liste .rev-foot{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-top:8px;padding-top:4px;border-top:1px solid var(--line)}
+.fy-help{
+  min-height:44px;display:inline-flex;align-items:center;gap:8px;
+  font-family:inherit;font-size:12.5px;font-weight:700;color:var(--muted);
+  background:none;border:none;padding:0;cursor:pointer;transition:color .2s var(--ease)
+}
+.fy-help:hover{color:var(--slate)}
+.fy-help:focus-visible{outline:2px solid var(--fit);outline-offset:2px;border-radius:var(--radius-sm)}
+button.fy-help.is-voted{color:var(--fit-deep)}
+.fy-bildirildi,.fy-bildirildi:hover{color:var(--fit-deep);cursor:default;opacity:1}
+
+/* yanıt formu — Gastro .c-reply-form (:1170); yalnız sahibi görür */
+.fy-yanit-form{margin-top:12px}
+.fy-yanit-form[hidden]{display:none}
+.fy-yanit-form textarea{
+  width:100%;min-height:64px;border:1px solid var(--line);border-radius:var(--radius-md);
+  padding:10px 13px;font-family:inherit;font-size:13px;font-weight:500;color:var(--ink);resize:vertical
+}
+.fy-yanit-form textarea:focus{outline:none;border-color:var(--fit)}
+.fy-yanit-act{display:flex;gap:8px;margin-top:8px}
+
+.fy-more{display:flex;justify-content:center;margin-top:20px}
+
+/* ---- kırılım noktaları --------------------------------------------- */
+@media (max-width:760px){
+  .fy-ozet{grid-template-columns:1fr;gap:16px}
+  .fy-avg{border-right:none;border-bottom:1px solid var(--line);padding-right:0;padding-bottom:16px}
+  .fy-form{flex-direction:column}
+  .fy-form .rev-av{display:none}
+}
+@media (max-width:520px){
+  .fy-liste .rev-top{flex-wrap:wrap}
+  .fy-liste .rev-rate{width:100%;order:3;margin-left:57px}
+  .fy-foot{align-items:flex-start;flex-direction:column}
+}
+@media (prefers-reduced-motion:reduce){
+  .fy-input-stars button,.fy-input-stars.shake{transition:none;animation:none}
+}

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8" />
+  <meta name="robots" content="noindex, nofollow" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>3D Secure doğrulaması — DadaFit</title>
+<meta name="description" content="Ödeme adımında bankanın 3D Secure doğrulaması: doğrulama nerede yapılır, DadaFit ne görür, ne görmez." />
+<link rel="icon" type="image/svg+xml" href="../kanon/varlik/dadafit-isaret.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="../kanon/varlik/dadafit-isaret-32.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="../kanon/varlik/dadafit-isaret-180.png" />
+<!-- FontAwesome 6.5.2 (kilitli ikon seti) -->
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+      integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+      crossorigin="anonymous" referrerpolicy="no-referrer" />
+<!-- DadaFit ortak kabuk (tek kaynak) -->
+<!-- KANON · yukleme sirasi: tokenlar -> markalar/fit (bilesenler YUKLENMEZ) -->
+<link rel="stylesheet" href="../kanon/tokenlar.css" />
+<link rel="stylesheet" href="../kanon/markalar/fit.css" />
+<link rel="stylesheet" href="assets/css/fit-shell.css" />
+<link rel="stylesheet" href="assets/css/fit-mesaj.css" />
+<!-- Durum ekranlarının ortak dili (altı ekran tek kaynaktan okur) -->
+<link rel="stylesheet" href="assets/css/fit-durum.css" />
+<!-- Metin yaslama katmani (tek kaynak) — sayfa stillerinden SONRA yuklenir -->
+<link rel="stylesheet" href="assets/css/fit-type.css" />
+</head>
+<body data-brand="fit" data-fit-page="pro-odeme-3d-v1">
+
+<!-- KABUK: ust katman -->
+<div id="fitShellTop"></div>
+
+<main class="page-main" id="pageMain">
+
+<!-- ===== BANNER + BREADCRUMB ===== -->
+<section class="lib-top">
+  <div class="wrap">
+    <nav class="lib-crumb" aria-label="Sayfa yolu">
+      <a href="dadafit-hub-v1.html" class="crumb-home"><i class="fa-solid fa-house" aria-hidden="true"></i><span class="sr-only">DadaFit ana sayfa</span></a>
+      <i class="fa-solid fa-chevron-right"></i>
+      <a href="pro-odeme-v1.html">Aboneliği başlat</a>
+      <i class="fa-solid fa-chevron-right"></i>
+      <span class="cur">3D Secure doğrulaması</span>
+    </nav>
+    <span class="eyebrow"><i class="fa-solid fa-shield-halved"></i> Ödeme adımı</span>
+    <h1>Bankan bu adımda devreye giriyor</h1>
+    <p class="lib-sub">Kart bilgilerini girdikten sonra ödeme, onayı senin bankandan alan bir doğrulama adımından geçer. Bu sayfa o adımın DadaFit tarafındaki karşılığıdır.</p>
+  </div>
+</section>
+
+<section class="sec" style="background:var(--bg-white)">
+  <div class="wrap dr-wrap">
+
+    <!-- ===== DÜRÜSTLÜK ŞERİDİ — ekranın TAMAMI için TEK kalem ============
+         Kit §11 dili: `.hr-note` (fit-shell.css), yeni sınıf üretilmedi.
+         Cümle kalıbı depodakiyle aynı: "Bu ekran maket: …"
+         (bkz. hata-500-v1.html · hata-403-v1.html · pro-odeme-v1.html).
+
+         🔴 BU EKRANDA KOD ALANI YOK VE OLMAYACAK. Gerçek 3D Secure
+         doğrulaması BANKANIN kendi sayfasında yapılır; kodu banka sorar,
+         banka doğrular. Buraya bir kod kutusu koymak iki ayrı yalan
+         olurdu: doğrulamayı DadaFit yapıyormuş gibi göstermek ve
+         girilen kodun bir yere gittiğini ima etmek. Sahte bekleme
+         animasyonu ve sahte "doğrulandı" ekranı da bu yüzden yok. -->
+    <div class="hr-note">
+      <i class="fa-solid fa-flask" aria-hidden="true"></i>
+      <p><b>Bu ekran maket: gerçek bir 3D Secure doğrulaması başlamaz.</b>
+      Tasarım hazır, onu tetikleyecek katman henüz yok — bu depo statik bir prototiptir,
+      ödeme sağlayıcısı bağlı değildir ve bankaya giden bir istek yoktur.
+      Sayfa yalnız doğrudan adresinden açılır; <b>kod alanı bilerek konmadı</b>,
+      çünkü kodu soran da doğrulayan da bankadır, DadaFit değildir.</p>
+    </div>
+
+    <div class="dr-lead" style="margin-top:34px">
+      <div class="dr-ico is-uyari"><i class="fa-solid fa-building-columns" aria-hidden="true"></i></div>
+      <div>
+        <h2>Doğrulama nerede yapılır</h2>
+        <p>Ödeme sağlayıcısı bağlandığında bu adımda <b>bankanın kendi sayfasına</b> yönlendirilirsin. Doğrulamayı orada tamamlarsın: bankan sana SMS ile tek kullanımlık şifre gönderir ya da mobil bankacılık uygulamandan onay ister — hangisi olduğunu bankan belirler.</p>
+        <p>Onaydan sonra ödeme sağlayıcısı seni DadaFit'e geri getirir ve akış kaldığı yerden sürer. Onaylamazsan ya da süre dolarsa tahsilat yapılmaz.</p>
+      </div>
+    </div>
+
+    <div class="dr-blok">
+      <h3>DadaFit ne görür, ne görmez</h3>
+      <!-- ⚠ `.dr-cikis` YALNIZ `<a>` çocuklarını biçimlendiriyor (ölçüldü:
+           fit-durum.css'te `.dr-cikis a{...}`, `span` için kural yok). Bu üç
+           madde bir yere GİTMİYOR — bilgi, bağlantı değil — o yüzden kart
+           ızgarası yerine düz metin. Kit'e link olmayan bir varyant eklemek
+           bu tek blok için kabuğu genişletmek olurdu. -->
+      <p>Doğrulama bankanın sayfasında yapıldığı için üç bilgi DadaFit'e hiç uğramaz:</p>
+      <p><b>Tek kullanımlık şifreni görmez.</b> Kod bankan ile senin aranda kalır; hiçbir aşamada DadaFit'e iletilmez.</p>
+      <p><b>Tam kart numaranı görmez.</b> Kart bilgisi ödeme sağlayıcısına gider; DadaFit'e yalnız maskeli kart referansı döner.</p>
+      <p><b>Yalnız sonucu görür.</b> Bankadan gelen tek bilgi doğrulamanın geçip geçmediğidir; gerekçesini banka saklar.</p>
+      <p>Bu ayrım <a href="yasal-v1.html?metin=teslimat">Ödeme ve Erişim Koşulları</a>'nda da yazılıdır: kart bilgileri DadaFit sistemlerinde saklanmaz.</p>
+    </div>
+
+    <div class="dr-blok">
+      <h3>Doğrulama sonucuna göre nereye gidilir</h3>
+      <p>Backend geldiğinde akış bu iki uçtan birine bağlanacak; ikisi de bugün çizili ve gezilebilir.</p>
+      <ul class="dr-cikis">
+        <li><a href="pro-odeme-v1.html?plan=pro&amp;ok=1"><i class="fa-solid fa-flag-checkered" aria-hidden="true"></i>
+          <span><b>Doğrulama geçerse</b><small>Akışın sonu: ne yapıldı, ne yapılmadı listesi. Bugün önizleme anahtarıyla açılıyor.</small></span></a></li>
+        <li><a href="pro-odeme-v1.html?plan=pro&amp;durum=basarisiz"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>
+          <span><b>Doğrulama geçmezse</b><small>Tahsilat reddedildi ekranı: ne olduğu, ne yapman gerektiği ve nereye gideceğin.</small></span></a></li>
+      </ul>
+    </div>
+
+    <div class="dr-blok">
+      <h3>Buradan devam edebilirsin</h3>
+      <ul class="dr-cikis">
+        <li><a href="pro-odeme-v1.html"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+          <span><b>Ödeme adımına dön</b><small>Planı, fatura bilgilerini ve kartı gözden geçir.</small></span></a></li>
+        <li><a href="fit-odemelerim.html#kartlar"><i class="fa-regular fa-credit-card" aria-hidden="true"></i>
+          <span><b>Kartlarım</b><small>Kayıtlı kartlarını yönet, varsayılanı değiştir.</small></span></a></li>
+        <li><a href="fit-cozum-merkezi.html#yeni"><i class="fa-solid fa-headset" aria-hidden="true"></i>
+          <span><b>Destek Merkezi</b><small>Doğrulama adımında takılırsan bize yaz.</small></span></a></li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+</main>
+
+<!-- KABUK: alt katman -->
+<div id="fitShellBottom"></div>
+
+<script src="assets/js/fit-shell.js"></script>
+<script src="assets/js/fit-mesaj.js"></script>
+</body>
+</html>

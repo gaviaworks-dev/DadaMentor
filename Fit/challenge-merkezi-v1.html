@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8" />
+  <meta name="robots" content="noindex, nofollow" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Challenge Merkezi — DadaFit · Aktif, yaklaşan ve tamamlanan challenge'lar</title>
+<link rel="icon" type="image/svg+xml" href="../kanon/varlik/dadafit-isaret.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="../kanon/varlik/dadafit-isaret-32.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="../kanon/varlik/dadafit-isaret-180.png" />
+<!-- FontAwesome 6.5.2 (kilitli ikon seti) -->
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+      integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+      crossorigin="anonymous" referrerpolicy="no-referrer" />
+<!-- DadaFit ortak kabuk (tek kaynak) -->
+<!-- KANON · yukleme sirasi: tokenlar -> markalar/fit (bilesenler YUKLENMEZ) -->
+<link rel="stylesheet" href="../kanon/tokenlar.css" />
+<link rel="stylesheet" href="../kanon/markalar/fit.css" />
+<link rel="stylesheet" href="assets/css/fit-shell.css" />
+<link rel="stylesheet" href="assets/css/fit-mesaj.css" />
+<style>
+/* SAYFA CSS — CHALLENGE MERKEZİ (belge §8.4)
+ Kabuk/banner/kart/çip/boş durum assets/css/fit-shell.css'te tek kaynakta. */
+.lib-top{--lib-img:url('https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=1680&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-16');--lib-pos:center 30%}
+/* SÜZGEÇ · R16/1 — KABUĞUN ORTAK FİLTRE BİLEŞENİ (`.ff`).
+ ÖLÇÜLEN KUSUR (iki kez): panel önce dört etiketli satırdı, 15 çip ve
+ ~360 px yer kaplıyordu. Onu tek satıra indirdim ama BİR HATA YAPTIM:
+ paneli yeniden yazarken `ff` sınıfını ve `data-ff` sözleşmesini
+ düşürdüm. Oysa `egzersiz-kutuphane-v1`in ekranda görünen açılır
+ menülerini sayfa değil KABUK basıyor (`fit-shell.js` · ORTAK FİLTRE
+ BİLEŞENİ): sayfa yalnız `.fgroup[data-group]` + `.lbl` yazar, bileşen
+ onları facet düğmesine ve açılır panele çevirir, aktif çip şeridini ve
+ mobil çekmeceyi de kendisi kurar. Sözleşme düşünce challenge merkezi
+ çıplak çip yığını olarak kaldı — kit ikiye ayrıldı.
+ Panel artık sözleşmeye geri döndü; yerleşim kuralı YAZILMIYOR, kabuktan
+ geliyor. Sayfanın tek işi grupları katalogdan üretmek ve dolunca
+ `FIT_SHELL.filtreKur()` ile haber vermek. */
+.cm-count{margin:22px 0 18px;font-size:14px;font-weight:600;color:var(--muted)}
+.cm-count b{color:var(--slate);font-weight:800}
+@media (max-width:1024px){ .sec{padding:var(--sec-pad) 0} }
+@media (max-width:640px){ .sec{padding:var(--sec-pad) 0} }
+
+/* ================= R8/32 · SECTION İÇİ KART TUTARSIZLIĞI =================
+ ÖLÇÜM (düzeltmeden önce, iki genişlikte):
+   .cc-card  ×3 → 300 · 300 · 300 px  (maks−min 0)  ✓ zaten tutarlı
+   .fp-card  ×3 → 207 · 184 · 184 px @1440  (maks−min 23)
+                  199 · 176 · 176 px @390   (maks−min 23)
+   dolgu, görsel oranı ve başlık satır sayısı üç kartta da TEK değerdi —
+   tutarsızlık yalnız yükseklikte.
+ KÖK NEDEN: fit-shell.css:1630 `.fp-grid{align-items:start}`. Izgara öğeleri
+ esnemiyor, her kart kendi metni kadar oluyor; "Seri" kartının metni bir satır
+ uzun olduğu için +23 px.
+ KABUĞA DOKUNULMADI — .fp-grid'i 13 sayfa kullanıyor. Yalnız bu sayfadaki
+ üçlü ızgara esnetildi. */
+/* KAPSAM (Beyar/lead karari): esit yukseklik YALNIZ izgara varken anlamli.
+ <=640'ta .fp-grid tek kolona duser (fit-shell.css:1711); orada hizalanacak
+ bir komsu yok, esit yukseklik yalnizca kisa kartlarin altina 23 px olu
+ bosluk birakiyordu (olculdu: 199 vs kendi icerigi 176). Kural 641'den
+ itibaren gecerli — kirilma noktasi kabuk rampasiyla ayni (640). */
+@media (min-width:641px){
+  .cm-esit{align-items:stretch;grid-auto-rows:1fr}
+  .cm-esit>.fp-card{height:100%}
+}
+</style>
+<!-- Metin yaslama katmani (tek kaynak) — sayfa stillerinden SONRA yuklenir,
+     boylece sayfa ici text-align kurallari yaslamayi geri alamaz -->
+<link rel="stylesheet" href="assets/css/fit-type.css" />
+</head>
+<body data-brand="fit" data-fit-page="challenge-merkezi-v1">
+
+<!-- KABUK: ust katman (topbar+header+drawer+alt bar+gorus+cerez) — ortak kabuk JS basar -->
+<div id="fitShellTop"></div>
+
+<main class="page-main" id="pageMain">
+
+<!-- ===== BANNER + BREADCRUMB ===== -->
+<section class="lib-top">
+  <div class="wrap">
+    <nav class="lib-crumb" aria-label="Sayfa yolu">
+      <a href="dadafit-hub-v1.html" class="crumb-home"><i class="fa-solid fa-house" aria-hidden="true"></i><span class="sr-only">DadaFit ana sayfa</span></a>
+      <i class="fa-solid fa-chevron-right"></i>
+      <a href="programlar-merkezi-v1.html">Programlar</a>
+      <i class="fa-solid fa-chevron-right"></i>
+      <span class="cur">Challenge Merkezi</span>
+    </nav>
+    <span class="eyebrow"><i class="fa-solid fa-trophy"></i> Programlar · Challenge</span>
+    <h1>Kısa süreli, birlikte yapılan meydan okumalar</h1>
+    <p class="lib-sub">Challenge ayrı bir ürün değil — süreli bir program türü. Katıldığın challenge Fit Planım'a işlenir, serin ve rozetin orada birikir.</p>
+    <!-- ÖLÇÜLEN KUSUR (R16/1): bu üç sayı SABİTTİ ve katalogla çelişiyordu —
+         ekranda "1 aktif · 2 yaklaşan" yazıyordu, katalogda 2 aktif · 1
+         yaklaşan vardı. Artık katalogdan sayılıyor. -->
+    <div class="lib-stats" id="cmStats"></div>
+  </div>
+</section>
+
+<!-- ===== KATILDIĞIN CHALLENGE (Fit Planım'dan okunur) ===== -->
+<!-- ÖLÇÜLEN KUSUR (R15/5, düzeltmeden önce @1440): bölüm yüksekliği 371.1 px,
+     padding-top 74 px, padding-bottom 0 px, kartın altındaki boşluk 0 px —
+     kart section'ın tabanına yapışıktı. Kaynağı buradaki satır içi
+     `padding-bottom:0` idi. Kaldırıldı; bölüm artık kabuğun kendi 74/74
+     ritmine döndü ve kart dikeyde merkezde duruyor. -->
+<section class="sec sec-fit" style="background:var(--bg-white)">
+  <div class="wrap">
+    <div class="fp-card is-dark" id="cmMine" hidden>
+      <div class="fp-head">
+        <h3><i class="fa-solid fa-trophy"></i> Katıldığın challenge</h3>
+        <span class="fp-badge ok" id="cmBadge"><i class="fa-solid fa-play"></i> Devam ediyor</span>
+      </div>
+      <b style="font-size:19px" id="cmName">30 Günde Hareket Alışkanlığı</b>
+      <p style="margin-top:6px" id="cmLine">İlerlemen Fit Planım'a işleniyor.</p>
+      <div class="fp-bar"><span id="cmBar" style="width:3%"></span></div>
+      <!-- Ölçü satırı TİPE GÖRE kurulur (R15/5). Üç sabit span vardı ve
+           üçü de yalnız alışkanlık tipini anlatıyordu. -->
+      <div class="fp-meta" id="cmOlcu"></div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:18px">
+        <a class="btn btn-primary" id="cmOpen" href="challenge-v1.html"><i class="fa-solid fa-play"></i> Bugünün görevini aç</a>
+        <a class="btn btn-ghost" href="fit-challengelarim.html">Challenge'larım</a>
+      </div>
+    </div>
+    <div class="hm-gate-strip" id="cmNone" style="display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;background:var(--cream-2);border:1px solid #e7ddcb;border-radius:var(--radius-lg);padding:18px 22px">
+      <p style="font-size:14px;font-weight:500;color:var(--slate-2);margin:0;max-width:64ch"><b>Henüz bir challenge'a katılmadın.</b> Aşağıdan birini seç; katıldığın anda ilerlemen Fit Planım'a işlenmeye başlar.</p>
+      <a class="btn btn-primary" href="#liste"><i class="fa-solid fa-trophy"></i> Challenge'ları gör</a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FİLTRE + LİSTE ===== -->
+<section class="sec sec-fit" id="liste" style="background:var(--bg-cream)">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <span class="eyebrow"><i class="fa-solid fa-layer-group"></i> Tüm challenge'lar</span>
+        <h2>Aktif, yaklaşan ve tamamlanan</h2>
+        <p class="lead">Her challenge'ın süresi, günlük yükü ve rozeti bellidir. Katılım ücretsizdir; istediğin an bırakır, istediğin an geri dönersin.</p>
+        <div class="sec-tools"><a class="see-all" href="programlar-merkezi-v1.html">Programlar Merkezi <i class="fa-solid fa-arrow-right"></i></a></div>
+      </div>
+    </div>
+
+    <!-- SÜZGEÇ · R16/1 — çip grupları KATALOGDAN basılır.
+         Eskiden dört grubun çipleri de elle yazılıydı: "Tamamlanan" diye bir
+         durum vardı ama katalogda o durum YOK, "mobilite" çipi ise kataloğun
+         kategorisi değişince sessizce boşa düşerdi. Süzgeç artık listelediği
+         şeyin kendisinden doğuyor; boş çip üretilemez. -->
+    <div class="cm-panel ff" id="cmPanel" data-ff
+         data-ff-count=".cm-count" data-ff-clear="#cmReset"></div>
+
+    <p class="cm-count"><b id="cmCount">0</b> challenge gösteriliyor</p>
+
+    <!-- LİSTE · R16/1 — üç SABİT kart kaldırıldı, katalogdan basılıyor.
+         Eski kartlar kataloğun ikinci kopyasıydı ve ölçüldü ki ÇELİŞİYORDU:
+         yürüyüş kartı "Tamamlandı" rozeti taşıyordu, katalog o challenge'a
+         `aktif` diyordu. Aynı soruya iki cevap. Kart artık tek kaynaktan
+         basılır ve KATIL DÜĞMESİ taşır — bu sayfadan katılmak mümkün değildi,
+         katılma yalnız Challenge'larım'dan yapılabiliyordu. -->
+    <div class="hub-grid cols-3" id="cmGrid"></div>
+
+    <div class="lib-empty" id="cmEmpty">
+      <span class="ico"><i class="fa-solid fa-trophy"></i></span>
+      <h3>Bu seçimle challenge bulamadık</h3>
+      <p>Filtreyi gevşetebilir ya da uzun soluklu bir programa göz atabilirsin.</p>
+      <div class="sec-tools">
+        <button class="btn btn-primary" type="button" id="cmReset"><i class="fa-solid fa-rotate-left"></i> Filtreyi sıfırla</button>
+        <!-- §D5 · boş durum kartında TEK eylem düğmesi bulunur.
+             İkincil düğme kaldırıldı; kalan düğme bu yüzeyin birincil
+             eylemidir (süzgeci sıfırlamak). -->
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SERİ VE ROZET KURALLARI (belge §15 · §19) ===== -->
+<section class="sec sec-fit" style="background:var(--bg-white)">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <span class="eyebrow"><i class="fa-solid fa-scale-balanced"></i> Kurallar</span>
+        <h2>Seri ve rozet nasıl işliyor?</h2>
+        <p class="lead">Baskı değil denge. Kurallar baştan açık olsun ki kaçırdığın gün sürpriz olmasın.</p>
+      </div>
+    </div>
+    <div class="fp-grid cols-3 cm-esit">
+      <div class="fp-card">
+        <div class="fp-head"><h3><i class="fa-solid fa-fire"></i> Seri</h3></div>
+        <p style="font-size:14px;color:var(--slate-2);font-weight:500;line-height:1.65">Seri, üst üste görevi tamamladığın gün sayısıdır. <b>Bir gün kaçırmak seriyi sıfırlamaz</b> — ay içinde iki telafi hakkın var. Üçüncü kaçırılan günde seri baştan başlar; challenge devam eder.</p>
+      </div>
+      <div class="fp-card">
+        <div class="fp-head"><h3><i class="fa-solid fa-medal"></i> Rozet</h3></div>
+        <p style="font-size:14px;color:var(--slate-2);font-weight:500;line-height:1.65">Rozetler kıyas için değil, <b>kendi kilometre taşların</b> için. İlk gün, beş günlük seri ve challenge sonu ayrı rozetlerdir; kazanılan rozet geri alınmaz. Her rozet <a href="fit-rozetlerim.html#puan">puan</a> da getirir.</p>
+      </div>
+      <!-- R15/5 · Buradaki eski kart "katılımcı sayıları gerçek veriyle
+           üretilir" diyordu. Bu prototipte sunucu yok, başka kullanıcı verisi
+           yok — söz tutulamıyordu. Yerine tutulabilir olan geldi: kanıt kuralı,
+           ki o gerçekten çalışıyor. -->
+      <div class="fp-card">
+        <div class="fp-head"><h3><i class="fa-solid fa-shield-halved"></i> Kanıt</h3></div>
+        <p style="font-size:14px;color:var(--slate-2);font-weight:500;line-height:1.65">İlerlemeni elle bastığın bir düğme değil, <b>antrenman kayıtların</b> belirler. Her kayıt neye dayandığını taşır: ölçüldü, cihazdan geldi ya da beyan. <b>Beyan alışkanlık serisini besler, sayısal hedefe girmez.</b></p>
+      </div>
+    </div>
+    <div class="hr-note">
+      <i class="fa-solid fa-circle-info"></i>
+      <p>Challenge içerikleri <b>genel bilgilendirme amaçlıdır</b>. Bir rahatsızlığın varsa ya da uzun süredir hareketsizsen katılmadan önce <a href="antrenorler-v1.html">bir uzmana danış</a>. Durma kriterleri: <a href="saglik-bilgilendirme-v1.html">Sağlık Bilgilendirmesi</a>.</p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- KABUK: alt katman (giris kapisi + footer + basa don) -->
+<div id="fitShellBottom"></div>
+
+<!-- DadaFit ortak kabuk JS (tek kaynak): markup + davranis -->
+<script src="assets/js/fit-shell.js"></script>
+<script src="assets/js/fit-mesaj.js"></script>
+<!-- CHALLENGE MOTORU (R15/5) — katalog, üç tip, ilerleme hesabı -->
+<script src="assets/js/fit-challenge.js"></script>
+<!-- ROZET · PUAN — challenge bitince rozet buradan mühürlenir -->
+<script src="assets/js/fit-rozet.js"></script>
+<script>
+/* =====================================================================
+   CHALLENGE MERKEZİ   (R16/1)
+   ---------------------------------------------------------------------
+   ESKİ HÂL (ölçüldü, 2026-08-30): bu sayfa kataloğun İKİNCİ KOPYASIYDI.
+   Üç kart elle yazılmıştı, dört süzgeç grubunun çipleri elle yazılmıştı,
+   hero'daki üç sayı elle yazılmıştı. Üçü de kataloğa göre eskimişti:
+     · hero "1 aktif · 2 yaklaşan" diyordu — katalog 2 aktif · 1 yaklaşan
+     · yürüyüş kartı "Tamamlandı" rozeti taşıyordu — katalog `aktif` diyordu
+     · süzgeçte "Tamamlanan" çipi vardı — katalogda öyle bir durum yok
+   Ve en önemlisi: **katıl düğmesi yoktu**. Keşif yüzeyinden katılmak
+   mümkün değildi; kullanıcı önce Challenge'larım'a gitmek zorundaydı.
+
+   YENİ HÂL: sayfa hiçbir challenge bilgisi TAŞIMAZ, yalnız çizer. Kart,
+   çip, sayaç ve hero sayıları `FIT_CHALLENGE.KATALOG`tan doğar; katılım
+   durumu `ilerleme()`den okunur. Yeni bir challenge katalog dizisine bir
+   satır olarak eklenir ve bu sayfa onu kendiliğinden gösterir.
+   ===================================================================== */
+(function(){
+  var C = window.FIT_CHALLENGE;
+  var grid  = document.getElementById('cmGrid');
+  var panel = document.getElementById('cmPanel');
+  var count = document.getElementById('cmCount');
+  var empty = document.getElementById('cmEmpty');
+  var stats = document.getElementById('cmStats');
+  if(!C || !grid || !panel) return;
+
+  function esc(t){ return String(t==null?'':t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+  function n(x){ return Number(x||0).toLocaleString('tr-TR'); }
+
+  /* Hedefin tek cümlesi — tip başına ayrı, çünkü üç tip ayrı şey ölçer. */
+  function hedefMetni(k){
+    return k.tip==='sureli' ? n(k.hedef.deger)+' '+esc(k.hedef.ad)
+         : k.tip==='seri'   ? k.adimlar.length+' adım, sırayla'
+         : 'her gün işaretle';
+  }
+
+  /* ---------- süzgeç durumu ---------- */
+  var sel = {durum:new Set(), benim:new Set(), tip:new Set(), sure:new Set()};
+
+  /* Bir challenge'ın KULLANICIYA GÖRE durumu. Katalog durumu (aktif/yaklaşan)
+     challenge'ın kendi takvimidir; bu ise üyenin onunla ilişkisi. İkisi ayrı
+     eksen olduğu için ayrı süzgeç grubu — tek grupta birleştirilseydi
+     "aktif ama katılmadığım" seçilemezdi. */
+  function benimDurum(i){
+    if(!i.katildi) return 'yok';
+    if(i.durum==='tamamlandi') return 'tamamladim';
+    if(i.durum==='devam')      return 'katildim';
+    return 'biraktim';
+  }
+
+  var BENIM_AD = {katildim:'Katıldıklarım', tamamladim:'Tamamladıklarım',
+                  biraktim:'Bıraktıklarım', yok:'Katılmadıklarım'};
+  var BENIM_IKO= {katildim:'fa-solid fa-person-running', tamamladim:'fa-solid fa-check',
+                  biraktim:'fa-solid fa-circle-half-stroke', yok:'fa-regular fa-circle'};
+  var DURUM_AD = {aktif:'Aktif', yaklasan:'Yaklaşan', gecmis:'Geçmiş'};
+  var DURUM_IKO= {aktif:'fa-solid fa-play', yaklasan:'fa-regular fa-clock', gecmis:'fa-solid fa-flag-checkered'};
+
+  /* ---------- süzgeç panelini KATALOGDAN kur ----------
+     Boş çip üretilemez: her çip, o değeri gerçekten taşıyan en az bir
+     challenge olduğu için vardır. */
+  function panelKur(){
+    var K = C.KATALOG;
+    function benzersiz(f){
+      var g=[]; K.forEach(function(k){ var v=f(k); if(v!=null && g.indexOf(v)<0) g.push(v); }); return g;
+    }
+    var gruplar = [
+      { anahtar:'tip', ad:'Tip',
+        secenek: benzersiz(function(k){return k.tip;}).map(function(v){
+          return {val:v, ad:C.TIP[v].etiket, iko:C.TIP[v].ikon}; }) },
+      { anahtar:'benim', ad:'Benim',
+        secenek: ['katildim','tamamladim','yok'].map(function(v){
+          return {val:v, ad:BENIM_AD[v], iko:BENIM_IKO[v]}; }) },
+      { anahtar:'durum', ad:'Durum',
+        secenek: benzersiz(function(k){return k.durum;}).map(function(v){
+          return {val:v, ad:DURUM_AD[v]||v, iko:DURUM_IKO[v]||'fa-solid fa-circle'}; }) }
+    ];
+    /* SÜRE EKSENİ KATALOĞA GÖRE DOĞAR.
+       Üç challenge varken süreler 7 · 21 · 30 idi: her çip tam bir kartı
+       süzüyordu, yani süzgeç değil ikinci bir kart listesiydi. Süre zaten
+       her kartın olgu satırında yazılı. Katalog sekizi geçince eksen
+       kendiliğinden geri gelir — panel, süzdüğü listeye göre büyür. */
+    var sureler = benzersiz(function(k){return k.gun;});
+    if (K.length >= 8 && sureler.length >= 2) {
+      gruplar.push({ anahtar:'sure', ad:'Süre',
+        secenek: sureler.sort(function(a,b){return a-b;}).map(function(v){
+          return {val:String(v), ad:v+' gün', iko:null}; }) });
+    }
+
+    /* Grup başına "Tümü" çipi GERİ GELDİ. Bir önceki turda "seçim yoksa
+       zaten tümü" diye kaldırmıştım; kabuğun bileşeni onu bir SÖZLEŞME
+       olarak okuyor (`isAll(chip)` → `data-val="all"`) ve açılır panelin
+       içinde o facet'i tek dokunuşla temizlemenin yolu odur. Kütüphane
+       sayfası da aynısını yazıyor; iki yüzey aynı kalıbı paylaşır. */
+    panel.innerHTML = gruplar.map(function(g){
+      return '<div class="fgroup" data-group="'+g.anahtar+'" role="group" aria-label="'+esc(g.ad)+' filtresi">'+
+        '<span class="lbl">'+esc(g.ad)+'</span>'+
+        '<button class="df-fchip on" type="button" data-val="all">Tümü</button>'+
+        g.secenek.map(function(o){
+          return '<button class="df-fchip" type="button" data-val="'+esc(o.val)+'">'+
+                 (o.iko?'<i class="'+o.iko+'"></i> ':'')+esc(o.ad)+'</button>';
+        }).join('')+'</div>';
+    }).join('');
+
+    /* Panel VERİDEN doldu; kabuğun filtre bileşeni betik yüklenirken bir
+       kez tarama yaptığı için burayı görememişti. Doldurduğumuzu söylüyoruz;
+       açılır menüleri, aktif çip şeridini ve mobil çekmeceyi o kuruyor. */
+    if(window.FIT_SHELL && FIT_SHELL.filtreKur) FIT_SHELL.filtreKur(panel);
+  }
+
+  /* ---------- kart ----------
+     Kart bir <div>; başlık bağlantısı ve KATIL düğmesi ayrı hedeflerdir.
+     Kartın tamamı bağlantı olsaydı düğme onun içinde kalırdı — kabuğun
+     `.kyt-btn` deseninde çözülen aynı iç içe etkileşim kusuru. */
+  function kart(k){
+    var i = C.ilerleme(k.slug);
+    var t = C.TIP[k.tip];
+    var b = benimDurum(i);
+    var rozet = b==='tamamladim'
+        ? '<span class="cm-state done"><i class="fa-solid fa-check"></i> Tamamladın</span>'
+      : b==='katildim'
+        ? '<span class="cm-state"><i class="fa-solid fa-person-running"></i> Katıldın</span>'
+      : k.durum==='yaklasan'
+        ? '<span class="cm-state wait"><i class="fa-regular fa-clock"></i> Yaklaşan</span>'
+        : '<span class="cm-state"><i class="fa-solid fa-play"></i> Aktif</span>';
+
+    /* Katıldıysan kart senin ilerlemeni gösterir, tanıtımını değil. */
+    var govde = (b==='katildim' || b==='tamamladim')
+      ? '<div class="fp-bar" style="margin-top:10px"><span style="width:'+i.oran+'%"></span></div>'+
+        '<p style="font-size:12.5px;color:var(--fit-bright);font-weight:700;margin-top:8px">'+
+          (k.tip==='sureli' ? n(i.biriken)+' / '+n(i.hedef)+' '+esc(i.birimAd)
+         : k.tip==='seri'   ? i.biriken+' / '+i.hedef+' adım kapandı'
+         : i.biriken+' / '+i.hedef+' gün · '+i.seri+' gün üst üste')+
+        ' · %'+i.oran+'</p>'
+      : '<p style="font-size:12.5px;color:var(--fit-bright);font-weight:700;margin-top:8px">'+
+          esc(hedefMetni(k))+' · '+k.gun+' gün · +'+k.odul.puan+' puan</p>';
+
+    var eylem = b==='katildim'
+      ? '<a class="btn btn-primary" href="challenge-v1.html?slug='+esc(k.slug)+'"><i class="fa-solid fa-play"></i> Devam et</a>'
+      : b==='tamamladim'
+        ? '<button class="btn btn-primary" type="button" data-katil="'+esc(k.slug)+'"><i class="fa-solid fa-rotate-right"></i> Yeniden başla</button>'
+        : '<button class="btn btn-primary" type="button" data-katil="'+esc(k.slug)+'"><i class="fa-solid fa-plus"></i> Katıl ve başla</button>';
+
+    return '<div class="cc-card'+(b==='tamamladim'?' is-past':'')+'"'+
+      ' data-durum="'+esc(k.durum)+'" data-benim="'+b+'" data-tip="'+esc(k.tip)+'" data-sure="'+k.gun+'"'+
+      ' style="min-height:300px;background-image:url(\''+esc(k.gorsel)+'\')">'+
+      /* İKİ KÖŞE, İKİ EKSEN: solda üyenin bu challenge'la ilişkisi, sağda
+         challenge'ın TİPİ — süzgecin de ayırdığı iki şey. Süre köşeden
+         indi, çünkü aşağıdaki olgu satırında zaten hedefin yanında duruyor
+         ve orada anlamı var ("7 adım · 7 gün"), köşede yalnız bir sayıydı.
+         Tip için `.pstat` denendi ve ÖLÇÜLDÜ: sınıfın taban kuralında zemin
+         YOK (zemin `.ok/.wait/.off` durum ekleriyle geliyor), fotoğrafın
+         üstünde zemin​siz bir nokta+metin oluyordu. `.cm-len` bu kartın kendi
+         koyu saydam rozetidir; yeni sınıf üretmedik, doğru olanı kullandık. */
+      rozet+'<span class="cm-len"><i class="'+t.ikon+'"></i> '+esc(t.etiket)+'</span>'+
+      '<div style="position:relative;z-index:2;padding:22px">'+
+        '<b style="display:block;font-size:19px;color:#fff;margin:0 0 6px">'+esc(k.ad)+'</b>'+
+        '<p style="font-size:13.5px;color:rgba(255,255,255,.82);font-weight:500;line-height:1.55">'+esc(k.ozet)+'</p>'+
+        govde+
+        '<div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px">'+
+          eylem+
+          '<a class="btn btn-ghost" href="challenge-v1.html?slug='+esc(k.slug)+'">İncele</a>'+
+        '</div>'+
+      '</div></div>';
+  }
+
+  /* ---------- süzme ---------- */
+  function uygula(){
+    var kartlar = Array.prototype.slice.call(grid.querySelectorAll('.cc-card'));
+    var say=0;
+    kartlar.forEach(function(c){
+      var ok = Object.keys(sel).every(function(g){
+        return !sel[g].size || sel[g].has(c.getAttribute('data-'+g));
+      });
+      c.style.display = ok?'':'none'; if(ok) say++;
+    });
+    count.textContent = say;
+    if(empty) empty.classList.toggle('show', say===0);
+    grid.style.display = say===0?'none':'';
+    var qs=[]; Object.keys(sel).forEach(function(g){ if(sel[g].size) qs.push(g+'='+Array.from(sel[g]).join(',')); });
+    history.replaceState(null,'',location.pathname+(qs.length?'?'+qs.join('&'):''));
+  }
+
+  function cipBagla(){
+    panel.querySelectorAll('.fgroup[data-group]').forEach(function(g){
+      var grup=g.getAttribute('data-group');
+      g.querySelectorAll('.df-fchip').forEach(function(btn){
+        btn.addEventListener('click',function(){
+          var val=btn.getAttribute('data-val');
+          if(val==='all'){
+            sel[grup].clear();
+            g.querySelectorAll('.df-fchip').forEach(function(x){ x.classList.toggle('on', x===btn); });
+          } else {
+            var acik = !sel[grup].has(val);
+            if(acik) sel[grup].add(val); else sel[grup].delete(val);
+            btn.classList.toggle('on', acik);
+            var all=g.querySelector('.df-fchip[data-val="all"]');
+            if(all) all.classList.toggle('on', sel[grup].size===0);
+          }
+          uygula();
+        });
+      });
+    });
+  }
+
+  /* Süzgeci sıfırla — hem şeritteki çip hem boş durumdaki düğme burayı çağırır;
+     iki ayrı sıfırlama mantığı yazmak ikisinin ayrışması demekti. */
+  function sifirlaSuzgec(){
+    Object.keys(sel).forEach(function(g){ sel[g].clear(); });
+    panel.querySelectorAll('.df-fchip').forEach(function(c){
+      c.classList.toggle('on', c.getAttribute('data-val')==='all');
+    });
+    uygula();
+  }
+
+  function derin(){
+    var p=new URLSearchParams(location.search);
+    Object.keys(sel).forEach(function(g){
+      var ham=p.get(g); if(!ham) return;
+      ham.split(',').forEach(function(v){
+        var b=panel.querySelector('.fgroup[data-group="'+g+'"] .df-fchip[data-val="'+v+'"]');
+        if(b){ sel[g].add(v); b.classList.add('on'); }
+      });
+      var all=panel.querySelector('.fgroup[data-group="'+g+'"] .df-fchip[data-val="all"]');
+      if(all && sel[g].size) all.classList.remove('on');
+    });
+  }
+
+  /* ---------- hero sayıları — katalogdan sayılır ---------- */
+  function statBas(){
+    if(!stats) return;
+    var K=C.KATALOG;
+    var aktif=K.filter(function(k){return k.durum==='aktif';}).length;
+    var yak  =K.filter(function(k){return k.durum==='yaklasan';}).length;
+    var gunler=K.map(function(k){return k.gun;});
+    var katildim=K.filter(function(k){ var i=C.ilerleme(k.slug); return i.katildi && i.durum==='devam'; }).length;
+    var hucre=[[aktif,'aktif'],[yak,'yaklaşan'],
+               [Math.min.apply(null,gunler)+'–'+Math.max.apply(null,gunler),'günlük süre']];
+    if(katildim) hucre.push([katildim,'katıldığın']);
+    stats.innerHTML = hucre.map(function(h){
+      return '<div class="lib-stat"><b>'+h[0]+'</b><span>'+h[1]+'</span></div>';
+    }).join('');
+  }
+
+  /* ---------- katılma ---------- */
+  grid.addEventListener('click', function(e){
+    var b = e.target.closest && e.target.closest('[data-katil]');
+    if(!b) return;
+    C.katil(b.getAttribute('data-katil'));       /* fit-challenge-degisti → boya() */
+  });
+
+  var kuruldu=false;
+  function boya(){
+    grid.innerHTML = C.KATALOG.map(kart).join('');
+    if(!kuruldu){ panelKur(); cipBagla(); derin(); kuruldu=true; }
+    statBas();
+    uygula();
+    paintMine();
+  }
+
+  /* ---------- KATILDIĞIN CHALLENGE (üst kart) — motordan okunur ----------
+     Üç tip aynı cümleyi paylaşamaz: süreli hedef sayısal ölçü sayar, seri
+     adım sayar, alışkanlık gün sayar. Ölçü satırı tipe göre kurulur. */
+  function paintMine(){
+    var devam = C.ozet().devam;
+    var var_ = devam.length > 0;
+    document.getElementById('cmMine').hidden = !var_;
+    document.getElementById('cmNone').hidden = !!var_;
+    if(!var_) return;
+
+    var x = devam[0], k = x.katalog, i = x.ilerleme, t = C.TIP[k.tip];
+    document.getElementById('cmName').textContent = k.ad;
+    var b = document.getElementById('cmBadge');
+    b.className = 'fp-badge ' + (i.suresiDoldu ? 'wait' : 'ok');
+    b.innerHTML = '<i class="' + t.ikon + '"></i> ' + esc(t.etiket);
+    document.getElementById('cmBar').style.width = i.oran + '%';
+    document.getElementById('cmOlcu').innerHTML =
+      (k.tip === 'sureli'
+        ? '<span><b>' + n(i.biriken) + '</b> / ' + n(i.hedef) + ' ' + esc(i.birimAd) + '</span>' +
+          '<span><b>' + i.gecenGun + '</b> / ' + i.toplamGun + ' gün geçti</span>'
+        : k.tip === 'seri'
+          ? '<span><b>' + i.biriken + '</b> / ' + i.hedef + ' adım</span>' +
+            '<span>Sırada: <b>' + esc(i.siradaki ? i.siradaki.ad : 'kalmadı') + '</b></span>'
+          : '<span><b>' + i.biriken + '</b> / ' + i.hedef + ' gün</span>' +
+            '<span><b>' + i.seri + '</b> gün üst üste</span>' +
+            '<span>Telafi hakkı: <b>' + i.telafiKalan + '</b> / ' + C.TELAFI_HAKKI + '</span>') +
+      (devam.length > 1 ? '<span><b>' + (devam.length - 1) + '</b> challenge daha sürüyor</span>' : '');
+    document.getElementById('cmOpen').setAttribute('href','challenge-v1.html?slug=' + k.slug);
+    document.getElementById('cmLine').textContent = i.suresiDoldu
+      ? 'Süre doldu. Hedefe ulaşmadın ama kazandığın rozetler sende kaldı.'
+      : t.aciklama + ' ' + t.kanit;
+  }
+
+  var sifirla = document.getElementById('cmReset');
+  if(sifirla) sifirla.addEventListener('click', sifirlaSuzgec);
+
+  C.dinle(boya);
+})();
+</script>
+</body>
+</html>

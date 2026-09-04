@@ -1,0 +1,1518 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8" />
+  <meta name="robots" content="noindex, nofollow" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Selin Aksoy — DadaFit Onaylı Antrenör | DadaFit</title>
+<link rel="icon" type="image/svg+xml" href="../kanon/varlik/dadafit-isaret.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="../kanon/varlik/dadafit-isaret-32.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="../kanon/varlik/dadafit-isaret-180.png" />
+<!-- FontAwesome 6.5.2 (kilitli ikon seti) -->
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+      integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+      crossorigin="anonymous" referrerpolicy="no-referrer" />
+<!-- DadaFit ortak kabuk (tek kaynak) -->
+<!-- KANON · yukleme sirasi: tokenlar -> markalar/fit (bilesenler YUKLENMEZ) -->
+<link rel="stylesheet" href="../kanon/tokenlar.css" />
+<link rel="stylesheet" href="../kanon/markalar/fit.css" />
+<link rel="stylesheet" href="assets/css/fit-shell.css" />
+<link rel="stylesheet" href="assets/css/fit-mesaj.css" />
+<style>
+/* =====================================================================
+ ANTRENÖR DETAY — DadaFit Onaylı Antrenör public profil sayfası
+ Chrome (token+topbar+header+drawer+bottom-nav+footer+modal+JS) antrenör
+ dizininden (antrenorler-v1.html) BİREBİR taşındı. DadaFit recolor: yeşil.
+ İskelet referansı diyetisyen-profil (hero + sticky tab + sağlık aksanı)
+ antrenör profiline UYARLANDI: koyu+yeşil gradient hero, full-görsel
+ program/antrenör kartı, beden-pozitif danışan yorumları. Aksan SADECE #009d4f.
+ ===================================================================== */
+
+.acct-menu{position:absolute;top:calc(100% + 12px);right:0;min-width:236px;background:#fff;border:1px solid var(--line);border-radius:var(--radius-lg);box-shadow:var(--sh-lg);padding:10px;opacity:0;visibility:hidden;transform:translateY(8px);transition:.22s var(--ease);z-index:80}
+
+html,body{overflow-x:clip}
+
+.fb-success .ok{width:62px;height:62px;border-radius:var(--radius-circle);background:#EAF7F0;color:var(--fit-deep);display:grid;place-items:center;font-size:26px;margin:0 auto 16px}
+
+/* crumb-home (dark hero — legible fit-tint house) */
+.cp-crumb .crumb-home i{font-size:12px;color:var(--fit-bright)}
+.cp-crumb .crumb-home:hover i{color:#fff}
+
+/* =====================================================================
+ SAYFA CSS — ANTRENÖR DETAY / PUBLIC PROFİL
+ İskelet diyetisyen-profil'den (hero + sticky tab) UYARLANDI; imza DadaFit
+ dili: koyu+yeşil gradient hero, cam/blur kimlik kartı, full-görsel kart.
+ ===================================================================== */
+:root{
+  --fit:var(--marka);          /* DadaFit aksanı (Pantone 7482 C) */
+  --fit-deep:var(--marka-koyu);     /* hover / gradient ucu */
+  --fit-tint:var(--marka-yikama-2);     /* yumuşak yeşil yıkama */
+  --fit-line:var(--marka-cizgi);     /* yeşil-nötr hairline */
+  --fit-bright:var(--marka-parlak);   /* koyu zeminde okunur aksan metni */
+  --fit-dark:#211E16;     /* vurgu/hero zemini */
+}
+
+/* ---- RANDEVU MODALI (seans slot seçici) — apt-* deseni, DadaFit yeşili ---- */
+.apt-overlay{position:fixed;inset:0;background:rgba(20,18,12,.5);z-index:97;opacity:0;visibility:hidden;transition:opacity .25s var(--ease),visibility .25s}
+.apt-overlay.show{opacity:1;visibility:visible}
+.apt-modal{position:fixed;inset:0;z-index:98;display:grid;place-items:center;padding:20px;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .25s var(--ease),visibility .25s}
+.apt-modal.show{opacity:1;visibility:visible;pointer-events:auto}
+.apt-panel{width:min(580px,100%);max-height:calc(100vh - 40px);overflow-y:auto;background:#fff;border-radius:var(--radius-lg);box-shadow:var(--sh-lg);transform:translateY(14px);transition:transform .3s var(--ease)}
+.apt-modal.show .apt-panel{transform:translateY(0)}
+.apt-head{display:flex;align-items:center;gap:14px;padding:20px 24px;border-bottom:1px solid var(--line)}
+.apt-av{flex:none;width:46px;height:46px;border-radius:var(--radius-circle);background-size:cover;background-position:center top}
+.apt-head h3{font-size:18px}
+.apt-head p{font-size:12.5px;color:var(--muted);font-weight:500;margin-top:2px;display:inline-flex;align-items:center;gap:6px}
+.apt-head p i{color:var(--fit-deep)}
+.apt-close{margin-left:auto;flex:none;width:40px;height:40px;border-radius:var(--radius-md);border:1px solid var(--line);background:var(--paper);color:var(--slate);font-size:16px;cursor:pointer;display:grid;place-items:center;transition:.2s var(--ease)}
+.apt-close:hover{border-color:var(--fit);color:var(--fit)}
+.apt-body{padding:22px 24px 24px}
+.apt-block+.apt-block{margin-top:22px}
+.apt-lbl{font-size:13px;font-weight:700;color:var(--slate);margin-bottom:11px;display:flex;align-items:center;gap:8px}
+.apt-lbl i{color:var(--fit-deep);font-size:12px}
+.apt-svc{display:flex;flex-direction:column;gap:8px}
+.apt-svc label{position:relative;display:flex;align-items:center;gap:12px;padding:13px 15px;border:1px solid var(--line);border-radius:var(--radius-md);cursor:pointer;transition:.18s var(--ease)}
+.apt-svc input{position:absolute;opacity:0;pointer-events:none}
+.apt-svc label:hover{border-color:var(--fit)}
+.apt-svc .rd{flex:none;width:20px;height:20px;border-radius:var(--radius-circle);border:1.5px solid #d8d8d8;display:grid;place-items:center;transition:.18s}
+.apt-svc .rd::after{content:"";width:10px;height:10px;border-radius:var(--radius-circle);background:var(--fit);transform:scale(0);transition:.18s}
+.apt-svc input:checked~.rd{border-color:var(--fit)}
+.apt-svc input:checked~.rd::after{transform:scale(1)}
+.apt-svc input:checked~.si b{color:var(--fit-deep)}
+.apt-svc label:has(input:checked){border-color:var(--fit);background:var(--fit-tint)}
+.apt-svc .si{flex:1;min-width:0}
+.apt-svc .si b{font-size:14px;font-weight:700;color:var(--slate);display:block}
+.apt-svc .si span{font-size:12px;color:var(--muted);font-weight:500}
+.apt-svc .sp{flex:none;font-size:14px;font-weight:700;color:var(--slate)}
+.apt-days{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding-bottom:4px}
+.apt-days::-webkit-scrollbar{display:none}
+.apt-day{flex:none;min-width:66px;text-align:center;padding:11px 8px;border:1px solid var(--line);border-radius:var(--radius-md);background:var(--paper);cursor:pointer;font-family:inherit;transition:.18s var(--ease)}
+.apt-day span{display:block;font-size:11px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.03em}
+.apt-day b{display:block;font-size:18px;color:var(--slate);font-weight:700;margin-top:3px}
+.apt-day small{display:block;font-size:10px;color:var(--fit-deep);font-weight:600;margin-top:3px}
+.apt-day:hover{border-color:var(--fit)}
+.apt-day.sel{border-color:var(--fit);background:var(--fit)}
+.apt-day.sel span,.apt-day.sel b,.apt-day.sel small{color:#fff}
+.apt-day.off{opacity:.4;pointer-events:none}
+.apt-slots{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.apt-slot{padding:11px 0;text-align:center;border:1px solid var(--line);border-radius:var(--radius-md);background:var(--paper);cursor:pointer;font-family:inherit;font-size:13.5px;font-weight:700;color:var(--slate);transition:.18s var(--ease)}
+.apt-slot:hover{border-color:var(--fit);color:var(--fit-deep)}
+.apt-slot.sel{border-color:var(--fit);background:var(--fit);color:#fff}
+.apt-slot.off{opacity:.4;pointer-events:none;text-decoration:line-through}
+.apt-foot{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-top:24px;padding-top:18px;border-top:1px solid var(--line)}
+.apt-sum{font-size:12px;color:var(--muted);font-weight:500}
+.apt-sum b{display:block;font-size:15px;color:var(--slate);font-weight:700;margin-top:2px}
+.apt-confirm{flex:none}
+.apt-success{text-align:center;padding:22px 0 10px}
+.apt-success .ok{width:64px;height:64px;border-radius:var(--radius-circle);background:var(--fit-tint);color:var(--fit-deep);display:grid;place-items:center;font-size:27px;margin:0 auto 16px}
+.apt-success h4{font-size:19px;margin-bottom:8px}
+.apt-success p{font-size:13.5px;color:var(--muted);font-weight:500;max-width:380px;margin:0 auto;line-height:1.6}
+.apt-success .btn{margin-top:18px}
+.apt-note{font-size:11.5px;color:var(--muted);font-weight:500;margin-top:10px;line-height:1.5}
+
+/* ---- HERO: koyu+yeşil gradient + desatüre görsel + cam kimlik kartı ---- */
+.cp-top{
+  position:relative;overflow:hidden;margin-top:112px;
+  /* R9 · ZEMİN SADE KOYU PLAKAYA İNDİ.
+     ÖNCE: bölümün KENDİSİ fotoğraftı (üç gradyan + unsplash + #1b1913) ve
+     kimlik metni doğrudan onun üstünde duruyordu. Referansta bölüm zemini
+     düz; fotoğraf AYRI ve yuvarlatılmış bir şerit (.pf-banner). Fotoğraf
+     artık `.cp-banner`da; burada yalnız plaka kaldı. */
+  background:
+    radial-gradient(900px 420px at 86% 6%,color-mix(in srgb, var(--marka) 20%, transparent),transparent 62%),
+    linear-gradient(180deg,#1b1913 0%,#191710 100%);
+  padding:34px 0 44px;
+}
+/* R9 (Beyar): şeritteki görsel banner'a da geldi — BUĞULU.
+   İki katman: ::before buğulu fotoğraf, ::after koyu perde. Sıralama
+   önemli — eleman zemini (plaka) en altta, sonra fotoğraf, sonra perde,
+   en üstte içerik (.wrap z-index:2). Perde olmazsa kırıntı ve kimlik
+   metni fotoğrafın açık yerlerinde okunmaz.
+   `inset:-60px` bilerek: `filter:blur()` kenarlarda saydamlığa doğru
+   soluyor, kutuyu taşırmazsan üstte/altta açık bir çerçeve kalıyor.
+   Görsel URL'i `.cp-banner`dan JS ile okunuyor (tek kaynak) — şerit
+   ileride slug'a göre değişirse buğu da kendiliğinden onu izler. */
+/* R9 (Beyar): "en üstte full, aşağı doğru yoğunluğu azalsın".
+   `filter:blur()` tek elemanda KADEMELENEMEZ — tek sayı, tüm kutuya
+   uygulanır. Bu yüzden dört katman üst üste bindirildi; her biri aynı
+   görseli farklı bulanıklıkla çiziyor ve yumuşak kenarlı bir maskeyle
+   kendi bandında görünüyor. Bantlar örtüştüğü için geçiş kademe değil
+   süreklilik olarak okunuyor: üstte 40px bulanık, altta 3px'e iniyor.
+   (Saydamlık DEĞİL bulanıklık azalıyor — ilk denemede yanlış anlamıştım.)
+   inset:-60px: blur kenarlarda saydamlığa soluyor, kutuyu taşırmazsan
+   üstte/altta açık bir çerçeve kalıyor. */
+.cp-bgblur{position:absolute;inset:-60px;z-index:0;pointer-events:none}
+.cp-bgblur i{
+  position:absolute;inset:0;display:block;
+  background-image:var(--cp-bg,none);
+  background-size:cover;background-position:center 46%;
+}
+.cp-bgblur i:nth-child(1){filter:blur(40px) saturate(1.05);
+  -webkit-mask-image:linear-gradient(180deg,#000 0%,#000 26%,transparent 46%);
+          mask-image:linear-gradient(180deg,#000 0%,#000 26%,transparent 46%)}
+.cp-bgblur i:nth-child(2){filter:blur(22px) saturate(1.05);
+  -webkit-mask-image:linear-gradient(180deg,transparent 24%,#000 40%,#000 54%,transparent 70%);
+          mask-image:linear-gradient(180deg,transparent 24%,#000 40%,#000 54%,transparent 70%)}
+.cp-bgblur i:nth-child(3){filter:blur(11px) saturate(1.05);
+  -webkit-mask-image:linear-gradient(180deg,transparent 50%,#000 66%,#000 78%,transparent 90%);
+          mask-image:linear-gradient(180deg,transparent 50%,#000 66%,#000 78%,transparent 90%)}
+.cp-bgblur i:nth-child(4){filter:blur(3px) saturate(1.05);
+  -webkit-mask-image:linear-gradient(180deg,transparent 74%,#000 88%,#000 100%);
+          mask-image:linear-gradient(180deg,transparent 74%,#000 88%,#000 100%)}
+.cp-top::after{
+  content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:
+    radial-gradient(900px 420px at 86% 6%,color-mix(in srgb, var(--marka) 22%, transparent),transparent 62%),
+    linear-gradient(180deg,rgba(23,21,15,.58) 0%,rgba(21,19,13,.72) 100%);
+}
+.cp-top .wrap{position:relative;z-index:2}
+/* R9 · buğulu banner kırıntının ZEMİNİNİ AÇTI: luminans 0.011 → 0.177,
+   `rgba(255,255,255,.6)` metin 6.08:1'den 1.87:1'e düştü (AA 4.5).
+   Perdeyi koyulaştırmak buğuyu geri yutuyordu — çözüm metni parlatmak.
+   Gölge, fotoğrafın en açık yerlerine denk gelen harfler için. */
+/* §R6 · breadcrumb yazı boyu 12.5px — dört markada ve Fit'in üç banner
+   kabında tek değer. Ölçülen sapma: 13px. */
+.cp-crumb{display:flex;align-items:center;gap:9px;font-size:12.5px;font-weight:600;color:rgba(255,255,255,.95);padding:18px 0 14px;flex-wrap:wrap;text-shadow:0 1px 3px rgba(0,0,0,.6)}
+.cp-crumb a{color:rgba(255,255,255,.95);transition:color .2s var(--ease)}
+.cp-crumb a:hover{color:#fff}
+.cp-crumb i{font-size:9px;color:rgba(255,255,255,.65)}
+.cp-crumb .cur{color:var(--fit-bright)}
+
+/* =====================================================================
+ R9 · PROFİL İSKELETİ KARDEŞ MARKADAN BİREBİR ALINDI
+ ---------------------------------------------------------------------
+ KAYNAK: dadadiet.com/diyetisyen/dyt-elif-sahin — Playwright ile @1440 ve
+ @390'da ölçüldü (ölçüm dökümü: scratchpad/r9profil/ref-tree-*.txt).
+ Referansın `.pf-top` blok sırası:
+   1 kırıntı (.rd-crumb, pad 18/0/14/0)
+   2 banner görseli (.pf-banner, r24 @1440 · r16 @390)
+   3 kimlik kartı (.pf-head — banner'ın alt kenarına BİNER, w = wrap-56,
+     pad 26/30/28/30, r16, 1px çizgi, beyaz; içinde .pf-ava 128 daire +
+     .pf-id + .pf-actions)
+   4 istatistik şeridi (.pf-stats, w = wrap-56, h75, r16, 3 hücre)
+ Burada aynı sıra, aynı ölçüler. TEK FARK: bölüm zemini.
+ Referansta `.pf-top` BEYAZ; burada koyu — çünkü DadaFit kabuğu bu sayfada
+ `data-fit-over="1"` ile header'ı şeffaflaştırıp marka yazısını BEYAZ
+ boyuyor (fit-shell.css), yani header'ın arkasında koyu bant ŞART.
+ Beyaz zemin logoyu görünmez yapardı. Kabuk kusuru değil, kabuk sözleşmesi.
+
+ YÜKSEKLİK: `.cp-top` yüksekliği kabuk tarafından kilitli
+ (--banner-h-detay: 560 @1440 · 617 @1024 · 726 @390). Banner görseli
+ `flex:1` ile ARTAN alanı yutuyor; böylece kırıntı/kart/şerit ne kadar
+ yer kaplarsa kaplasın toplam HER ZAMAN aile sabitine oturuyor —
+ sabit artık tesadüf değil, yapısal.
+ ===================================================================== */
+/* Kabuk `.cp-top{padding:var(--hero-pt) 0 var(--hero-pb) !important}` diyor
+   (@1440 46 px, ≤640 12 px). Referansta `.pf-top`un alt dolgusu 0 — şerit
+   bölümün alt kenarına yaslanıyor. Burada plaka koyu olduğu için sıfır değil,
+   şeridin plakanın üstünde durduğu okunacak kadar (20 px) bırakıldı.
+   Kabuğa dokunmamak için özgüllük yükseltildi (0,2,2 > 0,1,0). */
+/* R15 · Beyar: "Danışan Deneyimi kartının alt kenarı ile beyaz panelin üst
+   kenarı yapışık". ÖLÇÜM (kart altı → beyaz üstü): 1440 **8px** · 1024 **12px**
+   · 768 **−11px** (beyaz alan kartın İÇİNE giriyordu).
+   Kök sebep: beyaz gövde `.cp-body` banner'ın bitişinden 22px YUKARIDA
+   başlıyor (kabuğun "banner → gövde dikişi" bloğu bilerek bindiriyor), yani
+   kartın nefesi = `.cp-top` alt dolgusu − 22.
+   EMSAL ÖLÇÜLDÜ — dadagastro.com ana sayfası: koyu banner `.hero-v` altı 1122,
+   sonraki panel `.catstrip` üstü 1100 (aynı 22px bindirme), panelin üst
+   dolgusu **48px** → görünen nefes 26px.
+   Fit de aynı değere çekildi: alt dolgu 34 → **48px** (Gastro'nun panel
+   dolgusuyla birebir), görünen nefes 48 − 22 = 26px. */
+body[data-fit-over="1"] section.cp-top{padding-bottom:48px !important}
+/* …ama alt dolguyu büyütmek TEK BAŞINA işe yaramadı, ölçüm gösterdi:
+   `.cp-top` SABİT yükseklikli (560px) ve `overflow:hidden`. İçerik zaten
+   620px'ti, yani kartın alt 60px'i KIRPILIYORDU; dolguyu 34'ten 48'e
+   çıkarmak hiçbir kutuyu oynatmadı (ölçüm: banner altı 560 → 560).
+   Kilit TABANA çevriliyor: bölüm sabitin altına inemez ama içeriği
+   kırpmak yerine büyür. Aynı çözüm ≤380px kırılımında zaten kuruluydu
+   (aşağıdaki blok), burada tüm genişliklere alındı. */
+body[data-fit-over="1"] section.cp-top{height:auto !important;min-height:var(--banner-h-detay) !important}
+.cp-top .wrap{display:flex;flex-direction:column;height:100%}
+.cp-crumb{flex:none}
+
+/* 2 · banner görseli — referans .pf-banner (240 px @1440, r24) */
+.cp-banner{
+  flex:1 1 auto;min-height:150px;border-radius:var(--radius-xl);
+  background-size:cover;background-position:center 46%;
+  box-shadow:0 22px 60px rgba(0,0,0,.42);
+  position:relative;overflow:hidden;
+}
+.cp-banner::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,18,12,0) 46%,rgba(18,16,11,.5))}
+
+/* 3 · kimlik kartı — referans .pf-head (w wrap-56 · pad 26/30/28/30 · r16) */
+.cp-head{
+  position:relative;z-index:2;
+  width:calc(100% - 56px);margin:-78px auto 0;
+  background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);
+  box-shadow:0 10px 34px rgba(20,18,12,.14);
+  padding:26px 30px 28px;display:flex;gap:26px;align-items:flex-start;
+}
+/* referans .pf-ava 128×128 · r50% · 4px beyaz çerçeve · kartın üstüne taşar */
+.cp-ava{
+  position:relative;flex:none;width:128px;height:128px;border-radius:var(--radius-circle);
+  margin-top:-69px;background-size:cover;background-position:center;
+  border:4px solid var(--paper);box-shadow:0 8px 24px rgba(20,18,12,.22);
+}
+.cp-ava .cp-on{position:absolute;right:7px;bottom:7px;width:17px;height:17px;border-radius:var(--radius-circle);background:var(--fit);border:3px solid var(--paper);box-shadow:0 0 0 2px color-mix(in srgb, var(--marka) 22%, transparent)}
+.cp-id{flex:1;min-width:0}
+/* referans .pf-id h1 29/700 · .pf-verify 12/700 hap · .pf-handle 14/600 · .pf-meta 13/500 */
+/* SEÇİCİ ÖZGÜLLÜĞÜ — kabuk `body[data-fit-hero-kind] .cp-top h1{font-size:42px}`
+   diyor (fit-shell.css, ≥901px). O kural kimlik metni KOYU banner'ın üstünde
+   dururken doğruydu; artık h1 beyaz kartın içinde ve referans ölçüsü 29px.
+   Kabuğa dokunmamak için burada özgüllük yükseltildi (0,3,1 > 0,2,1). */
+.cp-top .cp-head .cp-id h1{display:flex;align-items:center;flex-wrap:wrap;gap:12px;font-size:29px;font-weight:700;line-height:1.1;letter-spacing:-.02em;color:var(--slate);margin:0;max-width:none}
+.cp-verify{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;line-height:1;color:var(--fit-ink);background:color-mix(in srgb, var(--marka) 13%, transparent);padding:5px 11px;border-radius:var(--radius-sm)}
+.cp-verify i{font-size:12px}
+.cp-spec{display:block;font-size:14px;font-weight:600;color:var(--slate-2);margin-top:9px}
+.cp-meta{display:flex;flex-wrap:wrap;gap:7px 20px;margin-top:13px;font-size:13px;font-weight:500;color:var(--muted)}
+.cp-meta span{display:inline-flex;align-items:center;gap:7px}
+.cp-meta i{color:var(--fit-deep);font-size:12px}
+/* KENDİ ELEŞTİRİM · KUSUR 3 — puan yıldızı YEŞİLDİ.
+   Ölçüldü: `.cp-meta .fa-star` rgb(0,122,61) iken aynı sayfadaki
+   `.rev-stars i` ve `.sim-rate i` rgb(250,192,69). Puan yıldızının rengi
+   sitede sarı; meta satırına taşınırken yeşile düşmüştü. */
+.cp-meta i.fa-star{color:var(--yellow)}
+/* referans .pf-actions — birincil düğme + (ikincil + ikon) satırı, gap 9 */
+.cp-actions{flex:none;display:flex;flex-direction:column;gap:9px;width:194px}
+.cp-actions .btn{width:100%;justify-content:center}
+.cp-actions .cta-row{display:flex;gap:9px}
+.cp-actions .cta-row .btn{flex:1;padding:12px 16px;font-size:13.5px}
+.cp-mini{flex:none;width:46px;padding:0;display:grid;place-items:center;background:var(--paper);border:1px solid var(--line);color:var(--slate);border-radius:var(--radius-md);cursor:pointer;font-size:15px;transition:.2s var(--ease)}
+.cp-mini:hover{border-color:var(--fit);color:var(--fit-deep)}
+.cp-mini.is-on{border-color:var(--fit);color:var(--fit-deep);background:var(--fit-tint)}
+/* ODAK HALKASI — kabuktan geliyor; sayfa kuralı YOK ve olmamalı.
+   YANLIŞ ALARM KAYDI (R9): hesaplanan `outline-color` bu düğmelerde
+   rgb(255,255,255) okunuyor ve "beyaz kartta beyaz halka, görünmez" diye
+   bir kusur yazılmıştı. Ekran görüntüsüne bakılınca öyle olmadığı görüldü:
+   halka düğmenin İÇİNE çiziliyor ve düğmenin kendi zemini yeşil, yani
+   beyaz halka orada okunan halka. Eklenen sayfa kuralı geri alındı.
+   Nöbeti `tests/antrenor-profil.mjs` §14 devraldı: halkanın rengi
+   DÜĞMENİN KENDİ ZEMİNİNDEN farklı mı — ölçülen şey bu olmalıydı. */
+
+/* ---- STICKY SEKME ÇUBUĞU ---- */
+.cp-body{padding:40px 0 var(--sec-pad);background:var(--bg-white)}
+/* R15 · Beyar: "sekme şeridi ile altındaki panel bitişik, üst üste yapışık".
+   ÖLÇÜLEN İKİ SEBEP, ikisi de düzeltildi:
+   1) Boşluk 30px'ti ve kitte böyle bir değer YOK. `--sec-pad-sm` (32px)
+      bölüm arası ritmin küçük adımıdır; yeni değer üretmek yerine ona çekildi.
+   2) Asıl "yapışık" hissi boşluktan değil ZEMİNDEN geliyordu: çubuk
+      `rgba(255,255,255,.94)` yarı saydamdı ve altından kayan metin
+      içinden okunuyordu; panel de beyaz olduğu için iki yüzey tek yüzey
+      gibi görünüyordu. Zemin OPAK `--paper` yapıldı, blur kaldırıldı
+      (saydamlık olmayınca işlevi de kalmıyor). Alt saç çizgisi duruyor. */
+.cp-tabbar{
+  position:sticky;top:112px;z-index:40;background:var(--paper);
+  border-bottom:1px solid var(--line);margin-bottom:var(--sec-pad-sm);
+}
+/* SEKME ŞERİDİ ORTAK BİLEŞENE GEÇTİ — .fit-tabs / .fit-tab / .fit-pane
+   (assets/css/fit-shell.css + fit-shell.js, görsel kalıp DadaGastro'nun
+   segment hapı; KARARLAR.md K13). Sayfaya özgü kalan tek şey sticky
+   çubuğun kendisi (.cp-tabbar) ve şeridin dikey nefesi. */
+/* R11/M18 · Beyar: "profilde tablar var ya, onlar merkezi olsun."
+   Şerit `width:100%` ile sola yaslıydı; kalemler soldan başlıyordu.
+   Ray tam genişlikte KALIYOR (tıklama alanı ve kaydırma bozulmasın),
+   içindeki kalemler ortalandı. */
+.cp-tabbar .fit-tabs{margin:12px 0;display:flex;width:100%;justify-content:center}
+
+/* ---- HAKKINDA: ana metin + yan bilgi kartları ---- */
+.ab-grid{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:30px;align-items:start}
+.ab-main h2{font-size:22px;margin-bottom:14px}
+.ab-main h2:not(:first-child){margin-top:34px}
+.ab-main p{font-size:15px;font-weight:500;color:var(--slate-2);line-height:1.7;margin-bottom:14px}
+.ab-spec{margin-top:4px}
+.ab-spec .chip{cursor:default}
+.ab-spec .chip:hover{border-color:var(--fit);color:var(--fit-deep);background:var(--fit-tint)}
+/* "neden farklı" yaklaşım ızgarası */
+.ab-approach{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:6px}
+.ap-item{display:flex;gap:13px;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);padding:17px 18px}
+.ap-item i{flex:none;width:40px;height:40px;border-radius:var(--radius-md);background:var(--fit-tint);color:var(--fit-deep);display:grid;place-items:center;font-size:16px}
+.ap-item b{display:block;font-size:14.5px;color:var(--slate);font-weight:800;margin-bottom:3px}
+.ap-item span{font-size:13px;color:var(--muted);font-weight:500;line-height:1.5}
+.ab-side{position:sticky;top:178px;display:flex;flex-direction:column;gap:18px}
+.info-card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);box-shadow:var(--sh-sm);padding:20px 22px}
+.info-card h4{display:flex;align-items:center;gap:9px;font-size:14px;line-height:1.12;letter-spacing:-.02em;padding-bottom:13px;margin-bottom:15px;border-bottom:1px solid var(--line)}
+.info-card h4 i{color:var(--fit-deep);font-size:13px}
+.ic-row{display:flex;gap:13px;padding:10px 0}
+.ic-ico{flex:none;width:34px;height:34px;border-radius:var(--radius-md);background:var(--fit-tint);color:var(--fit-deep);display:grid;place-items:center;font-size:14px}
+.ic-row b{display:block;font-size:13.5px;line-height:1.3;color:var(--slate);font-weight:700}
+.ic-row span:not(.ic-ico){display:block;font-size:13px;line-height:1.55;color:var(--muted);font-weight:500;margin-top:1px}
+.ic-verify{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:700;color:var(--fit-deep);margin-top:5px}
+.ic-verify i{font-size:11px}
+/* uygunluk kutusu — yan kolon vurgu */
+.avail-card{background:linear-gradient(135deg,var(--fit-tint),#f4fbf6);border:1px solid var(--fit-line);border-radius:var(--radius-lg);padding:20px 22px}
+.avail-card h4{display:flex;align-items:center;gap:9px;font-size:14px;line-height:1.12;letter-spacing:-.02em;margin-bottom:6px}
+.avail-card h4 i{color:var(--fit-deep);font-size:13px}
+.avail-card .av-state{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:var(--fit-deep);background:#fff;border:1px solid var(--fit-line);padding:7px 13px;border-radius:var(--radius-pill);margin:8px 0 14px}
+.avail-card .av-state .dot{width:8px;height:8px;border-radius:50%;background:var(--fit);box-shadow:0 0 0 3px color-mix(in srgb, var(--marka) 18%, transparent)}
+.av-rows{display:flex;flex-direction:column;gap:10px}
+.av-rows .avr{display:flex;align-items:center;gap:11px;font-size:13.5px;font-weight:600;color:var(--slate-2)}
+.av-rows .avr i{flex:none;width:18px;text-align:center;color:var(--fit-deep);font-size:13px}
+.av-rows .avr b{color:var(--slate);font-weight:700}
+
+/* =====================================================================
+ R9 · "SEANSLAR" SEKMESİ — referansın "Hizmetler" paneli BİREBİR
+ ---------------------------------------------------------------------
+ BEYAR'IN ŞİKÂYETİ: "burda 450 tl kartı berbat bir yerde".
+ ÖLÇÜM (önce): fiyat `.cp-cta` içindeydi — 262×285 px koyu cam kutu,
+ y592'de, tek başına SOLDA; sağında 914 px boş alan. Sayfada fiyat
+ gören TEK yer orasıydı.
+ ÖLÇÜM (referans): dadadiet profilinde hero'da fiyat YOK. Fiyat yalnız
+ "Hizmetler" sekmesinde, `.svc-card`ın ayağında duruyor:
+   .svc-grid  → grid · gap 22 · 3 kolon (377 px kart @1440)
+   .svc-card  → pad 24/22 · r16 · 1px çizgi · beyaz · flex kolon
+   .svc-tag   → 10.5/700 · pad 5/11 · r8 · aksan yıkama
+   .svc-ico   → 48×48 · r12 · aksan yıkama · ikon 19px
+   h3         → 18/700 ·  ul.svc-feats → li 13.5/500 · gap 9
+   .svc-foot  → margin-top:auto · pad-top 18 · ÜST ÇİZGİ · flex · gap 12
+   .svc-price b → 23/700 · span → 12/500 ·  .svc-book → pad 12/18 · r12 · 13.5/700
+ Buradaki üç seans UYDURULMADI: sayfanın kendi randevu modalindeki
+ (`#aptSvc`) üç seçenekten alındı — Birebir Seans · Aylık Paket ·
+ Tanışma Görüşmesi. Fiyat biçimi (₺450) DadaFit'in kendi biçimi;
+ referansın "450 ₺" sırası markanın geri kalanıyla çelişirdi.
+ ===================================================================== */
+.svc-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px;align-items:stretch}
+.svc-card{display:flex;flex-direction:column;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);box-shadow:var(--sh-sm);padding:24px 22px}
+.svc-card.feat{border-color:color-mix(in srgb, var(--marka) 50%, transparent);box-shadow:0 6px 22px color-mix(in srgb, var(--marka) 12%, transparent)}
+.svc-tag{align-self:flex-start;font-size:10.5px;font-weight:700;letter-spacing:.06em;color:var(--fit-ink);background:color-mix(in srgb, var(--marka) 13%, transparent);padding:5px 11px;border-radius:var(--radius-sm);line-height:1.5}
+.svc-ico{width:48px;height:48px;margin-top:14px;border-radius:var(--radius-md);background:color-mix(in srgb, var(--marka) 13%, transparent);color:var(--fit-deep);display:grid;place-items:center;font-size:19px}
+.svc-card h3{font-size:18px;font-weight:700;letter-spacing:-.01em;line-height:1.14;margin-top:16px;color:var(--slate)}
+.svc-feats{display:flex;flex-direction:column;gap:9px;margin-top:7px}
+.svc-feats li{display:flex;align-items:flex-start;gap:10px;font-size:13.5px;font-weight:500;line-height:1.42;color:var(--slate-2)}
+.svc-feats li i{flex:none;font-size:13px;color:var(--fit-deep);margin-top:2px}
+.svc-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:auto;padding-top:18px;border-top:1px solid var(--line)}
+.svc-price{min-width:0}
+.svc-price b{font-size:23px;font-weight:700;letter-spacing:-.01em;color:var(--slate)}
+.svc-price span{font-size:12px;font-weight:500;color:var(--muted);margin-left:5px}
+.svc-book{display:inline-flex;align-items:center;gap:8px;flex:none;font-family:inherit;font-size:13.5px;font-weight:700;color:#fff;background:var(--fit);border:0;border-radius:var(--radius-md);padding:12px 18px;cursor:pointer;transition:.2s var(--ease)}
+.svc-book:hover{background:var(--fit-deep);transform:translateY(-2px)}
+.svc-book i{font-size:13.5px}
+/* KENDİ ELEŞTİRİM · KUSUR 5 — "Ücretsiz" yeşildi ve 12 px sağındaki yeşil
+   "Randevu" düğmesiyle yarışıyordu; referansta üç kartın fiyatı da aynı
+   renk. Vurgu kelimenin kendisinde, renkte değil. */
+.svc-price b.free{color:var(--slate)}
+/* boş sekme panelinin sarılması gerekmiyor: `.svc-feats` madde işareti yok */
+.svc-feats{list-style:none}
+/* ---- PROGRAMLAR: full-görsel kart (div+bg cover) ---- */
+.prog-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px}
+.prog-media{position:relative;height:188px;background-size:cover;background-position:center}
+.prog-media::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(33,30,22,0) 42%,rgba(18,16,11,.74))}
+.prog-level{position:absolute;top:12px;left:12px;z-index:2;display:inline-flex;align-items:center;gap:6px;background:var(--fit);color:#fff;font-size:11px;font-weight:700;padding:5px 11px;border-radius:var(--radius-sm)}
+.prog-dur{position:absolute;top:12px;right:12px;z-index:2;display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.94);color:var(--slate);font-size:11px;font-weight:700;padding:5px 11px;border-radius:var(--radius-sm)}
+.prog-dur i{color:var(--fit-deep);font-size:11px}
+.prog-title{position:absolute;left:15px;right:15px;bottom:13px;z-index:2;color:#fff;font-size:17px;font-weight:800;letter-spacing:-.01em;line-height:1.22}
+.prog-body{padding:15px 18px 18px;display:flex;flex-direction:column;flex:1}
+.prog-body p{font-size:13.5px;color:var(--muted);font-weight:500;line-height:1.55;margin-bottom:14px}
+.prog-feats{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px}
+.prog-feats span{font-size:11.5px;font-weight:600;color:var(--slate-2);background:var(--fit-tint);border:1px solid var(--fit-line);padding:5px 11px;border-radius:var(--radius-sm)}
+.prog-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:auto;padding-top:14px;border-top:1px solid var(--line)}
+.prog-foot .price{font-size:12.5px;color:var(--muted);font-weight:500}
+.prog-foot .price b{color:var(--slate);font-weight:800;font-size:14.5px}
+.prog-foot .go{display:inline-flex;align-items:center;gap:7px;color:var(--fit-deep);font-weight:700;font-size:13.5px}
+.prog-foot .go i{transition:transform .2s var(--ease)}
+.prog-card:hover .prog-foot .go i{transform:translateX(3px)}
+
+/* ---- YORUMLAR: özet + kapsayıcı yorum kartları ---- */
+.rev-layout{display:grid;grid-template-columns:288px minmax(0,1fr);gap:34px;align-items:start}
+.rev-summary{position:sticky;top:178px;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);box-shadow:var(--sh-sm);padding:24px}
+.rev-score{display:flex;align-items:baseline;gap:8px}
+.rev-score b{font-size:48px;font-weight:800;color:var(--slate);letter-spacing:-.02em;line-height:1}
+.rev-score span{font-size:16px;color:var(--muted);font-weight:600}
+.rev-stars{color:var(--yellow);font-size:15px;margin:8px 0 4px;letter-spacing:2px}
+.rev-count{font-size:13px;color:var(--muted);font-weight:500;margin-bottom:18px}
+.rev-bars{display:flex;flex-direction:column;gap:8px}
+.rev-bar{display:flex;align-items:center;gap:10px;font-size:12px;font-weight:600;color:var(--muted)}
+.rev-bar .lbl{width:30px;flex:none;color:var(--slate-2)}
+.rev-bar .track{flex:1;height:7px;background:var(--bg);border-radius:var(--radius-pill);overflow:hidden}
+.rev-bar .fill{height:100%;background:var(--fit);border-radius:var(--radius-pill)}
+.rev-bar .pct{width:34px;flex:none;text-align:right}
+.rev-tagline{margin-top:18px;padding-top:16px;border-top:1px solid var(--line);font-size:12.5px;color:var(--slate-2);font-weight:500;line-height:1.55}
+.rev-tagline b{color:var(--fit-deep);font-weight:800}
+/* yorum kartları */
+.rev-list{display:flex;flex-direction:column;gap:16px}
+.rev-card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);box-shadow:var(--sh-sm);padding:20px 22px}
+.rev-top{display:flex;align-items:center;gap:13px;margin-bottom:13px}
+.rev-ava{flex:none;width:46px;height:46px;border-radius:var(--radius-circle);background-size:cover;background-position:center}
+.rev-who{min-width:0;flex:1}
+.rev-who b{display:block;font-size:14.5px;color:var(--slate);font-weight:700}
+.rev-who span{display:block;font-size:12px;color:var(--muted);font-weight:500;margin-top:1px}
+.rev-when{flex:none;font-size:12px;color:var(--muted);font-weight:500}
+.rev-rate{color:var(--yellow);font-size:13px;letter-spacing:2px;margin-bottom:9px}
+.rev-card p{font-size:14px;color:var(--slate-2);font-weight:500;line-height:1.66}
+.rev-result{display:inline-flex;align-items:center;gap:8px;margin-top:13px;font-size:12px;font-weight:700;color:var(--fit-deep);background:var(--fit-tint);border:1px solid var(--fit-line);padding:6px 12px;border-radius:var(--radius-sm)}
+.rev-result i{font-size:11px}
+.rev-more{display:flex;justify-content:center;margin-top:8px}
+.rev-more .btn-more{display:inline-flex;align-items:center;gap:10px;font-family:inherit;font-size:14px;font-weight:700;color:var(--slate);background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-md);padding:13px 26px;cursor:pointer;transition:.2s var(--ease)}
+.rev-more .btn-more:hover{border-color:var(--fit);color:var(--fit-deep);transform:translateY(-2px)}
+.rev-more .btn-more i{color:var(--fit)}
+
+/* ---- BENZER ANTRENÖRLER ŞERİDİ — full-görsel portre kart ---- */
+.sim-sec{background:var(--bg);padding:var(--sec-pad) 0 var(--sec-pad)}
+.sim-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px}
+.sim-card{position:relative;display:block;border-radius:var(--radius-lg);overflow:hidden;height:280px;cursor:pointer;box-shadow:var(--sh-sm);transition:.3s var(--ease)}
+.sim-card:hover{transform:translateY(-6px);box-shadow:var(--sh-lg)}
+.sim-card:focus-visible{outline:3px solid var(--fit);outline-offset:2px}
+.sim-media{position:absolute;inset:0;background-size:cover;background-position:center top}
+.sim-media::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(33,30,22,0) 38%,rgba(16,14,9,.82))}
+.sim-verify{position:absolute;top:11px;left:11px;z-index:2;display:inline-flex;align-items:center;gap:6px;background:var(--fit);color:#fff;font-size:10.5px;font-weight:700;padding:5px 10px;border-radius:var(--radius-sm)}
+.sim-id{position:absolute;left:15px;right:15px;bottom:14px;z-index:2}
+.sim-id b{display:block;color:#fff;font-size:16px;font-weight:800;letter-spacing:-.01em}
+.sim-id span{display:block;color:rgba(255,255,255,.82);font-size:12px;font-weight:600;margin-top:3px}
+.sim-id .sim-rate{display:inline-flex;align-items:center;gap:6px;margin-top:9px;font-size:12px;font-weight:700;color:#fff}
+.sim-id .sim-rate i{color:var(--yellow);font-size:11px}
+
+/* ---- ALT CTA BANDI (danışan ol) ---- */
+.cp-cta-band{
+  position:relative;overflow:hidden;margin-top:46px;border-radius:var(--radius-xl);
+  background:
+    radial-gradient(620px 280px at 88% 0%,color-mix(in srgb, var(--marka) 30%, transparent),transparent 64%),
+    linear-gradient(120deg,#211E16 0%,#1c1a13 52%,#112d3c 100%);
+  color:#fff;padding:42px 46px;
+  display:grid;grid-template-columns:minmax(0,1fr) auto;gap:30px;align-items:center;
+}
+.cp-cta-band .cb-eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--fit-bright);margin-bottom:13px}
+.cp-cta-band h2{color:#fff;font-size:27px;letter-spacing:-.02em;margin-bottom:11px;max-width:560px}
+.cp-cta-band p{color:rgba(255,255,255,.82);font-size:14.5px;font-weight:500;line-height:1.55;max-width:540px;margin-bottom:0}
+.cp-cta-band .cb-act{display:flex;flex-direction:column;gap:11px;align-items:flex-start;min-width:220px}
+.cp-cta-band .cb-act .btn{width:100%}
+.cp-cta-band .cb-act .btn-line{background:rgba(255,255,255,.08);color:#fff;border:1px solid rgba(255,255,255,.24)}
+.cp-cta-band .cb-act .btn-line:hover{background:rgba(255,255,255,.16);border-color:rgba(255,255,255,.4);transform:translateY(-2px)}
+.cp-cta-band .cb-note{font-size:12px;color:rgba(255,255,255,.62);font-weight:500;display:inline-flex;align-items:center;gap:7px}
+.cp-cta-band .cb-note i{color:var(--fit-bright)}
+
+/* =====================================================================
+ R8 · KALEM 38 — "DANIŞAN DENEYİMİ" SATIRI
+ ---------------------------------------------------------------------
+ İSKELET KAYNAĞI: dadadiet.com/diyetisyen/dyt-elif-sahin → `.pf-stats`
+ (Playwright ile ölçüldü @1440 + @390). Referans değerleri:
+   .pf-stats  → r16 · 1px solid var(--line) · #fff · display:flex
+   .pfs       → padding 15px 20px · gap 12px · eşit bölünür (372/373/373)
+   .pfs i     → 38×38 · r12 · yeşil yıkama zemin
+   .pfs span  → 11px / lh 17.05 (1.55) / 500 / ls .02em / muted
+   .pfs b     → 16.5px / lh 25.575 (1.55) / 700 / ink
+   @390       → satır 2'ye sarıyor (.pfs 166px), kutu 334×147
+ TEK FARK: renk token'ı DadaFit yeşiline çevrildi (--fit-tint / --fit-deep).
+ KONUM: referansta `.pf-stats` kimlik kartının HEMEN ALTINDA, sekme
+ çubuğundan ÖNCE gelir (bölüm sırasında 4. blok). Burada da öyle —
+ banner sabit yükseklikli (--banner-h-detay) olduğu için satır banner'ın
+ İÇİNE değil, tıpkı randevu kartı gibi (R15.3) hemen altına konur.
+ ===================================================================== */
+/* R9 · ŞERİT REFERANSTAKİ YERİNE TAŞINDI: artık `main`in çıplak çocuğu
+   değil, `.cp-top` içinde kimlik kartının HEMEN ALTINDA — referansta
+   `.pf-stats` tam olarak orada duruyor (.pf-head'in kardeşi, 20 px altı).
+   Genişliği de referanstaki gibi wrap-56 (kartla aynı kenar). */
+.cp-exp{flex:none;width:calc(100% - 56px);margin:20px auto 0}
+.cp-exp-lbl{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--fit-bright);margin-bottom:10px}
+.cp-exp-lbl i{font-size:11px}
+.cp-stats{display:flex;flex-wrap:wrap;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);box-shadow:var(--sh-sm);overflow:hidden}
+.cps{flex:1 1 200px;display:flex;align-items:center;gap:12px;padding:15px 20px;min-width:0}
+.cps+.cps{border-left:1px solid var(--line)}
+.cps>i{flex:none;width:38px;height:38px;border-radius:var(--radius-md);background:var(--fit-tint);color:var(--fit-deep);display:grid;place-items:center;font-size:15px}
+.cps>div{min-width:0}
+.cps span{display:block;font-size:11px;line-height:1.55;font-weight:500;letter-spacing:.02em;color:var(--muted)}
+.cps b{display:block;font-size:16.5px;line-height:1.55;font-weight:700;color:var(--slate)}
+/* YER TUTUCU — gerçek toplu veri gelene kadar sayı UYDURULMAZ.
+   docs/icerik-bekleyen.md 6. kalem. */
+.cps[data-yer-tutucu] b{color:var(--muted);font-weight:600;font-size:14px}
+
+/* =====================================================================
+ R8 · KALEM 37 — SAĞLIK BİLGİLENDİRME BANDI (referans `.pf-disclaimer`)
+ ---------------------------------------------------------------------
+ Referans profilinin SON bölümü tam genişlikte bir uyarı bandıdır; bu
+ sayfada karşılığı yoktu (yalnız `.hr-note` "profil sana mı ait" kartı
+ vardı, o başka bir şey). Ölçülen referans: bg #E6F5EE · üst çizgi
+ 1px rgba(59,183,126,.25) · .wrap padding 22px 32px · gap 14 · ikon 17px
+ · p 13.5px / lh 22.275 (1.65) / 500. Renk DadaFit yeşiline çevrildi.
+ Metin dili sitede zaten kurulu olan challenge-merkezi bandından alındı
+ (uydurma yok, mevcut DadaFit dili).
+ ===================================================================== */
+.cp-disclaimer{background:var(--fit-wash);border-top:1px solid color-mix(in srgb, var(--marka) 25%, transparent)}
+.cp-disclaimer .wrap{display:flex;gap:14px;align-items:flex-start;padding-top:22px;padding-bottom:22px}
+.cp-disclaimer i{flex:none;font-size:17px;color:var(--fit-deep);margin-top:2px}
+.cp-disclaimer p{font-size:13.5px;line-height:1.65;font-weight:500;color:var(--slate-2)}
+.cp-disclaimer p b{color:var(--slate);font-weight:700}
+.cp-disclaimer p a{color:var(--fit-deep);font-weight:700;text-decoration:underline;text-underline-offset:2px}
+.cp-disclaimer p a:hover{color:var(--fit-ink)}
+/* R11/M5 · Beyar: "bu yeşil infoları yayman lazım, kart içerisindeki
+   genişliğe göre". `.hr-note p` ile AYNI DİL korunuyor — kabuk artık
+   kutulu bilgi notlarında ölçü sınırını kaldırıp satır arasını açıyor
+   (fit-shell.css → "BİLGİ KUTULARINDA METİN KUTUYU DOLDURUR"), bu kutu
+   da onunla aynı davranıyor. Gerekçe ve geri alma orada yazılı. */
+.cp-disclaimer p{max-width:none;line-height:1.72}
+
+/* =====================================================================
+ R8 · KALEM 39 — CHALLENGE SEKMESİ PANELİ (boş durum)
+ Referansın boş sekme deseni: ortalanmış blok (`Yorumlar 0` panelinde
+ ölçüldü — text-align:center · padding 40px 0 · muted · 500).
+ Kalıp UYDURULMADI: sitenin kurulu `.lib-empty` bileşeni kullanılıyor
+ (fit-shell.css 1480–1484). Tek fark başlık düzeyi: bileşen `h3`
+ varsayıyor, burada sayfanın başlık sırası bozulmasın diye `h2`.
+ ===================================================================== */
+.pane-bos.lib-empty{display:flex;padding:44px 20px}
+.pane-bos.lib-empty h2{font-size:18px;margin-bottom:7px}
+
+/* ===================== SAYFA RESPONSIVE ===================== */
+@media (max-width:1024px){
+  .cp-top{margin-top:112px}
+  .cp-tabbar{top:112px}
+  /* R9 · kimlik kartı ≤1024'te sarıyor — eylem kolonu alta iner (referans
+     @390'da da böyle: `.pf-head` kolon akışına geçiyor). */
+  .cp-head{flex-wrap:wrap;padding:22px 24px 24px;gap:20px}
+  .cp-actions{width:100%;flex-direction:row;align-items:center}
+  .cp-actions .btn{flex:1;width:auto}
+  .cp-actions .cta-row{flex:1}
+  .svc-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .ab-grid{grid-template-columns:1fr}
+  .ab-side{position:static}
+  .ab-approach{grid-template-columns:1fr}
+  .prog-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .rev-layout{grid-template-columns:1fr}
+  .rev-summary{position:static}
+  .sim-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .cp-cta-band{grid-template-columns:1fr;gap:24px;padding:36px 32px}
+  .cp-cta-band .cb-act{min-width:0;width:100%;max-width:340px}
+}
+@media (max-width:640px){
+  .cp-top{margin-top:62px;padding:26px 0 48px}   /* R15 — bkz. yukarıdaki emsal ölçümü */
+  /* R9 · referans @390 ölçümü: .pf-banner 160 r16 · .pf-head 334 (12 px
+     kenar payı) pad 20/18/22/18 · .pf-ava 104 · .pf-stats 334, 2 satır. */
+  .cp-banner{border-radius:var(--radius-lg);min-height:120px}
+  .cp-head{width:calc(100% - 24px);margin-top:-56px;padding:20px 18px 22px;flex-direction:column;align-items:flex-start}
+  /* DİKEY RİTİM REFERANSTAN ÖLÇÜLDÜ (@390): portre kartın üst kenarından
+     51 px yukarıda · portre→kimlik 16 · kimlik→eylemler 16.
+     Kabuk `.cp-top .cp-head{gap:10px !important}` diyor, o yüzden kalan
+     6 px margin ile tamamlanıyor (10 + 6 = 16). */
+  .cp-ava{width:104px;height:104px;margin-top:-71px;margin-bottom:6px}
+  .cp-top .cp-head .cp-id h1{font-size:24px;gap:9px}
+  .cp-spec{font-size:13.5px;margin-top:7px}
+  .cp-meta{gap:6px 16px;margin-top:11px}
+  .cp-actions{width:100%;margin-top:6px;flex-direction:column;align-items:stretch}
+  .cp-actions .btn,.cp-actions .cta-row{width:100%;flex:none}
+  /* Eyebrow ≤640'ta gizlendi: şerit + kart + banner aile sabitine (726 px)
+     sığmıyordu, 35 px kırpılıyordu (ölçüldü). Referansta `.pf-stats`ın
+     üstünde ZATEN etiket yok; gizlemek referansa yaklaştırıyor. Satırın
+     kendisi `role="group" aria-label="Danışan deneyimi özeti"` taşıdığı
+     için ekran okuyucuda bilgi kaybı yok. */
+  .cp-exp-lbl{display:none}
+  .cp-exp{width:calc(100% - 24px);margin-top:16px}
+  .svc-grid{grid-template-columns:1fr}
+  .cp-tabbar{top:62px}
+  .cp-body{padding-bottom:var(--sec-pad)}
+  .prog-grid{grid-template-columns:1fr}
+  .sim-grid{grid-template-columns:1fr 1fr;gap:14px}
+  .sim-card{height:230px}
+  .rev-summary{padding:20px}
+  .cp-cta-band{padding:30px 22px}
+  .cps{flex:1 1 140px}
+  .cps+.cps{border-left:none}
+  .cps:nth-child(odd)+.cps{border-left:1px solid var(--line)}
+  .cps:nth-child(n+3){border-top:1px solid var(--line)}
+  .cp-cta-band h2{font-size:22px}
+  .apt-slots{grid-template-columns:repeat(3,1fr)}
+}
+@media (max-width:400px){
+  .sim-grid{grid-template-columns:1fr}
+  .sim-card{height:280px}
+}
+/* ---- ÇOK DAR EKRAN (≤380) ----
+   EŞİK 400 DEĞİL 380: ilk denemede kural ≤400'e yazılmıştı ve ölçülen
+   genişliklerden biri olan 390'ı da kapsayıp banner'ı 137 → 80 px'e
+   düşürüyordu; `.cp-top` 726 yerine 663 ölçüldü, aile sabiti kırıldı.
+   Eşik 390'ın ALTINA çekildi. */
+@media (max-width:380px){
+  .cp-banner{min-height:80px}
+  .cp-meta{gap:5px 14px;margin-top:9px}
+  .cp-ava{width:92px;height:92px;margin-top:-62px}
+  /* Bu genişlikte `.cp-meta` dört satıra çıkıyor ve kabuğun kilitlediği
+     sabit yükseklik içeriği KIRPIYOR (ölçüldü @320: 71 px kırpılma).
+     Kırpmak yerine kilit TABANA çevriliyor: bölüm sabitin altına inemez,
+     gerekirse büyür. Ailenin ölçüldüğü üç genişlikte (1440/1024/390)
+     `height` hâlâ kabuktan geldiği için sabit bozulmuyor. */
+  .cp-top{height:auto !important;min-height:var(--banner-h-detay) !important}
+}
+</style>
+<style>
+/* ===== Footer marka hizalama (Gastro footer dili; marka-nötr, sızma yok) ===== */
+
+</style>
+<!-- Metin yaslama katmani (tek kaynak) — sayfa stillerinden SONRA yuklenir,
+     boylece sayfa ici text-align kurallari yaslamayi geri alamaz -->
+<link rel="stylesheet" href="assets/css/fit-type.css" />
+<!-- Yorum ve değerlendirme bölümü (dört sayfanın TEK kaynağı) -->
+<link rel="stylesheet" href="assets/css/fit-yorum.css" />
+</head>
+<body data-brand="fit" data-fit-page="antrenor-detay-v1">
+
+<!-- KABUK: ust katman (topbar+header+drawer+alt bar+gorus+cerez) — ortak kabuk JS basar -->
+<div id="fitShellTop"></div>
+
+<main class="page-main" id="pageMain">
+
+<!-- =====================================================================
+     R9 · PROFİL İSKELETİ — KARDEŞ MARKADAN BİREBİR
+     ---------------------------------------------------------------------
+     Referans: dadadiet.com/diyetisyen/dyt-elif-sahin (`.pf-top`), Playwright
+     ile @1440 + @390 ölçüldü. Blok sırası birebir taşındı:
+       1 kırıntı → 2 banner görseli → 3 kimlik kartı → 4 istatistik şeridi
+     ÖNCEKİ HÂLİ (ölçüldü): kimlik metni doğrudan koyu fotoğrafın üstündeydi,
+     istatistikler sağ dikey kolondaydı (`.lib-stats`), eylem düğmeleri ve
+     ₺450 ise banner'ın ALTINDA ayrı bir koyu kutudaydı (`.cp-band`/`.cp-cta`,
+     262×285 px, tek başına solda, sağında 914 px boşluk — Beyar'ın
+     "berbat bir yerde" dediği kutu). Üçü de referansın tek kartında
+     birleşti; fiyat ise referanstaki yerine, "Seanslar" sekmesine gitti.
+     ===================================================================== -->
+<section class="cp-top">
+  <!-- R9 · kademeli buğu: üstte yoğun, aşağı doğru netleşiyor. Görsel
+       URL'i `.cp-banner`dan JS ile okunup `--cp-bg`ye yazılıyor. -->
+  <div class="cp-bgblur" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+  <div class="wrap">
+    <nav class="cp-crumb rd-crumb" aria-label="Sayfa yolu">
+      <a href="dadafit-hub-v1.html" class="crumb-home"><i class="fa-solid fa-house" aria-hidden="true"></i><span class="sr-only">DadaFit ana sayfa</span></a>
+      <i class="fa-solid fa-chevron-right"></i>
+      <a href="antrenorler-v1.html">Antrenörler</a>
+      <i class="fa-solid fa-chevron-right"></i>
+      <span class="cur" data-at="ad">Selin Aksoy</span>
+    </nav>
+
+    <!-- 2 · BANNER GÖRSELİ — referans `.pf-banner` (yuvarlatılmış şerit).
+         Yüksekliği `flex:1`; kabuğun kilitlediği aile sabitinden (560/617/726)
+         artan alanı yutuyor, böylece toplam her genişlikte sabite oturuyor. -->
+    <!-- KENDİ ELEŞTİRİM · KUSUR 1 — GÖRSEL DEĞİŞTİ.
+         Önceki kare (photo-1518611012118…) 1176×159'luk şeride KÖTÜ
+         kırpılıyordu: solda pencere, ortada kafası kesilmiş bir yüz, sağda
+         gövdesiz bir bacak — üç kopuk parça. Dört aday × dört kırpım noktası
+         yan yana çizilip bakıldı (scratchpad/r9profil/banner-secim.png);
+         bu kare 46%'de şeridi baştan sona tek bir sahne olarak dolduruyor ve
+         kimlik kartındaki portreyle yarışan ikinci bir yüz taşımıyor. -->
+    <div class="cp-banner" role="presentation" style="background-image:url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=1680&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-16')"></div>
+
+    <!-- 3 · KİMLİK KARTI — referans `.pf-head`: banner'ın alt kenarına biner,
+         solda 128 px daire portre, ortada kimlik, sağda eylem kolonu. -->
+    <div class="cp-head">
+      <!-- YER TUTUCU — antrenörün GERÇEK portre fotoğrafı gelince değişecek
+           (docs/icerik-bekleyen.md · antrenor-portre-fotografi). Buradaki
+           görsel portre DEĞİL: dört kişilik geniş bir salon karesi daireye
+           sığdırılıyor, hiçbir yüz seçilmiyor. Görsel ÜRETİLMEDİ, başka bir
+           stok kare de UYDURULMADI; kutu işaretli bırakıldı. -->
+      <div class="cp-ava" data-yer-tutucu="antrenor-portre-fotografi" role="img" aria-label="Selin Aksoy — portre fotoğrafı henüz yok, yakında" style="background-image:url('https://images.unsplash.com/photo-1518310383802-640c2de311b2?w=560&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-12')">
+        <span class="cp-on" title="Şu an müsait"></span>
+      </div>
+
+      <div class="cp-id">
+        <h1><span data-at="ad">Selin Aksoy</span> <span class="cp-verify"><i class="fa-solid fa-shield-halved" aria-hidden="true"></i> DadaFit Onaylı</span></h1>
+        <span class="cp-spec">Egzersiz ve spor bilimleri uzmanı</span>
+        <!-- R9 · referans `.pf-meta` satırı. Banner'ın sağ dikey kolonundaki
+             (`.lib-stats`) üç sayı buraya taşındı; hiçbiri kaybolmadı. -->
+        <div class="cp-meta">
+          <span><i class="fa-solid fa-location-dot" aria-hidden="true"></i> İstanbul · Online &amp; yüz yüze</span>
+          <span><i class="fa-solid fa-briefcase" aria-hidden="true"></i> 8 yıl deneyim</span>
+          <span><i class="fa-solid fa-star" aria-hidden="true"></i> 4.9 · 120 değerlendirme</span>
+          <span><i class="fa-solid fa-user-group" aria-hidden="true"></i> 180+ danışan</span>
+        </div>
+      </div>
+
+      <!-- referans `.pf-actions`: birincil düğme + (ikincil + ikon) satırı.
+           Fiyat BURADA YOK — referansta da yok; "Seanslar" sekmesinde. -->
+      <div class="cp-actions">
+        <button class="btn btn-fit" id="ctaBook" type="button"><i class="fa-solid fa-calendar-check" aria-hidden="true"></i> Randevu Al</button>
+        <div class="cta-row">
+          <button class="btn btn-ghost" id="ctaMsg" type="button"><i class="fa-regular fa-comment" aria-hidden="true"></i> Mesaj</button>
+          <button class="cp-mini" id="ctaSave" type="button" data-kaydet aria-pressed="false"
+                  data-tur="antrenor" data-slug="selin-aksoy" data-ad="Selin Aksoy"
+                  data-href="antrenor-detay-v1.html?slug=selin-aksoy"
+                  data-gorsel="https://images.unsplash.com/photo-1518310383802-640c2de311b2?w=560&amp;q=80&amp;auto=format&amp;fit=crop&amp;exp=7&amp;gam=6&amp;sat=-12"
+                  data-meta="Egzersiz ve spor bilimleri uzmanı" aria-label="Antrenörü kaydet"><i class="fa-regular fa-bookmark" aria-hidden="true"></i></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4 · İSTATİSTİK ŞERİDİ — referans `.pf-stats`: kimlik kartının hemen
+         altında, sekme çubuğundan ÖNCE, kartla aynı kenar hizasında.
+         R8'de bu şerit `main`in çıplak çocuğuydu ve randevu kutusunun
+         altında duruyordu; R9'da referanstaki yerine, kartın altına geldi.
+         İÇERİK DEĞİŞMEDİ: ilk iki hücrenin kaynağı sayfanın kendi yorum
+         paneli (%96 → `.rev-tagline`, %88 → `.rev-bars` 5★). Üçüncünün
+         toplu verisi YOK — sayı UYDURULMADI, yer tutucu
+         (docs/icerik-bekleyen.md · danisan-ortalama-calisma-suresi). -->
+    <div class="cp-exp">
+      <span class="cp-exp-lbl"><i class="fa-solid fa-heart-pulse" aria-hidden="true"></i> Danışan deneyimi</span>
+      <div class="cp-stats" role="group" aria-label="Danışan deneyimi özeti">
+        <div class="cps"><i class="fa-solid fa-thumbs-up" aria-hidden="true"></i><div><span>Tavsiye oranı</span><b>%96</b></div></div>
+        <div class="cps"><i class="fa-solid fa-star" aria-hidden="true"></i><div><span>5 yıldız oranı</span><b>%88</b></div></div>
+        <div class="cps" data-yer-tutucu="danisan-ortalama-calisma-suresi"><i class="fa-solid fa-hourglass-half" aria-hidden="true"></i><div><span>Ortalama çalışma süresi</span><b aria-label="Ortalama çalışma süresi — toplu veri henüz yok, yakında">Veri henüz yok</b></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- ===== GÖVDE: STICKY SEKME + PANELLER ===== -->
+<section class="cp-body">
+
+  <!-- STICKY SEKME ÇUBUĞU -->
+  <div class="cp-tabbar">
+    <div class="wrap">
+      <div class="fit-tabs" data-fit-tabs="antrenor" aria-label="Antrenör profili bölümleri">
+        <button class="fit-tab" type="button" aria-selected="true" data-tab="hakkinda"><i class="fa-solid fa-user"></i> Hakkında</button>
+        <!-- R9 · "Seanslar" sekmesi — referansın "Hizmetler" sekmesinin karşılığı,
+             referanstaki gibi Hakkında'nın HEMEN SONRASINDA. Fiyat bu panelde. -->
+        <button class="fit-tab" type="button" data-tab="seanslar"><i class="fa-solid fa-stopwatch"></i> Seanslar <span class="cnt">3</span></button>
+        <button class="fit-tab" type="button" data-tab="programlar"><i class="fa-solid fa-dumbbell"></i> Antrenörün Programları <span class="cnt">3</span></button>
+        <button class="fit-tab" type="button" data-tab="yorumlar"><i class="fa-solid fa-comment-dots"></i> Danışan Yorumları <span class="cnt" id="atRevCnt">0</span></button>
+        <!-- R8 · KALEM 39 — challenge sekmesi. Sayaç YOK: bu antrenöre
+             bağlı challenge kaydı yok (challenge-merkezi-v1'deki üç
+             challenge'ın hiçbirinde antrenör alanı bulunmuyor), sahte
+             sayı basılmadı. -->
+        <button class="fit-tab" type="button" data-tab="challenge"><i class="fa-solid fa-trophy"></i> Challenge&#39;lar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap">
+
+    <!-- ===== HAKKINDA ===== -->
+    <div class="fit-pane" data-pane="hakkinda">
+      <div class="ab-grid">
+        <div class="ab-main jt-flow">
+          <h2>Çalışma şeklim</h2>
+          <p>Antrenman, kendini kötü hissettiren bir ceza değil; hayatına oturan bir alışkanlık olmalı. Danışanlarımla önce hedefini, günlük rutinini ve evindeki imkanları konuşuyoruz — pahalı ekipman ya da spor salonu üyeliği şart değil. Sonra haftalık olarak güncellenen, sürdürülebilir ve senin tempona uygun bir plan kuruyoruz.</p>
+          <p>Her bedeni olduğu yerden alıp ileriye taşımaya inanıyorum. İlk görüşmede hareket geçmişini, varsa sakatlıklarını ve neyi keyifle yaptığını dinliyorum; plan oradan şekilleniyor. Tartı tek ölçüt değil — enerji, uyku ve nasıl hissettiğin de takip ettiğimiz şeyler.</p>
+
+          <h2>Uzmanlık alanlarım</h2>
+          <div class="ab-spec chips">
+            <span class="chip">Güç &amp; Kondisyon</span>
+            <span class="chip">Evde Antrenman</span>
+            <span class="chip">Kilo Yönetimi</span>
+            <span class="chip">Başlangıç Seviyesi</span>
+            <span class="chip">Ekipmansız Çalışma</span>
+            <span class="chip">Alışkanlık Kurma</span>
+          </div>
+
+          <h2>Beni farklı kılan</h2>
+          <div class="ab-approach">
+            <div class="ap-item"><i class="fa-solid fa-arrows-rotate"></i><div><b>Haftalık revizyon</b><span>Plan, ilerlemene ve geri bildirimine göre her hafta yeniden ayarlanır.</span></div></div>
+            <div class="ap-item"><i class="fa-solid fa-house"></i><div><b>Evinde çalış</b><span>Salon gerekmez — vücut ağırlığı ve evindeki birkaç eşya yeterli.</span></div></div>
+            <div class="ap-item"><i class="fa-solid fa-comments"></i><div><b>Seans arası destek</b><span>Sorularına mesajla genelde 3 saat içinde dönüş yaparım.</span></div></div>
+            <div class="ap-item"><i class="fa-solid fa-heart"></i><div><b>Beden-pozitif yaklaşım</b><span>Karşılaştırma değil, kendi ilerlemen. Herkesi olduğu yerden kabul ederim.</span></div></div>
+          </div>
+        </div>
+
+        <aside class="ab-side">
+          <div class="avail-card">
+            <h4><i class="fa-solid fa-circle-check"></i> Uygunluk</h4>
+            <span class="av-state"><span class="dot"></span> Yeni danışan alıyor</span>
+            <div class="av-rows">
+              <div class="avr"><i class="fa-solid fa-video"></i> <span><b>Online</b> &amp; hibrit çalışma</span></div>
+              <div class="avr"><i class="fa-solid fa-location-dot"></i> <span>İstanbul · yüz yüze (Kadıköy)</span></div>
+              <div class="avr"><i class="fa-solid fa-clock"></i> <span>Hafta içi 09:00–20:00</span></div>
+              <div class="avr"><i class="fa-solid fa-bolt"></i> <span>Yanıt süresi <b>~3 saat</b></span></div>
+            </div>
+          </div>
+
+          <div class="info-card">
+            <h4><i class="fa-solid fa-certificate"></i> Sertifikalar &amp; Belgeler</h4>
+            <div class="ic-row"><span class="ic-ico"><i class="fa-solid fa-graduation-cap"></i></span><div><b>Marmara Üniversitesi</b><span>Spor Bilimleri (Lisans)</span></div></div>
+            <div class="ic-row"><span class="ic-ico"><i class="fa-solid fa-certificate"></i></span><div><b>NASM Kişisel Antrenörlük</b><span>Sertifika · 2017</span></div></div>
+            <div class="ic-row"><span class="ic-ico"><i class="fa-solid fa-id-card"></i></span><div><b>Sertifika doğrulama</b><span>DadaFit ekibi tarafından incelendi</span><span class="ic-verify"><i class="fa-solid fa-circle-check"></i> DadaFit Onaylı</span></div></div>
+            <div class="ic-row"><span class="ic-ico"><i class="fa-solid fa-language"></i></span><div><b>Diller</b><span>Türkçe, İngilizce</span></div></div>
+          </div>
+
+          <div class="info-card">
+            <h4><i class="fa-solid fa-circle-info"></i> Hızlı Bilgi</h4>
+            <div class="ic-row"><span class="ic-ico"><i class="fa-solid fa-briefcase"></i></span><div><b>Deneyim</b><span>8 yıl antrenörlük</span></div></div>
+            <div class="ic-row"><span class="ic-ico"><i class="fa-solid fa-user-group"></i></span><div><b>Danışan</b><span>180+ kişiyle çalıştı</span></div></div>
+            <div class="ic-row"><span class="ic-ico"><i class="fa-solid fa-utensils"></i></span><div><b>Birlikte çalışma</b><span>Beslenme için Dada Diet diyetisyenleriyle ortak plan</span></div></div>
+          </div>
+        </aside>
+      </div>
+    </div>
+
+    <!-- ===== SEANSLAR — referansın "Hizmetler" paneli =====
+         ÜÇ SEANS UYDURULMADI: sayfanın kendi randevu modalindeki
+         (`#aptSvc`) üç seçeneğin aynısı — Birebir Seans · Aylık Paket ·
+         Tanışma Görüşmesi. Süreler ve kapsam da oradan.
+         FİYAT: birebir seans ücreti slug'dan geliyor (aşağıdaki VERI
+         haritası). Aylık paket ücreti bugün her antrenörde ₺1.600 —
+         slug'a bağlı DEĞİL; randevu modelinde de öyle. Antrenör başına
+         paket ücreti gelene kadar sayı uydurulmadı, olduğu gibi bırakıldı
+         (docs/icerik-bekleyen.md · antrenor-aylik-paket-ucreti). -->
+    <div class="fit-pane" data-pane="seanslar" hidden>
+      <div class="svc-grid">
+        <article class="svc-card">
+          <span class="svc-tag">ONLİNE</span>
+          <div class="svc-ico"><i class="fa-solid fa-comments" aria-hidden="true"></i></div>
+          <h3>Tanışma Görüşmesi</h3>
+          <ul class="svc-feats">
+            <li><i class="fa-solid fa-check" aria-hidden="true"></i> 15 dk görüntülü görüşme</li>
+            <li><i class="fa-solid fa-check" aria-hidden="true"></i> Hedef ve hareket geçmişi konuşulur</li>
+          </ul>
+          <div class="svc-foot">
+            <div class="svc-price"><b class="free">Ücretsiz</b></div>
+            <button class="svc-book" type="button" data-svc="Tanışma Görüşmesi" aria-label="Tanışma Görüşmesi için randevu al"><i class="fa-solid fa-calendar-check" aria-hidden="true"></i> Randevu</button>
+          </div>
+        </article>
+
+        <article class="svc-card feat">
+          <span class="svc-tag">ONLİNE</span>
+          <div class="svc-ico"><i class="fa-solid fa-dumbbell" aria-hidden="true"></i></div>
+          <h3>Birebir Seans</h3>
+          <ul class="svc-feats">
+            <li><i class="fa-solid fa-check" aria-hidden="true"></i> 60 dk görüntülü antrenman</li>
+            <li><i class="fa-solid fa-check" aria-hidden="true"></i> Kişiye özel, o gün için uyarlanır</li>
+          </ul>
+          <div class="svc-foot">
+            <div class="svc-price"><b data-at="fiyat">₺450</b><span>/ seans</span></div>
+            <button class="svc-book" type="button" data-svc="Birebir Seans" aria-label="Birebir Seans için randevu al"><i class="fa-solid fa-calendar-check" aria-hidden="true"></i> Randevu</button>
+          </div>
+        </article>
+
+        <article class="svc-card">
+          <span class="svc-tag">ONLİNE</span>
+          <div class="svc-ico"><i class="fa-solid fa-calendar-days" aria-hidden="true"></i></div>
+          <h3>Aylık Paket</h3>
+          <ul class="svc-feats">
+            <li><i class="fa-solid fa-check" aria-hidden="true"></i> 4 seans / ay</li>
+            <li><i class="fa-solid fa-check" aria-hidden="true"></i> Haftalık plan takibi ve mesajla destek</li>
+          </ul>
+          <div class="svc-foot">
+            <div class="svc-price"><b>₺1.600</b><span>/ ay</span></div>
+            <button class="svc-book" type="button" data-svc="Aylık Paket" aria-label="Aylık Paket için randevu al"><i class="fa-solid fa-calendar-check" aria-hidden="true"></i> Randevu</button>
+          </div>
+        </article>
+      </div>
+    </div>
+
+    <!-- ===== PROGRAMLAR ===== -->
+    <div class="fit-pane" data-pane="programlar" hidden>
+      <div class="sec-head"><div>
+        <span class="eyebrow"><i class="fa-solid fa-dumbbell"></i> Selin'in Programları</span>
+        <h2>Sunduğu programlar &amp; seanslar</h2>
+        <div class="sec-tools"><a class="see-all" href="program-liste-v1.html">Tüm Programlar <i class="fa-solid fa-arrow-right"></i></a></div>
+        <p class="lead">Her program seviyene göre uyarlanır — başlamadan önce ücretsiz tanışma görüşmesinde birlikte karar veririz.</p>
+      </div></div>
+
+      <div class="prog-grid">
+        <a class="prog-card" href="program-detay-v1.html">
+          <div class="prog-media" style="background-image:url('https://images.unsplash.com/photo-1518611012118-696072aa579a?w=700&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-12')">
+            <span class="prog-level"><i class="fa-solid fa-seedling"></i> Başlangıç</span>
+            <span class="prog-dur"><i class="fa-solid fa-calendar-day"></i> 6 hafta</span>
+            <h3 class="prog-title">Evde İlk Adım: Ekipmansız Güç</h3>
+          </div>
+          <div class="prog-body">
+            <p>Salona gitmeden, evinde vücut ağırlığıyla temel kuvvet ve hareket alışkanlığı kur.</p>
+            <div class="prog-feats"><span>Haftada 3 gün</span><span>20–30 dk</span><span>Ekipmansız</span></div>
+            <div class="prog-foot"><span class="price">Paket <b>₺2.400</b></span><span class="go">Programı Gör <i class="fa-solid fa-arrow-right"></i></span></div>
+          </div>
+        </a>
+
+        <a class="prog-card" href="program-detay-v1.html">
+          <div class="prog-media" style="background-image:url('https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=700&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-12')">
+            <span class="prog-level"><i class="fa-solid fa-fire"></i> Orta</span>
+            <span class="prog-dur"><i class="fa-solid fa-calendar-day"></i> 8 hafta</span>
+            <h3 class="prog-title">Sürdürülebilir Kilo Yönetimi</h3>
+          </div>
+          <div class="prog-body">
+            <p>Tempolu kardiyo ile kuvveti dengeleyen, günlük hayata oturan bir hareket düzeni.</p>
+            <div class="prog-feats"><span>Haftada 4 gün</span><span>30–40 dk</span><span>Online takip</span></div>
+            <div class="prog-foot"><span class="price">Paket <b>₺3.200</b></span><span class="go">Programı Gör <i class="fa-solid fa-arrow-right"></i></span></div>
+          </div>
+        </a>
+
+        <a class="prog-card" href="program-detay-v1.html">
+          <div class="prog-media" style="background-image:url('https://images.unsplash.com/photo-1538805060514-97d9cc17730c?w=700&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-12')">
+            <span class="prog-level"><i class="fa-solid fa-user-check"></i> Birebir</span>
+            <span class="prog-dur"><i class="fa-solid fa-calendar-day"></i> Aylık</span>
+            <h3 class="prog-title">Birebir Online Antrenörlük</h3>
+          </div>
+          <div class="prog-body">
+            <p>Tamamen sana özel plan, haftalık görüntülü seans ve seans arası mesajla sürekli destek.</p>
+            <div class="prog-feats"><span>4 seans / ay</span><span>Kişiye özel</span><span>Sınırsız mesaj</span></div>
+            <div class="prog-foot"><span class="price">Aylık <b>₺4.800</b></span><span class="go">Programı Gör <i class="fa-solid fa-arrow-right"></i></span></div>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <!-- ===== DANIŞAN YORUMLARI =====
+         R19/A15 · Elle yazılmış üç `.rev-card` `assets/js/fit-yorum-veri.js`e
+         TAŞINDI (ad · metin · puan birebir; at-1/at-2/at-3 kimlikleri
+         profil-v1'inkilerle aynı, faydalı oyları geçerli kalır). Görünüm
+         Gastro'nun yorum kalıbına çekildi: puan özeti + yazma formu +
+         filtre çipleri + faydalı/bildir + yanıt. Sabit "120 değerlendirme"
+         ve "%96'sı önerir" rakamları KALDIRILDI — artık ikisi de
+         `FIT_YORUM.ozet()`ten geliyor, uydurma sayı basılmıyor. -->
+    <div class="fit-pane" data-pane="yorumlar" hidden>
+      <div class="fy-sec"
+           data-fit-yorum="antrenor"
+           data-yorum-slug="selin-aksoy"
+           data-yorum-baslik="Bu antrenörü değerlendir"
+           data-yorum-sayac="#atRevCnt"></div>
+    </div>
+
+    <!-- ===== CHALLENGE'LAR ===== -->
+    <!-- YER TUTUCU — antrenör↔challenge eşleşmesi gelince değişecek
+         (docs/icerik-bekleyen.md 7. kalem). Bugün challenge kayıtlarında
+         antrenör alanı YOK; "Selin'in challenge'ları" diye bir liste
+         uydurmak yerine panel boş durumda bırakıldı ve gerçek bir sayfaya
+         (challenge merkezi) yönlendiriliyor. -->
+    <div class="fit-pane" data-pane="challenge" data-yer-tutucu="antrenor-challenge-eslesmesi" hidden>
+      <div class="pane-bos lib-empty">
+        <span class="ico"><i class="fa-solid fa-trophy" aria-hidden="true"></i></span>
+        <h2>Selin&#39;in challenge&#39;ı henüz yok</h2>
+        <p>Bu antrenöre bağlı bir challenge kaydı bulunmuyor. Yayındaki challenge&#39;ları challenge merkezinden görebilirsin.</p>
+        <a class="btn btn-fit" href="challenge-merkezi-v1.html"><i class="fa-solid fa-trophy" aria-hidden="true"></i> Challenge Merkezi</a>
+      </div>
+    </div>
+
+    <!-- ===== ALT CTA BANDI ===== -->
+    <div class="cp-cta-band">
+      <div>
+        <span class="cb-eyebrow"><i class="fa-solid fa-user-plus"></i> Birlikte başlayalım</span>
+        <h2>Selin ile çalışmaya hazır mısın?</h2>
+        <p>İlk 15 dakikalık tanışma görüşmesi ücretsiz. Hedefini anlat, sana uygun olup olmadığımıza birlikte karar verelim — baskı yok, taahhüt yok.</p>
+      </div>
+      <div class="cb-act">
+        <button class="btn btn-fit" type="button" id="bandClient" data-lg-gate data-lg-title="Danışan olmak için giriş yap" data-lg-desc="Bu antrenörle çalışmaya başlamak ve planını oluşturmak için hesabına giriş yap."><i class="fa-solid fa-user-plus"></i> Danışan Ol</button>
+        <button class="btn btn-line" type="button" id="bandMsg" data-lg-gate data-lg-title="Mesaj göndermek için giriş yap" data-lg-desc="Antrenöre mesaj gönderebilmek için hesabına giriş yap."><i class="fa-regular fa-comment"></i> Mesaj Gönder</button>
+        <span class="cb-note"><i class="fa-solid fa-shield-halved"></i> DadaFit Onaylı · sertifikası doğrulandı</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ===== BENZER ANTRENÖRLER ===== -->
+<section class="sim-sec">
+  <div class="wrap">
+    <div class="sec-head"><div>
+      <span class="eyebrow"><i class="fa-solid fa-users"></i> Benzer Antrenörler</span>
+      <h2>Sana uygun olabilecek diğer antrenörler</h2>
+      <div class="sec-tools"><a class="see-all" href="antrenorler-v1.html">Tüm Antrenörler <i class="fa-solid fa-arrow-right"></i></a></div>
+      <p class="lead">Evde antrenman ve kilo yönetimi alanında çalışan, DadaFit onaylı diğer antrenörler.</p>
+    </div></div>
+
+    <div class="sim-grid">
+      <a class="sim-card" href="profil-v1.html?role=antrenor&view=public">
+        <div class="sim-media" style="background-image:url('https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=560&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-12')"></div>
+        <span class="sim-verify"><i class="fa-solid fa-shield-halved"></i> Onaylı</span>
+        <div class="sim-id"><b>Ayşe Kaplan</b><span>Kilo Yönetimi · Başlangıç</span><span class="sim-rate"><i class="fa-solid fa-star"></i> 4.8 · 64 değerlendirme</span></div>
+      </a>
+      <a class="sim-card" href="profil-v1.html?role=antrenor&view=public">
+        <div class="sim-media" style="background-image:url('https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?w=560&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-12')"></div>
+        <span class="sim-verify"><i class="fa-solid fa-shield-halved"></i> Onaylı</span>
+        <div class="sim-id"><b>Naz Erdem</b><span>Evde Antrenman · Başlangıç</span><span class="sim-rate"><i class="fa-solid fa-star"></i> 4.7 · 41 değerlendirme</span></div>
+      </a>
+      <a class="sim-card" href="profil-v1.html?role=antrenor&view=public">
+        <div class="sim-media" style="background-image:url('https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=560&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-12')"></div>
+        <span class="sim-verify"><i class="fa-solid fa-shield-halved"></i> Onaylı</span>
+        <div class="sim-id"><b>Derya Yıldız</b><span>Mobilite &amp; Pilates · Postür</span><span class="sim-rate"><i class="fa-solid fa-star"></i> 5.0 · 86 değerlendirme</span></div>
+      </a>
+      <a class="sim-card" href="profil-v1.html?role=antrenor&view=public">
+        <div class="sim-media" style="background-image:url('https://images.unsplash.com/photo-1538805060514-97d9cc17730c?w=560&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-12')"></div>
+        <span class="sim-verify"><i class="fa-solid fa-shield-halved"></i> Onaylı</span>
+        <div class="sim-id"><b>Zeynep Arı</b><span>Koşu &amp; Dayanıklılık · Başlangıç</span><span class="sim-rate"><i class="fa-solid fa-star"></i> 4.7 · 53 değerlendirme</span></div>
+      </a>
+    </div>
+
+    <!-- Public → antrenör başvurusu.
+         ÜÇ KUSUR DAHA ÖNCE DÜZELTİLMİŞTİ (üçü de ölçülmüştü):
+         1 · HİZA: satır içi `style="margin:0 0 28px"` .wrap'in `margin:0 auto`
+             ortalamasını siliyordu; kutu sola kayıyordu.
+         2 · MARKA: "Antrenör Paneli" bağlantısı DadaMutfak'ın dış adresine
+             gidiyordu — belge §1 ihlali; gerçek hedefe çevrildi.
+         3 · YASLAMA: .hr-note artık yaslanmıyor (fit-type.css istisnası).
+
+         R6 · MADDE 7 — DÖRDÜNCÜ KUSUR: blok `#pageMain`in doğrudan çocuğu olan
+         çıplak bir `.wrap`tı; sayfa, sitenin geri kalanındaki 50 px'lik bölüm
+         dolgusu yerine 28 px'le bitiyordu ve `#pageMain`in son çocuğunun
+         `padding-bottom`u 0'dı (ölçüldü: 64 sayfanın 54'ünde bu değer 50).
+         Not, madde 6'daki kararla aynı biçimde bir üstteki bölümün kuyruğuna
+         girdi; sayfa artık sitenin ritmiyle bitiyor.
+         GERİ ALMA: bloğu `</section>`den sonra kendi `.wrap`ına geri koymak. -->
+    <div class="hr-note">
+      <i class="fa-solid fa-id-badge"></i>
+      <p>Bu profil sana mı ait? Antrenör olarak DadaFit'te yer almak, danışanlarını ve randevularını yönetmek istiyorsan <a href="fit-antrenor-ol.html">başvuru formu burada</a>. Hesabın varsa <a href="fit-giris.html">giriş yapabilirsin</a>.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== R8 · KALEM 37 — SAĞLIK BİLGİLENDİRME BANDI =====
+     Referans profilin SON bölümü (`.pf-disclaimer`, ölçüldü: tam genişlik,
+     yeşil yıkama zemin, üst çizgi, tek satır ikon+paragraf). Bu sayfada
+     karşılığı yoktu; bölüm sırasını referansla eşitlemek için eklendi. -->
+<section class="cp-disclaimer">
+  <div class="wrap">
+    <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+    <p>Bu sayfadaki içerik <b>genel bilgilendirme amaçlıdır</b>; tıbbi teşhis veya tedavi yerine geçmez. Bir rahatsızlığın varsa ya da uzun süredir hareketsizsen antrenmana başlamadan önce <a href="antrenorler-v1.html">bir uzmana danış</a>. Durma kriterleri: <a href="saglik-bilgilendirme-v1.html">Sağlık Bilgilendirmesi</a>.</p>
+  </div>
+</section>
+
+</main><!-- /.page-main -->
+
+<!-- ===== RANDEVU MODALI (seans slot seçici) ===== -->
+<div class="apt-overlay" id="aptOverlay"></div>
+<div class="apt-modal" id="aptModal" role="dialog" aria-modal="true" aria-label="Randevu Al">
+  <div class="apt-panel">
+    <div class="apt-head">
+      <div class="apt-av" style="background-image:url('https://images.unsplash.com/photo-1518310383802-640c2de311b2?w=300&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-12')"></div>
+      <div>
+        <h3>Randevu Al</h3>
+        <!-- 🔴 ÖLÇÜLDÜ VE DÜZELTİLDİ (F-A2 turu): bu ad SABİT YAZILIYDI ve
+             `?slug=` haritasına bağlı değildi — Mert Özkan'ın sayfasında modal
+             "Selin Aksoy" diyordu. Kusur önceden de vardı ama modal yalnız
+             sayfadaki düğmeyle açıldığı için göze çarpmıyordu; `?randevu=1`
+             ile modal artık doğrudan açılabildiğinden yanlış kimlik görünür
+             hâle geldi. Sayfanın kendi mekanizmasına bağlandı
+             (`[data-at="ad"]`, `:1137`), yeni bir alan uydurulmadı.
+             ⚠ KALAN: modaldeki avatar hâlâ sabit — slug haritasında
+             (`:1120-1133`) fotoğraf alanı YOK; eklemek veri modeli kararıdır
+             ve bu turda verilmedi. -->
+        <p><i class="fa-solid fa-circle-check"></i> <span data-at="ad">Selin Aksoy</span> · DadaFit Onaylı Antrenör</p>
+      </div>
+      <button class="apt-close" id="aptClose" type="button" aria-label="Kapat"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="apt-body" id="aptBody">
+      <div id="aptForm">
+      <div class="apt-block">
+        <div class="apt-lbl"><i class="fa-solid fa-dumbbell"></i> Seans türü</div>
+        <div class="apt-svc" id="aptSvc">
+          <label><input type="radio" name="svc" data-price="450" checked /><span class="rd"></span><span class="si"><b>Birebir Seans</b><span>60 dk · görüntülü, kişiye özel</span></span><span class="sp">₺450</span></label>
+          <label><input type="radio" name="svc" data-price="1600" /><span class="rd"></span><span class="si"><b>Aylık Paket</b><span>4 seans / ay · haftalık takip</span></span><span class="sp">₺1.600</span></label>
+          <label><input type="radio" name="svc" data-price="0" /><span class="rd"></span><span class="si"><b>Tanışma Görüşmesi</b><span>15 dk · hedef belirleme</span></span><span class="sp">Ücretsiz</span></label>
+        </div>
+        <p class="apt-note">Ücretli seanslar önce paket hakkından düşer; hakkın yoksa kayıtlı kartından (Visa •••• 4242) tahsil edilir ve fatura defterine düşer.</p>
+      </div>
+      <div class="apt-block">
+        <div class="apt-lbl"><i class="fa-solid fa-calendar-days"></i> Gün seç</div>
+        <div class="apt-days">
+            <button class="apt-day" type="button" data-day="Sal 17"><span>Sal</span><b>17</b><small>3 slot</small></button>
+            <button class="apt-day sel" type="button" data-day="Çar 18"><span>Çar</span><b>18</b><small>5 slot</small></button>
+            <button class="apt-day" type="button" data-day="Per 19"><span>Per</span><b>19</b><small>2 slot</small></button>
+            <button class="apt-day off" type="button" data-day="Cum 20"><span>Cum</span><b>20</b><small>—</small></button>
+            <button class="apt-day" type="button" data-day="Cmt 21"><span>Cmt</span><b>21</b><small>6 slot</small></button>
+            <button class="apt-day" type="button" data-day="Paz 22"><span>Paz</span><b>22</b><small>4 slot</small></button>
+            <button class="apt-day" type="button" data-day="Pzt 23"><span>Pzt</span><b>23</b><small>5 slot</small></button>
+        </div>
+      </div>
+      <div class="apt-block">
+        <div class="apt-lbl"><i class="fa-solid fa-clock"></i> Saat seç</div>
+        <div class="apt-slots">
+            <button class="apt-slot" type="button" data-slot="07:30">07:30</button>
+            <button class="apt-slot" type="button" data-slot="09:00">09:00</button>
+            <button class="apt-slot off" type="button" data-slot="10:30">10:30</button>
+            <button class="apt-slot" type="button" data-slot="12:00">12:00</button>
+            <button class="apt-slot" type="button" data-slot="13:30">13:30</button>
+            <button class="apt-slot off" type="button" data-slot="15:00">15:00</button>
+            <button class="apt-slot" type="button" data-slot="17:30">17:30</button>
+            <button class="apt-slot" type="button" data-slot="19:00">19:00</button>
+            <button class="apt-slot" type="button" data-slot="20:30">20:30</button>
+        </div>
+      </div>
+      <div class="apt-foot">
+        <div class="apt-sum">Seçilen<b id="aptSum">Seans türü, gün ve saat seç</b></div>
+        <button class="btn btn-fit apt-confirm" id="aptConfirm" type="button"><i class="fa-solid fa-check"></i> Randevuyu Onayla</button>
+      </div>
+      </div>
+      <div class="apt-success" id="aptSuccess" hidden>
+        <span class="ok"><i class="fa-solid fa-check" aria-hidden="true"></i></span>
+        <h4>Randevun alındı</h4>
+        <p id="aptSuccessTxt">Antrenörüne bildirim gitti; onay bekliyor.</p>
+        <button class="btn btn-primary" type="button" id="aptSuccessOk">Tamam</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- KABUK: alt katman (giris kapisi + footer + basa don) -->
+<div id="fitShellBottom"></div>
+
+<!-- DadaFit ortak kabuk JS (tek kaynak): markup + davranis -->
+<script src="assets/js/fit-shell.js"></script>
+<script src="assets/js/fit-mesaj.js"></script>
+<!-- R8 · ORTAK MODAL İSKELETİ (AJAN-C · assets/js/fit-modal.js).
+     fit-shell.js'ten SONRA yüklenir: scroll kilidini FIT_SHELL sayacına
+     devrediyor, o yüzden FIT_SHELL önce tanımlı olmalı. -->
+<script src="assets/js/fit-modal.js"></script>
+<!-- Kaydet düğmesinin (`.kyt-btn` sözleşmesi) tek kaynağı -->
+<script src="assets/js/fit-kayit.js"></script>
+<!-- Fatura defterinin tek kaynağı — K8: randevu/paket ödemesi burada faturaya düşer -->
+<script src="assets/js/fit-fatura.js"></script>
+<script>
+/* ===== FAZ 4 — antrenör slug + randevu yaşam döngüsü (belge §10.2 · §11 · §13) ===== */
+(function(){
+  var VERI = {
+    'selin-aksoy':{ad:'Selin Aksoy',  unvan:'Egzersiz ve spor bilimleri uzmanı', fiyat:'₺450'},
+    'burak-demir':{ad:'Burak Demir',  unvan:'Kuvvet ve kondisyon antrenörü',     fiyat:'₺520'},
+    'ece-yalcin' :{ad:'Ece Yalçın',   unvan:'Mobilite ve postür uzmanı',          fiyat:'₺400'},
+    'mert-ozkan' :{ad:'Mert Özkan',   unvan:'Yeni başlayan programları',          fiyat:'₺380'},
+    'deniz-kaya' :{ad:'Deniz Kaya',   unvan:'Kadın sağlığı ve hareket',           fiyat:'₺470'},
+    'derya-yildiz':{ad:'Derya Yıldız',unvan:'Mobilite ve postür',                 fiyat:'₺430'},
+    'ayse-kaplan':{ad:'Ayşe Kaplan',  unvan:'Yeni başlayan ve kilo yönetimi',     fiyat:'₺390'},
+    'can-aydin'  :{ad:'Can Aydın',    unvan:'Salon ve kondisyon',                 fiyat:'₺500'},
+    /* R10 · dogrula-A4'ün bulduğu kırmızı: dizindeki sekiz antrenörün DÖRDÜ
+       bu haritada yoktu (Merve Tan · Zeynep Arı · Elif Şahin · Naz Erdem) ve
+       kartlarının href'i başka birinin slug'ına gidiyordu — kadın antrenörün
+       kartına tıklayan erkek antrenörün profiline düşüyordu. Ünvanlar
+       uydurulmadı, her kartın KENDİ görünen uzmanlık satırından alındı. */
+    'merve-tan'  :{ad:'Merve Tan',    unvan:'Güç, kondisyon ve kilo yönetimi',    fiyat:'₺460'},
+    'zeynep-ari' :{ad:'Zeynep Arı',   unvan:'Koşu, dayanıklılık ve başlangıç',    fiyat:'₺410'},
+    'elif-sahin' :{ad:'Elif Şahin',   unvan:'Mobilite, pilates ve esneklik',      fiyat:'₺440'},
+    'naz-erdem'  :{ad:'Naz Erdem',    unvan:'Evde antrenman ve başlangıç',        fiyat:'₺370'}
+  };
+  var slug = new URLSearchParams(location.search).get('slug') || 'selin-aksoy';
+  var A = VERI[slug] || VERI['selin-aksoy'];
+  document.querySelectorAll('[data-at="ad"]').forEach(function(el){ el.textContent = A.ad; });
+  /* dogrula-A4 bulgusu: `unvan` ve `fiyat` haritada VARDI ama hiçbir yere
+     bağlanmamıştı — her antrenör aynı ₺450'yi ve aynı uzmanlık satırını
+     gösteriyordu. İkisi de artık slug'dan geliyor. */
+  var specEl = document.querySelector('.cp-spec');
+  if(specEl) specEl.textContent = A.unvan;
+  /* R9 · fiyat hero'dan "Seanslar" sekmesindeki seans kartına taşındı
+     (referansta da fiyat yalnız hizmet kartının ayağında duruyor).
+     Seçici `.cta-price b` → `[data-at="fiyat"]`; aynı kaynak, yeni yer.
+     Randevu modalindeki birebir seans satırı da AYNI sayıyı gösteriyor;
+     iki yerde iki farklı ücret çıkmasın diye ikisi de buradan yazılıyor. */
+  document.querySelectorAll('[data-at="fiyat"]').forEach(function(el){ el.textContent = A.fiyat; });
+  var modalSeans = document.querySelector('#aptSvc input[data-price="450"]');
+  if(modalSeans){
+    var sp = modalSeans.closest('label').querySelector('.sp');
+    if(sp) sp.textContent = A.fiyat;
+    modalSeans.setAttribute('data-price', A.fiyat.replace(/[^0-9]/g,''));
+  }
+  document.title = A.ad + ' — DadaFit Onaylı Antrenör | DadaFit';
+
+  /* EK GÖREV B · kaydet düğmesinin data-* alanları slug'a göre güncellenir
+     (HTML'deki değerler yalnız varsayılan persona içindir). Görsel FAZ 4'ün
+     kendi `.cp-ava` yer tutucusundan okunur — yeni bir görsel uydurulmadı. */
+  (function(){
+    var kaydetBtn = document.getElementById('ctaSave');
+    if(!kaydetBtn) return;
+    var ava = document.querySelector('.cp-ava');
+    var avaBg = ava ? getComputedStyle(ava).backgroundImage.replace(/^url\(["']?/, '').replace(/["']?\)$/, '') : '';
+    kaydetBtn.setAttribute('data-slug', slug);
+    kaydetBtn.setAttribute('data-ad', A.ad);
+    kaydetBtn.setAttribute('data-href', 'antrenor-detay-v1.html?slug=' + slug);
+    kaydetBtn.setAttribute('data-meta', A.unvan);
+    if(avaBg) kaydetBtn.setAttribute('data-gorsel', avaBg);
+    if(window.FIT_KAYIT) FIT_KAYIT.tazele();
+  })();
+
+  /* ===== RANDEVU ÖZETİ + ONAY (belge §11 adım 5–6) ================
+     ÖLÇÜLEN KUSUR (Beyar, R15): "Seçilen" başlığının altında
+     "Randevu isteğin alındı — Fit Planım › Randevularım" yazıyordu —
+     yani bir SONUÇ mesajı, henüz onay verilmeden. İki ayrı sebebi vardı:
+       1) markup'taki başlangıç değeri sabit bir ad ("Birebir Seans · ₺450")
+          idi ve gün/saat seçimini hiç yansıtmıyordu;
+       2) onaydan sonra yazılan sonuç mesajı modal kapanıp yeniden
+          açıldığında da DURUYORDU, çünkü kimse geri almıyordu.
+     Çözüm: özet artık SEÇİMDEN türetiliyor ve her değişimde yeniden
+     yazılıyor; sonuç mesajı yalnız onay anında basılıyor, modal her
+     açıldığında özet geri geliyor. */
+  var S = window.FIT_SHELL && window.FIT_SHELL.state;
+  var sumEl = document.getElementById('aptSum');
+  var BOS_METIN = 'Seans türü, gün ve saat seç';
+
+  function ozetYaz(){
+    if(!sumEl) return;
+    var svc  = document.querySelector('#aptSvc input:checked');
+    var day  = document.querySelector('.apt-day.sel');
+    var slot = document.querySelector('.apt-slot.sel');
+    /* Üçü de gerekli: eksik seçimle "özet" basmak, olmayan bir randevuyu
+       varmış gibi göstermek olurdu. */
+    if(!svc || !day || !slot){ sumEl.textContent = BOS_METIN; return; }
+    var ad = (svc.closest('label').querySelector('.si b')||{}).textContent || 'Seans';
+    var fi = (svc.closest('label').querySelector('.sp')||{}).textContent || A.fiyat;
+    var gun = ((day.querySelector('b')||{}).textContent||'').trim() + ' ' +
+              ((day.querySelector('span')||{}).textContent||'').trim();
+    sumEl.textContent = [ad, gun.trim(), slot.textContent.trim(), fi]
+                        .filter(Boolean).join(' · ');
+  }
+
+  /* Seçim üç ayrı yerde değişiyor; üçünü de tek dinleyiciyle yakalıyoruz.
+     Sınıf değişimini sayfanın kendi tıklama işleyicisi yapıyor, biz ondan
+     SONRA okumak için kabarma evresinde dinliyoruz. */
+  ['#aptSvc', '.apt-days', '.apt-slots'].forEach(function(sec){
+    var k = document.querySelector(sec);
+    if(k) k.addEventListener('click', function(){ setTimeout(ozetYaz, 0); });
+  });
+  document.addEventListener('change', function(e){
+    if(e.target && e.target.closest && e.target.closest('#aptSvc')) ozetYaz();
+  });
+
+  /* K6/K8/K9 · paket hakkı — antrenör slug'u başına {kalan,toplam}.
+     Şema Ajan 4 (lead) ile paylaşılıyor: dm_fit_paket_hakki_v1. */
+  var HAKKI_ANAHTAR = 'dm_fit_paket_hakki_v1';
+  function hakkiOku(){
+    try{
+      var d = JSON.parse(localStorage.getItem(HAKKI_ANAHTAR)||'null');
+      if(d && d.surum===1 && d.paketler) return d;
+    }catch(e){}
+    return {surum:1, paketler:{}, guncelleme:new Date().toISOString()};
+  }
+  function hakkiYaz(d){
+    d.guncelleme = new Date().toISOString();
+    try{ localStorage.setItem(HAKKI_ANAHTAR, JSON.stringify(d)); }catch(e){}
+  }
+
+  var confirmBtn = document.getElementById('aptConfirm');
+  if(S && confirmBtn){
+    confirmBtn.addEventListener('click', function(){
+      /* giriş yapılmamışsa BURADA hiçbir kayıt yazılmaz; giriş kapısı
+         aşağıdaki SAYFA JS bloğundaki ikinci dinleyicide açılıyor. Eskiden
+         bu dinleyici capture fazında önce çalışıp randevuyu SESSİZCE
+         yazıyordu — giriş kapısı sonradan açılsa bile kayıt kalıyordu. */
+      if(!document.body.classList.contains('is-auth')) return;
+      var slot = document.querySelector('.apt-slot.sel');
+      var day  = document.querySelector('.apt-day.sel');
+      if(!slot || !day) return;                    /* eksik seçimde onay yok */
+      var svc = document.querySelector('#aptSvc input:checked');
+      var ad  = svc ? svc.closest('label').querySelector('.si b').textContent : 'Seans';
+      var fi  = svc ? svc.closest('label').querySelector('.sp').textContent : A.fiyat;
+      var kurus = svc ? (parseInt(svc.getAttribute('data-price'), 10) || 0) * 100 : 0;
+
+      /* K6 — ücretli hizmet: önce paket hakkından düş, hakkı yoksa
+         kayıtlı karttan tahsil et ve faturaya düşür (K8). "Aylık Paket"in
+         kendisi bir hak alımı olduğu için hakkından değil kartından
+         tahsil edilir; onayladığı randevu paketin ilk kullanımıdır. */
+      var H = hakkiOku(), hak = H.paketler[slug], hakUlandi = false, odemeNotu = '';
+      if(kurus > 0 && ad !== 'Aylık Paket' && hak && hak.kalan > 0){
+        hak.kalan -= 1;
+        hakkiYaz(H);
+        hakUlandi = true;
+      }
+
+      S.randevuAl({antrenor:A.ad, slug:slug, hizmet:ad, fiyat:fi,
+                   tarih:((day.querySelector('span')||{}).textContent||'').trim()+' '+((day.querySelector('b')||{}).textContent||'').trim(),
+                   saat: slot.textContent.trim()});
+
+      if(kurus > 0){
+        if(hakUlandi){
+          odemeNotu = 'Paket hakkından düşüldü — ' + slug + ' paketinde ' + H.paketler[slug].kalan + ' seans hakkın kaldı.';
+        } else {
+          if(window.FIT_FATURA){
+            FIT_FATURA.ekle({
+              tur:'antrenor',
+              donem: ad === 'Aylık Paket' ? '4 seans / ay' : 'Tek seferlik',
+              konu: 'Antrenör ' + (ad==='Aylık Paket' ? 'paketi' : 'seansı') + ' — ' + A.ad + ' · ' + ad,
+              kalem: [[ 'Antrenör ' + (ad==='Aylık Paket'?'paketi':'seansı') + ' — ' + A.ad, ad, 1, kurus ]]
+            });
+          }
+          if(ad === 'Aylık Paket'){
+            H.paketler[slug] = { kalan: 3, toplam: 4 };  /* bu randevu ilk seansı kullanır */
+            hakkiYaz(H);
+          }
+          odemeNotu = fi + ' kayıtlı kartından (Visa •••• 4242) tahsil edildi ve faturana düştü.';
+        }
+      } else {
+        odemeNotu = 'Tanışma görüşmesi ücretsizdir.';
+      }
+
+      if(sumEl) sumEl.textContent = 'Randevu isteğin alındı — Fit Planım › Randevularım';
+      var succTxt = document.getElementById('aptSuccessTxt');
+      if(succTxt) succTxt.textContent = 'Antrenörüne bildirim gitti; onay bekliyor. ' + odemeNotu;
+      var aForm = document.getElementById('aptForm'), aSucc = document.getElementById('aptSuccess');
+      if(aForm) aForm.hidden = true;
+      if(aSucc) aSucc.hidden = false;
+    }, true);
+  }
+  var aptSuccessOk = document.getElementById('aptSuccessOk');
+  if(aptSuccessOk){
+    aptSuccessOk.addEventListener('click', function(){
+      var m = document.getElementById('aptModal');
+      if(window.__aptClose) window.__aptClose();
+      else if(m){ m.classList.remove('show'); document.getElementById('aptOverlay').classList.remove('show'); document.body.style.overflow=''; }
+    });
+  }
+
+  /* Modal her açıldığında özet, sonuç mesajından SEÇİME geri döner. */
+  document.addEventListener('click', function(e){
+    var t = e.target && e.target.closest && e.target.closest('[data-modal="aptModal"],[data-fm-open="aptModal"]');
+    if(t) setTimeout(ozetYaz, 0);
+  });
+
+  /* Sayfanın İKİNCİ bir özet yazıcısı daha vardı (`refreshSum`/`svcInfo`,
+     aşağıdaki blokta) ve yalnız "tür · fiyat" basıyordu — gün ve saati hiç
+     görmüyordu. İki yazıcı aynı kutuyu paylaşınca hangisi son yazarsa o
+     kalıyordu. Motor tek yerde toplandı; öteki blok artık buna çağırıyor. */
+  window.__aptOzet = ozetYaz;
+  ozetYaz();
+})();
+</script>
+<script>
+/* ===== SAYFA JS — ANTRENÖR DETAY ===== */
+(function(){
+ /* SEKME MOTORU KALDIRILDI — ortak bileşen (fit-shell.js · [data-fit-tabs])
+    devraldı. Eskisi sekme değişiminde window.scrollTo({behavior:'smooth'})
+    çağırıyordu; B1 ölçüm sözleşmesi "içerik kapsayıcısının boundingBox.top
+    değişmiyor" diyor, o zıplama bilerek kaldırıldı. */
+ // CTA'lar → giriş kapısı (logged-out)
+  function gate(title,desc){
+    if(window.__lgGate){var ok=window.__lgGate(title,desc);return ok;}
+    return false;
+  }
+  /* R9 · `ctaClient` listeden çıkarıldı: "Danışan Ol" düğmesi hero'daki
+     koyu kutuyla birlikte kalktı (referansın `.pf-actions`ında karşılığı
+     yok — orada da birincil düğme + Mesaj + Paylaş var). Eylem sayfadan
+     KAYBOLMADI: alt CTA bandındaki `bandClient` aynı işi yapıyor. */
+  [['bandClient','Danışan olmak için giriş yap','Selin Aksoy ile çalışmaya başlamak için DadaFit hesabına giriş yapman gerekiyor.'],
+   ['ctaMsg','Mesaj göndermek için giriş yap','Antrenörüne mesaj göndermek için DadaFit hesabına giriş yapman gerekiyor.'],
+   ['bandMsg','Mesaj göndermek için giriş yap','Antrenörüne mesaj göndermek için DadaFit hesabına giriş yapman gerekiyor.']
+  ].forEach(function(it){
+    var el=document.getElementById(it[0]);
+    if(!el)return;
+    el.addEventListener('click',function(e){
+      if(document.body.classList.contains('is-auth'))return; // giriş yapılmışsa gerçek akış (mockup: pas geç)
+      e.preventDefault();
+      gate(it[1],it[2]);
+    });
+  });
+
+ // kaydet ikonu — EK GÖREV B: artık `[data-kaydet]` sözleşmesiyle GERÇEKTEN
+ // kaydediyor (assets/js/fit-kayit.js, tür=antrenor). data-* alanları
+ // slug'a göre yukarıdaki FAZ 4 bloğunda dolduruluyor; ikon/aria-pressed
+ // durumu FIT_KAYIT'in kendi delegasyonundan geliyor, burada elle
+ // dokunulmaz (sitedeki 34 kaydet düğmesiyle aynı desen, giriş şartı yok).
+
+ // "daha fazla yorum" ARTIK KLONLAMIYOR: liste `FIT_YORUM`dan gelir ve
+ // düğmeyi modülün kendi sürücüsü basar (fit-yorum-veri.js). Eski blok
+ // ilk üç kartı kopyalayıp aynı yorumu iki kez gösteriyordu.
+
+  /* ---- RANDEVU MODALI (seans slot seçici) ---- */
+  var aptModal=document.getElementById('aptModal'),aptOv=document.getElementById('aptOverlay');
+  if(aptModal){
+    /* R15 · ÖZET TEK YERDEN — yukarıdaki `window.__aptOzet`.
+       Eski `svcInfo()` yalnız tür ve fiyatı okuyordu; şartname gün ve saati
+       de istiyor ve seçim eksikken "seç" demesini istiyor. Fonksiyon
+       silinmedi, YÖNLENDİRİLDİ ki modal açılışındaki çağrı zinciri kırılmasın. */
+    function refreshSum(){ if(window.__aptOzet) window.__aptOzet(); }
+
+    /* ---- R8 · MODAL AÇ/KAPA ORTAK İSKELETE DEVREDİLDİ ----------------
+       ÖNCE (ölçüldü, localhost:8811 · Playwright):
+         Esc ⛔ (keydown dinleyicisi hiç yoktu) · dışarı tıklama ⛔ ·
+         odak modala hiç GİRMİYORDU (açılışta `#ctaBook`ta kalıyordu) ·
+         odak tuzağı ⛔ (30 Tab'ın 16'sı panelin dışına düşüyordu) ·
+         odak dönüşü ⛔ (kapanışta `#aptClose`ta kalıyordu).
+       KÖK NEDEN: `.apt-modal{position:fixed;inset:0}` bütün pencereyi
+       kaplayıp `#aptOverlay`in üstünde duruyor; buradaki
+       `aptOv.addEventListener('click',closeApt)` satırı çalışıyordu ama
+       olay overlay'e HİÇ ulaşmıyordu (Playwright: "#aptModal … subtree
+       intercepts pointer events"). Dinleyiciyi overlay'e bağlamak
+       çözmüyor — FIT_MODAL bu yüzden KABA bağlanıyor.
+       Altı borcun hepsi tek yerde: assets/js/fit-modal.js (AJAN-C). */
+    /* R9 · buğulu banner — görsel `.cp-banner`dan okunur, tek kaynak kalsın */
+  (function(){
+    var ser = document.querySelector('.cp-banner');
+    var top = document.querySelector('.cp-top');
+    if (!ser || !top) return;
+    var bi = getComputedStyle(ser).backgroundImage;
+    if (bi && bi !== 'none') top.style.setProperty('--cp-bg', bi);
+  })();
+
+  var aptH=(window.FIT_MODAL&&FIT_MODAL.kur({
+      kap:aptModal, panel:'.apt-panel', ortu:aptOv, kapat:'#aptClose',
+      /* K6/K9 · modal her açıldığında sonuç ekranından seçim ekranına
+         dönülür — yoksa bir sonraki açılışta hâlâ "Randevun alındı"
+         görünürdü. Kapanışta değil AÇILIŞTA sıfırlanır ki kapanma
+         animasyonu sırasında içerik göz önünde değişmesin. */
+      acilinca:function(){
+        if(window.__bnUpdate)window.__bnUpdate();
+        var aForm=document.getElementById('aptForm'), aSucc=document.getElementById('aptSuccess');
+        if(aForm) aForm.hidden = false;
+        if(aSucc) aSucc.hidden = true;
+      },
+      kapaninca:function(){ if(window.__bnUpdate)window.__bnUpdate(); }
+    }))||null;
+    /* iskelet yoksa sayfa patlamasın — eski davranışa düşer */
+    function openApt(tetik){refreshSum();
+      if(aptH){aptH.ac(tetik);return;}
+      aptModal.classList.add('show');aptOv.classList.add('show');document.body.style.overflow='hidden';if(window.__bnUpdate)window.__bnUpdate();}
+    function closeApt(){
+      if(aptH){aptH.kapat();return;}
+      aptModal.classList.remove('show');aptOv.classList.remove('show');document.body.style.overflow='';if(window.__bnUpdate)window.__bnUpdate();}
+    window.__aptClose = closeApt;
+    var ctaBook=document.getElementById('ctaBook');
+    if(ctaBook)ctaBook.addEventListener('click',function(){openApt(ctaBook);});
+
+    /* ---- F-A2 · ?randevu=1 [&paket=<hizmet adı>] ----
+       Ölçülen kusur: hesabım ve Planım yüzeylerindeki "Randevu Al" düğmeleri
+       randevu ALMA akışına değil randevu LİSTESİNE gidiyordu; etiket ile hedef
+       örtüşmüyordu. Modal İKİNCİ BİR SAYFAYA KOPYALANMADI — tek kaynak burada
+       kaldı, dışarıdan adresle açılabilir hâle getirildi. Deponun kendi
+       parametre deyimi izlendi (`?flw=1` · `?lg=1` · `?empty=1`).
+       `&paket=` hizmeti önceden seçer; eşleşme `.svc-book`taki gibi
+       METİN üzerinden yapılır, yeni kimlik alanı uydurulmadı. */
+    (function(){
+      var qs=new URLSearchParams(location.search);
+      if(qs.get('randevu')!=='1')return;
+      var istenen=(qs.get('paket')||'').trim();
+      if(istenen){
+        document.querySelectorAll('#aptSvc label').forEach(function(lb){
+          var b=lb.querySelector('.si b');
+          if(b && b.textContent.trim()===istenen){ lb.querySelector('input').checked=true; }
+        });
+      }
+      /* kabuk katmanları kurulduktan sonra aç — odak tuzağı hazır olsun */
+      setTimeout(function(){ openApt(ctaBook||null); },300);
+    })();
+    /* R9 · "Seanslar" kartlarındaki Randevu düğmeleri de aynı modali açıyor;
+       kartın seansı modalde ÖNCEDEN seçili geliyor (kart adı ↔ modal satırı
+       adı birebir aynı, eşleşme metin üzerinden). */
+    document.querySelectorAll('.svc-book').forEach(function(bk){
+      bk.addEventListener('click',function(){
+        var ad=bk.getAttribute('data-svc');
+        document.querySelectorAll('#aptSvc label').forEach(function(lb){
+          var b=lb.querySelector('.si b');
+          if(b && b.textContent.trim()===ad){ lb.querySelector('input').checked=true; }
+        });
+        openApt(bk);
+      });
+    });
+    document.querySelectorAll('#aptSvc input').forEach(function(i){i.addEventListener('change',refreshSum);});
+    document.querySelectorAll('.apt-day').forEach(function(d){
+      d.addEventListener('click',function(){
+        document.querySelectorAll('.apt-day').forEach(function(x){x.classList.remove('sel');});
+        d.classList.add('sel');
+      });
+    });
+    document.querySelectorAll('.apt-slot').forEach(function(sl){
+      sl.addEventListener('click',function(){
+        document.querySelectorAll('.apt-slot').forEach(function(x){x.classList.remove('sel');});
+        sl.classList.add('sel');
+      });
+    });
+    document.getElementById('aptConfirm').addEventListener('click',function(){
+      var slot=document.querySelector('.apt-slot.sel');
+      if(!slot){ // saat seçilmeden onay → kullanıcıyı saat ızgarasına yönlendir
+        var slots=aptModal.querySelector('.apt-slots');
+        if(slots)slots.scrollIntoView({behavior:'smooth',block:'center'});
+        return;
+      }
+ // logged-out: randevuyu tamamlamak için Danışan Ol ile aynı giriş kapısı
+      if(!document.body.classList.contains('is-auth')){
+        closeApt();
+        gate('Randevuyu tamamlamak için giriş yap','Seçtiğin seans ve saati onaylamak için DadaFit hesabına giriş yapman gerekiyor. Randevu seçimin korunur.');
+      }
+    });
+    if(location.search.indexOf('randevu=1')>-1)openApt();
+  }
+})();
+</script>
+
+
+<!-- DADAFIT-ACTIVE-NAV — aktif nav item boş-tık feedback'i (aria-current + self smooth-scroll) -->
+
+
+
+
+
+<!-- YORUM SÖZLEŞMESİ — modül + bu sayfanın slug'ı -->
+<script src="assets/js/fit-yorum-veri.js"></script>
+<script>
+(function(){
+  var kap = document.querySelector('[data-fit-yorum]');
+  if(!kap) return;
+  var sl = new URLSearchParams(location.search).get('slug');
+  if(sl) kap.setAttribute('data-yorum-slug', sl);
+})();
+</script>
+
+</body>
+</html>

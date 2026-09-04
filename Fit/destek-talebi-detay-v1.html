@@ -1,0 +1,1493 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8" />
+<meta name="robots" content="noindex, nofollow" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Destek Talebi Detayı — Yazışma ve Talep Durumu | DadaFit</title>
+<meta name="description" content="Açtığın DadaFit destek talebinin numarası, durumu, açılış tarihi ve destek ekibiyle yazışmanın tamamı. Yanıt yazabilir, işin bittiyse talebi kapatabilirsin." />
+<link rel="icon" type="image/svg+xml" href="../kanon/varlik/dadafit-isaret.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="../kanon/varlik/dadafit-isaret-32.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="../kanon/varlik/dadafit-isaret-180.png" />
+<!-- FontAwesome 6.5.2 (kilitli ikon seti) -->
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+      integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+      crossorigin="anonymous" referrerpolicy="no-referrer" />
+<!-- DadaFit ortak kabuk (TEK KAYNAK — token, header, footer, kart/çip/banner kitleri) -->
+<!-- KANON · yukleme sirasi: tokenlar -> markalar/fit (bilesenler YUKLENMEZ) -->
+<link rel="stylesheet" href="../kanon/tokenlar.css" />
+<link rel="stylesheet" href="../kanon/markalar/fit.css" />
+<link rel="stylesheet" href="assets/css/fit-shell.css" />
+<link rel="stylesheet" href="assets/css/fit-mesaj.css" />
+<style>
+/* =====================================================================
+ SAYFA CSS — DESTEK TALEBİ DETAYI
+ ---------------------------------------------------------------------
+ Kabuktan gelen ve BURADA TEKRAR TANIMLANMAYAN şeyler: token'lar
+ (--fit*, --fit*, --line, --radius-*, --sh-*), .wrap, .btn/.btn-primary/
+ .btn-ghost, .lib-top banner + .lib-crumb breadcrumb, .lib-stats, .eyebrow,
+ .chips, .sec, .hr-note,
+
+ Burada tanımlananlar iki gruba ayrılır:
+ (A) TALEBE ÖZGÜ (.tk-*) — yazışma dizisi, durum rozeti, yan ray, onay
+     penceresi. Bu sayfaya (ve kardeşi destek-talepleri-v1'e) ait.
+ (B) FORM KİTİ (.fk-*) — GEÇİCİ KOPYA. Bu kit şu an kabukta DEĞİL; birebir
+     aynısı iletisim-v1.html'in kendi <style>'ında duruyor. Buraya yeniden
+     yazmak zorunda kaldım çünkü ajan kabuk dosyalarına yazmıyor. Raporda
+     "kabuğa taşınmalı" diye bildirildi; kabuğa girdiği gün bu blok silinir.
+     Kopyalanan seçiciler: .fk-field .fk-label .fk-textarea .fk-help .fk-err
+     .fk-summary .fk-count — davranışları iletisim-v1 ile aynı tutuldu ki
+     iki sayfada form dili ayrışmasın.
+ ===================================================================== */
+
+/* ---- BANNER görseli (kabuğun .lib-top kiti; sayfa yalnız görselini bildirir) ---- */
+.lib-top{--lib-img:url('https://images.unsplash.com/photo-1553877522-43269d4ea984?w=1680&q=80&auto=format&fit=crop&sat=-22');--lib-pos:center 38%}
+
+/* ---- talep kimlik satırı (banner içinde, h1'in altında) ---- */
+.tk-idline{display:flex;align-items:center;flex-wrap:wrap;gap:10px;margin:0 0 14px}
+.tk-no{font-size:13px;font-weight:800;letter-spacing:.04em;color:#fff;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.26);padding:6px 12px;border-radius:var(--radius-sm)}
+
+/* ---- DÖRT DURUM, ÜÇ ROZET — destek kanonu §1.2 --------------------
+ Her rozet üç kanaldan okunur: (1) İKON, (2) METİN, (3) destekleyici renk.
+ Renk körü ya da tek renkli ekranda da dört durumun ayrımı okunabilir kalır —
+ çünkü ayrım rozetin RENGİNDE değil ETİKETİNDE taşınır: `acik` ile
+ `yanit-bekleyen` aynı `wait` varyantını paylaşır, ikisini "Açık talep" /
+ "Yanıt bekleyen" dizgisi ve ikonu (fa-inbox / fa-reply) ayırır.
+
+ SINIF ADLARI VE RENKLER KARDEŞ SAYFADAN (destek-v1.html#taleplerim)
+ BİREBİR ALINDI — aynı talep listede ve detayda aynı rozetle görünsün diye.
+ 🔴 Renk kanondan GELMEZ (kanon §1.2 token şerhi); değerler bu deponun kendi
+ ölçülmüş çiftleridir, yeni renk icat edilmedi.
+ Kontrast (AA normal metin eşiği 4.5:1):
+   wait  --c-petrol #006072 on #e6f1f4            ≈ 6.3:1
+   ok    --fit-deep #007a3d on --fit-tint #eaf6ef ≈ 4.9:1
+   off   --slate-2  #56514a on #f1f1f1            ≈ 7.0:1 */
+.tk-badge{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:700;padding:6px 12px;border-radius:var(--radius-sm);white-space:nowrap}
+/* [hidden] açıkça yazılmalı: UA'nın [hidden]{display:none} kuralı (0,0,1)
+   .tk-badge{display:inline-flex} (0,1,0) tarafından eziliyor — .tk-modal'la
+   aynı tuzak. Rozet yalnız "talep bulunamadı" durumunda gizlenir. */
+.tk-badge[hidden]{display:none}
+.tk-badge i{font-size:10.5px}
+.st-wait{background:#e6f1f4;border:1px solid #cadfe5;color:var(--c-petrol)}
+.st-ok{background:var(--fit-tint);border:1px solid var(--fit-line);color:var(--fit-deep)}
+.st-off{background:#f1f1f1;border:1px solid #e2e2e2;color:var(--slate-2)}
+
+/* ---- YERLEŞİM: yazışma + 340px yan ray (iletisim-v1 ile aynı ölçü) ---- */
+.tk-sec{padding:var(--sec-pad) 0 var(--sec-pad);background:var(--bg-cream)}
+.tk-layout{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:30px;align-items:start}
+.tk-main{min-width:0}
+.tk-side{display:flex;flex-direction:column;gap:18px;min-width:0}
+
+/* ---- KART KİTİ — `.tk-card` KALKTI, KİTE ÇEKİLDİ ---------------------
+ ÖLÇÜLEN SAPMA (docs/fit-kit.md §2): bu sayfa tek ekranda İKİ kart sözlüğü
+ taşıyordu — kabuğun `.pnl-card` kiti (2 kart) ve sayfaya özel `.tk-card`
+ (5 kart). Kabuk değerleri (beyaz zemin · 1px --line · 16px yarıçap ·
+ --sh-sm) zaten aynıydı; sapan şey İÇ DOLGU ve BAŞLIK ölçüsüydü:
+
+   .tk-card         dolgu 26px (yan rayda 22px) · başlık 18px (rayda 15px)
+   .pnl-card (kit)  dolgu 0 — `.pc-head` 18px 22px · `.pc-body` 22px
+                    başlık `.pc-title` 16px/700
+
+ Beş kart `.pnl-card` + `.pc-head` + `.pc-body`ye geçirildi; sayfada artık
+ tek kart sözlüğü var ve dolgu/başlık değerleri kitten okunuyor.
+ Kalan tek sayfa kuralı, kabukta karşılığı olmayan `.pc-head` sayacı: */
+.pnl-card .pc-head .cnt{font-size:12.5px;font-weight:600;color:var(--muted);white-space:nowrap}
+/* kabuğun `.pc-title i` kuralı --fit veriyor; bu sayfadaki kart ikonları
+   kitin `.pnl-card` başlık ikonu ölçüsünde ve --fit-deep tonunda kalsın
+   (beyazda 5.45:1; --fit 3.54:1 ile AA altında). */
+.pnl-card .pc-title i{color:var(--fit-deep)}
+
+/* ---- YAZIŞMA DİZİSİ ---------------------------------------------------
+ Bu bir SOHBET BOTU DEĞİL (belge §21: yapay zekâ sohbet asistanı eklenmez).
+ Geçmişte olmuş bir yazışmanın dökümü + tek bir yanıt alanıdır; canlı
+ bağlantı, yazıyor göstergesi, otomatik cevap yok. */
+/* §Ö19 · §Ö20 · §Ö21 (Dalga 4, 2026-08-29) — YAZIŞMA KİTİ `.bub`e GEÇTİ.
+   ÖLÇÜLEN SAPMA — ve bir ölçüm düzeltmesi: eski `.tk-msg` gönderen ayrımını
+   ZATEN veriyordu (`is-me` sağa dönüyor ve `--fit-tint` zemin alıyordu); ilk
+   sondam `li` sarmalayıcısını okuduğu için "ayrım yok" demişti, `.bd`yi
+   okumamıştı. §U3 gereği kayda geçti. Gerçek sapma ÖLÇÜLERDE: eski kit
+   max-width 82% · dolgu `15px 17px` · 14px idi; şartname 68% · `10px 14px` ·
+   13.5px bağlıyor. Avatar da kalktı — §Ö19'un kitinde yok.
+   Kit artık kabukta (`fit-shell.css` → KANON KART KİTİ): `.bub` max-width 68%
+   · dolgu `10px 14px` · 13.5px/1.5 · radius-md, karşı köşe radius-sm;
+   `.bub.in` solda `--bg`+1px `--line`, `.bub.out` sağda marka fısıltısı;
+   `.bt` 11.5px `--muted`, giden mesajda derin marka tonu.
+   ⚠ `is-sys` (sistem notu) şartnamede YOK — gönderen mesajı değil, durum
+   kaydıdır. Ortada, nötr basılır; kayda geçti, sorulacak. */
+.bub.is-sys{align-self:center;background:var(--bg);border:1px dashed var(--line);color:var(--muted);font-size:12.5px;text-align:center;max-width:80%}
+.bub p{margin:0}
+.bub p+p{margin-top:8px}
+/* ek dosyası satırı balonun içinde kalır */
+.bub p.msg-ek{display:flex;align-items:center;gap:8px;margin-top:10px;padding-top:9px;border-top:1px solid var(--line);font-size:12.5px;font-weight:600}
+.bub p.msg-ek i{font-size:12px;flex:none}
+
+/* yeni eklenen mesaj göze çarpsın */
+@keyframes tkIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.bub.is-new{animation:tkIn .3s var(--ease)}
+@media (prefers-reduced-motion:reduce){.bub.is-new{animation:none}}
+
+/* ---- YANIT ALANI ---- */
+.tk-reply{margin-top:22px}
+.tk-reply-foot{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-top:18px}
+.tk-reply-foot .note{font-size:12.5px;color:var(--muted);font-weight:500;max-width:320px}
+
+/* kapalı talep bildirimi — yanıt formunun yerine geçer */
+.tk-closed{display:none;align-items:flex-start;gap:14px;background:var(--bg);border:1px dashed var(--line);border-radius:var(--radius-lg);padding:22px}
+.tk-closed.show{display:flex}
+.tk-closed>i{flex:none;width:42px;height:42px;border-radius:var(--radius-md);background:#ededed;color:#474747;display:grid;place-items:center;font-size:16px}
+/* ⚠ ÖLÇÜLDÜ: bu kural önce `.tk-closed b` idi ve GÖVDEDEKİ `<b>`leri de
+   yakalıyordu — paragrafın içindeki vurgu `display:block` alıp cümleyi üç
+   parçaya bölüyordu (render'da görüldü, ölçüyle değil GÖZLE: ders §19).
+   Seçici başlık `<b>`sine daraltıldı; değerler değişmedi. */
+.tk-closed>div>b{display:block;font-size:15px;color:var(--slate);margin-bottom:5px}
+.tk-closed p{font-size:13.5px;color:var(--muted);font-weight:500;line-height:1.6;margin:0 0 14px}
+.tk-closed .row{display:flex;gap:10px;flex-wrap:wrap}
+.tk-closed .row .btn[hidden]{display:none}
+
+/* ---- YAN RAY: künye satırları ---- */
+.tk-meta{display:flex;flex-direction:column}
+.tk-meta div{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;padding:11px 0;border-bottom:1px solid var(--line)}
+.tk-meta div:first-child{padding-top:0}
+.tk-meta div:last-child{border-bottom:none;padding-bottom:0}
+.tk-meta dt{font-size:12.5px;color:var(--muted);font-weight:600;flex:none}
+.tk-meta dd{margin:0;font-size:13.5px;color:var(--slate);font-weight:700;text-align:right;min-width:0;overflow-wrap:anywhere}
+
+/* ---- YAN RAY: diğer talepler ---- */
+.tk-others{display:flex;flex-direction:column;gap:9px}
+.tk-other{display:flex;align-items:flex-start;gap:11px;border:1px solid var(--line);border-radius:var(--radius-md);padding:12px 13px;transition:.18s var(--ease)}
+.tk-other:hover{border-color:var(--fit);background:var(--fit-tint)}
+.tk-other[aria-current="page"]{border-color:var(--fit);background:var(--fit-tint);cursor:default}
+.tk-other>i{flex:none;font-size:12px;color:var(--fit-deep);margin-top:3px}
+.tk-other .ot{min-width:0}
+.tk-other .ot b{display:block;font-size:13px;color:var(--slate);line-height:1.4}
+/* ÖLÇÜLDÜ: --muted (#717171) açık olan talebin --fit-tint zemininde 4.4:1,
+   AA normal metin eşiği 4.5:1'in altında. --slate-2 (#56514a) aynı zeminde
+   7.2:1 — kitin ikincil metin rengi, yeni renk üretilmedi. */
+.tk-other .ot span{display:block;font-size:11.5px;color:var(--slate-2);font-weight:600;margin-top:4px;letter-spacing:.03em}
+
+/* ---- YAN RAY: kart altı açıklama satırı ------------------------------
+ ⚠ DERS D-3: bu satır iki yerde yaşıyordu — bir kuralda (`.tk-close-card p`)
+ ve bir de "Beklerken" kartında SATIR İÇİ `style="…"` olarak, aynı dört
+ değerle. Satır içi yazım kuralı sessizce ezer ve ikinci kopya kimseye
+ görünmeden ayrışır. Tek sınıfa alındı; DEĞERLER DEĞİŞMEDİ. Eski eş anlamlı
+ seçici (`.tk-close-card p`) silindi — kart `.tk-act-card` oldu, o seçici
+ hiçbir şeyi eşlemiyordu ve ölü CSS bırakmak ikinci bir sözlük demektir. */
+.tk-card-note{font-size:13px;color:var(--muted);font-weight:500;line-height:1.6;margin:0 0 14px}
+
+/* ---- YAN RAY: talep işlemleri kartı (kapat / yeniden aç) ---- */
+#tkActCard .btn{width:100%}
+#tkActCard .btn+.btn{margin-top:10px}
+/* [hidden] AÇIKÇA yazılmalı: UA'nın [hidden]{display:none} kuralı (0,0,1)
+   kabuğun .btn{display:inline-flex} kuralı (0,1,0) tarafından eziliyor —
+   .tk-modal ve .tk-badge ile aynı tuzak, bu dosyada üçüncü kez. */
+#tkActCard .btn[hidden]{display:none}
+
+/* ---- dürüstlük şeridi: kabuk `.hr-note` kiti, yalnız payı bildiriliyor ----
+   Kabuğun 34px `margin-top`u gövdenin ilk çocuğunda gereksiz. */
+.mk-serit{margin-top:0;margin-bottom:22px}
+
+/* ---- demo notu (kaynak deseni: iletisim-v1 .demo-note) ---- */
+.demo-note{font-size:12px;color:var(--muted);font-weight:500;line-height:1.55;margin-top:14px;display:flex;gap:8px}
+.demo-note i{margin-top:2px;flex:none;color:var(--fit-deep)}
+
+/* ---- ekranda görünmeyen ama okunan canlı bölge ---- */
+.tk-sr{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+
+/* =====================================================================
+ (B) FORM KİTİ — GEÇİCİ KOPYA (yukarıdaki nota bak). Kabuğa taşınacak.
+ ===================================================================== */
+.fk-field{margin-bottom:0}
+.fk-label{display:flex;align-items:baseline;gap:7px;font-size:14px;font-weight:700;color:var(--slate);margin-bottom:9px}
+/* Zorunlu yıldızı --fit (#009d4f, beyazda 3.54:1) yerine --fit-ink
+   (#006a35, beyazda 6.75:1) — iletisim-v1'de ölçülen aynı düzeltme. */
+.fk-label .req{color:var(--fit-ink);font-weight:700}
+.fk-label .fk-count{margin-left:auto;font-size:11.5px;color:var(--muted);font-weight:500;letter-spacing:.02em}
+.fk-textarea{
+  width:100%;font-family:inherit;font-size:14px;font-weight:500;color:var(--slate);
+  background:var(--bg);border:1px solid var(--line);border-radius:var(--radius-md);
+  padding:13px 15px;outline:none;min-height:132px;resize:vertical;line-height:1.6;
+  transition:border-color .2s var(--ease),box-shadow .2s var(--ease);
+}
+.fk-textarea::placeholder{color:#6f6f6f}   /* --bg #f9f9f9 üstünde 4.77:1 */
+.fk-textarea:focus{border-color:var(--fit);box-shadow:0 0 0 3px color-mix(in srgb, var(--marka) 14%, transparent)}
+.fk-help{display:flex;align-items:flex-start;gap:7px;font-size:12.5px;color:var(--muted);font-weight:500;margin-top:8px;line-height:1.5}
+.fk-help i{color:var(--fit);font-size:12px;margin-top:2px;flex:none}
+
+/* ---- EK DOSYA (kanon §8.1: MESAJ başına TEK dosya, alan adı `ek`) ----
+   Kardeş sayfa destek-v1.html#taleplerim'in kitiyle birebir aynı. */
+.fk-file{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:14px}
+.fk-file-btn{display:inline-flex;align-items:center;gap:9px;font-size:13.5px;font-weight:700;color:var(--slate);
+  background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-md);padding:11px 16px;cursor:pointer;transition:.18s var(--ease)}
+.fk-file-btn:hover{border-color:var(--fit);color:var(--fit-deep)}
+.fk-file input[type=file]:focus-visible+.fk-file-btn{outline:3px solid var(--fit-wash);outline-offset:2px}
+.fk-file-name{font-size:12.5px;color:var(--slate-2);font-weight:600;min-width:0;overflow-wrap:anywhere}
+.fk-file-clear{border:none;background:none;padding:0;color:var(--fit-ink);font-size:12.5px;font-weight:700;cursor:pointer;
+  font-family:inherit;text-decoration:underline;text-underline-offset:2px}
+.fk-file-clear[hidden]{display:none}
+
+/* HATA GÖSTERİMİ (belge §20: hata YALNIZ RENKLE anlatılmaz) --------------
+ Üç kanal birden: (1) alanın altında ikonlu METİN, (2) aria-invalid +
+ aria-describedby ile ekran okuyucuya, (3) formun başında role="alert"
+ taşıyan özet. Kenarlık rengi yalnız DESTEKLEYİCİ sinyaldir.
+ Kontrast: #b3261e on #fdf7f6 ≈ 6.4:1 · #8c1d18 on #fdecea ≈ 7.97:1. */
+.fk-err{display:flex;align-items:flex-start;gap:7px;margin-top:8px;font-size:12.5px;font-weight:600;color:#b3261e;line-height:1.45}
+.fk-err i{font-size:12px;margin-top:2px;flex:none}
+.fk-err[hidden]{display:none}
+.fk-textarea.is-bad{border-color:#b3261e;background:#fdf7f6}
+.fk-textarea.is-bad:focus{border-color:#b3261e;box-shadow:0 0 0 3px rgba(179,38,30,.14)}
+.fk-summary{display:flex;align-items:flex-start;gap:9px;margin:0 0 18px;padding:13px 15px;border-radius:var(--radius-md);background:#fdecea;border:1px solid #efc2bd;color:#8c1d18;font-size:13px;font-weight:600;line-height:1.5}
+.fk-summary i{font-size:14px;margin-top:1px;flex:none}
+.fk-summary[hidden]{display:none}
+
+/* =====================================================================
+ ONAY PENCERESİ — "talebi kapat" geri alınamaz bir adım olduğu için
+ doğrudan değil, onaylı yapılır. Kabuğun .fb-modal deseniyle AYNI açılış
+ mekaniği (opacity + visibility geçişi) kullanılıyor ki kabuğun
+ FIT_SHELL.trapFocus() kare yoklaması burada da doğru çalışsın.
+ ===================================================================== */
+.tk-modal{position:fixed;inset:0;z-index:98;display:grid;place-items:center;padding:20px;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .25s var(--ease),visibility .25s}
+/* [hidden] TEK BAŞINA YETMEZ: UA'nın [hidden]{display:none} kuralı (0,0,1)
+   .tk-modal{display:grid} (0,1,0) tarafından eziliyor. Kural açıkça yazılmazsa
+   pencere sayfa açılır açılmaz DOM'da odaklanabilir hâlde duruyor. */
+.tk-modal[hidden]{display:none}
+.tk-modal.show{opacity:1;visibility:visible;pointer-events:auto}
+.tk-modal .sc{position:absolute;inset:0;background:rgba(20,18,12,.55);-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px)}
+.tk-panel{position:relative;z-index:2;width:min(460px,100%);background:var(--paper);border-radius:var(--radius-lg);box-shadow:var(--sh-lg);padding:28px;transform:translateY(14px);transition:transform .25s var(--ease)}
+.tk-modal.show .tk-panel{transform:translateY(0)}
+.tk-panel h2{font-size:20px;margin-bottom:10px}
+.tk-panel p{font-size:14px;color:var(--muted);font-weight:500;line-height:1.6;margin:0 0 22px}
+.tk-panel .row{display:flex;gap:11px;justify-content:flex-end;flex-wrap:wrap}
+.tk-panel .row .btn{padding:13px 22px;font-size:14px}
+.tk-x{position:absolute;top:14px;right:14px;width:38px;height:38px;border-radius:var(--radius-circle);border:1px solid var(--line);background:var(--paper);color:var(--slate);font-size:15px;cursor:pointer;display:grid;place-items:center;transition:.18s var(--ease)}
+.tk-x:hover{background:var(--bg);border-color:var(--slate)}
+.tk-x:focus-visible,.tk-panel .btn:focus-visible{outline:3px solid var(--fit);outline-offset:2px}
+
+/* ===== TABLET (≤1024px) ===== */
+@media (max-width:1024px){
+  .tk-layout{grid-template-columns:1fr}
+  .bub{max-width:88%}
+}
+/* ===== MOBİL (≤640px) ===== */
+@media (max-width:640px){
+  .tk-sec{padding:var(--sec-pad-sm) 0 var(--sec-pad)}
+  .pnl-card .pc-head{padding:16px}
+  .pnl-card .pc-body{padding:16px}
+  .bub{max-width:100%}
+  .tk-idline{gap:8px}
+  .tk-reply-foot{flex-direction:column;align-items:stretch}
+  .tk-reply-foot .btn{width:100%}
+  .tk-reply-foot .note{max-width:none}
+  .tk-panel{padding:22px 18px}
+  .tk-panel .row{flex-direction:column-reverse}
+  .tk-panel .row .btn{width:100%}
+}
+</style>
+<!-- Metin yaslama katmanı (tek kaynak) — sayfa stillerinden SONRA yüklenir,
+     böylece sayfa içi text-align kuralları yaslamayı geri alamaz (HANDOFF §5) -->
+<link rel="stylesheet" href="assets/css/fit-type.css" />
+</head>
+<body data-brand="fit" data-fit-page="destek-talebi-detay">
+
+<!-- KABUK: üst katman (üst bant + header + drawer + alt bar + görüş + çerez) -->
+<div id="fitShellTop"></div>
+
+<main class="page-main" id="pageMain">
+
+<!-- ===== BANNER + BREADCRUMB (kabuğun .lib-top kiti) ================== -->
+<div id="fitPlanTop" data-plan-page="destek-detay" data-plan-title="Destek Talebi"
+     data-plan-sub="Bu talebin bütün yazışması aşağıda, en eskiden en yeniye sıralı."></div>
+
+<!-- §Ö2 · kabuk MODÜL SAYFASI kalıbıdır (§F), banner ailesi (§R) DEĞİL.
+     Eski `.lib-top` banner'ı ve içindeki künye/istatistik şeridi kalktı;
+     künye artık §Ö17'nin "Talep Bilgileri" kartında, tek yerde duruyor. -->
+
+<!-- ===== GÖVDE ======================================================= -->
+<section class="tk-sec">
+  <div class="wrap">
+
+    <!-- ekran okuyucu için canlı bölge: yanıt eklendi / talep kapatıldı -->
+    <p class="tk-sr" id="tkLive" role="status" aria-live="polite"></p>
+
+    <!-- ===== DÜRÜSTLÜK ŞERİDİ (kit §11) — ekranın BAŞINDA, TEK KALEM =====
+         Bu ekranın taşıdığı her şey (yazışma, talep numarası, durum, yanıt
+         kutusu) makettir. İfade tek yerde yaşıyor: kartların içine dağılmış
+         "prototipteki talepler örnektir" satırı buraya toplandı, düğme
+         başına rozet serpilmedi. Kit kalemi `.hr-note` (fit-shell.css). -->
+    <div class="hr-note mk-serit">
+      <i class="fa-solid fa-flask" aria-hidden="true"></i>
+      <p><b>Bu ekran maket: yanıt gönderilmez, kimse dönmez.</b>
+      Aşağıdaki yazışma, talep numarası ve durum örnektir. Yazdığın yanıt yalnız bu sekmede görünür; sayfayı yenilersen kaybolur.</p>
+    </div>
+
+    <div class="tk-layout">
+
+      <!-- ---------- YAZIŞMA ---------- -->
+      <div class="tk-main">
+
+        <!-- §Ö18 · ACİL SAĞLIK DURUMU UYARISI — bu kart İSTEĞE BAĞLI DEĞİLDİR.
+             Destek kanalı acil durumlar için kullanılmaz; §Ö17 onu sıranın
+             BİRİNCİSİ yapar, yani üye yazışmayı okumadan önce görür. -->
+        <div class="pnl-card warn-card" id="tkAcil">
+          <div class="pc-head">
+            <div>
+              <h2 class="pc-title"><i class="fa-solid fa-triangle-exclamation"></i> Acil sağlık durumu mu?</h2>
+              <p>Destek kanalı acil durumlar için kullanılmaz.</p>
+            </div>
+          </div>
+          <div class="pc-body">
+            <p class="fk-help"><i class="fa-solid fa-circle-info" aria-hidden="true"></i> <span>Göğüs ağrısı, nefes darlığı, baygınlık, ani ve şiddetli ağrı gibi bir durumda <b>112</b>'yi ara ya da en yakın acil servise başvur. Destek ekibi sağlık danışmanlığı vermez ve mesajları anlık olarak izlemez.</span></p>
+          </div>
+        </div>
+
+        <!-- §Ö17 · kart sırası ① acil uyarı ② TALEP BİLGİLERİ ③ Yazışma.
+             Kart yan sütundan buraya taşındı: şartname sırayı DOM üzerinde
+             bağlıyor ve künye, yazışmadan önce okunmalı. -->
+        <div class="pnl-card" id="tkInfoCard">
+          <div class="pc-head">
+            <div><h2 class="pc-title"><i class="fa-solid fa-file-lines"></i> Talep Bilgileri</h2></div>
+          </div>
+          <div class="pc-body">
+            <dl class="tk-meta">
+            <div><dt>Talep numarası</dt><dd id="mNo">DF-2026-K7WQ9M</dd></div>
+            <div><dt>Durum</dt><dd><span class="pstat ok" id="mBadge">Çözülen</span></dd></div>
+            <div><dt>Konu</dt><dd id="mKonu">DadaFit Pro ve ödeme</dd></div>
+            <div><dt>Açılış</dt><dd><time id="mOpen" datetime="2026-08-12">12 Ağustos 2026, 14:32</time></dd></div>
+            <div><dt>Son hareket</dt><dd><time id="mLast" datetime="2026-08-14">14 Ağustos 2026, 09:05</time></dd></div>
+            <div><dt>Mesaj</dt><dd id="mCount">4</dd></div>
+            <div><dt>Kanal</dt><dd id="mKanal">Web · Destek Taleplerim</dd></div>
+          </dl>
+          </div>
+        </div>
+
+        <div class="pnl-card">
+          <div class="pc-head">
+            <div><h2 class="pc-title"><i class="fa-solid fa-comments" aria-hidden="true"></i> Yazışma</h2></div>
+            <span class="cnt" id="tkHeadCount">4 mesaj</span>
+          </div>
+          <div class="pc-body">
+
+          <!-- Her talebin yazışması kendi <div data-tk> bloğunda durur; seçili
+               olan görünür, ötekiler hidden. Talep künyesi data-* özniteliklerinde
+               yazar — banner ve yan ray oradan doldurulur, böylece aynı metin iki
+               yere kopyalanmaz. JS kapalıysa ilk talep gene de okunur. -->
+
+          <!-- ===== DF-2026-K7WQ9M · Çözülen ===== -->
+          <div class="tk-t" data-tk="DF-2026-K7WQ9M"
+               data-title="Pro üyeliğim yenilendi ama paket ücretsize düştü"
+               data-status="cozulen"
+               data-konu="DadaFit Pro ve ödeme"
+               data-kanal="Web · Destek Taleplerim"
+               data-open-iso="2026-08-12" data-open-txt="12 Ağustos 2026, 14:32" data-open-short="12 Ağu"
+               data-last-iso="2026-08-14" data-last-txt="14 Ağustos 2026, 09:05" data-last-short="14 Ağu">
+            <div class="bub-list">
+              <div class="bub out">
+                <div class="bt"><b>Sen</b> <time datetime="2026-08-12T14:32">12 Ağustos 2026 · 14:32</time></div>
+                <p>Merhaba, Pro üyeliğim dün otomatik yenilendi ve ödeme geçti. Ama uygulamada paketim &quot;Ücretsiz&quot; görünüyor, video seanslarına girmeye çalışınca &quot;Pro üyelere özel&quot; uyarısı çıkıyor. Ödeme geçmişimde yenileme kaydını görüyorum.</p>
+              </div>
+              <div class="bub in">
+                <div class="bt"><b>Destek ekibi</b> <time datetime="2026-08-12T16:48">12 Ağustos 2026 · 16:48</time></div>
+                <p>Merhaba Elif, yazdığın için teşekkürler. Yenileme kaydını biz de görüyoruz, ödeme tarafında bir sorun yok. Paket etiketinin neden güncellenmediğini bulmak için iki şey rica edeceğim:</p>
+                <p>1) Çıkıp tekrar giriş yaptığında paket hâlâ &quot;Ücretsiz&quot; mi görünüyor? 2) Uyarıyı hangi seansta gördüysen adını yazabilir misin?</p>
+              </div>
+              <div class="bub out">
+                <div class="bt"><b>Sen</b> <time datetime="2026-08-13T08:12">13 Ağustos 2026 · 08:12</time></div>
+                <p>Çıkıp tekrar giriş yaptım, değişmedi. &quot;Sabah Mobilite Akışı&quot; ve &quot;Masa Başı Sırt Rahatlatma&quot; seanslarında aynı uyarıyı alıyorum. Ücretsiz seanslar sorunsuz açılıyor.</p>
+              </div>
+              <div class="bub in">
+                <div class="bt"><b>Destek ekibi</b> <time datetime="2026-08-14T09:05">14 Ağustos 2026 · 09:05</time></div>
+                <p>Teşekkürler, bu bilgi yeterliydi. Hesabındaki paket etiketi yenileme sırasında güncellenmemiş; teknik ekip düzeltmeyi uyguladı. Uygulamayı bir kez kapatıp açtığında paketin &quot;Pro&quot; görünmeli ve iki seans da açılmalı.</p>
+                <p>Bu talebi çözüldü olarak işaretledik. Sende de düzeldiyse talebi kapatabilirsin; düzelmediyse buraya yazman yeterli, talep yeniden açılır.</p>
+              </div>
+              <div class="bub is-sys">
+                
+                <p><i class="fa-solid fa-circle-check" aria-hidden="true"></i> Destek ekibi talebi çözüldü olarak işaretledi · <time datetime="2026-08-14T09:05">14 Ağustos 2026 · 09:05</time></p>
+              </div>
+            </div>
+          </div>
+          <!-- ===== DF-2026-B4TXN2 · Açık talep ===== -->
+          <div class="tk-t" data-tk="DF-2026-B4TXN2" hidden
+               data-title="Apple Health adım verisi iki gündür aktarılmıyor"
+               data-status="acik"
+               data-konu="Aktivite ve cihaz bağlantıları"
+               data-kanal="Web · Destek Taleplerim"
+               data-open-iso="2026-08-09" data-open-txt="9 Ağustos 2026, 19:41" data-open-short="9 Ağu"
+               data-last-iso="2026-08-11" data-last-txt="11 Ağustos 2026, 07:58" data-last-short="11 Ağu">
+            <div class="bub-list">
+              <div class="bub out">
+                <div class="bt"><b>Sen</b> <time datetime="2026-08-09T19:41">9 Ağustos 2026 · 19:41</time></div>
+                <p>Aktivite günlüğümde 7 ve 8 Ağustos günleri boş görünüyor, oysa o iki gün de yürüdüm. Telefonumdaki Apple Health kayıtları duruyor ama DadaFit tarafına düşmemiş.</p>
+              </div>
+              <div class="bub in">
+                <div class="bt"><b>Destek ekibi</b> <time datetime="2026-08-10T10:07">10 Ağustos 2026 · 10:07</time></div>
+                <p>Merhaba Elif, bağlantı kaydına baktım: o iki günde aktivite izni kapalı görünüyor, bu yüzden veriler DadaFit'e gelmemiş. İzin kapalıyken geçmişe dönük aktarım da yapılmıyor.</p>
+                <p>Bağlantı ayarlarından aktivite iznini tekrar açar mısın? Açtıktan sonra bir gün bekleyip son senkronizasyon zamanının güncellenip güncellenmediğini yazarsan devam ederiz.</p>
+              </div>
+              <div class="bub out">
+                <div class="bt"><b>Sen</b> <time datetime="2026-08-11T07:58">11 Ağustos 2026 · 07:58</time></div>
+                <p>İzni açtım ama son senkronizasyon zamanı hâlâ 6 Ağustos'ta duruyor, bugünkü yürüyüş de gelmedi. Ekranın görüntüsünü de gönderebilirim.</p>
+              </div>
+            </div>
+          </div>
+          <!-- DF-2026-H9DKR6 ("Video seansı ortasında baştan başlıyor") KALDIRILDI —
+               Beyar, 2026-08-29: Video Seansları modülünün tamamı kalktı, olmayan bir
+               modüle ait talep bırakılmadı. Talep 12 → 11, "Açık talep" 3 → 2. -->
+
+          <!-- ===== DF-2026-QW3JZ8 · Yanıt bekleyen ===== -->
+          <div class="tk-t" data-tk="DF-2026-QW3JZ8" hidden
+               data-title="Programını Bul sonucundaki program planıma eklenmedi"
+               data-status="yanit-bekleyen"
+               data-konu="Programlar ve planım"
+               data-kanal="Web · Destek Taleplerim"
+               data-open-iso="2026-07-28" data-open-txt="28 Temmuz 2026, 13:22" data-open-short="28 Tem"
+               data-last-iso="2026-07-29" data-last-txt="29 Temmuz 2026, 11:40" data-last-short="29 Tem">
+            <div class="bub-list">
+              <div class="bub out">
+                <div class="bt"><b>Sen</b> <time datetime="2026-07-28T13:22">28 Temmuz 2026 · 13:22</time></div>
+                <p>Programını Bul sihirbazını bitirdim, sonuç ekranında bir program önerildi ve &quot;Planıma Ekle&quot; düğmesine bastım. Ama Planım sayfasında hâlâ eski programım duruyor, yenisi görünmüyor.</p>
+              </div>
+              <div class="bub in">
+                <div class="bt"><b>Destek ekibi</b> <time datetime="2026-07-29T11:40">29 Temmuz 2026 · 11:40</time></div>
+                <p>Merhaba Elif, kayıtlarda ekleme isteğini görüyoruz ama aynı anda tek aktif program tutulduğu için yeni program eskisinin yerine geçmeden bekletilmiş. Planım sayfasındaki program kartında &quot;Değiştir&quot; adımını onayladığında yenisi aktif olur, eskisi geçmişine düşer.</p>
+                <p>Bu adımı denediğinde yeni programın planına düştü mü? Yazarsan devam ederiz.</p>
+              </div>
+            </div>
+          </div>
+          <!-- ===== DF-2026-M2VYP7 · Yanıt bekleyen ===== -->
+          <div class="tk-t" data-tk="DF-2026-M2VYP7" hidden
+               data-title="Antrenman geçmişimde iki günlük boşluk görünüyor"
+               data-status="yanit-bekleyen"
+               data-konu="Aktivite ve cihaz bağlantıları"
+               data-kanal="Web · Destek Taleplerim"
+               data-open-iso="2026-07-26" data-open-txt="26 Temmuz 2026, 20:15" data-open-short="26 Tem"
+               data-last-iso="2026-07-27" data-last-txt="27 Temmuz 2026, 10:48" data-last-short="27 Tem">
+            <div class="bub-list">
+              <div class="bub out">
+                <div class="bt"><b>Sen</b> <time datetime="2026-07-26T20:15">26 Temmuz 2026 · 20:15</time></div>
+                <p>Antrenman geçmişimde 18 ve 19 Temmuz boş. O iki gün de seans yaptım ve bitirdikten sonra tamamlandı işaretini gördüm. Aktivite günlüğünde adımlarım duruyor ama seanslar yok.</p>
+              </div>
+              <div class="bub in">
+                <div class="bt"><b>Destek ekibi</b> <time datetime="2026-07-27T10:48">27 Temmuz 2026 · 10:48</time></div>
+                <p>Merhaba Elif, o iki günün kaydına baktım: seanslar başlatılmış ama tamamlanma kaydı sunucuya ulaşmamış. Bu genellikle seans biterken bağlantı kopunca oluyor.</p>
+                <p>Seansları o gün hangi cihazdan yaptığını ve internetin kesildiğini fark edip etmediğini yazar mısın? İkisini de aldıktan sonra kayıtları elle tamamlayabiliriz.</p>
+              </div>
+            </div>
+          </div>
+          <!-- ===== DF-2026-T6NGX4 · Açık talep ===== -->
+          <div class="tk-t" data-tk="DF-2026-T6NGX4" hidden
+               data-title="Challenge rozetim tamamlandığı hâlde düşmedi"
+               data-status="acik"
+               data-konu="Uygulama hatası"
+               data-kanal="Web · Destek Taleplerim"
+               data-open-iso="2026-07-22" data-open-txt="22 Temmuz 2026, 18:02" data-open-short="22 Tem"
+               data-last-iso="2026-07-23" data-last-txt="23 Temmuz 2026, 08:30" data-last-short="23 Tem">
+            <div class="bub-list">
+              <div class="bub out">
+                <div class="bt"><b>Sen</b> <time datetime="2026-07-22T18:02">22 Temmuz 2026 · 18:02</time></div>
+                <p>&quot;14 Gün Hareket&quot; challenge'ını dün tamamladım, ilerleme çubuğu 14/14 gösteriyor ama rozetlerim sayfasında rozet görünmüyor.</p>
+              </div>
+              <div class="bub in">
+                <div class="bt"><b>Destek ekibi</b> <time datetime="2026-07-23T08:00">23 Temmuz 2026 · 08:00</time></div>
+                <p>Merhaba Elif, challenge kaydında 14 günün 14'ü de işaretli görünüyor. Rozet dağıtımı gece toplu çalışıyor; bir gece daha bekleyip rozetlerim sayfasını yeniler misin?</p>
+              </div>
+              <div class="bub out">
+                <div class="bt"><b>Sen</b> <time datetime="2026-07-23T08:30">23 Temmuz 2026 · 08:30</time></div>
+                <p>Bugün sabah tekrar baktım, hâlâ yok. Challenge sayfasında &quot;tamamlandı&quot; yazısı duruyor ama rozetlerim boş.</p>
+              </div>
+            </div>
+          </div>
+          <!-- ===== DF-2026-Z4KMD9 · Kapatılan ===== -->
+          <div class="tk-t" data-tk="DF-2026-Z4KMD9" hidden
+               data-title="Fatura adresimi güncellemek istiyorum"
+               data-status="kapatilan"
+               data-konu="Üyelik ve fatura"
+               data-kanal="Web · Destek Taleplerim"
+               data-open-iso="2026-07-21" data-open-txt="21 Temmuz 2026, 13:05" data-open-short="21 Tem"
+               data-last-iso="2026-07-22" data-last-txt="22 Temmuz 2026, 15:52" data-last-short="22 Tem">
+            <div class="bub-list">
+              <div class="bub out">
+                <div class="bt"><b>Sen</b> <time datetime="2026-07-21T13:05">21 Temmuz 2026 · 13:05</time></div>
+                <p>Taşındım, faturalarımda eski adresim yazıyor. Yeni adresi nereden güncelleyebilirim?</p>
+              </div>
+              <div class="bub in">
+                <div class="bt"><b>Destek ekibi</b> <time datetime="2026-07-22T09:30">22 Temmuz 2026 · 09:30</time></div>
+                <p>Merhaba Elif, fatura bilgilerini hesabındaki fatura alanından kendin güncelleyebiliyorsun. Değişiklik, güncellemeden sonra kesilen faturalara işler; geçmiş faturalar olduğu gibi kalır.</p>
+              </div>
+              <div class="bub out">
+                <div class="bt"><b>Sen</b> <time datetime="2026-07-22T15:44">22 Temmuz 2026 · 15:44</time></div>
+                <p>Buldum ve güncelledim, teşekkür ederim.</p>
+              </div>
+              <div class="bub is-sys">
+                
+                <p><i class="fa-solid fa-circle-check" aria-hidden="true"></i> Talebi kapattın · <time datetime="2026-07-22T15:52">22 Temmuz 2026 · 15:52</time></p>
+              </div>
+            </div>
+          </div>
+          <!-- ===== DF-2026-A8RUC3 · Yanıt bekleyen ===== -->
+          <div class="tk-t" data-tk="DF-2026-A8RUC3" hidden
+               data-title="Antrenör randevumu ertelemek istiyorum"
+               data-status="yanit-bekleyen"
+               data-konu="Antrenör ve randevu"
+               data-kanal="Web · Destek Taleplerim"
+               data-open-iso="2026-07-20" data-open-txt="20 Temmuz 2026, 09:18" data-open-short="20 Tem"
+               data-last-iso="2026-07-21" data-last-txt="21 Temmuz 2026, 14:05" data-last-short="21 Tem">
+            <div class="bub-list">
+              <div class="bub out">
+                <div class="bt"><b>Sen</b> <time datetime="2026-07-20T09:18">20 Temmuz 2026 · 09:18</time></div>
+                <p>Cuma 18:00'deki antrenör görüşmemi bir hafta ertelemem gerekiyor. Randevular sayfasında erteleme seçeneğini bulamadım, iptal edip yeniden almam mı gerekiyor?</p>
+              </div>
+              <div class="bub in">
+                <div class="bt"><b>Destek ekibi</b> <time datetime="2026-07-21T14:05">21 Temmuz 2026 · 14:05</time></div>
+                <p>Merhaba Elif, iptal edip yeniden almana gerek yok. Randevu kartındaki &quot;Saati değiştir&quot; adımı antrenörün açık saatlerini gösteriyor ve seçtiğin saati onun onayına gönderiyor.</p>
+                <p>Hangi güne almak istediğini yazarsan biz de antrenörüne iletebiliriz.</p>
+              </div>
+            </div>
+          </div>
+          <!-- ===== DF-2026-P7XBW2 · Kapatılan ===== -->
+          <div class="tk-t" data-tk="DF-2026-P7XBW2" hidden
+               data-title="Antrenör randevum takvimde iki kez göründü"
+               data-status="kapatilan"
+               data-konu="Antrenör ve randevu"
+               data-kanal="Web · Destek Taleplerim"
+               data-open-iso="2026-07-15" data-open-txt="15 Temmuz 2026, 18:20" data-open-short="15 Tem"
+               data-last-iso="2026-07-17" data-last-txt="17 Temmuz 2026, 10:05" data-last-short="17 Tem">
+            <div class="bub-list">
+              <div class="bub out">
+                <div class="bt"><b>Sen</b> <time datetime="2026-07-15T18:20">15 Temmuz 2026 · 18:20</time></div>
+                <p>Cuma günkü antrenör görüşmem randevular sayfamda iki kez listeleniyor. İki kayıt da aynı saati gösteriyor; iki kez ücretlendirilir miyim diye çekiniyorum.</p>
+              </div>
+              <div class="bub in">
+                <div class="bt"><b>Destek ekibi</b> <time datetime="2026-07-16T09:15">16 Temmuz 2026 · 09:15</time></div>
+                <p>Merhaba Elif, içini rahat tut: tek bir randevu kaydı var, ikinci satır listeleme tarafındaki bir tekrardı ve ücretlendirmeye yansımıyor. Fazladan satırı kaldırdık, sayfayı yenilediğinde tek kayıt göreceksin.</p>
+              </div>
+              <div class="bub out">
+                <div class="bt"><b>Sen</b> <time datetime="2026-07-17T09:58">17 Temmuz 2026 · 09:58</time></div>
+                <p>Yeniledim, tek randevu görünüyor. Teşekkürler.</p>
+              </div>
+              <div class="bub is-sys">
+                
+                <p><i class="fa-solid fa-circle-check" aria-hidden="true"></i> Talebi kapattın · <time datetime="2026-07-17T10:05">17 Temmuz 2026 · 10:05</time></p>
+              </div>
+            </div>
+          </div>
+          <!-- ===== DF-2026-E3QHT6 · Kapatılan ===== -->
+          <div class="tk-t" data-tk="DF-2026-E3QHT6" hidden
+               data-title="Bildirim tercihlerim her girişte sıfırlanıyor"
+               data-status="kapatilan"
+               data-konu="Hesap ve giriş"
+               data-kanal="Web · Destek Taleplerim"
+               data-open-iso="2026-07-08" data-open-txt="8 Temmuz 2026, 11:47" data-open-short="8 Tem"
+               data-last-iso="2026-07-10" data-last-txt="10 Temmuz 2026, 16:30" data-last-short="10 Tem">
+            <div class="bub-list">
+              <div class="bub out">
+                <div class="bt"><b>Sen</b> <time datetime="2026-07-08T11:47">8 Temmuz 2026 · 11:47</time></div>
+                <p>Bildirim tercihlerimde hatırlatmaları kapatıyorum, kaydediyorum, ama bir sonraki girişimde hepsi tekrar açık geliyor. Üç kez denedim.</p>
+              </div>
+              <div class="bub in">
+                <div class="bt"><b>Destek ekibi</b> <time datetime="2026-07-09T14:02">9 Temmuz 2026 · 14:02</time></div>
+                <p>Merhaba Elif, tarayıcıdan yapılan tercih değişikliği hesaba yazılıyor ama girişte varsayılanlarla üzerine yazılıyormuş — bunu doğruladık ve düzeltmeyi yayına aldık.</p>
+                <p>Tercihlerini bir kez daha kaydeder misin? Bu sefer çıkış-giriş sonrasında da kalması gerekiyor.</p>
+              </div>
+              <div class="bub out">
+                <div class="bt"><b>Sen</b> <time datetime="2026-07-10T16:22">10 Temmuz 2026 · 16:22</time></div>
+                <p>Kaydettim, çıkıp girdim, tercihlerim korunuyor. Çözüldü.</p>
+              </div>
+              <div class="bub is-sys">
+                
+                <p><i class="fa-solid fa-circle-check" aria-hidden="true"></i> Talebi kapattın · <time datetime="2026-07-10T16:30">10 Temmuz 2026 · 16:30</time></p>
+              </div>
+            </div>
+          </div>
+          <!-- ===== DF-2026-N9GVJ4 · Kapatılan ===== -->
+          <div class="tk-t" data-tk="DF-2026-N9GVJ4" hidden
+               data-title="Egzersiz kütüphanesinde ekipman süzgeci boş sonuç döndürüyor"
+               data-status="kapatilan"
+               data-konu="Uygulama hatası"
+               data-kanal="Web · Destek Taleplerim"
+               data-open-iso="2026-07-01" data-open-txt="1 Temmuz 2026, 09:12" data-open-short="1 Tem"
+               data-last-iso="2026-07-03" data-last-txt="3 Temmuz 2026, 12:15" data-last-short="3 Tem">
+            <div class="bub-list">
+              <div class="bub out">
+                <div class="bt"><b>Sen</b> <time datetime="2026-07-01T09:12">1 Temmuz 2026 · 09:12</time></div>
+                <p>Egzersiz kütüphanesinde &quot;Ekipmansız&quot; süzgecini seçtiğimde hiç sonuç çıkmıyor, oysa ekipmansız yüzlerce hareket olduğunu biliyorum. Süzgeci kaldırınca liste geri geliyor.</p>
+              </div>
+              <div class="bub in">
+                <div class="bt"><b>Destek ekibi</b> <time datetime="2026-07-02T10:30">2 Temmuz 2026 · 10:30</time></div>
+                <p>Merhaba Elif, doğrulayabildik: süzgeç değeri adresteki parametreyle eşleşmediği için boş liste dönüyormuş. Düzeltme yayına alındı; sayfayı yenileyip tekrar dener misin?</p>
+              </div>
+              <div class="bub out">
+                <div class="bt"><b>Sen</b> <time datetime="2026-07-03T12:08">3 Temmuz 2026 · 12:08</time></div>
+                <p>Denedim, sonuçlar geliyor. Teşekkürler.</p>
+              </div>
+              <div class="bub is-sys">
+                
+                <p><i class="fa-solid fa-circle-check" aria-hidden="true"></i> Talebi kapattın · <time datetime="2026-07-03T12:15">3 Temmuz 2026 · 12:15</time></p>
+              </div>
+            </div>
+          </div>
+          <!-- ===== DF-2026-U2FZR8 · Çözülen ===== -->
+          <div class="tk-t" data-tk="DF-2026-U2FZR8" hidden
+               data-title="Enerji defterinde su takibi her gün sıfırlanıyor"
+               data-status="cozulen"
+               data-konu="Uygulama hatası"
+               data-kanal="Web · Destek Taleplerim"
+               data-open-iso="2026-06-24" data-open-txt="24 Haziran 2026, 07:40" data-open-short="24 Haz"
+               data-last-iso="2026-06-26" data-last-txt="26 Haziran 2026, 11:20" data-last-short="26 Haz">
+            <div class="bub-list">
+              <div class="bub out">
+                <div class="bt"><b>Sen</b> <time datetime="2026-06-24T07:40">24 Haziran 2026 · 07:40</time></div>
+                <p>Enerji defterindeki su takibine gün içinde bardakları işaretliyorum, ama ertesi gün açtığımda geçmiş günün kaydı da sıfır görünüyor. Yalnız o günün değil, önceki günlerin kaydı da kayboluyor.</p>
+              </div>
+              <div class="bub in">
+                <div class="bt"><b>Destek ekibi</b> <time datetime="2026-06-25T15:12">25 Haziran 2026 · 15:12</time></div>
+                <p>Merhaba Elif, su kaydı gün değişiminde sıfırlanırken geçmiş günlerin toplamını da siliyormuş. Hatayı doğruladık, düzeltme bu hafta yayına giriyor.</p>
+              </div>
+              <div class="bub in">
+                <div class="bt"><b>Destek ekibi</b> <time datetime="2026-06-26T11:20">26 Haziran 2026 · 11:20</time></div>
+                <p>Düzeltme yayına alındı: bugünden sonraki kayıtlar korunuyor. Ne yazık ki silinmiş geçmiş günler geri getirilemiyor, bunun için kusura bakma.</p>
+                <p>Talebi çözüldü olarak işaretliyorum. Aynı davranışı tekrar görürsen buraya yazman yeterli, talep yeniden açılır.</p>
+              </div>
+              <div class="bub is-sys">
+                
+                <p><i class="fa-solid fa-circle-check" aria-hidden="true"></i> Destek ekibi talebi çözüldü olarak işaretledi · <time datetime="2026-06-26T11:20">26 Haziran 2026 · 11:20</time></p>
+              </div>
+            </div>
+          </div>
+          <!-- talep numarası tanınmadıysa -->
+          <div class="lib-empty" id="tkEmpty">
+            <span class="ico"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i></span>
+            <h3>Bu numarayla bir yazışma bulunamadı</h3>
+            <p>Adresteki talep numarasına ait bir yazışma kaydı yok. Az önce açtığın bir talepse destek ekibi henüz yanıtlamamış olabilir; durumunu taleplerin listesinden takip edebilirsin.</p>
+            <a class="btn btn-fit" href="fit-cozum-merkezi.html#taleplerim"><i class="fa-solid fa-list" aria-hidden="true"></i> Taleplerim</a>
+          </div>
+          </div>
+        </div>
+
+        <!-- ---------- YANIT YAZ ---------- -->
+        <div class="tk-reply" id="yanit">
+          <form class="pnl-card" id="tkReplyForm" novalidate>
+            <div class="pc-head">
+              <div><h2 class="pc-title"><i class="fa-solid fa-reply" aria-hidden="true"></i> Yanıt Yaz</h2></div>
+            </div>
+            <div class="pc-body">
+
+            <!-- form düzeyi hata özeti — role="alert", gönderide doldurulur -->
+            <p class="fk-summary" id="tkErrSum" role="alert" hidden><i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i><span></span></p>
+
+            <div class="fk-field">
+              <label class="fk-label" for="tkReply">Yanıtın <span class="req" aria-hidden="true">*</span> <span class="fk-count"><span id="tkCount">0</span>/2000</span></label>
+              <textarea class="fk-textarea" id="tkReply" name="yanit" maxlength="2000"
+                        placeholder="Yeni bir bilgi, ekran görüntüsünde ne yazdığı ya da denediğin adımlar…"
+                        required aria-required="true" aria-describedby="tkReplyHelp tkErrMsg"></textarea>
+              <div class="fk-help" id="tkReplyHelp"><i class="fa-solid fa-circle-info" aria-hidden="true"></i><span>Aynı konuyu buradan sürdür — yeni talep açmana gerek yok. Ne zaman, hangi ekranda olduğunu yazarsan daha hızlı ilerleriz.</span></div>
+              <p class="fk-err" id="tkErrMsg" hidden><i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i><span></span></p>
+            </div>
+
+            <!-- EK DOSYA — kanon §8.1: MESAJ başına TEK dosya, alan adı `ek`.
+                 Yeni talep formundaki kuralın AYNISI: ek talebe değil MESAJA
+                 bağlıdır, o yüzden her yanıt kendi dosyasını taşıyabilir.
+                 "Ne kabul ediliyor" metni uydurulmadı — 5 MB + JPG/PNG/WebP bu
+                 deponun kendi ölçülmüş sınırı (hesabim-v1.html:1752), PDF ise
+                 kanon §8.1'in bu uca özel şerhi. -->
+            <div class="fk-file">
+              <input class="sr-only" type="file" id="tkEk" name="ek"
+                     accept="image/jpeg,image/png,image/webp,application/pdf"
+                     aria-describedby="tkEkHelp" />
+              <label class="fk-file-btn" for="tkEk"><i class="fa-solid fa-paperclip" aria-hidden="true"></i> Dosya ekle</label>
+              <span class="fk-file-name" id="tkEkName">Dosya seçilmedi</span>
+              <button type="button" class="fk-file-clear" id="tkEkClear" hidden>Kaldır</button>
+            </div>
+            <p class="fk-help" id="tkEkHelp"><i class="fa-solid fa-circle-info" aria-hidden="true"></i><span>Ekran görüntüsü ya da belge: JPG, PNG, WebP veya PDF · en çok 5 MB · mesaj başına tek dosya.</span></p>
+
+            <div class="tk-reply-foot">
+              <span class="note">Gerçeğinde yanıtlar <b>1 iş günü</b> içinde dönüyor; bu maket ekranda yanıt gelmez.</span>
+              <button class="btn btn-fit" type="submit" id="tkSend"><i class="fa-solid fa-paper-plane" aria-hidden="true"></i> Yanıtı Gönder</button>
+            </div>
+            </div>
+          </form>
+
+          <!-- talep kapalıyken formun yerine geçer -->
+          <!-- KAPALI TALEP — kanon §3: `acceptsReply()` bir DURUM kuralıdır,
+               yetki kuralı değil ("sahibi bile kapattığı talebe yazamaz, önce
+               yeniden açar"). Blok o yüzden hem GEREKÇEYİ hem ÇIKIŞ YOLUNU
+               taşıyor: boş bir kilit ekranı bırakılmıyor. -->
+          <div class="tk-closed" id="tkClosedNote">
+            <i class="fa-solid fa-lock" aria-hidden="true"></i>
+            <div>
+              <b>Bu talep kapatıldı</b>
+              <p>Kapatılan bir talebe yanıt yazılamaz. Bu bir <b>durum kuralıdır, yetki kuralı değil</b>: talep senin, yazışman kayıtta duruyor ve okunmaya devam ediyor. Aynı konu tekrar ederse talebi yeniden aç — geçmiş yazışma korunur ve sıra tekrar destek ekibine geçer.</p>
+              <div class="row">
+                <button class="btn btn-fit" type="button" id="tkReopenInline"><i class="fa-solid fa-rotate-left" aria-hidden="true"></i> Talebi Yeniden Aç</button>
+                <a class="btn btn-ghost" href="fit-cozum-merkezi.html#yeni"><i class="fa-solid fa-plus" aria-hidden="true"></i> Yeni Talep Aç</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SAĞLIK SINIRI (belge §8/§9) — destek kanalı sağlık danışmanlığı değildir -->
+        <div class="hr-note">
+          <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+          <p>Destek ekibi üyelik, ödeme ve uygulama sorunlarında yardımcı olur; <b>tıbbi teşhis, hastalık tanısı ya da tedavi önerisi vermez</b>. Ağrı, sakatlık ya da sağlık durumunla ilgili bir soru için bir sağlık uzmanına danış. Ayrıntı: <a href="saglik-bilgilendirme-v1.html">Sağlık Bilgilendirmesi</a> · programını birlikte gözden geçirmek istersen <a href="antrenorler-v1.html">Antrenörler</a>.</p>
+        </div>
+      </div>
+
+      <!-- ---------- YAN RAY ---------- -->
+      <aside class="tk-side">
+
+        <!-- TALEP İŞLEMLERİ — kanon §2.1'in ÜYE matrisinin ekran karşılığı.
+             Hangi düğmenin göründüğü durumdan türer, elle yazılmaz:
+               acik            → [Kapat]
+               yanit-bekleyen  → [Kapat]
+               cozulen         → [Kapat] + [Yeniden Aç]   (çözümü kabul etmedin)
+               kapatilan       → [Yeniden Aç]
+             🔴 Üye hiçbir talebi `yanit-bekleyen` ya da `cozulen`e SOKAMAZ —
+             o iki fiil destek ekibinindir; bu yüzden karşılıkları hiç basılmaz.
+             Kart hiçbir durumda boş kalmaz: her hâlde bir açıklama + en az bir
+             çıkış yolu taşır. -->
+        <div class="pnl-card tk-act-card" id="tkActCard">
+          <div class="pc-head"><div><h3 class="pc-title"><i class="fa-solid fa-list-check" aria-hidden="true"></i> Talep İşlemleri</h3></div></div>
+          <div class="pc-body">
+            <p class="tk-card-note" id="tkActNote">Konu çözüldüyse talebi kapatabilirsin. Kapatılan talep listende kalır ve yazışmayı okumaya devam edersin, ama yeni yanıt yazılamaz.</p>
+            <button class="btn btn-fit" type="button" id="tkCloseBtn"><i class="fa-solid fa-check" aria-hidden="true"></i> Talebi Kapat</button>
+            <button class="btn btn-ghost" type="button" id="tkReopenBtn" hidden><i class="fa-solid fa-rotate-left" aria-hidden="true"></i> Talebi Yeniden Aç</button>
+          </div>
+        </div>
+
+        <!-- ===== "TALEPLERİN" — Y8.5, Beyar bu tur KANONA DAHİL ETTİ =====
+             Talep detayının yan sütunundan diğer taleplere ÇAPRAZ GEÇİŞ.
+             Şemayı değiştirmez: kanon §9/Y8.5'in kendi notuyla "var olan
+             forUser() sorgusunun bir varyantı", yani bir GÖRÜNÜM kalemi.
+             Kural: DÖRT DURUMDAN da talep görünür (kapatılanlar dahil) ve
+             AÇIK OLAN TALEP işaretlidir (aria-current="page", JS basar).
+             Liste kardeş sayfadaki listenin AYNISI ve aynı sırada (son
+             hareket, yeniden eskiye); kısaltılmadı ki her satır buradan da
+             açılabilsin. Her satırın ikonu ve durum sözcüğü kanonun dört
+             durum sözlüğünden gelir. -->
+        <div class="pnl-card">
+          <div class="pc-head"><div><h3 class="pc-title"><i class="fa-solid fa-layer-group" aria-hidden="true"></i> Taleplerin</h3></div><span class="cnt">11 talep</span></div>
+          <div class="pc-body">
+          <div class="tk-others">
+            <a class="tk-other" href="destek-talebi-detay-v1.html?talep=DF-2026-K7WQ9M">
+              <i class="fa-solid fa-circle-check" aria-hidden="true"></i>
+              <span class="ot"><b>Pro üyeliğim yenilendi ama paket ücretsize düştü</b><span>DF-2026-K7WQ9M · Çözülen</span></span>
+            </a>
+            <a class="tk-other" href="destek-talebi-detay-v1.html?talep=DF-2026-B4TXN2">
+              <i class="fa-solid fa-inbox" aria-hidden="true"></i>
+              <span class="ot"><b>Apple Health adım verisi iki gündür aktarılmıyor</b><span>DF-2026-B4TXN2 · Açık talep</span></span>
+            </a>
+            <a class="tk-other" href="destek-talebi-detay-v1.html?talep=DF-2026-QW3JZ8">
+              <i class="fa-solid fa-reply" aria-hidden="true"></i>
+              <span class="ot"><b>Programını Bul sonucundaki program planıma eklenmedi</b><span>DF-2026-QW3JZ8 · Yanıt bekleyen</span></span>
+            </a>
+            <a class="tk-other" href="destek-talebi-detay-v1.html?talep=DF-2026-M2VYP7">
+              <i class="fa-solid fa-reply" aria-hidden="true"></i>
+              <span class="ot"><b>Antrenman geçmişimde iki günlük boşluk görünüyor</b><span>DF-2026-M2VYP7 · Yanıt bekleyen</span></span>
+            </a>
+            <a class="tk-other" href="destek-talebi-detay-v1.html?talep=DF-2026-T6NGX4">
+              <i class="fa-solid fa-inbox" aria-hidden="true"></i>
+              <span class="ot"><b>Challenge rozetim tamamlandığı hâlde düşmedi</b><span>DF-2026-T6NGX4 · Açık talep</span></span>
+            </a>
+            <a class="tk-other" href="destek-talebi-detay-v1.html?talep=DF-2026-Z4KMD9">
+              <i class="fa-solid fa-lock" aria-hidden="true"></i>
+              <span class="ot"><b>Fatura adresimi güncellemek istiyorum</b><span>DF-2026-Z4KMD9 · Kapatılan</span></span>
+            </a>
+            <a class="tk-other" href="destek-talebi-detay-v1.html?talep=DF-2026-A8RUC3">
+              <i class="fa-solid fa-reply" aria-hidden="true"></i>
+              <span class="ot"><b>Antrenör randevumu ertelemek istiyorum</b><span>DF-2026-A8RUC3 · Yanıt bekleyen</span></span>
+            </a>
+            <a class="tk-other" href="destek-talebi-detay-v1.html?talep=DF-2026-P7XBW2">
+              <i class="fa-solid fa-lock" aria-hidden="true"></i>
+              <span class="ot"><b>Antrenör randevum takvimde iki kez göründü</b><span>DF-2026-P7XBW2 · Kapatılan</span></span>
+            </a>
+            <a class="tk-other" href="destek-talebi-detay-v1.html?talep=DF-2026-E3QHT6">
+              <i class="fa-solid fa-lock" aria-hidden="true"></i>
+              <span class="ot"><b>Bildirim tercihlerim her girişte sıfırlanıyor</b><span>DF-2026-E3QHT6 · Kapatılan</span></span>
+            </a>
+            <a class="tk-other" href="destek-talebi-detay-v1.html?talep=DF-2026-N9GVJ4">
+              <i class="fa-solid fa-lock" aria-hidden="true"></i>
+              <span class="ot"><b>Egzersiz kütüphanesinde ekipman süzgeci boş sonuç döndürüyor</b><span>DF-2026-N9GVJ4 · Kapatılan</span></span>
+            </a>
+            <a class="tk-other" href="destek-talebi-detay-v1.html?talep=DF-2026-U2FZR8">
+              <i class="fa-solid fa-circle-check" aria-hidden="true"></i>
+              <span class="ot"><b>Enerji defterinde su takibi her gün sıfırlanıyor</b><span>DF-2026-U2FZR8 · Çözülen</span></span>
+            </a>
+          </div>
+          <div class="demo-note"><i class="fa-solid fa-list" aria-hidden="true"></i> <span>Taleplerinin tamamı ve durum süzgeci <a href="fit-cozum-merkezi.html#taleplerim">Destek Taleplerim</a>, yeni talep formu <a href="fit-cozum-merkezi.html#yeni">Yeni Destek Talebi</a> sekmesinde.</span></div>
+          </div>
+        </div>
+
+        <!-- ===== "BEKLERKEN" — Y8.5, Beyar bu tur KANONA DAHİL ETTİ =====
+             Yanıt beklerken üyenin KENDİ çözebileceği adımlar.
+             🔴 Kanon §4.12 + §9/Y8.5: bu blok YENİ İÇERİK ÜRETMEZ — var olan
+             Çözüm Merkezi konu listesinin talep detayına taşınmış hâlidir.
+             O yüzden beş kalem destek-v1.html'deki beş `.qa` konusunun ta
+             kendisi, `#konu-…` çapalarıyla; sıraları da orayla aynı.
+             Çapa hedefte kartı AÇIYOR (destek-v1.html'in `capadanAc()`u).
+
+             ⚠ KAPATILAN TALEPTE DE BASILIYOR — ölçüldü ve bilerek:
+             (1) kapatılan talebin ekranında yanıt kutusu YOK, yani blok
+                 çıkarılsaydı o durumun tek çıkışı "yeniden aç" kalırdı ve
+                 kilitli hücre TEK yollu olurdu (boş ekran yasağının ruhu);
+             (2) kullanıcı kapatılmış bir talebe genellikle konu TEKRARLADIĞI
+                 için döner — konu listesi tam o anda yeniden açmadan önceki
+                 en ucuz çıkıştır;
+             (3) blok bir DURUM göstergesi değil, statik bir konu dizinidir;
+                 duruma göre görünüp kaybolsaydı dört markada dört farklı
+                 davranış doğardı. -->
+        <div class="pnl-card">
+          <div class="pc-head"><div><h3 class="pc-title"><i class="fa-solid fa-circle-question" aria-hidden="true"></i> Beklerken</h3></div></div>
+          <div class="pc-body">
+          <p class="tk-card-note">Aşağıdaki beş kalem Destek Merkezi'ndeki çözüm konularının ta kendisidir; burada yeni bir metin yazılmadı, o liste talebin yanına taşındı. Yanıt beklerken çoğu konu bunlarla kendiliğinden çözülüyor.</p>
+          <div class="tk-others">
+            <a class="tk-other" href="fit-cozum-merkezi.html#konu-uyelik"><i class="fa-solid fa-crown" aria-hidden="true"></i><span class="ot"><b>Üyelik, DadaFit Pro ve ödeme</b><span>Destek Merkezi</span></span></a>
+            <a class="tk-other" href="fit-cozum-merkezi.html#konu-program"><i class="fa-solid fa-list-check" aria-hidden="true"></i><span class="ot"><b>Programlar, planım ve ilerleme</b><span>Destek Merkezi</span></span></a>
+            <a class="tk-other" href="fit-cozum-merkezi.html#konu-aktivite"><i class="fa-solid fa-plug-circle-check" aria-hidden="true"></i><span class="ot"><b>Bağlı uygulamalar ve aktivite verisi</b><span>Destek Merkezi</span></span></a>
+            <a class="tk-other" href="fit-cozum-merkezi.html#konu-hesap"><i class="fa-regular fa-user" aria-hidden="true"></i><span class="ot"><b>Hesap, giriş ve bildirimler</b><span>Destek Merkezi</span></span></a>
+            <a class="tk-other" href="fit-cozum-merkezi.html#konu-saglik"><i class="fa-solid fa-shield-heart" aria-hidden="true"></i><span class="ot"><b>Sağlık, veri ve izinler</b><span>Destek Merkezi</span></span></a>
+          </div>
+          <div class="demo-note"><i class="fa-solid fa-headset" aria-hidden="true"></i> <span>Beşi de, <a href="fit-cozum-merkezi.html#yeni">Yeni Destek Talebi</a> sekmesinde formun altında duruyor.</span></div>
+          </div>
+        </div>
+
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- ===== ONAY PENCERESİ — iki durum geçişi için TEK pencere ==========
+     Kapatma da yeniden açma da geri döndürülebilir olmayan bir adımdır
+     (yeniden açma damgaları temizler: kanon §2.4 → closed_at=null,
+     resolved_at=null), o yüzden ikisi de onaydan geçer. İkinci bir pencere
+     markup'ı YAZILMADI: başlık/metin/onay düğmesi fiile göre doldurulur —
+     iki kopya, birinin odak tuzağının unutulması demektir. -->
+<div class="tk-modal" id="tkModal" role="dialog" aria-modal="true" aria-labelledby="tkModalTitle" aria-describedby="tkModalDesc" hidden>
+  <div class="sc" id="tkModalScrim"></div>
+  <div class="tk-panel">
+    <button class="tk-x" type="button" id="tkModalX" aria-label="Pencereyi kapat"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
+    <h2 id="tkModalTitle">Talebi kapatalım mı?</h2>
+    <p id="tkModalDesc">Kapattığında bu talebe yeni yanıt yazılamaz. Yazışma listende durmaya devam eder; aynı konu tekrar ederse talebi yeniden açabilirsin.</p>
+    <div class="row">
+      <button class="btn btn-ghost" type="button" id="tkModalNo">Vazgeç</button>
+      <button class="btn btn-fit" type="button" id="tkModalYes"><i class="fa-solid fa-check" aria-hidden="true"></i> Evet, kapat</button>
+    </div>
+  </div>
+</div>
+
+</main><!-- /.page-main -->
+
+<!-- KABUK: alt katman (giriş kapısı + footer + başa dön) -->
+<div id="fitShellBottom"></div>
+
+<!-- DadaFit ortak kabuk JS (tek kaynak): markup + davranış -->
+<script src="assets/js/fit-shell.js"></script>
+<script src="assets/js/fit-mesaj.js"></script>
+<script>
+/* ===== DESTEK TALEBİ DETAYI — sayfa JS ==============================
+   Üç iş yapar:
+   1. ?talep=<no> ile hangi talebin görüneceğini seçer; künyeyi (banner +
+      yan ray) o talebin data-* özniteliklerinden doldurur. Tek kaynak
+      markup'tır, metin iki yere kopyalanmaz.
+   2. Yanıt formu — belge §20: hata YALNIZ renkle anlatılmaz. Üç kanal:
+      alanın altında ikonlu metin, aria-invalid + aria-describedby, ve
+      formun başında role="alert" özet. Geçerli yanıt dizinin sonuna
+      gerçekten eklenir.
+   3. DURUM GEÇİŞLERİ — destek kanonu §2.1'in ÜYE matrisi (Dalga 3).
+      İki fiil var: "Talebi Kapat" ve "Talebi Yeniden Aç" (D4 · Beyar
+      onayladı). İkisi de TEK onay penceresinden geçer (odak içeri, Escape
+      ile kapanır: kabuğun FIT_SHELL.trapFocus'u). Onaylanınca durum
+      gerçekten değişir: rozetler, yanıt kutusu, kapalı bloğu ve işlem
+      düğmeleri hep aynı `sync()`ten yeniden basılır; diziye sistem
+      satırı eklenir.
+      🔴 Hangi düğmenin görüneceği ELLE YAZILMAZ, `GECIS` sabitinden
+      türer — matrisin ikinci bir kopyası olsaydı sessizce ayrışırdı.
+
+   DURUM KALICI DEĞİL: geçişler yalnız açık sayfada yaşar, yenilenince
+   maket verisi geri gelir. Bilerek: talep durumu kardeş sayfa
+   destek-talepleri-v1 ile paylaşılan bir depoya yazılsa iki sayfa
+   birbirinin verisine bağlanırdı; belge §23 "yeni ayrı depo kurma"
+   diyor ve dm_fit'te destek talebi diye bir alan yok.
+   ⚠ Kalıcılık ve yönetim kuyruğu BACKEND işidir; K14 gereği Fit maket
+   düzeyinde kalıyor ve backend sonradır.
+   ==================================================================== */
+(function(){
+  'use strict';
+
+  /* Numaralandırma, durum anahtarları, durum metinleri ve ikonları KARDEŞ
+     SAYFAYLA (destek-v1.html#taleplerim) birebir aynı: liste oradaki her satırı
+     `?talep=DF-2026-XXXXXX` ile buraya yolluyor. Ayrı bir şema kullansaydım
+     listedeki on iki bağlantının hepsi "talep bulunamadı"ya düşerdi (ölçüldü). */
+  var DEFAULT = 'DF-2026-K7WQ9M';
+
+  /* ---- DÖRT DURUM — destek kanonu §1 --------------------------------
+     `acik`           = sıra DESTEK EKİBİNDE (talep açıldı ya da üye son sözü söyledi)
+     `yanit-bekleyen` = sıra ÜYEDE (destek ekibi yazdı, cevap/onay bekleniyor)
+     `cozulen`        = destek ekibi çözdüğünü bildirdi
+     `kapatilan`      = yazışma durdu, üye yeniden açabilir
+     Ters okuma (`yanit-bekleyen` = "destek yanıt bekliyor") `acik` ile aynı
+     kümeyi anlatırdı ve iki sekme aynı talepleri gösterirdi — kanon §1'in
+     en kritik cümlesi budur. Etiket "Açık" DEĞİL "Açık talep": tek başına
+     "Açık" bu ekranda "Yanıt bekleyen"le karışıyor.
+     ⚠ Kanonun etiket şerhi Diet'in `lang/en.json` ölçümünden doğmuştu; BU
+     DEPODA ÇEVİRİ DOSYASI YOK (arandı: `lang/`, `en.json` → 0 dosya), yani o
+     riskin Fit'teki karşılığı yok. Etiket yine de kanonunkidir — çünkü dört
+     marka aynı dili konuşacak ve Fit'te ayrım zaten gerekliydi. */
+  var STATUS = {
+    /* §Ö24 · rozet §C11'in `.pstat` kitidir; ayrı bir rozet biçimi üretilmez.
+       §Ö25 · DÖRT DURUM DÖRT AYRI SINIF taşır — iki durum aynı rozeti
+       PAYLAŞAMAZ. Ölçülen kusur buydu: `acik` ve `yanit-bekleyen` ikisi de
+       `st-wait` idi ve dört durum ekranda ÜÇ renk gösteriyordu.
+       Ayrım anlamdan gelir: `wait` top destekte, `warm` top üyede. */
+    'acik':           { cls:'wait', icon:'fa-inbox',        txt:'Açık talep' },
+    'yanit-bekleyen': { cls:'warm', icon:'fa-reply',        txt:'Yanıt bekleyen' },
+    'cozulen':        { cls:'ok',   icon:'fa-circle-check', txt:'Çözülen' },
+    'kapatilan':      { cls:'off',  icon:'fa-lock',         txt:'Kapatılan' }
+  };
+
+  /* ---- AKTÖR — durumu KİMİN eli değiştiriyor -----------------------
+     Diet'in `SupportActor` enum'unun maket karşılığı (Beyar kararı, Dalga 3:
+     "Diet pilot sayılsın, üç marka onun AsSupport desenini kopyalasın").
+     🔴 BU BİR ROL DEĞİL, BİR FİİLİN SAHİBİDİR: yalnız "hangi geçiş tablosu
+     okunacak" sorusunu cevaplar. Yetki kapısı ayrıdır — Fit'te henüz hiç
+     yoktur (yönetim paneli yok) ve bu değişkenin varlığı yetki VERMEZ. */
+  var AKTOR = { UYE:'uye', DESTEK:'destek' };
+
+  /* ---- GEÇİŞ MATRİSİ — kanon §2.1, AKTÖRE GÖRE İKİ KOL --------------
+     🔴 AKTÖR ARTIK YORUM DEĞİL, PARAMETRE. Önceki hâlde tek tablo vardı ve
+     "bu liste üye içindir" cümlesi yalnız YORUMDA yazılıydı; ölçülemiyordu.
+     Diet'te aynı yorumun ölçülen sonucu şuydu (kanon §9/D1 · §10/B2):
+     `yanit-bekleyen` ve `cozulen` tanımlı, etiketli, rozetli, ikonluydu ama
+     HİÇBİR KOD YOLU o değerleri yazmıyordu.
+
+     🔴 ÜYENİN TABLOSU TEK KARAKTER DEĞİŞMEDİ — beş geçiş, kanon §2.1'in
+     aynısı. Destek kolu üyeninkine EKLENMEDİ, YANINA kondu. Kapı:
+     tests/destek-kanon.mjs üye toplamını 5'te kilitler ve destek kolunun
+     üyeninkine sızmadığını ayrıca ölçer.
+
+     ═══ ÜYE (iki fiil: "Talebi Kapat" · "Talebi Yeniden Aç") ═══════════
+       Açık            → Kapatılan          (vazgeçti / kendi çözdü)
+       Yanıt bekleyen  → Kapatılan
+       Çözülen         → Kapatılan · Açık   (kabul etti / kabul etmedi)
+       Kapatılan       → Açık               (yeniden açtı)
+     ⚠ `Açık → Açık` YOK: zaten açık talebi yeniden açmak anlamsızdır ve
+       damgayı sessizce tazelerdi.
+     🔴 Üye hiçbir talebi `yanit-bekleyen`e ya da `cozulen`e SOKAMAZ.
+
+     ═══ DESTEK EKİBİ (tek durum fiili: "çözüldü") ══════════════════════
+       Açık            → Çözülen            (destek çözdüğünü bildirdi)
+       Yanıt bekleyen  → Çözülen            (üyeden cevap beklenirken çözüldü)
+       Çözülen         → —                  (tekrarı çözüm damgasını tazelerdi;
+                                              üyedeki `Açık → Açık` yasağının aynısı)
+       Kapatılan       → —                  (kapatma ÜYENİN sözüdür; destek onu
+                                              geri alamaz, üye yeniden açar)
+     ⚠ `* → yanit-bekleyen` BU TABLODA YOKTUR VE OLMAMALIDIR — o bir KARAR
+       değil, bir MESAJIN YAN ETKİSİDİR (aşağıya bak).
+     ⚠ DESTEK EKİBİ TALEP KAPATMAZ: kapatma üyenin fiilidir. Ölçülmemiş bir
+       yüzeyin kuralı bugünden uydurulmadı. */
+  var GECIS = {
+    'uye': {
+      'acik':           ['kapatilan'],
+      'yanit-bekleyen': ['kapatilan'],
+      'cozulen':        ['kapatilan', 'acik'],
+      'kapatilan':      ['acik']
+    },
+    'destek': {
+      'acik':           ['cozulen'],
+      'yanit-bekleyen': ['cozulen'],
+      'cozulen':        [],
+      'kapatilan':      []
+    }
+  };
+  /* Aktör VARSAYILAN OLARAK ÜYEDİR — Diet'in `SupportActor::Uye` varsayılanının
+     aynısı. Argümansız her çağrı üyenin tablosuna düşer, yani bu dosyadaki
+     bütün düğme mantığı destek kolu eklenmeden önceki hâliyle aynı kalır. */
+  function gecebilir(nereden, nereye, aktor){
+    var tablo = GECIS[aktor || AKTOR.UYE] || {};
+    return (tablo[nereden] || []).indexOf(nereye) > -1;
+  }
+
+  /* ---- YANIT YAZMANIN DURUM YAN ETKİSİ — kanon §3.1 -----------------
+     🔴 YAN ETKİ MATRİSE SORULMAZ, ve bu bilinçlidir: matris AÇIK durum
+     değiştirme fiilini yönetir ("çözüldü" / "kapat" / "yeniden aç"), mesaj
+     yazmanın yan etkisini değil. Emsal simetriktir — üye yazınca `acik`
+     yazılır ama `acik → acik` matriste YASAKTIR; matrise sorulsaydı üst üste
+     yazılan ikinci mesaj reddedilirdi.
+
+     Bir mesaj eklemek TOPU KARŞI TARAFA ATMAKTIR; ölçüt durumların kendi
+     tanımıdır (`acik` = sıra destekte · `yanit-bekleyen` = sıra üyede),
+     ikinci bir sözlük kurulmadı:
+       ÜYE yazınca    → acik            (her durumdan; kapatılanda yazılamaz)
+       DESTEK yazınca → yanit-bekleyen  (her durumdan; kapatılanda yazılamaz)
+     `null` dönüşü "bu talebe yazılamaz" demektir. */
+  function yanitEtkisi(aktor, durum){
+    if(!yanitAlir(durum)) return null;
+    return aktor === AKTOR.DESTEK ? 'yanit-bekleyen' : 'acik';
+  }
+
+  /* Kanon §3: yanıt kabulü bir DURUM kuralıdır, yetki kuralı değil.
+     Sahibi bile kapattığı talebe yazamaz; önce yeniden açar.
+     ⚠ Kural AKTÖRDEN BAĞIMSIZDIR: talep kapalıysa yazışma durmuştur —
+     destek ekibi de yazamaz. */
+  function yanitAlir(d){ return d !== 'kapatilan'; }
+
+  /* Talep işlemleri kartının duruma göre metni. Her durum bir açıklama ve
+     en az bir çıkış yolu taşır — kart hiçbir hâlde boş kalmaz. */
+  var ACT_NOTE = {
+    /* "gördüler ve yanıt hazırlıyorlar" KALKTI: makette kimse görmedi,
+       kimse yanıt hazırlamıyor. Cümle DURUMU söylüyor, olmayan bir
+       faaliyeti değil. */
+    'acik':           'Sıra destek ekibinde. Konu kendiliğinden çözüldüyse beklemeden kapatabilirsin.',
+    'yanit-bekleyen': 'Sıra sende: destek ekibi yazdı ve yanıtını bekliyor. Konu çözüldüyse yanıt yazmak yerine talebi kapatabilirsin.',
+    'cozulen':        'Destek ekibi bu talebi çözüldü olarak işaretledi. Çözüm işine yaradıysa talebi kapat; yaramadıysa yeniden aç, sıra tekrar destek ekibine geçsin.',
+    'kapatilan':      'Bu talep kapatıldı ve yazışması kayıtta duruyor. Aynı konu tekrar ederse talebi yeniden açabilirsin — geçmiş yazışma korunur.'
+  };
+
+  /* =====================================================================
+     K21 · YEREL TALEPLERİ İÇE AL — destek-v1.html'de gönderilen talep artık
+     `dm_fit_destek_v1`e de yazılıyor (bu depo yalnız DOM'a ekliyordu,
+     yenilemede kayboluyordu). Statik 11 `.tk-t` bloğunun YANINA, aynı
+     `.tk-t` şemasında bir blok daha üretiyoruz; `tickets` dizisi ve `pick()`
+     ikisini de aynı yoldan tanır — ayrı bir kod dalı açılmadı.
+     Yazışması TEK satırdır (kullanıcının kendi mesajı) ve önüne dürüst bir
+     sistem notu eklenir: bu talep sunucuya gitmedi, yalnız bu tarayıcıda
+     duruyor. "Destek ekibi yanıtladı" gibi sahte bir ikinci mesaj YOK. */
+  (function(){
+    var DEPO = 'dm_fit_destek_v1';
+    var veri = null;
+    try{ veri = JSON.parse(localStorage.getItem(DEPO)); }catch(e){ veri = null; }
+    var talepler = (veri && Array.isArray(veri.talepler)) ? veri.talepler : [];
+    if(!talepler.length) return;
+    var ilkTk = document.querySelector('.tk-t');
+    if(!ilkTk) return;
+    var kap = ilkTk.parentElement;
+    var AY_YEREL = ['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
+    function pad2(n){ return (n < 10 ? '0' : '') + n; }
+    function bicimle(iso){
+      var t = new Date(iso);
+      if(isNaN(t.getTime())) t = new Date();
+      return {
+        iso: t.getFullYear() + '-' + pad2(t.getMonth()+1) + '-' + pad2(t.getDate()),
+        txt: t.getDate() + ' ' + AY_YEREL[t.getMonth()] + ' ' + t.getFullYear() + ', ' + pad2(t.getHours()) + ':' + pad2(t.getMinutes()),
+        short: t.getDate() + ' ' + AY_YEREL[t.getMonth()].slice(0,3),
+        datetime: t.getFullYear() + '-' + pad2(t.getMonth()+1) + '-' + pad2(t.getDate()) + 'T' + pad2(t.getHours()) + ':' + pad2(t.getMinutes())
+      };
+    }
+    function escYerel(s){
+      return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){
+        return { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c];
+      });
+    }
+    talepler.forEach(function(tp){
+      if(!tp || !tp.no) return;
+      if(document.querySelector('.tk-t[data-tk="' + tp.no + '"]')) return; /* çift eklenmez */
+      var s = bicimle(tp.tarih);
+      var div = document.createElement('div');
+      div.className = 'tk-t';
+      div.hidden = true;
+      div.setAttribute('data-tk', tp.no);
+      div.setAttribute('data-title', tp.konu || tp.no);
+      div.setAttribute('data-status', tp.durum || 'acik');
+      div.setAttribute('data-konu', tp.konu || '');
+      div.setAttribute('data-kanal', 'Web · Destek Taleplerim');
+      div.setAttribute('data-open-iso', s.iso);
+      div.setAttribute('data-open-txt', s.txt);
+      div.setAttribute('data-open-short', s.short);
+      div.setAttribute('data-last-iso', s.iso);
+      div.setAttribute('data-last-txt', s.txt);
+      div.setAttribute('data-last-short', s.short);
+      div.innerHTML =
+        '<div class="bub-list">' +
+          '<div class="bub is-sys">' +
+            '<p><i class="fa-solid fa-laptop" aria-hidden="true"></i> Bu talep yalnız bu tarayıcıda duruyor, sunucuya gitmedi — makette örnek bir hesap değil.</p>' +
+          '</div>' +
+          '<div class="bub out">' +
+            '<div class="bt"><b>Sen</b> <time datetime="' + escYerel(s.datetime) + '">' + escYerel(s.txt) + '</time></div>' +
+            '<p>' + escYerel(tp.mesaj || '') + '</p>' +
+          '</div>' +
+        '</div>';
+      kap.appendChild(div);
+    });
+  })();
+
+  var tickets  = [].slice.call(document.querySelectorAll('.tk-t'));
+  var empty    = document.getElementById('tkEmpty');
+  var replyBox = document.getElementById('yanit');
+  var form     = document.getElementById('tkReplyForm');
+  var closedNo = document.getElementById('tkClosedNote');
+  var closeBtn = document.getElementById('tkCloseBtn');
+  var reopenBtn= document.getElementById('tkReopenBtn');
+  var reopenIn = document.getElementById('tkReopenInline');
+  var actNote  = document.getElementById('tkActNote');
+  var live     = document.getElementById('tkLive');
+  if(!tickets.length || !form) return;
+
+  var current = null;   /* seçili .tk-t düğümü */
+
+  function byId(id){ return document.getElementById(id); }
+  function setText(id, v){ var n = byId(id); if(n) n.textContent = v; }
+
+  /* durum rozetini (banner + yan ray) tek yerden yazar */
+  function paintBadge(node, key){
+    if(!node) return;
+    var s = STATUS[key] || STATUS['acik'];
+    node.className = 'pstat ' + s.cls;
+    node.textContent = s.txt;
+  }
+
+  function msgCount(node){
+    return node.querySelectorAll('.bub-list > .bub:not(.is-sys)').length;
+  }
+
+  /* künyeyi seçili talebin data-* değerlerinden doldurur */
+  function sync(){
+    if(!current) return;
+    var d = current.dataset;
+    var n = msgCount(current);
+
+    /* §Ö2 sonrası banner ailesi kalktı; künye artık TEK yerde, §Ö17'nin
+       "Talep Bilgileri" kartında. `setText` eksik düğümde sessizce geçer,
+       o yüzden kalkan kalemler (tkTitle/tkCrumb/tkNo/tkStat*) çağrıdan da
+       çıkarıldı — ölü referans bırakılmıyor.
+       Sayfa başlığını modül kabuğu basıyor (#fitPlanTop). */
+    setText('tkHeadCount', n + ' mesaj');
+
+    setText('mNo', d.tk);
+    setText('mKonu', d.konu);
+    setText('mKanal', d.kanal);
+    setText('mCount', String(n));
+    var mo = byId('mOpen'), ml = byId('mLast');
+    if(mo){ mo.setAttribute('datetime', d.openIso); mo.textContent = d.openTxt; }
+    if(ml){ ml.setAttribute('datetime', d.lastIso); ml.textContent = d.lastTxt; }
+
+    paintBadge(byId('mBadge'),  d.status);
+
+    /* seçili talebi yan raydaki "Taleplerin" listesinde işaretle (Y8.5) */
+    [].forEach.call(document.querySelectorAll('.tk-others a[href*="?talep="]'), function(a){
+      var href = a.getAttribute('href') || '';
+      if(href.indexOf('talep=' + d.tk) > -1){ a.setAttribute('aria-current','page'); }
+      else { a.removeAttribute('aria-current'); }
+    });
+
+    /* ---- yanıt kutusu · kapalı bloğu · işlem düğmeleri, hepsi DURUMDAN türer ---- */
+    var yazilabilir = yanitAlir(d.status);
+    form.hidden = !yazilabilir;
+    closedNo.classList.toggle('show', !yazilabilir);
+
+    if(actNote) actNote.textContent = ACT_NOTE[d.status] || ACT_NOTE['acik'];
+    /* Bu yüzey ÜYENİN yüzeyidir; aktör açıkça yazılıyor ki destek kolu
+       eklendiğinde hangi tablodan okunduğu okunur kalsın. */
+    if(closeBtn)  closeBtn.hidden  = !gecebilir(d.status, 'kapatilan', AKTOR.UYE);
+    if(reopenBtn) reopenBtn.hidden = !gecebilir(d.status, 'acik',      AKTOR.UYE);
+    /* `cozulen`de iki düğme birden var; oradaki "yeniden aç" birincil değil,
+       çünkü ana beklenti çözümün kabulüdür. `kapatilan`da tek düğme kalır ve
+       birincil olur — yoksa kilitli ekranın tek çıkışı sönük görünürdü. */
+    if(reopenBtn){
+      reopenBtn.classList.toggle('btn-fit', d.status === 'kapatilan');
+      reopenBtn.classList.toggle('btn-ghost',   d.status !== 'kapatilan');
+    }
+  }
+
+  /* ---- 1 · ?talep=<no> ---- */
+  function pick(){
+    var want = (new URLSearchParams(location.search).get('talep') || DEFAULT).trim().toUpperCase();
+    var hit = null;
+    tickets.forEach(function(t){
+      var on = t.dataset.tk.toUpperCase() === want;
+      t.hidden = !on;
+      if(on) hit = t;
+    });
+    current = hit;
+    if(!hit){
+      /* Tanınmayan numara: yanıt alanı, işlem kartı ve künye kartı anlamsız.
+         Künye kartı ÖZELLİKLE gizleniyor — açık kalsaydı varsayılan talebin
+         numarası, konusu ve tarihleri ekranda kalır, kullanıcı bulunamayan
+         talebin bilgisi sanırdı (ölçüldü). */
+      empty.classList.add('show');
+      replyBox.hidden = true;
+      var ic = byId('tkInfoCard'); if(ic) ic.hidden = true;
+      var cc = byId('tkActCard');  if(cc) cc.hidden = true;
+      setText('tkNo', '#' + want);
+      setText('tkHeadCount', '0 mesaj');
+      setText('tkStatCount', '0');
+      setText('tkStatOpen', '—');
+      setText('tkStatLast', '—');
+      [].forEach.call(document.querySelectorAll('.tk-other'), function(a){ a.removeAttribute('aria-current'); });
+      document.title = 'Talep bulunamadı — Destek Talebi Detayı | DadaFit';
+      return;
+    }
+    empty.classList.remove('show');
+    sync();
+    document.title = hit.dataset.title + ' — Talep ' + hit.dataset.tk + ' | DadaFit';
+  }
+  pick();
+
+  /* ---- şu anın damgası (eklenen mesajlar için) ---- */
+  var AY = ['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
+  function pad(n){ return (n < 10 ? '0' : '') + n; }
+  function stamp(){
+    var d = new Date();
+    return {
+      iso:   d.getFullYear() + '-' + pad(d.getMonth()+1) + '-' + pad(d.getDate()) + 'T' + pad(d.getHours()) + ':' + pad(d.getMinutes()),
+      txt:   d.getDate() + ' ' + AY[d.getMonth()] + ' ' + d.getFullYear() + ' · ' + pad(d.getHours()) + ':' + pad(d.getMinutes()),
+      full:  d.getDate() + ' ' + AY[d.getMonth()] + ' ' + d.getFullYear() + ', ' + pad(d.getHours()) + ':' + pad(d.getMinutes()),
+      short: d.getDate() + ' ' + AY[d.getMonth()].slice(0,3),
+      dIso:  d.getFullYear() + '-' + pad(d.getMonth()+1) + '-' + pad(d.getDate())
+    };
+  }
+  function esc(s){
+    return String(s).replace(/[&<>"']/g, function(c){
+      return { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c];
+    });
+  }
+  function touchLast(s){
+    current.dataset.lastIso   = s.dIso;
+    current.dataset.lastTxt   = s.full;
+    current.dataset.lastShort = s.short;
+  }
+  function sistemSatiri(metin, ikon, s){
+    var li = document.createElement('li');
+    li.className = 'bub is-sys is-new';
+    li.innerHTML =
+      '<div class="bd"><p><i class="fa-solid ' + ikon + '" aria-hidden="true"></i> ' +
+      esc(metin) + ' · <time datetime="' + s.iso + '">' + s.txt + '</time></p></div>';
+    current.querySelector('.bub-list').appendChild(li);
+    return li;
+  }
+
+  /* ---- 2 · yanıt formu ---- */
+  var ta    = byId('tkReply');
+  var cnt   = byId('tkCount');
+  var eBox  = byId('tkErrMsg');
+  var eSum  = byId('tkErrSum');
+  var eSumT = eSum ? eSum.querySelector('span') : null;
+  var MIN   = 10;
+
+  function problem(){
+    var v = (ta.value || '').trim();
+    if(!v) return 'Yanıt alanı boş — destek ekibine ne yazmak istediğini birkaç cümleyle anlat.';
+    if(v.length < MIN) return 'Yanıtın en az ' + MIN + ' karakter olsun — şu an ' + v.length + '.';
+    return '';
+  }
+  function mark(msg){
+    if(msg){
+      ta.setAttribute('aria-invalid','true');
+      ta.classList.add('is-bad');
+      eBox.querySelector('span').textContent = msg;
+      eBox.hidden = false;
+      if(eSum && eSumT){
+        eSumT.textContent = 'Yanıt gönderilemedi: 1 alan eksik ya da hatalı. Sebebi aşağıda alanın altında yazıyor.';
+        eSum.hidden = false;
+      }
+    } else {
+      ta.removeAttribute('aria-invalid');
+      ta.classList.remove('is-bad');
+      eBox.hidden = true;
+      if(eSum) eSum.hidden = true;
+    }
+  }
+
+  ta.addEventListener('input', function(){
+    if(cnt) cnt.textContent = ta.value.length;
+    if(ta.getAttribute('aria-invalid')) mark(problem());
+  });
+  ta.addEventListener('blur', function(){ if(ta.dataset.seen) mark(problem()); });
+
+  /* ---- ek dosya: seçilen dosyanın adı YAZIYLA gösterilir; mesaj başına
+         TEK dosya olduğu için input `multiple` taşımaz (kanon §8.1). ---- */
+  var ekInput = byId('tkEk');
+  var ekName  = byId('tkEkName');
+  var ekClear = byId('tkEkClear');
+  function ekYaz(){
+    if(!ekInput || !ekName) return;
+    var f = ekInput.files && ekInput.files[0];
+    ekName.textContent = f ? f.name : 'Dosya seçilmedi';
+    if(ekClear) ekClear.hidden = !f;
+  }
+  if(ekInput) ekInput.addEventListener('change', ekYaz);
+  if(ekClear) ekClear.addEventListener('click', function(){
+    ekInput.value = ''; ekYaz(); ekInput.focus();
+  });
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    if(!current) return;
+
+    /* Kanon §3: kapatılan talebe yazılamaz. Form zaten gizli, ama kapı
+       burada da duruyor — görünürlük bir kapı değildir. */
+    if(!yanitAlir(current.dataset.status)){
+      if(eSum && eSumT){
+        eSumT.textContent = 'Bu talep kapatıldı, yanıt yazılamaz. Önce talebi yeniden aç.';
+        eSum.hidden = false;
+      }
+      return;
+    }
+
+    ta.dataset.seen = '1';
+    var p = problem();
+    mark(p);
+    if(p){ ta.focus(); return; }
+
+    var s = stamp();
+    var ekDosya = ekInput && ekInput.files && ekInput.files[0];
+    var li = document.createElement('li');
+    li.className = 'tk-msg is-me is-new';
+    li.innerHTML =
+      '<span class="av" aria-hidden="true">EŞ</span>' +
+      '<div class="bd">' +
+        '<div class="mh"><b>Elif Şahin</b><span class="who">Sen</span>' +
+        '<time datetime="' + s.iso + '">' + s.txt + '</time></div>' +
+        '<p>' + esc(ta.value.trim()) + '</p>' +
+        (ekDosya ? '<p class="msg-ek"><i class="fa-solid fa-paperclip" aria-hidden="true"></i> ' + esc(ekDosya.name) + '</p>' : '') +
+      '</div>';
+    current.querySelector('.bub-list').appendChild(li);
+
+    /* 🔴 Yan etki TEK KAYNAKTAN gelir (`yanitEtkisi`), burada yeniden
+       yazılmaz — aktörü değişen ikinci bir kopya sessizce ayrışırdı.
+       Bu yüzey ÜYENİN yüzeyidir; destek kolu aynı fonksiyondan okunur.
+       Diet'te ayrıca `resolved_at = null` yazılıyor; buradaki karşılığı
+       durumun `cozulen`den çıkmasıdır — "çözülmüş ama açık" gibi okunamaz
+       bir satır kalmasın. */
+    var oncekiDurum = current.dataset.status;
+    var sonraki = yanitEtkisi(AKTOR.UYE, oncekiDurum);
+    if(sonraki) current.dataset.status = sonraki;
+
+    touchLast(s);
+    ta.value = '';
+    if(cnt) cnt.textContent = '0';
+    if(ekInput){ ekInput.value = ''; ekYaz(); }
+    delete ta.dataset.seen;
+    sync();
+    /* MAKET DİLİ: yazışmaya eklendi DOĞRU (balon ekranda), "sıra destek
+       ekibine geçti" DEĞİL — kimseye gitmedi. Cümle olanla sınırlandı. */
+    if(live) live.textContent = 'Yanıtın bu sekmedeki yazışmaya eklendi; gönderilmedi. Talepte artık ' + msgCount(current) + ' mesaj var.' +
+      (oncekiDurum !== current.dataset.status ? ' Makette talebin durumu "Açık talep" oldu.' : '');
+    li.scrollIntoView({ block:'nearest', behavior:'smooth' });
+  });
+
+  /* ---- 3 · durum geçişleri (kapat / yeniden aç) — onay penceresinden ----
+     Pencere TEK; başlık, metin ve onay düğmesi fiile göre doldurulur. */
+  var modal   = byId('tkModal');
+  var release = null;
+  var acan    = null;   /* pencereyi açan düğme — kapanınca odak oraya döner */
+  var fiil    = 'kapat';
+
+  var MODAL = {
+    'kapat': {
+      hedef:  'kapatilan',
+      baslik: 'Talebi kapatalım mı?',
+      metin:  'Kapattığında bu talebe yeni yanıt yazılamaz. Yazışma listende durmaya devam eder; aynı konu tekrar ederse talebi yeniden açabilirsin.',
+      onay:   '<i class="fa-solid fa-check" aria-hidden="true"></i> Evet, kapat',
+      sistem: 'Talebi kapattın',
+      ikon:   'fa-lock',
+      duyuru: 'Talep kapatıldı. Bu talebe artık yanıt yazılamaz; istersen yeniden açabilirsin.'
+    },
+    'yeniden-ac': {
+      hedef:  'acik',
+      baslik: 'Talebi yeniden açalım mı?',
+      metin:  'Yeniden açtığında talep "Açık talep" durumuna döner ve sıra destek ekibine geçer. Geçmiş yazışmanın tamamı olduğu gibi kalır; kaldığın yerden yazmaya devam edebilirsin.',
+      onay:   '<i class="fa-solid fa-rotate-left" aria-hidden="true"></i> Evet, yeniden aç',
+      sistem: 'Talebi yeniden açtın',
+      ikon:   'fa-rotate-left',
+      duyuru: 'Talep yeniden açıldı. Durumu "Açık talep" oldu ve yanıt kutusu tekrar açık.'
+    }
+  };
+
+  function openModal(hangi, kaynak){
+    if(!modal || modal.classList.contains('show')) return;   /* durum korumalı */
+    if(!current) return;
+    var m = MODAL[hangi];
+    if(!m || !gecebilir(current.dataset.status, m.hedef, AKTOR.UYE)){
+      /* 🔴 Geçersiz geçiş SESSİZCE YUTULMAZ (kanon §2.3). Sunucuda karşılığı
+         422'dir ("yetki tamam, sorun TALEBİN HÂLİDİR"); makette karşılığı
+         canlı bölgeye yazılan gerekçedir. */
+      if(live) live.textContent = 'Bu işlem talebin şu anki durumunda yapılamıyor. Talep şu an: ' +
+        (STATUS[current.dataset.status] || {}).txt + '.';
+      return;
+    }
+    fiil = hangi;
+    acan = kaynak || null;
+    setText('tkModalTitle', m.baslik);
+    setText('tkModalDesc',  m.metin);
+    var yes = byId('tkModalYes'); if(yes) yes.innerHTML = m.onay;
+    modal.hidden = false;
+    /* sınıf, hidden kalktıktan sonraki karede eklenir ki geçiş gerçekten çalışsın */
+    requestAnimationFrame(function(){ modal.classList.add('show'); });
+    if(window.FIT_SHELL && FIT_SHELL.lockScroll) FIT_SHELL.lockScroll();
+    if(window.FIT_SHELL && FIT_SHELL.trapFocus) release = FIT_SHELL.trapFocus(modal);
+  }
+  function closeModal(){
+    if(!modal || !modal.classList.contains('show')) return;
+    modal.classList.remove('show');
+    if(window.FIT_SHELL && FIT_SHELL.unlockScroll) FIT_SHELL.unlockScroll();
+    if(release){ release(); release = null; }
+    setTimeout(function(){ if(!modal.classList.contains('show')) modal.hidden = true; }, 280);
+  }
+
+  if(closeBtn)  closeBtn.addEventListener('click',  function(){ openModal('kapat', closeBtn); });
+  if(reopenBtn) reopenBtn.addEventListener('click', function(){ openModal('yeniden-ac', reopenBtn); });
+  if(reopenIn)  reopenIn.addEventListener('click',  function(){ openModal('yeniden-ac', reopenIn); });
+
+  ['tkModalX','tkModalNo','tkModalScrim'].forEach(function(id){
+    var n = byId(id); if(n) n.addEventListener('click', closeModal);
+  });
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape' && modal && modal.classList.contains('show')){
+      e.stopPropagation();
+      closeModal();
+    }
+  });
+
+  var yes = byId('tkModalYes');
+  if(yes) yes.addEventListener('click', function(){
+    if(!current) return;
+    var m = MODAL[fiil];
+    if(!m || !gecebilir(current.dataset.status, m.hedef, AKTOR.UYE)){ closeModal(); return; }
+
+    var s = stamp();
+    current.dataset.status = m.hedef;
+    touchLast(s);
+    /* Damgalar KURALIN KENDİSİNDEN türer, çağırandan gelmez (kanon §2.4):
+       → kapatilan : closed_at = şimdi · resolved_at DOKUNULMAZ
+       → acik      : closed_at = null  · resolved_at = null
+       Makette bu iki damganın kolonu yok; karşılıkları durumun kendisi ve
+       yazışmaya düşen sistem satırıdır. */
+    sistemSatiri(m.sistem, m.ikon, s);
+
+    sync();
+    closeModal();
+    if(live) live.textContent = m.duyuru;
+
+    /* Odak, işlemin SONUCUNA gider — kullanıcı ne değiştiğini görsün. */
+    var hedefEl = (m.hedef === 'kapatilan') ? closedNo : form;
+    if(hedefEl){
+      hedefEl.scrollIntoView({ block:'nearest', behavior:'smooth' });
+    }
+    if(m.hedef === 'acik' && ta){ try{ ta.focus({preventScroll:true}); }catch(err){ ta.focus(); } }
+    else if(acan && !acan.hidden){ try{ acan.focus({preventScroll:true}); }catch(err){} }
+  });
+
+  /* ---- 4 · DURUM MAKİNESİ TUTAMAĞI --------------------------------
+     Kabuğun kendi deseni (`FIT_SHELL` · `FIT_PAGI` · `FIT_PLAN`): motor
+     `window`a salt-okunur bir tutamakla açılır.
+
+     🔴 NEDEN GEREKLİ: destek ekibinin iki geçişi bu makette EKRANSIZDIR —
+     Fit'te yönetim paneli hiç yok ve Beyar "yönetim ekranı kurma" dedi.
+     Ekransız bırakılan bir kural ÖLÇÜLEMEZSE, Diet'te ölçülen kusurun
+     (kanon §10/B2: "tanımlı ama hiçbir kod yolu yazmıyor") maket sürümü
+     doğardı. Tutamak, `tests/destek-kanon.mjs`in destek kolunu — ve
+     üyeninkinin BÜYÜMEDİĞİNİ — doğrudan ölçmesini sağlar.
+
+     ⚠ TUTAMAK YETKİ DEĞİLDİR ve ekranda hiçbir şey açmaz: yalnız tabloları
+     ve iki saf fonksiyonu okutur. Üyenin yüzeyi bu tutamağı hiç kullanmaz. */
+  window.FIT_DESTEK = {
+    AKTOR: AKTOR,
+    DURUM: STATUS,
+    gecisler: function(aktor){ return GECIS[aktor || AKTOR.UYE]; },
+    gecebilir: gecebilir,
+    yanitEtkisi: yanitEtkisi,
+    yanitAlir: yanitAlir
+  };
+
+})();
+</script>
+</body>
+</html>

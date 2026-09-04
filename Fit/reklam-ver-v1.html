@@ -1,0 +1,1510 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8" />
+  <meta name="robots" content="noindex, nofollow" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>DadaFit Medya Kiti — Reklam, Sponsorluk ve İş Birliği</title>
+<meta name="description" content="DadaFit medya kiti: hareket, program ve antrenör içeriklerinde reklam alanları, yerleşim senaryoları, sponsorluk paketleri ve marka iş birliği modelleri." />
+<link rel="icon" type="image/svg+xml" href="../kanon/varlik/dadafit-isaret.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="../kanon/varlik/dadafit-isaret-32.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="../kanon/varlik/dadafit-isaret-180.png" />
+<!-- FontAwesome 6.5.2 (kilitli ikon seti) -->
+<!-- DadaFit ortak kabuk (tek kaynak) -->
+<!-- KANON · yukleme sirasi: tokenlar -> markalar/fit (bilesenler YUKLENMEZ) -->
+<link rel="stylesheet" href="../kanon/tokenlar.css" />
+<link rel="stylesheet" href="../kanon/markalar/fit.css" />
+<link rel="stylesheet" href="assets/css/fit-shell.css" />
+<link rel="stylesheet" href="assets/css/fit-mesaj.css" />
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+      integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+      crossorigin="anonymous" referrerpolicy="no-referrer" />
+<style>
+/* =====================================================================
+ SAYFAYA ÖZGÜ CSS — DadaFit Medya Kiti (reklam · sponsorluk · iş birliği)
+ ---------------------------------------------------------------------
+ Kabuk kuralları fit-shell.css'e devredildi. Buradaki hiçbir kural kabuk
+ kopyası değil: banner (.lib-top/.lib-crumb/.lib-sub), .sec/.sec-head,
+ .wrap, .eyebrow, .chips/.chip, .btn*, token'lar ve
+ @keyframes fadeUp kabuktan gelir.
+
+ Göçte KALDIRILANLAR ve nedenleri:
+  · .lst-top / .lst-hero / .rd-crumb → kabuğun kanonik .lib-top + .lib-crumb
+    banner'ı kullanılıyor (sss-v1 ile aynı karar). Böylece A2'nin "banner
+    üzerinde şeffaf header" davranışı (fit-shell.js OVER_MODE →
+    body[data-fit-over="1"]) bu sayfada da açılıyor. Yan kazanç: turuncu
+    hover (#ff8763), turuncu aksan (#ff7a5c) ve eski markanın yemek
+    fotoğrafı (harici Unsplash) kalktı. Banner görseli bilinçli olarak
+    bildirilmedi (--lib-img:none) — FAZ 9 harici Unsplash bağlantılarının
+    üretimden kalkmasını istiyor, yenisi eklenmedi.
+  · .statband arka planındaki Unsplash mutfak fotoğrafı → aynı gerekçe;
+    yerine kabuğun .lib-top gradient dili (yeşil radial + koyu katman).
+  · @font-face Gilroy + @keyframes fadeUp → kabukta tanımlı, kopya kalktı.
+  · .nav-div, .row-nav button:hover → sökülen eski turuncu kabuğun ölü
+    kalıntısı; bu dosyada .row-track/.row-nav markup'ı hiç yoktu.
+  · Turuncu literaller: rgba(0,157,79,*) → rgba(0,157,79,*) (DadaFit
+    yeşili #009d4f), .note-card gradient'i #A8331A→#E14827 yerine
+    --fit-ink→--fit, .statband small'u #ffb39e → --fit-bright,
+    eyebrow #ffd9cf → --fit-bright.
+ ===================================================================== */
+
+/* ---- banner: kabuk .lib-top üstünde iki kolonlu medya-kiti hero'su ---- */
+.mk-hero{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:44px;align-items:end}
+
+.mk-hero .mk-main{min-width:0}
+
+.lib-top .eyebrow-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+
+.lib-top h1 .accent{color:var(--fit-bright)}
+
+.mk-chips{margin-top:20px}
+
+.mk-chips .chip{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.22);color:#fff}
+
+.mk-chips .chip:hover{background:var(--fit);border-color:var(--fit);color:#fff}
+
+.mk-stats{display:flex;flex-direction:column;gap:16px;padding-left:38px;border-left:1px solid rgba(255,255,255,.18)}
+
+.mk-stats .st b{display:block;font-size:29px;font-weight:700;color:#fff;letter-spacing:-.02em;line-height:1.1}
+
+.mk-stats .st span{font-size:12.5px;color:rgba(255,255,255,.66);font-weight:500}
+
+@media (max-width:1024px){
+  .mk-hero{grid-template-columns:1fr;align-items:start;gap:22px}
+
+  .mk-stats{flex-direction:row;flex-wrap:wrap;gap:24px;padding-left:0;border-left:none;padding-top:18px;border-top:1px solid rgba(255,255,255,.18)}
+}
+
+@media (max-width:640px){
+  .mk-stats{gap:10px}
+
+  .mk-stats .st{flex:1 1 40%}
+
+  .mk-stats .st b{font-size:20px}
+
+.mk-chips{margin-top:16px}
+}
+
+
+/* ---- FORM KARTI + FK ALAN KİTİ — kaynak: diyetisyen-ol-v1 (tarif-ekle mirası) VERBATIM ---- */
+.form-card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);box-shadow:var(--sh-sm);padding:28px}
+
+.fc-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:24px;padding-bottom:18px;border-bottom:1px solid var(--line)}
+
+.fc-head h2{font-size:20px;display:flex;align-items:center;gap:11px}
+
+.fc-head h2 i{flex:none;width:38px;height:38px;border-radius:var(--radius-md);background:var(--fit-wash);color:var(--fit);display:grid;place-items:center;font-size:15px}
+
+.fc-head p{font-size:13px;color:var(--muted);font-weight:500;margin-top:5px}
+
+.fc-step{flex:none;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);background:var(--bg);border:1px solid var(--line);padding:6px 11px;border-radius:var(--radius-sm);white-space:nowrap}
+
+.fk-field{margin-bottom:22px}
+
+.fk-field:last-child{margin-bottom:0}
+
+.fk-label{display:flex;align-items:baseline;gap:7px;font-size:14px;font-weight:700;color:var(--slate);margin-bottom:9px}
+
+.fk-label .req{color:var(--fit);font-weight:700}
+
+.fk-label .opt{font-size:11.5px;color:var(--muted);font-weight:500}
+
+.fk-label .fk-count{margin-left:auto;font-size:11.5px;color:var(--muted);font-weight:500;letter-spacing:.02em}
+
+.fk-input,.fk-select,.fk-textarea{
+  width:100%;font-family:inherit;font-size:14px;font-weight:500;color:var(--slate);
+  background:var(--bg);border:1px solid var(--line);border-radius:var(--radius-md);
+  padding:13px 15px;outline:none;transition:border-color .2s var(--ease),box-shadow .2s var(--ease);
+}
+
+.fk-input::placeholder,.fk-textarea::placeholder{color:#a7a7a7}
+
+.fk-input:focus,.fk-select:focus,.fk-textarea:focus{border-color:var(--fit);box-shadow:0 0 0 3px color-mix(in srgb, var(--marka) 10%, transparent)}
+
+.fk-textarea{min-height:130px;resize:vertical;line-height:1.6}
+
+.fk-select{
+  appearance:none;-webkit-appearance:none;cursor:pointer;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%237E7E7E' stroke-width='1.6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 15px center;padding-right:40px;
+}
+
+.fk-select:invalid{color:#a7a7a7}
+
+.fk-help{display:flex;align-items:flex-start;gap:7px;font-size:12.5px;color:var(--muted);font-weight:500;margin-top:8px;line-height:1.5}
+
+.fk-help i{color:var(--fit);font-size:12px;margin-top:2px;flex:none}
+
+.fk-help.green i{color:var(--green-deep)}
+
+.fk-grid{display:grid;gap:16px 18px}
+
+.fk-grid .fk-field{margin-bottom:0}
+
+.fk-grid.c2{grid-template-columns:1fr 1fr}
+
+.fk-grid.c3{grid-template-columns:1fr 1fr 1fr}
+
+.fk-grid+.fk-grid{margin-top:18px}
+
+.fk-grid+.fk-field,.fk-field+.fk-grid{margin-top:22px}
+
+/* uzmanlık/ilgi çoklu seçim chip'leri — kaynak: diyetisyen-ol-v1 VERBATIM */
+.uz-grid{display:flex;flex-wrap:wrap;gap:9px}
+
+.uz-pick{display:inline-flex;align-items:center;gap:8px;font-family:inherit;font-size:13px;font-weight:600;color:var(--slate-2);background:var(--bg);border:1px solid var(--line);border-radius:var(--radius-sm);padding:9px 14px;cursor:pointer;transition:.18s var(--ease)}
+
+.uz-pick i{font-size:11px;opacity:0;width:0;transition:.18s}
+
+.uz-pick:hover{border-color:var(--fit);color:var(--fit)}
+
+.uz-pick.on{border-color:var(--fit);background:var(--fit-wash);color:var(--fit)}
+
+.uz-pick.on i{opacity:1;width:11px}
+
+/* KVKK / onay + captcha + gönder satırı — kaynak: diyetisyen-ol-v1 VERBATIM */
+.ol-consents{display:flex;flex-direction:column;gap:13px}
+
+.ol-consents .fb-kvkk{margin:0}
+
+.captcha-note{display:flex;align-items:center;gap:9px;font-size:12px;color:var(--muted);font-weight:500;margin-top:18px;padding-top:16px;border-top:1px solid var(--line)}
+
+.captcha-note i{color:var(--green-deep);font-size:13px}
+
+.ol-submit{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-top:6px}
+
+.ol-submit .sub-note{font-size:12.5px;color:var(--muted);font-weight:500;max-width:280px}
+
+.ol-submit .btn{padding:15px 30px;font-size:15px}
+
+/* yan ray kartları — kaynak: diyetisyen-ol-v1 VERBATIM */
+.tips-card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);box-shadow:var(--sh-sm);padding:22px}
+
+.tips-head{font-size:15px;display:flex;align-items:center;gap:10px;margin-bottom:18px}
+
+.tips-head i{color:var(--fit);font-size:14px}
+
+.tips-steps{display:flex;flex-direction:column}
+
+.tip-step{display:flex;gap:14px;position:relative;padding-bottom:20px}
+
+.tip-step:last-child{padding-bottom:0}
+
+.tip-step .tn{flex:none;width:30px;height:30px;border-radius:var(--radius-circle);background:var(--fit-wash);color:var(--fit);display:grid;place-items:center;font-size:13px;font-weight:700;z-index:2}
+
+.tip-step:not(:last-child)::before{content:"";position:absolute;left:15px;top:32px;bottom:4px;width:2px;background:var(--line)}
+
+.tip-step b{font-size:13.5px;color:var(--slate);display:block;margin-bottom:3px}
+
+.tip-step span{font-size:12.5px;color:var(--muted);font-weight:500;line-height:1.5}
+
+.note-card{background:linear-gradient(160deg,var(--fit-ink),var(--fit));color:#fff;border-radius:var(--radius-lg);box-shadow:var(--sh-sm);padding:22px}
+
+.note-card h4{color:#fff;font-size:15px;display:flex;align-items:center;gap:9px;margin-bottom:13px}
+
+.note-card ul{list-style:none;display:flex;flex-direction:column;gap:10px}
+
+.note-card li{display:flex;gap:10px;font-size:13px;font-weight:500;line-height:1.45;color:rgba(255,255,255,.94)}
+
+.note-card li i{flex:none;margin-top:3px;font-size:12px;color:#d7f1ff}
+
+/* başarı durumu — kaynak: diyetisyen-ol-v1 VERBATIM */
+.ol-success{display:none;text-align:center;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);box-shadow:var(--sh-sm);padding:60px 30px}
+
+.ol-success.show{display:block;animation:fadeUp .35s var(--ease)}
+
+.ol-success .ok{width:74px;height:74px;border-radius:var(--radius-circle);background:#EAF7F0;color:var(--green);display:grid;place-items:center;font-size:30px;margin:0 auto 20px}
+
+.ol-success h2{font-size:26px;margin-bottom:10px}
+
+.ol-success p{font-size:15px;color:var(--muted);font-weight:500;max-width:460px;margin:0 auto 26px;line-height:1.65}
+
+.ol-success .os-steps{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-bottom:26px}
+
+.ol-success .os-steps span{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;font-weight:600;color:var(--slate-2);background:var(--bg-cream);border:1px solid var(--line);padding:9px 14px;border-radius:var(--radius-sm)}
+
+.ol-success .os-steps i{color:var(--green-deep)}
+
+@media (max-width:640px){
+  .form-card{padding:20px 18px}
+
+  .fk-grid.c2,.fk-grid.c3{grid-template-columns:1fr}
+
+  .ol-submit{flex-direction:column;align-items:stretch}
+
+  .ol-submit .btn{width:100%}
+}
+
+
+/* ============ REKLAM & SPONSORLUK — alan vitrini + paketler + başvuru ============ */
+
+/* ---- reklam alanı kartları (banner boyut vitrini) ---- */
+.ads-sec{background:var(--bg-white)}
+
+.ad-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+
+.ad-card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);overflow:hidden;transition:.25s var(--ease);display:flex;flex-direction:column}
+
+.ad-card:hover{transform:translateY(-4px);box-shadow:var(--sh-md)}
+
+/* mock önizleme sahnesi: nokta ızgaralı zemin + oranlı placeholder kutu */
+.ad-stage{
+  height:170px;display:grid;place-items:center;padding:18px;
+  background:var(--bg) radial-gradient(rgba(33,30,22,.10) 1px,transparent 1px);
+  background-size:14px 14px;border-bottom:1px solid var(--line);
+}
+
+.ad-shape{
+  display:grid;place-items:center;background:var(--fit-wash);
+  border:1.5px dashed color-mix(in srgb, var(--marka) 50%, transparent);border-radius:var(--radius-sm);
+  color:var(--fit);font-size:11px;font-weight:700;letter-spacing:.05em;
+}
+
+.ad-body{padding:18px 20px 20px;display:flex;flex-direction:column;gap:9px;flex:1}
+
+.ad-body h3{font-size:17px}
+
+.ad-meta{display:flex;flex-wrap:wrap;gap:7px}
+
+.ad-tag{font-size:11px;font-weight:700;letter-spacing:.04em;color:var(--slate-2);background:var(--bg);border:1px solid var(--line);padding:5px 10px;border-radius:var(--radius-sm)}
+
+.ad-tag.hot{color:var(--fit);background:var(--fit-wash);border-color:color-mix(in srgb, var(--marka) 25%, transparent)}
+
+.ad-body p{font-size:13px;color:var(--muted);font-weight:500;line-height:1.55;flex:1}
+
+.ad-size{display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:700;color:var(--slate);margin-top:auto;padding-top:12px;border-top:1px solid var(--line)}
+
+.ad-size i{color:var(--fit);font-size:12px}
+
+.ad-size .muted{font-weight:500}
+
+
+/* ---- sponsorluk paketleri ---- */
+.spons-sec{background:var(--bg-cream)}
+
+.pk-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;align-items:stretch}
+
+.pk-card{position:relative;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);padding:28px;display:flex;flex-direction:column;gap:0;transition:.25s var(--ease)}
+
+.pk-card:hover{transform:translateY(-5px);box-shadow:var(--sh-md)}
+
+.pk-card.featured{border-color:color-mix(in srgb, var(--marka) 45%, transparent);box-shadow:var(--sh-md)}
+
+.pk-flag{position:absolute;top:0;right:22px;transform:translateY(-50%);background:var(--fit);color:#fff;font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:6px 12px;border-radius:var(--radius-sm);box-shadow:0 6px 16px color-mix(in srgb, var(--marka) 35%, transparent)}
+
+.pk-tier{display:flex;align-items:center;gap:11px;margin-bottom:14px}
+
+.pk-tier i{width:42px;height:42px;border-radius:var(--radius-md);display:grid;place-items:center;font-size:17px}
+
+.pk-card.bronz .pk-tier i{background:#F4E8DC;color:#9C6B3F}
+
+.pk-card.gumus .pk-tier i{background:#EEF1F4;color:#6B7B8C}
+
+.pk-card.altin .pk-tier i{background:#FBF3DC;color:#B8860B}
+
+.pk-tier b{font-size:19px;color:var(--slate)}
+
+.pk-desc{font-size:13px;color:var(--muted);font-weight:500;line-height:1.55;margin-bottom:16px}
+
+.pk-feats{list-style:none;display:flex;flex-direction:column;gap:10px;padding:16px 0;border-top:1px solid var(--line);flex:1}
+
+.pk-feats li{display:flex;gap:10px;font-size:13.5px;font-weight:500;color:var(--slate-2);line-height:1.45}
+
+.pk-feats li i{flex:none;margin-top:3px;font-size:12px;color:var(--green-deep)}
+
+.pk-feats li.no{color:#b9b9b9}
+
+.pk-feats li.no i{color:#d5d5d5}
+
+.pk-price{padding:14px 0 16px;border-top:1px solid var(--line)}
+
+.pk-price b{font-size:24px;color:var(--slate);letter-spacing:-.02em}
+
+.pk-price span{font-size:12.5px;color:var(--muted);font-weight:500}
+
+.pk-card .btn{width:100%}
+
+.pk-note{margin-top:22px;display:flex;align-items:flex-start;gap:9px;padding:13px 16px;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-md);font-size:12.5px;color:var(--muted);font-weight:500;line-height:1.55}
+
+.pk-note i{color:var(--fit);font-size:13px;margin-top:2px;flex:none}
+
+
+/* ---- iş birliği / partnerlik modelleri (#isbirligi) ---- */
+.isb-sec{background:var(--bg-white)}
+
+.isb-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+
+.isb-card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);padding:24px;display:flex;flex-direction:column;gap:10px;transition:.25s var(--ease)}
+
+.isb-card:hover{transform:translateY(-4px);box-shadow:var(--sh-md)}
+
+.isb-ico{flex:none;width:44px;height:44px;border-radius:var(--radius-md);background:var(--fit-wash);color:var(--fit);display:grid;place-items:center;font-size:17px}
+
+.isb-card h3{font-size:17px;color:var(--slate)}
+
+.isb-card p{font-size:13px;color:var(--muted);font-weight:500;line-height:1.55;flex:1}
+
+.isb-for{display:flex;flex-wrap:wrap;gap:6px;margin-top:auto;padding-top:13px;border-top:1px solid var(--line)}
+
+.isb-for span{font-size:10.5px;font-weight:700;letter-spacing:.02em;color:var(--slate-2);background:var(--bg);border:1px solid var(--line);padding:4px 9px;border-radius:var(--radius-sm)}
+
+.isb-rules{margin-top:26px;background:var(--cream-2);border:1px solid #e7ddcb;border-radius:var(--radius-lg);padding:22px 24px}
+
+.isb-rules h3{font-size:16px;color:var(--slate);display:flex;align-items:center;gap:10px;margin-bottom:14px}
+
+.isb-rules h3 i{color:var(--fit);font-size:14px}
+
+.isb-rules ul{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:11px 26px}
+
+.isb-rules li{display:flex;gap:10px;font-size:13px;font-weight:500;color:var(--slate-2);line-height:1.5}
+
+.isb-rules li i{flex:none;margin-top:3px;font-size:12px;color:var(--green-deep)}
+
+@media (max-width:1024px){
+  .isb-grid{grid-template-columns:1fr 1fr}
+}
+
+@media (max-width:640px){
+  .isb-grid{grid-template-columns:1fr}
+
+  .isb-rules{padding:18px 16px}
+
+  .isb-rules ul{grid-template-columns:1fr}
+}
+
+
+/* ---- kitle bandı — koyu blok, kabuğun .lib-top gradient dilinden (harici görsel yok) ---- */
+.statband{
+  background:
+    radial-gradient(820px 360px at 84% 14%,color-mix(in srgb, var(--marka) 20%, transparent),transparent 62%),
+    linear-gradient(90deg,rgba(33,30,22,.97) 0%,rgba(29,26,20,.92) 46%,rgba(27,25,19,.9) 100%),
+    #1b1913;
+  padding:var(--sec-pad) 0;
+}
+
+.statband .sb-head{text-align:center;margin-bottom:34px}
+
+.statband .sb-head .eyebrow{color:var(--fit-bright);justify-content:center}
+
+.statband .sb-head h2{color:#fff;font-size:30px;margin-top:12px}
+
+.statband .sb-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:18px;text-align:center}
+
+.statband .st{padding:var(--sec-pad-sm) 8px;border-radius:var(--radius-md);background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12)}
+
+.statband .st b{display:block;font-size:32px;font-weight:700;color:#fff;letter-spacing:-.02em;line-height:1.1}
+
+.statband .st b small{font-size:18px;font-weight:700;color:var(--fit-bright)}
+
+.statband .st span{display:block;margin-top:6px;font-size:12.5px;color:rgba(255,255,255,.68);font-weight:500}
+
+.statband .sb-note{margin-top:22px;text-align:center;font-size:12.5px;color:rgba(255,255,255,.62);font-weight:500}
+
+
+/* ---- başvuru bölümü yerleşimi (diyetisyen-ol dili) ---- */
+.rv-sec{padding:var(--sec-pad) 0;background:var(--bg-white)}
+
+.rv-layout{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:30px;align-items:start}
+
+.rv-side{position:sticky;top:130px;display:flex;flex-direction:column;gap:18px}
+
+
+/* ===== TABLET (≤1024px) ===== */
+@media (max-width:1024px){
+  .ad-grid{grid-template-columns:1fr 1fr}
+
+  .pk-grid{grid-template-columns:1fr}
+
+  .statband .sb-grid{grid-template-columns:repeat(3,1fr)}
+
+  .rv-layout{grid-template-columns:1fr}
+
+  .rv-side{position:static;flex-direction:row;flex-wrap:wrap}
+
+  .rv-side>*{flex:1 1 300px}
+}
+
+/* ===== MOBİL (≤640px) ===== */
+@media (max-width:640px){
+  .ad-grid{grid-template-columns:1fr}
+
+  .statband{padding:var(--sec-pad) 0}
+
+  .statband .sb-head h2{font-size:23px}
+
+  .statband .sb-grid{grid-template-columns:1fr 1fr;gap:10px}
+
+  .statband .st b{font-size:24px}
+
+  .rv-sec{padding:var(--sec-pad) 0}
+
+  .rv-side{flex-direction:column}
+}
+
+
+/* ============ YERLEŞİMLER — format → site konumu → satış argümanı (mock metrik) ============ */
+.yer-sec{background:var(--bg-cream)}
+
+.yer-flow{display:flex;flex-direction:column;gap:36px}
+
+.yer-stage-head{display:flex;align-items:center;gap:14px;margin-bottom:18px}
+
+.ys-num{flex:none;width:46px;height:46px;border-radius:var(--radius-md);background:var(--slate);color:#fff;display:grid;place-items:center;font-size:16px;font-weight:700;letter-spacing:.02em}
+
+.yer-stage-head .ys-txt b{display:block;font-size:19px;color:var(--slate);font-weight:700;line-height:1.2}
+
+.yer-stage-head .ys-txt span{font-size:13px;color:var(--muted);font-weight:500}
+
+.yer-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+
+.yer-card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);overflow:hidden;display:flex;flex-direction:column;transition:.25s var(--ease)}
+
+.yer-card[data-placement]{cursor:pointer}
+
+.yer-card[data-placement]:focus-visible{outline:2px solid var(--fit);outline-offset:2px}
+
+.yer-card:hover{transform:translateY(-4px);box-shadow:var(--sh-md)}
+
+.yer-card[data-placement]:hover{border-color:color-mix(in srgb, var(--marka) 45%, transparent)}
+
+/* "önizle" ipucu — wireframe üstünde hover'da beliren rozet */
+.yer-wire{position:relative}
+
+.yw-peek{position:absolute;top:9px;right:9px;z-index:2;display:inline-flex;align-items:center;gap:6px;background:var(--slate);color:#fff;font-size:10px;font-weight:700;letter-spacing:.03em;padding:5px 9px;border-radius:var(--radius-pill);opacity:0;transform:translateY(-3px);transition:opacity .2s var(--ease),transform .2s var(--ease);pointer-events:none}
+
+.yer-card[data-placement]:hover .yw-peek,.yer-card[data-placement]:focus-visible .yw-peek{opacity:1;transform:translateY(0)}
+
+.yw-peek i{font-size:9.5px}
+
+/* mini sayfa wireframe sahnesi: nokta-ızgara zemin + soluk içerik blokları + vurgulu reklam yuvası */
+.yer-wire{
+  height:140px;padding:13px;display:flex;flex-direction:column;gap:6px;position:relative;
+  background:var(--bg) radial-gradient(rgba(33,30,22,.08) 1px,transparent 1px);
+  background-size:13px 13px;border-bottom:1px solid var(--line);
+}
+
+.yw-head{height:13px;border-radius:4px;background:rgba(33,30,22,.16);flex:none}
+
+.yw-line{height:8px;border-radius:3px;background:rgba(33,30,22,.08);flex:none}
+
+.yw-line.s{width:60%}
+
+.yw-line.xs{width:40%}
+
+.yw-fill{flex:1}
+
+.yw-row{display:flex;gap:8px;flex:1;min-height:0}
+
+.yw-col{display:flex;flex-direction:column;gap:6px;flex:1;min-width:0}
+
+.yw-slot{
+  flex:none;display:grid;place-items:center;text-align:center;
+  background:var(--fit-wash);border:1.5px dashed color-mix(in srgb, var(--marka) 55%, transparent);border-radius:6px;
+  color:var(--fit);font-size:9px;font-weight:700;letter-spacing:.06em;line-height:1.2;padding:4px;
+}
+
+.yw-slot.tall{width:40px;flex:none;align-self:stretch}
+
+.yw-video{flex:1;border-radius:6px;background:linear-gradient(135deg,#2c2620,#48413a);display:grid;place-items:center;position:relative}
+
+.yw-video .yw-play{width:30px;height:30px;border-radius:var(--radius-circle);background:rgba(255,255,255,.92);color:var(--slate);display:grid;place-items:center;font-size:12px}
+
+.yw-video .yw-pretag{position:absolute;top:7px;left:7px;background:var(--fit);color:#fff;font-size:8.5px;font-weight:700;letter-spacing:.05em;padding:3px 7px;border-radius:4px}
+
+.yer-body{padding:15px 18px 18px;display:flex;flex-direction:column;gap:8px;flex:1}
+
+.yer-loc{display:inline-flex;align-items:center;gap:7px;font-size:11px;font-weight:700;letter-spacing:.04em;color:var(--fit);text-transform:uppercase}
+
+.yer-loc i{font-size:11px}
+
+.yer-card h4{font-size:16px;color:var(--slate)}
+
+.yer-fmt{display:flex;flex-wrap:wrap;gap:6px}
+
+.yer-fmt span{font-size:10.5px;font-weight:700;letter-spacing:.02em;color:var(--slate-2);background:var(--bg);border:1px solid var(--line);padding:4px 9px;border-radius:var(--radius-sm)}
+
+/* §22 — her kartın metrik bloğu "örnek" olarak işaretlenir (format çipleriyle aynı sırada) */
+.yer-card p{font-size:12.5px;color:var(--muted);font-weight:500;line-height:1.55;flex:1}
+
+.yer-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:auto;padding-top:13px;border-top:1px solid var(--line)}
+
+.ym{text-align:center}
+
+.ym b{display:block;font-size:16px;font-weight:700;color:var(--slate);letter-spacing:-.02em;line-height:1.15}
+
+.ym span{display:block;font-size:9.5px;color:var(--muted);font-weight:500;margin-top:3px;line-height:1.3}
+
+.yer-note{display:flex;align-items:flex-start;gap:9px;margin-top:26px;padding:13px 16px;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-md);font-size:12.5px;color:var(--muted);font-weight:500;line-height:1.55}
+
+.yer-note i{color:var(--fit);font-size:13px;margin-top:2px;flex:none}
+
+/* NOT SATIRLARINDA GÖVDE TEK <span> OLMALI —
+   .yer-note/.pk-note/.yp-note/.captcha-note display:flex; flex konteynerinde
+   her <b>/<a> ayrı bir flex ÖĞESİ olur ve aradaki metin parçaları da anonim
+   öğelere dönüşür. ÖLÇÜM: modaldeki .yp-note "Bu kutudaki rakamlar" /
+   "temsilî örnek" / kalanı diye üç dar kolona bölünüyordu (fit-type.css
+   yaslaması da o dar kolonlarda kelime araları açıyordu). Çözüm: ikon +
+   TEK <span> gövde; satır içi <b>/<a> span'in İÇİNDE kalır. */
+.yer-note>span,.pk-note>span,.yp-note>span,.captcha-note>span{min-width:0}
+
+
+/* ===== YERLEŞİM ÖNİZLEME MODALI (placement-preview — fb-modal dilinin kardeşi) =====
+ visibility GEÇİŞİ NEDEN 0s + gecikme: `transition:… visibility .25s` yazılırsa
+ visibility ayrık (discrete) bir özellik olduğu için değeri geçişin ORTASINDA
+ (~125ms) döner. O ana kadar panel hâlâ visibility:hidden'dır ve tarayıcı
+ visibility:hidden bir öğeye yapılan .focus() çağrısını YOK SAYAR.
+ ÖLÇÜM: modal açıldığında odak modala girmiyordu, tetikleyen .yer-card'da
+ kalıyordu (FIT_SHELL.trapFocus rAF'te de, bir kare sonraki denemede de
+ başarısız oluyordu). Açılışta visibility anında dönsün (0s 0s), kapanışta
+ solma bitene kadar beklesin (0s .25s) diye ayrıldı. */
+.yp-overlay{position:fixed;inset:0;background:rgba(20,18,12,.55);z-index:97;opacity:0;visibility:hidden;transition:opacity .25s var(--ease),visibility 0s .25s}
+
+.yp-overlay.show{opacity:1;visibility:visible;transition:opacity .25s var(--ease),visibility 0s 0s}
+
+.yp-modal{position:fixed;inset:0;z-index:98;display:grid;place-items:center;padding:20px;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .25s var(--ease),visibility 0s .25s}
+
+.yp-modal.show{opacity:1;visibility:visible;pointer-events:auto;transition:opacity .25s var(--ease),visibility 0s 0s}
+
+.yp-panel{width:min(820px,100%);max-height:calc(100vh - 40px);overflow-y:auto;background:#fff;border-radius:var(--radius-lg);box-shadow:var(--sh-lg);transform:translateY(14px);transition:transform .3s var(--ease)}
+
+.yp-modal.show .yp-panel{transform:translateY(0)}
+
+.yp-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;padding:20px 24px;border-bottom:1px solid var(--line)}
+
+.yp-head .yer-loc{margin-bottom:6px}
+
+.yp-head h3{font-size:20px;line-height:1.2}
+
+.yp-fmt{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px}
+
+.yp-fmt span{font-size:10.5px;font-weight:700;letter-spacing:.02em;color:var(--slate-2);background:var(--bg);border:1px solid var(--line);padding:4px 9px;border-radius:var(--radius-sm)}
+
+.yp-close{flex:none;width:40px;height:40px;border-radius:var(--radius-md);border:1px solid var(--line);background:var(--paper);color:var(--slate);font-size:16px;cursor:pointer;display:grid;place-items:center;transition:.2s var(--ease)}
+
+.yp-close:hover{border-color:var(--fit);color:var(--fit)}
+
+.yp-body{padding:22px 24px 24px;display:grid;grid-template-columns:1.15fr 1fr;gap:22px;align-items:start}
+
+/* sayfa şeması — gerçek sayfa iskeleti, reklam yuvası vurgulanır */
+.yp-screen{border:1px solid var(--line);border-radius:var(--radius-md);overflow:hidden;background:var(--bg)}
+
+.yp-screen-bar{display:flex;align-items:center;gap:7px;padding:9px 12px;background:var(--paper);border-bottom:1px solid var(--line)}
+
+.yp-screen-bar .dot{width:9px;height:9px;border-radius:50%;background:rgba(33,30,22,.18)}
+
+.yp-screen-bar .url{margin-left:8px;font-size:10.5px;font-weight:600;color:var(--muted);font-family:inherit}
+
+.yp-page{position:relative;padding:14px;display:flex;flex-direction:column;gap:9px;min-height:330px;background:#fff radial-gradient(rgba(33,30,22,.07) 1px,transparent 1px);background-size:14px 14px}
+
+.yp-page .pg-head{height:16px;border-radius:4px;background:rgba(33,30,22,.18);flex:none}
+
+.yp-page .pg-line{height:9px;border-radius:3px;background:rgba(33,30,22,.09);flex:none}
+
+.yp-page .pg-line.s{width:55%}
+.yp-page .pg-line.m{width:75%}
+
+.yp-page .pg-row{display:flex;gap:9px}
+
+.yp-page .pg-col{display:flex;flex-direction:column;gap:7px;flex:1}
+
+.yp-page .pg-card{height:54px;border-radius:6px;background:rgba(33,30,22,.06);border:1px solid rgba(33,30,22,.06)}
+
+.yp-page .pg-foot{height:30px;border-radius:5px;background:rgba(33,30,22,.12);margin-top:auto;flex:none}
+
+/* vurgulu reklam yuvası */
+.yp-ad{position:relative;display:grid;place-items:center;text-align:center;flex:none;
+  background:var(--fit-wash);border:2px dashed var(--fit);border-radius:7px;
+  color:var(--fit);font-size:11px;font-weight:700;letter-spacing:.05em;line-height:1.25;padding:8px;
+  box-shadow:0 0 0 4px color-mix(in srgb, var(--marka) 13%, transparent);animation:ypPulse 1.8s var(--ease) infinite}
+
+.yp-ad.sticky-bottom{position:absolute;left:14px;right:14px;bottom:14px;height:30px}
+
+.yp-ad.tall{width:60px;align-self:stretch}
+
+@keyframes ypPulse{0%,100%{box-shadow:0 0 0 4px color-mix(in srgb, var(--marka) 13%, transparent)}50%{box-shadow:0 0 0 7px color-mix(in srgb, var(--marka) 5%, transparent)}}
+
+.yp-side h4{font-size:13px;color:var(--slate);margin:0 0 7px;display:flex;align-items:center;gap:8px}
+
+.yp-side h4 i{color:var(--fit);font-size:12px}
+
+.yp-side p{font-size:13px;color:var(--muted);font-weight:500;line-height:1.6;margin:0 0 16px}
+
+.yp-side p b{color:var(--slate);font-weight:700}
+
+.yp-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;padding-top:15px;border-top:1px solid var(--line)}
+
+.yp-metrics .ym b{font-size:17px}
+
+/* §22 — modaldeki rakamlar da temsilî; kutunun altında sabit ibare */
+.yp-note{display:flex;align-items:flex-start;gap:8px;margin:16px 0 0;font-size:11.5px;color:var(--muted);font-weight:500;line-height:1.5}
+
+.yp-note i{flex:none;margin-top:2px;font-size:11px;color:var(--fit)}
+
+.yp-mobile .yp-screen{max-width:190px;margin:0 auto}
+
+@media (max-width:680px){
+  .yp-body{grid-template-columns:1fr}
+}
+
+@media (max-width:1024px){
+  .yer-cards{grid-template-columns:1fr 1fr}
+}
+
+@media (max-width:640px){
+  .yer-cards{grid-template-columns:1fr}
+
+  .yer-flow{gap:28px}
+
+  .ys-num{width:40px;height:40px;font-size:14px}
+
+  .yer-stage-head .ys-txt b{font-size:17px}
+}
+</style>
+
+<!-- Metin yaslama katmani (tek kaynak) — sayfa stillerinden SONRA yuklenir,
+     boylece sayfa ici text-align kurallari yaslamayi geri alamaz -->
+<link rel="stylesheet" href="assets/css/fit-type.css" />
+</head>
+<body data-brand="fit" data-fit-page="reklam-ver">
+
+<!-- KABUK: üst katman (üst bant + header + drawer + alt bar + görüş + çerez) -->
+<div id="fitShellTop"></div>
+
+<!-- ===== YERLEŞİM ÖNİZLEME MODALI — SAYFAYA ÖZGÜ, göçte KORUNDU =====
+ Neden burada (</main> dışında, kabuk mount'unun hemen altında): fixed
+ overlay .page-main'in stacking context'ine girmemeli. Kaydırma kilidi
+ FIT_SHELL.lockScroll()/unlockScroll() üzerinden (HANDOFF §4). SS: ?yp=mpu -->
+<div class="yp-overlay" id="ypOverlay"></div>
+<div class="yp-modal" id="ypModal" role="dialog" aria-modal="true" aria-labelledby="ypTitle">
+  <div class="yp-panel">
+    <div class="yp-head">
+      <div>
+        <span class="yer-loc"><i class="fa-solid fa-location-dot"></i> <span id="ypLoc">Konum</span></span>
+        <h3 id="ypTitle">Yerleşim</h3>
+        <div class="yp-fmt" id="ypFmt"></div>
+      </div>
+      <button class="yp-close" id="ypClose" type="button" aria-label="Kapat"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="yp-body">
+      <div class="yp-screen-wrap" id="ypScreenWrap">
+        <div class="yp-screen">
+          <div class="yp-screen-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="url" id="ypUrl">dadafit.com</span></div>
+          <div class="yp-page" id="ypPage"><!-- şema JS ile çizilir --></div>
+        </div>
+      </div>
+      <div class="yp-side">
+        <h4><i class="fa-solid fa-circle-info"></i> Bu reklam nerede görünür?</h4>
+        <p id="ypDesc"></p>
+        <div class="yp-metrics" id="ypMetrics"></div>
+        <p class="yp-note"><i class="fa-solid fa-flask"></i><span>Bu kutudaki rakamlar <b>temsilîdir</b> — gerçek envanter ve güncel ölçümler medya kitinde paylaşılır.</span></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<main class="page-main" id="pageMain">
+
+<!-- ===================== DADAFIT MEDYA KİTİ ===================== -->
+<!-- Banner kabuğun kanonik .lib-top kiti (breadcrumb + eyebrow + h1 + .lib-sub).
+ Sağdaki iki kolonlu kitle bloğu sayfaya özgü (.mk-hero/.mk-stats). -->
+<section class="lib-top">
+  <div class="wrap">
+    <nav class="lib-crumb" aria-label="Sayfa yolu">
+      <a href="dadafit-hub-v1.html" class="crumb-home"><i class="fa-solid fa-house" aria-hidden="true"></i><span class="sr-only">DadaFit ana sayfa</span></a>
+      <i class="fa-solid fa-chevron-right"></i>
+      <span class="cur">Reklam, Sponsorluk ve İş Birliği</span>
+    </nav>
+    <div class="mk-hero">
+      <div class="mk-main">
+        <div class="eyebrow-row">
+          <span class="eyebrow"><i class="fa-solid fa-rectangle-ad"></i> Medya Kiti</span> </div>
+        <h1>Markanı insanların <span class="accent">hareket rutinine</span> taşı</h1>
+        <p class="lib-sub">DadaFit'te insanlar egzersiz seçiyor, program takip ediyor, Enerji Defteri'ne gününü yazıyor ve challenge'a katılıyor. Spor ekipmanından giyime, kurumsal sağlık programından antrenör ekosistemine kadar markanı bu niyetin tam ortasına koyabilirsin.</p>
+        <div class="chips mk-chips">
+          <a class="chip" href="#reklam">Reklam Alanları</a>
+          <a class="chip" href="#yerlesimler">Yerleşimler</a>
+          <a class="chip" href="#rakamlar">Kitle</a>
+          <a class="chip" href="#isbirligi">İş Birliği</a>
+          <a class="chip" href="#paketler">Sponsorluk Paketleri</a>
+          <a class="chip" href="#basvuru">Başvuru</a>
+        </div>
+      </div>
+      <div class="mk-stats">
+        <div class="st"><b>410 B</b><span>aylık aktif kullanıcı</span></div>
+        <div class="st"><b>1,6 M</b><span>aylık tamamlanan antrenman</span></div>
+        <div class="st"><b>%74</b><span>mobil kullanım</span></div> </div>
+    </div>
+  </div>
+</section>
+
+<!-- ---- REKLAM VERME / MEDYA KİTİ ÇAPASI (#reklam) — footer "Reklam Vermek İçin" buraya bakar ---- -->
+<section class="sec ads-sec" id="reklam">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <span class="eyebrow"><i class="fa-solid fa-table-cells-large"></i> Reklam Vermek İçin</span>
+        <h2>Reklam alanları</h2>
+        <p class="lead">Ana sayfa, hareket ve program listeleri, egzersiz detayı ve rehber sayfalarında standart IAB boyutları.</p>
+      </div>
+    </div>
+    <div class="ad-grid">
+      <div class="ad-card">
+        <div class="ad-stage"><div class="ad-shape" style="width:230px;height:60px">970 × 250</div></div>
+        <div class="ad-body">
+          <h3>Masthead</h3>
+          <div class="ad-meta"><span class="ad-tag hot">Ana Sayfa</span><span class="ad-tag">Masaüstü</span><span class="ad-tag">Kanal: Ana-1</span></div>
+          <p>Header'ın hemen altında, sayfanın en görünür bloğu. Günlük tekil erişimi en yüksek alan.</p>
+          <div class="ad-size"><i class="fa-solid fa-ruler-combined"></i> 970×250 <span class="muted">&middot; mobil eşleniği 320×100</span></div>
+        </div>
+      </div>
+      <div class="ad-card">
+        <div class="ad-stage"><div class="ad-shape" style="width:240px;height:32px">728 × 90</div></div>
+        <div class="ad-body">
+          <h3>Leaderboard</h3>
+          <div class="ad-meta"><span class="ad-tag">Liste Sayfaları</span><span class="ad-tag">Masaüstü</span><span class="ad-tag">Kanal: Liste-1</span></div>
+          <p>DadaFit Egzersizleri ve program listelerinde içerik üstü şerit. Keşif trafiğini yakalar.</p>
+          <div class="ad-size"><i class="fa-solid fa-ruler-combined"></i> 728×90 <span class="muted">&middot; mobil eşleniği 320×50</span></div>
+        </div>
+      </div>
+      <div class="ad-card">
+        <div class="ad-stage"><div class="ad-shape" style="width:110px;height:92px">300 × 250</div></div>
+        <div class="ad-body">
+          <h3>MPU / Kare</h3>
+          <div class="ad-meta"><span class="ad-tag hot">Egzersiz Detay</span><span class="ad-tag">Hepsi</span><span class="ad-tag">Kanal: Detay-1</span></div>
+          <p>Egzersiz detayında ekipman ve set takibi bloğunun yanında. Hareket anına en yakın temas noktası.</p>
+          <div class="ad-size"><i class="fa-solid fa-ruler-combined"></i> 300×250 <span class="muted">&middot; mobil &amp; masaüstü ortak</span></div>
+        </div>
+      </div>
+      <div class="ad-card">
+        <div class="ad-stage"><div class="ad-shape" style="width:64px;height:128px">300 × 600</div></div>
+        <div class="ad-body">
+          <h3>Half Page</h3>
+          <div class="ad-meta"><span class="ad-tag">Rehber Sayfaları</span><span class="ad-tag">Masaüstü</span><span class="ad-tag">Kanal: Rehber-1</span></div>
+          <p>Hareket rehberi ve sözlük gibi uzun içerik sayfalarında sticky yan sütun. Okuma boyunca ekranda kalır.</p>
+          <div class="ad-size"><i class="fa-solid fa-ruler-combined"></i> 300×600 <span class="muted">&middot; scroll boyunca sabit</span></div>
+        </div>
+      </div>
+      <div class="ad-card">
+        <div class="ad-stage"><div class="ad-shape" style="width:230px;height:36px">320 × 100</div></div>
+        <div class="ad-body">
+          <h3>Mobil Sticky</h3>
+          <div class="ad-meta"><span class="ad-tag hot">Tüm Sayfalar</span><span class="ad-tag">Mobil</span><span class="ad-tag">Kanal: Mob-1</span></div>
+          <p>Mobilde alt kenara sabitlenen şerit. Mobil ağırlıklı kullanımın tamamına erişir.</p>
+          <div class="ad-size"><i class="fa-solid fa-ruler-combined"></i> 320×100 <span class="muted">&middot; kapatılabilir</span></div>
+        </div>
+      </div>
+      <div class="ad-card">
+        <div class="ad-stage">
+          <div class="ad-shape" style="width:210px;height:110px;flex-direction:column;display:flex;align-items:center;justify-content:center;gap:6px">
+            <i class="fa-solid fa-dumbbell" style="font-size:20px"></i> SPONSORLU PROGRAM
+          </div>
+        </div>
+        <div class="ad-body">
+          <h3>Native / Sponsorlu İçerik</h3>
+          <div class="ad-meta"><span class="ad-tag hot">Editoryal</span><span class="ad-tag">Hepsi</span><span class="ad-tag">Kanal: Ntv-1</span></div>
+          <p>Markan içeriğin içinde: sponsorlu program, egzersiz video seansı ya da challenge. &ldquo;Sponsorlu&rdquo; etiketiyle şeffaf.</p>
+          <div class="ad-size"><i class="fa-solid fa-ruler-combined"></i> İçerik formatında <span class="muted">&middot; antrenman akışını bölmez</span></div>
+        </div>
+      </div>
+    </div>
+    <p class="pk-note"><i class="fa-solid fa-shield-heart"></i><span>Sağlık sınırı: DadaFit reklam envanterinde <b>tanı, tedavi ya da ilaç iddiası taşıyan</b>, hızlı kilo kaybı vaat eden ve kullanıcıyı &ldquo;telafi etme / yediğini yakma&rdquo; diline iten mesajlar yayınlanmaz. Ayrıntı: <a href="saglik-bilgilendirme-v1.html">Sağlık Bilgilendirmesi</a>.</span></p>
+  </div>
+</section>
+
+<!-- ---- yerleşim senaryosu: format → site konumu → satış argümanı ---- -->
+<section class="sec yer-sec" id="yerlesimler">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <span class="eyebrow"><i class="fa-solid fa-map-location-dot"></i> Yerleşim Senaryosu</span>
+        <h2>Reklam sitede nerede yaşıyor?</h2>
+        <p class="lead">Her format, kullanıcının hareket yolculuğundaki bir ana denk gelir: keşfederken görünürlük, program ve egzersiz seçerken niyet, antrenman ve süreklilikte bağlılık. Aşağıdaki kart her formatın hangi sayfada, nerede durduğunu ve neden işe yaradığını gösterir.</p>
+      </div>
+    </div>
+
+    <div class="yer-flow">
+
+      <!-- AŞAMA 1 — KEŞİF -->
+      <div class="yer-stage">
+        <div class="yer-stage-head">
+          <span class="ys-num">01</span>
+          <div class="ys-txt"><b>Keşif</b><span>&ldquo;Bugün ne yapsam?&rdquo; — kullanıcı gezinirken görünürlük</span></div>
+        </div>
+        <div class="yer-cards">
+
+          <div class="yer-card" data-placement="masthead" role="button" tabindex="0" aria-label="Masthead yerleşimini önizle">
+            <div class="yer-wire">
+              <span class="yw-head"></span>
+              <span class="yw-slot" style="height:34px">MASTHEAD 970×250</span>
+              <span class="yw-line"></span>
+              <span class="yw-line s"></span>
+              <span class="yw-fill"></span>
+            </div>
+            <div class="yer-body">
+              <span class="yer-loc"><i class="fa-solid fa-location-dot"></i> Ana sayfa · header altı</span>
+              <h4>Masthead</h4>
+              <div class="yer-fmt"><span>970×250</span><span>Masaüstü</span><span>320×100 mobil</span> </div>
+              <p>Ana sayfanın açılışında, header'ın hemen altındaki ilk blok. Günün en yüksek tekil erişimli alanı — marka bilinirliği ve lansman için.</p>
+              <div class="yer-metrics">
+                <div class="ym"><b>340 B</b><span>aylık gösterim</span></div>
+                <div class="ym"><b>%0,64</b><span>ort. CTR</span></div>
+                <div class="ym"><b>%84</b><span>görüntülenebilirlik</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="yer-card" data-placement="leaderboard" role="button" tabindex="0" aria-label="Leaderboard yerleşimini önizle">
+            <div class="yer-wire">
+              <span class="yw-head"></span>
+              <span class="yw-slot" style="height:20px">LEADERBOARD 728×90</span>
+              <span class="yw-row">
+                <span class="yw-col"><span class="yw-line"></span><span class="yw-line s"></span></span>
+                <span class="yw-col"><span class="yw-line"></span><span class="yw-line s"></span></span>
+                <span class="yw-col"><span class="yw-line"></span><span class="yw-line s"></span></span>
+              </span>
+            </div>
+            <div class="yer-body">
+              <span class="yer-loc"><i class="fa-solid fa-location-dot"></i> DadaFit Egzersizleri &amp; program listesi · içerik üstü</span>
+              <h4>Leaderboard</h4>
+              <div class="yer-fmt"><span>728×90</span><span>Hedef bazlı</span> </div>
+              <p>Liste sayfalarında ızgaranın üstündeki şerit. Hedef bazlı hedefleme: &ldquo;Güç&rdquo; filtresinde ağırlık markası, &ldquo;Esneklik&rdquo;te mat ve bant markası.</p>
+              <div class="yer-metrics">
+                <div class="ym"><b>260 B</b><span>aylık gösterim</span></div>
+                <div class="ym"><b>%0,49</b><span>ort. CTR</span></div>
+                <div class="ym"><b>4</b><span>hedef kırılımı</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="yer-card" data-placement="native-liste" role="button" tabindex="0" aria-label="Liste arası kart yerleşimini önizle">
+            <div class="yer-wire">
+              <span class="yw-head"></span>
+              <span class="yw-row">
+                <span class="yw-col"><span class="yw-line"></span><span class="yw-line s"></span></span>
+                <span class="yw-col" style="flex:1.1"><span class="yw-slot" style="flex:1">SPONSORLU PROGRAM KARTI</span></span>
+                <span class="yw-col"><span class="yw-line"></span><span class="yw-line s"></span></span>
+              </span>
+            </div>
+            <div class="yer-body">
+              <span class="yer-loc"><i class="fa-solid fa-location-dot"></i> Program listesi · ızgara arası 6. kart</span>
+              <h4>Native / Liste Arası Kart</h4>
+              <div class="yer-fmt"><span>İçerik formatı</span><span>&ldquo;Sponsorlu&rdquo; etiketli</span> </div>
+              <p>Program ızgarasının içine organik kart diliyle yerleşir — banner körlüğüne takılmaz. Akışa karıştığı için etkileşim oranı display'in çok üstünde.</p>
+              <div class="yer-metrics">
+                <div class="ym"><b>130 B</b><span>aylık gösterim</span></div>
+                <div class="ym"><b>%1,8</b><span>kart etkileşimi</span></div>
+                <div class="ym"><b>+34<small>sn</small></b><span>ort. kalış</span></div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- AŞAMA 2 — NİYET -->
+      <div class="yer-stage">
+        <div class="yer-stage-head">
+          <span class="ys-num">02</span>
+          <div class="ys-txt"><b>Niyet</b><span>Kullanıcı hareketi seçiyor — antrenman niyeti zirvede</span></div>
+        </div>
+        <div class="yer-cards">
+
+          <div class="yer-card" data-placement="mpu" role="button" tabindex="0" aria-label="MPU yerleşimini önizle">
+            <div class="yer-wire">
+              <span class="yw-head"></span>
+              <span class="yw-row">
+                <span class="yw-col" style="flex:1.6"><span class="yw-line"></span><span class="yw-line"></span><span class="yw-line s"></span><span class="yw-fill"></span></span>
+                <span class="yw-slot tall">MPU<br>300×250</span>
+              </span>
+            </div>
+            <div class="yer-body">
+              <span class="yer-loc"><i class="fa-solid fa-location-dot"></i> Egzersiz detay · ekipman ve set takibi yanı</span>
+              <h4>MPU / Kare</h4>
+              <div class="yer-fmt"><span>300×250</span><span>Sticky</span><span>Bağlamsal</span> </div>
+              <p>Ekipman listesi ve set takibinin yanında sticky. Kullanıcı tam harekete hazırlanırken; ekipman markası için en bağlamsal temas noktası (dambıl, direnç bandı, mat).</p>
+              <div class="yer-metrics">
+                <div class="ym"><b>210 B</b><span>aylık gösterim</span></div>
+                <div class="ym"><b>%0,9</b><span>ort. CTR</span></div>
+                <div class="ym"><b>5:20</b><span>ort. sayfa süresi</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="yer-card" data-placement="niyet-native" role="button" tabindex="0" aria-label="Niyet-bazlı native yerleşimini önizle">
+            <div class="yer-wire">
+              <span class="yw-head"></span>
+              <span class="yw-line xs"></span>
+              <span class="yw-slot" style="height:26px">HEDEFİNE UYGUN EKİPMAN</span>
+              <span class="yw-line"></span>
+              <span class="yw-line s"></span>
+              <span class="yw-fill"></span>
+            </div>
+            <div class="yer-body">
+              <span class="yer-loc"><i class="fa-solid fa-location-dot"></i> &ldquo;Bana Uygun Başlangıcı Bul&rdquo; sihirbazı sonucu</span>
+              <h4>Niyet-Bazlı Native</h4>
+              <div class="yer-fmt"><span>İçerik formatı</span><span>Performans</span> </div>
+              <p>&ldquo;Evde, 20 dakika, ekipmansız&rdquo; → sonuç listesinde hedefe uygun ekipman ya da giyim önerisi. Niyet sinyali en net olduğu an; alt-huni performans için ideal.</p>
+              <div class="yer-metrics">
+                <div class="ym"><b>48 B</b><span>aylık gösterim</span></div>
+                <div class="ym"><b>%2,2</b><span>tıklama oranı</span></div>
+                <div class="ym"><b>%28</b><span>marka sayfasına geçiş</span></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- "Video Pre-roll" yerleşimi KALDIRILDI — Beyar, 2026-08-29.
+               Video Seansları modülünün tamamı kalktığı için yuvası da yok.
+               Envanter 8 → 7 satır, satılabilir aday 7 → 6. -->
+
+        </div>
+      </div>
+
+      <!-- AŞAMA 3 — BAĞLILIK -->
+      <div class="yer-stage">
+        <div class="yer-stage-head">
+          <span class="ys-num">03</span>
+          <div class="ys-txt"><b>Bağlılık &amp; Erişim</b><span>Süreklilik, challenge katılımı ve her gün görünürlük</span></div>
+        </div>
+        <div class="yer-cards">
+
+          <div class="yer-card" data-placement="mobil-sticky" role="button" tabindex="0" aria-label="Mobil sticky yerleşimini önizle">
+            <div class="yer-wire">
+              <span class="yw-head"></span>
+              <span class="yw-line"></span>
+              <span class="yw-line s"></span>
+              <span class="yw-fill"></span>
+              <span class="yw-slot" style="height:22px">MOBİL STICKY 320×100</span>
+            </div>
+            <div class="yer-body">
+              <span class="yer-loc"><i class="fa-solid fa-location-dot"></i> Tüm sayfalar · mobil alt kenar</span>
+              <h4>Mobil Sticky</h4>
+              <div class="yer-fmt"><span>320×100</span><span>Tüm mobil</span><span>Kapatılabilir</span> </div>
+              <p>Mobilde alt kenara sabit, scroll boyunca görünür. Mobil ağırlıklı kullanımın tamamına erişir; kapatılabilir olduğu için UX dostu.</p>
+              <div class="yer-metrics">
+                <div class="ym"><b>1,1 M</b><span>aylık gösterim</span></div>
+                <div class="ym"><b>%0,7</b><span>ort. CTR</span></div>
+                <div class="ym"><b>%74</b><span>mobil erişim payı</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="yer-card" data-placement="challenge-native" role="button" tabindex="0" aria-label="Sponsorlu challenge yerleşimini önizle">
+            <div class="yer-wire">
+              <span class="yw-head"></span>
+              <span class="yw-row">
+                <span class="yw-col"><span class="yw-line"></span><span class="yw-line s"></span></span>
+                <span class="yw-col" style="flex:1.1"><span class="yw-slot" style="flex:1">SPONSORLU CHALLENGE</span></span>
+                <span class="yw-col"><span class="yw-line"></span><span class="yw-line s"></span></span>
+              </span>
+            </div>
+            <div class="yer-body">
+              <span class="yer-loc"><i class="fa-solid fa-location-dot"></i> Challenge Merkezi · katılım kartı</span>
+              <h4>Sponsorlu Challenge</h4>
+              <div class="yer-fmt"><span>İçerik formatı</span><span>Katılım bazlı</span> </div>
+              <p>Markanın adını taşıyan bir challenge: &ldquo;30 gün, günde 20 dakika&rdquo;. Kullanıcı gönüllü katılır, her gün geri döner — bilinirlik yerine <b>süreli bağ</b> kurar.</p>
+              <div class="yer-metrics">
+                <div class="ym"><b>39 B</b><span>challenge görüntüleme</span></div>
+                <div class="ym"><b>%14</b><span>katılım oranı</span></div>
+                <div class="ym"><b>18</b><span>ort. aktif gün</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="yer-card" data-placement="half-page" role="button" tabindex="0" aria-label="Half page yerleşimini önizle">
+            <div class="yer-wire">
+              <span class="yw-head"></span>
+              <span class="yw-row">
+                <span class="yw-col" style="flex:1.7"><span class="yw-line"></span><span class="yw-line"></span><span class="yw-line s"></span><span class="yw-line"></span><span class="yw-line s"></span></span>
+                <span class="yw-slot tall">HALF<br>PAGE<br>300×600</span>
+              </span>
+            </div>
+            <div class="yer-body">
+              <span class="yer-loc"><i class="fa-solid fa-location-dot"></i> Hareket rehberi · sözlük · doğru form</span>
+              <h4>Half Page</h4>
+              <div class="yer-fmt"><span>300×600</span><span>Sticky yan sütun</span> </div>
+              <p>Uzun-form rehber sayfalarında scroll boyunca ekranda kalan yan sütun. Uzun okuma süresi = yüksek marka kalıcılığı (retention).</p>
+              <div class="yer-metrics">
+                <div class="ym"><b>74 B</b><span>aylık gösterim</span></div>
+                <div class="ym"><b>3:10</b><span>ekranda kalma</span></div>
+                <div class="ym"><b>%79</b><span>görüntülenebilirlik</span></div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+    <p class="yer-note"><i class="fa-solid fa-flask"></i><span><b>Prototip uyarısı:</b> bu bölümdeki tüm rakamlar (gösterim, CTR, etkileşim, katılım) prototip için üretilmiş <b>temsilî örneklerdir</b>, ölçülmüş gerçek değerler değildir. Gerçek envanter, hedefleme seçenekleri ve güncel fiyatlandırma talep üzerine medya kitinde paylaşılır.</span></p>
+  </div>
+</section>
+
+<!-- ---- kitle bandı (demo veri · §22) ---- -->
+<section class="statband" id="rakamlar">
+  <div class="wrap">
+    <div class="sb-head">
+      <span class="eyebrow"><i class="fa-solid fa-chart-simple"></i> Kitle</span>
+      <h2>Kitlemiz hareketi rutine çeviriyor</h2> </div>
+    <div class="sb-grid">
+      <div class="st"><b>410<small> B</small></b><span>aylık aktif kullanıcı</span></div>
+      <div class="st"><b>1,6<small> M</small></b><span>aylık tamamlanan antrenman</span></div>
+      <div class="st"><b>96<small> B</small></b><span>Enerji Defteri'ni haftada 3+ gün kullanan</span></div>
+      <div class="st"><b>42<small> B</small></b><span>aktif challenge katılımcısı</span></div>
+      <div class="st"><b>5:40</b><span>ort. oturum süresi</span></div>
+    </div>
+    <p class="sb-note">Bu rakamlar prototipte <b>örnek</b> olarak duruyor; gerçek ölçümler medya kitinde, ölçüm yöntemi ve dönemiyle birlikte paylaşılır.</p>
+  </div>
+</section>
+
+<!-- ---- İŞ BİRLİĞİ ÇAPASI (#isbirligi) — footer "İş Birliği" buraya bakar ---- -->
+<!-- §23 (aynı sayfaya farklı isimlerle gereksiz bağlantı): footer'ın iki ayrı
+ kalemi (İş Birliği · Reklam Vermek İçin) bu sayfanın İKİ AYRI bölümüne bakar,
+ aynı hedefe iki isim değil. #reklam = envanter/medya kiti · #isbirligi = partnerlik. -->
+<section class="sec isb-sec" id="isbirligi">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <span class="eyebrow"><i class="fa-solid fa-handshake-angle"></i> İş Birliği</span>
+        <h2>Birlikte çalışma biçimleri</h2>
+        <p class="lead">Reklam alanı satın almak tek yol değil. DadaFit'le partnerlik, markanı içeriğin ve ekosistemin içine yerleştirir.</p>
+      </div>
+    </div>
+    <div class="isb-grid">
+
+      <div class="isb-card jt-flow">
+        <span class="isb-ico"><i class="fa-solid fa-dumbbell"></i></span>
+        <h3>Marka İş Birliği</h3>
+        <p>Ekipman, spor giyim, içecek ya da giyilebilir teknoloji markası olarak sponsorlu program, video seansı veya challenge üretiriz. İçerik DadaFit editoryal çerçevesinde hazırlanır, marka mesajı ayrı durur.</p>
+        <div class="isb-for"><span>Ekipman</span><span>Giyim</span><span>Teknoloji</span></div>
+      </div>
+
+      <div class="isb-card jt-flow">
+        <span class="isb-ico"><i class="fa-solid fa-user-check"></i></span>
+        <h3>Antrenör ve Stüdyo Partnerliği</h3>
+        <p>Antrenörler ve stüdyolar dizine katılır, kendi program ve randevu akışını DadaFit üzerinden yürütür. Doğrulanmış partnerler <b>DadaFit Onaylı</b> rozetiyle listelenir.</p>
+        <div class="isb-for"><span>Antrenör</span><span>Stüdyo</span><span>Salon</span></div>
+      </div>
+
+      <div class="isb-card jt-flow">
+        <span class="isb-ico"><i class="fa-solid fa-building-user"></i></span>
+        <h3>Kurumsal Sağlık Programı</h3>
+        <p>Çalışanlara toplu <b>DadaFit Pro</b> erişimi, şirkete özel challenge ve takım tablosu. Kurum yalnız toplu katılım özetini görür; kişisel kayıtlar çalışanda kalır.</p>
+        <div class="isb-for"><span>İK</span><span>Kurumsal wellness</span></div>
+      </div>
+
+      <div class="isb-card jt-flow">
+        <span class="isb-ico"><i class="fa-solid fa-book-open-reader"></i></span>
+        <h3>İçerik ve Yayın Ortaklığı</h3>
+        <p>Hareket rehberi, doğru form serisi ya da masa başı hareket dosyası gibi uzun-form içeriklerde ortak yayın. Sponsorluk bölüm başında açıkça belirtilir.</p>
+        <div class="isb-for"><span>Rehber</span><span>Video serisi</span><span>Bülten</span></div>
+      </div>
+
+      <div class="isb-card jt-flow">
+        <span class="isb-ico"><i class="fa-solid fa-diagram-project"></i></span>
+        <h3>Ekosistem Partnerliği</h3>
+        <p>DadaFit hareket tarafını yürütür; beslenme ve tarif tarafı kardeş ürünlerde. Beslenme–hareket dengesine dokunan kampanyalar <a href="fit-enerji-defterim.html">Enerji Defteri</a> üzerinden kurulur ve hangi verinin hangi sistemle paylaşıldığı kullanıcıya gösterilir.</p>
+        <div class="isb-for"><span>Dada Diet</span><span>Dada Gastro</span></div>
+      </div>
+
+      <div class="isb-card jt-flow">
+        <span class="isb-ico"><i class="fa-solid fa-heart-pulse"></i></span>
+        <h3>Ölçüm ve Cihaz Ortaklığı</h3>
+        <p>Fit Testleri, ölçüm günleri ve cihaz entegrasyonları. Akıllı saat ve sağlık uygulaması partnerleri kullanıcının açık izniyle bağlanır; izin her an geri alınabilir.</p>
+        <div class="isb-for"><span>Cihaz</span><span>Sağlık uygulaması</span><span>Etkinlik</span></div>
+      </div>
+
+    </div>
+
+    <div class="isb-rules">
+      <h3><i class="fa-solid fa-scale-balanced"></i> İş birliğinde değişmeyen kurallar</h3>
+      <ul>
+        <li><i class="fa-solid fa-check"></i> Her sponsorlu içerik &ldquo;Sponsorlu&rdquo; etiketiyle, içeriğin başında işaretlenir.</li>
+        <li><i class="fa-solid fa-check"></i> Hareket önerilerinin editoryal sorumluluğu DadaFit'te kalır; marka içerik metnini yazmaz.</li>
+        <li><i class="fa-solid fa-check"></i> Tanı, tedavi, ilaç ya da hızlı kilo kaybı iddiası taşıyan mesaj kabul edilmez.</li>
+        <li><i class="fa-solid fa-check"></i> &ldquo;Telafi et / yediğini yak&rdquo; dili kullanılmaz; enerji değerleri yaklaşık verilir.</li>
+        <li><i class="fa-solid fa-check"></i> Kullanıcı verisi partnerle paylaşılmaz; yalnız toplu ve kimliksiz performans raporu verilir.</li>
+        <li><i class="fa-solid fa-check"></i> 18 yaş altına yönelik hedefleme yapılmaz.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ---- sponsorluk paketleri (iş birliğinin ticari kademeleri) ---- -->
+<section class="sec spons-sec" id="paketler">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <span class="eyebrow"><i class="fa-solid fa-handshake"></i> Sponsorluk</span>
+        <h2>Sponsorluk paketleri</h2>
+        <p class="lead">Partner vitrininde logo görünürlüğü + içerik hakları, üç kademede.</p>
+      </div>
+    </div>
+    <div class="pk-grid">
+      <div class="pk-card bronz">
+        <div class="pk-tier"><i class="fa-solid fa-medal"></i><b>Bronz Sponsor</b></div>
+        <p class="pk-desc">Görünürlüğe başlangıç: logon partner vitrininde, markan ayda bir içerikte.</p>
+        <ul class="pk-feats">
+          <li><i class="fa-solid fa-check"></i> Partner vitrininde logo</li>
+          <li><i class="fa-solid fa-check"></i> Ayda 1 sponsorlu program içeriği</li>
+          <li><i class="fa-solid fa-check"></i> Aylık performans raporu</li>
+          <li class="no"><i class="fa-solid fa-xmark"></i> Bülten &amp; sosyal medya paylaşımı</li>
+        </ul>
+        <div class="pk-price"><b>Aylık plan</b> <span>&middot; 3 ay taahhüt</span></div>
+        <a class="btn btn-ghost" href="#basvuru">Teklif İste</a>
+      </div>
+      <div class="pk-card gumus featured">
+        <span class="pk-flag">En çok tercih edilen</span>
+        <div class="pk-tier"><i class="fa-solid fa-medal"></i><b>Gümüş Sponsor</b></div>
+        <p class="pk-desc">İçerik ağırlıklı paket: program + video seansı karması ve bülten görünürlüğü.</p>
+        <ul class="pk-feats">
+          <li><i class="fa-solid fa-check"></i> Partner vitrininde öncelikli logo</li>
+          <li><i class="fa-solid fa-check"></i> Ayda 2 sponsorlu program içeriği</li>
+          <li><i class="fa-solid fa-check"></i> Ayda 1 sponsorlu video seansı</li>
+          <li><i class="fa-solid fa-check"></i> Haftalık bültende marka alanı</li>
+          <li class="no"><i class="fa-solid fa-xmark"></i> Markaya özel challenge</li>
+        </ul>
+        <div class="pk-price"><b>Aylık plan</b> <span>&middot; 3 ay taahhüt</span></div>
+        <a class="btn btn-primary" href="#basvuru">Teklif İste</a>
+      </div>
+      <div class="pk-card altin">
+        <div class="pk-tier"><i class="fa-solid fa-crown"></i><b>Altın Sponsor</b></div>
+        <p class="pk-desc">Tam kapsam: ana sayfa görünürlüğü, markaya özel challenge ve sosyal medya dahil.</p>
+        <ul class="pk-feats">
+          <li><i class="fa-solid fa-check"></i> Ana sayfada partner bandı</li>
+          <li><i class="fa-solid fa-check"></i> Ayda 4 sponsorlu program + 2 video seansı</li>
+          <li><i class="fa-solid fa-check"></i> Markaya özel challenge (30 gün)</li>
+          <li><i class="fa-solid fa-check"></i> Bülten + sosyal medya paylaşımları</li>
+          <li><i class="fa-solid fa-check"></i> Özel hesap yöneticisi</li>
+        </ul>
+        <div class="pk-price"><b>Yıllık plan</b> <span>&middot; özel fiyatlandırma</span></div>
+        <a class="btn btn-ghost" href="#basvuru">Teklif İste</a>
+      </div>
+    </div>
+    <p class="pk-note"><i class="fa-solid fa-flask"></i><span>Paket içerikleri prototipte <b>örnek kurgu</b> olarak duruyor; tutar yazılmadı çünkü doğrulanmış bir fiyat listesi yok. Güncel kademeler ve fiyatlar teklif yanıtında paylaşılır.</span></p>
+  </div>
+</section>
+
+<!-- ---- başvuru formu ---- -->
+<section class="rv-sec" id="basvuru">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <span class="eyebrow"><i class="fa-solid fa-paper-plane"></i> Başvuru</span>
+        <h2>Teklif iste</h2>
+        <p class="lead">Reklam alanı ya da iş birliği — ikisi de aynı formdan başlıyor. Medya kiti ve güncel fiyat listesiyle 2 iş günü içinde dönelim.</p>
+      </div>
+    </div>
+    <div class="rv-layout">
+      <div style="min-width:0">
+        <form id="rvForm" novalidate>
+          <div class="form-card">
+            <div class="fc-head">
+              <div>
+                <h2><i class="fa-solid fa-briefcase"></i> Reklam &amp; Sponsorluk Başvurusu</h2>
+                <p>Yıldızlı alanlar zorunludur.</p>
+              </div>
+            </div>
+            <div class="fk-grid c2">
+              <div class="fk-field"><label class="fk-label">Firma / Marka <span class="req">*</span></label><input type="text" class="fk-input" placeholder="Firma adı" required /></div>
+              <div class="fk-field"><label class="fk-label">Yetkili Ad Soyad <span class="req">*</span></label><input type="text" class="fk-input" placeholder="Ad Soyad" required /></div>
+            </div>
+            <div class="fk-grid c2">
+              <div class="fk-field"><label class="fk-label">Kurumsal E-posta <span class="req">*</span></label><input type="email" class="fk-input" placeholder="ad@firma.com" required /></div>
+              <div class="fk-field"><label class="fk-label">Telefon <span class="req">*</span></label><input type="tel" class="fk-input" placeholder="0(5__) ___ __ __" required /></div>
+            </div>
+            <div class="fk-grid c2">
+              <div class="fk-field"><label class="fk-label">İlgilendiğin Model <span class="req">*</span></label>
+                <select class="fk-select" required>
+                  <option value="" selected disabled>Seç</option>
+                  <option>Display / banner</option>
+                  <option>Sponsorlu içerik (program · video seansı)</option>
+                  <option>Sponsorluk paketi (Bronz / Gümüş / Altın)</option>
+                  <option>Markaya özel challenge</option>
+                  <option>Kurumsal sağlık programı</option>
+                  <option>Antrenör / stüdyo partnerliği</option>
+                  <option>Karma — birlikte planlayalım</option>
+                </select>
+              </div>
+              <div class="fk-field"><label class="fk-label">Aylık Bütçe Aralığı <span class="opt">(opsiyonel)</span></label>
+                <select class="fk-select">
+                  <option value="" selected disabled>Seç</option>
+                  <option>50.000 TL altı</option>
+                  <option>50.000 – 150.000 TL</option>
+                  <option>150.000 – 500.000 TL</option>
+                  <option>500.000 TL üzeri</option>
+                </select>
+              </div>
+            </div>
+            <div class="fk-field">
+              <label class="fk-label">İlgi Alanların <span class="opt">(birden fazla seçebilirsin)</span></label>
+              <div class="uz-grid">
+                <button class="uz-pick" type="button" aria-pressed="false"><i class="fa-solid fa-check"></i> Masthead</button>
+                <button class="uz-pick" type="button" aria-pressed="false"><i class="fa-solid fa-check"></i> Egzersiz Detay MPU</button>
+                <button class="uz-pick" type="button" aria-pressed="false"><i class="fa-solid fa-check"></i> Mobil Sticky</button>
+                <button class="uz-pick" type="button" aria-pressed="false"><i class="fa-solid fa-check"></i> Sponsorlu Program</button>
+                <button class="uz-pick" type="button" aria-pressed="false"><i class="fa-solid fa-check"></i> Markaya Özel Challenge</button>
+                <button class="uz-pick" type="button" aria-pressed="false"><i class="fa-solid fa-check"></i> Bülten</button>
+              </div>
+            </div>
+            <div class="fk-field">
+              <label class="fk-label">Mesajın <span class="opt">(opsiyonel)</span></label>
+              <textarea class="fk-textarea" style="min-height:100px" placeholder="Kampanya hedefini ve takvimini kısaca anlat."></textarea>
+            </div>
+            <div class="ol-consents">
+              <label class="fb-kvkk">
+                <input type="checkbox" required />
+                <span><a href="yasal-v1.html?metin=kvkk">KVKK Metni</a>'ni ve <a href="yasal-v1.html?metin=aydinlatma">Aydınlatma Metni</a>'ni okudum, onaylıyorum.</span>
+              </label>
+            </div>
+            <div class="captcha-note"><i class="fa-solid fa-shield-halved"></i><span>Bu form bot korumasıyla çalışır. Gönderdiğin bilgilerin nasıl işlendiği <a href="yasal-v1.html?metin=kvkk">KVKK Metni</a> ve <a href="yasal-v1.html?metin=aydinlatma">Aydınlatma Metni</a>'nde yazıyor.</span></div>
+            <div class="ol-submit">
+              <span class="sub-note">Medya kiti + fiyat listesiyle <b>2 iş günü</b> içinde dönüş yaparız.</span>
+              <button class="btn btn-primary" id="rvSubmit" type="submit"><i class="fa-solid fa-paper-plane"></i> Teklif İste</button>
+            </div>
+          </div>
+        </form>
+
+        <!-- başarı durumu (?ok=1) -->
+        <div class="ol-success" id="rvSuccess">
+          <span class="ok"><i class="fa-solid fa-check"></i></span>
+          <h2>Formu doğru doldurdun</h2>
+          <p class="hs-state" role="status"><i class="fa-solid fa-circle-info" aria-hidden="true"></i> <span>Talebin <b>gönderilmedi</b> — bu ekran maket, arkasında sunucu yok. Gerçek bir başvuruda reklam ekibimiz medya kiti ve güncel fiyat listesiyle e-posta üzerinden dönüş yapardı.</span></p>
+          <div class="os-steps">
+            <span><i class="fa-solid fa-check"></i> Başvuru alındı</span>
+            <span><i class="fa-solid fa-file-pdf"></i> Medya kiti gönderimi</span>
+            <span><i class="fa-solid fa-comments"></i> Planlama görüşmesi</span>
+          </div>
+          <a href="dadafit-hub-v1.html" class="btn btn-ghost"><i class="fa-solid fa-arrow-left"></i> DadaFit Ana Sayfaya Dön</a>
+        </div>
+      </div>
+
+      <aside class="rv-side">
+        <div class="tips-card">
+          <div class="tips-head"><i class="fa-solid fa-route"></i> Süreç Nasıl İşler?</div>
+          <div class="tips-steps">
+            <div class="tip-step"><span class="tn">1</span><div><b>Formu doldur</b><span>Model ve bütçe aralığını belirt.</span></div></div>
+            <div class="tip-step"><span class="tn">2</span><div><b>Medya kiti sende</b><span>Doğrulanmış rakamlar + fiyat listesi e-postanda.</span></div></div>
+            <div class="tip-step"><span class="tn">3</span><div><b>Planlama görüşmesi</b><span>Hedefine göre karma plan çıkarırız.</span></div></div>
+            <div class="tip-step"><span class="tn">4</span><div><b>Yayında</b><span>Aylık raporla performansı birlikte izleriz.</span></div></div>
+          </div>
+        </div>
+        <div class="note-card">
+          <h4><i class="fa-solid fa-bullseye"></i> Neden DadaFit?</h4>
+          <ul>
+            <li><i class="fa-solid fa-check"></i> Niyete en yakın an: egzersizin ve programın tam başında</li>
+            <li><i class="fa-solid fa-check"></i> Reklam ile içerik karışmaz — şeffaf &ldquo;Sponsorlu&rdquo; etiketi</li>
+            <li><i class="fa-solid fa-check"></i> Hedef bazlı hedefleme: güç, esneklik, dayanıklılık, alışkanlık</li>
+            <li><i class="fa-solid fa-check"></i> Süreklilik kitlesi: challenge ve Enerji Defteri her gün geri getirir</li>
+            <li><i class="fa-solid fa-check"></i> Aylık şeffaf performans raporu (toplu, kimliksiz)</li>
+          </ul>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+
+</main>
+
+<!-- KABUK: alt katman (giriş kapısı + footer + başa dön) -->
+<div id="fitShellBottom"></div>
+
+<!-- DadaFit ortak kabuk JS (tek kaynak) -->
+<script src="assets/js/fit-shell.js"></script>
+<script src="assets/js/fit-mesaj.js"></script>
+
+<script>
+/* =====================================================================
+ SAYFA JS — DadaFit Medya Kiti
+ ---------------------------------------------------------------------
+ Göçte SİLİNENLER (kabuk artık tek kaynak, HANDOFF §1):
+  · mobil alt katman yöneticisi (window.__bottomStrips / __bnUpdate)
+    → fit-shell.js:1299 içinde birebir var; sayfa kopyası ikinci bir
+      scroll/resize/click dinleyicisi kuruyor ve __bnUpdate'i eziyordu.
+  · "işletme rolü" bloğu → gövdesi boş bir IIFE'ydi (dm_business emekli).
+ ===================================================================== */
+
+/* ---- YERLEŞİM ÖNİZLEME MODALI — kart tık → sayfa şeması + vurgulu reklam yuvası ----
+ Kaydırma kilidi FIT_SHELL.lockScroll/unlockScroll ile (HANDOFF §4: body
+ overflow'una doğrudan yazmak kaydırma çubuğu genişliği kadar sıçrama
+ üretiyordu ve sayaçlı kilidi bozuyordu).
+ Erişilebilirlik (§20): odak yönetimi kabuğun FIT_SHELL.trapFocus(el)
+ yardımcısına devredildi — odağı bir kare sonra içeri alır (geçişli
+ katmanlarda aynı tick'te .focus() yok sayılıyor), Tab'ı modal içinde
+ döndürür ve release() ile odağı açan öğeye geri verir. Escape kapatır. */
+(function(){
+  var modal=document.getElementById('ypModal');
+  var overlay=document.getElementById('ypOverlay');
+  if(!modal||!overlay)return;
+  var page=document.getElementById('ypPage');
+  var screenWrap=document.getElementById('ypScreenWrap');
+  var closeBtn=document.getElementById('ypClose');
+  var elTitle=document.getElementById('ypTitle'), elLoc=document.getElementById('ypLoc'),
+      elUrl=document.getElementById('ypUrl'), elDesc=document.getElementById('ypDesc'),
+      elFmt=document.getElementById('ypFmt'), elMetrics=document.getElementById('ypMetrics');
+  var release=null;      // FIT_SHELL.trapFocus'un geri verdiği bırakma işlevi
+  var lastFocus=null;    // yedek: trapFocus yokken odağı elle geri ver
+
+ // her data-placement için: künye + sayfa şeması (schema tokenları) + vurgulu yuva
+ // schema satır tipleri: head | line | line-s | line-m | cards(n) | gridAd | rowAd | video | stickyAd | ad | foot
+ // METRİKLER TEMSİLÎ (§22) — markup'taki .yp-note bunu her açılışta yazılı olarak söyler.
+  var P={
+    'masthead':{loc:'Ana sayfa · header altı',url:'dadafit.com',title:'Masthead',
+      fmt:['970×250','Masaüstü','320×100 mobil'],
+      desc:'Ana sayfanın <b>açılışında, header\'ın hemen altındaki</b> ilk blok. Sayfa açılır açılmaz görünen, günün en yüksek tekil erişimli alanı — marka bilinirliği ve lansman için ideal.',
+      metrics:[['340 B','aylık gösterim'],['%0,64','ort. CTR'],['%84','görüntülenebilirlik']],
+      schema:[{t:'head'},{t:'ad',label:'MASTHEAD 970×250',h:46},{t:'line'},{t:'line-m'},{t:'cards',n:3},{t:'line'},{t:'foot'}]},
+    'leaderboard':{loc:'DadaFit Egzersizleri & program listesi · içerik üstü',url:'dadafit.com/egzersizler',title:'Leaderboard',
+      fmt:['728×90','Hedef bazlı'],
+      desc:'Liste sayfalarında <b>kart ızgarasının hemen üstündeki</b> yatay şerit. Hedef bazlı hedefleme: &ldquo;Güç&rdquo; filtresinde ağırlık markası, &ldquo;Esneklik&rdquo;te mat ve direnç bandı markası gösterilir.',
+      metrics:[['260 B','aylık gösterim'],['%0,49','ort. CTR'],['4','hedef kırılımı']],
+      schema:[{t:'head'},{t:'line-s'},{t:'ad',label:'LEADERBOARD 728×90',h:24},{t:'cards',n:3},{t:'cards',n:3},{t:'foot'}]},
+    'native-liste':{loc:'Program listesi · ızgara arası 6. kart',url:'dadafit.com/programlar',title:'Native / Liste Arası Kart',
+      fmt:['İçerik formatı','&ldquo;Sponsorlu&rdquo; etiketli'],
+      desc:'Program ızgarasının <b>içine, 6. kart hizasında</b> organik kart diliyle yerleşir — banner körlüğüne takılmaz. Akışa karıştığı için etkileşim oranı klasik display\'in çok üstünde.',
+      metrics:[['130 B','aylık gösterim'],['%1,8','kart etkileşimi'],['+34sn','ort. kalış']],
+      schema:[{t:'head'},{t:'line-s'},{t:'cards',n:3},{t:'gridAd',n:3,pos:1,label:'SPONSORLU PROGRAM'},{t:'cards',n:3},{t:'foot'}]},
+    'mpu':{loc:'Egzersiz detay · ekipman ve set takibi yanı',url:'dadafit.com/egzersiz/...',title:'MPU / Kare',
+      fmt:['300×250','Sticky','Bağlamsal'],
+      desc:'Egzersiz detayında <b>ekipman listesi ve set takibinin yanında sticky</b> durur. Kullanıcı tam harekete hazırlanırken; ekipman markası (dambıl, direnç bandı, mat) için en bağlamsal temas noktası.',
+      metrics:[['210 B','aylık gösterim'],['%0,9','ort. CTR'],['5:20','ort. sayfa süresi']],
+      schema:[{t:'head'},{t:'rowAd',side:'right',label:'MPU 300×250',adH:60}]},
+    'niyet-native':{loc:'&ldquo;Bana Uygun Başlangıcı Bul&rdquo; sonucu',url:'dadafit.com/baslangic-bul',title:'Niyet-Bazlı Native',
+      fmt:['İçerik formatı','Performans'],
+      desc:'&ldquo;Evde, 20 dakika, ekipmansız&rdquo; → <b>sonuç listesinin başında hedefe uygun ekipman ya da giyim önerisi</b>. Niyet sinyalinin en net olduğu an; alt-huni performans kampanyaları için ideal.',
+      metrics:[['48 B','aylık gösterim'],['%2,2','tıklama oranı'],['%28','marka sayfasına geçiş']],
+      schema:[{t:'head'},{t:'line-s'},{t:'ad',label:'HEDEFİNE UYGUN EKİPMAN',h:34},{t:'cards',n:3},{t:'cards',n:3},{t:'foot'}]},
+    'mobil-sticky':{loc:'Tüm sayfalar · mobil alt kenar',url:'m.dadafit.com',title:'Mobil Sticky',mobile:true,
+      fmt:['320×100','Tüm mobil','Kapatılabilir'],
+      desc:'Mobilde <b>alt kenara sabit</b>, scroll boyunca görünür kalır. Mobil ağırlıklı kullanımın tamamına erişir; kullanıcı kapatabildiği için UX dostu.',
+      metrics:[['1,1 M','aylık gösterim'],['%0,7','ort. CTR'],['%74','mobil erişim payı']],
+      schema:[{t:'head'},{t:'line'},{t:'line-m'},{t:'cards',n:2},{t:'cards',n:2},{t:'line'},{t:'stickyAd',label:'MOBİL STICKY 320×100'}]},
+    'challenge-native':{loc:'Challenge Merkezi · katılım kartı',url:'dadafit.com/challenge',title:'Sponsorlu Challenge',
+      fmt:['İçerik formatı','Katılım bazlı'],
+      desc:'Challenge listesinde <b>markanın adını taşıyan bir challenge</b>: &ldquo;30 gün, günde 20 dakika&rdquo;. Kullanıcı gönüllü katılır ve her gün geri döner — tek seferlik gösterim yerine süreli bir bağ kurulur.',
+      metrics:[['39 B','challenge görüntüleme'],['%14','katılım oranı'],['18','ort. aktif gün']],
+      schema:[{t:'head'},{t:'line-s'},{t:'cards',n:3},{t:'gridAd',n:3,pos:1,label:'SPONSORLU CHALLENGE'},{t:'cards',n:3},{t:'foot'}]},
+    'half-page':{loc:'Hareket rehberi · sözlük · doğru form',url:'dadafit.com/rehber/...',title:'Half Page',
+      fmt:['300×600','Sticky yan sütun'],
+      desc:'Uzun-form rehber sayfalarında <b>scroll boyunca ekranda kalan yan sütun</b>. Uzun okuma süresi = yüksek marka kalıcılığı (retention) sağlar.',
+      metrics:[['74 B','aylık gösterim'],['3:10','ekranda kalma'],['%79','görüntülenebilirlik']],
+      schema:[{t:'head'},{t:'rowAd',side:'right',label:'HALF PAGE 300×600',adH:130}]}
+  };
+
+  function lineEl(cls){var s=document.createElement('span');s.className='pg-line'+(cls?' '+cls:'');return s;}
+  function adEl(label,extra,h){var s=document.createElement('span');s.className='yp-ad'+(extra?' '+extra:'');s.textContent=label;if(h)s.style.height=h+'px';return s;}
+  function cardsRow(n){var r=document.createElement('span');r.className='pg-row';for(var i=0;i<n;i++){var c=document.createElement('span');c.className='pg-col';var cd=document.createElement('span');cd.className='pg-card';c.appendChild(cd);r.appendChild(c);}return r;}
+  function gridAdRow(n,pos,label){var r=document.createElement('span');r.className='pg-row';for(var i=0;i<n;i++){var c=document.createElement('span');c.className='pg-col';if(i===pos){c.appendChild(adEl(label,null,54));}else{var cd=document.createElement('span');cd.className='pg-card';c.appendChild(cd);}r.appendChild(c);}return r;}
+
+  function render(schema){
+    page.innerHTML='';
+    page.style.position='relative';
+    schema.forEach(function(it){
+      if(it.t==='head'){page.appendChild(Object.assign(document.createElement('span'),{className:'pg-head'}));}
+      else if(it.t==='line'){page.appendChild(lineEl());}
+      else if(it.t==='line-s'){page.appendChild(lineEl('s'));}
+      else if(it.t==='line-m'){page.appendChild(lineEl('m'));}
+      else if(it.t==='cards'){page.appendChild(cardsRow(it.n));}
+      else if(it.t==='foot'){page.appendChild(Object.assign(document.createElement('span'),{className:'pg-foot'}));}
+      else if(it.t==='ad'){page.appendChild(adEl(it.label,null,it.h||30));}
+      else if(it.t==='gridAd'){page.appendChild(gridAdRow(it.n,it.pos,it.label));}
+      else if(it.t==='stickyAd'){page.appendChild(adEl(it.label,'sticky-bottom'));}
+      else if(it.t==='video'){var v=document.createElement('span');v.className='yp-ad';v.style.height='90px';v.innerHTML='<i class="fa-solid fa-play" style="font-size:16px;margin-bottom:4px"></i><br>'+it.label;page.appendChild(v);}
+      else if(it.t==='rowAd'){
+        var row=document.createElement('span');row.className='pg-row';row.style.flex='1';
+        var col=document.createElement('span');col.className='pg-col';col.style.flex='1.6';
+        [' ','s',' ','s',' '].forEach(function(c){col.appendChild(lineEl(c.trim()));});
+        col.appendChild(Object.assign(document.createElement('span'),{className:'pg-card'}));
+        var ad=adEl(it.label,'tall');if(it.adH)ad.style.minHeight=it.adH+'px';
+        if(it.side==='right'){row.appendChild(col);row.appendChild(ad);}else{row.appendChild(ad);row.appendChild(col);}
+        page.appendChild(row);
+      }
+    });
+  }
+
+ // durum korumalı (HANDOFF §4): açıkken open, kapalıyken close no-op —
+ // yoksa ikinci close() başka bir katmanın sayaçlı kilidini düşürür.
+  function open(key,trigger){
+    var d=P[key]; if(!d)return;
+    if(modal.classList.contains('show'))return;
+    lastFocus=trigger||document.activeElement;
+    elTitle.innerHTML=d.title; elLoc.innerHTML=d.loc; elUrl.textContent=d.url;
+    elDesc.innerHTML=d.desc;
+    elFmt.innerHTML=d.fmt.map(function(f){return '<span>'+f+'</span>';}).join('');
+    elMetrics.innerHTML=d.metrics.map(function(m){return '<div class="ym"><b>'+m[0]+'</b><span>'+m[1]+'</span></div>';}).join('');
+    screenWrap.classList.toggle('yp-mobile',!!d.mobile);
+    render(d.schema);
+    modal.classList.add('show');overlay.classList.add('show');
+    if(window.FIT_SHELL&&FIT_SHELL.lockScroll)FIT_SHELL.lockScroll();
+    if(window.FIT_SHELL&&FIT_SHELL.trapFocus)release=FIT_SHELL.trapFocus(modal);
+    else closeBtn.focus();
+  }
+  function close(){
+    if(!modal.classList.contains('show'))return;
+    modal.classList.remove('show');overlay.classList.remove('show');
+    if(window.FIT_SHELL&&FIT_SHELL.unlockScroll)FIT_SHELL.unlockScroll();
+    if(release){release();release=null;}
+    // örtüye/dışarı tıklayarak kapatıldığında activeElement <body> olabilir;
+    // kartı tetikleyen düğüm hâlâ duruyorsa odağı ona geri ver (§20).
+    if(lastFocus&&document.contains(lastFocus)&&!modal.contains(document.activeElement)){
+      try{lastFocus.focus();}catch(e){}
+    }
+    lastFocus=null;
+  }
+
+  document.querySelectorAll('.yer-card[data-placement]').forEach(function(card){
+ // hover "önizle" ipucu rozetini wireframe'e enjekte et
+    var wire=card.querySelector('.yer-wire');
+    if(wire&&!wire.querySelector('.yw-peek')){
+      var peek=document.createElement('span');peek.className='yw-peek';
+      peek.innerHTML='<i class="fa-solid fa-magnifying-glass-location"></i> Önizle';
+      wire.appendChild(peek);
+    }
+    card.addEventListener('click',function(){open(card.getAttribute('data-placement'),card);});
+    card.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();open(card.getAttribute('data-placement'),card);}});
+  });
+  closeBtn.addEventListener('click',close);
+  overlay.addEventListener('click',close);
+  modal.addEventListener('click',function(e){if(e.target===modal)close();});
+
+ // Escape kapatır (Tab tuzağı trapFocus'ta)
+  document.addEventListener('keydown',function(e){
+    if(e.key==='Escape'&&modal.classList.contains('show')){e.preventDefault();close();}
+  });
+
+  if(location.search.indexOf('yp=')>-1){var k=new URLSearchParams(location.search).get('yp');if(P[k])open(k);}
+})();
+
+/* ---- BAŞVURU FORMU — ilgi alanı çoklu seçim + demo gönderim durumu ---- */
+(function(){
+  var params=new URLSearchParams(location.search);
+ // ilgi alanı çoklu seçim (§20: <button> durumu aria-pressed ile bildirilir)
+  document.querySelectorAll('.uz-pick').forEach(function(b){
+    b.addEventListener('click',function(){
+      var on=b.classList.toggle('on');
+      b.setAttribute('aria-pressed',on?'true':'false');
+    });
+  });
+  var form=document.getElementById('rvForm'),success=document.getElementById('rvSuccess');
+  if(!form||!success)return;
+  function showSuccess(){form.style.display='none';success.classList.add('show');}
+  /* K18 · rvForm hiçbir doğrulama yapmadan başarı ekranı açıyordu (0 doğrulama).
+     Artık gerçek bir `submit` işleyicisi var; `reportValidity()` boş/geçersiz
+     alanda tarayıcının kendi balonunu gösterip ilk hatalı alana odaklanıyor —
+     admin formlarındaki aynı desen (bkz. `fit-admin.js` `maketKaydet`). */
+  form.addEventListener('submit',function(e){
+    e.preventDefault();
+    var gecti = false;
+    try{ gecti = form.reportValidity(); }
+    catch(hata){ gecti = false; }
+    if(!gecti) return;
+    showSuccess();
+  });
+  if(params.get('ok')==='1'){showSuccess();window.addEventListener('load',function(){
+    var sec=document.getElementById('basvuru');if(sec)window.scrollTo({top:sec.offsetTop-120});});}
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8" />
+  <meta name="robots" content="noindex, nofollow" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>DadaFit Egzersizleri — DadaFit</title>
+<link rel="icon" type="image/svg+xml" href="../kanon/varlik/dadafit-isaret.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="../kanon/varlik/dadafit-isaret-32.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="../kanon/varlik/dadafit-isaret-180.png" />
+<!-- FontAwesome 6.5.2 (kilitli ikon seti) -->
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+      integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+      crossorigin="anonymous" referrerpolicy="no-referrer" />
+<!-- DadaFit ortak kabuk (tek kaynak) -->
+<!-- KANON · yukleme sirasi: tokenlar -> markalar/fit (bilesenler YUKLENMEZ) -->
+<link rel="stylesheet" href="../kanon/tokenlar.css" />
+<link rel="stylesheet" href="../kanon/markalar/fit.css" />
+<link rel="stylesheet" href="assets/css/fit-shell.css" />
+<link rel="stylesheet" href="assets/css/fit-mesaj.css" />
+<style>
+/* =====================================================================
+ EGZERSİZ KÜTÜPHANESİ — DadaFit liste/filtre sayfası
+ Chrome (token+topbar+header+drawer+bottom-nav+footer+modal+JS) hub'dan
+ BİREBİR taşındı (dadafit-hub-v1.html). DadaFit recolor: --fit → #009d4f.
+ Sayfa içeriği "SAYFA CSS" altına eklendi. Mega menü/chrome KİLİTLİ.
+ ===================================================================== */
+
+/* =====================================================================
+ SAYFA CSS — EGZERSİZ KÜTÜPHANESİ
+ ===================================================================== */
+:root{
+  --fit:var(--marka);          /* DadaFit aksanı (Pantone 7482 C) */
+  --fit-deep:var(--marka-koyu);     /* hover / gradient ucu */
+  --fit-tint:var(--marka-yikama-2);     /* yumuşak yeşil yıkama */
+  --fit-line:var(--marka-cizgi);     /* yeşil-nötr hairline */
+  --fit-bright:var(--marka-parlak);   /* koyu zeminde okunur aksan metni */
+  --fit-dark:#211E16;     /* vurgu/hero zemini */
+}
+.sec-fit .eyebrow{color:var(--fit-deep)}
+.sec-fit .eyebrow::before{background:var(--fit)}
+
+/* ---- ÜST PANEL: koyu band + breadcrumb + başlık + arama (signature carry-over) ---- */
+.lib-top{
+  position:relative;overflow:hidden;margin-top:112px;
+  /* hub df-hero-media deseni: desatüre görsel + koyu gradient overlay (metin solda okunur, görsel sağda belirir) */
+  background:
+    radial-gradient(820px 360px at 84% 14%,color-mix(in srgb, var(--marka) 20%, transparent),transparent 62%),
+    linear-gradient(90deg,rgba(33,30,22,.94) 0%,rgba(29,26,20,.82) 46%,rgba(27,25,19,.74) 100%),
+    linear-gradient(180deg,rgba(33,30,22,0) 58%,rgba(24,22,16,.62) 100%),
+    url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=1680&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-16') center 26%/cover no-repeat,
+    #1b1913;
+  padding:40px 0 38px;
+}
+.lib-top .wrap{position:relative;z-index:2}
+.lib-crumb{display:flex;align-items:center;gap:9px;font-size:12.5px;font-weight:600;color:rgba(255,255,255,.6);margin-bottom:18px}
+.lib-crumb a{color:rgba(255,255,255,.6);transition:color .2s var(--ease)}
+.lib-crumb a:hover{color:#fff}
+.lib-crumb i{font-size:9px;color:rgba(255,255,255,.34)}
+.lib-crumb .cur{color:var(--fit-bright)}
+.lib-top .eyebrow{color:var(--fit-bright)}
+.lib-top .eyebrow::before{background:var(--fit-bright)}
+.lib-top h1{color:#fff;font-size:39px;letter-spacing:-.02em;margin:14px 0 10px;max-width:680px}
+.lib-top .lib-sub{color:rgba(255,255,255,.78);font-size:15.5px;font-weight:500;max-width:560px;line-height:1.55}
+/* arama input — cam panel */
+.lib-search{
+  display:flex;align-items:center;gap:12px;margin-top:24px;max-width:520px;
+  background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);
+  -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+  border-radius:var(--radius-md);padding:4px 4px 4px 18px;
+  transition:border-color .2s var(--ease),background .2s var(--ease);
+}
+.lib-search:focus-within{border-color:var(--fit-bright);background:rgba(255,255,255,.14)}
+.lib-search i{color:rgba(255,255,255,.62);font-size:15px;flex:none}
+.lib-search input{
+  flex:1;min-width:0;background:none;border:none;outline:none;
+  font-family:inherit;font-size:14.5px;font-weight:500;color:#fff;padding:11px 0;
+}
+.lib-search input::placeholder{color:rgba(255,255,255,.5)}
+.lib-search button{
+  flex:none;font-family:inherit;font-size:13.5px;font-weight:700;color:#fff;
+  background:var(--fit);border:none;border-radius:var(--radius-sm);padding:0 18px;height:42px;cursor:pointer;
+  transition:background .2s var(--ease);
+}
+.lib-search button:hover{background:var(--fit-deep)}
+/* üst panel hızlı istatistik şeridi */
+.lib-stats{display:flex;align-items:center;gap:26px;margin-top:24px;flex-wrap:wrap}
+.lib-stat{display:flex;align-items:baseline;gap:8px}
+.lib-stat b{font-size:20px;font-weight:800;color:#fff;letter-spacing:-.01em}
+.lib-stat span{font-size:12.5px;font-weight:600;color:rgba(255,255,255,.62)}
+
+/* ---- FİLTRE RAYI (sticky) — df-fchip dili ---- */
+.lib-body{padding:var(--sec-pad-sm) 0 var(--sec-pad);background:var(--bg-white)}
+.lib-filters{
+  position:sticky;top:112px;z-index:40;
+  background:rgba(255,255,255,.92);
+  -webkit-backdrop-filter:saturate(150%) blur(8px);backdrop-filter:saturate(150%) blur(8px);
+  border:1px solid var(--line);border-radius:var(--radius-lg);
+  padding:18px 20px 16px;margin-bottom:28px;box-shadow:var(--sh-sm);
+}
+.fgroup{display:flex;align-items:center;flex-wrap:wrap;gap:9px;padding:7px 0}
+.fgroup+.fgroup{border-top:1px solid var(--line);margin-top:3px;padding-top:13px}
+.fgroup .lbl{
+  font-size:11.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--muted);min-width:96px;flex:none;
+}
+.df-fchip{font-size:13px;font-weight:600;color:var(--slate);background:var(--paper);border:1px solid var(--line);padding:9px 16px;border-radius:var(--radius-sm);cursor:pointer;transition:.18s var(--ease);display:inline-flex;align-items:center;gap:7px}
+.df-fchip i{font-size:12px;opacity:.8}
+.df-fchip:hover{border-color:var(--fit);color:var(--fit-deep);background:var(--fit-tint)}
+.df-fchip.on{border-color:var(--fit);color:#fff;background:var(--fit)}
+.df-fchip.on i{opacity:1}
+/* filtre rayı alt aksiyonu — temizle */
+.fclear{
+  margin-left:auto;font-size:12.5px;font-weight:700;color:var(--muted);
+  background:none;border:none;cursor:pointer;display:inline-flex;align-items:center;gap:7px;
+  padding:9px 6px;transition:color .2s var(--ease);
+}
+.fclear:hover{color:var(--fit-deep)}
+
+/* ---- SONUÇ ÇUBUĞU: sayı + sıralama ---- */
+.lib-bar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:22px;flex-wrap:wrap}
+.lib-count{font-size:14px;font-weight:600;color:var(--slate-2)}
+.lib-count b{color:var(--slate);font-weight:800}
+/* ---- R8/20 · SAYININ SOLUNDAKİ DİKEY AYRAÇ KALDIRILDI ----
+   Ayraç kabuğun genel filtre çubuğundan geliyor
+   (`fit-shell.css` → `.ff-bar .ff-count::before`, 1px × 20px `--line`).
+   Çubuk zaten `justify-content:space-between` ile iki uca yaslı: solda
+   filtre açılırları, sağda sayı + sıralama. Ayraç ayırdığı iki grup
+   arasında zaten 16px boşluk varken ikinci bir sınır çiziyor ve sayıyı
+   sıralama düğmelerinden koparmak yerine onlara yapıştırıyordu.
+   Kural KABUKTA (7 sayfada geçerli) — burada yalnız bu sayfa için
+   kapatıldı; kabuk dosyası R8'de AJAN-A'nın kapsamında. */
+/* R8 · yerel ezme KALDIRILDI (lead, birleştirme): kabuktaki
+   `.ff-bar .ff-count::before` kuralı Beyar kararıyla 7 sayfadan birden
+   silindi, ezilecek bir şey kalmadı. Ölü CSS bırakılmadı. */
+/* Sağlık notunun gövdesi kademe düşmez — gerekçe egzersiz-detay-v1 ile aynı
+   (kardeş marka `.reh-note` tek kademe; kalıcı güvenlik bilgisi ikincil
+   tipografiye inmez). */
+.lib-guide .note-more{font-size:14px;color:var(--slate-2)}
+.lib-sort{display:flex;align-items:center;gap:8px}
+.lib-sort .lbl{font-size:12.5px;font-weight:600;color:var(--muted)}
+.sort-seg{display:inline-flex;background:var(--bg);border:1px solid var(--line);border-radius:var(--radius-md);padding:3px}
+.sort-seg button{
+  font-family:inherit;font-size:13px;font-weight:700;color:var(--slate-2);
+  background:none;border:none;border-radius:var(--radius-sm);padding:8px 15px;cursor:pointer;
+  transition:.18s var(--ease);
+}
+.sort-seg button:hover{color:var(--fit-deep)}
+.sort-seg button.on{background:var(--fit);color:#fff}
+
+/* ---- EGZERSİZ KART GRID'İ — full-görsel kart (hub-card dili) ---- */
+.lib-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px}
+.ex-media{position:relative;height:188px;background-size:cover;background-position:center}
+.ex-media::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(33,30,22,0) 48%,rgba(20,18,12,.58))}
+/* kas grubu etiketi (sol üst) */
+.ex-cat{position:absolute;top:12px;left:12px;z-index:2;background:var(--fit);color:#fff;font-size:11.5px;font-weight:700;padding:6px 12px;border-radius:var(--radius-sm);letter-spacing:.02em}
+/* seviye rozeti (sağ üst) — yoğunluk pip'leri: dolu pip yeşil, boş pip nötr
+ (aksan SADECE #009d4f; seviye sarı/kırmızı kodlaması YOK) */
+/* ZORLUK ROZETİ SAĞ ALTA TAŞINDI (R16/1).
+   ÖLÇÜLEN KUSUR: rozet `top:12px;right:12px`teydi ve kaydet düğmesi
+   (`.kyt-btn`, `top:8px;right:8px`, 44×44) R15'te tam oraya eklendi.
+   Üst üste bindiler: kesişim **1162 px²**, üç genişlikte de (1440·1024·390),
+   bu sayfada 12 kartın 12'sinde. Düğme z-index 4'te olduğu için rozetin
+   üstünü kapatıyordu — seviye okunmuyordu.
+   Sağ alt köşe boştu (sol altta `.ex-tags` var), rozet oraya alındı.
+   Kural artık kitte: docs/fit-kit.md §12 · kart üstü öğe yerleşimi. */
+.ex-level{position:absolute;bottom:12px;right:12px;z-index:2;display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,.94);color:var(--slate);font-size:11px;font-weight:700;padding:6px 11px;border-radius:var(--radius-sm)}
+.ex-pips{display:inline-flex;gap:3px}
+.ex-pips i{width:6px;height:6px;border-radius:50%;background:#d6dad7;display:block}
+.ex-level.lv1 .ex-pips i:nth-child(-n+1),
+.ex-level.lv2 .ex-pips i:nth-child(-n+2),
+.ex-level.lv3 .ex-pips i:nth-child(-n+3){background:var(--fit)}
+/* DAR KOLONDA ROZET ALT SOLA, ETİKETLERİN ÜSTÜNE GEÇER (R16/1).
+   ÖLÇÜM (768 px, kart ızgarası 3 kolon): görsel genişliği 222 px, en geniş
+   `.ex-level` 103 px, en geniş `.ex-tags` 134 px. 103 + 134 + iki kenar
+   boşluğu, 222 px'e SIĞMIYOR — yan yana durmaları geometrik olarak
+   imkânsız, o yüzden burada bir hizalama ayarı değil bir YERLEŞİM
+   değişikliği gerekiyor. Rozet alt sola, etiketlerin bir sıra üstüne
+   çıkar; ikisi de tam okunur, hiçbir bilgi gizlenmez.
+   1440 ve 1024'te yan yana sığıyor (ölçüldü: çakışma 0), orada
+   değişiklik yok. */
+@media (min-width:641px) and (max-width:900px){
+  .ex-level{left:12px;right:auto;bottom:46px}
+}
+
+/* alt etiket: ekipman ikonu */
+.ex-tags{position:absolute;bottom:12px;left:12px;z-index:2;display:flex;gap:6px;flex-wrap:wrap}
+.ex-tag{display:inline-flex;align-items:center;gap:6px;background:rgba(20,18,12,.72);color:#fff;font-size:11px;font-weight:700;padding:6px 10px;border-radius:var(--radius-sm);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
+.ex-tag i{font-size:11px}
+.ex-body{padding:16px 18px 18px;display:flex;flex-direction:column;flex:1}
+.ex-body h3{font-size:16.5px;margin-bottom:6px;letter-spacing:-.01em;transition:color .2s var(--ease)}
+.ex-card:hover .ex-body h3{color:var(--fit-deep)}
+.ex-body p{font-size:13px;color:var(--muted);font-weight:500;line-height:1.5}
+.ex-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:auto;padding-top:14px;margin-top:16px;border-top:1px solid var(--line);font-size:12.5px;color:var(--muted);font-weight:500}
+.ex-foot .meta{display:inline-flex;align-items:center;gap:6px}
+.ex-foot .go{display:inline-flex;align-items:center;gap:7px;color:var(--fit-deep);font-weight:700}
+.ex-foot .go i{transition:transform .2s var(--ease)}
+.ex-card:hover .ex-foot .go i{transform:translateX(3px)}
+
+/* ---- DAHA FAZLA YÜKLE ---- */
+/* ÖLÜ KURALLAR — R11/M6'da "Daha fazla yükle" bloğu kaldırıldı, yerine
+   kabuktaki gerçek sayfalama geldi. Kurallar SİLİNMEDİ (kabuk sözleşmesi:
+   ölü kural silinmez, kütüğe yazılır — kütük tasks/REVIZYON-11.md M6). */
+.lib-more{display:flex;flex-direction:column;align-items:center;gap:14px;margin-top:40px}
+.lib-more .btn-more{
+  display:inline-flex;align-items:center;gap:10px;font-family:inherit;font-size:14.5px;font-weight:700;
+  color:var(--slate);background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-md);
+  padding:14px 30px;cursor:pointer;transition:.22s var(--ease);
+}
+.lib-more .btn-more:hover{border-color:var(--fit);color:var(--fit-deep);transform:translateY(-2px)}
+.lib-more .btn-more i{color:var(--fit)}
+.lib-more .more-note{font-size:12.5px;font-weight:500;color:var(--muted)}
+
+/* boş durum (filtre eşleşmezse) */
+/* §D2 (Dalga 4) — bu sayfa kabuktaki `.lib-empty` kuralının ESKİ hâlinin
+   birebir kopyasını taşıyordu ve kabuğu eziyordu. Kopya kaldırıldı; kit
+   artık tek yerden, `fit-shell.css`ten geliyor. */
+
+/* ===================== SAYFA RESPONSIVE ===================== */
+@media (max-width:1024px){
+  .lib-top{margin-top:112px}
+  .lib-filters{top:112px}
+  .lib-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .lib-top h1{font-size:33px}
+  .fgroup .lbl{min-width:88px}
+}
+@media (max-width:760px){
+  .lib-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:640px){
+  .lib-top{margin-top:62px;padding:30px 0 30px}
+  .lib-top h1{font-size:27px}
+  .lib-top .lib-sub{font-size:14px}
+  .lib-search{max-width:none}
+  .lib-stats{gap:18px;margin-top:20px}
+  .lib-stat b{font-size:18px}
+  .lib-body{padding:var(--sec-pad-sm) 0 var(--sec-pad)}
+  /* sticky filtre bar mobilde tek satır yatay kaydır */
+  .lib-filters{top:62px;padding:14px 14px 12px}
+  .fgroup{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;padding-bottom:5px}
+  .fgroup::-webkit-scrollbar{display:none}
+  .fgroup .lbl{position:sticky;left:0;background:rgba(255,255,255,.96);min-width:auto;padding-right:6px;z-index:1}
+  .df-fchip{flex:none;white-space:nowrap}
+  .fclear{flex:none}
+  .lib-bar{margin-bottom:18px}
+  .lib-sort{width:100%;justify-content:space-between}
+  .sort-seg button{padding:8px 12px;font-size:12.5px}
+  .lib-grid{grid-template-columns:1fr 1fr;gap:14px}
+  .ex-media{height:148px}
+  .ex-body{padding:13px 14px 15px}
+  .ex-body h3{font-size:15px}
+}
+@media (max-width:400px){
+  .lib-grid{grid-template-columns:1fr}
+  .ex-media{height:200px}
+}
+
+/* ============ KABUK: topbar social + acct-pro + gw imza (hub parite) ============ */
+
+</style>
+<style>
+/* ===== Footer marka hizalama (Gastro footer dili; marka-nötr, sızma yok) ===== */
+
+</style>
+<!-- Metin yaslama katmani (tek kaynak) — sayfa stillerinden SONRA yuklenir,
+     boylece sayfa ici text-align kurallari yaslamayi geri alamaz -->
+<link rel="stylesheet" href="assets/css/fit-type.css" />
+</head>
+<body data-brand="fit" data-fit-page="egzersiz-kutuphane-v1">
+
+<!-- KABUK: ust katman (topbar+header+drawer+alt bar+gorus+cerez) — ortak kabuk JS basar -->
+<div id="fitShellTop"></div>
+
+<main class="page-main" id="pageMain">
+
+<!-- ===== ÜST PANEL: koyu band + breadcrumb + arama ===== -->
+<section class="lib-top">
+  <div class="wrap">
+    <nav class="lib-crumb" aria-label="Sayfa yolu">
+      <a href="dadafit-hub-v1.html" class="crumb-home"><i class="fa-solid fa-house" aria-hidden="true"></i><span class="sr-only">DadaFit ana sayfa</span></a>
+      <i class="fa-solid fa-chevron-right"></i>
+      <span class="cur">DadaFit Egzersizleri</span>
+    </nav>
+    <span class="eyebrow"><i class="fa-solid fa-dumbbell"></i> Hareket Bul</span>
+    <h1>DadaFit Egzersizleri</h1>
+    <p class="lib-sub">Hareketini seç, doğru formla öğren. Kas grubu, ekipman, süre ve seviyeye göre filtrele — her harekette görsel, adım adım anlatım ve güvenli form notları.</p>
+    <!-- A3: banner içindeki arama formu kaldırıldı. Kardeş üründeki liste
+         banner'ında (dadadiet.com/diyetisyenler) arama input'u yoktur; banner
+         yalnız breadcrumb · eyebrow · başlık · alt metin · istatistik taşır.
+         Arama iki yerden sürüyor: header'daki arama ikonu (arama-fit-v1.html)
+         ve sayfanın kendi filtre bileşeni. Sayfa JS'i input'u zaten
+         null-korumalı okuyordu (`if(searchInput)`), bu yüzden markup'ın
+         kalkması filtre motorunu etkilemez. -->
+    <div class="lib-stats">
+      <div class="lib-stat"><b>25</b><span>hareket</span></div>
+      <div class="lib-stat"><b>9</b><span>kas grubu</span></div>
+      <div class="lib-stat"><b>3</b><span>seviye</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== LİSTE GÖVDE: filtre + grid ===== -->
+<section class="lib-body">
+  <div class="wrap">
+
+    <!-- FİLTRE RAYI (sticky) -->
+    <div class="lib-filters ff" id="libFilters"
+         data-ff data-ff-count=".lib-count" data-ff-sort=".lib-sort" data-ff-clear="#fClear"
+         data-ff-legacy="bolge">
+      <div class="fgroup" data-group="kas" role="group" aria-label="Kas grubu filtresi">
+        <span class="lbl">Kas Grubu</span>
+        <button class="df-fchip on" type="button" data-val="all">Tümü</button>
+        <button class="df-fchip" type="button" data-val="gogus">Göğüs</button>
+        <button class="df-fchip" type="button" data-val="sirt">Sırt</button>
+        <button class="df-fchip" type="button" data-val="omuz">Omuz</button>
+        <button class="df-fchip" type="button" data-val="biceps">Biceps</button>
+        <button class="df-fchip" type="button" data-val="triceps">Triceps</button>
+        <button class="df-fchip" type="button" data-val="onkol">Ön kol</button>
+        <button class="df-fchip" type="button" data-val="karin">Karın ve gövde merkezi</button>
+        <button class="df-fchip" type="button" data-val="bacak">Bacak</button>
+        <button class="df-fchip" type="button" data-val="kalca">Kalça</button>
+        <button class="df-fchip" type="button" data-val="tumvucut">Tüm vücut</button>
+      </div>
+      <div class="fgroup" data-group="ekipman" role="group" aria-label="Ekipman filtresi">
+        <span class="lbl">Ekipman</span>
+        <button class="df-fchip on" type="button" data-val="all">Tümü</button>
+        <button class="df-fchip" type="button" data-val="ekipmansiz"><i class="fa-solid fa-person"></i> Ekipmansız</button>
+        <button class="df-fchip" type="button" data-val="dambil"><i class="fa-solid fa-dumbbell"></i> Dambıl</button>
+        <button class="df-fchip" type="button" data-val="halter"><i class="fa-solid fa-dumbbell"></i> Halter</button>
+        <button class="df-fchip" type="button" data-val="kettlebell"><i class="fa-solid fa-weight-hanging"></i> Kettlebell</button>
+        <button class="df-fchip" type="button" data-val="direncbandi"><i class="fa-solid fa-grip-lines"></i> Direnç bandı</button>
+        <button class="df-fchip" type="button" data-val="kablo"><i class="fa-solid fa-link"></i> Kablo</button>
+        <button class="df-fchip" type="button" data-val="sabitmakine"><i class="fa-solid fa-gear"></i> Sabit makine</button>
+        <button class="df-fchip" type="button" data-val="askibandi"><i class="fa-solid fa-grip-lines-vertical"></i> Askı bandı</button>
+        <button class="df-fchip" type="button" data-val="sagliktopu"><i class="fa-solid fa-circle"></i> Sağlık topu</button>
+        <button class="df-fchip" type="button" data-val="pilatestopu"><i class="fa-regular fa-circle"></i> Pilates topu</button>
+        <button class="df-fchip" type="button" data-val="step"><i class="fa-solid fa-stairs"></i> Step</button>
+        <button class="df-fchip" type="button" data-val="bench"><i class="fa-solid fa-couch"></i> Bench</button>
+        <button class="df-fchip" type="button" data-val="barfiksbari"><i class="fa-solid fa-minus"></i> Barfiks barı</button>
+        <button class="df-fchip" type="button" data-val="atlamaipi"><i class="fa-solid fa-rotate"></i> Atlama ipi</button>
+        <button class="df-fchip" type="button" data-val="foamroller"><i class="fa-solid fa-scroll"></i> Foam roller</button>
+      </div>
+      <div class="fgroup" data-group="sure" role="group" aria-label="Süre filtresi">
+        <span class="lbl">Süre</span>
+        <button class="df-fchip on" type="button" data-val="all">Tümü</button>
+        <button class="df-fchip" type="button" data-val="5">5 dk</button>
+        <button class="df-fchip" type="button" data-val="10">10 dk</button>
+        <button class="df-fchip" type="button" data-val="15">15 dk</button>
+        <button class="df-fchip" type="button" data-val="20">20 dk</button>
+        <button class="df-fchip" type="button" data-val="30">30 dk</button>
+      </div>
+      <div class="fgroup" data-group="seviye" role="group" aria-label="Seviye filtresi">
+        <span class="lbl">Seviye</span>
+        <button class="df-fchip on" type="button" data-val="all">Tümü</button>
+        <button class="df-fchip" type="button" data-val="1">Başlangıç</button>
+        <button class="df-fchip" type="button" data-val="2">Orta</button>
+        <button class="df-fchip" type="button" data-val="3">İleri</button>
+        <button class="fclear" type="button" id="fClear"><i class="fa-solid fa-rotate-left"></i> Filtreyi sıfırla</button>
+      </div>
+    </div>
+
+    <!-- SONUÇ ÇUBUĞU -->
+    <div class="lib-bar">
+      <div class="lib-count"><b id="libCount">25</b> hareket bulundu </div>
+      <div class="lib-sort">
+        <span class="lbl">Sırala</span>
+        <div class="sort-seg" role="group" aria-label="Sıralama">
+          <button class="on" type="button" data-sort="pop">Popüler</button>
+          <button type="button" data-sort="yeni">Yeni</button>
+          <button type="button" data-sort="az">A-Z</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- EGZERSİZ GRID -->
+    <div class="lib-grid" id="libGrid">
+      <div class="ex-card" data-kas="bacak" data-ekipman="dambil" data-sure="5 10 15 20 30" data-seviye="2" data-pop="98" data-name="Goblet Squat">
+        <button class="kyt-btn" type="button" data-kaydet aria-pressed="false" data-tur="hareket" data-slug="goblet-squat" data-ad="Goblet Squat" data-href="egzersiz-detay-v1.html?slug=goblet-squat" data-gorsel="https://images.unsplash.com/photo-1574680096145-d05b474e2155?w=700&amp;q=80&amp;auto=format&amp;fit=crop&amp;exp=7&amp;gam=6&amp;sat=-12" data-meta="Bacak · Dambıl / Kettlebell"><i class="fa-regular fa-bookmark"></i></button>
+        <div class="ex-media" style="background-image:url('https://images.unsplash.com/photo-1574680096145-d05b474e2155?w=700&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-12')">
+          <span class="ex-cat">Bacak</span>
+          <span class="ex-level lv2"><span class="ex-pips"><i></i><i></i><i></i></span>Orta</span>
+          <div class="ex-tags"><span class="ex-tag"><i class="fa-solid fa-dumbbell"></i> Dambıl / Kettlebell</span></div>
+        </div>
+        <div class="ex-body">
+          <h3><a class="kyt-link" href="egzersiz-detay-v1.html?slug=goblet-squat">Goblet Squat</a></h3>
+          <p>Göğüs hizasında tutulan tek dambılla yapılan squat — gövdeyi dik tutar.</p>
+          <div class="ex-foot"><span class="meta"><i class="fa-regular fa-clock"></i> 3 dk anlatım</span><span class="go">İncele <i class="fa-solid fa-arrow-right"></i></span></div>
+        </div>
+      </div>
+
+      <div class="ex-card" data-kas="bacak" data-ekipman="ekipmansiz" data-sure="5 10 15 20 30" data-seviye="1" data-pop="95" data-name="Hava Squat (Bodyweight Squat)">
+        <button class="kyt-btn" type="button" data-kaydet aria-pressed="false" data-tur="hareket" data-slug="hava-squat" data-ad="Hava Squat (Bodyweight Squat)" data-href="egzersiz-detay-v1.html?slug=hava-squat" data-gorsel="https://images.unsplash.com/photo-1605296867304-46d5465a13f1?w=700&amp;q=80&amp;auto=format&amp;fit=crop&amp;exp=7&amp;gam=6&amp;sat=-12" data-meta="Bacak · Ekipmansız"><i class="fa-regular fa-bookmark"></i></button>
+        <div class="ex-media" style="background-image:url('https://images.unsplash.com/photo-1605296867304-46d5465a13f1?w=700&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-12')">
+          <span class="ex-cat">Bacak</span>
+          <span class="ex-level lv1"><span class="ex-pips"><i></i><i></i><i></i></span>Başlangıç</span>
+          <div class="ex-tags"><span class="ex-tag"><i class="fa-solid fa-person"></i> Ekipmansız</span></div>
+        </div>
+        <div class="ex-body">
+          <h3><a class="kyt-link" href="egzersiz-detay-v1.html?slug=hava-squat">Hava Squat (Bodyweight Squat)</a></h3>
+          <p>Ağırlıksız squat — kalça ve diz mekaniğini öğrenmenin en güvenli yolu.</p>
+          <div class="ex-foot"><span class="meta"><i class="fa-regular fa-clock"></i> 2 dk anlatım</span><span class="go">İncele <i class="fa-solid fa-arrow-right"></i></span></div>
+        </div>
+      </div>
+
+      <div class="ex-card" data-kas="karin" data-ekipman="ekipmansiz" data-sure="5 10 15 20 30" data-seviye="2" data-pop="92" data-name="Plank (Şınav Duruşu)">
+        <button class="kyt-btn" type="button" data-kaydet aria-pressed="false" data-tur="hareket" data-slug="plank" data-ad="Plank (Şınav Duruşu)" data-href="egzersiz-detay-v1.html?slug=plank" data-gorsel="https://images.unsplash.com/photo-1566241142559-40e1dab266c6?w=700&amp;q=80&amp;auto=format&amp;fit=crop&amp;exp=7&amp;gam=6&amp;sat=-12" data-meta="Karın · Ekipmansız"><i class="fa-regular fa-bookmark"></i></button>
+        <div class="ex-media" style="background-image:url('https://images.unsplash.com/photo-1566241142559-40e1dab266c6?w=700&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-12')">
+          <span class="ex-cat">Karın</span>
+          <span class="ex-level lv2"><span class="ex-pips"><i></i><i></i><i></i></span>Orta</span>
+          <div class="ex-tags"><span class="ex-tag"><i class="fa-solid fa-person"></i> Ekipmansız</span></div>
+        </div>
+        <div class="ex-body">
+          <h3><a class="kyt-link" href="egzersiz-detay-v1.html?slug=plank">Plank (Şınav Duruşu)</a></h3>
+          <p>Tüm gövde merkezini çalıştıran izometrik temel — süreyi kademeli artır.</p>
+          <div class="ex-foot"><span class="meta"><i class="fa-regular fa-clock"></i> 2 dk anlatım</span><span class="go">İncele <i class="fa-solid fa-arrow-right"></i></span></div>
+        </div>
+      </div>
+
+      <div class="ex-card" data-kas="tumvucut" data-ekipman="ekipmansiz" data-sure="10 15 20 30" data-seviye="3" data-pop="90" data-name="Burpee">
+        <button class="kyt-btn" type="button" data-kaydet aria-pressed="false" data-tur="hareket" data-slug="burpee" data-ad="Burpee" data-href="egzersiz-detay-v1.html?slug=burpee" data-gorsel="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=700&amp;q=80&amp;auto=format&amp;fit=crop&amp;exp=7&amp;gam=6&amp;sat=-12" data-meta="Tüm vücut · Ekipmansız"><i class="fa-regular fa-bookmark"></i></button>
+        <div class="ex-media" style="background-image:url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=700&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-12')">
+          <span class="ex-cat">Tüm vücut</span>
+          <span class="ex-level lv3"><span class="ex-pips"><i></i><i></i><i></i></span>İleri</span>
+          <div class="ex-tags"><span class="ex-tag"><i class="fa-solid fa-person"></i> Ekipmansız</span></div>
+        </div>
+        <div class="ex-body">
+          <h3><a class="kyt-link" href="egzersiz-detay-v1.html?slug=burpee">Burpee</a></h3>
+          <p>Çömel-uzan-sıçra zinciri — kısa sürede nabzı yükselten tüm vücut hareketi.</p>
+          <div class="ex-foot"><span class="meta"><i class="fa-regular fa-clock"></i> 3 dk anlatım</span><span class="go">İncele <i class="fa-solid fa-arrow-right"></i></span></div>
+        </div>
+      </div>
+
+      <div class="ex-card" data-kas="sirt" data-ekipman="dambil" data-sure="15 20 30" data-seviye="2" data-pop="88" data-name="Dambıl Kürek Çekme">
+        <button class="kyt-btn" type="button" data-kaydet aria-pressed="false" data-tur="hareket" data-slug="dambil-kurek" data-ad="Dambıl Kürek Çekme" data-href="egzersiz-detay-v1.html?slug=dambil-kurek" data-gorsel="https://images.unsplash.com/photo-1532384748853-8f54a8f476e2?w=700&amp;q=80&amp;auto=format&amp;fit=crop&amp;exp=7&amp;gam=6&amp;sat=-12" data-meta="Sırt · Dambıl"><i class="fa-regular fa-bookmark"></i></button>
+        <div class="ex-media" style="background-image:url('https://images.unsplash.com/photo-1532384748853-8f54a8f476e2?w=700&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-12')">
+          <span class="ex-cat">Sırt</span>
+          <span class="ex-level lv2"><span class="ex-pips"><i></i><i></i><i></i></span>Orta</span>
+          <div class="ex-tags"><span class="ex-tag"><i class="fa-solid fa-dumbbell"></i> Dambıl</span></div>
+        </div>
+        <div class="ex-body">
+          <h3><a class="kyt-link" href="egzersiz-detay-v1.html?slug=dambil-kurek">Dambıl Kürek Çekme</a></h3>
+          <p>Sırt ve postür için temel çekme hareketi — tek dambılla evde yapılır.</p>
+          <div class="ex-foot"><span class="meta"><i class="fa-regular fa-clock"></i> 3 dk anlatım</span><span class="go">İncele <i class="fa-solid fa-arrow-right"></i></span></div>
+        </div>
+      </div>
+
+      <div class="ex-card" data-kas="karin" data-ekipman="ekipmansiz" data-sure="5 10 15 20 30" data-seviye="2" data-pop="87" data-name="Dağ Tırmanışı (Mountain Climber)">
+        <button class="kyt-btn" type="button" data-kaydet aria-pressed="false" data-tur="hareket" data-slug="dag-tirmanisi" data-ad="Dağ Tırmanışı (Mountain Climber)" data-href="egzersiz-detay-v1.html?slug=dag-tirmanisi" data-gorsel="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=700&amp;q=80&amp;auto=format&amp;fit=crop&amp;exp=7&amp;gam=6&amp;sat=-12" data-meta="Karın · Ekipmansız"><i class="fa-regular fa-bookmark"></i></button>
+        <div class="ex-media" style="background-image:url('https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=700&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-12')">
+          <span class="ex-cat">Karın</span>
+          <span class="ex-level lv2"><span class="ex-pips"><i></i><i></i><i></i></span>Orta</span>
+          <div class="ex-tags"><span class="ex-tag"><i class="fa-solid fa-person"></i> Ekipmansız</span></div>
+        </div>
+        <div class="ex-body">
+          <h3><a class="kyt-link" href="egzersiz-detay-v1.html?slug=dag-tirmanisi">Dağ Tırmanışı (Mountain Climber)</a></h3>
+          <p>Şınav duruşunda dizleri sırayla çekmek — core ile kondisyonu birlikte çalıştırır.</p>
+          <div class="ex-foot"><span class="meta"><i class="fa-regular fa-clock"></i> 2 dk anlatım</span><span class="go">İncele <i class="fa-solid fa-arrow-right"></i></span></div>
+        </div>
+      </div>
+
+      <div class="ex-card" data-kas="sirt" data-ekipman="barfiksbari" data-sure="15 20 30" data-seviye="3" data-pop="86" data-name="Barfiks (Pull-up)">
+        <button class="kyt-btn" type="button" data-kaydet aria-pressed="false" data-tur="hareket" data-slug="barfiks" data-ad="Barfiks (Pull-up)" data-href="egzersiz-detay-v1.html?slug=barfiks" data-gorsel="https://images.unsplash.com/photo-1571019613576-2b22c76fd955?w=700&amp;q=80&amp;auto=format&amp;fit=crop&amp;exp=7&amp;gam=6&amp;sat=-12" data-meta="Sırt · Barfiks barı"><i class="fa-regular fa-bookmark"></i></button>
+        <div class="ex-media" style="background-image:url('https://images.unsplash.com/photo-1571019613576-2b22c76fd955?w=700&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-12')">
+          <span class="ex-cat">Sırt</span>
+          <span class="ex-level lv3"><span class="ex-pips"><i></i><i></i><i></i></span>İleri</span>
+          <div class="ex-tags"><span class="ex-tag"><i class="fa-solid fa-minus"></i> Barfiks barı</span></div>
+        </div>
+        <div class="ex-body">
+          <h3><a class="kyt-link" href="egzersiz-detay-v1.html?slug=barfiks">Barfiks (Pull-up)</a></h3>
+          <p>Üst vücudun en zorlu çekiş hareketi — bantla ya da negatif tekrarla başlanır.</p>
+          <div class="ex-foot"><span class="meta"><i class="fa-regular fa-clock"></i> 4 dk anlatım</span><span class="go">İncele <i class="fa-solid fa-arrow-right"></i></span></div>
+        </div>
+      </div>
+
+      <div class="ex-card" data-kas="gogus" data-ekipman="ekipmansiz" data-sure="10 15 20 30" data-seviye="2" data-pop="85" data-name="Şınav (Push-up)">
+        <button class="kyt-btn" type="button" data-kaydet aria-pressed="false" data-tur="hareket" data-slug="sinav" data-ad="Şınav (Push-up)" data-href="egzersiz-detay-v1.html?slug=sinav" data-gorsel="https://images.unsplash.com/photo-1598971639058-fab3c3109a00?w=700&amp;q=80&amp;auto=format&amp;fit=crop&amp;exp=7&amp;gam=6&amp;sat=-12" data-meta="Göğüs · Ekipmansız"><i class="fa-regular fa-bookmark"></i></button>
+        <div class="ex-media" style="background-image:url('https://images.unsplash.com/photo-1598971639058-fab3c3109a00?w=700&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-12')">
+          <span class="ex-cat">Göğüs</span>
+          <span class="ex-level lv2"><span class="ex-pips"><i></i><i></i><i></i></span>Orta</span>
+          <div class="ex-tags"><span class="ex-tag"><i class="fa-solid fa-person"></i> Ekipmansız</span></div>
+        </div>
+        <div class="ex-body">
+          <h3><a class="kyt-link" href="egzersiz-detay-v1.html?slug=sinav">Şınav (Push-up)</a></h3>
+          <p>Göğüs, omuz ve triceps'i birlikte çalıştıran klasik itme hareketi.</p>
+          <div class="ex-foot"><span class="meta"><i class="fa-regular fa-clock"></i> 2 dk anlatım</span><span class="go">İncele <i class="fa-solid fa-arrow-right"></i></span></div>
+        </div>
+      </div>
+
+      <div class="ex-card" data-kas="bacak" data-ekipman="ekipmansiz" data-sure="10 15 20 30" data-seviye="1" data-pop="83" data-name="Hamle (Lunge)">
+        <button class="kyt-btn" type="button" data-kaydet aria-pressed="false" data-tur="hareket" data-slug="hamle" data-ad="Hamle (Lunge)" data-href="egzersiz-detay-v1.html?slug=hamle" data-gorsel="https://images.unsplash.com/photo-1434608519344-49d77a699e1d?w=700&amp;q=80&amp;auto=format&amp;fit=crop&amp;exp=7&amp;gam=6&amp;sat=-12" data-meta="Bacak · Ekipmansız"><i class="fa-regular fa-bookmark"></i></button>
+        <div class="ex-media" style="background-image:url('https://images.unsplash.com/photo-1434608519344-49d77a699e1d?w=700&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-12')">
+          <span class="ex-cat">Bacak</span>
+          <span class="ex-level lv1"><span class="ex-pips"><i></i><i></i><i></i></span>Başlangıç</span>
+          <div class="ex-tags"><span class="ex-tag"><i class="fa-solid fa-person"></i> Ekipmansız</span></div>
+        </div>
+        <div class="ex-body">
+          <h3><a class="kyt-link" href="egzersiz-detay-v1.html?slug=hamle">Hamle (Lunge)</a></h3>
+          <p>Tek bacak gücü ve denge için temel hareket — diz hizasına dikkat.</p>
+          <div class="ex-foot"><span class="meta"><i class="fa-regular fa-clock"></i> 3 dk anlatım</span><span class="go">İncele <i class="fa-solid fa-arrow-right"></i></span></div>
+        </div>
+      </div>
+
+      <div class="ex-card" data-kas="gogus" data-ekipman="dambil" data-sure="15 20 30" data-seviye="2" data-pop="82" data-name="Dambıl Göğüs Press">
+        <button class="kyt-btn" type="button" data-kaydet aria-pressed="false" data-tur="hareket" data-slug="dambil-gogus-press" data-ad="Dambıl Göğüs Press" data-href="egzersiz-detay-v1.html?slug=dambil-gogus-press" data-gorsel="https://images.unsplash.com/photo-1571008887538-b36bb32f4571?w=700&amp;q=80&amp;auto=format&amp;fit=crop&amp;exp=7&amp;gam=6&amp;sat=-12" data-meta="Göğüs · Dambıl"><i class="fa-regular fa-bookmark"></i></button>
+        <div class="ex-media" style="background-image:url('https://images.unsplash.com/photo-1571008887538-b36bb32f4571?w=700&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-12')">
+          <span class="ex-cat">Göğüs</span>
+          <span class="ex-level lv2"><span class="ex-pips"><i></i><i></i><i></i></span>Orta</span>
+          <div class="ex-tags"><span class="ex-tag"><i class="fa-solid fa-dumbbell"></i> Dambıl</span></div>
+        </div>
+        <div class="ex-body">
+          <h3><a class="kyt-link" href="egzersiz-detay-v1.html?slug=dambil-gogus-press">Dambıl Göğüs Press</a></h3>
+          <p>Göğüs itişinin dambıllı hâli — yerde de yapılır, iki taraf ayrı çalışır.</p>
+          <div class="ex-foot"><span class="meta"><i class="fa-regular fa-clock"></i> 3 dk anlatım</span><span class="go">İncele <i class="fa-solid fa-arrow-right"></i></span></div>
+        </div>
+      </div>
+
+      <div class="ex-card" data-kas="omuz" data-ekipman="dambil" data-sure="15 20 30" data-seviye="2" data-pop="79" data-name="Dambıl Omuz Press">
+        <button class="kyt-btn" type="button" data-kaydet aria-pressed="false" data-tur="hareket" data-slug="dambil-omuz-press" data-ad="Dambıl Omuz Press" data-href="egzersiz-detay-v1.html?slug=dambil-omuz-press" data-gorsel="https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=700&amp;q=80&amp;auto=format&amp;fit=crop&amp;exp=7&amp;gam=6&amp;sat=-12" data-meta="Omuz · Dambıl"><i class="fa-regular fa-bookmark"></i></button>
+        <div class="ex-media" style="background-image:url('https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=700&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-12')">
+          <span class="ex-cat">Omuz</span>
+          <span class="ex-level lv2"><span class="ex-pips"><i></i><i></i><i></i></span>Orta</span>
+          <div class="ex-tags"><span class="ex-tag"><i class="fa-solid fa-dumbbell"></i> Dambıl</span></div>
+        </div>
+        <div class="ex-body">
+          <h3><a class="kyt-link" href="egzersiz-detay-v1.html?slug=dambil-omuz-press">Dambıl Omuz Press</a></h3>
+          <p>Omuz hacmi ve üst vücut itme gücü için oturarak ya da ayakta press.</p>
+          <div class="ex-foot"><span class="meta"><i class="fa-regular fa-clock"></i> 3 dk anlatım</span><span class="go">İncele <i class="fa-solid fa-arrow-right"></i></span></div>
+        </div>
+      </div>
+
+      <div class="ex-card" data-kas="karin" data-ekipman="ekipmansiz" data-sure="5 10 15 20" data-seviye="2" data-pop="77" data-name="Yan Plank">
+        <button class="kyt-btn" type="button" data-kaydet aria-pressed="false" data-tur="hareket" data-slug="yan-plank" data-ad="Yan Plank" data-href="egzersiz-detay-v1.html?slug=yan-plank" data-gorsel="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=700&amp;q=80&amp;auto=format&amp;fit=crop&amp;exp=7&amp;gam=6&amp;sat=-12" data-meta="Karın · Ekipmansız"><i class="fa-regular fa-bookmark"></i></button>
+        <div class="ex-media" style="background-image:url('https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=700&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-12')">
+          <span class="ex-cat">Karın</span>
+          <span class="ex-level lv2"><span class="ex-pips"><i></i><i></i><i></i></span>Orta</span>
+          <div class="ex-tags"><span class="ex-tag"><i class="fa-solid fa-person"></i> Ekipmansız</span></div>
+        </div>
+        <div class="ex-body">
+          <h3><a class="kyt-link" href="egzersiz-detay-v1.html?slug=yan-plank">Yan Plank</a></h3>
+          <p>Gövdenin yan hattını çalıştıran izometrik duruş — plank'ın eksik yarısı.</p>
+          <div class="ex-foot"><span class="meta"><i class="fa-regular fa-clock"></i> 2 dk anlatım</span><span class="go">İncele <i class="fa-solid fa-arrow-right"></i></span></div>
+        </div>
+      </div>
+
+      <div class="ex-card" data-kas="triceps" data-ekipman="ekipmansiz" data-sure="5 10 15 20 30" data-seviye="2" data-pop="76" data-name="Sehpa Dips (Bench Dips)">
+        <button class="kyt-btn" type="button" data-kaydet aria-pressed="false" data-tur="hareket" data-slug="sehpa-dips" data-ad="Sehpa Dips (Bench Dips)" data-href="egzersiz-detay-v1.html?slug=sehpa-dips" data-gorsel="https://images.unsplash.com/photo-1567013127542-490d757e51fc?w=700&amp;q=80&amp;auto=format&amp;fit=crop&amp;exp=7&amp;gam=6&amp;sat=-12" data-meta="Triceps · Ekipmansız"><i class="fa-regular fa-bookmark"></i></button>
+        <div class="ex-media" style="background-image:url('https://images.unsplash.com/photo-1567013127542-490d757e51fc?w=700&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-12')">
+          <span class="ex-cat">Triceps</span>
+          <span class="ex-level lv2"><span class="ex-pips"><i></i><i></i><i></i></span>Orta</span>
+          <div class="ex-tags"><span class="ex-tag"><i class="fa-solid fa-person"></i> Ekipmansız</span></div>
+        </div>
+        <div class="ex-body">
+          <h3><a class="kyt-link" href="egzersiz-detay-v1.html?slug=sehpa-dips">Sehpa Dips (Bench Dips)</a></h3>
+          <p>Sağlam bir sehpa kenarıyla triceps çalışması — evde ekipmansız yapılır.</p>
+          <div class="ex-foot"><span class="meta"><i class="fa-regular fa-clock"></i> 2 dk anlatım</span><span class="go">İncele <i class="fa-solid fa-arrow-right"></i></span></div>
+        </div>
+      </div>
+
+      <div class="ex-card" data-kas="biceps" data-ekipman="dambil" data-sure="15 20 30" data-seviye="1" data-pop="74" data-name="Dambıl Biceps Curl">
+        <button class="kyt-btn" type="button" data-kaydet aria-pressed="false" data-tur="hareket" data-slug="dambil-biceps" data-ad="Dambıl Biceps Curl" data-href="egzersiz-detay-v1.html?slug=dambil-biceps" data-gorsel="https://images.unsplash.com/photo-1517344884509-a0c97ec11bcc?w=700&amp;q=80&amp;auto=format&amp;fit=crop&amp;exp=7&amp;gam=6&amp;sat=-12" data-meta="Biceps · Dambıl"><i class="fa-regular fa-bookmark"></i></button>
+        <div class="ex-media" style="background-image:url('https://images.unsplash.com/photo-1517344884509-a0c97ec11bcc?w=700&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-12')">
+          <span class="ex-cat">Biceps</span>
+          <span class="ex-level lv1"><span class="ex-pips"><i></i><i></i><i></i></span>Başlangıç</span>
+          <div class="ex-tags"><span class="ex-tag"><i class="fa-solid fa-dumbbell"></i> Dambıl</span></div>
+        </div>
+        <div class="ex-body">
+          <h3><a class="kyt-link" href="egzersiz-detay-v1.html?slug=dambil-biceps">Dambıl Biceps Curl</a></h3>
+          <p>Kol ön yüzünü hedefleyen izole hareket — bilek ve dirsek sabit kalır.</p>
+          <div class="ex-foot"><span class="meta"><i class="fa-regular fa-clock"></i> 2 dk anlatım</span><span class="go">İncele <i class="fa-solid fa-arrow-right"></i></span></div>
+        </div>
+      </div>
+
+      <div class="ex-card" data-kas="karin" data-ekipman="ekipmansiz" data-sure="5 10 15 20" data-seviye="1" data-pop="72" data-name="Dead Bug (Ölü Böcek)">
+        <button class="kyt-btn" type="button" data-kaydet aria-pressed="false" data-tur="hareket" data-slug="dead-bug" data-ad="Dead Bug (Ölü Böcek)" data-href="egzersiz-detay-v1.html?slug=dead-bug" data-gorsel="https://images.unsplash.com/photo-1518611012118-696072aa579a?w=700&amp;q=80&amp;auto=format&amp;fit=crop&amp;exp=7&amp;gam=6&amp;sat=-12" data-meta="Karın · Ekipmansız"><i class="fa-regular fa-bookmark"></i></button>
+        <div class="ex-media" style="background-image:url('https://images.unsplash.com/photo-1518611012118-696072aa579a?w=700&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-12')">
+          <span class="ex-cat">Karın</span>
+          <span class="ex-level lv1"><span class="ex-pips"><i></i><i></i><i></i></span>Başlangıç</span>
+          <div class="ex-tags"><span class="ex-tag"><i class="fa-solid fa-person"></i> Ekipmansız</span></div>
+        </div>
+        <div class="ex-body">
+          <h3><a class="kyt-link" href="egzersiz-detay-v1.html?slug=dead-bug">Dead Bug (Ölü Böcek)</a></h3>
+          <p>Bel dostu core hareketi — merkez kontrolünü güvenli şekilde kurar.</p>
+          <div class="ex-foot"><span class="meta"><i class="fa-regular fa-clock"></i> 2 dk anlatım</span><span class="go">İncele <i class="fa-solid fa-arrow-right"></i></span></div>
+        </div>
+      </div>
+
+      <div class="ex-card" data-kas="bacak" data-ekipman="ekipmansiz" data-sure="15 20 30" data-seviye="3" data-pop="71" data-name="Bulgar Split Squat">
+        <button class="kyt-btn" type="button" data-kaydet aria-pressed="false" data-tur="hareket" data-slug="bulgar-split-squat" data-ad="Bulgar Split Squat" data-href="egzersiz-detay-v1.html?slug=bulgar-split-squat" data-gorsel="https://images.unsplash.com/photo-1534258936925-c58bed479fcb?w=700&amp;q=80&amp;auto=format&amp;fit=crop&amp;exp=7&amp;gam=6&amp;sat=-12" data-meta="Bacak · Ekipmansız"><i class="fa-regular fa-bookmark"></i></button>
+        <div class="ex-media" style="background-image:url('https://images.unsplash.com/photo-1534258936925-c58bed479fcb?w=700&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-12')">
+          <span class="ex-cat">Bacak</span>
+          <span class="ex-level lv3"><span class="ex-pips"><i></i><i></i><i></i></span>İleri</span>
+          <div class="ex-tags"><span class="ex-tag"><i class="fa-solid fa-person"></i> Ekipmansız</span></div>
+        </div>
+        <div class="ex-body">
+          <h3><a class="kyt-link" href="egzersiz-detay-v1.html?slug=bulgar-split-squat">Bulgar Split Squat</a></h3>
+          <p>Arka ayağı yükseltilmiş tek bacak squat'ı — denge ve bacak gücünü birlikte zorlar.</p>
+          <div class="ex-foot"><span class="meta"><i class="fa-regular fa-clock"></i> 4 dk anlatım</span><span class="go">İncele <i class="fa-solid fa-arrow-right"></i></span></div>
+        </div>
+      </div>
+
+      <div class="ex-card" data-kas="tumvucut" data-ekipman="kettlebell" data-sure="15 20 30" data-seviye="3" data-pop="69" data-name="Kettlebell Swing">
+        <button class="kyt-btn" type="button" data-kaydet aria-pressed="false" data-tur="hareket" data-slug="kettlebell-swing" data-ad="Kettlebell Swing" data-href="egzersiz-detay-v1.html?slug=kettlebell-swing" data-gorsel="https://images.unsplash.com/photo-1603287681836-b174ce5074c2?w=700&amp;q=80&amp;auto=format&amp;fit=crop&amp;exp=7&amp;gam=6&amp;sat=-12" data-meta="Tüm vücut · Kettlebell"><i class="fa-regular fa-bookmark"></i></button>
+        <div class="ex-media" style="background-image:url('https://images.unsplash.com/photo-1603287681836-b174ce5074c2?w=700&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-12')">
+          <span class="ex-cat">Tüm vücut</span>
+          <span class="ex-level lv3"><span class="ex-pips"><i></i><i></i><i></i></span>İleri</span>
+          <div class="ex-tags"><span class="ex-tag"><i class="fa-solid fa-weight-hanging"></i> Kettlebell</span></div>
+        </div>
+        <div class="ex-body">
+          <h3><a class="kyt-link" href="egzersiz-detay-v1.html?slug=kettlebell-swing">Kettlebell Swing</a></h3>
+          <p>Kalça itişiyle güç ve dayanıklılık — kalça menteşesi formu önemli.</p>
+          <div class="ex-foot"><span class="meta"><i class="fa-regular fa-clock"></i> 4 dk anlatım</span><span class="go">İncele <i class="fa-solid fa-arrow-right"></i></span></div>
+        </div>
+      </div>
+
+      <div class="ex-card" data-kas="bacak" data-ekipman="dambil" data-sure="15 20 30" data-seviye="2" data-pop="68" data-name="Dambıl Romanya Deadlift">
+        <button class="kyt-btn" type="button" data-kaydet aria-pressed="false" data-tur="hareket" data-slug="dambil-romanya" data-ad="Dambıl Romanya Deadlift" data-href="egzersiz-detay-v1.html?slug=dambil-romanya" data-gorsel="https://images.unsplash.com/photo-1526506118085-60ce8714f8c5?w=700&amp;q=80&amp;auto=format&amp;fit=crop&amp;exp=7&amp;gam=6&amp;sat=-12" data-meta="Bacak · Dambıl"><i class="fa-regular fa-bookmark"></i></button>
+        <div class="ex-media" style="background-image:url('https://images.unsplash.com/photo-1526506118085-60ce8714f8c5?w=700&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-12')">
+          <span class="ex-cat">Bacak</span>
+          <span class="ex-level lv2"><span class="ex-pips"><i></i><i></i><i></i></span>Orta</span>
+          <div class="ex-tags"><span class="ex-tag"><i class="fa-solid fa-dumbbell"></i> Dambıl</span></div>
+        </div>
+        <div class="ex-body">
+          <h3><a class="kyt-link" href="egzersiz-detay-v1.html?slug=dambil-romanya">Dambıl Romanya Deadlift</a></h3>
+          <p>Bacak arkası ve kalça için kalça menteşesi — sırtın düz kaldığı yere kadar in.</p>
+          <div class="ex-foot"><span class="meta"><i class="fa-regular fa-clock"></i> 3 dk anlatım</span><span class="go">İncele <i class="fa-solid fa-arrow-right"></i></span></div>
+        </div>
+      </div>
+
+      <div class="ex-card" data-kas="sirt" data-ekipman="ekipmansiz" data-sure="10 15 20 30" data-seviye="2" data-pop="66" data-name="Ters Şınav (Inverted Row)">
+        <button class="kyt-btn" type="button" data-kaydet aria-pressed="false" data-tur="hareket" data-slug="ters-sinav" data-ad="Ters Şınav (Inverted Row)" data-href="egzersiz-detay-v1.html?slug=ters-sinav" data-gorsel="https://images.unsplash.com/photo-1517963879433-6ad2b056d712?w=700&amp;q=80&amp;auto=format&amp;fit=crop&amp;exp=7&amp;gam=6&amp;sat=-12" data-meta="Sırt · Ekipmansız"><i class="fa-regular fa-bookmark"></i></button>
+        <div class="ex-media" style="background-image:url('https://images.unsplash.com/photo-1517963879433-6ad2b056d712?w=700&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-12')">
+          <span class="ex-cat">Sırt</span>
+          <span class="ex-level lv2"><span class="ex-pips"><i></i><i></i><i></i></span>Orta</span>
+          <div class="ex-tags"><span class="ex-tag"><i class="fa-solid fa-person"></i> Ekipmansız</span></div>
+        </div>
+        <div class="ex-body">
+          <h3><a class="kyt-link" href="egzersiz-detay-v1.html?slug=ters-sinav">Ters Şınav (Inverted Row)</a></h3>
+          <p>Bel hizasındaki bir barla yapılan çekiş — ekipmansız planda sırtı çalıştırır.</p>
+          <div class="ex-foot"><span class="meta"><i class="fa-regular fa-clock"></i> 3 dk anlatım</span><span class="go">İncele <i class="fa-solid fa-arrow-right"></i></span></div>
+        </div>
+      </div>
+
+      <div class="ex-card" data-kas="sirt" data-ekipman="direncbandi" data-sure="10 15 20 30" data-seviye="1" data-pop="64" data-name="Bant Çekme (Band Row)">
+        <button class="kyt-btn" type="button" data-kaydet aria-pressed="false" data-tur="hareket" data-slug="bant-cekme" data-ad="Bant Çekme (Band Row)" data-href="egzersiz-detay-v1.html?slug=bant-cekme" data-gorsel="https://images.unsplash.com/photo-1549060279-7e168fcee0c2?w=700&amp;q=80&amp;auto=format&amp;fit=crop&amp;exp=7&amp;gam=6&amp;sat=-12" data-meta="Sırt · Direnç bandı"><i class="fa-regular fa-bookmark"></i></button>
+        <div class="ex-media" style="background-image:url('https://images.unsplash.com/photo-1549060279-7e168fcee0c2?w=700&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-12')">
+          <span class="ex-cat">Sırt</span>
+          <span class="ex-level lv1"><span class="ex-pips"><i></i><i></i><i></i></span>Başlangıç</span>
+          <div class="ex-tags"><span class="ex-tag"><i class="fa-solid fa-grip-lines"></i> Direnç bandı</span></div>
+        </div>
+        <div class="ex-body">
+          <h3><a class="kyt-link" href="egzersiz-detay-v1.html?slug=bant-cekme">Bant Çekme (Band Row)</a></h3>
+          <p>Direnç bandıyla sırt aktivasyonu — eklem dostu, evde kolay kurulur.</p>
+          <div class="ex-foot"><span class="meta"><i class="fa-regular fa-clock"></i> 2 dk anlatım</span><span class="go">İncele <i class="fa-solid fa-arrow-right"></i></span></div>
+        </div>
+      </div>
+
+      <div class="ex-card" data-kas="sirt" data-ekipman="ekipmansiz" data-sure="5 10 15 20" data-seviye="1" data-pop="63" data-name="Superman (Yüzüstü Uzanma)">
+        <button class="kyt-btn" type="button" data-kaydet aria-pressed="false" data-tur="hareket" data-slug="superman" data-ad="Superman (Yüzüstü Uzanma)" data-href="egzersiz-detay-v1.html?slug=superman" data-gorsel="https://images.unsplash.com/photo-1522898467493-49726bf28798?w=700&amp;q=80&amp;auto=format&amp;fit=crop&amp;exp=7&amp;gam=6&amp;sat=-12" data-meta="Sırt · Ekipmansız"><i class="fa-regular fa-bookmark"></i></button>
+        <div class="ex-media" style="background-image:url('https://images.unsplash.com/photo-1522898467493-49726bf28798?w=700&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-12')">
+          <span class="ex-cat">Sırt</span>
+          <span class="ex-level lv1"><span class="ex-pips"><i></i><i></i><i></i></span>Başlangıç</span>
+          <div class="ex-tags"><span class="ex-tag"><i class="fa-solid fa-person"></i> Ekipmansız</span></div>
+        </div>
+        <div class="ex-body">
+          <h3><a class="kyt-link" href="egzersiz-detay-v1.html?slug=superman">Superman (Yüzüstü Uzanma)</a></h3>
+          <p>Yüzüstü uzanıp kol ve bacakları kaldırmak — sırt ve bel için aktivasyon.</p>
+          <div class="ex-foot"><span class="meta"><i class="fa-regular fa-clock"></i> 2 dk anlatım</span><span class="go">İncele <i class="fa-solid fa-arrow-right"></i></span></div>
+        </div>
+      </div>
+
+      <div class="ex-card" data-kas="kalca" data-ekipman="ekipmansiz" data-sure="5 10 15 20 30" data-seviye="2" data-pop="61" data-name="Köprü (Glute Bridge)">
+        <button class="kyt-btn" type="button" data-kaydet aria-pressed="false" data-tur="hareket" data-slug="kopru" data-ad="Köprü (Glute Bridge)" data-href="egzersiz-detay-v1.html?slug=kopru" data-gorsel="https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=700&amp;q=80&amp;auto=format&amp;fit=crop&amp;exp=7&amp;gam=6&amp;sat=-12" data-meta="Kalça · Ekipmansız"><i class="fa-regular fa-bookmark"></i></button>
+        <div class="ex-media" style="background-image:url('https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=700&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-12')">
+          <span class="ex-cat">Kalça</span>
+          <span class="ex-level lv2"><span class="ex-pips"><i></i><i></i><i></i></span>Orta</span>
+          <div class="ex-tags"><span class="ex-tag"><i class="fa-solid fa-person"></i> Ekipmansız</span></div>
+        </div>
+        <div class="ex-body">
+          <h3><a class="kyt-link" href="egzersiz-detay-v1.html?slug=kopru">Köprü (Glute Bridge)</a></h3>
+          <p>Kalça ve arka zincir aktivasyonu — masa başı duruşunu dengeler.</p>
+          <div class="ex-foot"><span class="meta"><i class="fa-regular fa-clock"></i> 2 dk anlatım</span><span class="go">İncele <i class="fa-solid fa-arrow-right"></i></span></div>
+        </div>
+      </div>
+
+      <div class="ex-card" data-kas="kalca" data-ekipman="ekipmansiz" data-sure="5 10 15 20 30" data-seviye="2" data-pop="59" data-name="Tek Bacak Köprü">
+        <button class="kyt-btn" type="button" data-kaydet aria-pressed="false" data-tur="hareket" data-slug="tek-bacak-kopru" data-ad="Tek Bacak Köprü" data-href="egzersiz-detay-v1.html?slug=tek-bacak-kopru" data-gorsel="https://images.unsplash.com/photo-1591258370814-01609b341790?w=700&amp;q=80&amp;auto=format&amp;fit=crop&amp;exp=7&amp;gam=6&amp;sat=-12" data-meta="Kalça · Ekipmansız"><i class="fa-regular fa-bookmark"></i></button>
+        <div class="ex-media" style="background-image:url('https://images.unsplash.com/photo-1591258370814-01609b341790?w=700&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-12')">
+          <span class="ex-cat">Kalça</span>
+          <span class="ex-level lv2"><span class="ex-pips"><i></i><i></i><i></i></span>Orta</span>
+          <div class="ex-tags"><span class="ex-tag"><i class="fa-solid fa-person"></i> Ekipmansız</span></div>
+        </div>
+        <div class="ex-body">
+          <h3><a class="kyt-link" href="egzersiz-detay-v1.html?slug=tek-bacak-kopru">Tek Bacak Köprü</a></h3>
+          <p>Köprünün tek taraflı hâli — iki kalça arasındaki farkı ortaya çıkarır.</p>
+          <div class="ex-foot"><span class="meta"><i class="fa-regular fa-clock"></i> 2 dk anlatım</span><span class="go">İncele <i class="fa-solid fa-arrow-right"></i></span></div>
+        </div>
+      </div>
+
+      <div class="ex-card" data-kas="omuz" data-ekipman="direncbandi" data-sure="5 10 15 20" data-seviye="2" data-pop="57" data-name="Bant Yana Açma">
+        <button class="kyt-btn" type="button" data-kaydet aria-pressed="false" data-tur="hareket" data-slug="bant-yana-acma" data-ad="Bant Yana Açma" data-href="egzersiz-detay-v1.html?slug=bant-yana-acma" data-gorsel="https://images.unsplash.com/photo-1599901860904-17e6ed7083a0?w=700&amp;q=80&amp;auto=format&amp;fit=crop&amp;exp=7&amp;gam=6&amp;sat=-12" data-meta="Omuz · Direnç bandı"><i class="fa-regular fa-bookmark"></i></button>
+        <div class="ex-media" style="background-image:url('https://images.unsplash.com/photo-1599901860904-17e6ed7083a0?w=700&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-12')">
+          <span class="ex-cat">Omuz</span>
+          <span class="ex-level lv2"><span class="ex-pips"><i></i><i></i><i></i></span>Orta</span>
+          <div class="ex-tags"><span class="ex-tag"><i class="fa-solid fa-grip-lines"></i> Direnç bandı</span></div>
+        </div>
+        <div class="ex-body">
+          <h3><a class="kyt-link" href="egzersiz-detay-v1.html?slug=bant-yana-acma">Bant Yana Açma</a></h3>
+          <p>Omuz sağlığı ve postür için yan deltoid çalışması — kontrollü tempo.</p>
+          <div class="ex-foot"><span class="meta"><i class="fa-regular fa-clock"></i> 2 dk anlatım</span><span class="go">İncele <i class="fa-solid fa-arrow-right"></i></span></div>
+        </div>
+      </div>
+
+      <div class="ex-card" data-kas="sirt" data-ekipman="ekipmansiz" data-sure="5 10 15 20" data-seviye="1" data-pop="55" data-name="Yüzücü (Y-T-W Kaldırış)">
+        <button class="kyt-btn" type="button" data-kaydet aria-pressed="false" data-tur="hareket" data-slug="yuzucu" data-ad="Yüzücü (Y-T-W Kaldırış)" data-href="egzersiz-detay-v1.html?slug=yuzucu" data-gorsel="https://images.unsplash.com/photo-1594381898411-846e7d193883?w=700&amp;q=80&amp;auto=format&amp;fit=crop&amp;exp=7&amp;gam=6&amp;sat=-12" data-meta="Sırt · Ekipmansız"><i class="fa-regular fa-bookmark"></i></button>
+        <div class="ex-media" style="background-image:url('https://images.unsplash.com/photo-1594381898411-846e7d193883?w=700&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-12')">
+          <span class="ex-cat">Sırt</span>
+          <span class="ex-level lv1"><span class="ex-pips"><i></i><i></i><i></i></span>Başlangıç</span>
+          <div class="ex-tags"><span class="ex-tag"><i class="fa-solid fa-person"></i> Ekipmansız</span></div>
+        </div>
+        <div class="ex-body">
+          <h3><a class="kyt-link" href="egzersiz-detay-v1.html?slug=yuzucu">Yüzücü (Y-T-W Kaldırış)</a></h3>
+          <p>Y-T-W harfleriyle kürek kemiği kontrolü — masa başı omuzları için birebir.</p>
+          <div class="ex-foot"><span class="meta"><i class="fa-regular fa-clock"></i> 3 dk anlatım</span><span class="go">İncele <i class="fa-solid fa-arrow-right"></i></span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BOŞ DURUM -->
+    <div class="lib-empty" id="libEmpty">
+      <div class="ico"><i class="fa-solid fa-magnifying-glass"></i></div>
+      <h3>Bu filtreyle hareket bulamadık</h3>
+      <p>Seçimini gevşetmeyi dene — bir kas grubu ya da ekipman çıkarınca daha çok hareket görünür.</p>
+      <button class="btn btn-fit" type="button" id="emptyReset"><i class="fa-solid fa-rotate-left"></i> Filtreyi sıfırla</button>
+    </div>
+
+    <!-- SAYFALAMA — R11/M6 · Beyar: "sonsuz kısım var şimdi, pagination
+         numaraları koyacaksın, Gastro'daki gibi; bir de ilk sayfaya /
+         son sayfaya atla olması lazım, DadaHaber'deki gibi."
+         Öncesi: "Daha fazla hareket yükle" düğmesi — üstelik gerçek sayfa
+         çekmiyor, mevcut kartların 8'ini KLONLUYORDU (aynı hareket iki kez
+         listeleniyordu). O mekanizma tamamen kalktı.
+         Biçim ve davranış kabukta: fit-shell.css "SAYFALAMA" +
+         fit-shell.js "SAYFALAMA MOTORU" (FIT_PAGI). -->
+    <nav class="pagi" id="libPagi" aria-label="Sayfalama"></nav>
+
+  </div>
+</section>
+
+<!-- ===== SAYFA ALTI · SAĞLIK VE DESTEK NOTU (R8/19) =====
+     Kütüphanede sağlık notu YOKTU — dokuz kardeş `hareket-*` sayfasının
+     hepsinde var, 25 hareketi listeleyen sayfada yoktu. Yapı kardeş
+     markadan ölçülüp alındı (dadadiet.com/beslenme `.reh-note`: kapsam
+     cümlesi → koşul listesi → SON CÜMLE uzmana yönlendirme; kutu kendi
+     içerik kolonunu doldurur, 1176/1176 fark 0).
+     Ton yönlendirme dilinde: hukuki kapsam (genel bilgi · tıbbi
+     değerlendirme yerine geçmez · kişiye özel program değil · ağrıda dur ·
+     rahatsızlık/yaralanma/gebelikte hekime danış) korunuyor, "sorumluluk
+     bizde değil" tonu yok. -->
+<!-- §B11 · zebra: bir önceki bölüm (.lib-body) beyaz, bu gri olur.
+     Kabuğun `.note-band{background:var(--bg-white)}` kuralına DOKUNULMADI —
+     `egzersiz-detay-v1`de aynı şerit gri bir bölümden sonra geliyor ve
+     orada beyaz DOĞRU; kural çevrilse o sayfa kırılırdı (ölçüldü). -->
+<section class="note-band" aria-label="Sağlık ve destek notu" style="background:var(--bg-cream)">
+  <div class="wrap">
+    <div class="hr-note is-center lib-guide">
+      <i class="fa-solid fa-hand-holding-heart"></i>
+      <p><b>Sana uygun hareketi seç.</b> Katalogdaki 25 hareketin anlatımı genel bilgi amaçlıdır; tıbbi değerlendirmenin ya da kişiye özel bir antrenman programının yerine geçmez.
+        <span class="note-more">Seviyene uygun olanla başla, formu öğrenene kadar yükü düşük tut — ağrı hissedersen o hareketi bırak. Bir sağlık sorunun, geçmiş bir yaralanman varsa ya da hamileysen, hangi hareketlerin sana uygun olduğunu başlamadan önce hekimine sor. Haftalık planını birlikte kurmak için <a href="antrenorler-v1.html">DadaFit antrenörlerinden destek alabilirsin</a>.</span>
+      </p>
+    </div>
+  </div>
+</section>
+
+</main><!-- /.page-main -->
+
+<!-- KABUK: alt katman (giris kapisi + footer + basa don) -->
+<div id="fitShellBottom"></div>
+
+<!-- DadaFit ortak kabuk JS (tek kaynak): markup + davranis -->
+<script src="assets/js/fit-shell.js"></script>
+<script src="assets/js/fit-mesaj.js"></script>
+<script src="assets/js/fit-kayit.js"></script>
+<script>
+/* ===== SAYFA JS — EGZERSİZ KÜTÜPHANESİ ===== */
+(function(){
+  var grid=document.getElementById('libGrid');
+  if(!grid)return;
+  var cards=Array.prototype.slice.call(grid.querySelectorAll('.ex-card'));
+  var filters=document.getElementById('libFilters');
+  var countEl=document.getElementById('libCount');
+  var emptyEl=document.getElementById('libEmpty');
+ // aktif seçim: her grup için Set (all = filtre yok)
+  /* Eksen listesi TEK YERDE: markup'taki .fgroup[data-group] kalemlerinden
+     türetilir. Yeni eksen eklemek için motora dokunmak gerekmez. */
+  var sel={};
+  filters.querySelectorAll('.fgroup[data-group]').forEach(function(g){
+    sel[g.getAttribute('data-group')]=new Set();
+  });
+
+  function chipClick(group,btn){
+    var val=btn.getAttribute('data-val');
+    var groupEl=filters.querySelector('.fgroup[data-group="'+group+'"]');
+    if(val==='all'){
+      sel[group].clear();
+      groupEl.querySelectorAll('.df-fchip').forEach(function(c){c.classList.toggle('on',c.getAttribute('data-val')==='all');});
+    }else{
+ // çoklu seçim toggle; "Tümü" kapanır
+      if(sel[group].has(val)){sel[group].delete(val);btn.classList.remove('on');}
+      else{sel[group].add(val);btn.classList.add('on');}
+      var allBtn=groupEl.querySelector('.df-fchip[data-val="all"]');
+      if(sel[group].size===0){sel[group].clear();allBtn.classList.add('on');}
+      else{allBtn.classList.remove('on');}
+    }
+    apply();
+  }
+
+  /* ÇOK DEĞERLİ EKSEN DESTEĞİ: data-* boşlukla ayrılmış birden çok değer
+     taşıyabilir (ör. data-sure="5 10 15" → hareket beş, on ve on beş dakikalık
+     bloklarda kullanılabilir). Tek değerli eksenler de aynı yoldan geçer. */
+  function tokens(card,group){
+    return (card.getAttribute('data-'+group)||'').split(/\s+/).filter(Boolean);
+  }
+  function matches(card){
+    return Object.keys(sel).every(function(g){
+      if(!sel[g].size)return true;
+      var t=tokens(card,g);
+      return t.some(function(v){return sel[g].has(v);});
+    });
+  }
+
+  /* R11/M6 · apply() artık kartları DOĞRUDAN göstermiyor: süzülen listeyi
+     hesaplayıp sayfalayıcıya veriyor, ekrana basmayı o yapıyor.
+     Liste DOM SIRASINDAN okunuyor (`cards` dizisinden değil) — sıralama
+     düğmeleri kartları `grid.appendChild` ile yeniden diziyor, dizi sırası
+     DOM sırasıyla uyuşmuyor; sayfalama yanlış sayfayı gösterirdi. */
+  var eslesen = [];
+  function suzulmus(){
+    return Array.prototype.filter.call(grid.children, function(c){
+      return c.classList && c.classList.contains('ex-card') && matches(c);
+    });
+  }
+  function apply(){
+    eslesen = suzulmus();
+    countEl.textContent = eslesen.length;
+    emptyEl.classList.toggle('show', eslesen.length === 0);
+    if(window.FIT_LIB_PAGI) window.FIT_LIB_PAGI.yenile();
+  }
+
+  filters.querySelectorAll('.fgroup').forEach(function(g){
+    var group=g.getAttribute('data-group');
+    g.querySelectorAll('.df-fchip').forEach(function(btn){
+      btn.addEventListener('click',function(){chipClick(group,btn);});
+    });
+  });
+
+  function resetAll(){
+    Object.keys(sel).forEach(function(g){sel[g].clear();});
+    filters.querySelectorAll('.fgroup').forEach(function(g){
+      g.querySelectorAll('.df-fchip').forEach(function(c){c.classList.toggle('on',c.getAttribute('data-val')==='all');});
+    });
+    apply();
+  }
+  var fClear=document.getElementById('fClear');
+  if(fClear)fClear.addEventListener('click',resetAll);
+  var emptyReset=document.getElementById('emptyReset');
+  if(emptyReset)emptyReset.addEventListener('click',resetAll);
+
+ // sıralama
+  var sortSeg=document.querySelector('.sort-seg');
+  if(sortSeg){
+    sortSeg.querySelectorAll('button').forEach(function(b){
+      b.addEventListener('click',function(){
+        sortSeg.querySelectorAll('button').forEach(function(x){x.classList.remove('on')});
+        b.classList.add('on');
+        var mode=b.getAttribute('data-sort');
+        var arr=cards.slice();
+        if(mode==='pop')arr.sort(function(a,c){return (+c.getAttribute('data-pop'))-(+a.getAttribute('data-pop'));});
+        else if(mode==='yeni')arr.reverse();
+        else if(mode==='az')arr.sort(function(a,c){return a.getAttribute('data-name').localeCompare(c.getAttribute('data-name'),'tr');});
+        arr.forEach(function(card){grid.appendChild(card);});
+        /* R11/M6 · sıralama DOM'u yeniden diziyor → sayfalanan liste de
+           yeniden okunmalı, yoksa 1. sayfada eski sıra kalır. */
+        apply();
+      });
+    });
+  }
+
+ // arama → kart adına göre süz (üst panel + filtre birlikte)
+  var searchInput=document.getElementById('libSearchInput');
+  if(searchInput){
+    searchInput.addEventListener('input',function(){
+      var q=searchInput.value.trim().toLocaleLowerCase('tr');
+      /* R11/M6 · arama da sayfalayıcıdan geçer; ekrana basmayı o yapar */
+      eslesen = Array.prototype.filter.call(grid.children, function(c){
+        if(!(c.classList && c.classList.contains('ex-card'))) return false;
+        var nameOk = !q || c.getAttribute('data-name').toLocaleLowerCase('tr').indexOf(q) > -1;
+        return matches(c) && nameOk;
+      });
+      countEl.textContent = eslesen.length;
+      emptyEl.classList.toggle('show', eslesen.length === 0);
+      if(window.FIT_LIB_PAGI) window.FIT_LIB_PAGI.yenile();
+    });
+  }
+
+ /* R11/M6 · "daha fazla yükle" KALDIRILDI. Eski kod gerçek sayfa çekmiyor,
+    mevcut kartların ilk 8'ini KLONLAYIP listeye ekliyordu — yani aynı
+    hareket listede iki kez görünüyordu. Yerine gerçek sayfalama geldi. */
+  window.FIT_LIB_PAGI = FIT_PAGI({
+    kap: document.getElementById('libPagi'),
+    ust: document.getElementById('libGrid'),
+    sayfaBoy: 12,
+    birim: 'hareket',
+    liste: function(){ return eslesen; },
+    ciz: function(gosterilecek){
+      Array.prototype.forEach.call(grid.children, function(c){
+        if(c.classList && c.classList.contains('ex-card')) c.style.display = 'none';
+      });
+      gosterilecek.forEach(function(c){ c.style.display = ''; });
+    }
+  });
+
+ // deep-link: dropdown'dan ?bolge= / ?ekipman= ile gelince ilgili chip'leri auto-activate et
+ // (dropdown taksonomisi → kütüphane data-val eşlemesi)
+  var DEEPLINK_MAP={
+    bolge:{
+      /* C4'te 'kol' üçe ayrıldı (biceps · triceps · ön kol) — üst vücut
+         eşlemesi de genişledi, yoksa dropdown'dan gelen kullanıcı kol
+         hareketlerini kaçırıyordu. */
+      'ust-vucut':{kas:['sirt','gogus','omuz','biceps','triceps','onkol']},
+      'alt-vucut':{kas:['bacak','kalca']},
+      'karin':{kas:['karin']}
+    },
+    ekipman:{
+      /* dropdown taksonomisi → kütüphane değerleri (C4'te sözlük genişledi) */
+      'vucut-agirligi':{ekipman:['ekipmansiz']},
+      'agirlik':{ekipman:['dambil','kettlebell','halter','direncbandi']}
+    }
+  };
+  /* NOT — ?sure=5 artık ALIAS DEĞİL, gerçek bir eksen (C2 bulgusu: hareket
+     merkezinden gelen sekiz "N dakika" bağlantısının kütüphanede karşılığı
+     yoktu, sessizce filtresiz açılıyorlardı). Ortak filtre bileşeni
+     (fit-shell.js) URL'deki sure= değerini doğrudan çipe çeviriyor. */
+  function activateChips(group,vals){
+    var groupEl=filters.querySelector('.fgroup[data-group="'+group+'"]');
+    if(!groupEl)return;
+    var allBtn=groupEl.querySelector('.df-fchip[data-val="all"]');
+    vals.forEach(function(val){
+      var btn=groupEl.querySelector('.df-fchip[data-val="'+val+'"]');
+      if(!btn || sel[group].has(val))return;
+      sel[group].add(val);
+      btn.classList.add('on');
+    });
+    if(sel[group].size>0 && allBtn)allBtn.classList.remove('on');
+  }
+  (function readDeepLink(){
+    var params=new URLSearchParams(window.location.search);
+    Object.keys(DEEPLINK_MAP).forEach(function(param){
+      var raw=params.get(param);
+      if(!raw)return;
+      var mapping=DEEPLINK_MAP[param][raw];
+      if(!mapping)return;
+      Object.keys(mapping).forEach(function(group){
+        activateChips(group,mapping[group]);
+      });
+    });
+  })();
+
+  apply();
+})();
+</script>
+
+
+<!-- DADAFIT-ACTIVE-NAV — aktif nav item boş-tık feedback'i (aria-current + self smooth-scroll) -->
+
+
+
+
+
+</body>
+</html>

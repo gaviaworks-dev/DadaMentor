@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8" />
+  <meta name="robots" content="noindex, nofollow" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Sağlık Bilgilendirmesi — DadaFit · Genel bilgi ile kişisel tavsiye ayrımı</title>
+<link rel="icon" type="image/svg+xml" href="../kanon/varlik/dadafit-isaret.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="../kanon/varlik/dadafit-isaret-32.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="../kanon/varlik/dadafit-isaret-180.png" />
+<!-- FontAwesome 6.5.2 (kilitli ikon seti) -->
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+      integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+      crossorigin="anonymous" referrerpolicy="no-referrer" />
+<!-- DadaFit ortak kabuk (tek kaynak) -->
+<!-- KANON · yukleme sirasi: tokenlar -> markalar/fit (bilesenler YUKLENMEZ) -->
+<link rel="stylesheet" href="../kanon/tokenlar.css" />
+<link rel="stylesheet" href="../kanon/markalar/fit.css" />
+<link rel="stylesheet" href="assets/css/fit-shell.css" />
+<link rel="stylesheet" href="assets/css/fit-mesaj.css" />
+<style>
+/* =====================================================================
+ SAYFA CSS — SAĞLIK BİLGİLENDİRMESİ (belge §3.3 footer kalemi · §14.1)
+ Kabuk/banner/kart/not assets/css/fit-shell.css'te tek kaynakta.
+ ===================================================================== */
+.lib-top{--lib-img:url('https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=1680&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-18');--lib-pos:center 32%}
+.sb-wrap{max-width:840px}
+.sb-lead{font-size:16.5px;color:var(--slate-2);font-weight:500;line-height:1.75}
+.sb-lead p+p{margin-top:15px}
+.sb-lead strong{color:var(--slate);font-weight:700}
+.sb-block{margin-top:38px}
+.sb-block h2{font-size:24px;margin-bottom:12px}
+.sb-block p{font-size:15px;color:var(--slate-2);font-weight:500;line-height:1.7}
+.sb-block p+p{margin-top:12px}
+.sb-list{list-style:none;display:flex;flex-direction:column;gap:11px;margin-top:14px}
+.sb-list li{position:relative;padding-left:26px;font-size:15px;color:var(--slate-2);font-weight:500;line-height:1.65}
+.sb-list li::before{content:"";position:absolute;left:0;top:9px;width:9px;height:9px;border-radius:50%;background:var(--fit);opacity:.75}
+.sb-list li b{color:var(--slate);font-weight:700}
+/* durma kriterleri — dikkat kartı */
+.sb-stop{background:#fff5f2;border:1px solid #f3cdc0;border-radius:var(--radius-lg);padding:24px 26px;margin-top:18px}
+.sb-stop h3{font-size:18px;margin-bottom:6px;display:flex;align-items:center;gap:10px}
+.sb-stop h3 i{color:#c3411f}
+.sb-stop p{font-size:14.5px;color:var(--slate-2);font-weight:500;line-height:1.65}
+.sb-stop ul{list-style:none;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 22px;margin-top:14px}
+.sb-stop li{display:flex;gap:10px;font-size:14.5px;font-weight:600;color:var(--slate)}
+.sb-stop li i{color:#c3411f;font-size:13px;margin-top:4px;flex:none}
+/* künye: hazırlayan / kontrol eden */
+.sb-kunye{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;margin-top:18px}
+.sb-person{display:flex;gap:14px;align-items:flex-start;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);padding:20px 22px;box-shadow:var(--sh-sm)}
+.sb-person .av{width:46px;height:46px;border-radius:var(--radius-circle);background:var(--fit-tint);color:var(--fit-deep);display:grid;place-items:center;font-size:19px;flex:none}
+.sb-person .rol{font-size:11px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+.sb-person b{display:block;font-size:15.5px;margin:3px 0 2px}
+.sb-person small{font-size:13px;color:var(--muted);font-weight:500;line-height:1.5;display:block}
+.sb-date{margin-top:16px;font-size:13px;color:var(--muted);font-weight:600}
+@media (max-width:1024px){ .sec{padding:var(--sec-pad) 0} }
+@media (max-width:640px){
+  .sb-stop ul,.sb-kunye{grid-template-columns:minmax(0,1fr)}
+  .sb-block h2{font-size:21px}
+  .sec{padding:var(--sec-pad) 0}
+}
+</style>
+<!-- Metin yaslama katmani (tek kaynak) — sayfa stillerinden SONRA yuklenir,
+     boylece sayfa ici text-align kurallari yaslamayi geri alamaz -->
+<link rel="stylesheet" href="assets/css/fit-type.css" />
+</head>
+<body data-brand="fit" data-fit-page="saglik-bilgilendirme-v1">
+
+<!-- KABUK: ust katman (topbar+header+drawer+alt bar+gorus+cerez) — ortak kabuk JS basar -->
+<div id="fitShellTop"></div>
+
+<main class="page-main" id="pageMain">
+
+<!-- ===== BANNER + BREADCRUMB ===== -->
+<section class="lib-top">
+  <div class="wrap">
+    <nav class="lib-crumb" aria-label="Sayfa yolu">
+      <a href="dadafit-hub-v1.html" class="crumb-home"><i class="fa-solid fa-house" aria-hidden="true"></i><span class="sr-only">DadaFit ana sayfa</span></a>
+      <i class="fa-solid fa-chevron-right"></i>
+      <span class="cur">Sağlık Bilgilendirmesi</span>
+    </nav>
+    <span class="eyebrow"><i class="fa-solid fa-shield-heart"></i> Sağlık ve güvenlik</span>
+    <h1>Genel bilgi ile kişisel tavsiye aynı şey değildir</h1>
+    <p class="lib-sub">DadaFit içerikleri hareket okuryazarlığı kazandırmak içindir; teşhis, tedavi ya da kişiye özel antrenman reçetesi değildir.</p>
+  </div>
+</section>
+
+<section class="sec sec-fit" style="background:var(--bg-white)">
+  <div class="wrap sb-wrap">
+    <div class="sb-lead">
+      <p>DadaFit'teki egzersiz anlatımları, programlar, challenge'lar ve enerji hesapları <strong>genel bilgilendirme amaçlıdır</strong>. Bunlar bir hekimin, fizyoterapistin ya da seni tanıyan bir antrenörün değerlendirmesinin yerine geçmez.</p>
+      <p>Amacımız baskı kurmak değil denge kurmak. Bir gün kaçırmak bir şeyi bozmaz; ağrıyı görmezden gelmek bozar.</p>
+    </div>
+
+    <div class="sb-block">
+      <h2>Başlamadan önce uzmana danış</h2>
+      <p>Aşağıdaki durumlardan biri sende varsa, bir programa ya da challenge'a başlamadan önce sağlık profesyoneline danışman gerekir:</p>
+      <ul class="sb-list">
+        <li><b>Kalp, tansiyon veya solunum rahatsızlığı</b> — tanı konmuş ya da şüphelenilen.</li>
+        <li><b>Yeni geçirilmiş yaralanma, ameliyat veya süregelen ağrı</b> — özellikle bel, diz, omuz ve boyun.</li>
+        <li><b>Gebelik ve doğum sonrası dönem</b> — hareket seçimi ve yoğunluğu ayrı değerlendirilir.</li>
+        <li><b>Uzun süredir hareketsizlik</b> — altı aydan uzun süredir düzenli hareket etmiyorsan.</li>
+        <li><b>Denge, baş dönmesi veya nörolojik bir durum.</b></li>
+        <li><b>Düzenli ilaç kullanımı</b> — bazı ilaçlar nabız ve efor yanıtını değiştirir.</li>
+      </ul>
+      <p style="margin-top:16px"><a href="antrenorler-v1.html" style="color:var(--fit-deep);font-weight:700;text-decoration:underline;text-underline-offset:2px">DadaFit onaylı antrenörlere</a> göz atabilir ya da kendi hekimine danışabilirsin. Riskli bir durum söz konusuysa DadaFit sana kişiselleştirilmiş egzersiz önermez; seni uzmana yönlendirir.</p>
+    </div>
+
+    <div class="sb-block">
+      <h2>Hareketi hemen bırakman gereken durumlar</h2>
+      <div class="sb-stop">
+        <h3><i class="fa-solid fa-triangle-exclamation"></i> Durma kriterleri</h3>
+        <p>Antrenman sırasında aşağıdakilerden biri olursa hareketi <b>hemen bırak</b>, otur ve nefesini topla. Geçmiyorsa tıbbi yardım al.</p>
+        <ul>
+          <li><i class="fa-solid fa-circle-exclamation"></i> Göğüs ağrısı veya baskı hissi</li>
+          <li><i class="fa-solid fa-circle-exclamation"></i> Nefes darlığı, konuşamayacak kadar zorlanma</li>
+          <li><i class="fa-solid fa-circle-exclamation"></i> Baş dönmesi, bayılma hissi, görme bulanıklığı</li>
+          <li><i class="fa-solid fa-circle-exclamation"></i> Keskin, batıcı veya ani eklem ağrısı</li>
+          <li><i class="fa-solid fa-circle-exclamation"></i> Kalp çarpıntısı veya düzensiz nabız</li>
+          <li><i class="fa-solid fa-circle-exclamation"></i> Bulantı, aşırı terleme, ani halsizlik</li>
+        </ul>
+      </div>
+      <p style="margin-top:14px">Kas yorgunluğu ile ağrı farklıdır. Yorgunluk çalıştığın kasta hissedilir ve dinlenince geçer; <b>keskin ağrı</b> eklemde ya da tek noktada hissedilir ve hareketi sürdürmen için bir sebep değildir.</p>
+    </div>
+
+    <div class="sb-block">
+      <h2>Enerji ve kalori sayıları yaklaşık değerdir</h2>
+      <p>Enerji Köprüsü ve Enerji Defteri'ndeki hesaplar; boy, kilo, yaş, cinsiyet ve aktivite bilgisine dayanan <b>istatistiksel tahminlerdir</b>. Gerçek harcaman metabolizmana, uyku ve stres durumuna, hareketin tekniğine göre değişir.</p>
+      <ul class="sb-list">
+        <li>Sayılar <b>yön göstermek</b> içindir; tıbbi kesinlik taşımaz.</li>
+        <li>Kalori rakamlarını görmek sana iyi gelmiyorsa <b>yalnız denge göstergesini</b> açık bırakabilirsin.</li>
+        <li>Beslenme düzeni kurmak istiyorsan bir <a href="https://by4r.github.io/dadamutfak-view/v7-6cu356/saglik-hub-v1.html" style="color:var(--fit-deep);font-weight:700">diyetisyene</a> danışman en doğrusu.</li>
+      </ul>
+    </div>
+
+    <div class="sb-block">
+      <h2>"DadaFit Onaylı" ne demek?</h2>
+      <p>Antrenör profillerindeki <b>DadaFit Onaylı</b> rozeti; kimlik bilgisinin, ilgili sertifika ya da diplomanın ve mesleki geçerlilik süresinin ekibimiz tarafından görüldüğü anlamına gelir.</p>
+      <ul class="sb-list">
+        <li>Onay, <b>belge doğrulamasıdır</b> — verilen hizmetin sonucuna dair bir garanti değildir.</li>
+        <li>Hassas belgeler (kimlik, sağlık raporu) profilde <b>gösterilmez</b>; yalnız doğrulama durumu görünür.</li>
+        <li>Belgenin geçerlilik süresi dolan antrenörün rozeti, yenileme yapılana kadar kaldırılır.</li>
+        <li>Bir profille ilgili şüphen varsa profildeki <b>şikâyet/bildir</b> bağlantısını kullanabilirsin.</li>
+      </ul>
+    </div>
+
+    <div class="sb-block">
+      <h2>İçeriği kim hazırladı, kim kontrol etti?</h2>
+      <p>DadaFit'teki hareket ve program içerikleri alan uzmanları tarafından hazırlanır ve ayrı bir uzman tarafından kontrol edilir. Her içeriğin altında hazırlayan, kontrol eden ve son kontrol tarihi görünür.</p>
+      <div class="sb-kunye">
+        <div class="sb-person">
+          <span class="av"><i class="fa-solid fa-pen-nib"></i></span>
+          <span>
+            <span class="rol">Hazırlayan</span>
+            <b>Selin Aksoy</b>
+            <small>Egzersiz ve spor bilimleri uzmanı · DadaFit onaylı antrenör</small>
+          </span>
+        </div>
+        <div class="sb-person">
+          <span class="av"><i class="fa-solid fa-user-check"></i></span>
+          <span>
+            <span class="rol">Kontrol eden</span>
+            <b>Dr. Mert Yılmaz</b>
+            <small>Fiziksel tıp ve rehabilitasyon · içerik güvenlik kontrolü</small>
+          </span>
+        </div>
+      </div>
+      <p class="sb-date"><i class="fa-regular fa-calendar-check"></i> Son kontrol tarihi: 11 Ağustos 2026 · Bu metin güncellendiğinde tarih yenilenir.</p>
+    </div>
+
+    <div class="hr-note">
+      <i class="fa-solid fa-circle-info"></i>
+      <p>Acil bir durumda bu sayfayı değil <b>112</b>'yi ara. Yasal metinler için: <a href="yasal-v1.html?metin=kullanim">Kullanım Koşulları</a> · <a href="yasal-v1.html?metin=kvkk">Gizlilik (KVKK)</a> · <a href="yasal-v1.html?metin=bilgilendirme">Bilgilendirme Metni</a>.</p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- KABUK: alt katman (giris kapisi + footer + basa don) -->
+<div id="fitShellBottom"></div>
+
+<!-- DadaFit ortak kabuk JS (tek kaynak): markup + davranis -->
+<script src="assets/js/fit-shell.js"></script>
+<script src="assets/js/fit-mesaj.js"></script>
+</body>
+</html>

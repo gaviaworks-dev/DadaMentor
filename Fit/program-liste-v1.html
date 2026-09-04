@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8" />
+  <meta name="robots" content="noindex, nofollow" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Programlar — DadaFit</title>
+<link rel="icon" type="image/svg+xml" href="../kanon/varlik/dadafit-isaret.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="../kanon/varlik/dadafit-isaret-32.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="../kanon/varlik/dadafit-isaret-180.png" />
+<!-- FontAwesome 6.5.2 (kilitli ikon seti) -->
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+      integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+      crossorigin="anonymous" referrerpolicy="no-referrer" />
+<!-- DadaFit ortak kabuk (tek kaynak) -->
+<!-- KANON · yukleme sirasi: tokenlar -> markalar/fit (bilesenler YUKLENMEZ) -->
+<link rel="stylesheet" href="../kanon/tokenlar.css" />
+<link rel="stylesheet" href="../kanon/markalar/fit.css" />
+<link rel="stylesheet" href="assets/css/fit-shell.css" />
+<link rel="stylesheet" href="assets/css/fit-mesaj.css" />
+<style>
+/* =====================================================================
+ PROGRAMLAR — DadaFit liste/filtre sayfası (kütüphanenin program muadili)
+ Chrome (token+topbar+header+drawer+bottom-nav+footer+modal+JS) hub'dan
+ BİREBİR taşındı (egzersiz-kutuphane-v1.html). DadaFit recolor: --fit → #009d4f.
+ Sayfa içeriği "SAYFA CSS" altına eklendi. Mega menü/chrome KİLİTLİ.
+ ===================================================================== */
+
+/* =====================================================================
+ SAYFA CSS — PROGRAMLAR
+ ===================================================================== */
+:root{
+  --fit:var(--marka);          /* DadaFit aksanı (Pantone 7482 C) */
+  --fit-deep:var(--marka-koyu);     /* hover / gradient ucu */
+  --fit-tint:var(--marka-yikama-2);     /* yumuşak yeşil yıkama */
+  --fit-line:var(--marka-cizgi);     /* yeşil-nötr hairline */
+  --fit-bright:var(--marka-parlak);   /* koyu zeminde okunur aksan metni */
+  --fit-dark:#211E16;     /* vurgu/hero zemini */
+}
+.sec-fit .eyebrow{color:var(--fit-deep)}
+.sec-fit .eyebrow::before{background:var(--fit)}
+
+/* ---- ÜST PANEL: koyu band + breadcrumb + başlık + arama (kütüphane lib-top deseni) ---- */
+.lib-top{
+  position:relative;overflow:hidden;margin-top:112px;
+  background:
+    radial-gradient(820px 360px at 84% 14%,color-mix(in srgb, var(--marka) 20%, transparent),transparent 62%),
+    linear-gradient(90deg,rgba(33,30,22,.94) 0%,rgba(29,26,20,.82) 46%,rgba(27,25,19,.74) 100%),
+    linear-gradient(180deg,rgba(33,30,22,0) 58%,rgba(24,22,16,.62) 100%),
+    url('https://images.unsplash.com/photo-1518611012118-696072aa579a?w=1680&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-16') center 28%/cover no-repeat,
+    #1b1913;
+  padding:40px 0 38px;
+}
+.lib-top .wrap{position:relative;z-index:2}
+.lib-crumb{display:flex;align-items:center;gap:9px;font-size:12.5px;font-weight:600;color:rgba(255,255,255,.6);margin-bottom:18px}
+.lib-crumb a{color:rgba(255,255,255,.6);transition:color .2s var(--ease)}
+.lib-crumb a:hover{color:#fff}
+.lib-crumb i{font-size:9px;color:rgba(255,255,255,.34)}
+.lib-crumb .cur{color:var(--fit-bright)}
+.lib-top .eyebrow{color:var(--fit-bright)}
+.lib-top .eyebrow::before{background:var(--fit-bright)}
+.lib-top h1{color:#fff;font-size:39px;letter-spacing:-.02em;margin:14px 0 10px;max-width:680px}
+.lib-top .lib-sub{color:rgba(255,255,255,.78);font-size:15.5px;font-weight:500;max-width:560px;line-height:1.55}
+/* arama input — cam panel */
+.lib-search{
+  display:flex;align-items:center;gap:12px;margin-top:24px;max-width:520px;
+  background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);
+  -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+  border-radius:var(--radius-md);padding:4px 4px 4px 18px;
+  transition:border-color .2s var(--ease),background .2s var(--ease);
+}
+.lib-search:focus-within{border-color:var(--fit-bright);background:rgba(255,255,255,.14)}
+.lib-search i{color:rgba(255,255,255,.62);font-size:15px;flex:none}
+.lib-search input{
+  flex:1;min-width:0;background:none;border:none;outline:none;
+  font-family:inherit;font-size:14.5px;font-weight:500;color:#fff;padding:11px 0;
+}
+.lib-search input::placeholder{color:rgba(255,255,255,.5)}
+.lib-search button{
+  flex:none;font-family:inherit;font-size:13.5px;font-weight:700;color:#fff;
+  background:var(--fit);border:none;border-radius:var(--radius-sm);padding:0 18px;height:42px;cursor:pointer;
+  transition:background .2s var(--ease);
+}
+.lib-search button:hover{background:var(--fit-deep)}
+/* üst panel hızlı istatistik şeridi */
+.lib-stats{display:flex;align-items:center;gap:26px;margin-top:24px;flex-wrap:wrap}
+.lib-stat{display:flex;align-items:baseline;gap:8px}
+.lib-stat b{font-size:20px;font-weight:800;color:#fff;letter-spacing:-.01em}
+.lib-stat span{font-size:12.5px;font-weight:600;color:rgba(255,255,255,.62)}
+
+/* ---- FİLTRE RAYI (sticky) — df-fchip dili ---- */
+.lib-body{padding:var(--sec-pad-sm) 0 var(--sec-pad);background:var(--bg-white)}
+.lib-filters{
+  position:sticky;top:112px;z-index:40;
+  background:rgba(255,255,255,.92);
+  -webkit-backdrop-filter:saturate(150%) blur(8px);backdrop-filter:saturate(150%) blur(8px);
+  border:1px solid var(--line);border-radius:var(--radius-lg);
+  padding:18px 20px 16px;margin-bottom:28px;box-shadow:var(--sh-sm);
+}
+.fgroup{display:flex;align-items:center;flex-wrap:wrap;gap:9px;padding:7px 0}
+.fgroup+.fgroup{border-top:1px solid var(--line);margin-top:3px;padding-top:13px}
+.fgroup .lbl{
+  font-size:11.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--muted);min-width:96px;flex:none;
+}
+.df-fchip{font-size:13px;font-weight:600;color:var(--slate);background:var(--paper);border:1px solid var(--line);padding:9px 16px;border-radius:var(--radius-sm);cursor:pointer;transition:.18s var(--ease);display:inline-flex;align-items:center;gap:7px}
+.df-fchip i{font-size:12px;opacity:.8}
+.df-fchip:hover{border-color:var(--fit);color:var(--fit-deep);background:var(--fit-tint)}
+.df-fchip.on{border-color:var(--fit);color:#fff;background:var(--fit)}
+.df-fchip.on i{opacity:1}
+/* filtre rayı alt aksiyonu — temizle */
+.fclear{
+  margin-left:auto;font-size:12.5px;font-weight:700;color:var(--muted);
+  background:none;border:none;cursor:pointer;display:inline-flex;align-items:center;gap:7px;
+  padding:9px 6px;transition:color .2s var(--ease);
+}
+.fclear:hover{color:var(--fit-deep)}
+
+/* ---- SONUÇ ÇUBUĞU: sayı + sıralama ---- */
+.lib-bar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:22px;flex-wrap:wrap}
+.lib-count{font-size:14px;font-weight:600;color:var(--slate-2)}
+.lib-count b{color:var(--slate);font-weight:800}
+.lib-sort{display:flex;align-items:center;gap:8px}
+.lib-sort .lbl{font-size:12.5px;font-weight:600;color:var(--muted)}
+.sort-seg{display:inline-flex;background:var(--bg);border:1px solid var(--line);border-radius:var(--radius-md);padding:3px}
+.sort-seg button{
+  font-family:inherit;font-size:13px;font-weight:700;color:var(--slate-2);
+  background:none;border:none;border-radius:var(--radius-sm);padding:8px 15px;cursor:pointer;
+  transition:.18s var(--ease);
+}
+.sort-seg button:hover{color:var(--fit-deep)}
+.sort-seg button.on{background:var(--fit);color:#fff}
+
+/* ---- PROGRAM KART GRID'İ — full-görsel kart (hub-card / ex-card dili) ---- */
+.lib-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px}
+.pr-media{position:relative;height:210px;background-size:cover;background-position:center}
+.pr-media::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(33,30,22,0) 40%,rgba(20,18,12,.66))}
+/* hedef rozeti (sol üst) */
+.pr-goal{position:absolute;top:12px;left:12px;z-index:2;background:var(--fit);color:#fff;font-size:11.5px;font-weight:700;padding:6px 12px;border-radius:var(--radius-sm);letter-spacing:.02em}
+/* Pro etiketi (sol üst, hedef altına) */
+.pr-pro{position:absolute;top:46px;left:12px;z-index:2;display:inline-flex;align-items:center;gap:6px;background:rgba(20,18,12,.78);color:#ffd97a;font-size:11px;font-weight:700;padding:5px 11px;border-radius:var(--radius-sm);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
+/* seviye rozeti (sağ üst) — yoğunluk pip'leri (aksan SADECE #009d4f) */
+/* ZORLUK ROZETİ SAĞ ALTA TAŞINDI (R16/1).
+   ÖLÇÜLEN KUSUR: rozet `top:12px;right:12px`teydi ve kaydet düğmesi
+   (`.kyt-btn`, `top:8px;right:8px`, 44×44) R15'te tam oraya eklendi.
+   Üst üste bindiler: kesişim **1162 px²**, üç genişlikte de (1440·1024·390),
+   bu sayfada 12 kartın 12'sinde. Düğme z-index 4'te olduğu için rozetin
+   üstünü kapatıyordu — seviye okunmuyordu.
+   Sağ alt köşe boştu (sol altta `.pr-tags` var), rozet oraya alındı.
+   Kural artık kitte: docs/fit-kit.md §12 · kart üstü öğe yerleşimi. */
+.pr-level{position:absolute;bottom:12px;right:12px;z-index:2;display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,.94);color:var(--slate);font-size:11px;font-weight:700;padding:6px 11px;border-radius:var(--radius-sm)}
+.pr-pips{display:inline-flex;gap:3px}
+.pr-pips i{width:6px;height:6px;border-radius:50%;background:#d6dad7;display:block}
+.pr-level.lv1 .pr-pips i:nth-child(-n+1),
+.pr-level.lv2 .pr-pips i:nth-child(-n+2),
+.pr-level.lv3 .pr-pips i:nth-child(-n+3){background:var(--fit)}
+/* DAR KOLONDA ROZET ALT SOLA, ETİKETLERİN ÜSTÜNE GEÇER (R16/1).
+   ÖLÇÜM (768 px, kart ızgarası 3 kolon): görsel genişliği 346 px, en geniş
+   `.pr-level` 103 px, en geniş `.pr-tags` 173 px. 103 + 173 + iki kenar
+   boşluğu, 222 px'e SIĞMIYOR — yan yana durmaları geometrik olarak
+   imkânsız, o yüzden burada bir hizalama ayarı değil bir YERLEŞİM
+   değişikliği gerekiyor. Rozet alt sola, etiketlerin bir sıra üstüne
+   çıkar; ikisi de tam okunur, hiçbir bilgi gizlenmez.
+   1440 ve 1024'te yan yana sığıyor (ölçüldü: çakışma 0), orada
+   değişiklik yok. */
+@media (min-width:641px) and (max-width:900px){
+  .pr-level{left:12px;right:auto;bottom:46px}
+}
+
+/* alt etiketler: süre + ekipman */
+.pr-tags{position:absolute;bottom:12px;left:12px;z-index:2;display:flex;gap:6px;flex-wrap:wrap}
+.pr-tag{display:inline-flex;align-items:center;gap:6px;background:rgba(20,18,12,.72);color:#fff;font-size:11px;font-weight:700;padding:6px 10px;border-radius:var(--radius-sm);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
+.pr-tag i{font-size:11px}
+.pr-body{padding:16px 18px 18px;display:flex;flex-direction:column;flex:1}
+.pr-body h3{font-size:17px;margin-bottom:6px;letter-spacing:-.01em;transition:color .2s var(--ease)}
+.pr-card:hover .pr-body h3{color:var(--fit-deep)}
+.pr-body p{font-size:13px;color:var(--muted);font-weight:500;line-height:1.5}
+/* SÜRE OMURGASI — programı egzersizden ayıran imza: hafta noktaları + plan özeti.
+ Program = haftalara yayılan sıra; bu satır o sırayı görselleştirir. */
+.pr-spine{display:flex;align-items:center;gap:5px;margin-top:14px}
+.pr-week{flex:1;height:5px;border-radius:var(--radius-sm);background:#e7eae6;transition:background .2s var(--ease)}
+.pr-week.fill{background:var(--fit)}
+.pr-card:hover .pr-week.fill{background:var(--fit-deep)}
+.pr-plan{display:flex;align-items:center;gap:7px;margin-top:11px;font-size:12px;color:var(--slate-2);font-weight:600}
+.pr-plan i{color:var(--fit-deep);font-size:12px}
+.pr-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:16px;padding-top:14px;border-top:1px solid var(--line);font-size:12.5px;color:var(--muted);font-weight:500}
+.pr-foot .meta{display:inline-flex;align-items:center;gap:6px}
+.pr-foot .go{display:inline-flex;align-items:center;gap:7px;color:var(--fit-deep);font-weight:700}
+.pr-foot .go i{transition:transform .2s var(--ease)}
+.pr-card:hover .pr-foot .go i{transform:translateX(3px)}
+
+/* ---- DAHA FAZLA YÜKLE ---- */
+.lib-more{display:flex;flex-direction:column;align-items:center;gap:14px;margin-top:40px}
+.lib-more .btn-more{
+  display:inline-flex;align-items:center;gap:10px;font-family:inherit;font-size:14.5px;font-weight:700;
+  color:var(--slate);background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-md);
+  padding:14px 30px;cursor:pointer;transition:.22s var(--ease);
+}
+.lib-more .btn-more:hover{border-color:var(--fit);color:var(--fit-deep);transform:translateY(-2px)}
+.lib-more .btn-more i{color:var(--fit)}
+.lib-more .more-note{font-size:12.5px;font-weight:500;color:var(--muted)}
+
+/* boş durum (filtre eşleşmezse) */
+.lib-empty{display:none;flex-direction:column;align-items:center;text-align:center;padding:54px 20px}
+.lib-empty.show{display:flex}
+.lib-empty .ico{width:62px;height:62px;border-radius:var(--radius-circle);background:var(--fit-tint);color:var(--fit-deep);display:grid;place-items:center;font-size:24px;margin-bottom:16px}
+.lib-empty h3{font-size:18px;margin-bottom:7px}
+.lib-empty p{font-size:13.5px;color:var(--muted);font-weight:500;max-width:340px;margin-bottom:18px}
+
+/* ===================== SAYFA RESPONSIVE ===================== */
+@media (max-width:1024px){
+  .lib-top{margin-top:112px}
+  .lib-filters{top:112px}
+  .lib-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .lib-top h1{font-size:33px}
+  .fgroup .lbl{min-width:88px}
+}
+@media (max-width:760px){
+  .lib-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:640px){
+  .lib-top{margin-top:62px;padding:30px 0 30px}
+  .lib-top h1{font-size:27px}
+  .lib-top .lib-sub{font-size:14px}
+  .lib-search{max-width:none}
+  .lib-stats{gap:18px;margin-top:20px}
+  .lib-stat b{font-size:18px}
+  .lib-body{padding:var(--sec-pad-sm) 0 var(--sec-pad)}
+  /* sticky filtre bar mobilde tek satır yatay kaydır */
+  .lib-filters{top:62px;padding:14px 14px 12px}
+  .fgroup{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;padding-bottom:5px}
+  .fgroup::-webkit-scrollbar{display:none}
+  .fgroup .lbl{position:sticky;left:0;background:rgba(255,255,255,.96);min-width:auto;padding-right:6px;z-index:1}
+  .df-fchip{flex:none;white-space:nowrap}
+  .fclear{flex:none}
+  .lib-bar{margin-bottom:18px}
+  .lib-sort{width:100%;justify-content:space-between}
+  .sort-seg button{padding:8px 12px;font-size:12.5px}
+  .lib-grid{grid-template-columns:1fr;gap:16px}
+  .pr-media{height:194px}
+  .pr-body{padding:14px 15px 16px}
+  .pr-body h3{font-size:16px}
+}
+@media (max-width:400px){
+  .lib-grid{grid-template-columns:1fr}
+  .pr-media{height:200px}
+}
+
+/* ---- gaviaworks imza code-mark ---- */
+
+/* breadcrumb root ev ikonu — koyu band üstünde okunur (chevron .34'ten ayrışsın) */
+.lib-crumb a i.fa-house{color:rgba(255,255,255,.72)}
+.lib-crumb a:hover i.fa-house{color:#fff}
+
+/* ============ ADIM 3 — KABUK: brand-switch band (Fit, .bs-fit aktif) ============ */
+/* NOT: .bs-gastro --bs-c LİTERAL #E14827 — bu sayfada --fit YEŞİL'e swap'lı (Fit aksanı),
+ var(--fit) kullanılsaydı Gastro pill'i yeşil render olurdu. Diğer markalar page-bağımsız token. */
+
+/* ============ SPONSORLU BLOK MAKETİ (FIT-LB, docs/reklam-envanteri-fit.json) ============
+ GERÇEK REKLAM KATMANI DEĞİL — statik prototip maketi. Backend/admin/veri katmanı yok,
+ bu blok yalnız yerleşimin nasıl duracağını gösterir (bkz. sayfa içindeki "MAKET" yorumu).
+ .lib-bar (sonuç çubuğu) ile .lib-grid (organik program ızgarası) arasına, kendi başlıklı
+ ve etiketli AYRI bir blok olarak oturur — organik kartların İÇİNE karışmaz (D-03 + D-06). */
+.spons-slot{
+  display:flex;align-items:center;gap:18px;flex-wrap:wrap;
+  border:1px solid var(--line);border-radius:var(--radius-lg);background:var(--paper);
+  box-shadow:var(--sh-sm);padding:18px 22px;margin-bottom:24px;
+}
+.spons-slot .eyebrow{margin:0;color:var(--fit-deep)}
+.spons-slot-fig{
+  flex:none;width:120px;height:60px;border-radius:var(--radius-md);
+  background:var(--fit-tint);display:grid;place-items:center;color:var(--fit-deep);font-size:22px;
+}
+.spons-slot-body{flex:1;min-width:0}
+.spons-slot-body h3{font-size:15.5px;margin:6px 0 3px}
+.spons-slot-body p{font-size:13px;color:var(--muted);font-weight:500;margin:0}
+.spons-slot-tag{
+  flex:none;font-size:11px;font-weight:700;letter-spacing:.04em;color:var(--muted);
+  border:1px dashed var(--line);border-radius:var(--radius-sm);padding:5px 10px;
+}
+@media (max-width:640px){
+  .spons-slot{padding:16px 18px}
+  .spons-slot-fig{width:100%;height:70px}
+}
+
+</style>
+<style>
+/* ===== Footer marka hizalama (Gastro footer dili; marka-nötr, sızma yok) ===== */
+
+</style>
+<!-- Metin yaslama katmani (tek kaynak) — sayfa stillerinden SONRA yuklenir,
+     boylece sayfa ici text-align kurallari yaslamayi geri alamaz -->
+<link rel="stylesheet" href="assets/css/fit-type.css" />
+</head>
+<body data-brand="fit" data-fit-page="program-liste-v1">
+
+<!-- KABUK: ust katman (topbar+header+drawer+alt bar+gorus+cerez) — ortak kabuk JS basar -->
+<div id="fitShellTop"></div>
+
+<main class="page-main" id="pageMain">
+
+<!-- ===== ÜST PANEL: koyu band + breadcrumb + arama ===== -->
+<section class="lib-top">
+  <div class="wrap">
+    <nav class="lib-crumb rd-crumb" aria-label="Sayfa yolu">
+      <a href="dadafit-hub-v1.html" class="crumb-home"><i class="fa-solid fa-house" aria-hidden="true"></i><span class="sr-only">DadaFit ana sayfa</span></a>
+      <i class="fa-solid fa-chevron-right"></i>
+      <a href="programlar-merkezi-v1.html">Programlar</a>
+      <i class="fa-solid fa-chevron-right"></i>
+      <span class="cur">Tüm Programlar</span>
+    </nav>
+    <span class="eyebrow"><i class="fa-solid fa-layer-group"></i> Hazır Programlar</span>
+    <h1>Hedefini seç, plan seni adım adım taşısın</h1>
+    <p class="lib-sub">Hedef, süre, seviye ve ekipmana göre filtrele. Her program hafta hafta planlı — kendi temponda ilerle, kaldığın yerden devam et.</p>
+    <!-- Ücretsiz/Pro ayrımı Programlar Merkezi'ndeki #pro bölümünde tek yerde anlatılıyor;
+         menüde ikinci bir kalem açmak yerine buradan bağlanır (aynı hedefe iki kapı olmaz). -->
+    <div class="chips" style="margin-top:20px">
+      <a class="btn btn-fit" href="programlar-merkezi-v1.html"><i class="fa-solid fa-compass"></i> Programlar Merkezi</a>
+      <a class="btn btn-ghost" href="pro-v1.html" style="background:rgba(255,255,255,.08);color:#fff;border-color:rgba(255,255,255,.24)"><i class="fa-solid fa-crown"></i> Ücretsiz ve Pro</a>
+    </div>
+    <!-- Banner içi arama formu KALDIRILDI (Beyar, hareket-merkezi ile aynı karar):
+         banner'ın dikey uzunluğunu tek başına 70px büyütüyordu ve liste
+         sayfalarının banner'larını birbirinden ayırıyordu. Arama header
+         ikonundan ve sayfanın kendi filtre bileşeninden sürüyor. -->
+    <div class="lib-stats">
+      <div class="lib-stat"><b>40+</b><span>program</span></div>
+      <div class="lib-stat"><b>3–12</b><span>hafta</span></div>
+      <div class="lib-stat"><b>4</b><span>hedef</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== LİSTE GÖVDE: filtre + grid ===== -->
+<section class="lib-body">
+  <div class="wrap">
+
+    <!-- FİLTRE RAYI (sticky) -->
+    <div class="lib-filters ff" id="libFilters"
+         data-ff data-ff-count=".lib-count" data-ff-sort=".lib-sort" data-ff-clear="#fClear">
+      <div class="fgroup" data-group="hedef" role="group" aria-label="Hedef filtresi">
+        <span class="lbl">Hedef</span>
+        <button class="df-fchip on" type="button" data-val="all">Tümü</button>
+        <button class="df-fchip" type="button" data-val="guc"><i class="fa-solid fa-dumbbell"></i> Güç &amp; Kondisyon</button>
+        <button class="df-fchip" type="button" data-val="kilo"><i class="fa-solid fa-scale-balanced"></i> Kilo Yönetimi</button>
+        <button class="df-fchip" type="button" data-val="mobilite"><i class="fa-solid fa-child-reaching"></i> Mobilite</button>
+        <button class="df-fchip" type="button" data-val="dayaniklilik"><i class="fa-solid fa-heart-pulse"></i> Dayanıklılık</button>
+      </div>
+      <div class="fgroup" data-group="sure" role="group" aria-label="Süre filtresi">
+        <span class="lbl">Süre</span>
+        <button class="df-fchip on" type="button" data-val="all">Tümü</button>
+        <button class="df-fchip" type="button" data-val="4">4 hafta</button>
+        <button class="df-fchip" type="button" data-val="8">8 hafta</button>
+        <button class="df-fchip" type="button" data-val="12">12 hafta</button>
+      </div>
+      <div class="fgroup" data-group="seviye" role="group" aria-label="Seviye filtresi">
+        <span class="lbl">Seviye</span>
+        <button class="df-fchip on" type="button" data-val="all">Tümü</button>
+        <button class="df-fchip" type="button" data-val="1">Başlangıç</button>
+        <button class="df-fchip" type="button" data-val="2">Orta</button>
+        <button class="df-fchip" type="button" data-val="3">İleri</button>
+      </div>
+      <div class="fgroup" data-group="ekipman" role="group" aria-label="Ekipman filtresi">
+        <span class="lbl">Ekipman</span>
+        <button class="df-fchip on" type="button" data-val="all">Tümü</button>
+        <button class="df-fchip" type="button" data-val="vucut"><i class="fa-solid fa-person"></i> Ekipmansız</button>
+        <button class="df-fchip" type="button" data-val="dambil"><i class="fa-solid fa-dumbbell"></i> Dambıl</button>
+        <button class="df-fchip" type="button" data-val="bant"><i class="fa-solid fa-grip-lines"></i> Bant</button>
+        <button class="fclear" type="button" id="fClear"><i class="fa-solid fa-rotate-left"></i> Filtreyi sıfırla</button>
+      </div>
+    </div>
+
+    <!-- SONUÇ ÇUBUĞU -->
+    <div class="lib-bar">
+      <div class="lib-count"><b id="libCount">9</b> program bulundu </div>
+      <div class="lib-sort">
+        <span class="lbl">Sırala</span>
+        <div class="sort-seg" role="group" aria-label="Sıralama">
+          <button class="on" type="button" data-sort="pop">Popüler</button>
+          <button type="button" data-sort="yeni">Yeni</button>
+          <button type="button" data-sort="sure">Süre</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================
+     MAKET — SPONSORLU BLOK YERLEŞİMİ (FIT-LB, statik prototip)
+     Gerçek reklam/envanter/admin katmanı YOK; bu depo backend içermiyor.
+     Amaç yalnız yerleşimi göstermek: organik ızgaranın ÖNÜNDE, kendi
+     başlıklı/etiketli AYRI blok (D-03: akışa karışmaz · D-06: "Sponsorlu"
+     etiketi fareyle gelmeden görünür). Marka adı UYDURULMADI — kategori
+     yazıyor. Kitle/performans rakamı YOK (medya kitindeki sayılar temsilî,
+     buraya taşınmadı). Kaynak: docs/reklam-envanteri-fit.json → FIT-LB.
+     ============================================================ -->
+    <div class="spons-slot" aria-label="Sponsorlu içerik alanı">
+      <span class="eyebrow"><i class="fa-solid fa-bullhorn"></i> Sponsorlu</span>
+      <div class="spons-slot-fig"><i class="fa-solid fa-shirt"></i></div>
+      <div class="spons-slot-body">
+        <h3>Spor Giyim Kategorisi</h3>
+        <p>Bu alan bir marka partnerine ayrılabilir — program listesinin hemen üstünde, ayrı ve etiketli.</p>
+      </div>
+      <span class="spons-slot-tag">MAKET · gerçek reklam değil</span>
+    </div>
+
+    <!-- PROGRAM GRID -->
+    <div class="lib-grid" id="libGrid">
+
+      <div class="pr-card" data-hedef="guc" data-sure="8" data-seviye="2" data-ekipman="dambil" data-pop="98" data-name="8 Haftalık Güç Temeli">
+        <button class="kyt-btn" type="button" data-kaydet aria-pressed="false" data-tur="program" data-slug="4-hafta-ev-antrenmani" data-ad="8 Haftalık Güç Temeli" data-href="program-detay-v1.html?slug=4-hafta-ev-antrenmani" data-gorsel="https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?w=700&amp;q=80&amp;auto=format&amp;fit=crop&amp;exp=7&amp;gam=6&amp;sat=-12" data-meta="Güç · 8 hafta"><i class="fa-regular fa-bookmark"></i></button>
+        <div class="pr-media" style="background-image:url('https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?w=700&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-12')">
+          <span class="pr-goal">Güç</span>
+          <span class="pr-level lv2"><span class="pr-pips"><i></i><i></i><i></i></span>Orta</span>
+          <div class="pr-tags"><span class="pr-tag"><i class="fa-regular fa-calendar"></i> 8 hafta</span><span class="pr-tag"><i class="fa-solid fa-dumbbell"></i> Dambıl</span></div>
+        </div>
+        <div class="pr-body">
+          <h3><a class="kyt-link" href="program-detay-v1.html?slug=4-hafta-ev-antrenmani">8 Haftalık Güç Temeli</a></h3>
+          <p>Dambılla kademeli güç gelişimi — hafta hafta artan, takip etmesi kolay plan.</p>
+          <div class="pr-spine" aria-hidden="true"><span class="pr-week fill"></span><span class="pr-week fill"></span><span class="pr-week"></span><span class="pr-week"></span><span class="pr-week"></span><span class="pr-week"></span><span class="pr-week"></span><span class="pr-week"></span></div>
+          <div class="pr-plan"><i class="fa-solid fa-calendar-week"></i> 8 hafta · haftada 3 gün · 24 antrenman</div>
+          <div class="pr-foot"><span class="meta"><i class="fa-solid fa-users"></i> 4.120 kişi yapıyor</span><span class="go">Programı Aç <i class="fa-solid fa-arrow-right"></i></span></div>
+        </div>
+      </div>
+
+      <div class="pr-card" data-hedef="kilo" data-sure="4" data-seviye="2" data-ekipman="vucut" data-pop="94" data-name="Evde HIIT">
+        <button class="kyt-btn" type="button" data-kaydet aria-pressed="false" data-tur="program" data-slug="8-hafta-mobilite" data-ad="Evde HIIT" data-href="program-detay-v1.html?slug=8-hafta-mobilite" data-gorsel="https://images.unsplash.com/photo-1599058917212-d750089bc07e?w=700&amp;q=80&amp;auto=format&amp;fit=crop&amp;exp=7&amp;gam=6&amp;sat=-12" data-meta="Kilo Yönetimi · 4 hafta"><i class="fa-regular fa-bookmark"></i></button>
+        <div class="pr-media" style="background-image:url('https://images.unsplash.com/photo-1599058917212-d750089bc07e?w=700&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-12')">
+          <span class="pr-goal">Kilo Yönetimi</span>
+          <span class="pr-level lv2"><span class="pr-pips"><i></i><i></i><i></i></span>Orta</span>
+          <div class="pr-tags"><span class="pr-tag"><i class="fa-regular fa-calendar"></i> 4 hafta</span><span class="pr-tag"><i class="fa-solid fa-house"></i> Ekipmansız</span></div>
+        </div>
+        <div class="pr-body">
+          <h3><a class="kyt-link" href="program-detay-v1.html?slug=8-hafta-mobilite">Evde HIIT</a></h3>
+          <p>Ekipmansız, kısa ve yoğun seanslar — küçük alanda yüksek tempo.</p>
+          <div class="pr-spine" aria-hidden="true"><span class="pr-week fill"></span><span class="pr-week"></span><span class="pr-week"></span><span class="pr-week"></span></div>
+          <div class="pr-plan"><i class="fa-solid fa-calendar-week"></i> 4 hafta · haftada 4 gün · 16 antrenman</div>
+          <div class="pr-foot"><span class="meta"><i class="fa-solid fa-users"></i> 6.480 kişi yapıyor</span><span class="go">Programı Aç <i class="fa-solid fa-arrow-right"></i></span></div>
+        </div>
+      </div>
+
+      <div class="pr-card" data-hedef="guc" data-sure="4" data-seviye="1" data-ekipman="vucut" data-pop="91" data-name="Yeni Başlayan 4 Hafta">
+        <button class="kyt-btn" type="button" data-kaydet aria-pressed="false" data-tur="program" data-slug="12-hafta-guc-temeli" data-ad="Yeni Başlayan 4 Hafta" data-href="program-detay-v1.html?slug=12-hafta-guc-temeli" data-gorsel="https://images.unsplash.com/photo-1518310383802-640c2de311b2?w=700&amp;q=80&amp;auto=format&amp;fit=crop&amp;exp=7&amp;gam=6&amp;sat=-12" data-meta="Başlangıç · 4 hafta"><i class="fa-regular fa-bookmark"></i></button>
+        <div class="pr-media" style="background-image:url('https://images.unsplash.com/photo-1518310383802-640c2de311b2?w=700&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-12')">
+          <span class="pr-goal">Başlangıç</span>
+          <span class="pr-level lv1"><span class="pr-pips"><i></i><i></i><i></i></span>Başlangıç</span>
+          <div class="pr-tags"><span class="pr-tag"><i class="fa-regular fa-calendar"></i> 4 hafta</span><span class="pr-tag"><i class="fa-solid fa-person"></i> Ekipmansız</span></div>
+        </div>
+        <div class="pr-body">
+          <h3><a class="kyt-link" href="program-detay-v1.html?slug=12-hafta-guc-temeli">Yeni Başlayan 4 Hafta</a></h3>
+          <p>Hareketle ilk tanışma, baskısız — temel form ve alışkanlık kurma.</p>
+          <div class="pr-spine" aria-hidden="true"><span class="pr-week fill"></span><span class="pr-week"></span><span class="pr-week"></span><span class="pr-week"></span></div>
+          <div class="pr-plan"><i class="fa-solid fa-calendar-week"></i> 4 hafta · haftada 3 gün · 12 antrenman</div>
+          <div class="pr-foot"><span class="meta"><i class="fa-solid fa-users"></i> 9.730 kişi yapıyor</span><span class="go">Programı Aç <i class="fa-solid fa-arrow-right"></i></span></div>
+        </div>
+      </div>
+
+      <div class="pr-card" data-hedef="mobilite" data-sure="4" data-seviye="1" data-ekipman="vucut" data-pop="86" data-name="Mobilite & Esneklik">
+        <button class="kyt-btn" type="button" data-kaydet aria-pressed="false" data-tur="program" data-slug="8-hafta-salon-kondisyon" data-ad="Mobilite &amp; Esneklik" data-href="program-detay-v1.html?slug=8-hafta-salon-kondisyon" data-gorsel="https://images.unsplash.com/photo-1545205597-3d9d02c29597?w=700&amp;q=80&amp;auto=format&amp;fit=crop&amp;exp=7&amp;gam=6&amp;sat=-12" data-meta="Mobilite · 4 hafta"><i class="fa-regular fa-bookmark"></i></button>
+        <div class="pr-media" style="background-image:url('https://images.unsplash.com/photo-1545205597-3d9d02c29597?w=700&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-12')">
+          <span class="pr-goal">Mobilite</span>
+          <span class="pr-level lv1"><span class="pr-pips"><i></i><i></i><i></i></span>Başlangıç</span>
+          <div class="pr-tags"><span class="pr-tag"><i class="fa-regular fa-calendar"></i> 4 hafta</span><span class="pr-tag"><i class="fa-solid fa-house"></i> Ekipmansız</span></div>
+        </div>
+        <div class="pr-body">
+          <h3><a class="kyt-link" href="program-detay-v1.html?slug=8-hafta-salon-kondisyon">Mobilite &amp; Esneklik</a></h3>
+          <p>Eklem sağlığı ve günlük rahatlık — her gün 10 dakikalık akış.</p>
+          <div class="pr-spine" aria-hidden="true"><span class="pr-week fill"></span><span class="pr-week"></span><span class="pr-week"></span><span class="pr-week"></span></div>
+          <div class="pr-plan"><i class="fa-solid fa-calendar-week"></i> 4 hafta · her gün 10 dk · 28 seans</div>
+          <div class="pr-foot"><span class="meta"><i class="fa-solid fa-users"></i> 5.210 kişi yapıyor</span><span class="go">Programı Aç <i class="fa-solid fa-arrow-right"></i></span></div>
+        </div>
+      </div>
+
+      <div class="pr-card" data-hedef="dayaniklilik" data-sure="8" data-seviye="1" data-ekipman="vucut" data-pop="81" data-name="Düşük Tempo Kondisyon">
+        <button class="kyt-btn" type="button" data-kaydet aria-pressed="false" data-tur="program" data-slug="4-hafta-ev-antrenmani" data-ad="Düşük Tempo Kondisyon" data-href="program-detay-v1.html?slug=4-hafta-ev-antrenmani" data-gorsel="https://images.unsplash.com/photo-1486218119243-13883505764c?w=700&amp;q=80&amp;auto=format&amp;fit=crop&amp;exp=7&amp;gam=6&amp;sat=-12" data-meta="Dayanıklılık · 8 hafta"><i class="fa-regular fa-bookmark"></i></button>
+        <div class="pr-media" style="background-image:url('https://images.unsplash.com/photo-1486218119243-13883505764c?w=700&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-12')">
+          <span class="pr-goal">Dayanıklılık</span>
+          <span class="pr-level lv1"><span class="pr-pips"><i></i><i></i><i></i></span>Başlangıç</span>
+          <div class="pr-tags"><span class="pr-tag"><i class="fa-regular fa-calendar"></i> 8 hafta</span><span class="pr-tag"><i class="fa-solid fa-person"></i> Ekipmansız</span></div>
+        </div>
+        <div class="pr-body">
+          <h3><a class="kyt-link" href="program-detay-v1.html?slug=4-hafta-ev-antrenmani">Düşük Tempo Kondisyon</a></h3>
+          <p>Sürdürülebilir tempoda nefes ve dayanıklılık — zorlamadan, istikrarla.</p>
+          <div class="pr-spine" aria-hidden="true"><span class="pr-week fill"></span><span class="pr-week fill"></span><span class="pr-week"></span><span class="pr-week"></span><span class="pr-week"></span><span class="pr-week"></span><span class="pr-week"></span><span class="pr-week"></span></div>
+          <div class="pr-plan"><i class="fa-solid fa-calendar-week"></i> 8 hafta · haftada 3 gün · 24 antrenman</div>
+          <div class="pr-foot"><span class="meta"><i class="fa-solid fa-users"></i> 3.640 kişi yapıyor</span><span class="go">Programı Aç <i class="fa-solid fa-arrow-right"></i></span></div>
+        </div>
+      </div>
+
+      <div class="pr-card" data-hedef="mobilite" data-sure="12" data-seviye="2" data-ekipman="bant" data-pop="76" data-name="Dik Duruş Programı">
+        <button class="kyt-btn" type="button" data-kaydet aria-pressed="false" data-tur="program" data-slug="8-hafta-mobilite" data-ad="Dik Duruş Programı" data-href="program-detay-v1.html?slug=8-hafta-mobilite" data-gorsel="https://images.unsplash.com/photo-1574680096145-d05b474e2155?w=700&amp;q=80&amp;auto=format&amp;fit=crop&amp;exp=7&amp;gam=6&amp;sat=-12" data-meta="Mobilite · 12 hafta"><i class="fa-regular fa-bookmark"></i></button>
+        <div class="pr-media" style="background-image:url('https://images.unsplash.com/photo-1574680096145-d05b474e2155?w=700&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-12')">
+          <span class="pr-goal">Mobilite</span>
+          <span class="pr-pro"><i class="fa-solid fa-crown"></i> Pro</span>
+          <span class="pr-level lv2"><span class="pr-pips"><i></i><i></i><i></i></span>Orta</span>
+          <div class="pr-tags"><span class="pr-tag"><i class="fa-regular fa-calendar"></i> 12 hafta</span><span class="pr-tag"><i class="fa-solid fa-grip-lines"></i> Bant</span></div>
+        </div>
+        <div class="pr-body">
+          <h3><a class="kyt-link" href="program-detay-v1.html?slug=8-hafta-mobilite">Dik Duruş Programı</a></h3>
+          <p>Masa başı sırt ve boyun için düzeltici plan — postürü kademeli toparlar.</p>
+          <div class="pr-spine" aria-hidden="true"><span class="pr-week fill"></span><span class="pr-week fill"></span><span class="pr-week fill"></span><span class="pr-week"></span><span class="pr-week"></span><span class="pr-week"></span><span class="pr-week"></span><span class="pr-week"></span><span class="pr-week"></span><span class="pr-week"></span><span class="pr-week"></span><span class="pr-week"></span></div>
+          <div class="pr-plan"><i class="fa-solid fa-calendar-week"></i> 12 hafta · haftada 3 gün · 36 antrenman</div>
+          <div class="pr-foot"><span class="meta"><i class="fa-solid fa-users"></i> 2.180 kişi yapıyor</span><span class="go">Programı Aç <i class="fa-solid fa-arrow-right"></i></span></div>
+        </div>
+      </div>
+
+      <div class="pr-card" data-hedef="kilo" data-sure="8" data-seviye="2" data-ekipman="dambil" data-pop="72" data-name="Yağ Yakım Devresi">
+        <button class="kyt-btn" type="button" data-kaydet aria-pressed="false" data-tur="program" data-slug="12-hafta-guc-temeli" data-ad="Yağ Yakım Devresi" data-href="program-detay-v1.html?slug=12-hafta-guc-temeli" data-gorsel="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=700&amp;q=80&amp;auto=format&amp;fit=crop&amp;exp=7&amp;gam=6&amp;sat=-12" data-meta="Kilo Yönetimi · 8 hafta"><i class="fa-regular fa-bookmark"></i></button>
+        <div class="pr-media" style="background-image:url('https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=700&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-12')">
+          <span class="pr-goal">Kilo Yönetimi</span>
+          <span class="pr-level lv2"><span class="pr-pips"><i></i><i></i><i></i></span>Orta</span>
+          <div class="pr-tags"><span class="pr-tag"><i class="fa-regular fa-calendar"></i> 8 hafta</span><span class="pr-tag"><i class="fa-solid fa-dumbbell"></i> Dambıl</span></div>
+        </div>
+        <div class="pr-body">
+          <h3><a class="kyt-link" href="program-detay-v1.html?slug=12-hafta-guc-temeli">Yağ Yakım Devresi</a></h3>
+          <p>Devre antrenmanıyla kalori yakımı — beslenme köprüsüyle birlikte ilerler.</p>
+          <div class="pr-spine" aria-hidden="true"><span class="pr-week fill"></span><span class="pr-week fill"></span><span class="pr-week"></span><span class="pr-week"></span><span class="pr-week"></span><span class="pr-week"></span><span class="pr-week"></span><span class="pr-week"></span></div>
+          <div class="pr-plan"><i class="fa-solid fa-calendar-week"></i> 8 hafta · haftada 4 gün · 32 antrenman</div>
+          <div class="pr-foot"><span class="meta"><i class="fa-solid fa-users"></i> 4.890 kişi yapıyor</span><span class="go">Programı Aç <i class="fa-solid fa-arrow-right"></i></span></div>
+        </div>
+      </div>
+
+      <div class="pr-card" data-hedef="dayaniklilik" data-sure="12" data-seviye="3" data-ekipman="vucut" data-pop="68" data-name="Koşuya Hazırlık 12 Hafta">
+        <button class="kyt-btn" type="button" data-kaydet aria-pressed="false" data-tur="program" data-slug="8-hafta-salon-kondisyon" data-ad="Koşuya Hazırlık 12 Hafta" data-href="program-detay-v1.html?slug=8-hafta-salon-kondisyon" data-gorsel="https://images.unsplash.com/photo-1502904550040-7534597429ae?w=700&amp;q=80&amp;auto=format&amp;fit=crop&amp;exp=7&amp;gam=6&amp;sat=-12" data-meta="Dayanıklılık · 12 hafta"><i class="fa-regular fa-bookmark"></i></button>
+        <div class="pr-media" style="background-image:url('https://images.unsplash.com/photo-1502904550040-7534597429ae?w=700&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-12')">
+          <span class="pr-goal">Dayanıklılık</span>
+          <span class="pr-level lv3"><span class="pr-pips"><i></i><i></i><i></i></span>İleri</span>
+          <div class="pr-tags"><span class="pr-tag"><i class="fa-regular fa-calendar"></i> 12 hafta</span><span class="pr-tag"><i class="fa-solid fa-person-running"></i> Ekipmansız</span></div>
+        </div>
+        <div class="pr-body">
+          <h3><a class="kyt-link" href="program-detay-v1.html?slug=8-hafta-salon-kondisyon">Koşuya Hazırlık 12 Hafta</a></h3>
+          <p>İlk 10K'na kademeli hazırlık — koş-yürü dengesiyle güvenli ilerleme.</p>
+          <div class="pr-spine" aria-hidden="true"><span class="pr-week fill"></span><span class="pr-week fill"></span><span class="pr-week fill"></span><span class="pr-week fill"></span><span class="pr-week"></span><span class="pr-week"></span><span class="pr-week"></span><span class="pr-week"></span><span class="pr-week"></span><span class="pr-week"></span><span class="pr-week"></span><span class="pr-week"></span></div>
+          <div class="pr-plan"><i class="fa-solid fa-calendar-week"></i> 12 hafta · haftada 3 gün · 36 antrenman</div>
+          <div class="pr-foot"><span class="meta"><i class="fa-solid fa-users"></i> 1.960 kişi yapıyor</span><span class="go">Programı Aç <i class="fa-solid fa-arrow-right"></i></span></div>
+        </div>
+      </div>
+
+      <div class="pr-card" data-hedef="guc" data-sure="12" data-seviye="3" data-ekipman="dambil" data-pop="63" data-name="İleri Güç & Hacim">
+        <button class="kyt-btn" type="button" data-kaydet aria-pressed="false" data-tur="program" data-slug="4-hafta-ev-antrenmani" data-ad="İleri Güç &amp; Hacim" data-href="program-detay-v1.html?slug=4-hafta-ev-antrenmani" data-gorsel="https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=700&amp;q=80&amp;auto=format&amp;fit=crop&amp;exp=7&amp;gam=6&amp;sat=-12" data-meta="Güç · 12 hafta"><i class="fa-regular fa-bookmark"></i></button>
+        <div class="pr-media" style="background-image:url('https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=700&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-12')">
+          <span class="pr-goal">Güç</span>
+          <span class="pr-pro"><i class="fa-solid fa-crown"></i> Pro</span>
+          <span class="pr-level lv3"><span class="pr-pips"><i></i><i></i><i></i></span>İleri</span>
+          <div class="pr-tags"><span class="pr-tag"><i class="fa-regular fa-calendar"></i> 12 hafta</span><span class="pr-tag"><i class="fa-solid fa-dumbbell"></i> Dambıl</span></div>
+        </div>
+        <div class="pr-body">
+          <h3><a class="kyt-link" href="program-detay-v1.html?slug=4-hafta-ev-antrenmani">İleri Güç &amp; Hacim</a></h3>
+          <p>Deneyimliler için periyotlanmış güç planı — hacim ve yoğunluk dönüşümlü.</p>
+          <div class="pr-spine" aria-hidden="true"><span class="pr-week fill"></span><span class="pr-week fill"></span><span class="pr-week fill"></span><span class="pr-week fill"></span><span class="pr-week fill"></span><span class="pr-week"></span><span class="pr-week"></span><span class="pr-week"></span><span class="pr-week"></span><span class="pr-week"></span><span class="pr-week"></span><span class="pr-week"></span></div>
+          <div class="pr-plan"><i class="fa-solid fa-calendar-week"></i> 12 hafta · haftada 4 gün · 48 antrenman</div>
+          <div class="pr-foot"><span class="meta"><i class="fa-solid fa-users"></i> 1.430 kişi yapıyor</span><span class="go">Programı Aç <i class="fa-solid fa-arrow-right"></i></span></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- BOŞ DURUM -->
+    <div class="lib-empty" id="libEmpty">
+      <div class="ico"><i class="fa-solid fa-layer-group"></i></div>
+      <h3>Bu filtreyle program bulamadık</h3>
+      <p>Seçimini gevşetmeyi dene — bir hedef ya da ekipman çıkarınca daha çok program görünür.</p>
+      <button class="btn btn-fit" type="button" id="emptyReset"><i class="fa-solid fa-rotate-left"></i> Filtreyi sıfırla</button>
+    </div>
+
+    <!-- DAHA FAZLA YÜKLE -->
+    <div class="lib-more" id="libMore">
+      <button class="btn-more" type="button" id="loadMore"><i class="fa-solid fa-circle-down"></i> Daha fazla program yükle</button>
+      <span class="more-note"><b id="moreSeen">9</b> / 40+ program gösteriliyor</span>
+    </div>
+
+  </div>
+</section>
+
+</main><!-- /.page-main -->
+
+<!-- KABUK: alt katman (giris kapisi + footer + basa don) -->
+<div id="fitShellBottom"></div>
+
+<!-- DadaFit ortak kabuk JS (tek kaynak): markup + davranis -->
+<script src="assets/js/fit-shell.js"></script>
+<script src="assets/js/fit-mesaj.js"></script>
+<script src="assets/js/fit-kayit.js"></script>
+<script>
+/* ===== SAYFA JS — PROGRAMLAR (kütüphane filtre/sıralama motoru, program facet'leriyle) ===== */
+(function(){
+  var grid=document.getElementById('libGrid');
+  if(!grid)return;
+  var cards=Array.prototype.slice.call(grid.querySelectorAll('.pr-card'));
+  var filters=document.getElementById('libFilters');
+  var countEl=document.getElementById('libCount');
+  var moreSeen=document.getElementById('moreSeen');
+  var emptyEl=document.getElementById('libEmpty');
+  var moreWrap=document.getElementById('libMore');
+ // aktif seçim: her grup için Set (all = filtre yok)
+  var sel={hedef:new Set(),sure:new Set(),seviye:new Set(),ekipman:new Set()};
+
+  function chipClick(group,btn){
+    var val=btn.getAttribute('data-val');
+    var groupEl=filters.querySelector('.fgroup[data-group="'+group+'"]');
+    if(val==='all'){
+      sel[group].clear();
+      groupEl.querySelectorAll('.df-fchip').forEach(function(c){c.classList.toggle('on',c.getAttribute('data-val')==='all');});
+    }else{
+ // çoklu seçim toggle; "Tümü" kapanır
+      if(sel[group].has(val)){sel[group].delete(val);btn.classList.remove('on');}
+      else{sel[group].add(val);btn.classList.add('on');}
+      var allBtn=groupEl.querySelector('.df-fchip[data-val="all"]');
+      if(sel[group].size===0){sel[group].clear();allBtn.classList.add('on');}
+      else{allBtn.classList.remove('on');}
+    }
+    apply();
+  }
+
+  function matches(card){
+    var h=card.getAttribute('data-hedef');
+    var su=card.getAttribute('data-sure');
+    var s=card.getAttribute('data-seviye');
+    var e=card.getAttribute('data-ekipman');
+    if(sel.hedef.size && !sel.hedef.has(h))return false;
+    if(sel.sure.size && !sel.sure.has(su))return false;
+    if(sel.seviye.size && !sel.seviye.has(s))return false;
+    if(sel.ekipman.size && !sel.ekipman.has(e))return false;
+    return true;
+  }
+
+  function apply(){
+    var shown=0;
+    cards.forEach(function(card){
+      var ok=matches(card);
+      card.style.display=ok?'':'none';
+      if(ok)shown++;
+    });
+    countEl.textContent=shown;
+    if(moreSeen)moreSeen.textContent=shown;
+    emptyEl.classList.toggle('show',shown===0);
+    if(moreWrap)moreWrap.style.display=shown===0?'none':'';
+  }
+
+  filters.querySelectorAll('.fgroup').forEach(function(g){
+    var group=g.getAttribute('data-group');
+    g.querySelectorAll('.df-fchip').forEach(function(btn){
+      btn.addEventListener('click',function(){chipClick(group,btn);});
+    });
+  });
+
+  function resetAll(){
+    Object.keys(sel).forEach(function(g){sel[g].clear();});
+    filters.querySelectorAll('.fgroup').forEach(function(g){
+      g.querySelectorAll('.df-fchip').forEach(function(c){c.classList.toggle('on',c.getAttribute('data-val')==='all');});
+    });
+    apply();
+  }
+  var fClear=document.getElementById('fClear');
+  if(fClear)fClear.addEventListener('click',resetAll);
+  var emptyReset=document.getElementById('emptyReset');
+  if(emptyReset)emptyReset.addEventListener('click',resetAll);
+
+ // sıralama
+  var sortSeg=document.querySelector('.sort-seg');
+  if(sortSeg){
+    sortSeg.querySelectorAll('button').forEach(function(b){
+      b.addEventListener('click',function(){
+        sortSeg.querySelectorAll('button').forEach(function(x){x.classList.remove('on')});
+        b.classList.add('on');
+        var mode=b.getAttribute('data-sort');
+        var arr=cards.slice();
+        if(mode==='pop')arr.sort(function(a,c){return (+c.getAttribute('data-pop'))-(+a.getAttribute('data-pop'));});
+        else if(mode==='yeni')arr.reverse();
+        else if(mode==='sure')arr.sort(function(a,c){return (+a.getAttribute('data-sure'))-(+c.getAttribute('data-sure'));});
+        arr.forEach(function(card){grid.appendChild(card);});
+      });
+    });
+  }
+
+ // arama → kart adına göre süz (üst panel + filtre birlikte)
+  var searchInput=document.getElementById('libSearchInput');
+  if(searchInput){
+    searchInput.addEventListener('input',function(){
+      var q=searchInput.value.trim().toLocaleLowerCase('tr');
+      var shown=0;
+      cards.forEach(function(card){
+        var nameOk=!q || card.getAttribute('data-name').toLocaleLowerCase('tr').indexOf(q)>-1;
+        var ok=matches(card)&&nameOk;
+        card.style.display=ok?'':'none';
+        if(ok)shown++;
+      });
+      countEl.textContent=shown;
+      if(moreSeen)moreSeen.textContent=shown;
+      emptyEl.classList.toggle('show',shown===0);
+      if(moreWrap)moreWrap.style.display=shown===0?'none':'';
+    });
+  }
+
+ // "daha fazla yükle" — mockup: aynı kartları klonlayıp ekler (gerçekte API sayfası)
+  var loadMore=document.getElementById('loadMore');
+  if(loadMore){
+    var loaded=false;
+    loadMore.addEventListener('click',function(){
+      if(loaded){loadMore.parentElement.style.display='none';return;}
+      cards.slice(0,6).forEach(function(card){
+        var clone=card.cloneNode(true);
+        grid.appendChild(clone);
+        cards.push(clone);
+      });
+      loaded=true;
+      apply();
+      loadMore.innerHTML='<i class="fa-solid fa-check"></i> Tüm programlar yüklendi';
+    });
+  }
+
+  apply();
+})();
+</script>
+
+
+<!-- DADAFIT-ACTIVE-NAV — aktif nav item boş-tık feedback'i (aria-current + self smooth-scroll) -->
+
+
+
+
+
+</body>
+</html>

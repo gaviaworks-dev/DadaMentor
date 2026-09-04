@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8" />
+  <meta name="robots" content="noindex, nofollow" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Programını Bul — DadaFit · Birkaç soruyla sana uygun programa ulaş</title>
+<link rel="icon" type="image/svg+xml" href="../kanon/varlik/dadafit-isaret.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="../kanon/varlik/dadafit-isaret-32.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="../kanon/varlik/dadafit-isaret-180.png" />
+<!-- FontAwesome 6.5.2 (kilitli ikon seti) -->
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+      integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+      crossorigin="anonymous" referrerpolicy="no-referrer" />
+<!-- DadaFit ortak kabuk (tek kaynak) -->
+<!-- KANON · yukleme sirasi: tokenlar -> markalar/fit (bilesenler YUKLENMEZ) -->
+<link rel="stylesheet" href="../kanon/tokenlar.css" />
+<link rel="stylesheet" href="../kanon/markalar/fit.css" />
+<link rel="stylesheet" href="assets/css/fit-shell.css" />
+<link rel="stylesheet" href="assets/css/fit-mesaj.css" />
+<style>
+/* =====================================================================
+ SAYFA CSS — PROGRAMINI BUL (R13 · 5. tur)
+
+ Sihirbaz artık POP-UP DEĞİL, kendi tam sayfası. Referans:
+ dadadiet.com/diyetisyen-bul — numaralı adım rayı, soru bloğu, seçenek
+ kartları (kalın etiket + tek satır açıklama), alt bar (Adım n / 3 +
+ Geri/İleri), sonuç listesi, alt aksiyon, yasal şerit.
+
+ Banner LİSTE ailesine giriyor (R15): .lib-top + dosya adında "-detay-"
+ geçmediği için kabuk body'ye data-fit-hero-kind="liste" yazıyor →
+ yükseklik --banner-h-liste (544 / 607 / 587). Burada banner ölçüsüne
+ dair TEK SATIR yok; yalnız arka plan görseli bildiriliyor.
+
+ Sınıf öneki `pb-` (programını bul). Eski `.wz-*` ailesi kabuktan
+ kaldırıldı: modal/örtü katmanı artık hiçbir sayfada üretilmiyor.
+ ===================================================================== */
+.lib-top{--lib-img:url('https://images.unsplash.com/photo-1571902943202-507ec2618e8f?w=1680&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-16');--lib-pos:center 30%}
+
+/* banner güven şeridi — .lib-stats kabuğun blok sırasını (istatistik → CTA)
+   verdiği için kap sınıfı korunuyor, kalemler sayısal değil ikonlu */
+.lib-stats .pb-trust{display:inline-flex;align-items:center;gap:9px;font-size:13px;font-weight:600;color:rgba(255,255,255,.72)}
+.lib-stats .pb-trust i{color:var(--fit-bright);font-size:13px}
+
+.pb-wrap{max-width:920px}
+
+/* ---- ADIM RAYI ---- */
+.pb-rail{list-style:none;display:flex;align-items:stretch;gap:10px;margin:0 0 26px;padding:0}
+.pb-rail li{flex:1;display:flex;align-items:center;gap:12px;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);padding:14px 16px;transition:.2s var(--ease)}
+.pb-rail .no{flex:none;width:30px;height:30px;border-radius:var(--radius-circle);display:grid;place-items:center;background:#ececeb;color:var(--muted);font-size:13.5px;font-weight:800}
+.pb-rail .lbl{font-size:14px;font-weight:700;color:var(--muted);line-height:1.3}
+.pb-rail li.on{border-color:var(--fit);background:var(--fit-tint)}
+.pb-rail li.on .no{background:var(--fit);color:#fff}
+.pb-rail li.on .lbl{color:var(--fit-deep)}
+.pb-rail li.done .no{background:var(--fit-deep);color:#fff}
+.pb-rail li.done .lbl{color:var(--slate)}
+
+/* ---- SORU KUTUSU ---- */
+.pb-card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);box-shadow:var(--sh-sm);overflow:hidden}
+.pb-head{padding:22px 26px 18px;border-bottom:1px solid var(--line)}
+.pb-head h2{font-size:20px;margin-bottom:5px}
+.pb-head p{font-size:13.5px;color:var(--muted);font-weight:500;line-height:1.6;margin:0}
+.pb-body{padding:24px 26px 6px}
+.pb-step{display:none}
+.pb-step.on{display:block;animation:fadeUp .3s var(--ease)}
+.pb-q{margin-bottom:26px}
+.pb-q:last-child{margin-bottom:0}
+.pb-q h3{font-size:16.5px;margin-bottom:5px}
+.pb-hint{font-size:13px;color:var(--muted);font-weight:500;margin-bottom:14px}
+.pb-opts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.pb-opt{font-family:inherit;text-align:left;background:#fff;border:1.5px solid var(--line);border-radius:var(--radius-lg);padding:14px 16px;cursor:pointer;display:flex;align-items:flex-start;gap:12px;transition:.18s var(--ease)}
+.pb-opt .ico{flex:none;width:34px;height:34px;border-radius:var(--radius-md);background:var(--fit-tint);color:var(--fit-deep);display:grid;place-items:center;font-size:14px;transition:.18s var(--ease)}
+.pb-opt .txt{min-width:0}
+.pb-opt b{display:block;font-size:14.5px;font-weight:700;color:var(--slate);line-height:1.35}
+.pb-opt small{display:block;font-size:12.5px;font-weight:500;color:var(--muted);line-height:1.5;margin-top:3px}
+.pb-opt:hover{border-color:var(--fit);background:var(--fit-tint)}
+.pb-opt[aria-pressed="true"]{border-color:var(--fit);background:var(--fit-tint);box-shadow:inset 0 0 0 1px var(--fit)}
+.pb-opt[aria-pressed="true"] .ico{background:var(--fit);color:#fff}
+.pb-opt:focus-visible{outline:3px solid var(--fit);outline-offset:2px}
+
+/* ---- ALT BAR ---- */
+.pb-foot{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:18px 26px 20px;border-top:1px solid var(--line);margin-top:24px;flex-wrap:wrap}
+.pb-no{font-size:12.5px;font-weight:700;color:var(--muted);letter-spacing:.02em}
+.pb-nav{display:flex;align-items:center;gap:10px}
+.pb-warn{width:100%;font-size:12.5px;font-weight:600;color:#a8431f;display:none}
+.pb-warn.on{display:block}
+
+/* ---- SONUÇ ---- */
+.pb-list{display:flex;flex-direction:column;gap:12px}
+.pb-hit{display:flex;align-items:flex-start;gap:15px;background:#fff;border:1px solid var(--line);border-radius:var(--radius-lg);padding:17px 19px;transition:.2s var(--ease)}
+.pb-hit:hover{border-color:var(--fit);background:var(--fit-tint)}
+.pb-hit .rank{flex:none;width:32px;height:32px;border-radius:var(--radius-circle);background:var(--fit);color:#fff;display:grid;place-items:center;font-size:13.5px;font-weight:800}
+.pb-hit .txt{flex:1;min-width:0}
+.pb-hit .kind{font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.pb-hit .ad{display:block;font-size:16px;font-weight:700;color:var(--slate);margin:3px 0 4px}
+.pb-hit small{display:block;font-size:13px;font-weight:500;color:var(--slate-2);line-height:1.55}
+.pb-hit .nicin{display:block;margin-top:4px;font-size:12.5px;color:var(--muted)}
+.pb-hit .nicin b{font-weight:700;color:var(--slate-2)}
+.pb-hit .go{flex:none;color:var(--fit-deep);font-size:13px;margin-top:9px}
+.pb-side{margin-top:26px}
+.pb-side h3{font-size:15px;margin-bottom:10px}
+.pb-side-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.pb-side-list a{display:flex;align-items:flex-start;gap:12px;border:1px solid var(--line);border-radius:var(--radius-md);padding:14px 16px;background:#fff;transition:.2s var(--ease)}
+.pb-side-list a:hover{border-color:var(--fit-line);background:var(--fit-tint)}
+.pb-side-list .ico{flex:none;width:32px;height:32px;border-radius:var(--radius-md);background:var(--fit-tint);color:var(--fit-deep);display:grid;place-items:center;font-size:13px}
+.pb-side-list b{display:block;font-size:14px;color:var(--slate)}
+.pb-side-list small{display:block;font-size:12.5px;color:var(--muted);font-weight:500;line-height:1.5;margin-top:2px}
+
+/* risk dalı — kişisel egzersiz reçetesi üretilmez */
+.pb-risk{display:flex;gap:14px;align-items:flex-start;background:#fff5f2;border:1px solid #f3cdc0;border-radius:var(--radius-lg);padding:18px 20px;margin-bottom:16px}
+.pb-risk>i{color:#c3411f;font-size:18px;margin-top:2px;flex:none}
+.pb-risk b{display:block;font-size:15px;color:var(--slate);margin-bottom:5px}
+.pb-risk p{font-size:13.5px;color:var(--slate-2);font-weight:500;line-height:1.65;margin:0}
+
+/* seçimlerin + nasıl kuruldu (4. turdaki R9b blokları korunuyor) */
+.pb-sum,.pb-how{margin-top:22px;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);padding:18px 20px}
+.pb-sum h3,.pb-how h3{font-size:14px;margin-bottom:10px}
+.pb-sum-row{display:flex;gap:14px;align-items:baseline;padding:8px 0;border-top:1px solid var(--line)}
+.pb-sum-row:first-of-type{border-top:none;padding-top:0}
+.pb-sum-k{flex:0 0 40%;font-size:12.5px;font-weight:600;color:var(--muted);line-height:1.5}
+.pb-sum-v{flex:1;display:flex;flex-wrap:wrap;gap:6px}
+.pb-pick{background:var(--fit-tint);color:var(--fit-deep);border:1px solid var(--fit-line);border-radius:var(--radius-pill);padding:4px 11px;font-size:12px;font-weight:700}
+.pb-how ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:7px}
+.pb-how li{font-size:12.5px;font-weight:500;color:var(--slate-2);line-height:1.6}
+.pb-how li b{color:var(--slate);font-weight:700}
+.pb-how-note{margin:12px 0 0;font-size:12px;font-weight:500;color:var(--muted);line-height:1.6}
+
+/* alt aksiyon */
+.pb-done{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:24px}
+
+@media (max-width:1024px){ .sec{padding:var(--sec-pad) 0} }
+@media (max-width:640px){
+  .sec{padding:var(--sec-pad) 0}
+  .pb-rail{flex-direction:column;gap:8px;margin-bottom:20px}
+  .pb-opts,.pb-side-list{grid-template-columns:minmax(0,1fr)}
+  .pb-head{padding:18px 18px 14px}
+  .pb-body{padding:20px 18px 4px}
+  .pb-foot{padding:16px 18px 18px}
+  .pb-nav{width:100%}
+  .pb-nav .btn{flex:1;justify-content:center}
+  .pb-sum-row{flex-direction:column;gap:5px}
+  .pb-sum-k{flex:none}
+}
+</style>
+<!-- Metin yaslama katmani (tek kaynak) — sayfa stillerinden SONRA yuklenir,
+     boylece sayfa ici text-align kurallari yaslamayi geri alamaz -->
+<link rel="stylesheet" href="assets/css/fit-type.css" />
+</head>
+<body data-brand="fit" data-fit-page="programini-bul-v1">
+
+<!-- KABUK: ust katman (topbar+header+drawer+alt bar+gorus+cerez) — ortak kabuk JS basar -->
+<div id="fitShellTop"></div>
+
+<main class="page-main" id="pageMain">
+
+<!-- ===== 1 · BANNER + BREADCRUMB (LİSTE AİLESİ · R15) ===== -->
+<section class="lib-top">
+  <div class="wrap">
+    <nav class="lib-crumb" aria-label="Sayfa yolu">
+      <a href="dadafit-hub-v1.html" class="crumb-home"><i class="fa-solid fa-house" aria-hidden="true"></i><span class="sr-only">DadaFit ana sayfa</span></a>
+      <i class="fa-solid fa-chevron-right"></i>
+      <a href="programlar-merkezi-v1.html">Programlar</a>
+      <i class="fa-solid fa-chevron-right"></i>
+      <span class="cur">Programını Bul</span>
+    </nav>
+    <span class="eyebrow"><i class="fa-solid fa-wand-magic-sparkles"></i> Sana Uygun Programı Bul</span>
+    <h1>Birkaç soruyla sana uygun programa ulaş</h1>
+    <p class="lib-sub">Altı kısa soru; sonunda sana en çok uyan üç program. Hepsi öneridir, karar senindir.</p>
+    <div class="lib-stats">
+      <span class="pb-trust"><i class="fa-solid fa-user-check"></i> Uzman onaylı içerik</span>
+      <span class="pb-trust"><i class="fa-solid fa-house-laptop"></i> Evde veya salonda</span>
+      <span class="pb-trust"><i class="fa-solid fa-stopwatch"></i> 30 saniyeden kısa</span>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 2 · SİHİRBAZ — SAYFANIN KENDİSİ ===== -->
+<section class="sec sec-fit" style="background:var(--bg-white)">
+  <div class="wrap pb-wrap">
+
+    <!-- adım rayı -->
+    <ol class="pb-rail" id="pbRail" aria-label="Sihirbaz adımları">
+      <li data-ix="0"><span class="no">1</span><span class="lbl">Hedefin</span></li>
+      <li data-ix="1"><span class="no">2</span><span class="lbl">Ortam</span></li>
+      <li data-ix="2"><span class="no">3</span><span class="lbl">Tercih</span></li>
+    </ol>
+
+    <div class="pb-card">
+      <div class="pb-head">
+        <h2 id="pbTitle">Hedefin</h2>
+        <p id="pbLead">Neyi büyütmek istediğini bilmek, geri kalan her şeyi kolaylaştırır.</p>
+      </div>
+      <div class="pb-body" id="pbBody" aria-live="polite"><!-- adımlar JS ile basılır --></div>
+      <div class="pb-foot" id="pbFoot">
+        <span class="pb-no" id="pbNo">Adım 1 / 3</span>
+        <div class="pb-nav">
+          <button class="btn btn-ghost" type="button" id="pbBack"><i class="fa-solid fa-arrow-left"></i> Geri</button>
+          <button class="btn btn-fit" type="button" id="pbNext">İleri <i class="fa-solid fa-arrow-right"></i></button>
+        </div>
+        <p class="pb-warn" id="pbWarn">Devam etmek için bu adımdaki her soruyu yanıtla.</p>
+      </div>
+    </div>
+
+    <!-- yasal şerit — sağlık ve egzersiz uyarısı -->
+    <div class="hr-note">
+      <i class="fa-solid fa-shield-heart"></i>
+      <p>Bu sihirbaz <b>genel bilgilendirme</b> amaçlıdır; teşhis, tedavi ya da kişiye özel antrenman reçetesi değildir. Ağrı, özel bir sağlık durumu, gebelik ya da uzun süreli hareketsizlik varsa başlamadan önce bir hekime veya fizyoterapiste danış. Ayrıntı: <a href="saglik-bilgilendirme-v1.html">Sağlık Bilgilendirmesi</a>.</p>
+    </div>
+
+  </div>
+</section>
+
+</main>
+
+<!-- KABUK: alt katman (giris kapisi + footer + basa don) -->
+<div id="fitShellBottom"></div>
+
+<!-- DadaFit ortak kabuk JS (tek kaynak): markup + davranis -->
+<script src="assets/js/fit-shell.js"></script>
+<script src="assets/js/fit-mesaj.js"></script>
+<script>
+/* =====================================================================
+ SAYFA JS — PROGRAMINI BUL SİHİRBAZI (R13)
+
+ Motor 4. turda kabuğun içindeydi ve modal/satır içi iki kipte çalışıyordu.
+ R13 ile pop-up tamamen kalktı: motor buraya, kendi sayfasına taşındı.
+ Kabukta artık ne örtü katmanı ne modal ne de tetikleyici var; menüdeki ve
+ sayfalardaki "Programını Bul" düğmeleri düz bağlantı olarak buraya geliyor.
+
+ Referans kurgusu (dadadiet.com/diyetisyen-bul): üç numaralı adım, her
+ adımda soru bloğu, alt barda "Adım n / 3" + Geri/İleri, sonunda liste.
+ Altı soru üç adıma bölündü: Hedefin (amaç+seviye) · Ortam (mekân+ekipman)
+ · Tercih (süre+durum). Yanıtlar kaybolmuyor; Geri ile dönülüp değişebilir.
+
+ SONUÇ GERÇEKTEN HESAPLANIYOR — kabuk değil:
+ KATALOG'daki yedi kalem (4 program + 3 challenge) puanlanıp ilk üçü
+ gösteriliyor. Hedef, seviye, mekân, ekipman ve seans süresi ayrı ayrı
+ puan taşıyor; ekipman eksikliği elemiyor değil, puan düşürüyor — böylece
+ hiçbir yanıt bileşimi boş sonuç döndüremiyor (karşılıksız kombinasyon 0).
+ Her kalemin hedefi diskte var olan gerçek bir slug: program-detay ve
+ challenge sayfalarının VERI tablolarından alındı, kırık slug yok.
+ ===================================================================== */
+(function(){
+  var body  = document.getElementById('pbBody');
+  if(!body) return;
+
+  /* ---- SORULAR — üç adıma bölünmüş altı soru ---- */
+  var ADIMLAR = [
+    {ad:'Hedefin', lead:'Neyi büyütmek istediğini bilmek, geri kalan her şeyi kolaylaştırır.', s:[
+      {k:'amac', q:'Amacın ne?', h:'Bir tane seç — sonucu en çok bu belirler.', o:[
+        {v:'guc',          t:'Güçlenmek',                   d:'Kuvvet ve kas dayanıklılığı öne çıksın.',      i:'fa-solid fa-dumbbell'},
+        {v:'esneklik',     t:'Esnemek',                     d:'Hareket açıklığı ve mobilite öncelikli olsun.',i:'fa-solid fa-child-reaching'},
+        {v:'dayaniklilik', t:'Dayanıklılık',                d:'Nefesin ve temponun uzasın.',                  i:'fa-solid fa-heart-pulse'},
+        {v:'aliskanlik',   t:'Hareket alışkanlığı',         d:'Önce süreklilik, sonra yoğunluk.',             i:'fa-solid fa-seedling'},
+        {v:'kilo',         t:'Kilo yönetimini desteklemek', d:'Hareketle dengeyi destekle.',                  i:'fa-solid fa-scale-balanced'}
+      ]},
+      {k:'seviye', q:'Kendini nerede görüyorsun?', h:'Doğru cevap yok; rahat ettiğin yeri seç.', o:[
+        {v:'yeni',  t:'Yeni başlayan',        d:'Son aylarda düzenli antrenman yapmadım.',       i:'fa-solid fa-egg'},
+        {v:'orta',  t:'Düzenli hareket eden', d:'Haftada birkaç gün hareket ediyorum.',          i:'fa-solid fa-person-walking'},
+        {v:'ileri', t:'İleri',                d:'Yıllardır düzenli çalışıyorum, teknik oturmuş.',i:'fa-solid fa-medal'}
+      ]}
+    ]},
+    {ad:'Ortam', lead:'Nerede ve neyle çalıştığın, gerçekten sürdürebileceğin programı belirler.', s:[
+      {k:'mekan', q:'Nerede hareket edeceksin?', h:'Birden fazla seçebilirsin.', cok:true, o:[
+        {v:'ev',    t:'Ev',        d:'Küçük alan, sessiz ve zıplamasız seçenekler.', i:'fa-solid fa-house'},
+        {v:'ofis',  t:'Ofis',      d:'Kısa molalar, kıyafet değiştirmeden.',         i:'fa-solid fa-chair'},
+        {v:'acik',  t:'Açık alan', d:'Park, yürüyüş yolu, açık hava.',               i:'fa-solid fa-tree'},
+        {v:'salon', t:'Salon',     d:'Ekipmanlı ortam ve ağırlık alanı.',            i:'fa-solid fa-building'}
+      ]},
+      {k:'ekipman', q:'Neye erişimin var?', h:'Yoksa "Yok" de — ekipmansız da her şey yapılır. Birden fazla seçebilirsin.', cok:true, o:[
+        {v:'yok',        t:'Yok',             d:'Yalnız kendi vücut ağırlığın.',            i:'fa-solid fa-hand'},
+        {v:'bant',       t:'Direnç bandı',    d:'Hafif, taşınabilir, ev için ideal.',       i:'fa-solid fa-grip-lines'},
+        {v:'dambil',     t:'Dambıl',          d:'Bir çift dambıl çoğu programa yeter.',     i:'fa-solid fa-dumbbell'},
+        {v:'kettlebell', t:'Kettlebell',      d:'Salınım ve tam vücut hareketleri.',        i:'fa-solid fa-weight-hanging'},
+        {v:'salon',      t:'Salon ekipmanı',  d:'Barbell, makineler, kablo istasyonu.',     i:'fa-solid fa-warehouse'}
+      ]}
+    ]},
+    {ad:'Tercih', lead:'Son iki soru: ne kadar vaktin var ve dikkate almamız gereken bir şey var mı?', s:[
+      {k:'sure', q:'Bir seansa ne kadar ayırabilirsin?', h:'Beş dakika da bir şeydir.', o:[
+        {v:'5',  t:'5 dakika',    d:'Günü açan kısa bir hareket molası.',        i:'fa-solid fa-bolt'},
+        {v:'10', t:'10 dakika',   d:'Kısa ama düzenli — alışkanlık için yeterli.',i:'fa-solid fa-mug-hot'},
+        {v:'15', t:'15 dakika',   d:'Isınma ve birkaç ana hareket sığar.',       i:'fa-solid fa-clock'},
+        {v:'20', t:'20 dakika',   d:'Dengeli bir seans için rahat aralık.',      i:'fa-solid fa-hourglass-half'},
+        {v:'30', t:'30+ dakika',  d:'Tam bir antrenman kurulabilir.',            i:'fa-solid fa-stopwatch'}
+      ]},
+      {k:'risk', q:'Dikkate almamız gereken bir durum var mı?', h:'Doğru yönlendirme için önemli. Hiçbiri yoksa "Yok" de.', cok:true, o:[
+        {v:'yok',        t:'Yok',                       d:'Bilinen bir kısıt ya da şikâyet yok.',       i:'fa-solid fa-check'},
+        {v:'agri',       t:'Ağrı veya hareket kısıtı',  d:'Belirli bir bölgede ağrı ya da kısıtlılık var.', i:'fa-solid fa-triangle-exclamation'},
+        {v:'saglik',     t:'Özel sağlık durumu',        d:'Takip edilen bir tanı ya da tedavi var.',    i:'fa-solid fa-notes-medical'},
+        {v:'gebelik',    t:'Gebelik / doğum sonrası',   d:'Bu dönem ayrı bir değerlendirme ister.',     i:'fa-solid fa-person-pregnant'},
+        {v:'hareketsiz', t:'Uzun süredir hareketsizim', d:'Bir yıldan uzun süredir düzenli hareket yok.', i:'fa-solid fa-bed'}
+      ]}
+    ]}
+  ];
+
+  /* ---- KATALOG — hedefler diskte var olan gerçek sayfalar ----
+     program-detay-v1.html VERI tablosu: 4-hafta-ev-antrenmani ·
+     8-hafta-mobilite · 12-hafta-guc-temeli · 8-hafta-salon-kondisyon
+     fit-challenge.js KATALOG'u: hareket-aliskanligi · ekipmansiz-temel ·
+     bin-tekrar  (⚠ slug'lar oradan gelir; katalog değişince burası da değişir)
+     `hedef` ağırlıkları: birincil 40, ikincil 26, dolaylı 14. */
+  var KATALOG = [
+    {slug:'4-hafta-ev-antrenmani', tur:'Program', ad:'4 Hafta Ev Antrenmanı',
+     href:'program-detay-v1.html?slug=4-hafta-ev-antrenmani',
+     meta:'4 hafta · haftada 3 gün · başlangıç', seviye:1, seans:20,
+     hedef:{aliskanlik:40, kilo:26, guc:14}, mekan:['ev','ofis'], gerek:[],
+     not:'Ekipmansız kurulmuş, evden çıkmadan yürüyen dört haftalık plan.'},
+
+    {slug:'8-hafta-mobilite', tur:'Program', ad:'8 Hafta Mobilite Planı',
+     href:'program-detay-v1.html?slug=8-hafta-mobilite',
+     meta:'8 hafta · haftada 4 gün · başlangıç', seviye:1, seans:15,
+     hedef:{esneklik:40, aliskanlik:26, guc:14}, mekan:['ev','ofis','acik'], gerek:[],
+     not:'Hareket açıklığını adım adım açan, ekipman istemeyen mobilite planı.'},
+
+    {slug:'12-hafta-guc-temeli', tur:'Program', ad:'12 Hafta Güç Temeli',
+     href:'program-detay-v1.html?slug=12-hafta-guc-temeli',
+     meta:'12 hafta · haftada 3 gün · orta', seviye:2, seans:30,
+     hedef:{guc:40, kilo:26, dayaniklilik:14}, mekan:['ev','salon'], gerek:['dambil','kettlebell','salon','bant'],
+     not:'Temel kaldırışları öğretip yükü kontrollü artıran uzun soluklu plan.'},
+
+    {slug:'8-hafta-salon-kondisyon', tur:'Program', ad:'8 Hafta Salon Kondisyon',
+     href:'program-detay-v1.html?slug=8-hafta-salon-kondisyon',
+     meta:'8 hafta · haftada 4 gün · ileri', seviye:3, seans:30,
+     hedef:{dayaniklilik:40, kilo:26, guc:14}, mekan:['salon'], gerek:['salon'],
+     not:'Salon ekipmanıyla nefesi ve temposu yükselten yoğun kondisyon planı.'},
+
+    {slug:'hareket-aliskanligi', tur:'Challenge', ad:'30 Günde Hareket Alışkanlığı',
+     href:'challenge-v1.html?slug=hareket-aliskanligi',
+     meta:'30 gün · her gün 10–15 dk · başlangıç', seviye:1, seans:10,
+     hedef:{aliskanlik:40, kilo:26, esneklik:14}, mekan:['ev','ofis','acik'], gerek:[],
+     not:'Büyük hedef değil, küçük süreklilik: her gün kısa bir hareket.'},
+
+    {slug:'ekipmansiz-temel', tur:'Challenge', ad:'7 Gün Ekipmansız Temel Seri',
+     href:'challenge-v1.html?slug=ekipmansiz-temel',
+     meta:'7 gün · günde 8–10 dk · başlangıç', seviye:1, seans:10,
+     hedef:{guc:40, aliskanlik:26, esneklik:14}, mekan:['ev','ofis'], gerek:[],
+     not:'Yedi ekipmansız temel hareket, sırayla — her adım kendi kaydıyla kapanır.'},
+
+    {slug:'bin-tekrar', tur:'Challenge', ad:'21 Günde 1.000 Tekrar',
+     href:'challenge-v1.html?slug=bin-tekrar',
+     meta:'21 gün · günde 15–30 dk · başlangıç', seviye:1, seans:20,
+     hedef:{dayaniklilik:40, guc:26, aliskanlik:14}, mekan:['ev','salon'], gerek:[],
+     not:'Yirmi bir günde bin tekrar: kapattığın her set hedefe sayılır.'}
+  ];
+
+  /* yan öneriler — amaca göre okunacak rehber (uygulama değil) */
+  var REHBER = {
+    guc:          {ad:'Doğru Form Rehberi',            not:'Temel hareketlerde teknik ve sık hatalar',  href:'hareket-dogru-form-v1.html'},
+    esneklik:     {ad:'Isınma, Soğuma ve Esneme',      not:'Hazırlık ve toparlanma',                    href:'hareket-isinma-soguma-v1.html'},
+    dayaniklilik: {ad:'Süreye Göre Hareketler',        not:'5–30 dakikalık rutin mantığı',              href:'hareket-sureye-gore-v1.html'},
+    aliskanlik:   {ad:'Yeni Başlayanlar İçin Hareket', not:'İlk 7 gün ve rutine dönüş',                 href:'hareket-yeni-baslayanlar-v1.html'},
+    kilo:         {ad:'Hedefe Göre Hareket',           not:'Güç, mobilite, kondisyon, günlük hareket',  href:'hareket-hedefe-gore-v1.html'}
+  };
+
+  var SEVIYE_NO = {yeni:1, orta:2, ileri:3};
+  var cevap = {}, adim = 0, sonucta = false;
+
+  /* ---- yardımcılar ---- */
+  function sorular(ix){ return ADIMLAR[ix].s; }
+  function tumSorular(){ return ADIMLAR.reduce(function(a,g){ return a.concat(g.s); }, []); }
+  function etiket(k, v){
+    var s = tumSorular().filter(function(x){ return x.k===k; })[0];
+    if(!s) return v;
+    var o = s.o.filter(function(x){ return x.v===v; })[0];
+    return o ? o.t : v;
+  }
+  function secili(k){
+    var c = cevap[k];
+    if(c===undefined || c===null) return [];
+    return Array.isArray(c) ? c : [c];
+  }
+  function adimTam(ix){
+    return sorular(ix).every(function(s){ return secili(s.k).length > 0; });
+  }
+  function riskli(){
+    return secili('risk').some(function(v){ return v!=='yok'; });
+  }
+
+  /* ---- adım işaretlemesi ---- */
+  function adimHtml(ix){
+    var g = ADIMLAR[ix];
+    var bloklar = g.s.map(function(s){
+      var opts = s.o.map(function(o){
+        return '<button class="pb-opt" type="button" aria-pressed="false" data-k="'+s.k+'" data-v="'+o.v+'">'+
+               '<span class="ico"><i class="'+o.i+'" aria-hidden="true"></i></span>'+
+               '<span class="txt"><b>'+o.t+'</b><small>'+o.d+'</small></span></button>';
+      }).join('');
+      return '<div class="pb-q"><h3>'+s.q+'</h3><p class="pb-hint">'+s.h+'</p>'+
+             '<div class="pb-opts" role="group" aria-label="'+s.q+'">'+opts+'</div></div>';
+    }).join('');
+    return '<div class="pb-step" data-ix="'+ix+'">'+bloklar+'</div>';
+  }
+  body.innerHTML = ADIMLAR.map(function(g,ix){ return adimHtml(ix); }).join('') +
+                   '<div class="pb-step" data-ix="'+ADIMLAR.length+'" id="pbResult"></div>';
+
+  /* ---- PUANLAMA ----
+     Hiçbir kural eleyici değil: eksik ekipman puan düşürür, kalemi listeden
+     çıkarmaz. Böylece 7 kalemlik katalogdan her zaman üç sonuç çıkar. */
+  function puanla(p){
+    var neden = [], puan = 0;
+    var amac = cevap.amac;
+
+    var h = p.hedef[amac] || 0;
+    puan += h;
+    if(h >= 40)      neden.push('amacın (' + etiket('amac', amac).toLocaleLowerCase('tr') + ') tam karşılığı');
+    else if(h >= 26) neden.push('amacını yakından destekliyor');
+    else if(h > 0)   neden.push('amacına dolaylı katkı');
+
+    var sv = SEVIYE_NO[cevap.seviye] || 1;
+    var fark = Math.abs(p.seviye - sv);
+    if(fark === 0){ puan += 16; neden.push('seviyenle birebir'); }
+    else if(fark === 1){ puan += 8; neden.push('seviyene bir basamak yakın'); }
+
+    var mek = secili('mekan');
+    var ortak = p.mekan.filter(function(m){ return mek.indexOf(m) > -1; });
+    if(ortak.length){ puan += 14; neden.push(ortak.map(function(m){ return etiket('mekan', m).toLocaleLowerCase('tr'); }).join(' ve ') + ' için kurulu'); }
+
+    var ekp = secili('ekipman');
+    if(!p.gerek.length){ puan += 10; neden.push('ekipman istemiyor'); }
+    else if(p.gerek.some(function(g){ return ekp.indexOf(g) > -1; })){ puan += 18; neden.push('elindeki ekipmana uyuyor'); }
+    else { puan -= 25; neden.push('ekipman uyumu sınırlı'); }
+
+    var sure = +(cevap.sure || 10);
+    var sfark = Math.abs(p.seans - sure);
+    if(sfark <= 5){ puan += 12; neden.push('bir seansı yaklaşık ' + p.seans + ' dakika'); }
+    else if(sfark <= 10){ puan += 6; }
+
+    return {p:p, puan:puan, neden:neden};
+  }
+  function siralama(){
+    return KATALOG.map(puanla).sort(function(a,b){
+      if(b.puan !== a.puan) return b.puan - a.puan;
+      return KATALOG.indexOf(a.p) - KATALOG.indexOf(b.p);   /* sabit eşitlik bozucu */
+    });
+  }
+
+  /* ---- sonuç blokları ---- */
+  function secimlerinHtml(){
+    var satir = tumSorular().map(function(s){
+      var vals = secili(s.k);
+      if(!vals.length) return '';
+      var cips = vals.map(function(v){ return '<span class="pb-pick">'+etiket(s.k, v)+'</span>'; }).join('');
+      return '<div class="pb-sum-row"><span class="pb-sum-k">'+s.q.replace(/\?$/,'')+'</span>'+
+             '<span class="pb-sum-v">'+cips+'</span></div>';
+    }).join('');
+    return '<div class="pb-sum"><h3>Seçimlerin</h3>'+satir+'</div>';
+  }
+  function nasilHtml(risk){
+    var kural = risk
+      ? ['<b>Durum yanıtın</b> → kişisel egzersiz reçetesi üretilmez; uzmana ve sağlık bilgilendirmesine yönlendirilir.',
+         '<b>Amacın</b> → yalnız <i>okunacak</i> rehber içeriği seçilir, uygulama önerilmez.']
+      : ['<b>Amacın</b> → her programın hedef ağırlığıyla eşleşir; en yüksek payı bu taşır.',
+         '<b>Seviyen</b> → birebir eşleşme puan ekler, bir basamak fark yarısını ekler.',
+         '<b>Mekânın</b> → programın kurulduğu ortamla kesişiyorsa puan ekler.',
+         '<b>Ekipmanın</b> → eksikse eleme değil puan düşüşü olur; bu yüzden hiçbir yanıt bileşimi boş sonuç vermez.',
+         '<b>Seans süren</b> → programın ortalama seans süresine yakınlığı puanlanır.'];
+    return '<div class="pb-how"><h3>Bu öneri nasıl kuruldu?</h3><ul>'+
+           kural.map(function(k){ return '<li>'+k+'</li>'; }).join('')+
+           '</ul><p class="pb-how-note">Sıralama kişisel veriye değil, verdiğin altı yanıta bakar. '+
+           'Hiçbir öneri teşhis ya da reçete değildir.</p></div>';
+  }
+  function altAksiyonHtml(){
+    return '<div class="pb-done">'+
+           '<a class="btn btn-fit" href="program-liste-v1.html"><i class="fa-solid fa-clipboard-list"></i> Tüm programları gör</a>'+
+           '<button class="btn btn-ghost" type="button" id="pbRestart"><i class="fa-solid fa-rotate-left"></i> Baştan başla</button>'+
+           '</div>';
+  }
+  function sonucHtml(){
+    var amac = cevap.amac || 'aliskanlik';
+    var rh = REHBER[amac] || REHBER.aliskanlik;
+
+    if(riskli()){
+      return '<div class="pb-risk"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i><div>'+
+             '<b>Önce bir uzmana danışman gerekiyor</b>'+
+             '<p>Verdiğin yanıtlar (ağrı, özel sağlık durumu, gebelik ya da uzun süreli hareketsizlik) için '+
+             '<b>sana özel egzersiz reçetesi üretmiyoruz</b>. Bu bir teşhis değil, bir sınır: doğru başlangıcı '+
+             'seni tanıyan biri belirlemeli.</p></div></div>'+
+             '<div class="pb-list">'+
+             '<a class="pb-hit" href="antrenorler-v1.html"><span class="rank"><i class="fa-solid fa-user-tie"></i></span>'+
+             '<span class="txt"><span class="kind">Uzman</span><span class="ad">DadaFit onaylı antrenörler</span>'+
+             '<small>Belgesi doğrulanmış uzmanlar · online ve yüz yüze</small></span>'+
+             '<i class="fa-solid fa-arrow-right go" aria-hidden="true"></i></a>'+
+             '<a class="pb-hit" href="saglik-bilgilendirme-v1.html"><span class="rank"><i class="fa-solid fa-shield-heart"></i></span>'+
+             '<span class="txt"><span class="kind">Sınırlar</span><span class="ad">Sağlık Bilgilendirmesi</span>'+
+             '<small>Durma kriterleri ve uzmana danışma koşulları</small></span>'+
+             '<i class="fa-solid fa-arrow-right go" aria-hidden="true"></i></a>'+
+             '<a class="pb-hit" href="'+rh.href+'"><span class="rank"><i class="fa-solid fa-book-open"></i></span>'+
+             '<span class="txt"><span class="kind">Okuma</span><span class="ad">'+rh.ad+'</span>'+
+             '<small>Genel bilgi — uygulama değil, okuma</small></span>'+
+             '<i class="fa-solid fa-arrow-right go" aria-hidden="true"></i></a>'+
+             '</div>'+
+             secimlerinHtml() + nasilHtml(true) + altAksiyonHtml();
+    }
+
+    var ilk3 = siralama().slice(0,3);
+    var kartlar = ilk3.map(function(r, ix){
+      var neden = r.neden.slice(0,2).join(' · ');
+      return '<a class="pb-hit" href="'+r.p.href+'" data-slug="'+r.p.slug+'">'+
+             '<span class="rank">'+(ix+1)+'</span>'+
+             '<span class="txt"><span class="kind">'+r.p.tur+' · '+r.p.meta+'</span>'+
+             '<span class="ad">'+r.p.ad+'</span><small>'+r.p.not+
+             (neden ? '<span class="nicin"><b>Neden bu:</b> '+neden+'.</span>' : '')+'</small></span>'+
+             '<i class="fa-solid fa-arrow-right go" aria-hidden="true"></i></a>';
+    }).join('');
+
+    /* Başlık kutunun kendi başlığında (pbTitle) — burada tekrarlanmaz. */
+    return '<div class="pb-list" id="pbHits">'+kartlar+'</div>'+
+           '<div class="pb-side"><h3>Yanına iyi gider</h3><div class="pb-side-list">'+
+           '<a href="'+rh.href+'"><span class="ico"><i class="fa-solid fa-book-open"></i></span>'+
+           '<span><b>'+rh.ad+'</b><small>'+rh.not+'</small></span></a>'+
+           '<a href="antrenorler-v1.html"><span class="ico"><i class="fa-solid fa-user-tie"></i></span>'+
+           '<span><b>Yalnız ilerlemek istemiyorsan</b><small>Sana uygun antrenörü bul — isteğe bağlı</small></span></a>'+
+           '</div></div>'+
+           secimlerinHtml() + nasilHtml(false) + altAksiyonHtml();
+  }
+
+  /* ---- görünüm ---- */
+  var rail   = document.getElementById('pbRail');
+  var titleE = document.getElementById('pbTitle');
+  var leadE  = document.getElementById('pbLead');
+  var noE    = document.getElementById('pbNo');
+  var backE  = document.getElementById('pbBack');
+  var nextE  = document.getElementById('pbNext');
+  var warnE  = document.getElementById('pbWarn');
+  var footE  = document.getElementById('pbFoot');
+
+  function goster(){
+    sonucta = adim === ADIMLAR.length;
+
+    body.querySelectorAll('.pb-step').forEach(function(st){
+      st.classList.toggle('on', +st.getAttribute('data-ix') === adim);
+    });
+    rail.querySelectorAll('li').forEach(function(li, ix){
+      li.classList.toggle('on',   !sonucta && ix === adim);
+      li.classList.toggle('done', sonucta || ix < adim);
+      li.setAttribute('aria-current', (!sonucta && ix === adim) ? 'step' : 'false');
+    });
+
+    if(sonucta){
+      document.getElementById('pbResult').innerHTML = sonucHtml();
+      titleE.textContent = riskli() ? 'Sonuç' : 'Sana uygun 3 program';
+      leadE.textContent  = riskli()
+        ? 'Yanıtların güvenli bir başlangıç için uzman değerlendirmesi gerektiriyor.'
+        : 'Aşağıdaki sıralama verdiğin altı yanıttan hesaplandı.';
+      footE.style.display = 'none';
+      warnE.classList.remove('on');
+    } else {
+      var g = ADIMLAR[adim];
+      titleE.textContent = g.ad;
+      leadE.textContent  = g.lead;
+      footE.style.display = '';
+      noE.textContent = 'Adım ' + (adim+1) + ' / ' + ADIMLAR.length;
+      backE.style.visibility = adim === 0 ? 'hidden' : 'visible';
+      nextE.innerHTML = adim === ADIMLAR.length-1
+        ? 'Sonucu gör <i class="fa-solid fa-arrow-right"></i>'
+        : 'İleri <i class="fa-solid fa-arrow-right"></i>';
+      nextE.disabled = false;
+      warnE.classList.remove('on');
+    }
+  }
+
+  /* seçenek tıklaması — "yok" seçenekleri çoklu listede diğerlerini temizler */
+  body.addEventListener('click', function(e){
+    var o = e.target.closest('.pb-opt');
+    if(!o) return;
+    var k = o.getAttribute('data-k'), v = o.getAttribute('data-v');
+    var s = tumSorular().filter(function(x){ return x.k===k; })[0];
+    if(!s) return;
+
+    if(s.cok){
+      var arr = Array.isArray(cevap[k]) ? cevap[k] : [];
+      var ix  = arr.indexOf(v);
+      if(ix > -1) arr.splice(ix, 1);
+      else if(v === 'yok') arr = ['yok'];
+      else { arr = arr.filter(function(x){ return x !== 'yok'; }); arr.push(v); }
+      cevap[k] = arr;
+    } else {
+      cevap[k] = v;
+    }
+
+    var grup = o.parentElement;
+    grup.querySelectorAll('.pb-opt').forEach(function(b){
+      b.setAttribute('aria-pressed', secili(k).indexOf(b.getAttribute('data-v')) > -1 ? 'true' : 'false');
+    });
+    warnE.classList.remove('on');
+  });
+
+  backE.addEventListener('click', function(){ if(adim > 0){ adim--; goster(); window.scrollTo({top:document.querySelector('.pb-wrap').offsetTop - 130, behavior:'smooth'}); } });
+  nextE.addEventListener('click', function(){
+    if(adim < ADIMLAR.length && !adimTam(adim)){ warnE.classList.add('on'); return; }
+    if(adim < ADIMLAR.length){ adim++; goster(); window.scrollTo({top:document.querySelector('.pb-wrap').offsetTop - 130, behavior:'smooth'}); }
+  });
+
+  /* "Baştan başla" — yanıtlar silinir, adım 1'e dönülür */
+  body.addEventListener('click', function(e){
+    if(!e.target.closest('#pbRestart')) return;
+    cevap = {}; adim = 0;
+    body.querySelectorAll('.pb-opt').forEach(function(b){ b.setAttribute('aria-pressed','false'); });
+    goster();
+    window.scrollTo({top:document.querySelector('.pb-wrap').offsetTop - 130, behavior:'smooth'});
+  });
+
+  goster();
+})();
+</script>
+</body>
+</html>

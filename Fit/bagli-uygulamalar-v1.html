@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8" />
+  <meta name="robots" content="noindex, nofollow" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<!-- BENZERSİZ title (belge §19) -->
+<title>Bağlı Uygulamalar — sağlık ve aktivite bağlantıların | DadaFit</title>
+<!-- BENZERSİZ meta description (belge §19) -->
+<meta name="description" content="Apple Health, Android Health Connect, akıllı saat ve manuel veri girişi bağlantılarını tek yerden yönet: bağlantı durumu, verilen izinler, son senkronizasyon, hangi verinin hangi yöne aktığı ve bağlantıyı kesme." />
+<link rel="icon" type="image/svg+xml" href="../kanon/varlik/dadafit-isaret.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="../kanon/varlik/dadafit-isaret-32.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="../kanon/varlik/dadafit-isaret-180.png" />
+<!-- FontAwesome 6.5.2 (kilitli ikon seti) -->
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+      integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+      crossorigin="anonymous" referrerpolicy="no-referrer" />
+<!-- DadaFit ortak kabuk (TEK KAYNAK — token, header, footer, kart/çip/banner kitleri) -->
+<!-- KANON · yukleme sirasi: tokenlar -> markalar/fit (bilesenler YUKLENMEZ) -->
+<link rel="stylesheet" href="../kanon/tokenlar.css" />
+<link rel="stylesheet" href="../kanon/markalar/fit.css" />
+<link rel="stylesheet" href="assets/css/fit-shell.css" />
+<link rel="stylesheet" href="assets/css/fit-mesaj.css" />
+<style>
+/* =====================================================================
+ SAYFA CSS — BAĞLI UYGULAMALAR (belge §7 · şeffaflık §14)
+ ---------------------------------------------------------------------
+ Kabuktan GELEN ve burada TEKRAR TANIMLANMAYAN her şey:
+ token'lar (--fit*, --line, --radius-*, --sh-*) · .wrap · .sec ·
+ .sec-head/.eyebrow/.lead/.see-all · .btn/.btn-primary/.btn-ghost ·
+ .lib-top banner + .lib-crumb + .lib-stats · .fp-card/.fp-head/.fp-grid ·
+ .fp-list/.fp-row · .fp-badge (ok/wait/off/stop) · .fp-toggle + .fp-sw +
+ .fp-sw-lbl (izin anahtarı — fit-planim-veri-izin-v1 ile BİREBİR aynı kit) ·
+ .df-fchip filtre çipi + .fgroup · .lib-empty · .hr-note ·
+
+ Banner görseli BİLİNÇLİ EKLENMEDİ (--lib-img varsayılanı none) — Faz 9
+ harici Unsplash bağlantılarını üretimden kaldırmak istiyor; fit-testleri-v1
+ · pro-v1 · sss-v1 ile aynı karar. Sayfada hiç <img> yok → CLS kaynağı da
+ yok (§18).
+ ===================================================================== */
+
+/* ---- FİLTRE + SAYAÇ ÇUBUĞU ----------------------------------------
+ Kabuğun .ff bileşeni BİLİNÇLİ kullanılmadı: burada süzülen şey bir
+ katalog değil, dört sabit bağlantı kartı; tek gruplu düz bir çip rayı
+ yeterli. .fgroup + .df-fchip kabuktan geliyor, aşağısı yalnız yerleşim. */
+.ba-bar{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;margin-bottom:22px}
+.ba-bar .fgroup{padding:0}
+/* GEÇİCİ KOPYA: kabukta `.fgroup > .lbl` için taban kural YOK — yalnız
+   `.chips .lbl` (satır 132) ve `.ff-pop/.lst-side` içinde GİZLEME kuralları var
+   (satır 1908 · 2129). Kolon dışı düz bir çip rayında etiket bu yüzden
+   biçimsiz kalıyor. Aynı sorun fit-testleri-v1'de de var. Raporda bildirildi. */
+.ba-bar .fgroup>.lbl{font-size:13px;color:var(--muted);font-weight:500;margin-right:2px}
+.ba-count{font-size:14px;font-weight:600;color:var(--slate-2)}
+.ba-count b{color:var(--slate);font-weight:800}
+/* GEÇİCİ KOPYA: kabukta yalnız `.fp-head .fp-act` var (satır 1316); satır
+   sonundaki `.fp-row .end .fp-act` bağlantısı biçimsiz kalıyor.
+   fit-planim-veri-izin-v1 de aynı boşluğa düşüyor. Raporda bildirildi. */
+.fp-row .end .fp-act{font-size:13px;font-weight:700;color:var(--fit-deep);display:inline-flex;align-items:center;gap:7px}
+.fp-row .end .fp-act:hover{text-decoration:underline;text-underline-offset:2px}
+
+/* ---- BAĞLANTI KARTI ------------------------------------------------ */
+.ba-grid{display:flex;flex-direction:column;gap:22px}
+.ba-card{scroll-margin-top:130px}
+.ba-card.is-hidden{display:none}
+.ba-head-ico{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+/* kart üst künyesi: 1 · Bağlantı durumu   +   3 · Son senkronizasyon */
+.ba-top{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.ba-box{background:var(--bg);border:1px solid var(--line);border-radius:var(--radius-md);padding:14px 16px}
+.ba-box h4{font-size:11.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:9px;display:flex;align-items:center;gap:7px}
+.ba-box h4 i{font-size:11px;color:var(--fit-deep)}
+.ba-box .v{font-size:14.5px;font-weight:800;color:var(--slate);display:flex;align-items:center;gap:10px;flex-wrap:wrap;line-height:1.35}
+.ba-box small{display:block;font-size:12.5px;color:var(--muted);font-weight:500;margin-top:6px;line-height:1.5}
+.ba-box small a{color:var(--fit-deep);font-weight:700;text-decoration:underline;text-underline-offset:2px}
+.ba-box small b{color:var(--slate-2);font-weight:800}
+
+/* ---- kart içi bölüm başlığı (2 · izinler · 4 · veri akışı) ---- */
+.ba-sech{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:24px 0 2px;padding-top:20px;border-top:1px solid var(--line)}
+.ba-sech h4{font-size:15px;display:flex;align-items:center;gap:10px;color:var(--slate)}
+.ba-sech h4 i{width:30px;height:30px;border-radius:var(--radius-sm);background:var(--fit-tint);color:var(--fit-deep);display:grid;place-items:center;font-size:12px;flex:none}
+.ba-sech .hint{font-size:12.5px;font-weight:600;color:var(--muted)}
+
+/* ---- 2 · verilen izinler ---- */
+/* .fp-toggle + .fp-sw + .fp-sw-lbl kabuktan; burada yalnız kapalı-kart hâli. */
+.ba-perms{margin-top:2px}
+/* GEÇİCİ DÜZELTME: kabuğun `.fp-toggle .txt b{display:block;font-size:14.5px}`
+   kuralı (satır 1355) açıklama metninin İÇİNDEKİ <b>'yi de yakalıyor; vurgulu
+   sözcük kendi satırına düşüp ikinci bir başlık gibi görünüyor. Ölçüldü:
+   1440px'te "Tek çıkış izni budur." ayrı satırda, 14.5px/koyu. Aynı sorun
+   fit-planim-veri-izin-v1'de de var. Kabuğa taşınmalı — raporda bildirildi. */
+.fp-toggle .txt small b{display:inline;font-size:inherit;color:inherit;font-weight:800;margin:0}
+.ba-card[data-durum="off"] .fp-toggle .txt b{color:var(--slate-2)}
+.fp-sw[disabled]{cursor:not-allowed;opacity:.75}
+.ba-warn{display:flex;gap:11px;align-items:flex-start;background:#fff6e6;border:1px solid #e8d5a8;border-radius:var(--radius-md);padding:12px 15px;margin-top:14px}
+.ba-warn i{color:#8a6410;font-size:14px;margin-top:2px;flex:none}
+.ba-warn p{font-size:13px;font-weight:600;color:#6f5210;line-height:1.55;margin:0}
+.ba-warn[hidden]{display:none}
+
+/* ---- 4 · hangi verilerin aktarıldığı (yön açıkça yazılı — belge §14) ---- */
+.ba-flow{display:flex;flex-direction:column;margin-top:4px}
+.ba-frow{display:flex;align-items:center;gap:13px;padding:12px 0;border-bottom:1px solid var(--line)}
+.ba-frow:last-child{border-bottom:none}
+.ba-frow .txt{flex:1;min-width:0}
+.ba-frow .txt b{display:block;font-size:14px;color:var(--slate);font-weight:800}
+.ba-frow .txt small{display:block;font-size:12.5px;color:var(--muted);font-weight:500;line-height:1.5;margin-top:2px}
+/* yön rozeti — renge EK OLARAK ikon ve metin taşır (belge §20) */
+.ba-dir{flex:none;display:inline-flex;align-items:center;gap:7px;font-size:11.5px;font-weight:800;letter-spacing:.01em;padding:6px 11px;border-radius:var(--radius-sm);border:1px solid;text-align:left}
+.ba-dir i{font-size:10px}
+.ba-dir.in{background:var(--fit-tint);color:var(--fit-deep);border-color:var(--fit-line)}
+.ba-dir.out{background:#fff6e6;color:#6f5210;border-color:#e8d5a8}
+.ba-dir.self{background:var(--cream-2);color:#6b5a3c;border-color:#e3d9c7}
+.ba-dir.none{background:#f4f4f3;color:var(--slate-2);border-color:var(--line)}
+.ba-frow.is-off .txt b{color:var(--slate-2);text-decoration:line-through;text-decoration-color:var(--line)}
+
+/* ---- 5 · bağlantıyı kesme ---- */
+.ba-foot{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;margin-top:22px;padding-top:20px;border-top:1px solid var(--line)}
+.ba-foot .ba-foot-txt{flex:1;min-width:260px}
+.ba-foot h4{font-size:15px;display:flex;align-items:center;gap:10px;color:var(--slate);margin-bottom:7px}
+.ba-foot h4 i{width:30px;height:30px;border-radius:var(--radius-sm);background:var(--fit-tint);color:var(--fit-deep);display:grid;place-items:center;font-size:12px;flex:none}
+.ba-foot p{font-size:12.5px;color:var(--muted);font-weight:500;line-height:1.55;margin:0;max-width:620px}
+.ba-foot p a{color:var(--fit-deep);font-weight:700;text-decoration:underline;text-underline-offset:2px}
+.ba-cut{
+  flex:none;font-family:inherit;font-size:13.5px;font-weight:700;
+  border-radius:var(--radius-md);padding:12px 20px;cursor:pointer;
+  border:1px solid #f3cdc0;background:#fff2ee;color:#a8391c;
+  display:inline-flex;align-items:center;gap:9px;transition:.2s var(--ease);
+}
+.ba-cut:hover{background:#a8391c;border-color:#a8391c;color:#fff}
+.ba-cut:focus-visible{outline:3px solid var(--fit-tint);outline-offset:2px}
+.ba-card[data-durum="off"] .ba-cut{border-color:var(--fit-line);background:var(--fit-tint);color:var(--fit-deep)}
+.ba-card[data-durum="off"] .ba-cut:hover{background:var(--fit);border-color:var(--fit);color:#fff}
+
+/* ---- ŞEFFAFLIK PANELİ (belge §14) ---- */
+.ba-map{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px}
+.ba-mapc{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);box-shadow:var(--sh-sm);padding:24px 22px}
+.ba-mapc .ico{width:38px;height:38px;border-radius:var(--radius-md);display:grid;place-items:center;font-size:15px;margin-bottom:14px;background:var(--fit-tint);color:var(--fit-deep)}
+.ba-mapc.is-out .ico{background:#fff6e6;color:#6f5210}
+.ba-mapc.is-never .ico{background:#f4f4f3;color:var(--slate-2)}
+.ba-mapc h3{font-size:16.5px;margin-bottom:8px}
+.ba-mapc p{font-size:13.5px;color:var(--muted);font-weight:500;line-height:1.55}
+.ba-mapc ul{list-style:none;margin:12px 0 0;padding:0}
+.ba-mapc li{position:relative;padding-left:22px;font-size:13.5px;font-weight:600;color:var(--slate-2);line-height:1.5}
+.ba-mapc li+li{margin-top:8px}
+.ba-mapc li i{position:absolute;left:0;top:4px;font-size:11px;color:var(--fit-deep)}
+.ba-mapc.is-out li i{color:#8a6410}
+.ba-mapc.is-never li i{color:var(--slate-2)}
+
+/* ---- SENKRONİZASYON TERCİHİ (gerçek <label> + <select> — belge §20) ---- */
+.ba-sync{display:flex;align-items:flex-end;gap:18px;flex-wrap:wrap}
+.ba-fld{display:flex;flex-direction:column;gap:7px;min-width:230px;flex:1}
+.ba-fld label{font-size:13px;font-weight:700;color:var(--slate)}
+.ba-fld select{
+  font-family:inherit;font-size:14px;font-weight:600;color:var(--slate);
+  background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-md);
+  padding:12px 14px;cursor:pointer;transition:.2s var(--ease);width:100%;
+}
+.ba-fld select:hover{border-color:var(--fit)}
+.ba-fld select:focus-visible{outline:3px solid var(--fit-tint);outline-offset:2px;border-color:var(--fit)}
+.ba-fld .help{font-size:12.5px;color:var(--muted);font-weight:500;line-height:1.5}
+.ba-syncbtn{flex:none}
+.ba-live{font-size:13px;font-weight:700;color:var(--fit-deep);min-height:20px;margin-top:14px;display:flex;align-items:center;gap:8px}
+.ba-live:empty{display:none}
+
+/* ===================== SAYFA RESPONSIVE ===================== */
+@media (max-width:1024px){
+  .ba-map{grid-template-columns:minmax(0,1fr);gap:16px}
+}
+@media (max-width:760px){
+  .ba-top{grid-template-columns:minmax(0,1fr)}
+  .ba-frow{align-items:flex-start;flex-direction:column;gap:8px}
+  .ba-dir{order:-1}
+  .ba-foot{align-items:stretch}
+  .ba-cut{width:100%;justify-content:center}
+  .ba-sync{align-items:stretch}
+  .ba-syncbtn .btn{width:100%;justify-content:center}
+}
+@media (max-width:640px){
+  .ba-grid{gap:16px}
+  .ba-bar{gap:12px}
+  .ba-count{width:100%}
+}
+</style>
+<!-- Metin yaslama katmanı (tek kaynak) — sayfa stillerinden SONRA yüklenir,
+     böylece sayfa içi text-align kuralları yaslamayı geri alamaz (HANDOFF §5) -->
+<link rel="stylesheet" href="assets/css/fit-type.css" />
+</head>
+<body data-brand="fit" data-fit-page="bagli-uygulamalar-v1">
+
+<!-- KABUK: üst katman (üst bant + header + drawer + alt bar + görüş + çerez) -->
+<div id="fitShellTop"></div>
+
+<main class="page-main" id="pageMain">
+
+<!-- ===== BANNER + BREADCRUMB =====================================
+     Banner'a arama input'u KONMADI (A3/A4 kuralı). Sayfada dört sabit
+     kart var; süzme işi banner'da değil, gövdedeki çip rayında.
+     ============================================================== -->
+<section class="lib-top">
+  <div class="wrap">
+    <nav class="lib-crumb" aria-label="Sayfa yolu">
+      <a href="dadafit-hub-v1.html" class="crumb-home"><i class="fa-solid fa-house" aria-hidden="true"></i><span class="sr-only">DadaFit ana sayfa</span></a>
+      <i class="fa-solid fa-chevron-right"></i>
+      <a href="fit-hesabim.html">Hesabım</a>
+      <i class="fa-solid fa-chevron-right"></i>
+      <span class="cur">Bağlı Uygulamalar</span>
+    </nav>
+    <span class="eyebrow"><i class="fa-solid fa-plug-circle-check"></i> Bağlı Uygulamalar</span>
+    <!-- TEK H1 (belge §19) -->
+    <h1>Hangi veri nereye gidiyor, sen seçersin</h1>
+    <p class="lib-sub">Apple Health, Android Health Connect, akıllı saatler ve manuel veri girişi
+    burada yönetilir. Her izin <b>ayrı ayrı</b> açılıp kapatılır, hepsi <b>geri alınabilir</b> ve
+    her birinin yanında ne işe yaradığı yazılıdır. Bağlantıyı istediğin an kesebilirsin.</p>
+    <div class="chips">
+      <a class="btn btn-primary" href="fit-enerji-defterim.html#def-aktivite"><i class="fa-solid fa-shoe-prints"></i> Aktivite Günlüğü</a>
+      <a class="btn btn-ghost" href="fit-planim-veri-izin-v1.html"><i class="fa-solid fa-shield-halved"></i> Veri ve İzinlerim</a>
+    </div>
+    <div class="lib-stats">
+      <div class="lib-stat"><b>4</b><span>bağlantı seçeneği</span></div>
+      <div class="lib-stat"><b id="baStatOn">3</b><span>etkin kaynak</span></div>
+      <div class="lib-stat"><b id="baStatPerm">11</b><span>açık izin</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== ŞEFFAFLIK: VERİ NEREDEN GELİR, NEREYE GİDER (belge §14) ===== -->
+<section class="sec sec-fit" style="background:var(--bg-white)">
+  <div class="wrap">
+
+    <div class="sec-head">
+      <div>
+        <span class="eyebrow"><i class="fa-solid fa-arrows-left-right"></i> Veri akışının yönü</span>
+        <h2>Bu sayfada ne oluyor?</h2>
+        <p class="lead">Bir bağlantı iki yönlü olabilir: bir kısmı DadaFit'e <b>gelir</b>,
+        bir kısmı DadaFit'ten dış sisteme <b>gider</b>. Aşağıdaki üç kutu hangisinin
+        hangi yönde aktığını açıkça söyler.</p>
+        <div class="sec-tools">
+          <a class="see-all" href="fit-planim-veri-izin-v1.html">Amaç bazlı izinler <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+      </div>
+    </div>
+
+    <div class="ba-map">
+      <div class="ba-mapc">
+        <div class="ico"><i class="fa-solid fa-arrow-right-to-bracket" aria-hidden="true"></i></div>
+        <h3>DadaFit'e gelen</h3>
+        <p>Bağlı sistemden okunan hareket verisi. Yalnız açtığın izin kadarı okunur.</p>
+        <ul>
+          <li><i class="fa-solid fa-check" aria-hidden="true"></i> Adım sayısı ve mesafe</li>
+          <li><i class="fa-solid fa-check" aria-hidden="true"></i> Aktif süre ve antrenman oturumları</li>
+          <li><i class="fa-solid fa-check" aria-hidden="true"></i> Yaklaşık enerji kullanımı (cihaz tahmini)</li>
+          <li><i class="fa-solid fa-check" aria-hidden="true"></i> Nabız ve uyku — yalnız sen açarsan</li>
+        </ul>
+      </div>
+      <div class="ba-mapc is-out">
+        <div class="ico"><i class="fa-solid fa-arrow-right-from-bracket" aria-hidden="true"></i></div>
+        <h3>DadaFit'ten giden</h3>
+        <p>Yalnız tek bir şey çıkar ve o da ayrı bir izne bağlıdır. Kapatırsan hiçbir veri gönderilmez.</p>
+        <ul>
+          <li><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i> DadaFit'te tamamladığın antrenman oturumu (süre, tür, yaklaşık enerji)</li>
+          <li><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i> Bağlantı başına ayrı yazma izni — Apple Health ve Health Connect için tek tek</li>
+        </ul>
+      </div>
+      <div class="ba-mapc is-never">
+        <div class="ico"><i class="fa-solid fa-ban" aria-hidden="true"></i></div>
+        <h3>Hiçbir koşulda gitmeyen</h3>
+        <p>Bu sayfadaki hiçbir anahtar aşağıdakileri dış bir sisteme açmaz.</p>
+        <ul>
+          <li><i class="fa-solid fa-xmark" aria-hidden="true"></i> Sağlık ve hareket profilin, ağrı ve hareket kısıtı bilgin</li>
+          <li><i class="fa-solid fa-xmark" aria-hidden="true"></i> Antrenörünle yazışman ve randevu kayıtların</li>
+          <li><i class="fa-solid fa-xmark" aria-hidden="true"></i> Ödeme ve fatura bilgin</li>
+          <li><i class="fa-solid fa-xmark" aria-hidden="true"></i> Enerji Defteri öğün kayıtların</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="hr-note">
+      <i class="fa-solid fa-circle-info"></i>
+      <p><b>Bağlantılardan gelen veri tıbbi teşhis, hastalık tanısı ya da tedavi önerisi üretmez.</b>
+      Adım, nabız ve yaklaşık enerji değerleri cihazının tahminidir; klinik ölçüm değildir ve
+      sağlık durumunu değerlendirmek için kullanılamaz. Cihazın uyarı verdiği ya da kendini kötü
+      hissettiğin bir durumda bir sağlık profesyoneline başvur.
+      Ayrıntı: <a href="saglik-bilgilendirme-v1.html">Sağlık Bilgilendirmesi</a> ·
+      Verinin amacı ve saklanması: <a href="fit-planim-veri-izin-v1.html">Veri ve İzinlerim</a> ·
+      Yasal metin: <a href="yasal-v1.html?metin=aydinlatma">Aydınlatma Metni</a>.</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- ===== DÖRT BAĞLANTI SEÇENEĞİ (belge §7) ========================= -->
+<section class="sec sec-fit" style="background:var(--bg-cream);padding-top:0">
+  <div class="wrap">
+
+    <div class="sec-head" style="padding-top:74px">
+      <div>
+        <span class="eyebrow"><i class="fa-solid fa-list-check"></i> Dört seçenek</span>
+        <h2>Bağlantıların</h2>
+        <p class="lead">Her kartta beş şey yazılı: bağlantı durumu, verdiğin izinler,
+        son senkronizasyon, hangi verinin hangi yöne aktarıldığı ve bağlantıyı kesme.</p>
+      </div>
+    </div>
+
+    <!-- FİLTRE + SAYAÇ — seçim URL'ye yansır, geri/ileri çalışır (belge §23),
+         çiplerde aria-pressed (belge §20) -->
+    <div class="ba-bar">
+      <div class="fgroup" id="baFilter" role="group" aria-label="Bağlantı durumu süzgeci">
+        <span class="lbl">Durum</span>
+        <button class="df-fchip on" type="button" data-val="all" aria-pressed="true">Tümü</button>
+        <button class="df-fchip" type="button" data-val="on" aria-pressed="false"><i class="fa-solid fa-circle-check" aria-hidden="true"></i> Etkin</button>
+        <button class="df-fchip" type="button" data-val="off" aria-pressed="false"><i class="fa-solid fa-circle-minus" aria-hidden="true"></i> Etkin değil</button>
+      </div>
+      <div class="ba-count"><b id="baCount">4</b> bağlantı gösteriliyor </div>
+    </div>
+
+    <div class="ba-grid" id="baGrid">
+
+      <!-- ============ 1 · APPLE HEALTH ============ -->
+      <article class="ba-card fp-card" id="baglanti-apple-health"
+               data-app="apple-health" data-durum="on"
+               data-ad="Apple Health"
+               data-lbl-on="Bağlı" data-lbl-off="Bağlı değil"
+               data-cut-on="Bağlantıyı kes" data-cut-off="Yeniden bağlan"
+               data-senk-on="Bugün 13:05" data-senk-off="Bağlantı kesildi">
+        <div class="fp-head">
+          <h3><i class="fa-brands fa-apple" aria-hidden="true"></i> Apple Health</h3>
+          <span class="ba-head-ico">
+            <span class="fp-badge ok" data-role="badge"><i class="fa-solid fa-check" aria-hidden="true"></i> Bağlı</span>
+          </span>
+        </div>
+
+        <!-- 1 · BAĞLANTI DURUMU   +   3 · SON SENKRONİZASYON -->
+        <div class="ba-top">
+          <div class="ba-box">
+            <h4><i class="fa-solid fa-plug" aria-hidden="true"></i> Bağlantı durumu</h4>
+            <p class="v"><span data-role="durum-txt">Bağlı</span> </p>
+            <small data-role="durum-alt">iPhone 13 · iOS 18.3 · 4 Mart 2026'dan beri bağlı. Telefonunun adım sayarı buraya yazar; <a href="fit-enerji-defterim.html#def-aktivite">Aktivite Günlüğü</a>'nde bu kaynak <b>Telefon</b> adıyla görünür.</small>
+          </div>
+          <div class="ba-box">
+            <h4><i class="fa-solid fa-rotate" aria-hidden="true"></i> Son senkronizasyon</h4>
+            <p class="v"><span data-role="senk">Bugün 13:05</span></p>
+            <small data-role="senk-alt">Otomatik · arka planda, uygulamayı açmana gerek yok</small>
+          </div>
+        </div>
+
+        <!-- 2 · VERİLEN İZİNLER — her biri ayrı, geri alınabilir, açıklamalı -->
+        <div class="ba-sech">
+          <h4><i class="fa-solid fa-sliders" aria-hidden="true"></i> Verilen izinler</h4>
+          <span class="hint">Her biri ayrı ayrı kapatılabilir</span>
+        </div>
+        <div class="ba-perms">
+          <div class="fp-toggle">
+            <span class="txt"><b>Adım ve mesafe</b><small>Günlük adımın ve yürüdüğün mesafe Aktivite Günlüğü'ne düşer. Kapatırsan adım satırı boş kalır, eski kayıtlar silinmez.</small></span>
+            <span class="fp-sw-lbl">Açık</span>
+            <button class="fp-sw" type="button" role="switch" aria-checked="true" data-perm="adim" aria-label="Apple Health — adım ve mesafe izni"></button>
+          </div>
+          <div class="fp-toggle">
+            <span class="txt"><b>Aktif süre ve antrenman oturumları</b><small>Telefonunda ya da saatinde kaydedilen yürüyüş, koşu ve bisiklet oturumları günlüğüne eklenir.</small></span>
+            <span class="fp-sw-lbl">Açık</span>
+            <button class="fp-sw" type="button" role="switch" aria-checked="true" data-perm="oturum" aria-label="Apple Health — aktif süre ve antrenman oturumları izni"></button>
+          </div>
+          <div class="fp-toggle">
+            <span class="txt"><b>Yaklaşık enerji kullanımı</b><small>Aktivitenin yaklaşık enerji kullanımı okunur. Değer cihazın tahminidir; kesin ölçüm değildir ve öyle sunulmaz.</small></span>
+            <span class="fp-sw-lbl">Açık</span>
+            <button class="fp-sw" type="button" role="switch" aria-checked="true" data-perm="enerji" aria-label="Apple Health — yaklaşık enerji kullanımı izni"></button>
+          </div>
+          <div class="fp-toggle">
+            <span class="txt"><b>Nabız</b><small>İsteğe bağlıdır. Kapalıyken hiçbir nabız verisi okunmaz ve günlüğünde nabız satırı görünmez.</small></span>
+            <span class="fp-sw-lbl">Kapalı</span>
+            <button class="fp-sw" type="button" role="switch" aria-checked="false" data-perm="nabiz" aria-label="Apple Health — nabız izni"></button>
+          </div>
+          <div class="fp-toggle">
+            <span class="txt"><b>Uyku süresi</b><small>İsteğe bağlıdır. Yalnız haftalık hareket dengeni yorumlarken kullanılır; uyku kalitesi hakkında değerlendirme yapılmaz.</small></span>
+            <span class="fp-sw-lbl">Kapalı</span>
+            <button class="fp-sw" type="button" role="switch" aria-checked="false" data-perm="uyku" aria-label="Apple Health — uyku süresi izni"></button>
+          </div>
+          <div class="fp-toggle">
+            <span class="txt"><b>DadaFit antrenmanlarını Apple Health'e yaz</b><small><b>Tek çıkış izni budur.</b> DadaFit'te tamamladığın antrenman Apple Health'e kaydedilir. Kapatırsan DadaFit hiçbir veri göndermez.</small></span>
+            <span class="fp-sw-lbl">Açık</span>
+            <button class="fp-sw" type="button" role="switch" aria-checked="true" data-perm="yazma" aria-label="Apple Health — DadaFit antrenmanlarını yazma izni"></button>
+          </div>
+        </div>
+        <div class="ba-warn" data-role="nozin" hidden>
+          <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>
+          <p>Bağlantı duruyor ama açık izin kalmadı — şu an hiçbir veri aktarılmıyor.</p>
+        </div>
+
+        <!-- 4 · HANGİ VERİLERİN AKTARILDIĞI (yön açıkça yazılı) -->
+        <div class="ba-sech">
+          <h4><i class="fa-solid fa-arrows-left-right" aria-hidden="true"></i> Hangi veriler aktarılıyor</h4>
+          <span class="hint">Yön ve kaynak sistem her satırda yazılı</span>
+        </div>
+        <div class="ba-flow">
+          <div class="ba-frow" data-flow="adim">
+            <span class="ba-dir in" data-role="dir"><i class="fa-solid fa-arrow-right" aria-hidden="true"></i> Apple Health → DadaFit</span>
+            <span class="txt"><b>Adım sayısı ve mesafe</b><small>Gün içinde saatlik toplanır</small></span>
+          </div>
+          <div class="ba-frow" data-flow="oturum">
+            <span class="ba-dir in" data-role="dir"><i class="fa-solid fa-arrow-right" aria-hidden="true"></i> Apple Health → DadaFit</span>
+            <span class="txt"><b>Aktif süre, yürüyüş · koşu · bisiklet oturumları</b><small>Başlangıç saati, süre ve tür</small></span>
+          </div>
+          <div class="ba-frow" data-flow="enerji">
+            <span class="ba-dir in" data-role="dir"><i class="fa-solid fa-arrow-right" aria-hidden="true"></i> Apple Health → DadaFit</span>
+            <span class="txt"><b>Yaklaşık enerji kullanımı</b><small>Cihaz tahminidir, kesin değer değildir</small></span>
+          </div>
+          <div class="ba-frow" data-flow="nabiz">
+            <span class="ba-dir in" data-role="dir"><i class="fa-solid fa-arrow-right" aria-hidden="true"></i> Apple Health → DadaFit</span>
+            <span class="txt"><b>Nabız</b><small>İsteğe bağlı — izin kapalıyken okunmaz</small></span>
+          </div>
+          <div class="ba-frow" data-flow="uyku">
+            <span class="ba-dir in" data-role="dir"><i class="fa-solid fa-arrow-right" aria-hidden="true"></i> Apple Health → DadaFit</span>
+            <span class="txt"><b>Uyku süresi</b><small>İsteğe bağlı — izin kapalıyken okunmaz</small></span>
+          </div>
+          <div class="ba-frow" data-flow="yazma">
+            <span class="ba-dir out" data-role="dir"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i> DadaFit → Apple Health</span>
+            <span class="txt"><b>Tamamladığın DadaFit antrenmanı</b><small>Süre, tür ve yaklaşık enerji — başka hiçbir alan gönderilmez</small></span>
+          </div>
+        </div>
+
+        <!-- 5 · BAĞLANTIYI KESME -->
+        <div class="ba-foot">
+          <div class="ba-foot-txt">
+            <h4><i class="fa-solid fa-link-slash" aria-hidden="true"></i> Bağlantıyı kesme</h4>
+            <p>Kestiğinde tüm izinler aynı anda geri alınır ve okuma da yazma da durur.
+            DadaFit'te oluşmuş eski kayıtların silinmez; onları
+            <a href="fit-planim-veri-izin-v1.html">Veri ve İzinlerim</a> sayfasından silebilirsin.
+            Bağlantıyı istediğin an yeniden kurabilirsin.</p>
+          </div>
+          <button class="ba-cut" type="button" data-cut><i class="fa-solid fa-link-slash" aria-hidden="true"></i> <span data-role="cut-txt">Bağlantıyı kes</span></button>
+        </div>
+      </article>
+
+      <!-- ============ 2 · ANDROID HEALTH CONNECT ============ -->
+      <article class="ba-card fp-card" id="baglanti-health-connect"
+               data-app="health-connect" data-durum="off"
+               data-ad="Android Health Connect"
+               data-lbl-on="Bağlı" data-lbl-off="Bağlı değil"
+               data-cut-on="Bağlantıyı kes" data-cut-off="Health Connect'e bağlan"
+               data-senk-on="Az önce" data-senk-off="Hiç senkronize edilmedi">
+        <div class="fp-head">
+          <h3><i class="fa-brands fa-android" aria-hidden="true"></i> Android Health Connect</h3>
+          <span class="ba-head-ico">
+            <span class="fp-badge off" data-role="badge"><i class="fa-solid fa-xmark" aria-hidden="true"></i> Bağlı değil</span>
+          </span>
+        </div>
+
+        <div class="ba-top">
+          <div class="ba-box">
+            <h4><i class="fa-solid fa-plug" aria-hidden="true"></i> Bağlantı durumu</h4>
+            <p class="v"><span data-role="durum-txt">Bağlı değil</span> </p>
+            <small data-role="durum-alt">Health Connect yalnız Android'de çalışır; bu hesap şu an bir iOS cihazla kullanılıyor. Android'e geçtiğinde buradan bağlarsın.</small>
+          </div>
+          <div class="ba-box">
+            <h4><i class="fa-solid fa-rotate" aria-hidden="true"></i> Son senkronizasyon</h4>
+            <p class="v"><span data-role="senk">Hiç senkronize edilmedi</span></p>
+            <small data-role="senk-alt">Bağlantı kurulmadığı için aktarım başlamadı</small>
+          </div>
+        </div>
+
+        <div class="ba-sech">
+          <h4><i class="fa-solid fa-sliders" aria-hidden="true"></i> Verilen izinler</h4>
+          <span class="hint">Bağlantı kurulunca tek tek açılır</span>
+        </div>
+        <div class="ba-perms">
+          <div class="fp-toggle">
+            <span class="txt"><b>Adım ve mesafe</b><small>Telefonun ya da Health Connect'e yazan başka bir uygulaman topladığı adımı paylaşır. Bağlantı kurulmadan açılamaz.</small></span>
+            <span class="fp-sw-lbl">Kapalı</span>
+            <button class="fp-sw" type="button" role="switch" aria-checked="false" data-perm="adim" disabled aria-label="Health Connect — adım ve mesafe izni"></button>
+          </div>
+          <div class="fp-toggle">
+            <span class="txt"><b>Egzersiz oturumları</b><small>Health Connect'te biriken yürüyüş, koşu ve bisiklet oturumları günlüğüne eklenir.</small></span>
+            <span class="fp-sw-lbl">Kapalı</span>
+            <button class="fp-sw" type="button" role="switch" aria-checked="false" data-perm="oturum" disabled aria-label="Health Connect — egzersiz oturumları izni"></button>
+          </div>
+          <div class="fp-toggle">
+            <span class="txt"><b>Yaklaşık enerji kullanımı</b><small>Oturumun yaklaşık enerji kullanımı okunur. Cihaz tahminidir, kesin ölçüm değildir.</small></span>
+            <span class="fp-sw-lbl">Kapalı</span>
+            <button class="fp-sw" type="button" role="switch" aria-checked="false" data-perm="enerji" disabled aria-label="Health Connect — yaklaşık enerji kullanımı izni"></button>
+          </div>
+          <div class="fp-toggle">
+            <span class="txt"><b>Nabız</b><small>İsteğe bağlıdır ve bağlansa bile varsayılan olarak kapalı gelir.</small></span>
+            <span class="fp-sw-lbl">Kapalı</span>
+            <button class="fp-sw" type="button" role="switch" aria-checked="false" data-perm="nabiz" disabled aria-label="Health Connect — nabız izni"></button>
+          </div>
+          <div class="fp-toggle">
+            <span class="txt"><b>DadaFit antrenmanlarını Health Connect'e yaz</b><small><b>Tek çıkış izni budur.</b> Açarsan DadaFit'te tamamladığın antrenman Health Connect'e kaydedilir; kapalıyken DadaFit hiçbir veri göndermez.</small></span>
+            <span class="fp-sw-lbl">Kapalı</span>
+            <button class="fp-sw" type="button" role="switch" aria-checked="false" data-perm="yazma" disabled aria-label="Health Connect — DadaFit antrenmanlarını yazma izni"></button>
+          </div>
+        </div>
+        <div class="ba-warn" data-role="nozin" hidden>
+          <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>
+          <p>Bağlantı duruyor ama açık izin kalmadı — şu an hiçbir veri aktarılmıyor.</p>
+        </div>
+
+        <div class="ba-sech">
+          <h4><i class="fa-solid fa-arrows-left-right" aria-hidden="true"></i> Hangi veriler aktarılıyor</h4>
+          <span class="hint">Şu an hiçbiri — bağlantı kurulmadı</span>
+        </div>
+        <div class="ba-flow">
+          <div class="ba-frow" data-flow="adim">
+            <span class="ba-dir in" data-role="dir"><i class="fa-solid fa-arrow-right" aria-hidden="true"></i> Health Connect → DadaFit</span>
+            <span class="txt"><b>Adım sayısı ve mesafe</b><small>Gün içinde saatlik toplanır</small></span>
+          </div>
+          <div class="ba-frow" data-flow="oturum">
+            <span class="ba-dir in" data-role="dir"><i class="fa-solid fa-arrow-right" aria-hidden="true"></i> Health Connect → DadaFit</span>
+            <span class="txt"><b>Egzersiz oturumları</b><small>Başlangıç saati, süre ve tür</small></span>
+          </div>
+          <div class="ba-frow" data-flow="enerji">
+            <span class="ba-dir in" data-role="dir"><i class="fa-solid fa-arrow-right" aria-hidden="true"></i> Health Connect → DadaFit</span>
+            <span class="txt"><b>Yaklaşık enerji kullanımı</b><small>Cihaz tahminidir, kesin değer değildir</small></span>
+          </div>
+          <div class="ba-frow" data-flow="nabiz">
+            <span class="ba-dir in" data-role="dir"><i class="fa-solid fa-arrow-right" aria-hidden="true"></i> Health Connect → DadaFit</span>
+            <span class="txt"><b>Nabız</b><small>İsteğe bağlı — izin kapalıyken okunmaz</small></span>
+          </div>
+          <div class="ba-frow" data-flow="yazma">
+            <span class="ba-dir out" data-role="dir"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i> DadaFit → Health Connect</span>
+            <span class="txt"><b>Tamamladığın DadaFit antrenmanı</b><small>Süre, tür ve yaklaşık enerji — başka hiçbir alan gönderilmez</small></span>
+          </div>
+        </div>
+
+        <div class="ba-foot">
+          <div class="ba-foot-txt">
+            <h4><i class="fa-solid fa-link-slash" aria-hidden="true"></i> Bağlantıyı kesme</h4>
+            <p>Şu an kesilecek bir bağlantı yok. Bağladığında izinler kapalı gelir ve hangisini
+            açacağına sen karar verirsin; kestiğinde tüm izinler aynı anda geri alınır.
+            Health Connect tarafındaki izni telefonunun sistem ayarlarından da geri alabilirsin —
+            iki taraf birbirinden bağımsızdır. DadaFit'teki eski kayıtların bağlantıdan bağımsızdır;
+            silmek istersen <a href="fit-planim-veri-izin-v1.html">Veri ve İzinlerim</a> sayfasından silersin.</p>
+          </div>
+          <button class="ba-cut" type="button" data-cut><i class="fa-solid fa-link" aria-hidden="true"></i> <span data-role="cut-txt">Health Connect'e bağlan</span></button>
+        </div>
+      </article>
+
+      <!-- ============ 3 · AKILLI SAATLER ============ -->
+      <article class="ba-card fp-card" id="baglanti-akilli-saat"
+               data-app="akilli-saat" data-durum="on"
+               data-ad="Akıllı saatler"
+               data-lbl-on="Bağlı" data-lbl-off="Bağlı değil"
+               data-cut-on="Bağlantıyı kes" data-cut-off="Saat bağla"
+               data-senk-on="Bugün 07:12" data-senk-off="Bağlantı kesildi">
+        <div class="fp-head">
+          <h3><i class="fa-solid fa-stopwatch" aria-hidden="true"></i> Akıllı saatler</h3>
+          <span class="ba-head-ico">
+            <span class="fp-badge ok" data-role="badge"><i class="fa-solid fa-check" aria-hidden="true"></i> Bağlı</span>
+          </span>
+        </div>
+
+        <div class="ba-top">
+          <div class="ba-box">
+            <h4><i class="fa-solid fa-plug" aria-hidden="true"></i> Bağlantı durumu</h4>
+            <p class="v"><span data-role="durum-txt">Bağlı</span> </p>
+            <small data-role="durum-alt">Bir saat eşleştirildi · 22 Şubat 2026'dan beri bağlı. <a href="fit-enerji-defterim.html#def-aktivite">Aktivite Günlüğü</a>'nde bu kaynak <b>Akıllı saat</b> adıyla görünür.</small>
+          </div>
+          <div class="ba-box">
+            <h4><i class="fa-solid fa-rotate" aria-hidden="true"></i> Son senkronizasyon</h4>
+            <p class="v"><span data-role="senk">Bugün 07:12</span></p>
+            <small data-role="senk-alt">Saat telefonunla eşleştiğinde · gün içinde birkaç kez</small>
+          </div>
+        </div>
+
+        <div class="ba-sech">
+          <h4><i class="fa-solid fa-sliders" aria-hidden="true"></i> Verilen izinler</h4>
+          <span class="hint">Her biri ayrı ayrı kapatılabilir</span>
+        </div>
+        <div class="ba-perms">
+          <div class="fp-toggle">
+            <span class="txt"><b>Adım, mesafe ve aktif süre</b><small>Saatin gün boyu topladığı hareket Aktivite Günlüğü'ne düşer.</small></span>
+            <span class="fp-sw-lbl">Açık</span>
+            <button class="fp-sw" type="button" role="switch" aria-checked="true" data-perm="adim" aria-label="Akıllı saat — adım, mesafe ve aktif süre izni"></button>
+          </div>
+          <div class="fp-toggle">
+            <span class="txt"><b>Antrenman oturumları</b><small>Saatinde başlattığın koşu, yürüyüş, bisiklet ve kuvvet oturumları günlüğüne eklenir.</small></span>
+            <span class="fp-sw-lbl">Açık</span>
+            <button class="fp-sw" type="button" role="switch" aria-checked="true" data-perm="oturum" aria-label="Akıllı saat — antrenman oturumları izni"></button>
+          </div>
+          <div class="fp-toggle">
+            <span class="txt"><b>Yaklaşık enerji kullanımı</b><small>Saatin tahmini. Kesin ölçüm değildir ve öyle sunulmaz.</small></span>
+            <span class="fp-sw-lbl">Açık</span>
+            <button class="fp-sw" type="button" role="switch" aria-checked="true" data-perm="enerji" aria-label="Akıllı saat — yaklaşık enerji kullanımı izni"></button>
+          </div>
+          <div class="fp-toggle">
+            <span class="txt"><b>Nabız</b><small>İsteğe bağlıdır — bunu sen açtın. Kapatırsan saatinden hiçbir nabız verisi okunmaz ve günlüğündeki nabız satırı boş kalır.</small></span>
+            <span class="fp-sw-lbl">Açık</span>
+            <button class="fp-sw" type="button" role="switch" aria-checked="true" data-perm="nabiz" aria-label="Akıllı saat — nabız izni"></button>
+          </div>
+        </div>
+        <div class="ba-warn" data-role="nozin" hidden>
+          <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>
+          <p>Bağlantı duruyor ama açık izin kalmadı — şu an hiçbir veri aktarılmıyor.</p>
+        </div>
+
+        <div class="ba-sech">
+          <h4><i class="fa-solid fa-arrows-left-right" aria-hidden="true"></i> Hangi veriler aktarılıyor</h4>
+          <span class="hint">Tek yönlü: saat okunur, saate hiçbir şey yazılmaz</span>
+        </div>
+        <div class="ba-flow">
+          <div class="ba-frow" data-flow="adim">
+            <span class="ba-dir in" data-role="dir"><i class="fa-solid fa-arrow-right" aria-hidden="true"></i> Akıllı saat → DadaFit</span>
+            <span class="txt"><b>Adım, mesafe ve aktif süre</b><small>Gün boyu toplanır</small></span>
+          </div>
+          <div class="ba-frow" data-flow="oturum">
+            <span class="ba-dir in" data-role="dir"><i class="fa-solid fa-arrow-right" aria-hidden="true"></i> Akıllı saat → DadaFit</span>
+            <span class="txt"><b>Antrenman oturumları</b><small>Başlangıç saati, süre ve tür</small></span>
+          </div>
+          <div class="ba-frow" data-flow="enerji">
+            <span class="ba-dir in" data-role="dir"><i class="fa-solid fa-arrow-right" aria-hidden="true"></i> Akıllı saat → DadaFit</span>
+            <span class="txt"><b>Yaklaşık enerji kullanımı</b><small>Saat tahminidir, kesin değer değildir</small></span>
+          </div>
+          <div class="ba-frow" data-flow="nabiz">
+            <span class="ba-dir in" data-role="dir"><i class="fa-solid fa-arrow-right" aria-hidden="true"></i> Akıllı saat → DadaFit</span>
+            <span class="txt"><b>Nabız</b><small>İsteğe bağlı — bu izni sen açtın</small></span>
+          </div>
+          <div class="ba-frow">
+            <span class="ba-dir none"><i class="fa-solid fa-ban" aria-hidden="true"></i> Saate gönderim yok</span>
+            <span class="txt"><b>DadaFit saatine hiçbir veri yazmaz</b><small>Bu bağlantı tek yönlüdür; çıkış izni yalnız Apple Health ve Health Connect kartlarında vardır</small></span>
+          </div>
+        </div>
+
+        <div class="ba-foot">
+          <div class="ba-foot-txt">
+            <h4><i class="fa-solid fa-link-slash" aria-hidden="true"></i> Bağlantıyı kesme</h4>
+            <p>Kestiğinde saatin dört izni birden geri alınır ve okuma durur; saatinin kendi
+            kayıtlarına dokunulmaz. DadaFit'te oluşmuş eski kayıtların da silinmez —
+            <a href="fit-planim-veri-izin-v1.html">Veri ve İzinlerim</a> sayfasından silebilirsin.
+            Saatin verisini zaten Apple Health'e yazıyorsa bu bağlantıyı kesip yalnız Apple Health
+            üzerinden de devam edebilirsin.</p>
+          </div>
+          <button class="ba-cut" type="button" data-cut><i class="fa-solid fa-link-slash" aria-hidden="true"></i> <span data-role="cut-txt">Bağlantıyı kes</span></button>
+        </div>
+      </article>
+
+      <!-- ============ 4 · MANUEL VERİ GİRİŞİ ============ -->
+      <article class="ba-card fp-card" id="baglanti-manuel"
+               data-app="manuel" data-durum="on"
+               data-ad="Manuel veri girişi"
+               data-lbl-on="Açık" data-lbl-off="Kapalı"
+               data-cut-on="Manuel girişi kapat" data-cut-off="Manuel girişi aç"
+               data-senk-on="Senkronizasyon yok" data-senk-off="Senkronizasyon yok">
+        <div class="fp-head">
+          <h3><i class="fa-solid fa-pen-to-square" aria-hidden="true"></i> Manuel veri girişi</h3>
+          <span class="ba-head-ico">
+            <span class="fp-badge ok" data-role="badge"><i class="fa-solid fa-check" aria-hidden="true"></i> Açık</span>
+          </span>
+        </div>
+
+        <div class="ba-top">
+          <div class="ba-box">
+            <h4><i class="fa-solid fa-plug" aria-hidden="true"></i> Bağlantı durumu</h4>
+            <p class="v"><span data-role="durum-txt">Açık</span> </p>
+            <small data-role="durum-alt">Dış bir sisteme bağlanmaz — <b>bağlantı yok</b>. Cihazın olmasa da hareketini elle kaydedebilirsin. <a href="fit-enerji-defterim.html#def-aktivite">Aktivite Günlüğü</a>'nde bu kaynak <b>Manuel giriş</b> adıyla görünür.</small>
+          </div>
+          <div class="ba-box">
+            <h4><i class="fa-solid fa-rotate" aria-hidden="true"></i> Son senkronizasyon</h4>
+            <p class="v"><span data-role="senk">Senkronizasyon yok</span></p>
+            <small data-role="senk-alt">Kayıt anında işlenir · son manuel kayıt: dün 21:40</small>
+          </div>
+        </div>
+
+        <div class="ba-sech">
+          <h4><i class="fa-solid fa-sliders" aria-hidden="true"></i> Verilen izinler</h4>
+          <span class="hint">Hangi alanı elle gireceğini sen seçersin</span>
+        </div>
+        <div class="ba-perms">
+          <div class="fp-toggle">
+            <span class="txt"><b>Adım ve mesafeyi elle gir</b><small>Günlüğünde adım alanı açık kalır. Kapatırsan bu alan hiç görünmez.</small></span>
+            <span class="fp-sw-lbl">Açık</span>
+            <button class="fp-sw" type="button" role="switch" aria-checked="true" data-perm="manuel-adim" aria-label="Manuel giriş — adım ve mesafe alanı"></button>
+          </div>
+          <div class="fp-toggle">
+            <span class="txt"><b>Antrenman süresi ve türünü elle gir</b><small>Yürüyüş, koşu, bisiklet ya da kendi eklediğin bir hareket. Aktivite Günlüğü'ne kaydolur.</small></span>
+            <span class="fp-sw-lbl">Açık</span>
+            <button class="fp-sw" type="button" role="switch" aria-checked="true" data-perm="manuel-oturum" aria-label="Manuel giriş — antrenman süresi ve türü alanı"></button>
+          </div>
+          <div class="fp-toggle">
+            <span class="txt"><b>Yaklaşık enerji değerini elle gir</b><small>Kapalıyken DadaFit bu değeri süre ve türden yaklaşık olarak kendisi çıkarır; sayı yine yaklaşıktır.</small></span>
+            <span class="fp-sw-lbl">Kapalı</span>
+            <button class="fp-sw" type="button" role="switch" aria-checked="false" data-perm="manuel-enerji" aria-label="Manuel giriş — yaklaşık enerji alanı"></button>
+          </div>
+          <div class="fp-toggle">
+            <span class="txt"><b>Nabız notu ekle</b><small>İsteğe bağlıdır. Kendi ölçtüğün değeri not olarak yazarsın; değerlendirme yapılmaz.</small></span>
+            <span class="fp-sw-lbl">Açık</span>
+            <button class="fp-sw" type="button" role="switch" aria-checked="true" data-perm="manuel-nabiz" aria-label="Manuel giriş — nabız notu alanı"></button>
+          </div>
+        </div>
+        <div class="ba-warn" data-role="nozin" hidden>
+          <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>
+          <p>Manuel giriş açık ama hiçbir alan seçili değil — günlüğünde elle girilecek alan görünmez.</p>
+        </div>
+
+        <div class="ba-sech">
+          <h4><i class="fa-solid fa-arrows-left-right" aria-hidden="true"></i> Hangi veriler aktarılıyor</h4>
+          <span class="hint">Dış sisteme çıkış yok</span>
+        </div>
+        <div class="ba-flow">
+          <div class="ba-frow" data-flow="manuel-adim">
+            <span class="ba-dir self" data-role="dir"><i class="fa-solid fa-keyboard" aria-hidden="true"></i> Sen → DadaFit</span>
+            <span class="txt"><b>Adım ve mesafe</b><small>Yalnız senin girdiğin sayı</small></span>
+          </div>
+          <div class="ba-frow" data-flow="manuel-oturum">
+            <span class="ba-dir self" data-role="dir"><i class="fa-solid fa-keyboard" aria-hidden="true"></i> Sen → DadaFit</span>
+            <span class="txt"><b>Antrenman süresi ve türü</b><small>Aktivite Günlüğü kaydına düşer</small></span>
+          </div>
+          <div class="ba-frow" data-flow="manuel-enerji">
+            <span class="ba-dir self" data-role="dir"><i class="fa-solid fa-keyboard" aria-hidden="true"></i> Sen → DadaFit</span>
+            <span class="txt"><b>Yaklaşık enerji değeri</b><small>Kapalıyken süre ve türden yaklaşık olarak çıkarılır</small></span>
+          </div>
+          <div class="ba-frow" data-flow="manuel-nabiz">
+            <span class="ba-dir self" data-role="dir"><i class="fa-solid fa-keyboard" aria-hidden="true"></i> Sen → DadaFit</span>
+            <span class="txt"><b>Nabız notu</b><small>Serbest not — değerlendirilmez</small></span>
+          </div>
+          <div class="ba-frow">
+            <span class="ba-dir none"><i class="fa-solid fa-ban" aria-hidden="true"></i> Dış sisteme gönderim yok</span>
+            <span class="txt"><b>Manuel kayıtların hiçbir dış sisteme gönderilmez</b><small>Apple Health, Health Connect ve saat bağlantıları manuel kayıtlarına erişemez</small></span>
+          </div>
+        </div>
+
+        <div class="ba-foot">
+          <div class="ba-foot-txt">
+            <h4><i class="fa-solid fa-link-slash" aria-hidden="true"></i> Bağlantıyı kesme</h4>
+            <p>Kesilecek bir <b>dış</b> bağlantı yok — manuel giriş DadaFit'in kendi içindedir.
+            Karşılığı, manuel girişi tamamen kapatmaktır: alanlar günlüğünden kalkar, yazdıkların
+            durur. Kayıtları silmek istersen
+            <a href="fit-planim-veri-izin-v1.html">Veri ve İzinlerim</a> sayfasından silebilir,
+            tek tek düzeltmek istersen <a href="fit-egzersizlerim.html">Geçmişim</a>
+            sayfasından düzenleyebilirsin.</p>
+          </div>
+          <button class="ba-cut" type="button" data-cut><i class="fa-solid fa-pen-slash" aria-hidden="true"></i> <span data-role="cut-txt">Manuel girişi kapat</span></button>
+        </div>
+      </article>
+
+    </div><!-- /#baGrid -->
+
+    <!-- BOŞ DURUM — süzgeç hiçbir kartla eşleşmezse (kabuğun .lib-empty kiti) -->
+    <div class="lib-empty" id="baEmpty">
+      <div class="ico"><i class="fa-solid fa-plug-circle-xmark" aria-hidden="true"></i></div>
+      <h3>Bu durumda bağlantı yok</h3>
+      <p>Seçtiğin duruma uyan bağlantı bulunmadı. Süzgeci sıfırlayıp dördünü de görebilirsin.</p>
+      <button class="btn btn-primary" type="button" id="baEmptyReset"><i class="fa-solid fa-rotate-left" aria-hidden="true"></i> Süzgeci sıfırla</button>
+    </div>
+
+  </div>
+</section>
+
+<!-- ===== SENKRONİZASYON TERCİHİ + SONRAKİ ADIM ===================== -->
+<section class="sec sec-fit" style="background:var(--bg-white)">
+  <div class="wrap">
+
+    <div class="sec-head">
+      <div>
+        <span class="eyebrow"><i class="fa-solid fa-rotate"></i> Senkronizasyon</span>
+        <h2>Ne sıklıkla güncellensin?</h2>
+        <p class="lead">Bu tercih tüm etkin bağlantılar için geçerlidir. Bağlantı başına
+        izinler yukarıda ayrı ayrı duruyor; burası yalnız <b>ne zaman</b> okunacağını belirler.</p>
+      </div>
+    </div>
+
+    <div class="fp-grid">
+      <div class="fp-card">
+        <div class="fp-head"><h3><i class="fa-solid fa-clock-rotate-left"></i> Sıklık ve elle yenileme</h3></div>
+        <div class="ba-sync">
+          <div class="ba-fld">
+            <label for="baFreq">Senkronizasyon sıklığı</label>
+            <select id="baFreq" name="baFreq">
+              <option value="oto" selected>Otomatik — cihaz uygun olduğunda</option>
+              <option value="saat">Saatte bir</option>
+              <option value="gun">Günde bir</option>
+              <option value="elle">Yalnız elle yenilediğimde</option>
+            </select>
+            <span class="help" id="baFreqHelp">Otomatikte cihazın pil ve ağ durumuna göre gün içinde birkaç kez okunur.</span>
+          </div>
+          <div class="ba-syncbtn">
+            <button class="btn btn-primary" type="button" id="baSyncNow"><i class="fa-solid fa-rotate" aria-hidden="true"></i> Şimdi senkronize et</button>
+          </div>
+        </div>
+        <p class="ba-live" id="baLive" role="status" aria-live="polite"></p>
+      </div>
+
+      <div class="fp-card">
+        <div class="fp-head"><h3><i class="fa-solid fa-shoe-prints"></i> Senkronlanan veri nereye düşer</h3>
+          <a class="fp-act" href="fit-enerji-defterim.html#def-aktivite">Aktivite Günlüğü <i class="fa-solid fa-arrow-right"></i></a></div>
+        <div class="fp-list">
+          <div class="fp-row"><span class="ico"><i class="fa-solid fa-shoe-prints"></i></span>
+            <span class="txt"><b>Aktivite Günlüğü</b><small>Adım, aktif süre, oturumlar, mesafe ve yaklaşık enerji kullanımı gün gün burada listelenir</small></span>
+            <span class="end"><a class="fp-act" href="fit-enerji-defterim.html#def-aktivite">Aç</a></span></div>
+          <div class="fp-row"><span class="ico"><i class="fa-solid fa-chart-line"></i></span>
+            <span class="txt"><b>İlerlemem</b><small>Haftalık hareket dengen ve gelişimin — kendi başlangıcınla kıyaslanır, başkasıyla değil</small></span>
+            <span class="end"><a class="fp-act" href="fit-ilerlemem.html">Aç</a></span></div>
+          <div class="fp-row"><span class="ico"><i class="fa-solid fa-clock-rotate-left"></i></span>
+            <span class="txt"><b>Geçmişim</b><small>Kaydı düzeltmek ya da silmek istediğinde buradan tek tek düzenlersin</small></span>
+            <span class="end"><a class="fp-act" href="fit-egzersizlerim.html">Aç</a></span></div>
+          <div class="fp-row"><span class="ico"><i class="fa-solid fa-shield-halved"></i></span>
+            <span class="txt"><b>Veri ve İzinlerim</b><small>Amaç bazlı izinler, antrenörünün gördükleri, saklama süresi ve veri silme</small></span>
+            <span class="end"><a class="fp-act" href="fit-planim-veri-izin-v1.html">Aç</a></span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hr-note">
+      <i class="fa-solid fa-shield-halved"></i>
+      <p><b>Bu sayfa yalnız cihaz ve uygulama bağlantılarını yönetir.</b>
+      Verinin hangi <b>amaçla</b> tutulduğu, antrenörünün ne gördüğü, saklama süresi ve
+      verini indirme/silme işlemleri <a href="fit-planim-veri-izin-v1.html">Veri ve İzinlerim</a>
+      sayfasındadır; iki sayfa aynı ilkeyi paylaşır: izinler isteğe bağlı, geri alınabilir ve
+      açıklamalıdır. Bağlı Uygulamalar'daki hiçbir anahtar oradaki amaç izinlerini otomatik açmaz.
+      Hesabın ve paketinle ilgili işlemler için <a href="fit-hesabim.html">Hesabım</a>,
+      yasal metinler için <a href="yasal-v1.html?metin=kvkk">Gizlilik (KVKK)</a>.</p>
+    </div>
+
+  </div>
+</section>
+
+</main><!-- /.page-main -->
+
+<!-- KABUK: alt katman (giriş kapısı + footer + başa dön) -->
+<div id="fitShellBottom"></div>
+
+<!-- DadaFit ortak kabuk JS (tek kaynak): markup + davranış -->
+<script src="assets/js/fit-shell.js"></script>
+<script src="assets/js/fit-mesaj.js"></script>
+<script>
+/* ===== SAYFA JS — BAĞLI UYGULAMALAR ================================
+   Üç davranış, üçü de gerçekten çalışır ve ölçülebilir:
+   1) İzin anahtarları tek tek açılıp kapanır (role="switch" + aria-checked),
+      ilgili veri akışı satırı anında "Aktarılmıyor"a döner (belge §7 · §14).
+   2) "Bağlantıyı kes" durumu gerçekten değiştirir: rozet, durum metni,
+      son senkronizasyon, tüm izinler ve akış satırları birlikte döner.
+      Tersi de çalışır (geri alınabilirlik — belge §7).
+   3) Durum süzgeci URL parametresine yansır, geri/ileri çalışır,
+      yenilemede seçim korunur (belge §23), çiplerde aria-pressed (§20).
+   Durum merkezî dm_fit kaydının içine yazılır (FIT_SHELL.state) —
+   ayrı bir depo kurulmadı.
+   ==================================================================== */
+(function(){
+  'use strict';
+
+  var grid = document.getElementById('baGrid');
+  if(!grid) return;
+
+  var cards   = Array.prototype.slice.call(grid.querySelectorAll('.ba-card'));
+  var filter  = document.getElementById('baFilter');
+  var chips   = filter ? Array.prototype.slice.call(filter.querySelectorAll('.df-fchip')) : [];
+  var empty   = document.getElementById('baEmpty');
+  var elCount = document.getElementById('baCount');
+  var elOn    = document.getElementById('baStatOn');
+  var elPerm  = document.getElementById('baStatPerm');
+  var live    = document.getElementById('baLive');
+  var freq    = document.getElementById('baFreq');
+  var freqHelp= document.getElementById('baFreqHelp');
+
+  var FREQ_HELP = {
+    oto:  'Otomatikte cihazın pil ve ağ durumuna göre gün içinde birkaç kez okunur.',
+    saat: 'Saat başı bir kez okunur. Pil kullanımı otomatikten biraz daha yüksektir.',
+    gun:  'Günde bir kez, gece okunur. Gün içindeki değerler geç güncellenir.',
+    elle: 'Kendiliğinden okunmaz. Veriyi yalnız "Şimdi senkronize et" dediğinde alır.'
+  };
+
+  function say(msg){
+    if(!live) return;
+    live.innerHTML = '<i class="fa-solid fa-circle-check" aria-hidden="true"></i> ' + msg;
+  }
+
+  /* ---------- merkezî durum: dm_fit içinde 'baglantilar' ---------- */
+  var ST = (window.FIT_SHELL && window.FIT_SHELL.state) || null;
+
+  function snapshot(){
+    var o = {};
+    cards.forEach(function(c){
+      var izin = {};
+      c.querySelectorAll('.fp-sw[data-perm]').forEach(function(sw){
+        izin[sw.getAttribute('data-perm')] = sw.getAttribute('aria-checked') === 'true';
+      });
+      o[c.getAttribute('data-app')] = { durum: c.getAttribute('data-durum'), izin: izin };
+    });
+    if(freq) o._siklik = freq.value;
+    return o;
+  }
+  function save(){
+    if(!ST) return;
+    try{ var s = ST.read(); s.baglantilar = snapshot(); ST.write(s); }catch(e){}
+  }
+  function restore(){
+    if(!ST) return;
+    var saved;
+    try{ saved = (ST.read() || {}).baglantilar; }catch(e){ return; }
+    if(!saved) return;
+    cards.forEach(function(c){
+      var rec = saved[c.getAttribute('data-app')];
+      if(!rec) return;
+      if(rec.durum === 'on' || rec.durum === 'off') c.setAttribute('data-durum', rec.durum);
+      c.querySelectorAll('.fp-sw[data-perm]').forEach(function(sw){
+        var k = sw.getAttribute('data-perm');
+        if(rec.izin && typeof rec.izin[k] === 'boolean')
+          sw.setAttribute('aria-checked', rec.izin[k] ? 'true' : 'false');
+      });
+    });
+    if(freq && saved._siklik){
+      freq.value = saved._siklik;
+      if(freqHelp) freqHelp.textContent = FREQ_HELP[freq.value] || FREQ_HELP.oto;
+    }
+  }
+
+  /* ---------- kart boyama: rozet · durum · izin · akış · kesme düğmesi ---------- */
+  function paintCard(c){
+    var on   = c.getAttribute('data-durum') === 'on';
+    var lbl  = on ? c.getAttribute('data-lbl-on')  : c.getAttribute('data-lbl-off');
+    var cut  = on ? c.getAttribute('data-cut-on')  : c.getAttribute('data-cut-off');
+    var senk = on ? c.getAttribute('data-senk-on') : c.getAttribute('data-senk-off');
+
+    /* durum rozeti — renge EK OLARAK ikon ve metin taşır (belge §20) */
+    var badge = c.querySelector('[data-role="badge"]');
+    if(badge){
+      badge.className = 'fp-badge ' + (on ? 'ok' : 'off');
+      badge.innerHTML = '<i class="fa-solid fa-' + (on ? 'check' : 'xmark') + '" aria-hidden="true"></i> ' + lbl;
+    }
+    var dtxt = c.querySelector('[data-role="durum-txt"]'); if(dtxt) dtxt.textContent = lbl;
+    var senkEl = c.querySelector('[data-role="senk"]');   if(senkEl) senkEl.textContent = senk;
+    var cutTxt = c.querySelector('[data-role="cut-txt"]');if(cutTxt) cutTxt.textContent = cut;
+
+    var acik = 0;
+    c.querySelectorAll('.fp-sw[data-perm]').forEach(function(sw){
+      var yes = sw.getAttribute('aria-checked') === 'true';
+      if(!on) yes = false;
+      sw.setAttribute('aria-checked', yes ? 'true' : 'false');
+      sw.disabled = !on;
+      if(yes) acik++;
+      var row = sw.closest('.fp-toggle');
+      var t   = row && row.querySelector('.fp-sw-lbl');
+      if(t) t.textContent = on ? (yes ? 'Açık' : 'Kapalı') : 'Kapalı';
+
+      /* aynı anahtara bağlı veri akışı satırı */
+      var flow = c.querySelector('.ba-frow[data-flow="' + sw.getAttribute('data-perm') + '"]');
+      if(flow){
+        var dir = flow.querySelector('[data-role="dir"]');
+        if(yes){
+          flow.classList.remove('is-off');
+          if(dir){
+            dir.className = 'ba-dir ' + (dir.getAttribute('data-base') || 'in');
+            dir.innerHTML = dir.getAttribute('data-base-html') || dir.innerHTML;
+          }
+        }else{
+          flow.classList.add('is-off');
+          if(dir){
+            dir.className = 'ba-dir none';
+            dir.innerHTML = '<i class="fa-solid fa-ban" aria-hidden="true"></i> Aktarılmıyor';
+          }
+        }
+      }
+    });
+
+    var warn = c.querySelector('[data-role="nozin"]');
+    if(warn) warn.hidden = !(on && acik === 0);
+
+    return { on: on, acik: acik };
+  }
+
+  /* akış rozetlerinin özgün hâlini bir kez sakla (geri dönebilmek için) */
+  grid.querySelectorAll('.ba-frow [data-role="dir"]').forEach(function(d){
+    d.setAttribute('data-base', d.classList.contains('out') ? 'out' : (d.classList.contains('self') ? 'self' : 'in'));
+    d.setAttribute('data-base-html', d.innerHTML);
+  });
+
+  function paintAll(){
+    var etkin = 0, izin = 0;
+    cards.forEach(function(c){
+      var r = paintCard(c);
+      if(r.on) etkin++;
+      izin += r.acik;
+    });
+    if(elOn)   elOn.textContent   = etkin;
+    if(elPerm) elPerm.textContent = izin;
+  }
+
+  /* ---------- 1 · izin anahtarı: tek tek, klavyeyle de ---------- */
+  grid.addEventListener('click', function(e){
+    var sw = e.target.closest('.fp-sw[data-perm]');
+    if(!sw || sw.disabled) return;
+    flip(sw);
+  });
+  grid.addEventListener('keydown', function(e){
+    var sw = e.target.closest && e.target.closest('.fp-sw[data-perm]');
+    if(!sw || sw.disabled) return;
+    if(e.key === ' ' || e.key === 'Spacebar' || e.key === 'Enter'){ e.preventDefault(); flip(sw); }
+  });
+  function flip(sw){
+    var yes = sw.getAttribute('aria-checked') === 'true';
+    sw.setAttribute('aria-checked', yes ? 'false' : 'true');
+    var card = sw.closest('.ba-card');
+    paintCard(card); paintAll(); save();
+    var row  = sw.closest('.fp-toggle');
+    var name = row && row.querySelector('.txt b');
+    say((card.getAttribute('data-ad') || 'Bağlantı') + ' — “' +
+        (name ? name.textContent : 'izin') + '” izni ' + (yes ? 'kapatıldı' : 'açıldı') + '.');
+  }
+
+  /* ---------- 2 · bağlantıyı kes / yeniden bağla ---------- */
+  grid.addEventListener('click', function(e){
+    var btn = e.target.closest('[data-cut]');
+    if(!btn) return;
+    var card = btn.closest('.ba-card');
+    var on   = card.getAttribute('data-durum') === 'on';
+    if(on){
+      /* kesmeden önce açık izinleri sakla ki geri bağlanınca aynen dönsün */
+      var keep = {};
+      card.querySelectorAll('.fp-sw[data-perm]').forEach(function(sw){
+        keep[sw.getAttribute('data-perm')] = sw.getAttribute('aria-checked') === 'true';
+      });
+      card.setAttribute('data-onceki', JSON.stringify(keep));
+      card.setAttribute('data-durum', 'off');
+    }else{
+      card.setAttribute('data-durum', 'on');
+      var prev = card.getAttribute('data-onceki');
+      if(prev){
+        try{
+          var o = JSON.parse(prev);
+          card.querySelectorAll('.fp-sw[data-perm]').forEach(function(sw){
+            var k = sw.getAttribute('data-perm');
+            if(typeof o[k] === 'boolean') sw.setAttribute('aria-checked', o[k] ? 'true' : 'false');
+          });
+        }catch(err){}
+      }
+    }
+    paintCard(card); paintAll(); apply(current()); save();
+    say((card.getAttribute('data-ad') || 'Bağlantı') + ' — ' +
+        (on ? 'bağlantı kesildi, tüm izinler geri alındı.' : 'bağlantı yeniden kuruldu.'));
+    btn.focus();
+  });
+
+  /* ---------- 3 · durum süzgeci (URL + geri/ileri) ---------- */
+  function current(){
+    var v = new URLSearchParams(location.search).get('durum');
+    return (v === 'on' || v === 'off') ? v : 'all';
+  }
+  function apply(val){
+    var n = 0;
+    cards.forEach(function(c){
+      var show = (val === 'all') || (c.getAttribute('data-durum') === val);
+      c.classList.toggle('is-hidden', !show);
+      if(show) n++;
+    });
+    chips.forEach(function(ch){
+      var sel = ch.getAttribute('data-val') === val;
+      ch.classList.toggle('on', sel);
+      ch.setAttribute('aria-pressed', sel ? 'true' : 'false');
+    });
+    if(elCount) elCount.textContent = n;
+    if(empty) empty.classList.toggle('show', n === 0);
+    return n;
+  }
+  function go(val, push){
+    var u = new URL(location.href);
+    if(val === 'all') u.searchParams.delete('durum'); else u.searchParams.set('durum', val);
+    if(push) history.pushState({durum:val}, '', u.pathname + u.search + u.hash);
+    apply(val);
+  }
+  chips.forEach(function(ch){
+    ch.addEventListener('click', function(){ go(ch.getAttribute('data-val'), true); });
+  });
+  var reset = document.getElementById('baEmptyReset');
+  if(reset) reset.addEventListener('click', function(){ go('all', true); });
+  window.addEventListener('popstate', function(){ apply(current()); });
+
+  /* ---------- senkronizasyon tercihi ---------- */
+  if(freq){
+    freq.addEventListener('change', function(){
+      if(freqHelp) freqHelp.textContent = FREQ_HELP[freq.value] || FREQ_HELP.oto;
+      save();
+      say('Senkronizasyon sıklığı güncellendi: ' + freq.options[freq.selectedIndex].text + '.');
+    });
+  }
+  var syncBtn = document.getElementById('baSyncNow');
+  if(syncBtn){
+    syncBtn.addEventListener('click', function(){
+      var n = 0;
+      cards.forEach(function(c){
+        if(c.getAttribute('data-durum') !== 'on') return;
+        if(c.getAttribute('data-app') === 'manuel') return;   /* manuel giriş senkronize edilmez */
+        var el = c.querySelector('[data-role="senk"]');
+        if(el){ el.textContent = 'Az önce'; c.setAttribute('data-senk-on', 'Az önce'); }
+        n++;
+      });
+      say(n ? (n + ' bağlantı yenilendi. Yeni kayıtlar Aktivite Günlüğü’ne düştü.')
+            : 'Yenilenecek etkin bağlantı yok. Önce bir bağlantı kur.');
+    });
+  }
+
+  /* ---------- ilk boyama ---------- */
+  restore();
+  paintAll();
+  apply(current());
+})();
+</script>
+</body>
+</html>

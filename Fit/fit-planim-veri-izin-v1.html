@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8" />
+  <meta name="robots" content="noindex, nofollow" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Veri ve İzinlerim — Fit Planım · DadaFit</title>
+<link rel="icon" type="image/svg+xml" href="../kanon/varlik/dadafit-isaret.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="../kanon/varlik/dadafit-isaret-32.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="../kanon/varlik/dadafit-isaret-180.png" />
+<!-- FontAwesome 6.5.2 (kilitli ikon seti) -->
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+      integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+      crossorigin="anonymous" referrerpolicy="no-referrer" />
+<!-- DadaFit ortak kabuk (tek kaynak) -->
+<!-- KANON · yukleme sirasi: tokenlar -> markalar/fit (bilesenler YUKLENMEZ) -->
+<link rel="stylesheet" href="../kanon/tokenlar.css" />
+<link rel="stylesheet" href="../kanon/markalar/fit.css" />
+<link rel="stylesheet" href="assets/css/fit-shell.css" />
+<link rel="stylesheet" href="assets/css/fit-mesaj.css" />
+<style>
+/* ---- KALEM #8 · veri listesi ve indirme durumu (vz-*) ----
+   `.fp-card`/`.fp-row` kabuğunun içinde yaşar; kendi kutusu yok.
+   Renk · yuvarlaklık · gölge tokenden. */
+.vz-liste{margin:4px 0 14px;border:1px solid var(--line);border-radius:var(--radius-md);background:var(--bg);padding:16px;overflow-x:auto}
+.vz-tablo{width:100%;border-collapse:collapse;font-size:13px;min-width:460px}
+.vz-tablo th{text-align:left;font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);padding:0 10px 10px 0;border-bottom:1px solid var(--line)}
+.vz-tablo td{padding:10px 10px 10px 0;border-bottom:1px solid var(--line);color:var(--slate-2);font-weight:500}
+.vz-tablo tr:last-child td{border-bottom:none}
+.vz-tablo td:first-child{color:var(--slate);font-weight:600}
+.vz-indir{margin:4px 0 14px;border:1px solid var(--line);border-radius:var(--radius-md);background:var(--bg);padding:16px}
+.vz-adimlar{display:flex;flex-direction:column;gap:9px;margin-bottom:12px}
+.vz-adim{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:600;color:var(--muted)}
+.vz-adim i{flex:none;font-size:13px;color:var(--line)}
+.vz-adim.is-on{color:var(--slate)}
+.vz-adim.is-on i{color:var(--fit)}
+.vz-adim.is-done i{color:var(--fit)}
+@media (max-width:640px){ .vz-liste{padding:12px} }
+
+/* SAYFA CSS — Veri ve İzinlerim · Fit Planım
+ Kabuk, banner, sekme rayı, kart/liste/rozet/izin kitleri
+ assets/css/fit-shell.css'te tek kaynakta. Burada yalnız sayfaya özgü ölçüler. */
+
+</style>
+<!-- Metin yaslama katmani (tek kaynak) — sayfa stillerinden SONRA yuklenir,
+     boylece sayfa ici text-align kurallari yaslamayi geri alamaz -->
+<link rel="stylesheet" href="assets/css/fit-type.css" />
+</head>
+<body data-brand="fit" data-fit-page="fit-planim-veri-izin-v1">
+
+<!-- KABUK: ust katman (topbar+header+drawer+alt bar+gorus+cerez) — ortak kabuk JS basar -->
+<div id="fitShellTop"></div>
+
+<main class="page-main" id="pageMain">
+
+<!-- FİT PLANIM kabuğu: banner + breadcrumb + sekme rayı (ortak kabuk JS basar) -->
+<div id="fitPlanTop" data-plan-page="veri" data-plan-title="Veri ve İzinlerim" data-plan-sub="Hangi verinin ne için tutulduğu, kimin gördüğü ve ne kadar saklandığı. Hepsini buradan yönetirsin."></div>
+
+<section class="fp-body">
+  <div class="wrap">
+    <div class="fp-card">
+      <div class="fp-head"><h3><i class="fa-solid fa-sliders"></i> Amaç bazlı izinler</h3>
+        <span class="fp-badge off">Her biri ayrı ayrı kapatılabilir</span></div>
+      <div class="fp-toggle">
+        <span class="txt"><b>Sağlık ve hareket profili</b><small>Amaç: sana uygun hareket ve program önermek. Kapatırsan öneriler genelleşir.</small></span>
+        <span class="fp-sw-lbl">Açık</span>
+        <button class="fp-sw" data-izin-key="saglik-hareket" role="switch" aria-checked="true" aria-label="Sağlık ve hareket profili izni"></button>
+      </div>
+      <div class="fp-toggle">
+        <span class="txt"><b>Kilo ve ölçüm kaydı</b><small>Amaç: enerji ihtiyacını hesaplamak. Kapatırsan Enerji Defteri yalnız denge göstergesiyle çalışır.</small></span>
+        <span class="fp-sw-lbl">Açık</span>
+        <button class="fp-sw" data-izin-key="kilo-olcum" role="switch" aria-checked="true" aria-label="Kilo ve ölçüm kaydı izni"></button>
+      </div>
+      <div class="fp-toggle">
+        <span class="txt"><b>Aktivite ve performans kaydı</b><small>Amaç: ilerlemeni göstermek, set-tekrar gelişimini izlemek.</small></span>
+        <span class="fp-sw-lbl">Açık</span>
+        <button class="fp-sw" data-izin-key="aktivite-performans" role="switch" aria-checked="true" aria-label="Aktivite ve performans kaydı izni"></button>
+      </div>
+      <div class="fp-toggle">
+        <span class="txt"><b>Ağrı ve hareket kısıtı bilgisi</b><small>Amaç: riskli hareketleri elemek ve gerektiğinde seni uzmana yönlendirmek.</small></span>
+        <span class="fp-sw-lbl">Açık</span>
+        <button class="fp-sw" data-izin-key="agri-kisit" role="switch" aria-checked="true" aria-label="Ağrı ve hareket kısıtı bilgisi izni"></button>
+      </div>
+      <div class="fp-toggle">
+        <span class="txt"><b>Döngü takibi</b><small>Amaç: döngüne uyumlu hareket önerisi. Şu an kapalı.</small></span>
+        <span class="fp-sw-lbl">Kapalı</span>
+        <button class="fp-sw" data-izin-key="dongu-takibi" role="switch" aria-checked="false" aria-label="Döngü takibi izni"></button>
+      </div>
+      <div class="fp-toggle">
+        <span class="txt"><b>Pazarlama iletişimi</b><small>Hizmet için gerekli bildirimlerden <b>ayrıdır</b>; kapatmak hizmeti etkilemez.</small></span>
+        <span class="fp-sw-lbl">Kapalı</span>
+        <button class="fp-sw" data-izin-key="pazarlama" role="switch" aria-checked="false" aria-label="Pazarlama iletişimi izni"></button>
+      </div>
+    </div>
+
+    <div class="fp-card" style="margin-top:22px">
+      <div class="fp-head"><h3><i class="fa-solid fa-user-tie"></i> Antrenörünün gördüğü veriler</h3>
+        <a class="fp-act" href="fit-antrenorum.html">Antrenörlerim <i class="fa-solid fa-arrow-right"></i></a></div>
+      <p style="font-size:14px;color:var(--slate-2);font-weight:500;line-height:1.6;margin-bottom:8px">Selin Aksoy ile çalışıyorsun. Aşağıdakiler ona <b>açık</b>; kalan her şey kapalı.</p>
+      <div class="fp-list">
+        <div class="fp-row"><span class="ico"><i class="fa-solid fa-eye"></i></span>
+          <span class="txt"><b>Antrenman geçmişi ve set kayıtları</b><small>Planını sana göre kurabilmesi için</small></span>
+          <span class="end"><span class="fp-badge ok"><i class="fa-solid fa-check"></i> Görüyor</span></span></div>
+        <div class="fp-row"><span class="ico"><i class="fa-solid fa-eye"></i></span>
+          <span class="txt"><b>Ağrı ve hareket kısıtı bilgisi</b><small>Riskli hareketleri elemesi için</small></span>
+          <span class="end"><span class="fp-badge ok"><i class="fa-solid fa-check"></i> Görüyor</span></span></div>
+        <div class="fp-row"><span class="ico"><i class="fa-solid fa-eye-slash"></i></span>
+          <span class="txt"><b>Enerji Defteri ve öğün kayıtları</b><small>Beslenme antrenörün alanı değil</small></span>
+          <span class="end"><span class="fp-badge off"><i class="fa-solid fa-xmark"></i> Görmüyor</span></span></div>
+        <div class="fp-row"><span class="ico"><i class="fa-solid fa-eye-slash"></i></span>
+          <span class="txt"><b>Kilo ve ölçüm kaydı</b><small>Sen açmadıkça paylaşılmaz</small></span>
+          <span class="end"><span class="fp-badge off"><i class="fa-solid fa-xmark"></i> Görmüyor</span></span></div>
+      </div>
+    </div>
+
+    <div class="fp-grid" style="margin-top:22px">
+      <!-- #indir: hesap menüsündeki "Verilerimi İndir" kalemi buraya geliyor.
+           Çapa YOKTU ve bağlantı sessizce sayfa başına düşüyordu (ölçüldü). -->
+      <div class="fp-card" id="indir">
+        <div class="fp-head"><h3><i class="fa-solid fa-database"></i> Verini gör, indir, sil</h3></div>
+        <div class="fp-list">
+          <div class="fp-row"><span class="ico"><i class="fa-solid fa-list"></i></span>
+            <span class="txt"><b>Tuttuğumuz veriler</b><small>Profil, antrenman kaydı, enerji defteri, challenge katılımı, mesajlar</small></span>
+            <span class="end"><button class="fp-act fp-actbtn" type="button" id="vzListele" data-lg-gate data-lg-title="Verini listelemek için giriş yap" data-lg-desc="Hangi verilerin tutulduğunu görmek için hesabına giriş yapman gerekiyor." aria-expanded="false" aria-controls="vzListe">Listele</button></span></div>
+
+          <!-- =====================================================================
+           KALEM #8 · VERİ LİSTELEME VE İNDİRME DURUMU  (envanter §4/8)
+           ---------------------------------------------------------------------
+           Ölçülen kusur: "Listele" ve "İndir" düğmelerinin HEDEF EKRANI YOKTU;
+           giriş yapılmış hâlde ikisi de hiçbir şey açmıyordu.
+           Sözleşme §3.2 "verilerimi indir" yüzeyini dört markada zorunlu
+           sayıyor; Fit'te bu yüzey yarımdı.
+           ⚠ BACKEND YOK: gerçek bir dışa aktarım paketi üretilmez. Liste
+           sayfada duran gerçek kalemlerden çizilir; indirme adımı hazırlanma
+           durumunu gösterir ve kullanıcıya paketin e-posta ile geleceğini
+           söyler — sahte bir dosya indirtilmez. -->
+          <div class="vz-liste" id="vzListe" hidden>
+            <table class="vz-tablo">
+              <caption class="sr-only">Hesabında tutulan veri grupları</caption>
+              <thead><tr><th scope="col">Veri grubu</th><th scope="col">Kayıt</th><th scope="col">İlk kayıt</th><th scope="col">Saklama</th></tr></thead>
+              <!-- YER TUTUCU — gerçek kayıt sayıları gelince değişecek.
+                   Grup adları ve saklama süreleri GERÇEK; yalnız sayılar örnek. -->
+              <tbody data-yer-tutucu="veri-listesi-sayilari">
+                <tr><td>Profil ve hesap bilgileri</td><td>1</td><td>14 Şub 2026</td><td>Hesap açık kaldıkça</td></tr>
+                <tr><td>Antrenman ve set kaydı</td><td>184</td><td>16 Şub 2026</td><td>Hesap açık kaldıkça</td></tr>
+                <tr><td>Enerji defteri girdileri</td><td>241</td><td>16 Şub 2026</td><td>Hesap açık kaldıkça</td></tr>
+                <tr><td>Ölçüm ve kilo kaydı</td><td>32</td><td>18 Şub 2026</td><td>Hesap açık kaldıkça</td></tr>
+                <tr><td>Challenge katılımları</td><td>7</td><td>2 Mar 2026</td><td>Hesap açık kaldıkça</td></tr>
+                <tr><td>Antrenör mesajları ve dosyalar</td><td>96</td><td>12 Mar 2026</td><td>Hesap açık kaldıkça</td></tr>
+                <tr><td>Bağlı uygulama senkron kaydı</td><td>1.408</td><td>19 Şub 2026</td><td>90 gün</td></tr>
+                <tr><td>Destek talepleri ve yazışma</td><td>8</td><td>21 Mar 2026</td><td>Yasal saklama süresi</td></tr>
+              </tbody>
+            </table>
+            <p class="fk-help"><i class="fa-solid fa-circle-info" aria-hidden="true"></i> Hesabını silersen bu grupların tamamı 30 gün içinde silinir; faturalar yasal saklama süresince muhasebe kaydında kalır.</p>
+          </div>
+
+          <div class="fp-row"><span class="ico"><i class="fa-solid fa-download"></i></span>
+            <span class="txt"><b>Veriyi indir</b><small>Makine okunur dosya olarak, tek seferde</small></span>
+            <span class="end"><button class="fp-act fp-actbtn" type="button" id="vzIndir" data-lg-gate data-lg-title="Veriyi indirmek için giriş yap" data-lg-desc="Verini makine okunur dosya olarak indirmek için hesabına giriş yapman gerekiyor.">İndir</button></span></div>
+
+          <div class="vz-indir" id="vzIndirDurum" hidden>
+            <div class="vz-adimlar" id="vzAdimlar">
+              <span class="vz-adim is-on"><i class="fa-solid fa-circle-notch fa-spin" aria-hidden="true"></i> Paket hazırlanıyor</span>
+              <span class="vz-adim"><i class="fa-regular fa-circle" aria-hidden="true"></i> Dosya oluşturuluyor</span>
+              <span class="vz-adim"><i class="fa-regular fa-circle" aria-hidden="true"></i> Bağlantı e-postana gönderiliyor</span>
+            </div>
+            <p class="hs-state" id="vzIndirNot" role="status"><i class="fa-solid fa-circle-info" aria-hidden="true"></i> <span>Paketin hazırlanması birkaç dakika sürebilir; hazır olunca <b>elif.sahin@eposta.com</b> adresine indirme bağlantısı gönderilir. Bağlantı 48 saat geçerlidir.</span></p>
+          </div>
+          <div class="fp-row"><span class="ico"><i class="fa-solid fa-pen"></i></span>
+            <span class="txt"><b>Kaydı düzelt</b><small>Yanlış girdiğin ölçüm ya da antrenman kaydını düzeltebilirsin</small></span>
+            <span class="end"><a class="fp-act" href="fit-egzersizlerim.html">Geçmişe git</a></span></div>
+          <div class="fp-row"><span class="ico"><i class="fa-solid fa-trash-can"></i></span>
+            <span class="txt"><b>Veriyi sil</b><small>Yalnız DadaFit verisi ya da tüm hesap — ikisi ayrı seçenektir</small></span>
+            <span class="end"><a class="fp-act" href="fit-hesabim.html">Sil</a></span></div>
+        </div>
+      </div>
+
+      <div class="fp-card">
+        <div class="fp-head"><h3><i class="fa-solid fa-hourglass-half"></i> Saklama ve erişim</h3></div>
+        <div class="fp-list">
+          <div class="fp-row"><span class="ico"><i class="fa-regular fa-calendar"></i></span>
+            <span class="txt"><b>Antrenman ve enerji kaydı</b><small>Hesabın açık kaldığı sürece; hesap silinince 30 gün içinde silinir</small></span>
+            <span class="end">Aktif</span></div>
+          <div class="fp-row"><span class="ico"><i class="fa-solid fa-user-shield"></i></span>
+            <span class="txt"><b>Rol bazlı erişim</b><small>Antrenör yalnız kendi danışanını görür; yönetim erişimi işlem kaydına yazılır</small></span>
+            <span class="end">Açık</span></div>
+          <div class="fp-row"><span class="ico"><i class="fa-solid fa-clipboard-list"></i></span>
+            <span class="txt"><b>İşlem kaydı</b><small>Verine kimin ne zaman eriştiği tutulur</small></span>
+            <span class="end"><a class="fp-act" href="veri-islem-kaydi-v1.html">Görüntüle <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a></span></div>
+          <div class="fp-row"><span class="ico"><i class="fa-solid fa-child"></i></span>
+            <span class="txt"><b>Yaş ve veli onayı</b><small>16 yaş altı kullanıcıda veli onayı istenir; sağlık profili alanları kapalıdır</small></span>
+            <span class="end">Uygulanıyor</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="fp-card" style="margin-top:22px">
+      <div class="fp-head"><h3><i class="fa-regular fa-bell"></i> Bildirim kategorileri</h3>
+        <a class="fp-act" href="fit-hesabim.html">Kanal ayarları <i class="fa-solid fa-arrow-right"></i></a></div>
+      <p style="font-size:14px;color:var(--slate-2);font-weight:500;line-height:1.6;margin-bottom:6px">Her kategori ayrı kapatılabilir; sıklığı da kanal ayarlarından belirlersin.</p>
+      <div class="fp-toggle">
+        <span class="txt"><b>Antrenman hatırlatması</b><small>Planladığın günlerde, seçtiğin saatte</small></span>
+        <span class="fp-sw-lbl">Açık</span><button class="fp-sw" data-izin-key="bild-antrenman" role="switch" aria-checked="true" aria-label="Antrenman hatırlatması"></button>
+      </div>
+      <div class="fp-toggle">
+        <span class="txt"><b>Program günü ve challenge görevi</b><small>Gün başında tek bildirim</small></span>
+        <span class="fp-sw-lbl">Açık</span><button class="fp-sw" data-izin-key="bild-program-challenge" role="switch" aria-checked="true" aria-label="Program günü bildirimi"></button>
+      </div>
+      <div class="fp-toggle">
+        <span class="txt"><b>Randevu hatırlatması</b><small>Görüşmeden 24 saat ve 1 saat önce</small></span>
+        <span class="fp-sw-lbl">Açık</span><button class="fp-sw" data-izin-key="bild-randevu" role="switch" aria-checked="true" aria-label="Randevu hatırlatması"></button>
+      </div>
+      <div class="fp-toggle">
+        <span class="txt"><b>Ödeme ve belge yenileme</b><small>Yalnız işlem gerektiğinde</small></span>
+        <span class="fp-sw-lbl">Açık</span><button class="fp-sw" data-izin-key="bild-odeme" role="switch" aria-checked="true" aria-label="Ödeme ve belge bildirimi"></button>
+      </div>
+    </div>
+
+    <!-- R6 · MADDE 2 — sayfa altındaki "Sağlık ve güvenlik" şeridinden TAŞINDI.
+         Üç tercih aynı localStorage anahtarlarıyla burada yaşıyor:
+         dm_fit_sound · dm_fit_vibe · dm_fit_motion. Kayıtlı tercih kaybolmadı. -->
+    <div class="fp-card" style="margin-top:22px" id="uygulama">
+      <div class="fp-head"><h3><i class="fa-solid fa-sliders"></i> Uygulama tercihleri</h3>
+        <span class="fp-badge off">Bu cihazda saklanır</span></div>
+      <p style="font-size:14px;color:var(--slate-2);font-weight:500;line-height:1.6;margin-bottom:6px">Sayaç, zamanlayıcı ve animasyon davranışı. Hesabına değil, kullandığın tarayıcıya kaydedilir.</p>
+      <div class="fp-toggle">
+        <span class="txt"><b>Sayaç sesi</b><small>Set ve dinlenme sayacı bittiğinde kısa bir uyarı sesi çalar</small></span>
+        <span class="fp-sw-lbl">Açık</span><button class="fp-sw" data-fit-pref="dm_fit_sound" role="switch" aria-checked="true" aria-label="Sayaç sesi"></button>
+      </div>
+      <div class="fp-toggle">
+        <span class="txt"><b>Titreşim</b><small>Sayaç bittiğinde telefonun titrer. Titreşimi destekleyen cihazlarda çalışır</small></span>
+        <span class="fp-sw-lbl">Kapalı</span><button class="fp-sw" data-fit-pref="dm_fit_vibe" role="switch" aria-checked="false" aria-label="Titreşim"></button>
+      </div>
+      <div class="fp-toggle">
+        <span class="txt"><b>Hareketi azalt</b><small>Kaydırma animasyonlarını ve otomatik oynayan arka plan videolarını kapatır. Site genelinde geçerlidir</small></span>
+        <span class="fp-sw-lbl">Kapalı</span><button class="fp-sw" data-fit-pref="dm_fit_motion" role="switch" aria-checked="false" aria-label="Hareketi azalt"></button>
+      </div>
+    </div>
+
+    <div class="hr-note">
+      <i class="fa-solid fa-circle-info"></i>
+      <p>Yasal metinler: <a href="yasal-v1.html?metin=kvkk">Gizlilik (KVKK)</a> · <a href="yasal-v1.html?metin=aydinlatma">Aydınlatma Metni</a> · <a href="yasal-v1.html?metin=kullanim">Kullanım Koşulları</a>. Sağlık içeriklerinin kapsamı: <a href="saglik-bilgilendirme-v1.html">Sağlık Bilgilendirmesi</a>.</p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- KABUK: alt katman (giris kapisi + footer + basa don) -->
+<div id="fitShellBottom"></div>
+
+<!-- DadaFit ortak kabuk JS (tek kaynak): markup + davranis -->
+<script src="assets/js/fit-shell.js"></script>
+<script src="assets/js/fit-mesaj.js"></script>
+<script>
+/* açma-kapama düğmeleri — klavye ile de çalışır (belge §14.3) */
+function fpBoya(sw, on){
+  sw.setAttribute('aria-checked', on ? 'true' : 'false');
+  var lbl = sw.parentElement.querySelector('.fp-sw-lbl');
+  if(lbl) lbl.textContent = on ? 'Açık' : 'Kapalı';
+}
+function fpBagla(sw, flip){
+  sw.addEventListener('click', flip);
+  sw.addEventListener('keydown', function(e){
+    if(e.key === ' ' || e.key === 'Enter'){ e.preventDefault(); flip(); }
+  });
+}
+
+/* =====================================================================
+ K19 · İZİN VE BİLDİRİM ANAHTARLARI — TEK ANAHTARDA KAYIT
+ Eskiden bu anahtarlar yalnız `aria-checked` boyuyordu, hiçbir yere
+ yazmıyordu: kullanıcı izni kapatıp sayfayı yenileyince hepsini açık
+ buluyordu. Şimdi hepsi `dm_fit_izin_v1`e yazılıyor ve açılışta okunuyor.
+ (`dm_fit_sound`/`dm_fit_vibe`/`dm_fit_motion` — aşağıdaki ayrı blok —
+ zaten gerçek bir anahtara yazıyordu, buna DOKUNULMADI.)
+ Şema: { surum:1, izinler:{ "<anahtar>":true|false }, guncelleme:ISO }
+ ===================================================================== */
+(function(){
+  var IZIN_KEY = 'dm_fit_izin_v1';
+  function izinOku(){
+    try{
+      var v = JSON.parse(localStorage.getItem(IZIN_KEY) || 'null');
+      return (v && v.izinler) ? v.izinler : {};
+    }catch(e){ return {}; }
+  }
+  function izinYaz(anahtar, deger){
+    try{
+      var kayit = JSON.parse(localStorage.getItem(IZIN_KEY) || 'null');
+      if(!kayit || typeof kayit !== 'object') kayit = {surum:1, izinler:{}};
+      if(!kayit.izinler) kayit.izinler = {};
+      kayit.izinler[anahtar] = deger;
+      kayit.guncelleme = new Date().toISOString();
+      localStorage.setItem(IZIN_KEY, JSON.stringify(kayit));
+    }catch(e){}
+  }
+  var kayitli = izinOku();
+  document.querySelectorAll('.fp-sw[data-izin-key]').forEach(function(sw){
+    var anahtar = sw.getAttribute('data-izin-key');
+    var on = Object.prototype.hasOwnProperty.call(kayitli, anahtar)
+      ? !!kayitli[anahtar]
+      : sw.getAttribute('aria-checked') === 'true';
+    fpBoya(sw, on);
+    fpBagla(sw, function(){
+      on = sw.getAttribute('aria-checked') !== 'true';
+      fpBoya(sw, on);
+      izinYaz(anahtar, on);
+    });
+  });
+})();
+
+/* R6 · MADDE 2 — kabuğun sağlık şeridinden taşınan üç uygulama tercihi.
+   localStorage anahtarları DEĞİŞMEDİ: dm_fit_sound · dm_fit_vibe · dm_fit_motion.
+   Eskiden `fit-shell.js`'teki pref() bu üçünü aynı anahtarlarla yazıyordu;
+   kayıtlı tercih burada aynı değerle okunuyor. `dm_fit_motion` ayrıca
+   html.reduce-motion sınıfını anında uyguluyor (eski davranışın aynısı). */
+document.querySelectorAll('.fp-sw[data-fit-pref]').forEach(function(sw){
+  var key = sw.getAttribute('data-fit-pref');
+  var on;
+  try{
+    var v = localStorage.getItem(key);
+    on = v === null ? (sw.getAttribute('aria-checked') === 'true') : v === '1';
+  }catch(e){ on = sw.getAttribute('aria-checked') === 'true'; }
+
+  function uygula(){
+    fpBoya(sw, on);
+    if(key === 'dm_fit_motion'){
+      document.documentElement.classList.toggle('reduce-motion', on);
+      if(on) document.documentElement.classList.remove('reveal-ready');
+    }
+  }
+  uygula();
+  fpBagla(sw, function(){
+    on = !on;
+    try{ localStorage.setItem(key, on ? '1' : '0'); }catch(e){}
+    uygula();
+  });
+});
+
+/* =====================================================================
+ KALEM #8 · VERİ LİSTELEME VE İNDİRME DURUMU
+ ⚠ BACKEND YOK: gerçek bir dışa aktarım paketi üretilmez ve sahte bir
+ dosya indirtilmez. "Listele" sayfadaki listeyi açar/kapatır; "İndir"
+ hazırlama adımlarını sırayla işaretler ve paketin e-posta ile geleceğini
+ söyler — kullanıcıya olmayan bir dosya vaat edilmez.
+ ===================================================================== */
+(function(){
+  var liste=document.getElementById('vzListe'), btn=document.getElementById('vzListele');
+  if(btn && liste){
+    btn.addEventListener('click', function(){
+      if(!document.body.classList.contains('is-auth')) return;   /* kapı kabukta */
+      var acik = liste.hidden;
+      liste.hidden = !acik;
+      btn.setAttribute('aria-expanded', acik ? 'true' : 'false');
+      btn.textContent = acik ? 'Gizle' : 'Listele';
+    });
+  }
+
+  var ind=document.getElementById('vzIndir'), kutu=document.getElementById('vzIndirDurum');
+  if(ind && kutu){
+    ind.addEventListener('click', function(){
+      if(!document.body.classList.contains('is-auth')) return;
+      if(!kutu.hidden) return;
+      kutu.hidden=false;
+      ind.disabled=true;
+      var adimlar=[].slice.call(kutu.querySelectorAll('.vz-adim'));
+      var i=0;
+      var ilerle=function(){
+        adimlar[i].classList.remove('is-on');
+        adimlar[i].classList.add('is-done');
+        adimlar[i].querySelector('i').className='fa-solid fa-circle-check';
+        i++;
+        if(i<adimlar.length){
+          adimlar[i].classList.add('is-on');
+          adimlar[i].querySelector('i').className='fa-solid fa-circle-notch fa-spin';
+          setTimeout(ilerle, 1100);
+        } else {
+          ind.disabled=false; ind.textContent='Yeniden İste';
+          var not=document.getElementById('vzIndirNot');
+          if(not) not.querySelector('span').innerHTML =
+            'Paket isteğin alındı. Hazır olunca <b>elif.sahin@eposta.com</b> adresine indirme bağlantısı gönderilir; ' +
+            'bağlantı 48 saat geçerlidir. <b>Bu prototipte gerçek bir dosya üretilmez.</b>';
+        }
+      };
+      setTimeout(ilerle, 1100);
+    });
+  }
+})();
+</script>
+</body>
+</html>

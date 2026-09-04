@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8" />
+  <meta name="robots" content="noindex, nofollow" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Terim — Spor Sözlüğü | DadaFit</title>
+<link rel="icon" type="image/svg+xml" href="../kanon/varlik/dadafit-isaret.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="../kanon/varlik/dadafit-isaret-32.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="../kanon/varlik/dadafit-isaret-180.png" />
+<!-- FontAwesome 6.5.2 (kilitli ikon seti) -->
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+      integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+      crossorigin="anonymous" referrerpolicy="no-referrer" />
+<!-- DadaFit ortak kabuk (tek kaynak) -->
+<!-- KANON · yukleme sirasi: tokenlar -> markalar/fit (bilesenler YUKLENMEZ) -->
+<link rel="stylesheet" href="../kanon/tokenlar.css" />
+<link rel="stylesheet" href="../kanon/markalar/fit.css" />
+<link rel="stylesheet" href="assets/css/fit-shell.css" />
+<link rel="stylesheet" href="assets/css/fit-mesaj.css" />
+<style>
+/* =====================================================================
+ SAYFA CSS — SPOR SÖZLÜĞÜ · TERİM DETAYI  (H1 · 5. tur)
+
+ Adres: sozluk-detay-v1.html?slug=<terim-slug>
+ Veri: assets/js/sozluk-veri.js — liste sayfasıyla AYNI dizi.
+
+ BANNER: dosya adında "-detay-" GEÇİYOR → kabuk body'ye
+ data-fit-hero-kind="detay" yazıyor → yükseklik --banner-h-detay
+ (560 / 617 / 726). Bu doğru davranış; sayfa buna karşı koymuyor ve
+ banner ölçüsüne dair tek satır CSS yazmıyor. Yalnız görsel bildiriliyor.
+
+ KABUĞA DOKUNULMADI (KARARLAR K35). Sınıf öneki `sz-`.
+ ===================================================================== */
+.lib-top{--lib-img:url('https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=1680&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-16');--lib-pos:center 40%}
+
+.sz-body{padding:var(--sec-pad-sm) 0 var(--sec-pad);background:var(--bg-white)}
+
+/* ---------- İKİ KOLON ---------- */
+.sz-cols{display:grid;grid-template-columns:minmax(0,1fr) 348px;gap:30px;align-items:start}
+.sz-side{position:sticky;top:132px;display:flex;flex-direction:column;gap:14px}
+
+/* ---------- ANA GÖVDE ---------- */
+.sz-block{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);
+  padding:26px 28px}
+.sz-block+.sz-block{margin-top:18px}
+.sz-block>h2{font-size:15px;letter-spacing:.02em;margin-bottom:14px;
+  display:flex;align-items:center;gap:10px}
+.sz-block>h2 i{color:var(--fit-deep);font-size:14px}
+.sz-lead{font-size:16.5px;font-weight:500;color:var(--slate-2);line-height:1.72;max-width:var(--measure)}
+.sz-quote{display:flex;gap:15px;align-items:flex-start;background:var(--fit-tint);
+  border:1px solid var(--fit-line);border-radius:var(--radius-lg);padding:20px 22px;margin-top:18px}
+.sz-quote>i{flex:none;color:var(--fit-deep);font-size:16px;margin-top:3px}
+.sz-quote .k{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--fit-deep);display:block;margin-bottom:5px}
+.sz-quote p{font-size:15px;font-weight:600;color:var(--slate);line-height:1.6;margin:0;font-style:italic}
+
+/* karıştırılanlar */
+.sz-mix{display:flex;gap:15px;align-items:flex-start;background:#fff8ee;border:1px solid #f0e0c6;
+  border-radius:var(--radius-lg);padding:20px 22px}
+.sz-mix>i{flex:none;color:#a9761f;font-size:17px;margin-top:2px}
+.sz-mix b{display:block;font-size:15px;color:var(--slate);margin-bottom:5px}
+.sz-mix p{font-size:14px;font-weight:500;color:var(--slate-2);line-height:1.65;margin:0}
+.sz-mix a{color:var(--fit-deep);font-weight:700;text-decoration:underline;text-underline-offset:2px}
+
+/* ---------- YAN KÖPRÜ KARTLARI ---------- */
+.sz-link-card{display:flex;gap:14px;align-items:flex-start;background:var(--paper);
+  border:1px solid var(--line);border-radius:var(--radius-lg);padding:17px 19px;
+  transition:.2s var(--ease)}
+.sz-link-card:hover{border-color:var(--fit);background:var(--fit-tint);transform:translateY(-2px)}
+.sz-link-card .ico{flex:none;width:38px;height:38px;border-radius:var(--radius-md);
+  background:var(--fit-tint);color:var(--fit-deep);display:grid;place-items:center;font-size:15px}
+.sz-link-card:hover .ico{background:var(--fit);color:#fff}
+.sz-link-card .t{min-width:0;flex:1}
+.sz-link-card .k{font-size:10.5px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+.sz-link-card b{display:block;font-size:15px;color:var(--slate);margin:3px 0 3px}
+.sz-link-card small{display:block;font-size:12.5px;font-weight:500;color:var(--muted);line-height:1.5}
+.sz-link-card>.go{flex:none;color:var(--fit-deep);font-size:13px;margin-top:11px}
+
+/* kategori kartı */
+.sz-kat{background:var(--slate);border-radius:var(--radius-lg);padding:20px 22px;color:#fff}
+.sz-kat .k{font-size:10.5px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;
+  color:var(--fit-bright);display:flex;align-items:center;gap:8px}
+.sz-kat b{display:block;font-size:17px;margin:8px 0 8px;letter-spacing:-.01em}
+.sz-kat p{font-size:13px;font-weight:500;color:rgba(255,255,255,.74);line-height:1.65;margin:0}
+.sz-kat a{display:inline-flex;align-items:center;gap:8px;margin-top:14px;font-size:13px;
+  font-weight:700;color:var(--fit-bright);transition:gap .2s var(--ease)}
+.sz-kat a:hover{gap:12px}
+
+/* ---------- AİLE LİSTESİ ---------- */
+.sz-fam{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.sz-fam a{display:flex;align-items:flex-start;gap:12px;border:1px solid var(--line);
+  border-radius:var(--radius-md);padding:14px 15px;background:var(--paper);transition:.2s var(--ease)}
+.sz-fam a:hover{border-color:var(--fit);background:var(--fit-tint)}
+.sz-fam .g{flex:none;width:30px;height:30px;border-radius:var(--radius-sm);background:var(--fit-tint);
+  color:var(--fit-deep);display:grid;place-items:center;font-size:13.5px;font-weight:800}
+.sz-fam a:hover .g{background:var(--fit);color:#fff}
+.sz-fam b{display:block;font-size:14px;color:var(--slate);line-height:1.3}
+.sz-fam small{display:block;font-size:12px;font-weight:500;color:var(--muted);margin-top:2px}
+
+/* ---------- KÜNYE (referanstaki "KÜNYE" bloğunun karşılığı) ---------- */
+.sz-kunye{border:1px solid var(--line);border-radius:var(--radius-md);overflow:hidden;background:var(--paper)}
+.sz-kunye .r{display:flex;gap:14px;padding:11px 15px}
+.sz-kunye .r+.r{border-top:1px solid var(--line)}
+.sz-kunye .k{flex:0 0 42%;font-size:12.5px;font-weight:600;color:var(--muted);line-height:1.45}
+.sz-kunye .v{flex:1;min-width:0;font-size:13px;font-weight:700;color:var(--slate);line-height:1.45}
+
+/* R8 madde 10 — "Sık aranan sorular" (.sz-ask) ve "Etiketler" (.sz-tags)
+   bölümleri kalktı; stilleri de silindi. Geri alma: bu iki blok ve aşağıdaki
+   `aramalar` / `etiketler` üreticileri git geçmişinden geri gelir. */
+
+/* ---------- ÖNCEKİ / SONRAKİ ---------- */
+.sz-nav{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:18px}
+.sz-nav a{display:flex;align-items:center;gap:13px;border:1px solid var(--line);
+  border-radius:var(--radius-lg);padding:16px 18px;background:var(--paper);transition:.2s var(--ease)}
+.sz-nav a:hover{border-color:var(--fit);background:var(--fit-tint)}
+.sz-nav a>i{flex:none;color:var(--fit-deep);font-size:14px}
+.sz-nav .t{min-width:0;flex:1}
+.sz-nav .k{font-size:10.5px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+.sz-nav b{display:block;font-size:14.5px;color:var(--slate);margin-top:2px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sz-nav .son{flex-direction:row-reverse;text-align:right}
+
+/* ÖLÜ KURAL — R11/M10'da `.sz-back` bloğu işaretlemeden çıkarıldı
+   (Beyar: "şu iki butonu kaldır"). Kural bilerek BIRAKILDI: blok geri
+   istenirse biçimi hazır dursun, silinip yeniden yazılmasın. */
+.sz-back{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:22px}
+
+/* ---------- BULUNAMADI ---------- */
+.sz-404{display:flex;flex-direction:column;align-items:center;text-align:center;padding:44px 20px}
+.sz-404 .ico{width:64px;height:64px;border-radius:var(--radius-circle);background:var(--fit-tint);
+  color:var(--fit-deep);display:grid;place-items:center;font-size:25px;margin-bottom:16px}
+.sz-404 h2{font-size:20px;margin-bottom:8px}
+.sz-404 p{font-size:14px;color:var(--muted);font-weight:500;max-width:430px;line-height:1.65;margin-bottom:20px}
+.sz-404 .acts{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+
+@media (max-width:1024px){
+  .sz-cols{grid-template-columns:minmax(0,1fr);gap:20px}
+  .sz-side{position:static}
+}
+@media (max-width:640px){
+  .sz-block{padding:20px 18px}
+  .sz-lead{font-size:15.5px}
+  .sz-fam{grid-template-columns:minmax(0,1fr)}
+  .sz-nav{grid-template-columns:minmax(0,1fr)}
+  .sz-nav .son{flex-direction:row;text-align:left}
+  .sz-quote,.sz-mix{padding:16px 16px}
+}
+</style>
+<!-- Metin yaslama katmani (tek kaynak) — sayfa stillerinden SONRA yuklenir,
+     boylece sayfa ici text-align kurallari yaslamayi geri alamaz -->
+<link rel="stylesheet" href="assets/css/fit-type.css" />
+</head>
+<body data-brand="fit" data-fit-page="sozluk-detay-v1">
+
+<!-- KABUK: ust katman -->
+<div id="fitShellTop"></div>
+
+<main class="page-main" id="pageMain">
+
+<!-- ===== 1 · BANNER + BREADCRUMB (DETAY AİLESİ · R15, kabuk otomatik atar) ===== -->
+<section class="lib-top">
+  <div class="wrap">
+    <nav class="lib-crumb" aria-label="Sayfa yolu">
+      <a href="dadafit-hub-v1.html" class="crumb-home"><i class="fa-solid fa-house" aria-hidden="true"></i><span class="sr-only">DadaFit ana sayfa</span></a>
+      <i class="fa-solid fa-chevron-right"></i>
+      <a href="sozluk-v1.html">Spor Sözlüğü</a>
+      <i class="fa-solid fa-chevron-right"></i>
+      <span class="cur" id="szCrumb">Terim</span>
+    </nav>
+    <span class="eyebrow" id="szEyebrow"><i class="fa-solid fa-book-open" aria-hidden="true"></i> Spor Sözlüğü</span>
+    <h1 id="szH1">Terim</h1>
+    <p class="lib-sub" id="szSub"></p>
+    <div class="lib-stats" id="szStats"></div>
+  </div>
+</section>
+
+<!-- ===== 2 · GÖVDE ===== -->
+<section class="sz-body">
+  <div class="wrap" id="szMain"><!-- JS basar --></div>
+</section>
+
+</main>
+
+<!-- KABUK: alt katman -->
+<div id="fitShellBottom"></div>
+
+<script src="assets/js/fit-shell.js"></script>
+<script src="assets/js/fit-mesaj.js"></script>
+<!-- Sözlük verisi — liste sayfasıyla AYNI dizi, kopya yok -->
+<script src="assets/js/sozluk-veri.js"></script>
+<script>
+/* =====================================================================
+ SAYFA JS — SPOR SÖZLÜĞÜ · TERİM DETAYI
+
+ BİLİNMEYEN SLUG'DA 404 YOK. `egzersiz-detay-v1.html`'in yaptığı gibi
+ anlamlı bir düşüş yapılıyor: sayfa yine HTTP 200 döner, banner ve gövde
+ "terim bulunamadı" durumunu basar, sözlüğe dönüş bağlantısı ile en yakın
+ birkaç öneri gösterilir. Sessiz bir başka terime düşülmüyor — kullanıcı
+ yanlış adrese geldiğini görüyor.
+
+ Köprüler tek yerden kuruluyor (SOZLUK.hareketAdres / kasAdres /
+ terimAdres) ki liste ve detay aynı adrese gitsin.
+
+ NOT — anatomi köprüsü: `anatomi-v1.html` H2 oturumunun sayfası ve bu
+ branch'te henüz yok. Köprü bilerek bırakıldı; birleştirmeden sonra
+ karşılık bulacak. Sahte sayfa üretilmedi, köprü kaldırılmadı.
+ ===================================================================== */
+(function(){
+  var S = window.SOZLUK;
+  var main = document.getElementById('szMain');
+  if(!S || !main) return;
+
+  function esc(s){ return String(s).replace(/[&<>"]/g, function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+
+  var slug = (new URLSearchParams(location.search).get('slug') || '').trim();
+  var T = S.bul(slug);
+
+  /* ---------------- BULUNAMADI DALI ---------------- */
+  if(!T){
+    document.getElementById('szCrumb').textContent = 'Terim bulunamadı';
+    document.getElementById('szH1').textContent    = 'Bu terim sözlükte yok';
+    document.getElementById('szEyebrow').innerHTML = '<i class="fa-solid fa-circle-question" aria-hidden="true"></i> Spor Sözlüğü';
+    document.getElementById('szSub').textContent   =
+      slug ? '“' + slug + '” adresine karşılık gelen bir terim bulunamadı.'
+           : 'Adreste bir terim belirtilmemiş.';
+    document.getElementById('szStats').innerHTML =
+      '<div class="lib-stat"><b>' + S.TERIMLER.length + '</b><span>terim sözlükte</span></div>' +
+      '<div class="lib-stat"><b>' + S.KATEGORILER.length + '</b><span>kategori</span></div>';
+    document.title = 'Terim bulunamadı — Spor Sözlüğü | DadaFit';
+
+    /* rastgele değil: alfabenin başından birkaç terim, hep aynı öneri */
+    var oneri = S.TERIMLER.slice(0, 6).map(function(t){
+      return '<a href="' + S.terimAdres(t.slug) + '"><span class="g">' + t.harf + '</span>' +
+             '<span><b>' + esc(t.terim) + '</b><small>' + esc(t.ingilizce) + '</small></span></a>';
+    }).join('');
+
+    main.innerHTML =
+      '<div class="sz-block"><div class="sz-404">' +
+        '<div class="ico"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i></div>' +
+        '<h2>Terim bulunamadı</h2>' +
+        '<p>Aradığın terim sözlükte yer almıyor ya da bağlantı yanlış. Sözlükte ' +
+          S.TERIMLER.length + ' terim var; harf dizininden ya da arama kutusundan bakabilirsin.</p>' +
+        '<div class="acts">' +
+          '<a class="btn btn-fit" href="sozluk-v1.html"><i class="fa-solid fa-list" aria-hidden="true"></i> Tüm sözlüğe dön</a>' +
+          '<a class="btn btn-ghost" href="egzersiz-kutuphane-v1.html"><i class="fa-solid fa-dumbbell" aria-hidden="true"></i> DadaFit Egzersizleri</a>' +
+        '</div>' +
+      '</div></div>' +
+      '<div class="sz-block"><h2><i class="fa-solid fa-compass" aria-hidden="true"></i> Sözlükten birkaç terim</h2>' +
+        '<div class="sz-fam">' + oneri + '</div></div>';
+    return;
+  }
+
+  /* ---------------- TERİM DALI ---------------- */
+  var K = S.kategori(T.kategori) || { ad:'', giris:'', ikon:'fa-solid fa-book-open' };
+  var komsu = S.komsu(T);
+  var aile  = S.aile(T, 6);
+
+  /* banner */
+  document.getElementById('szCrumb').textContent   = T.terim;
+  document.getElementById('szH1').textContent      = T.terim;
+  document.getElementById('szEyebrow').innerHTML   = '<i class="' + K.ikon + '" aria-hidden="true"></i> ' + esc(K.ad);
+  /* referansın başlık altı satırı: yabancı karşılık + okunuş */
+  document.getElementById('szSub').textContent     = 'İngilizce karşılığı: ' + T.ingilizce +
+    (T.kunye.okunus ? '  ·  okunuşu: ' + T.kunye.okunus : '');
+  document.getElementById('szStats').innerHTML =
+    '<div class="lib-stat"><b>' + T.harf + '</b><span>harf dizininde</span></div>' +
+    '<div class="lib-stat"><b>' + K.adet + '</b><span>terim bu ailede</span></div>' +
+    '<div class="lib-stat"><b>' + S.TERIMLER.length + '</b><span>terim sözlükte</span></div>';
+  document.title = T.terim + ' — Spor Sözlüğü | DadaFit';
+
+  /* karıştırılanlar */
+  var mix = '';
+  if(T.karistirilanlar){
+    var kt = S.bul(T.karistirilanlar.slug);
+    if(kt) mix =
+      '<div class="sz-block"><h2><i class="fa-solid fa-code-compare" aria-hidden="true"></i> Karıştırılanlar</h2>' +
+      '<div class="sz-mix"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i><div>' +
+        '<b>' + esc(T.terim) + ' &harr; ' + esc(kt.terim) + '</b>' +
+        '<p>' + esc(T.karistirilanlar.not) +
+        ' <a href="' + S.terimAdres(kt.slug) + '">' + esc(kt.terim) + ' terimine bak</a>.</p>' +
+      '</div></div></div>';
+  }
+
+  /* künye tablosu — boş alan basılmıyor */
+  var kunye = '<div class="sz-kunye">' + S.kunyeSatirlari(T).map(function(r){
+    return '<div class="r"><span class="k">' + esc(r.k) + '</span>' +
+           '<span class="v">' + esc(r.v) + '</span></div>';
+  }).join('') + '</div>';
+
+  /* R8 MADDE 10 — İKİ BÖLÜM KALKTI.
+     · "Sık aranan sorular" (`.sz-ask`): kategori kalıbından türetilen dört
+       ifadeydi; gerçek bir arama verisi değildi, sayfaya bilgi eklemiyordu.
+     · "Etiketler" (`.sz-tags`): dört kalemden üçünün karşılığı sayfada zaten
+       vardı — kategori kırıntıda ve eyebrow'da, ilgili kas yan köprü
+       kartında, dil künye tablosunda. Tek benzersiz yol "H harfi" süzgeciydi;
+       ona da sözlük listesindeki harf rayı gidiyor.
+     Kaybolan benzersiz hedef YOK; `S.aramalar()` yardımcısı artık
+     çağrılmıyor (veri dosyasında duruyor, silinmedi). */
+
+  /* yan köprü kartları */
+  var yan = '';
+  if(T.hareket) yan +=
+    '<a class="sz-link-card" href="' + S.hareketAdres(T.hareket) + '" data-kop="hareket">' +
+      '<span class="ico"><i class="fa-solid fa-dumbbell" aria-hidden="true"></i></span>' +
+      '<span class="t"><span class="k">İlgili hareket</span>' +
+      '<b>' + esc(S.hareketAdi(T.hareket) || 'Kütüphanede aç') + '</b>' +
+      '<small>Bu terimin geçtiği hareketi kütüphanede adım adım anlatımıyla gör.</small></span>' +
+      '<i class="fa-solid fa-arrow-right go" aria-hidden="true"></i></a>';
+  if(T.kas) yan +=
+    '<a class="sz-link-card" href="' + S.kasAdres(T.kas) + '" data-kop="kas">' +
+      '<span class="ico"><i class="fa-solid fa-person" aria-hidden="true"></i></span>' +
+      '<span class="t"><span class="k">İlgili kas</span>' +
+      '<b>' + esc(S.kasAdi(T.kas) || 'Kas haritasında aç') + '</b>' +
+      '<small>Bu terimle anılan kası anatomi haritasında incele.</small></span>' +
+      '<i class="fa-solid fa-arrow-right go" aria-hidden="true"></i></a>';
+
+  main.innerHTML =
+  '<div class="sz-cols">' +
+    '<div class="sz-col-main">' +
+
+      '<div class="sz-block">' +
+        '<h2><i class="fa-solid fa-book-open" aria-hidden="true"></i> Tanım</h2>' +
+        '<p class="sz-lead" id="szTanim">' + esc(T.tanim) + '</p>' +
+        '<div class="sz-quote"><i class="fa-solid fa-quote-left" aria-hidden="true"></i><div>' +
+          '<span class="k">Örnek kullanım</span><p id="szOrnek">' + esc(T.ornek) + '</p>' +
+        '</div></div>' +
+      '</div>' +
+
+      mix +
+
+      '<div class="sz-block">' +
+        '<h2><i class="' + K.ikon + '" aria-hidden="true"></i> Bunlar da bu ailede</h2>' +
+        '<div class="sz-fam">' +
+          aile.map(function(x){
+            return '<a href="' + S.terimAdres(x.slug) + '"><span class="g">' + x.harf + '</span>' +
+                   '<span><b>' + esc(x.terim) + '</b><small>' + esc(x.ingilizce) + '</small></span></a>';
+          }).join('') +
+        '</div>' +
+      '</div>' +
+
+      '<nav class="sz-nav" aria-label="Alfabetik gezinme">' +
+        '<a href="' + S.terimAdres(komsu.onceki.slug) + '" id="szPrev">' +
+          '<i class="fa-solid fa-arrow-left" aria-hidden="true"></i>' +
+          '<span class="t"><span class="k">Önceki terim</span><b>' + esc(komsu.onceki.terim) + '</b></span></a>' +
+        '<a class="son" href="' + S.terimAdres(komsu.sonraki.slug) + '" id="szNext">' +
+          '<i class="fa-solid fa-arrow-right" aria-hidden="true"></i>' +
+          '<span class="t"><span class="k">Sonraki terim</span><b>' + esc(komsu.sonraki.terim) + '</b></span></a>' +
+      '</nav>' +
+
+      /* R11/M10 · Beyar: "şu iki butonu kaldır" — `.sz-back` bloğu
+         ("Tüm sözlüğe dön" + "<harf> harfindeki terimler") ÇIKARILDI.
+         Sözlüğe dönüş yolu kapanmadı: kırıntıda "Sözlük" kalemi ve
+         hemen üstteki önceki/sonraki terim gezinmesi duruyor.
+         404 kipindeki (terim bulunamadı) çıkış düğmeleri DOKUNULMADI —
+         orada sayfanın başka çıkışı yok. */
+
+      '<div class="hr-note">' +
+        '<i class="fa-solid fa-shield-heart" aria-hidden="true"></i>' +
+        '<p>Bu tanım <b>genel bilgilendirme</b> amaçlıdır; teşhis, tedavi ya da kişiye özel antrenman ve beslenme önerisi değildir. Ağrı, özel bir sağlık durumu, gebelik ya da uzun süreli hareketsizlik varsa bir hekime veya fizyoterapiste danış. Ayrıntı: <a href="saglik-bilgilendirme-v1.html">Sağlık Bilgilendirmesi</a>.</p>' +
+      '</div>' +
+
+    '</div>' +
+
+    '<aside class="sz-side">' +
+      yan +
+      kunye +
+      '<div class="sz-kat">' +
+        '<span class="k"><i class="' + K.ikon + '" aria-hidden="true"></i> Kategori</span>' +
+        '<b>' + esc(K.ad) + '</b>' +
+        '<p>' + esc(K.giris) + '</p>' +
+        '<a href="sozluk-v1.html?kategori=' + encodeURIComponent(T.kategori) + '">' +
+          'Bu kategorideki ' + K.adet + ' terim <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>' +
+      '</div>' +
+      '<a class="sz-link-card" href="sozluk-v1.html">' +
+        '<span class="ico"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i></span>' +
+        '<span class="t"><span class="k">Sözlükte ara</span><b>' + S.TERIMLER.length + ' terim</b>' +
+        '<small>Harf, kategori ve arama kutusu birlikte süzer.</small></span>' +
+        '<i class="fa-solid fa-arrow-right go" aria-hidden="true"></i></a>' +
+    '</aside>' +
+  '</div>';
+})();
+</script>
+</body>
+</html>

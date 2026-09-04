@@ -1,0 +1,1641 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8" />
+  <meta name="robots" content="noindex, nofollow" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Antrenman Oluşturucu — DadaFit · Birkaç seçimle gün gün antrenman planı</title>
+<link rel="icon" type="image/svg+xml" href="../kanon/varlik/dadafit-isaret.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="../kanon/varlik/dadafit-isaret-32.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="../kanon/varlik/dadafit-isaret-180.png" />
+<!-- FontAwesome 6.5.2 (kilitli ikon seti) -->
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+      integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+      crossorigin="anonymous" referrerpolicy="no-referrer" />
+<!-- DadaFit ortak kabuk (tek kaynak) -->
+<!-- KANON · yukleme sirasi: tokenlar -> markalar/fit (bilesenler YUKLENMEZ) -->
+<link rel="stylesheet" href="../kanon/tokenlar.css" />
+<link rel="stylesheet" href="../kanon/markalar/fit.css" />
+<link rel="stylesheet" href="assets/css/fit-shell.css" />
+<link rel="stylesheet" href="assets/css/fit-mesaj.css" />
+<style>
+/* =====================================================================
+ SAYFA CSS — ANTRENMAN OLUŞTURUCU (H3 · 7. oturum)
+
+ Tam sayfa sihirbaz, pop-up DEĞİL (K33 / K35). İskelet R13'ün
+ `programini-bul-v1.html`inden alındı: numaralı adım rayı, soru bloğu,
+ büyük tıklanabilir kartlar, alt bar (Adım n/5 + Geri/İleri), sonuç,
+ alt aksiyon, yasal şerit. Sınıf öneki `wg-` (workout generator).
+
+ R13'ten FARKI: R13 var olan programları puanlayıp SIRALIYOR; burada
+ motor yeni bir plan KURUYOR — havuz süzme + gün gün dağıtma. Kurallar
+ sayfaya gömülü değil, `tasks/H3-KURALLAR.md`'nin §9 bloğuyla birebir
+ aynı `KURALLAR` nesnesinden okunuyor.
+
+ Banner LİSTE ailesine giriyor (R15): `.lib-top` + dosya adında
+ "-detay-" geçmiyor → kabuk body'ye data-fit-hero-kind="liste" yazıyor
+ → yükseklik --banner-h-liste (544 / 607 / 587). Burada banner ölçüsüne
+ dair TEK SATIR yok; yalnız arka plan görseli bildiriliyor.
+ ===================================================================== */
+.lib-top{--lib-img:url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=1680&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-16');--lib-pos:center 38%}
+
+/* banner güven şeridi — .lib-stats kabuğun blok sırasını verdiği için
+   kap sınıfı korunuyor, kalemler sayısal değil ikonlu */
+.lib-stats .wg-trust{display:inline-flex;align-items:center;gap:9px;font-size:13px;font-weight:600;color:rgba(255,255,255,.72)}
+.lib-stats .wg-trust i{color:var(--fit-bright);font-size:13px}
+
+.wg-wrap{max-width:980px}
+
+/* ---- ADIM RAYI ---- */
+.wg-rail{list-style:none;display:flex;align-items:stretch;gap:8px;margin:0 0 26px;padding:0}
+.wg-rail li{flex:1;display:flex;align-items:center;gap:10px;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);padding:13px 13px;transition:.2s var(--ease);min-width:0}
+.wg-rail .no{flex:none;width:28px;height:28px;border-radius:var(--radius-circle);display:grid;place-items:center;background:#ececeb;color:var(--muted);font-size:13px;font-weight:800}
+.wg-rail .lbl{font-size:13.5px;font-weight:700;color:var(--muted);line-height:1.3;min-width:0}
+.wg-rail li.on{border-color:var(--fit);background:var(--fit-tint)}
+.wg-rail li.on .no{background:var(--fit);color:#fff}
+.wg-rail li.on .lbl{color:var(--fit-deep)}
+.wg-rail li.done .no{background:var(--fit-deep);color:#fff}
+.wg-rail li.done .lbl{color:var(--slate)}
+
+/* ---- SORU KUTUSU ---- */
+.wg-card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);box-shadow:var(--sh-sm);overflow:hidden}
+.wg-head{padding:22px 26px 18px;border-bottom:1px solid var(--line)}
+.wg-head h2{font-size:20px;margin-bottom:5px}
+.wg-head p{font-size:13.5px;color:var(--muted);font-weight:500;line-height:1.6;margin:0}
+.wg-body{padding:24px 26px 6px}
+.wg-step{display:none}
+.wg-step.on{display:block;animation:fadeUp .3s var(--ease)}
+/* R9 · EKSİK ZORUNLU SORU İŞARETİ (Beyar).
+   Önce yalnız adım altında tek bir genel uyarı vardı ("zorunlu soruları
+   yanıtla") ve HANGİ sorunun eksik olduğu belli olmuyordu — adımda birden
+   çok soru varsa kullanıcı hepsini gözle tarıyordu. Artık eksik sorunun
+   kendisi işaretleniyor, sayfa ona kaydırılıyor ve genel uyarı sorunun
+   adını yazıyor. */
+.wg-q{margin-bottom:26px;scroll-margin-top:130px}
+.wg-eksik{display:none;margin:0 0 10px;font-size:13px;font-weight:700;color:#A32B10;
+  align-items:center;gap:7px}
+.wg-q.eksik>.wg-eksik{display:flex}
+.wg-q.eksik>h3{color:#A32B10}
+/* şerit SORU BLOĞUNUN tamamını sarar (başlık + ipucu + uyarı + seçenekler).
+   Önce yalnız `.wg-opts`'a veriliyordu ve kartların 16px solunda, oluğun
+   içinde asılı kalıyordu — hangi bloğa ait olduğu okunmuyordu. */
+.wg-q.eksik{border-left:3px solid #A32B10;padding-left:16px;margin-left:-19px}
+.wg-q:last-child{margin-bottom:0}
+.wg-q h3{font-size:18px;margin-bottom:5px}
+.wg-q h3 .wg-ops{font-size:11.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);background:#ececeb;border-radius:var(--radius-pill);padding:3px 9px;margin-left:8px;vertical-align:2px}
+.wg-hint{font-size:13px;color:var(--muted);font-weight:500;margin-bottom:14px}
+
+/* seçenek ızgarası — sütun sayısı SORUYA göre değişiyor (keşif §9:
+   "adıma göre sütun sayısı"). 2–3 seçenekli adımlar geniş kart, çok
+   seçenekli adımlar sıkışık ızgara. */
+.wg-opts{display:grid;gap:12px}
+.wg-opts[data-kol="1"]{grid-template-columns:minmax(0,1fr)}
+.wg-opts[data-kol="2"]{grid-template-columns:repeat(2,minmax(0,1fr))}
+.wg-opts[data-kol="3"]{grid-template-columns:repeat(3,minmax(0,1fr))}
+.wg-opts[data-kol="4"]{grid-template-columns:repeat(4,minmax(0,1fr))}
+
+.wg-opt{font-family:inherit;text-align:left;background:#fff;border:1.5px solid var(--line);border-radius:var(--radius-lg);padding:14px 16px;cursor:pointer;display:flex;align-items:flex-start;gap:12px;transition:.18s var(--ease)}
+.wg-opt .ico{flex:none;width:34px;height:34px;border-radius:var(--radius-md);background:var(--fit-tint);color:var(--fit-deep);display:grid;place-items:center;font-size:14px;transition:.18s var(--ease)}
+.wg-opt .txt{min-width:0}
+.wg-opt b{display:block;font-size:14.5px;font-weight:700;color:var(--slate);line-height:1.35}
+.wg-opt small{display:block;font-size:12.5px;font-weight:500;color:var(--muted);line-height:1.5;margin-top:3px}
+.wg-opt .meta{display:inline-flex;align-items:center;gap:6px;margin-top:8px;font-size:11.5px;font-weight:800;letter-spacing:.01em;color:var(--fit-deep);background:var(--fit-tint);border:1px solid var(--fit-line);border-radius:var(--radius-pill);padding:3px 10px}
+.wg-opt[aria-pressed="true"] .meta{background:#fff;border-color:var(--fit)}
+.wg-opt:hover{border-color:var(--fit);background:var(--fit-tint)}
+.wg-opt[aria-pressed="true"]{border-color:var(--fit);background:var(--fit-tint);box-shadow:inset 0 0 0 1px var(--fit)}
+.wg-opt[aria-pressed="true"] .ico{background:var(--fit);color:#fff}
+.wg-opt:focus-visible{outline:3px solid var(--fit);outline-offset:2px}
+/* ================= R8/23 · DIKKAT DURUMU KIRMIZI VURGU =================
+ SORUN: "Agri", "Gebelik", "Ozel saglik durumu", "Uzun suredir hareketsiz"
+ secilince secenek her secenek gibi YESIL oluyordu — plan uretilmeyecegini
+ haber veren tek isaret yoktu.
+ RENK: #A32B10 · zemin #FFF5F2 uzerinde kontrast 6.73:1 (AA kucuk metin
+ 4.5:1 esigini gecer). Secilen secenegin basligi #8C2409 = 8.26:1 (AAA).
+ Rozet metni #FFFFFF uzerine #A32B10 zemin = 7.22:1 (AAA).
+ Uc oran da WCAG 2.1 relative-luminance formuluyle hesaplandi.
+ IKINCI ISARET (renk tek basina degil): (a) gorunur "Dikkat" rozeti + ucgen
+ ikon, (b) 1.5px yerine 2px kenarlik + sol 4px seritten ayri ic golge,
+ (c) ikon kutusu dolu kirmiziya donuyor. Renk gormeyen de ayirt eder. */
+.wg-opt[data-risk="1"]:hover{border-color:#A32B10;background:#FFF5F2}
+.wg-opt[data-risk="1"][aria-pressed="true"]{
+  border-color:#A32B10;background:#FFF5F2;
+  box-shadow:inset 0 0 0 1px #A32B10, inset 4px 0 0 #A32B10}
+.wg-opt[data-risk="1"][aria-pressed="true"] .ico{background:#A32B10;color:#fff}
+.wg-opt[data-risk="1"][aria-pressed="true"] b{color:#8C2409}
+.wg-opt[data-risk="1"]:focus-visible{outline-color:#A32B10}
+.wg-dikkat{display:inline-flex;align-items:center;gap:5px;margin-left:8px;
+  padding:2px 8px;border-radius:var(--radius-pill);background:#A32B10;color:#fff;
+  font-size:10.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;
+  vertical-align:middle;line-height:1.6}
+.wg-dikkat i{font-size:9.5px}
+/* sıkışık kip — gün sayısı ve odak kartları */
+/* ÇİP DİZİSİ — 7 kalemlik "odak" sorusu ızgarada son satırda BOŞ KUTU
+   bırakıyordu (@1440 4+3, @390 2+2+2+1). Akan çip dizisinde satır
+   uzunluğu içerikten çıkıyor, boşluk kalmıyor; ayrıca isteğe bağlı
+   sorunun görsel ağırlığı zorunlu ekipman kartlarının altına iniyor.
+   Dil, kütüphanedeki süzgeç çipiyle (.df-fchip) aynı ailede. */
+.wg-opts.cip{display:flex;flex-wrap:wrap;gap:9px}
+.wg-opt.cip{flex:0 0 auto;align-items:center;gap:9px;padding:10px 16px 10px 10px;border-radius:var(--radius-pill)}
+.wg-opt.cip .ico{width:26px;height:26px;font-size:12px;border-radius:var(--radius-circle)}
+.wg-opt.cip b{font-size:13.5px}
+.wg-opt.dar{flex-direction:column;align-items:center;text-align:center;gap:8px;padding:14px 10px}
+.wg-opt.dar b{font-size:14px}
+.wg-opt.dar small{margin-top:1px;font-size:11.5px}
+
+/* ---- CİNSİYET KARTI — H2'nin SVG gövde modeli ---- */
+.wg-opt.govde{flex-direction:column;align-items:center;text-align:center;gap:10px;padding:18px 14px 16px}
+/* R6 · MADDE 17 — gövde görselleri anatomi setiyle BİRLEŞTİRİLDİ.
+   Aynı dört dosya (assets/svg/govde-*.svg) artık iki katmanlı: altta
+   Higgsfield render'ı (<image class="an-govde">), üstte segmentlenmiş
+   tıklama path'leri (.an-bolge). Burada seçim yok — path'ler yalnız
+   SEÇİLİ DURUMUN yeşil yıkamasını taşıyor, tıklama hedefi değiller.
+   Eski .an-siluet / .an-cizgi kuralları kaldırıldı: o düğümler artık yok
+   ve .an-bolge kuralsız kalırsa SVG varsayılanı olan SİYAHA boyanırdı.
+   aspect-ratio yeni ortak viewBox'tan (758/1380). */
+.wg-govde{width:100%;max-width:132px;aspect-ratio:758/1380;display:grid;place-items:center}
+.wg-govde svg{width:100%;height:100%;display:block}
+.wg-govde .an-govde{opacity:.86;transition:opacity .18s var(--ease)}
+.wg-govde .an-bolge{fill:transparent;pointer-events:none;transition:fill .18s var(--ease)}
+.wg-opt.govde:hover .wg-govde .an-govde,
+.wg-opt.govde[aria-pressed="true"] .wg-govde .an-govde{opacity:1}
+.wg-opt.govde:hover .wg-govde .an-bolge{fill:color-mix(in srgb,var(--fit) 18%,transparent)}
+.wg-opt.govde[aria-pressed="true"] .wg-govde .an-bolge{fill:color-mix(in srgb,var(--fit) 34%,transparent)}
+@supports not (color: color-mix(in srgb, red 50%, transparent)){
+  .wg-opt.govde:hover .wg-govde .an-bolge{fill:rgba(0,150,227,.18)}
+  .wg-opt.govde[aria-pressed="true"] .wg-govde .an-bolge{fill:rgba(0,150,227,.34)}
+}
+.wg-govde-yok{background:var(--fit-tint);border-radius:var(--radius-md)}
+
+/* ---- ALT BAR ---- */
+.wg-foot{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:18px 26px 20px;border-top:1px solid var(--line);margin-top:24px;flex-wrap:wrap}
+.wg-no{font-size:12.5px;font-weight:700;color:var(--muted);letter-spacing:.02em}
+.wg-nav{display:flex;align-items:center;gap:10px}
+.wg-warn{width:100%;font-size:12.5px;font-weight:600;color:#a8431f;display:none;align-items:center;gap:8px}
+.wg-warn.on{display:flex}
+.wg-warn i{font-size:13px}
+
+/* ---- R6 · MADDE 3 · KARTIN YASAL ALT BANDI ----
+   Kabuğun `.hr-note` kutusu (yeşil zemin + kenarlık + 34px üst boşluk +
+   yuvarlak köşe) kart DIŞINDA duran bağımsız bir blok içindi. Kartın içine
+   girince aynı görünüm iki kutunun iç içe geçmesi demek olurdu; band
+   kartın kendi kenarına yaslanıyor: dış kenarlık ve yarıçap yok, yalnız
+   üstte ayraç çizgisi ve kartın alt köşe yarıçapı. */
+.wg-card>.wg-legal{
+  margin-top:0;border:none;border-top:1px solid var(--fit-line);
+  border-radius:0;padding:18px 26px 20px;background:var(--fit-tint);
+  align-items:flex-start;gap:12px
+}
+.wg-card>.wg-legal>i{font-size:15px;margin-top:1px}
+.wg-card>.wg-legal p{font-size:13px;line-height:1.62;color:var(--slate-2)}
+
+/* ---- SONUÇ: PLAN ÖZETİ ---- */
+.wg-ozet{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:20px}
+.wg-ozet span{display:inline-flex;align-items:center;gap:8px;background:var(--fit-tint);border:1px solid var(--fit-line);border-radius:var(--radius-pill);padding:7px 14px;font-size:12.5px;font-weight:700;color:var(--fit-deep)}
+.wg-ozet i{font-size:12px}
+
+/* havuz sınırı bildirimi — gizlenmiyor, söyleniyor */
+.wg-uyari{display:flex;gap:13px;align-items:flex-start;background:var(--fit-tint);border:1px solid var(--fit-line);border-radius:var(--radius-lg);padding:15px 18px;margin-bottom:20px}
+.wg-uyari>i{color:var(--fit-deep);font-size:15px;margin-top:2px;flex:none}
+.wg-uyari p{margin:0;font-size:13px;font-weight:500;color:var(--slate-2);line-height:1.65}
+
+/* ---- SONUÇ: GÜNLER ---- */
+.wg-gunler{display:flex;flex-direction:column;gap:14px}
+.wg-gun{background:#fff;border:1px solid var(--line);border-radius:var(--radius-lg);overflow:hidden}
+.wg-gun-head{display:flex;align-items:center;gap:13px;padding:15px 19px;background:var(--paper);border-bottom:1px solid var(--line);flex-wrap:wrap}
+.wg-gun-no{flex:none;width:32px;height:32px;border-radius:var(--radius-circle);background:var(--fit);color:#fff;display:grid;place-items:center;font-size:13.5px;font-weight:800}
+.wg-gun-ad{flex:1;min-width:0;font-size:16px;font-weight:700;color:var(--slate)}
+.wg-gun-kalip{font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.wg-nicin{padding:13px 19px;border-bottom:1px solid var(--line);background:#fcfcfb}
+.wg-nicin b{font-size:12px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:5px}
+.wg-nicin ul{margin:0;padding-left:17px;display:flex;flex-direction:column;gap:4px}
+.wg-nicin li{font-size:12.5px;font-weight:500;color:var(--slate-2);line-height:1.55}
+.wg-nicin li i{color:var(--fit-deep);font-style:normal;font-weight:700}
+.wg-hrk{display:flex;flex-direction:column}
+.wg-hrk a{display:flex;align-items:center;gap:14px;padding:13px 19px;border-top:1px solid var(--line);transition:.18s var(--ease)}
+.wg-hrk a:first-child{border-top:none}
+.wg-hrk a:hover{background:var(--fit-tint)}
+.wg-hrk .s{flex:none;width:26px;height:26px;border-radius:var(--radius-sm);background:#ececeb;color:var(--slate-2);display:grid;place-items:center;font-size:12px;font-weight:800}
+.wg-hrk .t{flex:1;min-width:0}
+.wg-hrk .t b{display:block;font-size:14.5px;font-weight:700;color:var(--slate);line-height:1.35}
+.wg-hrk .t small{display:block;font-size:12px;font-weight:500;color:var(--muted);margin-top:2px}
+.wg-recete{flex:none;display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.wg-recete span{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-pill);padding:4px 10px;font-size:11.5px;font-weight:700;color:var(--slate-2);white-space:nowrap}
+.wg-hrk .go{flex:none;color:var(--fit-deep);font-size:13px}
+/* şema v2 · §3.3 — günün ısınması. `.wg-nicin` ile aynı şeritte durur ama
+ zemini değil AKSANI farklı: ısınma bir gerekçe değil, yapılacak ilk iş. */
+.wg-isinma{display:flex;gap:11px;align-items:flex-start;padding:13px 19px;border-bottom:1px solid var(--line);background:var(--fit-tint)}
+.wg-isinma>i{flex:none;margin-top:2px;color:var(--fit-deep);font-size:13px}
+.wg-isinma b{display:block;font-size:12px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:var(--fit-deep);margin-bottom:4px}
+.wg-isinma p{font-size:12.5px;font-weight:500;color:var(--slate-2);line-height:1.55;margin:0}
+.wg-isinma p a{color:var(--fit-deep);font-weight:700;text-decoration:underline;text-underline-offset:2px}
+.wg-isinma p a:focus-visible{outline:3px solid var(--fit-tint);outline-offset:2px;border-radius:var(--radius-sm)}
+/* "zorlarsa şu" satırı — ikinci kademe bilgi, ad satırından bir ton aşağıda */
+.wg-hrk .t .alt{display:block;font-size:12px;font-weight:600;color:var(--fit-deep);margin-top:3px}
+.wg-hrk .t .alt i{font-size:10px;margin-right:5px}
+
+/* risk dalı — kişisel egzersiz reçetesi üretilmez */
+/* R8/23: sonuc blogu da ayni kirmiziyi kullanir — ikon zaten kirmiziydi,
+ BASLIK notrdu. Sol 4px serit = ikinci isaret (renk tek basina degil). */
+.wg-risk{display:flex;gap:14px;align-items:flex-start;background:#fff5f2;border:1px solid #f3cdc0;border-left:4px solid #A32B10;border-radius:var(--radius-lg);padding:18px 20px;margin-bottom:16px}
+.wg-risk>i{color:#A32B10;font-size:18px;margin-top:2px;flex:none}
+.wg-risk b{display:block;font-size:15px;color:#8C2409;margin-bottom:5px}
+.wg-risk p{font-size:13.5px;color:var(--slate-2);font-weight:500;line-height:1.65;margin:0}
+.wg-list{display:flex;flex-direction:column;gap:12px}
+.wg-hit{display:flex;align-items:flex-start;gap:15px;background:#fff;border:1px solid var(--line);border-radius:var(--radius-lg);padding:17px 19px;transition:.2s var(--ease)}
+.wg-hit:hover{border-color:var(--fit);background:var(--fit-tint)}
+.wg-hit .rank{flex:none;width:32px;height:32px;border-radius:var(--radius-circle);background:var(--fit);color:#fff;display:grid;place-items:center;font-size:13.5px;font-weight:800}
+.wg-hit .txt{flex:1;min-width:0}
+.wg-hit .kind{font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.wg-hit .ad{display:block;font-size:16px;font-weight:700;color:var(--slate);margin:3px 0 4px}
+.wg-hit small{display:block;font-size:13px;font-weight:500;color:var(--slate-2);line-height:1.55}
+.wg-hit .go{flex:none;color:var(--fit-deep);font-size:13px;margin-top:9px}
+
+/* seçimlerin + nasıl kuruldu */
+.wg-sum,.wg-how{margin-top:22px;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);padding:18px 20px}
+.wg-sum h3,.wg-how h3{font-size:14px;margin-bottom:10px}
+.wg-sum-row{display:flex;gap:14px;align-items:baseline;padding:8px 0;border-top:1px solid var(--line)}
+.wg-sum-row:first-of-type{border-top:none;padding-top:0}
+.wg-sum-k{flex:0 0 40%;font-size:12.5px;font-weight:600;color:var(--muted);line-height:1.5}
+.wg-sum-v{flex:1;display:flex;flex-wrap:wrap;gap:6px}
+.wg-pick{background:var(--fit-tint);color:var(--fit-deep);border:1px solid var(--fit-line);border-radius:var(--radius-pill);padding:4px 11px;font-size:12px;font-weight:700}
+.wg-how ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:7px}
+.wg-how li{font-size:12.5px;font-weight:500;color:var(--slate-2);line-height:1.6}
+.wg-how li b{color:var(--slate);font-weight:700}
+.wg-how-note{margin:12px 0 0;font-size:12px;font-weight:500;color:var(--muted);line-height:1.6}
+
+/* plan bağlantısı */
+.wg-link{margin-top:22px;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);padding:18px 20px}
+.wg-link h3{font-size:14px;margin-bottom:5px}
+.wg-link p{font-size:12.5px;color:var(--muted);font-weight:500;line-height:1.6;margin:0 0 11px}
+.wg-link-row{display:flex;gap:10px;flex-wrap:wrap}
+.wg-link-row input{flex:1;min-width:220px;font-family:inherit;font-size:12.5px;font-weight:600;color:var(--slate-2);background:#fff;border:1px solid var(--line);border-radius:var(--radius-md);padding:11px 14px}
+.wg-link-row input:focus-visible{outline:3px solid var(--fit);outline-offset:1px}
+.wg-kopyalandi{font-size:12.5px;font-weight:700;color:var(--fit-deep);margin:9px 0 0;display:none}
+.wg-kopyalandi.on{display:block}
+
+/* ---- PLANI KAYDET (madde 18) ----
+   Referans (dadagastro.com/bugun-ne-pisirsem · "Menüye Ekle") eylemi
+   kartın içinde, tam genişlikte ve birincil renkte tutuyor; burada plan
+   TEK bir nesne olduğu için eylem sonucun en üstünde tek bir bant. */
+.wg-kaydet{display:flex;align-items:center;gap:18px;flex-wrap:wrap;background:var(--fit-tint);border:1px solid var(--fit-line);border-radius:var(--radius-lg);padding:17px 20px;margin-bottom:20px}
+.wg-kaydet .kt{flex:1;min-width:240px}
+.wg-kaydet .kt>b{display:block;font-size:15px;font-weight:700;color:var(--slate);line-height:1.35}
+.wg-kaydet p{margin:4px 0 0;font-size:12.5px;font-weight:500;color:var(--slate-2);line-height:1.6}
+.wg-kaydet p b{font-weight:700;color:var(--slate)}
+.wg-kaydet p a{color:var(--fit-deep);font-weight:700;text-decoration:underline;text-underline-offset:2px}
+.wg-kaydet .ke{flex:none;display:flex;gap:10px;flex-wrap:wrap}
+.wg-kaydet.ok{background:#fff;border-color:var(--fit)}
+.wg-kaydet .kico{flex:none;width:38px;height:38px;border-radius:var(--radius-circle);background:var(--fit);color:#fff;display:grid;place-items:center;font-size:15px}
+
+/* alt aksiyon */
+/* R11/M11 · Beyar: "alttaki 3'lü butonları merkezi yap ve altındaki
+   infoyla mesafeyi koy". Ortalandı; alt boşluk 24 → 40px (bilgi kutusunun
+   kendi `margin-top:34px`'i ile toplam nefes belirgin ayrım veriyor).
+   Değerler 4px ızgarasına oturuyor. */
+.wg-done{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:24px;margin-bottom:40px}
+
+@media (max-width:1024px){
+  .sec{padding:var(--sec-pad) 0}
+  .wg-rail{overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+  .wg-rail::-webkit-scrollbar{display:none}
+  .wg-rail li{flex:0 0 auto;min-width:132px}
+}
+@media (max-width:640px){
+  .sec{padding:var(--sec-pad) 0}
+  .wg-rail li{min-width:118px;padding:11px 12px}
+  .wg-rail .lbl{font-size:12.5px}
+  .wg-opts[data-kol="2"],.wg-opts[data-kol="3"],.wg-opts[data-kol="4"]{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .wg-opts[data-kol="1"],.wg-opts[data-kol-m="1"]{grid-template-columns:minmax(0,1fr)}
+  .wg-head{padding:18px 18px 14px}
+  .wg-body{padding:20px 18px 4px}
+  .wg-foot{padding:16px 18px 18px}
+  .wg-card>.wg-legal{padding:16px 18px 18px}
+  .wg-nav{width:100%}
+  .wg-nav .btn{flex:1;justify-content:center}
+  .wg-sum-row{flex-direction:column;gap:5px}
+  .wg-sum-k{flex:none}
+  .wg-hrk a{flex-wrap:wrap}
+  .wg-recete{justify-content:flex-start;width:100%;padding-left:40px}
+  .wg-gun-ad{flex:1 0 100%}
+  .wg-kaydet{padding:16px 18px}
+  .wg-kaydet .ke,.wg-kaydet .ke .btn{width:100%;justify-content:center}
+}
+</style>
+<!-- Metin yaslama katmani (tek kaynak) — sayfa stillerinden SONRA yuklenir,
+     boylece sayfa ici text-align kurallari yaslamayi geri alamaz -->
+<link rel="stylesheet" href="assets/css/fit-type.css" />
+</head>
+<body data-brand="fit" data-fit-page="antrenman-olusturucu-v1">
+
+<!-- KABUK: ust katman (topbar+header+drawer+alt bar+gorus+cerez) — ortak kabuk JS basar -->
+<div id="fitShellTop"></div>
+
+<main class="page-main" id="pageMain">
+
+<!-- ===== 1 · BANNER + BREADCRUMB (LİSTE AİLESİ · R15) ===== -->
+<section class="lib-top">
+  <div class="wrap">
+    <nav class="lib-crumb" aria-label="Sayfa yolu">
+      <a href="dadafit-hub-v1.html" class="crumb-home"><i class="fa-solid fa-house" aria-hidden="true"></i><span class="sr-only">DadaFit ana sayfa</span></a>
+      <i class="fa-solid fa-chevron-right"></i>
+      <span class="cur">Antrenman Oluşturucu</span>
+    </nav>
+    <span class="eyebrow"><i class="fa-solid fa-wand-magic-sparkles"></i> Antrenman Oluşturucu</span>
+    <h1>Birkaç seçimle gün gün antrenman planı</h1>
+    <p class="lib-sub">Beş kısa adım; sonunda haftanın her günü için hareket, set, tekrar ve dinlenme. Hepsi öneridir, karar senindir.</p>
+    <div class="lib-stats">
+      <span class="wg-trust"><i class="fa-solid fa-calendar-week"></i> Haftada 3–6 gün</span>
+      <span class="wg-trust"><i class="fa-solid fa-scale-balanced"></i> Dengeli kas kapsamı</span>
+      <span class="wg-trust"><i class="fa-solid fa-link"></i> Planın bağlantısı paylaşılabilir</span>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 2 · SİHİRBAZ — SAYFANIN KENDİSİ (pop-up YOK · K33/K35) ===== -->
+<section class="sec sec-fit" style="background:var(--bg-white)">
+  <div class="wrap wg-wrap">
+
+    <!-- adım rayı — JS basıyor, kalemler ADIMLAR dizisinden -->
+    <ol class="wg-rail" id="wgRail" aria-label="Sihirbaz adımları"></ol>
+
+    <div class="wg-card">
+      <div class="wg-head">
+        <h2 id="wgTitle">Vücut modeli</h2>
+        <p id="wgLead">Gövde modeli yalnız görseli belirler; planın hareketleri seçimlerinden çıkar.</p>
+      </div>
+      <div class="wg-body" id="wgBody" aria-live="polite"><!-- adımlar JS ile basılır --></div>
+      <div class="wg-foot" id="wgFoot">
+        <span class="wg-no" id="wgNo">Adım 1 / 5</span>
+        <div class="wg-nav">
+          <button class="btn btn-ghost" type="button" id="wgBack"><i class="fa-solid fa-arrow-left"></i> Geri</button>
+          <button class="btn btn-fit" type="button" id="wgNext">İleri <i class="fa-solid fa-arrow-right"></i></button>
+        </div>
+        <p class="wg-warn" id="wgWarn"><i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i> Devam etmek için bu adımdaki zorunlu soruları yanıtla.</p>
+      </div>
+
+      <!-- R6 · MADDE 3 — yasal şerit KARTIN İÇİNE, alt bandına taşındı.
+           Eskiden kartın altında kendi başına duran bir .hr-note kutusuydu;
+           kabuğun .fit-health section'ıyla birlikte sayfada İKİ uyarı vardı.
+           Kabuğunki madde 2 ile kalktı, bu metin kaybolmadı — kartın parçası
+           oldu. Geri almak için bloğu .wg-card'ın DIŞINA çıkarmak yeterli. -->
+      <div class="hr-note wg-legal">
+        <i class="fa-solid fa-shield-heart"></i>
+        <p>Bu oluşturucu <b>genel bilgilendirme</b> amaçlıdır; teşhis, tedavi ya da kişiye özel antrenman reçetesi değildir. Ağrı, özel bir sağlık durumu, gebelik ya da uzun süreli hareketsizlik varsa başlamadan önce bir hekime veya fizyoterapiste danış. Ayrıntı: <a href="saglik-bilgilendirme-v1.html">Sağlık Bilgilendirmesi</a>.</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+</main>
+
+<!-- KABUK: alt katman (giris kapisi + footer + basa don) -->
+<div id="fitShellBottom"></div>
+
+<!-- DadaFit ortak kabuk JS (tek kaynak): markup + davranis -->
+<script src="assets/js/fit-shell.js"></script>
+<script src="assets/js/fit-mesaj.js"></script>
+<!-- PLAN KAYDI — tek kaynak sözleşme (REVİZYON 6 · madde 18). Sayfa kendi
+     depolama kodunu yazmıyor, yalnız FIT_PLAN yüzeyini çağırıyor. -->
+<script src="assets/js/fit-plan-kayit.js"></script>
+<script>
+/* =====================================================================
+ SAYFA JS — ANTRENMAN OLUŞTURUCU MOTORU (H3)
+
+ KURALLAR NEREDEN GELİYOR: aşağıdaki blok `tasks/H3-KURALLAR.md` §9'un
+ BİREBİR kopyasıdır. Belge kaynaktır, kod onu taşır; ikisi ayrışırsa
+ `tests/workout-generator.mjs` §14 sınaması kırmızıya döner. Motor
+ dağınık `if` bloklarıyla değil, yalnız bu nesneyle karar veriyor.
+
+ DETERMİNİZM (KARARLAR K41 · AS-2): `Math.random()` YOK. Eşitlik bozucu
+ sabittir — `KURALLAR.havuz` dizisindeki sıra. Aynı seçim her zaman aynı
+ planı verir; `?plan=` paylaşılabilirliği bunu gerektiriyor.
+
+ KARŞILIKSIZ KOMBİNASYON 0 mimariden geliyor, yedek listeden değil:
+ `gerek:[]` taşıyan 15 hareket hiçbir ekipman seçiminde havuzdan düşmez,
+ yani havuz asla 15'in altına inmez ve gün başına hareket sayısı havuza
+ göre ölçekleniyor. Bu 15'in üçü ÇEKİŞ kalıbındadır (ters şınav ·
+ superman · yüzücü): ekipmansız planda da sırt çalışır.
+ ===================================================================== */
+(function(){
+  var body = document.getElementById('wgBody');
+  if(!body) return;
+
+  /* ==KURALLAR-BASLANGIC== */
+var KURALLAR = {
+
+  /* ---- A · HAREKET HAVUZU (25 kalem — kütüphanenin tamamı) ----
+     slug/ad/zorluk/gerek alanları egzersiz-kutuphane-v1.html'in kart
+     özniteliklerinden (data-name · data-seviye · data-ekipman) ÖLÇÜLEREK
+     alındı. birincil/ikincil grup ve kalıp DadaFit'in editoryal ataması.
+     Kalıp dağılımı: 8 bacak · 5 itiş · 7 çekiş · 5 core.
+     Ekipman istemeyen (gerek:[]) 15 hareketin 3'ü ÇEKİŞ kalıbında
+     (ters-sinav · superman · yuzucu) — ekipmansız planda sırt çalışır. */
+  havuz: [
+    {slug:'goblet-squat',       ad:'Goblet Squat',                     kalip:'bacak', birincil:'bacak', ikincil:['kalca'],         gerek:['dambil'],      zorluk:2, olcum:'tekrar'},
+    {slug:'plank',              ad:'Plank (Şınav Duruşu)',             kalip:'core',  birincil:'core',  ikincil:[],                gerek:[],              zorluk:2, olcum:'sure'},
+    {slug:'dambil-kurek',       ad:'Dambıl Kürek Çekme',               kalip:'cekis', birincil:'sirt',  ikincil:['kol'],           gerek:['dambil'],      zorluk:2, olcum:'tekrar'},
+    {slug:'sinav',              ad:'Şınav (Push-up)',                  kalip:'itis',  birincil:'gogus', ikincil:['omuz','core'],   gerek:[],              zorluk:2, olcum:'tekrar'},
+    {slug:'hamle',              ad:'Hamle (Lunge)',                    kalip:'bacak', birincil:'bacak', ikincil:['kalca'],         gerek:[],              zorluk:1, olcum:'tekrar'},
+    {slug:'dambil-omuz-press',  ad:'Dambıl Omuz Press',                kalip:'itis',  birincil:'omuz',  ikincil:['kol'],           gerek:['dambil'],      zorluk:2, olcum:'tekrar'},
+    {slug:'dambil-biceps',      ad:'Dambıl Biceps Curl',               kalip:'cekis', birincil:'kol',   ikincil:[],                gerek:['dambil'],      zorluk:1, olcum:'tekrar'},
+    {slug:'dead-bug',           ad:'Dead Bug (Ölü Böcek)',             kalip:'core',  birincil:'core',  ikincil:[],                gerek:[],              zorluk:1, olcum:'tekrar'},
+    {slug:'kettlebell-swing',   ad:'Kettlebell Swing',                 kalip:'bacak', birincil:'kalca', ikincil:['sirt','core'],   gerek:['kettlebell'],  zorluk:3, olcum:'tekrar'},
+    {slug:'bant-cekme',         ad:'Bant Çekme (Band Row)',            kalip:'cekis', birincil:'sirt',  ikincil:['kol'],           gerek:['bant'],        zorluk:1, olcum:'tekrar'},
+    {slug:'kopru',              ad:'Köprü (Glute Bridge)',             kalip:'bacak', birincil:'kalca', ikincil:['core'],          gerek:[],              zorluk:2, olcum:'tekrar'},
+    {slug:'bant-yana-acma',     ad:'Bant Yana Açma',                   kalip:'itis',  birincil:'omuz',  ikincil:[],                gerek:['bant'],        zorluk:2, olcum:'tekrar'},
+    {slug:'hava-squat',         ad:'Hava Squat (Bodyweight Squat)',    kalip:'bacak', birincil:'bacak', ikincil:['kalca'],         gerek:[],              zorluk:1, olcum:'tekrar'},
+    {slug:'ters-sinav',         ad:'Ters Şınav (Inverted Row)',        kalip:'cekis', birincil:'sirt',  ikincil:['kol'],           gerek:[],              zorluk:2, olcum:'tekrar'},
+    {slug:'superman',           ad:'Superman (Yüzüstü Uzanma)',        kalip:'cekis', birincil:'sirt',  ikincil:['kalca','core'],  gerek:[],              zorluk:1, olcum:'tekrar'},
+    {slug:'yuzucu',             ad:'Yüzücü (Y-T-W Kaldırış)',          kalip:'cekis', birincil:'sirt',  ikincil:['omuz'],          gerek:[],              zorluk:1, olcum:'tekrar'},
+    {slug:'barfiks',            ad:'Barfiks (Pull-up)',                kalip:'cekis', birincil:'sirt',  ikincil:['kol'],           gerek:['barfiksbari'], zorluk:3, olcum:'tekrar'},
+    {slug:'sehpa-dips',         ad:'Sehpa Dips (Bench Dips)',          kalip:'itis',  birincil:'kol',   ikincil:['omuz','gogus'],  gerek:[],              zorluk:2, olcum:'tekrar'},
+    {slug:'bulgar-split-squat', ad:'Bulgar Split Squat',               kalip:'bacak', birincil:'bacak', ikincil:['kalca','core'],  gerek:[],              zorluk:3, olcum:'tekrar'},
+    {slug:'tek-bacak-kopru',    ad:'Tek Bacak Köprü',                  kalip:'bacak', birincil:'kalca', ikincil:['core'],          gerek:[],              zorluk:2, olcum:'tekrar'},
+    {slug:'yan-plank',          ad:'Yan Plank',                        kalip:'core',  birincil:'core',  ikincil:['omuz'],          gerek:[],              zorluk:2, olcum:'sure'},
+    {slug:'dag-tirmanisi',      ad:'Dağ Tırmanışı (Mountain Climber)', kalip:'core',  birincil:'core',  ikincil:['omuz','bacak'],  gerek:[],              zorluk:2, olcum:'tekrar'},
+    {slug:'burpee',             ad:'Burpee',                           kalip:'core',  birincil:'core',  ikincil:['bacak','gogus'], gerek:[],              zorluk:3, olcum:'tekrar'},
+    {slug:'dambil-gogus-press', ad:'Dambıl Göğüs Press',               kalip:'itis',  birincil:'gogus', ikincil:['omuz','kol'],    gerek:['dambil'],      zorluk:2, olcum:'tekrar'},
+    {slug:'dambil-romanya',     ad:'Dambıl Romanya Deadlift',          kalip:'bacak', birincil:'bacak', ikincil:['kalca','sirt'],  gerek:['dambil'],      zorluk:2, olcum:'tekrar'}
+  ],
+
+  gruplar:  {bacak:'Bacak', kalca:'Kalça', sirt:'Sırt', gogus:'Göğüs', omuz:'Omuz', kol:'Kol', core:'Core'},
+  kaliplar: {bacak:'Bacak', itis:'İtiş', cekis:'Çekiş', core:'Core'},
+  ekipman:  {yok:'Vücut ağırlığı', dambil:'Dambıl', kettlebell:'Kettlebell', bant:'Direnç bandı', barfiksbari:'Barfiks barı', salon:'Tam ekipman (salon)'},
+
+  /* ---- B · GÜN SAYISI → BÖLÜNME ----
+     Brief'in şartı: 3 → full body · 4 → üst/alt · 5–6 → push/pull/legs.
+     `kalip` günün asıl kalıpları, `vurgu` o gün öne çıkan kalıp,
+     `gruplar` günün hedeflediği kas grupları. Hiçbiri eleyici değil. */
+  bolunme: {
+    '3': {anahtar:'full-body', ad:'Tüm vücut (full body)', gunler:[
+      {ad:'Tüm Vücut A', kalip:['bacak','itis','cekis','core'], vurgu:['bacak','itis'],  gruplar:['bacak','kalca','gogus','omuz','sirt','kol','core']},
+      {ad:'Tüm Vücut B', kalip:['bacak','itis','cekis','core'], vurgu:['cekis','core'],  gruplar:['sirt','kol','core','bacak','kalca','gogus','omuz']},
+      {ad:'Tüm Vücut C', kalip:['bacak','itis','cekis','core'], vurgu:['bacak','cekis'], gruplar:['bacak','kalca','sirt','kol','gogus','omuz','core']}
+    ]},
+    '4': {anahtar:'ust-alt', ad:'Üst / Alt', gunler:[
+      {ad:'Üst Vücut A', kalip:['itis','cekis'], vurgu:['itis'],  gruplar:['gogus','omuz','sirt','kol']},
+      {ad:'Alt Vücut A', kalip:['bacak','core'], vurgu:['bacak'], gruplar:['bacak','kalca','core']},
+      {ad:'Üst Vücut B', kalip:['itis','cekis'], vurgu:['cekis'], gruplar:['sirt','kol','gogus','omuz']},
+      {ad:'Alt Vücut B', kalip:['bacak','core'], vurgu:['core'],  gruplar:['kalca','bacak','core']}
+    ]},
+    '5': {anahtar:'ppl', ad:'İtiş / Çekiş / Bacak (+ üst-alt tamamlayıcı)', gunler:[
+      {ad:'İtiş Günü',          kalip:['itis'],          vurgu:['itis'],  gruplar:['gogus','omuz','kol']},
+      {ad:'Çekiş Günü',         kalip:['cekis'],         vurgu:['cekis'], gruplar:['sirt','kol']},
+      {ad:'Bacak Günü',         kalip:['bacak'],         vurgu:['bacak'], gruplar:['bacak','kalca']},
+      {ad:'Üst Vücut',          kalip:['itis','cekis'],  vurgu:['cekis'], gruplar:['gogus','omuz','sirt','kol']},
+      {ad:'Alt Vücut ve Core',  kalip:['bacak','core'],  vurgu:['core'],  gruplar:['bacak','kalca','core']}
+    ]},
+    '6': {anahtar:'ppl', ad:'İtiş / Çekiş / Bacak (iki tur)', gunler:[
+      {ad:'İtiş Günü A',  kalip:['itis'],  vurgu:['itis'],          gruplar:['gogus','omuz','kol']},
+      {ad:'Çekiş Günü A', kalip:['cekis'], vurgu:['cekis'],         gruplar:['sirt','kol']},
+      {ad:'Bacak Günü A', kalip:['bacak'], vurgu:['bacak'],         gruplar:['bacak','kalca']},
+      {ad:'İtiş Günü B',  kalip:['itis'],  vurgu:['itis','core'],   gruplar:['omuz','gogus','kol','core']},
+      {ad:'Çekiş Günü B', kalip:['cekis'], vurgu:['cekis','core'],  gruplar:['sirt','kol','core']},
+      {ad:'Bacak Günü B', kalip:['bacak'], vurgu:['bacak','core'],  gruplar:['kalca','bacak','core']}
+    ]}
+  },
+
+  /* ---- C · SEVİYE → SET / DİNLENME / GÜN BAŞINA HAREKET ----
+     Değerler MuscleWiki'den ALINMADI (keşif §5 · AS-3: sonuç ekranı
+     görülemedi, set/tekrar/dinlenme değerleri elde yok). Aşağıdakiler
+     yaygın kuvvet antrenmanı pratiğinin genel aralıklarıdır; DadaFit'in
+     editoryal seçimidir. `sure` yalnız olcum:'sure' hareketler için. */
+  seviye: {
+    baslangic: {ad:'Başlangıç', no:1, set:2, dinlenme:60, hareket:4, sure:'20-30 sn'},
+    orta:      {ad:'Orta',      no:2, set:3, dinlenme:75, hareket:5, sure:'30-45 sn'},
+    ileri:     {ad:'İleri',     no:3, set:4, dinlenme:90, hareket:6, sure:'45-60 sn'}
+  },
+
+  /* ---- D · HEDEF → HACİM / YOĞUNLUK ----
+     tekrar aralığı + set eki + dinlenme çarpanı; ayrıca hedefin kalıp
+     ağırlığı (hangi kalıba ne kadar yer verilsin). */
+  hedef: {
+    kilo: {ad:'Kilo verme',  tekrar:'12-15', setEk:0, dinlenmeKat:0.70, kalipAgirlik:{bacak:8,  itis:4, cekis:4, core:8}},
+    kas:  {ad:'Kas kazanma', tekrar:'8-12',  setEk:0, dinlenmeKat:1.00, kalipAgirlik:{bacak:6,  itis:8, cekis:8, core:2}},
+    guc:  {ad:'Güç',         tekrar:'4-6',   setEk:1, dinlenmeKat:1.55, kalipAgirlik:{bacak:10, itis:8, cekis:8, core:0}}
+  },
+
+  /* ---- E · PUAN EKSENLERİ ----
+     Hiçbiri eleyici değil (ekipman hariç, bkz. F). Puan düşüşü sıralamayı
+     değiştirir, havuzdan kalem çıkarmaz. Haftalık tekrar YASAĞI puanla
+     değil, seçim turlarıyla kuruluyor — bkz. E2. */
+  puan: {
+    kalipUyum:50,      /* hareketin kalıbı günün kalıbındaysa */
+    vurgu:14,          /* kalıp ayrıca günün vurgusundaysa */
+    birincilGrup:22,   /* birincil kas grubu günün gruplarındaysa */
+    ikincilGrup:10,    /* ikincil kas grubu günün gruplarındaysa */
+    odakUyum:12,       /* kullanıcı odak seçtiyse ve hareket odakla kesişiyorsa */
+    zorlukCeza:8,      /* seviyenin üstündeki her zorluk basamağı için */
+    tekrarCeza:9,      /* YALNIZ düşüş turunda: en az kullanılan öne gelsin */
+    gunIciGrupTavan:2, /* aynı gün içinde aynı birincil gruptan en fazla */
+    gunIciKalipPay:1   /* çok kalıplı günde bir kalıptan en fazla
+                          ceil(N × pay / günün kalıp sayısı) hareket */
+  },
+
+  /* ---- E2 · HAFTALIK TEKRAR YASAĞI + SEÇİM TURLARI ----
+     Havuz 12 kalemken tekrar bir CEZAYDI (9 puan) ve hareket haftada
+     birden fazla geçebiliyordu. Havuz 25 kaleme çıkınca §8'in kendi
+     eşiği (≥24) doldu: tekrar artık YASAK.
+
+     Yasak PUANLA kurulmuyor, SEÇİM TURLARIYLA kuruluyor. Nedeni
+     ölçüldü: cezayı 999'a çıkarmak yasağı havuz geneline yayıyor ve
+     günün kalıbını yıkıyordu — 6 gün · dambıl+bant planında "İtiş Günü
+     B" tek bir itiş hareketi bile içermeden bacak/core hareketleriyle
+     doluyor, üstelik gerekçe "havuzda İtiş kalıbında hiç hareket yok"
+     diye YANLIŞ bir cümle yazıyordu (havuzda 5 itiş hareketi vardı,
+     hepsi İtiş Günü A'da kullanılmıştı). §7'nin "itiş gününe bacak
+     doldurulmaz" sözü de bozuluyordu. Bu yüzden yasak GÜNÜN KALIBI
+     içinde mutlak:
+
+       TUR 1  günün kalıbındaki KULLANILMAMIŞ hareketler · iki tavan da
+              geçerli (grup tavanı ve kalıp tavanı)
+       TUR 2  aynı küme · tavanlar gevşek — kalıp havuzu bitmeden gün
+              dışarıdan hareket almaz
+       TUR 3  kalan havuz (tamamlayıcılar + kullanılmışlar) · puanda
+              tekrarCeza var, yani ÖNCE en az kullanılan · tavanlar
+              geçerli                                  ← ZARİF DÜŞÜŞ
+       TUR 4  kalan havuz · tavanlar gevşek — plan asla eksik dönmez
+
+     TUR 1–2 dolduğu sürece hareket haftada bir kez geçer: yasak
+     MUTLAK. Gün TUR 3'e düştüyse o günün kalıbındaki hareketler
+     gerçekten tükenmiştir (ör. 6 gün × ekipmansız: havuzda 2 itiş
+     hareketi var, İtiş Günü B'ye yenisi kalmaz). KARŞILIKSIZ
+     KOMBİNASYON 0 mutlak ölçütü hiçbir koşulda bozulmaz.
+
+     DÜŞÜŞ GİZLENMEZ: sonuç ekranında bildirim şeridi ("… yerde
+     esnedi"), o günün gerekçesinde de "⚠ tekrar yasağı bu günde
+     esnedi: {hareketler} … kullanılmamış hareket kalmadı" satırı. */
+  tekrarYasagi: {esik:24, kapsam:'gunKalibi', turlar:4, dususSirasi:'enAzKullanilan'},
+
+  /* ---- F · EKİPMAN → HAVUZ SÜZME ----
+     TEK SERT SÜZGEÇ BUDUR ve karşılıksız kombinasyon üretemez: gerek:[]
+     olan 15 hareket her zaman havuzdadır, yani havuz hiçbir seçimde
+     15'in altına düşmez.
+
+     İKİ SEÇENEK EKİPMAN DEĞİL, BİR KÜME ADIDIR (`kume`): 'yok' boş
+     kümedir (yalnız vücut ağırlığı → havuz 15), 'salon' dört ekipmanın
+     hepsini birden açar (→ havuz 25, kataloğun tamamı). İkisi de
+     `tekKip` listesindedir: seçilince öteki seçimleri temizler, çünkü
+     yanlarında başka bir ekipman işaretlemek anlamsızdır — 'yok' ile
+     dambıl bir arada çelişir, 'salon' zaten hepsini kapsar. Menüdeki
+     hareket sayıları da bu kümelerden SAYILARAK yazılıyor, elle
+     girilmiyor. */
+  ekipmanSuzme: {tabanHavuz:15, kural:'gerek boşsa her zaman; değilse seçilen ekipmanlardan en az biri gerekte olmalı',
+                 kume:{yok:[], salon:['dambil','kettlebell','bant','barfiksbari']}, tekKip:['yok','salon']},
+
+  /* ---- G · HAVUZA GÖRE ÖLÇEKLEME + YUVARLAMA ----
+     Gün başına hareket sayısı ÜÇ tavanın en küçüğüdür:
+       (1) seviye.hareket
+       (2) max(enAz, havuz - tabanEksi)          havuz küçüldükçe gün incelir
+       (3) max(enAz, günün kalıbındaki hareket)  itiş gününe bacak hareketi
+                                                 doldurulmaz
+     25 kalemlik havuzda (2) hiç bağlayıcı değil; (3) push/pull/legs
+     bölünmesinde bağlayıcı olmayı sürdürüyor — tam havuzda 8 bacak,
+     5 itiş, 7 çekiş, 5 core hareketi var; ekipmansız havuzda ise
+     5 bacak, 2 itiş, 3 çekiş, 5 core.
+
+     N belli olunca KALIP TAVANI da ondan çıkar:
+       kalipTavan = ceil(N × puan.gunIciKalipPay / günün kalıp sayısı)
+     Tek kalıplı günde (İtiş/Çekiş/Bacak) tavan N'dir, yani bağlamaz.
+     Çok kalıplı günde bağlar ve "Tüm Vücut A"nın dört bacak
+     hareketine dönüşmesini engeller — havuz 25'e çıkınca bacak+kalça
+     arzı arttığı için bu ölçüldü ve gerekti.
+
+     Dinlenme `yuvarla`nın katına yuvarlanır. */
+  olcek: {tabanEksi:2, enAz:3},
+  yuvarla: 5,
+
+  /* ---- H · RİSK DALI ----
+     Bu yanıtlardan biri işaretliyse kişiye özel plan ÜRETİLMEZ. */
+  riskli: ['agri','saglik','gebelik','hareketsiz']
+};
+  /* ==KURALLAR-BITIS== */
+
+  /* Sınama ve hata ayıklama için dışa veriliyor — motor bunu kullanmıyor. */
+  window.AO_KURALLAR = KURALLAR;
+
+  /* ---- A2 · HAREKET EK BİLGİSİ (şema v2 · §3.3) ----
+     KURALLAR bloğunun DIŞINDA duruyor: o blok tasks/H3-KURALLAR.md ile
+     birebir eşleşmek zorunda (tests/workout-generator.mjs madde 14).
+
+     İki alan da UYDURULMADI, depodan ÖLÇÜLEREK çıkarıldı:
+
+       uyari      ← egzersiz-detay-v1.html · VERI[slug].ipuclari
+                    (o blok sayfada zaten "form / güvenlik ipuçları"
+                    başlığıyla duruyor — egzersiz-detay-v1.html:139).
+                    Kural: ipuçları içinde RİSKTEN söz eden ilk madde
+                    alınır (ağrı · zorlama · kilitle · çök · bel · boyun ·
+                    aşırı · bırak · sarsıl); böyle bir madde yoksa ilk
+                    ipucu alınır — hepsi form ipucudur, hiçbiri boş değil.
+                    ÖLÇÜM: 25/25 dolu · 17 risk maddesi · 8 ilk ipucu.
+
+       alternatif ← egzersiz-detay-v1.html · VERI[slug].benzer
+                    (deponun kendi "benzer hareketler" listesi) SÜZÜLEREK:
+                    havuzdaki `gerek` sayısı DAHA AZ olan ilk benzer;
+                    yoksa ekipmanı artmayan ama ZORLUĞU daha düşük ilk
+                    benzer. İkisi de yoksa alan BOŞ (null) bırakılır —
+                    hareket zaten en hafif seçenektir, sahte bir
+                    alternatif yazmaktansa alan boş kalır.
+                    ÖLÇÜM: 18/25 dolu · 7 boş (hepsi gerek:[] ve zorluk≤2).
+
+     `ekipman` ve `video` bu tabloda YOK ve olmamalı: ekipman havuzun
+     `gerek` alanından, video ise slug'ın kendisinden
+     (egzersiz-detay-v1.html?slug=…) doğrudan çıkıyor. İkinci bir liste
+     tutmak ayrışma üretirdi. */
+  var HAREKET_EK = {
+    'goblet-squat':       {uyari:'Ağrı varsa dur — Dizinde keskin ağrı hissedersen mola ver, formu gözden geçir.', alternatif:'hava-squat'},
+    'plank':              {uyari:'Bakış yerde — Başını kaldırma; bakışın ellerinin biraz önüne düşsün, boyun nötr kalsın.', alternatif:'dead-bug'},
+    'dambil-kurek':       {uyari:'Boyun nötr — Başını kaldırıp aynaya bakma; bakışın yere düşsün.', alternatif:'ters-sinav'},
+    'sinav':              {uyari:'Dirsek kırk beş derece — Dirsekleri tam yana açmak omuz eklemini zorlar.', alternatif:null},
+    'hamle':              {uyari:'Ön diz hizası — Ön diz ayak parmaklarını belirgin şekilde geçiyorsa adımın kısa demektir.', alternatif:null},
+    'dambil-omuz-press':  {uyari:'Kaburgayı kapat — Bel kavisi artıyorsa ağırlık fazladır — sırt destekli otururken çalış.', alternatif:'sinav'},
+    'dambil-biceps':      {uyari:'Gövde sallanmasın — Belden savurarak kaldırıyorsan ağırlık fazladır.', alternatif:'ters-sinav'},
+    'dead-bug':           {uyari:'Bel yerde — Belin yerden kalkıyorsa uzanma mesafeni kısalt.', alternatif:null},
+    'kettlebell-swing':   {uyari:'Menteşe, squat değil — Diz çok bükülüyorsa hareket squat\'a dönüşür; kalçadan kır.', alternatif:'kopru'},
+    'bant-cekme':         {uyari:'Omuz aşağıda — Omuzlar kulağa doğru yükselirse yük sırttan trapeze kayar.', alternatif:'ters-sinav'},
+    'kopru':              {uyari:'Bel değil kalça — Yüksekliği belden kavis yaparak değil, kalçanı sıkarak kazan.', alternatif:'dead-bug'},
+    'bant-yana-acma':     {uyari:'Omuz hizasında dur — Kolları omuz hizasının üstüne çıkarmak sıkışma yapabilir.', alternatif:'yuzucu'},
+    'hava-squat':         {uyari:'Dizleri dışa it — Dizleri hafifçe dışa doğru yönlendir — içe çökmesini engeller.', alternatif:null},
+    'ters-sinav':         {uyari:'Kalça düşmesin — Kalça sarkarsa çekiş kısalır ve bel yüklenir.', alternatif:'yuzucu'},
+    'superman':           {uyari:'Az kaldır — Aşırı kaldırmak beli sıkıştırabilir; birkaç santim yeterlidir.', alternatif:null},
+    'yuzucu':             {uyari:'Boyun nötr — Başını kaldırma; alnın yerde ya da yere yakın kalsın.', alternatif:null},
+    'barfiks':            {uyari:'Bantla destekle — Direnç bandını bara asıp dizini üstüne koyarak yardımlı tekrar yapabilirsin.', alternatif:'ters-sinav'},
+    'sehpa-dips':         {uyari:'Dirsek geriye — Dirsekler yana açılırsa omuz zorlanır; geriye doğru bükülsün.', alternatif:null},
+    'bulgar-split-squat': {uyari:'Adım mesafesi — Ön diz aşırı bükülüyorsa öne bir adım daha al.', alternatif:'hamle'},
+    'tek-bacak-kopru':    {uyari:'Kalça dönmesin — Kalçanın bir tarafı düşüyorsa menzili kısalt.', alternatif:'hamle'},
+    'yan-plank':          {uyari:'Boyun nötr — Başını omuz hattının uzantısında tut.', alternatif:'dead-bug'},
+    'dag-tirmanisi':      {uyari:'Bileği koru — Bilek ağrıyorsa yumruk üstünde ya da şınav sapıyla çalış.', alternatif:'dead-bug'},
+    'burpee':             {uyari:'Tempoyu böl — Yorulunca sıçramayı bırak, ayakları adım adım geri-ileri götür — hareket devam etsin.', alternatif:'dag-tirmanisi'},
+    'dambil-gogus-press': {uyari:'Yerde daha güvenli — Yerde çalışırken dirsek yere değince menzil kendiliğinden sınırlanır — yalnız çalışmak için uygundur.', alternatif:'sinav'},
+    'dambil-romanya':     {uyari:'Dambıl bacağa yakın — Ağırlık gövdeden uzaklaşırsa bel yüklenir.', alternatif:'kopru'}
+  };
+
+  /* ---- SUNUM SÖZLÜĞÜ ----
+     Yalnız ikon ve açıklama satırı; KURAL DEĞİL. Etiketlerin kendisi
+     (ad, tekrar, gün adı …) KURALLAR'dan okunuyor — sunum burada. */
+  var META = {
+    cinsiyet:{
+      erkek:{d:'Erkek gövde modeli', svg:'assets/svg/govde-erkek-on.svg'},
+      kadin:{d:'Kadın gövde modeli', svg:'assets/svg/govde-kadin-on.svg'}
+    },
+    hedef:{
+      kilo:{i:'fa-solid fa-scale-balanced', d:'Çok tekrar, kısa dinlenme; hacim yüksek tutulur.'},
+      kas: {i:'fa-solid fa-dumbbell',       d:'Orta tekrar, orta dinlenme; itiş ve çekiş dengeli.'},
+      guc: {i:'fa-solid fa-medal',          d:'Az tekrar, uzun dinlenme; bileşik hareketler öne çıkar.'}
+    },
+    seviye:{
+      baslangic:{i:'fa-solid fa-egg',              d:'Son altı ayda düzenli antrenman yapmadım.'},
+      orta:     {i:'fa-solid fa-person-walking',   d:'En az altı aydır haftada birkaç gün düzenli çalışıyorum.'},
+      ileri:    {i:'fa-solid fa-fire',             d:'Yıllardır düzenliyim; teknik oturmuş, yük artışını takip ediyorum.'}
+    },
+    ekipman:{
+      yok:       {i:'fa-solid fa-hand',            d:'Yalnız kendi vücut ağırlığın.'},
+      dambil:    {i:'fa-solid fa-dumbbell',        d:'Bir çift dambıl çoğu planı açar.'},
+      kettlebell:{i:'fa-solid fa-weight-hanging',  d:'Salınım ve kalça hareketleri.'},
+      bant:      {i:'fa-solid fa-grip-lines',      d:'Hafif; çekiş hareketlerini açar.'},
+      barfiksbari:{i:'fa-solid fa-arrows-up-to-line', d:'Kapı barı ya da parktaki bar.'},
+      salon:     {i:'fa-solid fa-building',        d:'Dört ekipmanın hepsi birden.'}
+    },
+    gun:{
+      '3':{i:'fa-solid fa-3'}, '4':{i:'fa-solid fa-4'},
+      '5':{i:'fa-solid fa-5'}, '6':{i:'fa-solid fa-6'}
+    },
+    odak:{
+      bacak:{i:'fa-solid fa-person-running'}, kalca:{i:'fa-solid fa-shoe-prints'},
+      sirt: {i:'fa-solid fa-person-rays'},    gogus:{i:'fa-solid fa-heart-pulse'},
+      omuz: {i:'fa-solid fa-hands'},          kol:  {i:'fa-solid fa-hand-fist'},
+      core: {i:'fa-solid fa-circle-dot'}
+    },
+    durum:{
+      yok:        {t:'Yok',                       i:'fa-solid fa-check',                 d:'Bilinen bir kısıt ya da şikâyet yok.'},
+      agri:       {t:'Ağrı veya hareket kısıtı',  i:'fa-solid fa-triangle-exclamation',  d:'Belirli bir bölgede ağrı ya da kısıtlılık var.'},
+      saglik:     {t:'Özel sağlık durumu',        i:'fa-solid fa-notes-medical',         d:'Takip edilen bir tanı ya da tedavi var.'},
+      gebelik:    {t:'Gebelik / doğum sonrası',   i:'fa-solid fa-person-pregnant',       d:'Bu dönem ayrı bir değerlendirme ister.'},
+      hareketsiz: {t:'Uzun süredir hareketsizim', i:'fa-solid fa-bed',                   d:'Bir yıldan uzun süredir düzenli hareket yok.'}
+    }
+  };
+
+  /* ---- SEÇENEK LİSTELERİ — KURALLAR'dan türetiliyor ----
+     Menüde ne varsa tabloda o var; tabloya kalem eklemek arayüze de
+     ekler. Elle yazılmış ikinci bir liste yok. */
+  function opsHedef(){
+    return Object.keys(KURALLAR.hedef).map(function(v){
+      return {v:v, t:KURALLAR.hedef[v].ad, d:META.hedef[v].d + ' (' + KURALLAR.hedef[v].tekrar + ' tekrar)', i:META.hedef[v].i};
+    });
+  }
+  function opsSeviye(){
+    return Object.keys(KURALLAR.seviye).map(function(v){
+      var s = KURALLAR.seviye[v];
+      return {v:v, t:s.ad, d:META.seviye[v].d + ' · ' + s.set + ' set taban, gün başına ' + s.hareket + ' hareket', i:META.seviye[v].i};
+    });
+  }
+  /* Her ekipman seçeneğinin havuza ETKİSİ ELLE YAZILMIYOR, kuraldan
+     sayılıyor: küme seçenekleri ("Vücut ağırlığı" · "Tam ekipman")
+     kuracakları havuzun büyüklüğünü, tekil ekipmanlar taban havuza kaç
+     hareket EKLEDİKLERİNİ gösteriyor. Altı seçeneğin altısında da bir
+     sayı var; hiçbiri dekoratif değil, hepsi ölçülebilir. */
+  function opsEkipman(){
+    var kume = KURALLAR.ekipmanSuzme.kume;
+    var taban = havuzSuz([]).length;
+    return Object.keys(KURALLAR.ekipman).map(function(v){
+      var m = kume[v]
+        ? 'havuz ' + havuzSuz(kume[v]).length + ' hareket'
+        : '+' + (havuzSuz([v]).length - taban) + ' hareket';
+      return {v:v, t:KURALLAR.ekipman[v], d:META.ekipman[v].d, m:m, i:META.ekipman[v].i};
+    });
+  }
+  function opsGun(){
+    return Object.keys(KURALLAR.bolunme).map(function(v){
+      return {v:v, t:v + ' gün', d:KURALLAR.bolunme[v].ad, i:META.gun[v].i, dar:true};
+    });
+  }
+  function opsOdak(){
+    return Object.keys(KURALLAR.gruplar).map(function(v){
+      return {v:v, t:KURALLAR.gruplar[v], i:META.odak[v].i, cip:true};
+    });
+  }
+  function opsDurum(){
+    /* R8/23: riskli olup olmadigi KURALLAR.riskli'den okunuyor — sunumda
+       ikinci bir liste tutulmuyor (K44: kural VERI, sunum kurali tekrar etmez). */
+    return ['yok'].concat(KURALLAR.riskli).map(function(v){
+      return {v:v, t:META.durum[v].t, d:META.durum[v].d, i:META.durum[v].i,
+              risk: KURALLAR.riskli.indexOf(v) > -1};
+    });
+  }
+  function opsCinsiyet(){
+    return [
+      {v:'erkek', t:'Erkek', d:META.cinsiyet.erkek.d, svg:META.cinsiyet.erkek.svg},
+      {v:'kadin', t:'Kadın', d:META.cinsiyet.kadin.d, svg:META.cinsiyet.kadin.svg}
+    ];
+  }
+
+  /* ---- ADIMLAR — 5 adım, 6 soru (gerekçesi H3-KURALLAR.md §2) ---- */
+  var ADIMLAR = [
+    {ad:'Vücut modeli', lead:'Gövde modeli yalnız görseli belirler; planın hareketleri seçimlerinden çıkar.', s:[
+      {k:'cinsiyet', q:'Hangi vücut modeliyle çalışalım?', h:'Bir tane seç. Gövde çizimleri DadaFit’in kendi anatomi haritasından geliyor.', kol:2, o:opsCinsiyet()}
+    ]},
+    {ad:'Hedefin', lead:'Hedef, planın hacmini ve yoğunluğunu belirliyor — set, tekrar ve dinlenmeyi doğrudan değiştirir.', s:[
+      {k:'hedef', q:'Bu planla neyi hedefliyorsun?', h:'Bir tane seç — set ve tekrar aralığını en çok bu belirler.', kol:1, o:opsHedef()}
+    ]},
+    {ad:'Seviyen', lead:'Seviye hem set sayısını hem gün başına hareket sayısını, hem de hareket karmaşıklığını ayarlıyor.', s:[
+      {k:'seviye', q:'Kendini nerede görüyorsun?', h:'Doğru cevap yok; rahat ettiğin yeri seç. Aşağıdaki ölçütler DadaFit’in kendi eşikleridir.', kol:1, o:opsSeviye()}
+    ]},
+    {ad:'Ekipman ve odak', lead:'Neyin var ve neye ağırlık vermek istiyorsun. Ekipman havuzu süzer; odak yalnız sıralamayı değiştirir.', s:[
+      {k:'ekipman', q:'Neye erişimin var?', h:'Birden fazla seçebilirsin. Ekipmansız da tam bir plan çıkar — ekipman istemeyen ' +
+        KURALLAR.havuz.filter(function(h){ return !h.gerek.length; }).length +
+        ' hareket her seçimde havuzda kalır, üçü çekiş kalıbında.', kol:3, kolM:1, cok:true,
+        tek:KURALLAR.ekipmanSuzme.tekKip, o:opsEkipman()},
+      {k:'odak', q:'Öne çıkarmak istediğin bir bölge var mı?', h:'İsteğe bağlı. Seçmezsen plan dengeli dağıtılır; seçersen o bölge sıralamada öne geçer, başkası havuzdan düşmez.', kol:4, cip:true, cok:true, ops:true, o:opsOdak()}
+    ]},
+    {ad:'Haftan', lead:'Gün sayısı bölünmeyi belirliyor. Son soru güvenlik içindir; yanıtına göre plan yerine uzman yönlendirmesi çıkabilir.', s:[
+      {k:'gun', q:'Haftada kaç gün ayırabilirsin?', h:'3 gün tüm vücut · 4 gün üst/alt · 5–6 gün itiş/çekiş/bacak.', kol:4, o:opsGun()},
+      {k:'durum', q:'Dikkate almamız gereken bir durum var mı?', h:'Doğru yönlendirme için önemli. Hiçbiri yoksa "Yok" de.', kol:2, cok:true, o:opsDurum()}
+    ]}
+  ];
+
+  var cevap = {}, adim = 0, sonucta = false, sonPlan = null;
+
+  /* ---- yardımcılar ---- */
+  function esc(s){
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;')
+                    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+  function tumSorular(){ return ADIMLAR.reduce(function(a,g){ return a.concat(g.s); }, []); }
+  function soru(k){ return tumSorular().filter(function(x){ return x.k===k; })[0]; }
+  function etiket(k, v){
+    var s = soru(k); if(!s) return v;
+    var o = s.o.filter(function(x){ return x.v===v; })[0];
+    return o ? o.t : v;
+  }
+  function secili(k){
+    var c = cevap[k];
+    if(c===undefined || c===null) return [];
+    return Array.isArray(c) ? c : [c];
+  }
+  function adimTam(ix){
+    return ADIMLAR[ix].s.every(function(s){ return s.ops || secili(s.k).length > 0; });
+  }
+  function riskli(){
+    return secili('durum').some(function(v){ return KURALLAR.riskli.indexOf(v) > -1; });
+  }
+  function trBuyuk(s){ return String(s).toLocaleUpperCase('tr'); }
+  function trKucuk(s){ return String(s).toLocaleLowerCase('tr'); }
+
+  /* =====================================================================
+     MOTOR — havuz süz → gün şablonu al → puanla → seç → reçete yaz
+     ===================================================================== */
+
+  /* 1 · HAVUZ SÜZME — motorun tek sert süzgeci (H3-KURALLAR.md §7).
+     `gerek` boşsa hareket her zaman havuzda; bu yüzden havuz asla
+     15'in altına inmiyor ve boş plan üretilemiyor. */
+  function havuzSuz(ekipman){
+    var ek = ekipmanAc(ekipman);
+    return KURALLAR.havuz.filter(function(h){
+      if(!h.gerek.length) return true;
+      return h.gerek.some(function(g){ return ek.indexOf(g) > -1; });
+    });
+  }
+
+  /* Küme seçeneklerini gerçek ekipmanlara açar: 'salon' → dört ekipman,
+     'yok' → hiçbiri. Tablodan okunuyor (KURALLAR.ekipmanSuzme.kume);
+     motorun içinde ikinci bir liste yok. */
+  function ekipmanAc(sec){
+    var kume = KURALLAR.ekipmanSuzme.kume, out = [];
+    (sec || []).forEach(function(v){
+      (kume[v] || [v]).forEach(function(x){ if(out.indexOf(x) < 0) out.push(x); });
+    });
+    return out;
+  }
+
+  /* 2 · REÇETE — seviye × hedef tablosundan (H3-KURALLAR.md §5–6) */
+  function recete(h, sv, hd){
+    return {
+      set: sv.set + hd.setEk,
+      tekrar: (h.olcum === 'sure') ? sv.sure : hd.tekrar,
+      dinlenme: Math.round(sv.dinlenme * hd.dinlenmeKat / KURALLAR.yuvarla) * KURALLAR.yuvarla
+    };
+  }
+
+  /* 2b · GÜN ISINMASI (şema v2 · §3.3)
+     ---------------------------------------------------------------
+     Depoda ADLI ısınma hareketi listesi YOK — ölçüldü:
+     `hareket-isinma-soguma-v1.html` kütüphaneye köprü kurar ama kendi
+     hareket kartını taşımaz (sayfadaki `.ex-card` sayısı 0). Bu yüzden
+     burada hareket adı UYDURULMUYOR.
+
+     Süre de yazılmıyor ("5 dk" gibi): o sayfanın kendi yanıtı
+     "kesin bir rakam vermek yerine … kendini harekete hazır hissedene
+     kadar" diyor. Uydurma bir rakam deponun kendi editoryal duruşuyla
+     çelişirdi.
+
+     Cümlenin her parçasının kaynağı var:
+       "nabzın yükselene kadar hafif tempo"
+          ← "Dolaşımı ve nabzı yavaşça artırır, bedeni uyandırır."
+       "geniş ama nazik hareketlerle aç"
+          ← "Eklemleri geniş ama nazik hareketlerle açar."
+       "ısındığını hissetmeden ilk sete başlama"
+          ← "Bedenin ısındığını hissetmeden asıl harekete geçme."
+       bölge adları
+          ← GÜNÜN KENDİ grupları (KURALLAR.bolunme[…].gunler[].gruplar)  */
+  function isinmaMetni(gun){
+    var bolge = (gun.g.gruplar || []).slice(0, 3)
+      .map(function(k){ return KURALLAR.gruplar[k]; })
+      .filter(Boolean).join(' · ');
+    return 'Nabzın yükselene kadar hafif tempo, sonra bugün çalışacağın ' +
+           'bölgeleri geniş ama nazik hareketlerle aç' +
+           (bolge ? ': ' + bolge : '') +
+           '. Isındığını hissetmeden ilk sete başlama.';
+  }
+
+  /* 3 · GÜN BAŞINA HAREKET — üç tavanın en küçüğü (H3-KURALLAR.md §7 · G).
+     Üçüncü tavan olmasa "İtiş Günü"ne çekiş ve bacak hareketi
+     doldurulurdu: ekipmansız havuzda yalnız 2 itiş hareketi var. */
+  function kalipta(havuz, gun){
+    return havuz.filter(function(h){ return gun.kalip.indexOf(h.kalip) > -1; }).length;
+  }
+  function hareketSayisi(sv, havuz, gun){
+    return Math.min(
+      sv.hareket,
+      Math.max(KURALLAR.olcek.enAz, havuz.length - KURALLAR.olcek.tabanEksi),
+      Math.max(KURALLAR.olcek.enAz, kalipta(havuz, gun))
+    );
+  }
+
+  var KALIP_SIRA = ['bacak','itis','cekis','core'];
+
+  /* 4 · PLAN KUR — deterministik; Math.random() yok */
+  function planKur(){
+    var ek    = secili('ekipman');
+    var odak  = secili('odak');
+    var havuz = havuzSuz(ek);
+    var sv    = KURALLAR.seviye[cevap.seviye];
+    var hd    = KURALLAR.hedef[cevap.hedef];
+    var bol   = KURALLAR.bolunme[String(cevap.gun)];
+    var P     = KURALLAR.puan;
+    var kullanim = {};
+
+    var gunler = bol.gunler.map(function(g, gix){
+      var N = hareketSayisi(sv, havuz, g);
+      var puanli = havuz.map(function(h){
+        var p = 0;
+        if(g.kalip.indexOf(h.kalip) > -1) p += P.kalipUyum;
+        if(g.vurgu.indexOf(h.kalip) > -1) p += P.vurgu;
+        p += (hd.kalipAgirlik[h.kalip] || 0);
+        if(g.gruplar.indexOf(h.birincil) > -1) p += P.birincilGrup;
+        if(h.ikincil.some(function(x){ return g.gruplar.indexOf(x) > -1; })) p += P.ikincilGrup;
+        if(odak.length && (odak.indexOf(h.birincil) > -1 ||
+           h.ikincil.some(function(x){ return odak.indexOf(x) > -1; }))) p += P.odakUyum;
+        p -= P.zorlukCeza * Math.max(0, h.zorluk - sv.no);
+        p -= P.tekrarCeza * (kullanim[h.slug] || 0);
+        return {h:h, puan:p};
+      }).sort(function(a,b){
+        if(b.puan !== a.puan) return b.puan - a.puan;
+        return KURALLAR.havuz.indexOf(a.h) - KURALLAR.havuz.indexOf(b.h);  /* sabit eşitlik bozucu */
+      });
+
+      /* SEÇİM — DÖRT TUR (H3-KURALLAR.md §8 · KURALLAR E2).
+         TUR 1–2 günün kalıbındaki KULLANILMAMIŞ hareketlerdir: bunlar
+         bitmedikçe hiçbir hareket haftada ikinci kez geçemez, yani
+         haftalık tekrar yasağı MUTLAK. TUR 3–4 zarif düşüştür; oraya
+         ancak günün kalıbı tükendiğinde inilir ve düşüş arayüzde
+         açıkça yazılır. Tavanlar: aynı birincil gruptan en fazla
+         gunIciGrupTavan, aynı kalıptan en fazla kalipTavan. */
+      var kalipTavan = Math.ceil(N * P.gunIciKalipPay / g.kalip.length);
+      var sec = [], grupSay = {}, kalipSay = {};
+      function al(r){
+        grupSay[r.h.birincil] = (grupSay[r.h.birincil] || 0) + 1;
+        kalipSay[r.h.kalip]   = (kalipSay[r.h.kalip]   || 0) + 1;
+        sec.push(r);
+      }
+      function tur(kume, tavanli){
+        kume.forEach(function(r){
+          if(sec.length >= N || sec.indexOf(r) > -1) return;
+          if(tavanli){
+            if((grupSay[r.h.birincil] || 0)  >= P.gunIciGrupTavan) return;
+            if((kalipSay[r.h.kalip]   || 0)  >= kalipTavan) return;
+          }
+          al(r);
+        });
+      }
+      var tazeKalipta = puanli.filter(function(r){
+        return !kullanim[r.h.slug] && g.kalip.indexOf(r.h.kalip) > -1;
+      });
+      tur(tazeKalipta, true);   /* 1 · kalıp + kullanılmamış + tavanlı  */
+      tur(tazeKalipta, false);  /* 2 · kalıp + kullanılmamış + tavansız */
+      tur(puanli, true);        /* 3 · kalan havuz + tavanlı  → DÜŞÜŞ   */
+      tur(puanli, false);       /* 4 · kalan havuz + tavansız → hiç boş kalmaz */
+
+      /* HAFTALIK TEKRAR YASAĞI — zarif düşüşün ÖLÇÜLDÜĞÜ yer.
+         `tekrarCeza` (999) hiçbir puan farkının kapatamayacağı kadar
+         büyüktür (olası en büyük fark 134), yani kullanılmış bir hareket
+         kullanılmamış hiçbir hareketin önüne geçemez → yasak, havuz
+         yettiği sürece MUTLAK. Buraya bir hareket ancak günün tüm uygun
+         kullanılmamış adayları tükendiğinde düşer; o zaman da gizlenmez,
+         `tekrar` listesi gün gerekçesine ve sonuç şeridine yazılır. */
+      var tekrar = sec.filter(function(r){ return (kullanim[r.h.slug] || 0) > 0; })
+                      .map(function(r){ return r.h; });
+
+      sec.forEach(function(r){ kullanim[r.h.slug] = (kullanim[r.h.slug] || 0) + 1; });
+
+      /* gün içi sıralama: ÖNCE günün kendi kalıpları (kendi sıralarıyla),
+         sonra tamamlayıcılar KALIP_SIRA ile. Yoksa "İtiş Günü"nün başında
+         squat görünürdü — ölçüldü, düzeltilmeden önce böyleydi. */
+      var sirano = function(h){
+        var i = g.kalip.indexOf(h.kalip);
+        return i > -1 ? i : 10 + KALIP_SIRA.indexOf(h.kalip);
+      };
+      sec.sort(function(a,b){
+        var d = sirano(a.h) - sirano(b.h);
+        if(d) return d;
+        if(b.puan !== a.puan) return b.puan - a.puan;
+        return KURALLAR.havuz.indexOf(a.h) - KURALLAR.havuz.indexOf(b.h);
+      });
+
+      return {no:gix + 1, g:g, sec:sec, N:N, kalipta:kalipta(havuz, g), tekrar:tekrar};
+    });
+
+    /* havuzda hiç karşılığı olmayan kalıplar — gizlenmiyor, söyleniyor */
+    var bos = [];
+    bol.gunler.forEach(function(g){
+      g.kalip.forEach(function(k){
+        if(bos.indexOf(k) < 0 && !havuz.some(function(h){ return h.kalip === k; })) bos.push(k);
+      });
+    });
+
+    /* yasağın kaç yerleşimde esnediği — sıfırsa hiçbir hareket haftada
+       birden fazla geçmiyor demektir */
+    var dusus = gunler.reduce(function(a, g){ return a + g.tekrar.length; }, 0);
+
+    return {bolunme:bol, gunler:gunler, havuz:havuz, sv:sv, hd:hd, ek:ek,
+            odak:odak, kullanim:kullanim, bosKalip:bos, dusus:dusus};
+  }
+
+  /* 5 · GÜN GEREKÇESİ — puanı üreten eksenlerden türetiliyor, uydurma
+     metin değil. Her cümlenin dayandığı alan H3-KURALLAR.md §11'de. */
+  function gerekce(plan, gun){
+    var out = [];
+    var kalipAd = gun.g.kalip.map(function(k){ return KURALLAR.kaliplar[k]; }).join(' + ');
+    out.push('<i>' + esc(kalipAd) + '</i> kalıbı bu günün omurgası');
+
+    /* vurgu yalnız günün birden çok kalıbı varsa bilgi taşır; tek kalıplı
+       günde vurgu kalıbın kendisidir, tekrar yazmanın anlamı yok */
+    if(gun.g.kalip.length > 1){
+      out.push('vurgu: <i>' + esc(gun.g.vurgu.map(function(k){ return KURALLAR.kaliplar[k]; }).join(' · ')) + '</i>');
+    }
+
+    var gruplar = [];
+    gun.sec.forEach(function(r){
+      if(gruplar.indexOf(r.h.birincil) < 0) gruplar.push(r.h.birincil);
+    });
+    out.push('çalışan gruplar: <i>' + esc(gruplar.map(function(g){ return KURALLAR.gruplar[g]; }).join(' · ')) + '</i>');
+
+    /* hedefin en ağır bastığı kalıp bu günün kalıbı mı — kalipAgirlik'ten */
+    var ag = plan.hd.kalipAgirlik, enYuksek = null, enDeger = -1;
+    Object.keys(ag).forEach(function(k){ if(ag[k] > enDeger){ enDeger = ag[k]; enYuksek = k; } });
+    if(gun.g.kalip.indexOf(enYuksek) > -1){
+      out.push('<i>' + esc(plan.hd.ad) + '</i> hedefi <i>' + esc(KURALLAR.kaliplar[enYuksek]) +
+               '</i> kalıbına ağırlık verdiriyor (+' + enDeger + ')');
+    }
+
+    var r0 = recete(gun.sec[0].h, plan.sv, plan.hd);
+    out.push('<i>' + esc(plan.sv.ad) + '</i> seviyesi: ' + r0.set + ' set · ' +
+             esc(plan.hd.tekrar) + ' tekrar · ' + r0.dinlenme + ' sn dinlenme');
+
+    var icinde = gun.sec.filter(function(r){ return gun.g.kalip.indexOf(r.h.kalip) > -1; }).length;
+    if(icinde === 0){
+      out.push('⚠ elindeki havuzda <i>' + esc(kalipAd) + '</i> kalıbında hiç hareket yok — ' +
+               'gün tamamen tamamlayıcı hareketlerle kuruldu');
+    } else if(icinde * 2 < gun.sec.length){
+      out.push('havuz bu kalıpta sınırlı olduğu için gün tamamlayıcı hareketlerle dolduruldu (' +
+               icinde + '/' + gun.sec.length + ' hareket günün kalıbında)');
+    }
+    if(gun.N < plan.sv.hareket){
+      out.push('gün ' + gun.N + ' harekete ölçeklendi: seviye ' + plan.sv.hareket +
+               ' isterdi, havuzda bu kalıpta ' + gun.kalipta + ' hareket var');
+    }
+
+    /* TEKRAR YASAĞI — tuttuysa sessiz, esnediyse GÜNÜN KENDİ satırında
+       sebebiyle birlikte yazılıyor (H3-KURALLAR.md §8). */
+    if(gun.tekrar.length){
+      out.push('⚠ tekrar yasağı bu günde esnedi: <i>' +
+               esc(gun.tekrar.map(function(h){ return h.ad; }).join(' · ')) +
+               '</i> haftada ikinci kez geçiyor — ' + plan.havuz.length +
+               ' hareketlik havuzda bu günün kalıbında (' +
+               esc(gun.g.kalip.map(function(k){ return KURALLAR.kaliplar[k]; }).join(' + ')) +
+               ') kullanılmamış hareket kalmadı');
+    }
+
+    out.push('<i>' + esc(plan.ek.map(function(e){ return KURALLAR.ekipman[e]; }).join(' · ')) + '</i> havuzuyla kuruldu (' +
+             plan.havuz.length + ' hareket)');
+    return out;
+  }
+
+  /* =====================================================================
+     ?plan= — DETERMİNİSTİK olduğu için PLAN değil SEÇİMLER kodlanıyor
+     ===================================================================== */
+  function kodla(){
+    return [
+      cevap.cinsiyet, cevap.hedef, cevap.seviye,
+      secili('ekipman').join('_') || 'yok',
+      String(cevap.gun),
+      secili('odak').join('_') || '0',
+      secili('durum').join('_') || 'yok'
+    ].join('-');
+  }
+  function gecerliMi(k, v){
+    var s = soru(k);
+    return !!s && s.o.some(function(o){ return o.v === v; });
+  }
+  /* Bozuk / bilinmeyen değerde 404 YOK: false döner, sihirbaz adım 1'de
+     kalır, sayfa 200 olarak açılmayı sürdürür. */
+  function coz(kod){
+    if(!kod) return false;
+    var p = String(kod).split('-');
+    if(p.length !== 7) return false;
+    var y = {};
+    if(!gecerliMi('cinsiyet', p[0])) return false; y.cinsiyet = p[0];
+    if(!gecerliMi('hedef',    p[1])) return false; y.hedef    = p[1];
+    if(!gecerliMi('seviye',   p[2])) return false; y.seviye   = p[2];
+    var ek = p[3].split('_');
+    if(!ek.length || !ek.every(function(v){ return gecerliMi('ekipman', v); })) return false; y.ekipman = ek;
+    if(!gecerliMi('gun', p[4])) return false; y.gun = p[4];
+    y.odak = (p[5] === '0') ? [] : p[5].split('_');
+    if(!y.odak.every(function(v){ return gecerliMi('odak', v); })) return false;
+    var dr = p[6].split('_');
+    if(!dr.length || !dr.every(function(v){ return gecerliMi('durum', v); })) return false; y.durum = dr;
+    return y;
+  }
+  function urlYaz(){
+    if(!window.history || !history.replaceState) return;
+    try { history.replaceState(null, '', location.pathname + '?plan=' + kodla()); } catch(e){}
+  }
+  function planUrl(){
+    return location.origin + location.pathname + '?plan=' + kodla();
+  }
+
+  /* =====================================================================
+     GÖRÜNÜM
+     ===================================================================== */
+  var rail   = document.getElementById('wgRail');
+  var titleE = document.getElementById('wgTitle');
+  var leadE  = document.getElementById('wgLead');
+  var noE    = document.getElementById('wgNo');
+  var backE  = document.getElementById('wgBack');
+  var nextE  = document.getElementById('wgNext');
+  var warnE  = document.getElementById('wgWarn');
+  var footE  = document.getElementById('wgFoot');
+
+  rail.innerHTML = ADIMLAR.map(function(g, ix){
+    return '<li data-ix="' + ix + '"><span class="no">' + (ix + 1) + '</span>' +
+           '<span class="lbl">' + esc(g.ad) + '</span></li>';
+  }).join('');
+
+  function optHtml(s, o){
+    var sinif = 'wg-opt' + (o.svg ? ' govde' : (o.cip ? ' cip' : (o.dar ? ' dar' : '')));
+    var gorsel = o.svg
+      ? '<span class="wg-govde" data-svg="' + esc(o.svg) + '"></span>'
+      : '<span class="ico"><i class="' + esc(o.i) + '" aria-hidden="true"></i></span>';
+    return '<button class="' + sinif + '" type="button" aria-pressed="false" ' +
+           (o.risk ? 'data-risk="1" ' : '') +
+           'data-k="' + esc(s.k) + '" data-v="' + esc(o.v) + '">' + gorsel +
+           '<span class="txt"><b>' + esc(o.t) +
+           /* R8/23 IKINCI ISARET — renk tek basina tasimasin (renk korlugu):
+              gorunur metinli rozet + ikon. Ekran okuyucu da duyar. */
+           (o.risk ? '<span class="wg-dikkat"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>Dikkat</span>' : '') +
+           '</b>' +
+           (o.d ? '<small>' + esc(o.d) + '</small>' : '') +
+           (o.m ? '<span class="meta">' + esc(o.m) + '</span>' : '') + '</span></button>';
+  }
+  function adimHtml(ix){
+    var bloklar = ADIMLAR[ix].s.map(function(s){
+      var opts = s.o.map(function(o){ return optHtml(s, o); }).join('');
+      return '<div class="wg-q" data-k="' + s.k + '"' + (s.ops ? ' data-ops="1"' : '') + '><h3>' + esc(s.q) +
+             (s.ops ? '<span class="wg-ops">İsteğe bağlı</span>' : '') + '</h3>' +
+             '<p class="wg-hint">' + esc(s.h) + '</p>' +
+             (s.ops ? '' : '<p class="wg-eksik"><i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i> Bu soru zorunlu — bir seçim yap.</p>') +
+             '<div class="wg-opts' + (s.cip ? ' cip' : '') + '" data-kol="' + (s.kol || 2) + '"' +
+             (s.kolM ? ' data-kol-m="' + s.kolM + '"' : '') +
+             ' role="group" aria-label="' + esc(s.q) + '">' +
+             opts + '</div></div>';
+    }).join('');
+    return '<div class="wg-step" data-ix="' + ix + '">' + bloklar + '</div>';
+  }
+  body.innerHTML = ADIMLAR.map(function(g, ix){ return adimHtml(ix); }).join('') +
+                   '<div class="wg-step" data-ix="' + ADIMLAR.length + '" id="wgResult"></div>';
+
+  /* ---- gövde SVG'leri: H2'nin dosyalarından, satır içine alınıyor ----
+     Satır içi alınıyor ki `fill="currentColor"` sayfanın rengini alsın;
+     <img> ile currentColor çalışmaz. role/başlık kaldırılıyor: kart
+     zaten kendi etiketini taşıyor, ekran okuyucuda tekrar olmasın. */
+  (function govdeYukle(){
+    Array.prototype.forEach.call(document.querySelectorAll('.wg-govde[data-svg]'), function(kap){
+      fetch(kap.getAttribute('data-svg')).then(function(r){
+        if(!r.ok) throw new Error('HTTP ' + r.status);
+        return r.text();
+      }).then(function(txt){
+        var doc = new DOMParser().parseFromString(txt, 'image/svg+xml');
+        var svg = doc.querySelector('svg');
+        if(!svg) throw new Error('SVG kökü yok');
+        var node = document.importNode(svg, true);
+        node.removeAttribute('width'); node.removeAttribute('height');
+        node.removeAttribute('role'); node.removeAttribute('aria-labelledby');
+        node.setAttribute('aria-hidden', 'true');
+        node.setAttribute('focusable', 'false');
+        kap.appendChild(node);
+      })['catch'](function(){ kap.classList.add('wg-govde-yok'); });
+    });
+  })();
+
+  /* ---- sonuç blokları ---- */
+  function ozetHtml(plan){
+    var enAz = Math.min.apply(null, plan.gunler.map(function(g){ return g.sec.length; }));
+    var enCok = Math.max.apply(null, plan.gunler.map(function(g){ return g.sec.length; }));
+    var toplam = plan.gunler.reduce(function(a, g){ return a + g.sec.length; }, 0);
+    var uyari = '';
+    if(plan.bosKalip.length){
+      /* kalıbın hangi ekipmanlarla açıldığı SAYILIYOR, yazıya gömülmüyor */
+      var acan = [];
+      plan.bosKalip.forEach(function(k){
+        KURALLAR.havuz.forEach(function(h){
+          if(h.kalip !== k) return;
+          h.gerek.forEach(function(g){ if(acan.indexOf(g) < 0) acan.push(g); });
+        });
+      });
+      uyari += '<div class="wg-uyari"><i class="fa-solid fa-circle-info" aria-hidden="true"></i>' +
+        '<p>Seçtiğin ekipmanla kurulan ' + plan.havuz.length + ' hareketlik havuzda <b>' +
+        esc(plan.bosKalip.map(function(k){ return KURALLAR.kaliplar[k]; }).join(' · ')) +
+        '</b> kalıbında hiç hareket yok; o günler tamamlayıcı hareketlerle kuruldu.' +
+        (acan.length ? ' Şunlardan birini eklersen bu kalıp açılır: <b>' +
+          esc(acan.map(function(g){ return KURALLAR.ekipman[g]; }).join(' · ')) + '</b>.' : '') +
+        '</p></div>';
+    }
+    /* TEKRAR YASAĞI ESNEDİYSE — kullanıcı sebebini burada da görüyor */
+    if(plan.dusus){
+      uyari += '<div class="wg-uyari"><i class="fa-solid fa-repeat" aria-hidden="true"></i>' +
+        '<p>Aynı hareket <b>haftada yalnız bir gün</b> geçer. Bu planda ' +
+        plan.havuz.length + ' hareketlik havuz bazı günlerin kalıbında tükendiği için kural <b>' +
+        plan.dusus + ' yerde esnedi</b>; o hareketler haftada ikinci kez geçiyor ve ' +
+        'hangileri olduğu ilgili günün <i>“Neden bu gün böyle”</i> kutusunda yazılı. ' +
+        'Daha fazla ekipman seçmek havuzu büyütür ve tekrarı azaltır.</p></div>';
+    }
+    return '<div class="wg-ozet">' +
+      '<span><i class="fa-solid fa-calendar-week"></i> ' + plan.gunler.length + ' gün · ' + esc(plan.bolunme.ad) + '</span>' +
+      '<span><i class="fa-solid fa-bullseye"></i> ' + esc(plan.hd.ad) + '</span>' +
+      '<span><i class="fa-solid fa-signal"></i> ' + esc(plan.sv.ad) + '</span>' +
+      '<span><i class="fa-solid fa-list-check"></i> Gün başına ' +
+        (enAz === enCok ? enAz : enAz + '–' + enCok) + ' hareket · toplam ' + toplam + '</span>' +
+      '<span><i class="fa-solid fa-dumbbell"></i> ' + plan.havuz.length + ' hareketlik havuz</span>' +
+      '</div>' + uyari;
+  }
+  /* alternatif slug → görünen ad (havuzdan okunur, ikinci liste yok) */
+  function havuzAdi(slug){
+    var h = KURALLAR.havuz.filter(function(x){ return x.slug === slug; })[0];
+    return h ? h.ad : '';
+  }
+  function gunHtml(plan, gun){
+    var hrk = gun.sec.map(function(r, i){
+      var re = recete(r.h, plan.sv, plan.hd);
+      var ek = HAREKET_EK[r.h.slug] || {};
+      var altAd = ek.alternatif ? havuzAdi(ek.alternatif) : '';
+      return '<a href="egzersiz-detay-v1.html?slug=' + esc(r.h.slug) + '" data-slug="' + esc(r.h.slug) + '">' +
+             '<span class="s">' + (i + 1) + '</span>' +
+             '<span class="t"><b>' + esc(r.h.ad) + '</b>' +
+             '<small>' + esc(KURALLAR.kaliplar[r.h.kalip]) + ' · ' + esc(KURALLAR.gruplar[r.h.birincil]) +
+             (r.h.gerek.length ? ' · ' + esc(r.h.gerek.map(function(g){ return KURALLAR.ekipman[g]; }).join(', ')) : ' · ekipmansız') +
+             '</small>' +
+             (altAd ? '<span class="alt"><i class="fa-solid fa-shuffle" aria-hidden="true"></i>' +
+                      'Zorlarsa: ' + esc(altAd) + '</span>' : '') +
+             '</span>' +
+             '<span class="wg-recete"><span>' + re.set + ' set</span><span>' + esc(re.tekrar) +
+             (r.h.olcum === 'sure' ? '' : ' tekrar') + '</span><span>' + re.dinlenme + ' sn</span></span>' +
+             '<i class="fa-solid fa-arrow-right go" aria-hidden="true"></i></a>';
+    }).join('');
+
+    return '<div class="wg-gun" data-gun="' + gun.no + '">' +
+      '<div class="wg-gun-head"><span class="wg-gun-no">' + gun.no + '</span>' +
+      '<span class="wg-gun-ad">' + esc(gun.g.ad) + '</span>' +
+      '<span class="wg-gun-kalip">' + esc(trBuyuk(gun.g.kalip.map(function(k){ return KURALLAR.kaliplar[k]; }).join(' / '))) + '</span></div>' +
+      '<div class="wg-nicin"><b>Neden bu gün böyle</b><ul>' +
+      gerekce(plan, gun).map(function(c){ return '<li>' + c + '</li>'; }).join('') +
+      '</ul></div>' +
+      '<div class="wg-isinma"><i class="fa-solid fa-fire" aria-hidden="true"></i>' +
+      '<div><b>Isınma</b><p>' + esc(isinmaMetni(gun)) +
+      ' <a href="hareket-isinma-soguma-v1.html">Isınma ve soğuma rehberi</a>.</p></div></div>' +
+      '<div class="wg-hrk">' + hrk + '</div></div>';
+  }
+  function secimlerinHtml(){
+    var satir = tumSorular().map(function(s){
+      var vals = secili(s.k);
+      if(!vals.length) return '<div class="wg-sum-row"><span class="wg-sum-k">' + esc(s.q.replace(/\?$/, '')) +
+                              '</span><span class="wg-sum-v"><span class="wg-pick">Seçilmedi</span></span></div>';
+      var cips = vals.map(function(v){ return '<span class="wg-pick">' + esc(etiket(s.k, v)) + '</span>'; }).join('');
+      return '<div class="wg-sum-row"><span class="wg-sum-k">' + esc(s.q.replace(/\?$/, '')) + '</span>' +
+             '<span class="wg-sum-v">' + cips + '</span></div>';
+    }).join('');
+    return '<div class="wg-sum"><h3>Seçimlerin</h3>' + satir + '</div>';
+  }
+  function nasilHtml(risk){
+    var kural = risk
+      ? ['<b>Durum yanıtın</b> → kişiye özel antrenman planı üretilmez; uzmana ve sağlık bilgilendirmesine yönlendirilir.',
+         '<b>Hedefin</b> → yalnız <i>okunacak</i> rehber içeriği seçilir, uygulama önerilmez.']
+      : ['<b>Ekipmanın</b> → havuzu süzen tek eksen. Ekipman istemeyen ' +
+           KURALLAR.havuz.filter(function(h){ return !h.gerek.length; }).length +
+           ' hareket her seçimde havuzda kalır; bu yüzden hiçbir bileşim boş plan veremez.',
+         '<b>Gün sayın</b> → bölünmeyi belirler: 3 tüm vücut · 4 üst/alt · 5–6 itiş/çekiş/bacak.',
+         '<b>Hedefin</b> → tekrar aralığını, set ekini, dinlenme çarpanını ve hangi kalıba ağırlık verileceğini belirler.',
+         '<b>Seviyen</b> → set sayısını, dinlenmeyi ve gün başına hareket sayısını belirler; seviyenin üstündeki hareketler <i>elenmez</i>, sıralamada geriye düşer.',
+         '<b>Odağın</b> → yalnız puan ekler. Seçmediğin bölge havuzdan çıkmaz.',
+         '<b>Gün içi denge</b> → aynı gün içinde aynı kas grubundan en fazla ' + KURALLAR.puan.gunIciGrupTavan +
+           ' hareket; çok kalıplı günde (tüm vücut, üst/alt) tek bir kalıp günü kaplayamaz. ' +
+           'Bu iki tavan da <i>eleyici değil</i>: günün kalıbında başka hareket kalmadıysa gevşerler.',
+         '<b>Tekrar yasağı</b> → aynı hareket <i>haftada yalnız bir gün</i> geçer (havuz ' +
+           KURALLAR.havuz.length + ' kalem). Yasak, o günün kalıbında kullanılmamış hareket kaldığı ' +
+           'sürece mutlaktır; tükenirse plan boş kalmasın diye kural esner ve <i>esnediği yer ' +
+           'gün gerekçesinde yazılır</i>.'];
+    return '<div class="wg-how"><h3>Bu plan nasıl kuruldu?</h3><ul>' +
+           kural.map(function(k){ return '<li>' + k + '</li>'; }).join('') +
+           '</ul><p class="wg-how-note">Motor <b>deterministiktir</b>: aynı seçim her zaman aynı planı verir — ' +
+           'bu yüzden plan bağlantısı paylaşılabilir. Kural tablosunun tamamı ' +
+           '<b>tasks/H3-KURALLAR.md</b> dosyasındadır; kod o tablodan okur. ' +
+           'Hiçbir öneri teşhis ya da reçete değildir.</p></div>';
+  }
+  function baglantiHtml(){
+    return '<div class="wg-link"><h3>Planın bağlantısı</h3>' +
+      '<p>Bağlantı planı değil <b>seçimlerini</b> taşır; açan kişide motor aynı planı yeniden kurar.</p>' +
+      '<div class="wg-link-row">' +
+      '<input type="text" id="wgUrl" readonly value="' + esc(planUrl()) + '" aria-label="Plan bağlantısı" />' +
+      '<button class="btn btn-ghost" type="button" id="wgCopy"><i class="fa-solid fa-copy"></i> Bağlantıyı kopyala</button>' +
+      '</div><p class="wg-kopyalandi" id="wgCopied">Bağlantı kopyalandı.</p></div>';
+  }
+  /* =====================================================================
+     PLANI KAYDET — madde 18
+     ---------------------------------------------------------------------
+     Depolama sözleşmesi `assets/js/fit-plan-kayit.js`tedir; burada tek
+     satır localStorage kodu yok. Motorun ürettiği plan sözleşmenin
+     şemasına çevrilip FIT_PLAN.kaydet()'e veriliyor.
+
+     GİRİŞ YAPILMAMIŞ KULLANICI — ölçülerek karar verildi. Kardeş markada
+     (dadagastro.com/bugun-ne-pisirsem · "Menüye Ekle") aynı eylem
+     girişsizken DÜRÜST BİR KAPI açıyor: kilit ikonu, "… için giriş yap"
+     başlığı, Giriş Yap / Üye Ol. DadaFit'te bu kapının kendi bileşeni
+     zaten var (kabuğun `data-lg-gate`i), o kullanılıyor — sayfa kendi
+     kapısını icat etmiyor. Akış KIRILMIYOR: plan deterministik olduğu
+     için girişsiz kullanıcının kalıcılığı sayfanın altındaki `?plan=`
+     bağlantısıdır ve kapı bunu söylüyor. Uydurma bir "cihazına
+     kaydedildi" vaadi verilmiyor. */
+  function planAdi(){
+    var ek = secili('ekipman').map(function(e){ return KURALLAR.ekipman[e]; }).join(' + ');
+    return ek + ' · ' + cevap.gun + ' gün · ' + KURALLAR.seviye[cevap.seviye].ad;
+  }
+  function planNesnesi(plan){
+    return {
+      ad: planAdi(),
+      kaynak: 'antrenman-olusturucu',
+      secimler: {
+        cinsiyet: cevap.cinsiyet, hedef: cevap.hedef, seviye: cevap.seviye,
+        ekipman: secili('ekipman'), odak: secili('odak'),
+        gunSayisi: Number(cevap.gun), durum: secili('durum'),
+        bolunme: plan.bolunme.anahtar, havuz: plan.havuz.length, kod: kodla()
+      },
+      gunler: plan.gunler.map(function(gun){
+        return {
+          no: gun.no,
+          ad: gun.g.ad,
+          odak: gun.g.kalip.map(function(k){ return KURALLAR.kaliplar[k]; }).join(' / '),
+          isinma: isinmaMetni(gun),                       /* v2 · §3.3 */
+          hareketler: gun.sec.map(function(r){
+            var re = recete(r.h, plan.sv, plan.hd);
+            var ek = HAREKET_EK[r.h.slug] || {};
+            var h = {
+              slug: r.h.slug, ad: r.h.ad,
+              set: re.set,
+              tekrar: r.h.olcum === 'sure' ? null : re.tekrar,
+              sure:   r.h.olcum === 'sure' ? re.tekrar : null,
+              dinlenme: re.dinlenme,                      /* v2 · §3.3 */
+              kalip: KURALLAR.kaliplar[r.h.kalip],
+              grup:  KURALLAR.gruplar[r.h.birincil],
+              /* v2 · §3.3 — ekipman havuzun `gerek` alanından, adı
+                 KURALLAR.ekipman sözlüğünden. Ekipman istemeyen hareket
+                 için liste BOŞ BIRAKILMIYOR: "Vücut ağırlığı" deponun
+                 kendi etiketidir (KURALLAR.ekipman.yok) ve boş dizi
+                 "bilinmiyor" ile "gerekmiyor"u ayırt edilemez kılardı. */
+              ekipman: r.h.gerek.length
+                ? r.h.gerek.map(function(g){ return KURALLAR.ekipman[g]; })
+                : [KURALLAR.ekipman.yok],
+              /* v2 · §3.3 — form sayfası slug'ı. 25/25 hareket için
+                 egzersiz-detay-v1.html?slug=… kartı VAR (K43 ölçümü). */
+              video: r.h.slug
+            };
+            if(ek.uyari) h.uyari = ek.uyari;                /* v2 · §3.3 */
+            /* Alternatifin ADI da yazılıyor: slug→ad tablosu yalnız burada.
+               Okuyan sayfa slug'ı güzelleştirse FABRİKASYON olurdu
+               ('sinav' → "Sinav", doğrusu "Şınav (Push-up)"). */
+            if(ek.alternatif){
+              h.alternatif   = ek.alternatif;              /* v2 · §3.3 */
+              h.alternatifAd = havuzAdi(ek.alternatif);    /* v2 · §3.3 */
+            }
+            return h;
+          })
+        };
+      })
+    };
+  }
+  /* Aynı seçim ikinci kez kaydedilirse yeni kayıt AÇILMAZ, var olan
+     güncellenir — `secimler.kod` deterministik olduğu için kimlik odur. */
+  function ayniPlan(kod){
+    if(!window.FIT_PLAN) return null;
+    var v = FIT_PLAN.listele().filter(function(x){
+      return x.secimler && x.secimler.kod === kod;
+    })[0];
+    return v ? v.id : null;
+  }
+  function girisVar(){ return document.body.classList.contains('is-auth'); }
+
+  function kaydetHtml(){
+    if(!window.FIT_PLAN) return '';
+    var acik = girisVar();
+    var kapi = acik ? '' :
+      ' data-lg-gate data-lg-title="Planı kaydetmek için giriş yap"' +
+      ' data-lg-desc="Kaydedilen plan hesabına bağlanır; Planım\'da gün gün durur ve her hareketi işaretlersin. Girmesen de plan kaybolmaz — sayfadaki plan bağlantısı seçimlerini taşır."';
+    return '<div class="wg-kaydet" id="wgKaydetKutu">' +
+      '<span class="kico"><i class="fa-solid fa-' + (acik ? 'bookmark' : 'lock') + '" aria-hidden="true"></i></span>' +
+      '<span class="kt"><b>Planı kaydet</b>' +
+      '<p>' + (acik
+        ? 'Planım sayfana düşer; her hareketi <b>tamamlandı · yarım · atlandı</b> diye işaretlersin.'
+        : 'Kaydetmek için giriş gerekiyor. Girmesen de plan kaybolmaz: aşağıdaki <b>bağlantı</b> seçimlerini taşır.') +
+      '</p></span>' +
+      '<span class="ke"><button class="btn btn-fit" type="button" id="wgKaydet"' + kapi + '>' +
+      '<i class="fa-solid fa-bookmark"></i> Planı Kaydet</button></span></div>';
+  }
+  function kaydedildiHtml(id, ad){
+    return '<span class="kico"><i class="fa-solid fa-check" aria-hidden="true"></i></span>' +
+      '<span class="kt"><b>Plan kaydedildi</b>' +
+      '<p>“' + esc(ad) + '” artık Planım sayfanda; ilerlemeni orada işaretle. ' +
+      'Aynı seçimle yeniden kaydedersen bu kayıt güncellenir, ikinci plan açılmaz.</p></span>' +
+      '<span class="ke"><a class="btn btn-fit" href="fit-programlarim.html?plan=' + esc(id) + '">' +
+      '<i class="fa-solid fa-arrow-right"></i> Planı aç</a></span>';
+  }
+
+  function altAksiyonHtml(){
+    return '<div class="wg-done">' +
+      '<a class="btn btn-fit" href="egzersiz-kutuphane-v1.html"><i class="fa-solid fa-dumbbell"></i> Tüm hareketlere git</a>' +
+      '<a class="btn btn-ghost" href="programini-bul-v1.html"><i class="fa-solid fa-clipboard-list"></i> Hazır program da bak</a>' +
+      '<button class="btn btn-ghost" type="button" id="wgRestart"><i class="fa-solid fa-rotate-left"></i> Baştan başla</button>' +
+      '</div>';
+  }
+  function riskHtml(){
+    return '<div class="wg-risk"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i><div>' +
+      '<b>Önce bir uzmana danışman gerekiyor</b>' +
+      '<p>Verdiğin yanıtlar (ağrı, özel sağlık durumu, gebelik ya da uzun süreli hareketsizlik) için ' +
+      '<b>sana özel antrenman planı üretmiyoruz</b>. Bu bir teşhis değil, bir sınır: doğru başlangıcı ' +
+      'seni tanıyan biri belirlemeli.</p></div></div>' +
+      '<div class="wg-list">' +
+      '<a class="wg-hit" href="antrenorler-v1.html"><span class="rank"><i class="fa-solid fa-user-tie"></i></span>' +
+      '<span class="txt"><span class="kind">Uzman</span><span class="ad">DadaFit onaylı antrenörler</span>' +
+      '<small>Belgesi doğrulanmış uzmanlar · online ve yüz yüze</small></span>' +
+      '<i class="fa-solid fa-arrow-right go" aria-hidden="true"></i></a>' +
+      '<a class="wg-hit" href="saglik-bilgilendirme-v1.html"><span class="rank"><i class="fa-solid fa-shield-heart"></i></span>' +
+      '<span class="txt"><span class="kind">Sınırlar</span><span class="ad">Sağlık Bilgilendirmesi</span>' +
+      '<small>Durma kriterleri ve uzmana danışma koşulları</small></span>' +
+      '<i class="fa-solid fa-arrow-right go" aria-hidden="true"></i></a>' +
+      '<a class="wg-hit" href="hareket-yeni-baslayanlar-v1.html"><span class="rank"><i class="fa-solid fa-book-open"></i></span>' +
+      '<span class="txt"><span class="kind">Okuma</span><span class="ad">Yeni Başlayanlar İçin Hareket</span>' +
+      '<small>Genel bilgi — uygulama değil, okuma</small></span>' +
+      '<i class="fa-solid fa-arrow-right go" aria-hidden="true"></i></a>' +
+      '</div>';
+  }
+  function sonucHtml(){
+    if(riskli()) return riskHtml() + secimlerinHtml() + nasilHtml(true) + altAksiyonHtml();
+    var plan = planKur();
+    sonPlan = plan;
+    return ozetHtml(plan) + kaydetHtml() +
+      '<div class="wg-gunler" id="wgPlan">' +
+      plan.gunler.map(function(gun){ return gunHtml(plan, gun); }).join('') +
+      /* R11/M11 · Beyar: "sonucundaki planın bağlantısını kaldır".
+         `baglantiHtml()` çağrısı ÇIKARILDI. Fonksiyonun kendisi ve
+         `planUrl()` DURUYOR — plan hâlâ `?plan=` ile paylaşılabiliyor
+         (tests/plan-kayit.mjs bunu ölçüyor), yalnız kopyalama kutusu
+         ekrandan kalktı. Blok geri istenirse tek çağrı yeter. */
+      '</div>' + secimlerinHtml() + nasilHtml(false) + altAksiyonHtml();
+  }
+
+  function isaretle(){
+    body.querySelectorAll('.wg-opt').forEach(function(b){
+      var k = b.getAttribute('data-k');
+      b.setAttribute('aria-pressed', secili(k).indexOf(b.getAttribute('data-v')) > -1 ? 'true' : 'false');
+    });
+  }
+
+  function goster(kaydir){
+    sonucta = adim === ADIMLAR.length;
+
+    body.querySelectorAll('.wg-step').forEach(function(st){
+      st.classList.toggle('on', +st.getAttribute('data-ix') === adim);
+    });
+    rail.querySelectorAll('li').forEach(function(li, ix){
+      li.classList.toggle('on',   !sonucta && ix === adim);
+      li.classList.toggle('done', sonucta || ix < adim);
+      li.setAttribute('aria-current', (!sonucta && ix === adim) ? 'step' : 'false');
+    });
+
+    if(sonucta){
+      document.getElementById('wgResult').innerHTML = sonucHtml();
+      titleE.textContent = riskli() ? 'Sonuç' : 'Haftalık antrenman planın';
+      leadE.textContent  = riskli()
+        ? 'Yanıtların güvenli bir başlangıç için uzman değerlendirmesi gerektiriyor.'
+        : 'Aşağıdaki plan verdiğin altı yanıttan hesaplandı. Her hareket kütüphanedeki kartına gider.';
+      footE.style.display = 'none';
+      warnE.classList.remove('on');
+      if(!riskli()) urlYaz();
+    } else {
+      var g = ADIMLAR[adim];
+      titleE.textContent = g.ad;
+      leadE.textContent  = g.lead;
+      footE.style.display = '';
+      noE.textContent = 'Adım ' + (adim + 1) + ' / ' + ADIMLAR.length;
+      /* İlk adımda "Geri" YOK ama yeri korunuyor (visibility:hidden —
+         `display:none` düğme sırasını kaydırırdı). visibility:hidden
+         elemanı klavye sırasından düşürür ama `getClientRects()` hâlâ
+         kutu döndürür ve `innerText` boşalır: mekanik denetim bunu
+         "görünür + adsız + etkisiz" diye okuyordu (tool'un kendi kör
+         noktası, DENETIM §2). `aria-disabled` + `aria-hidden` durumu
+         hem yardımcı teknolojiye hem denetime DOĞRU söylüyor. */
+      var geriYok = adim === 0;
+      backE.style.visibility = geriYok ? 'hidden' : 'visible';
+      backE.setAttribute('aria-disabled', geriYok ? 'true' : 'false');
+      if(geriYok) backE.setAttribute('aria-hidden', 'true');
+      else        backE.removeAttribute('aria-hidden');
+      nextE.innerHTML = adim === ADIMLAR.length - 1
+        ? 'Planı oluştur <i class="fa-solid fa-wand-magic-sparkles"></i>'
+        : 'İleri <i class="fa-solid fa-arrow-right"></i>';
+      nextE.disabled = false;
+      warnE.classList.remove('on');
+      body.querySelectorAll('.wg-q.eksik').forEach(function(el){ el.classList.remove('eksik'); });  /* R9 */
+    }
+    if(kaydir) window.scrollTo({top:document.querySelector('.wg-wrap').offsetTop - 130, behavior:'smooth'});
+  }
+
+  /* ---- seçenek tıklaması — "yok" seçenekleri çoklu listede diğerlerini temizler ---- */
+  body.addEventListener('click', function(e){
+    var o = e.target.closest('.wg-opt');
+    if(!o) return;
+    var k = o.getAttribute('data-k'), v = o.getAttribute('data-v');
+    var s = soru(k);
+    if(!s) return;
+
+    if(s.cok){
+      /* TEK KİP seçenekleri: yanlarında başka seçim anlamsız olduğu için
+         işaretlenince ötekileri temizlerler, başka bir seçim de onları
+         temizler. Liste sorunun kendi `tek` alanından geliyor; ekipman
+         adımında bu alan KURALLAR.ekipmanSuzme.tekKip'ten okunuyor
+         ("yok" ve "salon"), öteki çoklu sorularda yalnız "yok". */
+      var tek = s.tek || ['yok'];
+      var arr = Array.isArray(cevap[k]) ? cevap[k] : [];
+      var ix  = arr.indexOf(v);
+      if(ix > -1) arr = arr.slice(0, ix).concat(arr.slice(ix + 1));
+      else if(tek.indexOf(v) > -1) arr = [v];
+      else { arr = arr.filter(function(x){ return tek.indexOf(x) < 0; }); arr = arr.concat([v]); }
+      cevap[k] = arr;
+    } else {
+      cevap[k] = v;
+    }
+    isaretle();
+    var qEl = e.target.closest('.wg-q'); if(qEl) qEl.classList.remove('eksik');   /* R9 */
+    warnE.classList.remove('on');
+  });
+
+  backE.addEventListener('click', function(){ if(adim > 0){ adim--; goster(true); } });
+  nextE.addEventListener('click', function(){
+    if(adim < ADIMLAR.length && !adimTam(adim)){
+      /* R9 · hangi soru eksik — genel uyarı yetmiyordu */
+      var eksikler = ADIMLAR[adim].s.filter(function(q){ return !q.ops && secili(q.k).length === 0; });
+      body.querySelectorAll('.wg-q.eksik').forEach(function(el){ el.classList.remove('eksik'); });
+      var ilk = null;
+      eksikler.forEach(function(q){
+        var el = body.querySelector('.wg-step.on .wg-q[data-k="' + q.k + '"]');
+        if(el){ el.classList.add('eksik'); if(!ilk) ilk = el; }
+      });
+      warnE.innerHTML = '<i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i> ' +
+        (eksikler.length === 1
+          ? 'Şu soru yanıtlanmadı: <b>' + esc(eksikler[0].q) + '</b>'
+          : eksikler.length + ' zorunlu soru yanıtlanmadı — aşağıda işaretledim.');
+      warnE.classList.add('on');
+      if(ilk){
+        /* YALNIZ görünmüyorsa kaydır. Koşulsuz kaydırma, kullanıcı "İleri"ye
+           bastıktan sonra sayfayı imlecin altına getiriyor ve o kart hover'la
+           yeşile dönüp SEÇİLİ sanılıyordu — düzeltmenin amacının tam tersi. */
+        var r = ilk.getBoundingClientRect();
+        if(r.top < 90 || r.bottom > window.innerHeight - 60)
+          ilk.scrollIntoView({block:'center', behavior:'smooth'});
+        var od = ilk.querySelector('.wg-opt'); if(od) od.focus({preventScroll:true});
+      }
+      return;
+    }
+    if(adim < ADIMLAR.length){ adim++; goster(true); }
+  });
+
+  /* ---- "Baştan başla" — yanıtlar silinir, adım 1'e dönülür ---- */
+  body.addEventListener('click', function(e){
+    if(!e.target.closest('#wgRestart')) return;
+    cevap = {}; adim = 0;
+    isaretle();
+    if(window.history && history.replaceState){
+      try { history.replaceState(null, '', location.pathname); } catch(err){}
+    }
+    goster(true);
+  });
+
+  /* ---- bağlantıyı kopyala — panoya erişilemezse girdi metni seçiliyor ---- */
+  body.addEventListener('click', function(e){
+    if(!e.target.closest('#wgCopy')) return;
+    var inp = document.getElementById('wgUrl');
+    var not = document.getElementById('wgCopied');
+    if(!inp) return;
+    inp.focus(); inp.select();
+    var bitir = function(){ if(not) not.classList.add('on'); };
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(inp.value).then(bitir)['catch'](bitir);
+    } else { bitir(); }
+  });
+
+  /* ---- "Planı Kaydet" — sözleşme modülüne yazar ----
+     Girişsizken kabuğun kapısı bu tıklamayı yakalama evresinde zaten
+     kesiyor (data-lg-gate); buraya yalnız girişli kullanıcı düşer. */
+  body.addEventListener('click', function(e){
+    if(!e.target.closest('#wgKaydet')) return;
+    if(!window.FIT_PLAN || !sonPlan) return;
+    var kutu = document.getElementById('wgKaydetKutu');
+    var nesne = planNesnesi(sonPlan);
+    var eski  = ayniPlan(nesne.secimler.kod);
+    if(eski) nesne.id = eski;
+    var id = FIT_PLAN.kaydet(nesne);
+    if(!id){
+      if(kutu) kutu.querySelector('p').innerHTML =
+        'Tarayıcı bu sitede veri saklamaya izin vermiyor (gizli kip ya da dolu depolama). ' +
+        'Planı kaybetmemek için aşağıdaki <b>plan bağlantısını</b> kopyala.';
+      return;
+    }
+    FIT_PLAN.aktifYap(id);
+    if(kutu){ kutu.className = 'wg-kaydet ok'; kutu.innerHTML = kaydedildiHtml(id, nesne.ad); }
+  });
+
+  /* ---- açılış: ?plan= varsa geri kur, yoksa adım 1 ---- */
+  (function acilis(){
+    var kod = new URLSearchParams(location.search).get('plan');
+    var y = coz(kod);
+    if(y){
+      cevap = {cinsiyet:y.cinsiyet, hedef:y.hedef, seviye:y.seviye,
+               ekipman:y.ekipman, gun:y.gun, odak:y.odak, durum:y.durum};
+      adim = ADIMLAR.length;
+      isaretle();
+      goster(false);
+      return;
+    }
+    goster(false);
+  })();
+})();
+</script>
+</body>
+</html>

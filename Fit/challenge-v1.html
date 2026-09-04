@@ -1,0 +1,1572 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8" />
+  <meta name="robots" content="noindex, nofollow" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Challenge — DadaFit</title>
+<link rel="icon" type="image/svg+xml" href="../kanon/varlik/dadafit-isaret.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="../kanon/varlik/dadafit-isaret-32.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="../kanon/varlik/dadafit-isaret-180.png" />
+<!-- FontAwesome 6.5.2 (kilitli ikon seti) -->
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+      integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+      crossorigin="anonymous" referrerpolicy="no-referrer" />
+<!-- DadaFit ortak kabuk (tek kaynak) -->
+<!-- KANON · yukleme sirasi: tokenlar -> markalar/fit (bilesenler YUKLENMEZ) -->
+<link rel="stylesheet" href="../kanon/tokenlar.css" />
+<link rel="stylesheet" href="../kanon/markalar/fit.css" />
+<link rel="stylesheet" href="assets/css/fit-shell.css" />
+<link rel="stylesheet" href="assets/css/fit-mesaj.css" />
+<style>
+/* =====================================================================
+ DADAFIT CHALLENGE — aylık challenge sayfası
+ Chrome (token+topbar+header+drawer+bottom-nav+footer+modal+JS) hub'dan
+ BİREBİR taşındı (egzersiz-kutuphane-v1.html EN GÜNCEL header pattern'i).
+ DadaFit recolor: --fit → #009d4f. Aktif nav = Challenge.
+ Sayfa içeriği "SAYFA CSS" altına eklendi. Mega menü/chrome KİLİTLİ.
+ ===================================================================== */
+
+.dropdown{
+  position:absolute;top:calc(100% + 12px);left:50%;transform:translateX(-50%) translateY(8px);
+  min-width:230px;background:#fff;border:1px solid var(--line);border-radius:var(--radius-lg);box-shadow:var(--sh-lg);
+  padding:10px;opacity:0;visibility:hidden;transition:opacity .01s,visibility .01s,transform .12s var(--ease);z-index:80;
+}
+
+/* =====================================================================
+ SAYFA CSS — DADAFIT CHALLENGE
+ Signature: hub df-chal/df-days daygrid full sayfaya açıldı — 30 günlük
+ takvim, sayfanın belkemiği. Kapsayıcı ton (K7): no-pain-no-gain YOK.
+ ===================================================================== */
+:root{
+  --fit:var(--marka);          /* DadaFit aksanı (Pantone 7482 C) */
+  --fit-deep:var(--marka-koyu);     /* hover / gradient ucu */
+  --fit-tint:var(--marka-yikama-2);     /* yumuşak yeşil yıkama */
+  --fit-line:var(--marka-cizgi);     /* yeşil-nötr hairline */
+  --fit-bright:var(--marka-parlak);   /* koyu zeminde okunur aksan metni */
+  --fit-dark:#211E16;     /* vurgu/hero zemini */
+}
+.sec-fit .eyebrow{color:var(--fit-deep)}
+.sec-fit .eyebrow::before{background:var(--fit)}
+
+/* ---------------------------------------------------------------------
+ 1 · HERO — koyu band + desatüre görsel + yeşil gradient + cam panel
+ (hub df-chal panel dilini tam-genişlik hero'ya açar)
+ --------------------------------------------------------------------- */
+.chl-hero{
+  position:relative;overflow:hidden;margin-top:112px;color:#fff;
+  background:
+    radial-gradient(880px 420px at 86% 8%,color-mix(in srgb, var(--marka) 26%, transparent),transparent 62%),
+    linear-gradient(90deg,rgba(33,30,22,.96) 0%,rgba(29,26,20,.84) 44%,rgba(27,25,19,.74) 100%),
+    linear-gradient(180deg,rgba(33,30,22,0) 56%,rgba(22,20,15,.66) 100%),
+    url('https://images.unsplash.com/photo-1518611012118-696072aa579a?w=1680&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-16') center 22%/cover no-repeat,
+    #1b1913;
+  padding:46px 0 54px;
+}
+.chl-hero .wrap{position:relative;z-index:2}
+.chl-crumb{display:flex;align-items:center;gap:9px;font-size:13px;font-weight:600;color:rgba(255,255,255,.6);margin-bottom:20px}
+.chl-crumb a{color:rgba(255,255,255,.6);transition:color .2s var(--ease)}
+.chl-crumb a:hover{color:#fff}
+.chl-crumb i{font-size:9px;color:rgba(255,255,255,.34)}
+.chl-crumb .cr-home{display:inline-flex;align-items:center;color:var(--fit-bright)}
+.chl-crumb .cr-home i{font-size:13px;color:var(--fit-bright)}
+.chl-crumb .cr-home:hover,.chl-crumb .cr-home:hover i{color:#fff}
+.chl-crumb .cur{color:var(--fit-bright)}
+.chl-grid{display:grid;grid-template-columns:1fr minmax(330px,.86fr);gap:48px;align-items:center}
+.chl-lead{min-width:0}
+.chl-hero .eyebrow{color:var(--fit-bright)}
+.chl-hero .eyebrow::before{background:var(--fit-bright)}
+/* canlı durum rozeti */
+.chl-live{
+  display:inline-flex;align-items:center;gap:9px;margin-left:12px;
+  font-size:11.5px;font-weight:700;letter-spacing:.04em;color:#fff;
+  background:color-mix(in srgb, var(--marka) 18%, transparent);border:1px solid color-mix(in srgb, var(--marka-parlak) 45%, transparent);
+  padding:5px 12px 5px 10px;border-radius:var(--radius-pill);vertical-align:middle;
+}
+.chl-live .dot{width:8px;height:8px;border-radius:50%;background:var(--fit-bright);box-shadow:0 0 0 0 color-mix(in srgb, var(--marka-parlak) 55%, transparent);animation:livePulse 1.9s var(--ease) infinite}
+@keyframes livePulse{0%{box-shadow:0 0 0 0 color-mix(in srgb, var(--marka-parlak) 55%, transparent)}70%{box-shadow:0 0 0 7px color-mix(in srgb, var(--marka-parlak) 0%, transparent)}100%{box-shadow:0 0 0 0 color-mix(in srgb, var(--marka-parlak) 0%, transparent)}}
+.chl-eyebrow-row{display:flex;align-items:center;flex-wrap:wrap;gap:0}
+.chl-hero h1{color:#fff;font-size:46px;letter-spacing:-.025em;margin:16px 0 14px;max-width:640px;line-height:1.06}
+.chl-hero h1 em{font-style:normal;color:var(--fit-bright)}
+.chl-hero .chl-sub{color:rgba(255,255,255,.8);font-size:16px;font-weight:500;max-width:520px;line-height:1.6}
+/* hero meta stat şeridi */
+.chl-meta{display:flex;align-items:center;gap:30px;margin-top:28px;flex-wrap:wrap}
+.chl-mstat{display:flex;flex-direction:column;gap:2px}
+.chl-mstat b{font-size:25px;font-weight:800;color:#fff;letter-spacing:-.01em;font-variant-numeric:tabular-nums;line-height:1}
+.chl-mstat b small{font-size:13px;font-weight:700;color:rgba(255,255,255,.72);margin-left:3px;letter-spacing:0}
+.chl-mstat span{font-size:12.5px;font-weight:600;color:rgba(255,255,255,.6)}
+.chl-mdiv{width:1px;height:38px;background:rgba(255,255,255,.16);flex:none}
+/* ---- F3 · ZAMAN ÇİZELGESİ ---------------------------------------
+ Tek okunur bileşen: solda başlangıç, ortada ilerleme rayı ve "bugün"
+ imleci, sağda bitiş; altında dört sayısal olgu.
+ Taşma güvenliği: ray min-width:0 ile büzülür, olgular sarar; 390px'te
+ uçlar üst üste değil ALT ALTA gelir. */
+.chl-time{
+  margin-top:26px;padding:18px 20px;   /* max-width:640px SÖKÜLDÜ — kardeş kartla eşit genişlik */
+  background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.16);
+  border-radius:var(--radius-lg)
+}
+/* Başlık ŞART: sağdaki "İlerlemen" kartı KİŞİSEL ilerlemeyi gösteriyor
+   (7/30). Bu bileşen ise CHALLENGE'IN kendi takvimini gösteriyor (18/30).
+   İkisi farklı şey; etiketsiz yan yana durduklarında çelişki gibi okunuyordu. */
+.ct-title{display:flex;align-items:center;gap:8px;margin:0 0 14px;font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.62)}
+.ct-title i{color:var(--fit-bright);font-size:12px}
+.ct-line{display:flex;align-items:flex-end;gap:16px;min-width:0}
+.ct-end{flex:0 0 auto;min-width:0}
+.ct-end.is-right{text-align:right}
+.ct-lbl{display:block;font-size:10.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.56)}
+.ct-end b{display:block;font-size:15px;color:#fff;margin-top:3px;white-space:nowrap}
+.ct-track{flex:1 1 auto;min-width:0;padding-bottom:3px}
+.ct-bar{display:block;height:6px;border-radius:var(--radius-pill);background:rgba(255,255,255,.16);overflow:hidden}
+.ct-bar i{display:block;height:100%;background:var(--fit-bright);border-radius:var(--radius-pill)}
+.ct-now{display:block;margin-top:7px;text-align:center;font-size:11.5px;font-weight:700;color:var(--fit-bright);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ct-facts{
+  list-style:none;display:flex;flex-wrap:wrap;gap:10px 22px;margin:16px 0 0;
+  padding-top:14px;border-top:1px solid rgba(255,255,255,.14)
+}
+.ct-facts li{display:flex;flex-direction:column;gap:2px;min-width:0}
+.ct-facts b{font-size:16px;font-weight:800;color:#fff;letter-spacing:-.01em;white-space:nowrap}
+.ct-facts span{font-size:11.5px;font-weight:600;color:rgba(255,255,255,.6)}
+@media (max-width:640px){
+  .chl-time{padding:15px 16px;margin-top:20px}
+  .ct-line{flex-wrap:wrap;gap:10px}
+  .ct-end,.ct-end.is-right{flex:1 1 46%;text-align:left}
+  .ct-track{flex:1 1 100%;order:3}
+  .ct-facts{gap:10px 18px}
+  .ct-facts b{font-size:15px}
+}
+
+.chl-cta{display:flex;align-items:center;gap:14px;margin-top:32px;flex-wrap:wrap}
+.chl-cta .btn-fit{box-shadow:0 12px 30px color-mix(in srgb, var(--marka) 36%, transparent);padding:15px 28px}
+.chl-cta .btn-line{
+  display:inline-flex;align-items:center;gap:10px;font-weight:700;font-size:14.5px;color:#fff;
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.24);
+  padding:14px 22px;border-radius:var(--radius-md);transition:.2s var(--ease);
+}
+.chl-cta .btn-line:hover{background:rgba(255,255,255,.16);border-color:rgba(255,255,255,.4)}
+.chl-cta .btn-line i{color:var(--fit-bright)}
+/* EK GÖREV · kaydet düğmesi — desen antrenor-detay-v1.html'in `.cp-mini`si,
+   koyu hero'ya `.chl-cta .btn-line`in kendi rgba(255,255,255,…) katmanıyla
+   uyarlandı (yeni renk yok). `.is-on` FIT_KAYIT.tazele() tarafından basılır. */
+.chl-save{flex:none;width:46px;height:46px;padding:0;display:grid;place-items:center;
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.24);color:#fff;
+  border-radius:var(--radius-md);cursor:pointer;font-size:15px;transition:.2s var(--ease)}
+.chl-save:hover{background:rgba(255,255,255,.16);border-color:rgba(255,255,255,.4)}
+.chl-save.is-on{background:var(--fit);border-color:var(--fit);color:#fff}
+/* katılımcı avatar yığını */
+.chl-join{display:flex;align-items:center;gap:13px;margin-top:24px}
+.chl-avastack{display:flex}
+.chl-avastack span{width:34px;height:34px;border-radius:50%;background-size:cover;background-position:center;border:2px solid #211E16;margin-left:-10px;box-shadow:0 2px 6px rgba(0,0,0,.3)}
+.chl-avastack span:first-child{margin-left:0}
+.chl-avastack .more{display:grid;place-items:center;background:color-mix(in srgb, var(--marka) 90%, transparent);color:#fff;font-size:11px;font-weight:800;border-color:#211E16}
+.chl-join p{font-size:13px;font-weight:500;color:rgba(255,255,255,.74);line-height:1.45}
+.chl-join p b{color:#fff;font-weight:700}
+
+/* hero cam panel: kompakt 30-gün ilerleme önizleme */
+.chl-card{
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);
+  -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
+  border-radius:var(--radius-xl);padding:26px;box-shadow:0 24px 60px rgba(0,0,0,.34);
+}
+.chl-card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.chl-card-top .ttl{font-size:13px;font-weight:700;color:rgba(255,255,255,.82);display:inline-flex;align-items:center;gap:8px}
+.chl-card-top .ttl i{color:var(--fit-bright)}
+.chl-card-top .pct{font-size:13px;font-weight:800;color:var(--fit-bright);font-variant-numeric:tabular-nums}
+.chl-bar{height:8px;border-radius:var(--radius-pill);background:rgba(255,255,255,.1);overflow:hidden;margin:12px 0 6px}
+.chl-bar i{display:block;height:100%;border-radius:var(--radius-pill);background:linear-gradient(90deg,var(--fit),var(--fit-bright))}
+.chl-card-meta{display:flex;align-items:center;justify-content:space-between;font-size:12px;font-weight:600;color:rgba(255,255,255,.6);margin-bottom:18px}
+.chl-card-meta b{color:#fff;font-weight:700}
+/* kompakt 30-gün rozet ızgarası (df-daygrid dili) */
+/* .chl-mini kuralları SİLİNDİ — mini takvim kartın içinden çıkarıldı
+   (gerekçesi kartBas() içinde yazılı), ölü kural bırakılmadı. */
+.chl-card-foot{display:flex;align-items:center;gap:9px;margin-top:18px;padding-top:16px;border-top:1px solid rgba(255,255,255,.1);font-size:12.5px;font-weight:600;color:rgba(255,255,255,.74)}
+.chl-card-foot i{color:var(--fit-bright)}
+.chl-card-foot b{color:#fff;font-weight:800}
+
+/* ===== GÖVDE BANDI VE DİKİŞ =====================================
+ Kalıp `antrenor-detay-v1.html`in `.cp-body`sinden ÖLÇÜLEREK alındı
+ (1440·1024·768'te birebir aynı): margin-top −22, yarıçap 22, opak
+ --bg-white, position:relative. Yeni ölçü üretilmedi.
+ `padding-top:40px` de aynı emsalden (.cp-body{padding:40px 0 var(--sec-pad)}).*/
+.chl-body{
+  position:relative;z-index:2;
+  margin-top:-22px;border-radius:22px;
+  background:var(--bg-white);
+  padding-top:40px;
+}
+/* Gövdenin İLK çocuğu artık gövdenin kendi dolgusunu alıyor; kabuğun
+   .fit-band-panel'ine gömülü 32px üst boşluk burada çift sayardı. */
+.chl-body>.fit-band-panel:first-child{margin-top:0}
+
+/* Banner alt dolgusu 48 → görünen nefes 48−22 = 26 px (emsalle birebir).
+   Kabuk `padding:var(--hero-pt) 0 var(--hero-pb) !important` dediği için
+   özgüllük ve !important emsaldeki gibi tekrarlanıyor
+   (antrenor-detay-v1.html:214 ile aynı kalıp). */
+body[data-fit-over="1"] section.chl-hero{padding-bottom:48px !important}
+
+/* Katılım düğmeleri kartın içinde, kartın kendi dilinde. */
+.chl-card-acts{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px;padding-top:16px;border-top:1px solid rgba(255,255,255,.1)}
+
+/* ---------------------------------------------------------------------
+ 2 · TAKİP — tam-genişlik 30 günlük takvim + ilerleme (signature)
+ --------------------------------------------------------------------- */
+.chl-track{padding:74px 0;background:var(--bg-white)}
+.chl-track .sec-head{margin-bottom:30px}
+.track-wrap{
+  border:1px solid var(--line);border-radius:var(--radius-xl);background:var(--paper);
+  box-shadow:var(--sh-md);overflow:hidden;
+}
+/* özet şerit */
+.track-summary{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  background:var(--slate);color:#fff;
+}
+.ts-cell{padding:22px 24px;border-right:1px solid rgba(255,255,255,.08)}
+.ts-cell:last-child{border-right:none}
+.ts-cell .lbl{display:flex;align-items:center;gap:8px;font-size:11.5px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:rgba(255,255,255,.56);margin-bottom:10px}
+.ts-cell .lbl i{color:var(--fit-bright);font-size:12px}
+.ts-cell b{font-size:30px;font-weight:800;color:#fff;letter-spacing:-.02em;font-variant-numeric:tabular-nums;line-height:1}
+.ts-cell b small{font-size:14px;font-weight:700;color:rgba(255,255,255,.6);margin-left:3px}
+.ts-cell .note{font-size:12px;font-weight:500;color:rgba(255,255,255,.52);margin-top:5px}
+/* ilerleme bar (özet altı) */
+.track-bar-wrap{padding:22px 28px 6px}
+.track-bar-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:11px}
+.track-bar-top span{font-size:13px;font-weight:600;color:var(--slate-2)}
+.track-bar-top b{font-size:13.5px;font-weight:800;color:var(--fit-deep)}
+.track-bar{height:10px;border-radius:var(--radius-pill);background:var(--fit-tint);overflow:hidden}
+.track-bar i{display:block;height:100%;border-radius:var(--radius-pill);background:linear-gradient(90deg,var(--fit),var(--fit-deep))}
+/* tam-genişlik daygrid */
+.track-grid-wrap{padding:24px 28px 30px}
+.track-grid{display:grid;grid-template-columns:repeat(10,1fr);gap:10px}
+.tg-day{
+  aspect-ratio:1;border-radius:var(--radius-md);background:var(--bg);border:1px solid var(--line);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+  font-weight:700;color:var(--slate-2);position:relative;transition:.18s var(--ease);
+}
+.tg-day .n{font-size:15px;font-variant-numeric:tabular-nums}
+.tg-day .ic{font-size:11px;opacity:.55}
+.tg-day.done{background:var(--fit);border-color:var(--fit);color:#fff}
+.tg-day.done .ic{opacity:1}
+.tg-day.today{background:#fff;border:2px solid var(--fit);color:var(--fit-deep);box-shadow:0 6px 16px color-mix(in srgb, var(--marka) 18%, transparent)}
+.tg-day.today .ic{color:var(--fit);opacity:1}
+.tg-day.today::after{content:"Bugün";position:absolute;bottom:-9px;left:50%;transform:translateX(-50%);background:var(--fit);color:#fff;font-size:9px;font-weight:700;padding:2px 7px;border-radius:var(--radius-pill);white-space:nowrap}
+.tg-day.rest{background:var(--fit-tint);border-color:var(--fit-line);color:var(--fit-deep)}
+.tg-day.rest .ic{color:var(--fit-deep);opacity:.8}
+/* takvim açıklama (legend) */
+.track-legend{display:flex;flex-wrap:wrap;gap:18px;padding:0 28px 26px;align-items:center}
+.tl-item{display:inline-flex;align-items:center;gap:9px;font-size:12.5px;font-weight:600;color:var(--slate-2)}
+.tl-swatch{width:18px;height:18px;border-radius:var(--radius-badge);flex:none}
+.tl-swatch.done{background:var(--fit)}
+.tl-swatch.today{background:#fff;border:2px solid var(--fit)}
+.tl-swatch.rest{background:var(--fit-tint);border:1px solid var(--fit-line)}
+.tl-swatch.todo{background:var(--bg);border:1px solid var(--line)}
+.track-cta{margin-left:auto}
+.track-cta .btn-fit{padding:12px 22px}
+
+/* ---------------------------------------------------------------------
+ 3 · NASIL ÇALIŞIR — adım adım (gerçek sıra → numara meşru)
+ --------------------------------------------------------------------- */
+.chl-how{padding:74px 0;background:var(--bg-cream)}
+.how-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.how-step{
+  background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);
+  padding:26px 24px;position:relative;transition:.25s var(--ease);
+}
+.how-step:hover{transform:translateY(-4px);box-shadow:var(--sh-md);border-color:#dcdcdc}
+.how-num{
+  display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;
+  border-radius:var(--radius-md);background:var(--fit-tint);color:var(--fit-deep);
+  font-size:16px;font-weight:800;margin-bottom:18px;font-variant-numeric:tabular-nums;
+}
+.how-step h3{font-size:17px;margin-bottom:9px;letter-spacing:-.01em}
+.how-step p{font-size:13.5px;color:var(--muted);font-weight:500;line-height:1.6}
+.how-step .ic{position:absolute;top:26px;right:24px;font-size:18px;color:var(--fit-line)}
+
+/* ---------------------------------------------------------------------
+ 4 · KAZANIMLAR / ROZETLER — kapsayıcı ton
+ --------------------------------------------------------------------- */
+.chl-earn{padding:74px 0;background:var(--bg-white)}
+.earn-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.earn-card{
+  background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);
+  padding:26px 22px;text-align:center;transition:.25s var(--ease);
+}
+.earn-card:hover{transform:translateY(-4px);box-shadow:var(--sh-md);border-color:var(--fit-line)}
+.earn-badge{
+  width:74px;height:74px;border-radius:var(--radius-lg);margin:0 auto 16px;
+  display:grid;place-items:center;font-size:30px;color:#fff;
+  background:linear-gradient(150deg,var(--fit),var(--fit-deep));
+  box-shadow:0 10px 26px color-mix(in srgb, var(--marka) 28%, transparent);position:relative;
+}
+.earn-card.locked .earn-badge{background:var(--bg);color:#c3c3c3;box-shadow:none;border:1px solid var(--line)}
+.earn-badge .lock{position:absolute;bottom:-6px;right:-6px;width:26px;height:26px;border-radius:50%;background:#fff;border:1px solid var(--line);display:grid;place-items:center;font-size:11px;color:var(--muted)}
+.earn-card h3{font-size:16px;margin-bottom:7px}
+.earn-card p{font-size:12.5px;color:var(--muted);font-weight:500;line-height:1.55}
+.earn-tag{display:inline-block;margin-top:13px;font-size:11px;font-weight:700;letter-spacing:.04em;color:var(--fit-deep);background:var(--fit-tint);padding:5px 12px;border-radius:var(--radius-pill)}
+.earn-card.locked .earn-tag{color:var(--muted);background:var(--bg)}
+
+/* ---------------------------------------------------------------------
+ 5 · TOPLULUK — bugün hareket edenler + alıntı
+ --------------------------------------------------------------------- */
+.chl-comm{padding:74px 0;background:var(--bg-cream)}
+.comm-grid{display:grid;grid-template-columns:1fr 1.15fr;gap:32px;align-items:stretch}
+/* sol: topluluk paneli (koyu) */
+.comm-panel{
+  border-radius:var(--radius-xl);padding:34px;color:#fff;position:relative;overflow:hidden;
+  background:
+    radial-gradient(480px 300px at 100% 0%,color-mix(in srgb, var(--marka) 30%, transparent),transparent 60%),
+    linear-gradient(150deg,#211E16,#1a1812);
+  display:flex;flex-direction:column;
+}
+.comm-panel .eyebrow{color:var(--fit-bright)}
+.comm-panel .eyebrow::before{background:var(--fit-bright)}
+.comm-panel h3{color:#fff;font-size:24px;margin:13px 0 12px;letter-spacing:-.02em}
+.comm-panel p{color:rgba(255,255,255,.76);font-size:14.5px;font-weight:500;line-height:1.6;margin-bottom:24px}
+.comm-num{display:flex;align-items:baseline;gap:10px;margin-bottom:6px}
+.comm-num b{font-size:42px;font-weight:800;color:#fff;letter-spacing:-.02em;font-variant-numeric:tabular-nums;line-height:1}
+.comm-num span{font-size:14px;font-weight:600;color:var(--fit-bright)}
+.comm-sub{font-size:13px;font-weight:500;color:rgba(255,255,255,.6);margin-bottom:24px}
+.comm-movers{display:flex;align-items:center;gap:14px;margin-top:auto;padding-top:22px;border-top:1px solid rgba(255,255,255,.12)}
+.comm-movers .avastack{display:flex}
+.comm-movers .avastack span{width:40px;height:40px;border-radius:50%;background-size:cover;background-position:center;border:2px solid #211E16;margin-left:-12px}
+.comm-movers .avastack span:first-child{margin-left:0}
+.comm-movers .avastack .more{display:grid;place-items:center;background:var(--fit);color:#fff;font-size:12px;font-weight:800}
+.comm-movers .mv-txt{font-size:12.5px;font-weight:500;color:rgba(255,255,255,.72);line-height:1.45}
+.comm-movers .mv-txt b{color:#fff;font-weight:700}
+/* sağ: katılımcı sözleri (kapsayıcı, beden-pozitif) */
+.comm-voices{display:flex;flex-direction:column;gap:16px}
+.voice-card{
+  background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);
+  padding:22px 24px;box-shadow:var(--sh-sm);flex:1;display:flex;flex-direction:column;
+}
+.voice-card .quote{font-size:15px;color:var(--slate);font-weight:500;line-height:1.6;flex:1}
+.voice-card .quote::before{content:"\201C";color:var(--fit);font-weight:800;font-size:20px;margin-right:2px}
+.voice-who{display:flex;align-items:center;gap:12px;margin-top:18px;padding-top:16px;border-top:1px solid var(--line)}
+.voice-who .ava{width:42px;height:42px;border-radius:50%;background-size:cover;background-position:center;flex:none}
+.voice-who b{display:block;font-size:14px;color:var(--slate);font-weight:700}
+.voice-who small{display:block;font-size:12px;color:var(--muted);font-weight:500}
+.voice-who .day{margin-left:auto;font-size:11.5px;font-weight:700;color:var(--fit-deep);background:var(--fit-tint);padding:5px 11px;border-radius:var(--radius-pill);white-space:nowrap}
+
+/* ---------------------------------------------------------------------
+ 6 · GEÇMİŞ / YAKLAŞAN CHALLENGE'LAR — full-görsel kart şeridi
+ --------------------------------------------------------------------- */
+.chl-more{padding:74px 0;background:var(--bg-white)}
+.more-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.cc-card{min-height:300px}
+.cc-card::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(33,30,22,.12) 26%,rgba(20,18,12,.86));z-index:1}
+.cc-card>*{position:relative;z-index:2}
+.cc-state{
+  position:absolute;top:16px;left:16px;font-size:11px;font-weight:700;letter-spacing:.04em;
+  padding:6px 13px;border-radius:var(--radius-pill);
+}
+.cc-state.live{background:var(--fit);color:#fff}
+.cc-state.soon{background:rgba(255,255,255,.9);color:var(--slate)}
+.cc-state.past{background:rgba(20,18,12,.6);color:#fff;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
+.cc-body{padding:24px}
+.cc-body .meta{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;color:rgba(255,255,255,.78);margin-bottom:9px}
+.cc-body .meta i{color:var(--fit-bright);font-size:11px}
+.cc-body h3{color:#fff;font-size:20px;letter-spacing:-.01em;margin-bottom:7px}
+.cc-body p{font-size:13px;color:rgba(255,255,255,.78);font-weight:500;line-height:1.5;margin-bottom:15px}
+.cc-go{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:#fff}
+.cc-go i{transition:transform .2s var(--ease)}
+.cc-card:hover .cc-go i{transform:translateX(3px)}
+.cc-card.is-past{filter:saturate(.9)}
+.cc-card.is-past .cc-go{color:rgba(255,255,255,.82)}
+
+/* ---------------------------------------------------------------------
+ 7 · KAPANIŞ CTA — koyu panel + yeşil gradient
+ --------------------------------------------------------------------- */
+.chl-cta-sec{padding:0 0 86px;background:var(--bg-white)}
+.chl-cta-panel{
+  position:relative;overflow:hidden;border-radius:var(--radius-xl);padding:54px;color:#fff;text-align:center;
+  background:
+    radial-gradient(600px 320px at 50% 0%,color-mix(in srgb, var(--marka) 32%, transparent),transparent 64%),
+    linear-gradient(150deg,#211E16,#1a1812);
+}
+.chl-cta-panel .eyebrow{color:var(--fit-bright);justify-content:center}
+.chl-cta-panel .eyebrow::before{background:var(--fit-bright)}
+.chl-cta-panel h2{color:#fff;font-size:34px;letter-spacing:-.02em;margin:14px 0 12px}
+.chl-cta-panel p{color:rgba(255,255,255,.8);font-size:15.5px;font-weight:500;max-width:520px;margin:0 auto 28px;line-height:1.6}
+.chl-cta-panel .cta-acts{display:flex;align-items:center;justify-content:center;gap:13px;flex-wrap:wrap}
+.chl-cta-panel .btn-fit{padding:15px 30px;box-shadow:0 12px 30px color-mix(in srgb, var(--marka) 40%, transparent)}
+.chl-cta-panel .btn-line{
+  display:inline-flex;align-items:center;gap:9px;font-weight:700;font-size:14.5px;color:#fff;
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.24);
+  padding:14px 24px;border-radius:var(--radius-md);transition:.2s var(--ease);
+}
+.chl-cta-panel .btn-line:hover{background:rgba(255,255,255,.16);border-color:rgba(255,255,255,.42)}
+.chl-cta-note{font-size:12.5px;font-weight:500;color:rgba(255,255,255,.6)}
+.chl-cta-note i{color:var(--fit-bright)}
+/* ===== R15/5 · İKİ KUSUR, İKİSİ DE ÖLÇÜLDÜ =====================
+ 1 · SOLA KAYMA. Panel `text-align:center` taşıyor ve not da onu MİRAS
+     ALIYOR (computed değer gerçekten "center"). Buna rağmen tek satırlık
+     not sola yaslıydı: `fit-type.css:164` bütün <p>'lere
+     `text-align-last:start` veriyor ve TEK SATIRLIK bir paragrafın o tek
+     satırı aynı zamanda SON satırdır — yani `text-align-last` `text-align`i
+     yeniyor. Ölçüm (1440): metnin sol boşluğu 274 px, sağ boşluğu 384.7 px.
+     Yeni bir hizalama dili yazılmıyor; panelin KENDİ ortalaması, son satır
+     için de açıkça tekrar ediliyor.
+
+ 2 · DÜĞMELERE YAPIŞIKLIK. Yazarın niyeti zaten `margin-top:18px` idi ama
+     hiç uygulanmıyordu: `.chl-cta-panel p{margin:0 auto 28px}` özgüllüğü
+     (0,1,1), `.chl-cta-note`unkini (0,1,0) yeniyor ve margin-top'u 0'a
+     eziyordu. Ölçüm: düğmelerle ara 0 px, computed margin-top 0px.
+     YENİ ÖLÇÜ ÜRETİLMEDİ — dosyada zaten yazılı olan 18 px'in uygulanması
+     için özgüllük (0,2,0)'a yükseltildi (docs/fit-kit.md: "değişken varsa o
+     kullanılır"; kitte bu tier için bir token yok, sayfanın kendi yazılı
+     değeri var). `--sec-pad-sm` (32 px) BÖLÜM dolgusudur, kart içi bir
+     dipnot adımı değil; kart içi satır aralığı (10 px) ise ölçüldüğünde
+     notu düğme grubunun parçası gibi okutuyordu — bildirilen kusurun ta
+     kendisi. */
+/* Aynı kusur panelin ÜST paragrafında da vardı: iki satırlık lead'in ikinci
+   (son) satırı sola yaslı kalıyordu. Kural notla sınırlı tutulsaydı düzeltme
+   yarım kalırdı — panelin bütün paragrafları panelin kendi ortalamasını
+   son satırda da sürdürür. */
+.chl-cta-panel p{ text-align-last:center; }
+.chl-cta-panel .chl-cta-note{ margin-top:18px; }
+
+/* ===================== SAYFA RESPONSIVE ===================== */
+@media (max-width:1024px){
+  .chl-hero{margin-top:112px}
+  .chl-grid{grid-template-columns:1fr;gap:34px}
+  /* .chl-card{max-width:520px} SÖKÜLDÜ — iki kart her genişlikte eşit */
+  .chl-hero h1{font-size:39px}
+  .how-grid{grid-template-columns:repeat(2,1fr)}
+  .earn-grid{grid-template-columns:repeat(2,1fr)}
+  .comm-grid{grid-template-columns:1fr;gap:24px}
+  .more-grid{grid-template-columns:1fr 1fr}
+}
+@media (max-width:760px){
+  .more-grid{grid-template-columns:1fr}
+}
+@media (max-width:640px){
+  .chl-hero{margin-top:62px;padding:34px 0 40px}
+  .chl-hero h1{font-size:31px}
+  .chl-live{margin-left:0;margin-top:10px}
+  .chl-eyebrow-row{gap:0}
+  .chl-hero .chl-sub{font-size:14.5px}
+  .chl-meta{gap:18px}
+  .chl-mdiv{display:none}
+  .chl-mstat b{font-size:21px}
+  .chl-cta{margin-top:24px;gap:10px}
+  .chl-cta .btn-fit,.chl-cta .btn-line{width:100%}
+  .chl-card{padding:22px}
+  .chl-track,.chl-how,.chl-earn,.chl-comm,.chl-more{padding:var(--sec-pad) 0}
+  .chl-cta-sec{padding:0 0 76px}
+  .track-summary{grid-template-columns:1fr 1fr}
+  .ts-cell{border-right:none;border-bottom:1px solid rgba(255,255,255,.08);padding:18px 20px}
+  .ts-cell:nth-child(2n){border-right:none}
+  .ts-cell b{font-size:25px}
+  .track-bar-wrap{padding:18px 18px 4px}
+  .track-grid-wrap{padding:18px 18px 26px}
+  .track-grid{gap:7px}
+  .tg-day{border-radius:var(--radius-sm)}
+  .tg-day .n{font-size:12.5px}
+  .tg-day .ic{display:none}
+  .tg-day.today::after{display:none}
+  .track-legend{padding:0 18px 22px;gap:12px}
+  .tl-item{font-size:11.5px}
+  .track-cta{margin-left:0;width:100%;margin-top:6px}
+  .track-cta .btn-fit{width:100%}
+  .how-grid{grid-template-columns:1fr;gap:14px}
+  .earn-grid{grid-template-columns:1fr 1fr;gap:14px}
+  .earn-badge{width:62px;height:62px;font-size:25px}
+  .comm-panel{padding:26px}
+  .comm-num b{font-size:34px}
+  .chl-cta-panel{padding:36px 22px}
+  .chl-cta-panel h2{font-size:26px}
+  .chl-cta-panel .btn-fit,.chl-cta-panel .btn-line{width:100%}
+  .cc-card{min-height:260px}
+}
+@media (max-width:380px){
+  .earn-grid{grid-template-columns:1fr}
+}
+
+/* ===== SEKME ŞERİDİ — KİTE ÇEKİLDİ (R15/5) =====================
+ Bu sayfa kendi şeridini (.chl-tabbar / .chl-tb / .chl-pane) çiziyordu:
+ alt çizgili, kutusuz, YAPIŞKAN (sticky, top:112px), aktif kalem boş
+ zeminli. Kardeş modül sayfaları (egzersizlerim · programlarim · destek)
+ üçü de kabuğun ORTAK bileşenini kullanıyor ve birbirinin aynısı.
+ Sapan sayı ölçüldü: kap kenarlığı yok / yarıçap 0 / dolgu 0, aktif kalem
+ zemini rgba(0,0,0,0), yarıçapı 0, yazısı 15px, yüksekliği 52px.
+
+ Şerit artık `.pf-tabbar.fp-tabbar > .wrap > nav.fit-tabs` — kabuğun modül
+ sayfalarında bastığı kalıbın birebir aynısı. Rol/aria/klavye/roving-tabindex
+ ve panel geçişi kabukta kurulu (fit-shell.js "SEKME BİLEŞENİ"), sayfada
+ tekrarlanmıyor; sayfanın kendi geçiş JS'i de silindi. Sticky kuralı gitti,
+ kit `static`. Bu blokta artık SIFIR kural var — kitin dışına çıkan tek şey
+ yoktu, o yüzden yerine bir şey yazılmadı. */
+
+/* ===== SU İÇME TAKİBİ PANELİ (.wt-*) ===== */
+.wt-sec{padding:56px 0;background:var(--bg-white)}
+.wt-layout{display:grid;grid-template-columns:1fr 1.1fr;gap:30px;align-items:start}
+/* sol: günlük hedef + bardak ızgarası */
+.wt-card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-xl);padding:28px;box-shadow:var(--sh-sm)}
+.wt-card h3{font-size:20px;margin-bottom:4px}
+.wt-card .sub{font-size:13px;color:var(--muted);font-weight:500;margin-bottom:22px}
+/* hedef bar */
+.wt-prog-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.wt-prog-row b{font-size:28px;font-weight:700;color:var(--fit);letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.wt-prog-row b small{font-size:15px;color:var(--muted);font-weight:600;margin-left:3px}
+.wt-prog-row span{font-size:13px;color:var(--muted);font-weight:500}
+.wt-bar{height:10px;border-radius:var(--radius-pill);background:var(--fit-tint);overflow:hidden;margin-bottom:20px}
+.wt-bar i{display:block;height:100%;border-radius:var(--radius-pill);background:linear-gradient(90deg,var(--fit),var(--fit-bright));transition:width .4s var(--ease)}
+/* bardak ızgarası */
+.wt-cups{display:grid;grid-template-columns:repeat(8,1fr);gap:10px;margin-bottom:22px}
+.wt-cup{aspect-ratio:1;border-radius:var(--radius-md);border:2px solid var(--fit-line);background:var(--fit-tint);
+  display:grid;place-items:center;cursor:pointer;transition:.18s var(--ease);font-size:18px;color:var(--fit-line)}
+.wt-cup.filled{background:var(--fit);border-color:var(--fit);color:#fff;box-shadow:0 4px 10px color-mix(in srgb, var(--marka) 22%, transparent)}
+.wt-cup:not(.filled):hover{border-color:var(--fit);color:var(--fit);background:#fff}
+.wt-cup-note{font-size:12px;color:var(--muted);font-weight:600;margin-bottom:20px}
+.wt-actions{display:flex;gap:10px}
+.wt-actions .btn{font-size:13.5px;padding:12px 20px}
+/* sağ: istatistik + hedef hesaplayıcı */
+.wt-side{display:flex;flex-direction:column;gap:18px}
+.wt-stats-card{background:var(--fit-tint);border:1px solid var(--fit-line);border-radius:var(--radius-xl);padding:24px}
+.wt-stats-card h4{font-size:16px;color:var(--fit);margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.wt-stats-card h4 i{font-size:14px}
+.wt-stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.wt-stat{background:var(--paper);border:1px solid var(--fit-line);border-radius:var(--radius-md);padding:14px 16px}
+.wt-stat b{display:block;font-size:22px;font-weight:700;color:var(--fit);line-height:1;letter-spacing:-.01em}
+.wt-stat span{display:block;font-size:11.5px;color:var(--muted);font-weight:500;margin-top:4px}
+/* hedef hesaplayıcı kutusu */
+.wt-calc{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-xl);padding:24px}
+.wt-calc h4{font-size:16px;margin-bottom:4px}
+.wt-calc p{font-size:13px;color:var(--muted);font-weight:500;margin-bottom:18px}
+.wt-calc-result{display:flex;align-items:center;gap:10px;padding:14px 16px;background:var(--fit-tint);border:1px solid var(--fit-line);border-radius:var(--radius-md);margin-top:12px}
+.wt-calc-result i{color:var(--fit);font-size:15px;flex:none}
+.wt-calc-result b{font-size:14px;color:var(--fit);font-weight:700}
+.wt-calc-result span{font-size:12.5px;color:var(--muted);font-weight:500;margin-top:1px;display:block}
+/* 7 günlük geçmiş sütunu */
+.wt-history{padding:var(--sec-pad) 0;background:var(--bg-cream)}
+.wt-history .sec-head{margin-bottom:24px}
+.wt-week{display:grid;grid-template-columns:repeat(7,1fr);gap:12px}
+.wt-wday{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);padding:16px 12px;text-align:center}
+.wt-wday .wd-name{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.wt-wday .wd-date{font-size:12.5px;font-weight:600;color:var(--slate);margin:4px 0 10px}
+.wt-wday .wd-fill{height:52px;border-radius:var(--radius-sm);background:var(--fit-tint);overflow:hidden;position:relative;margin-bottom:8px;display:flex;align-items:flex-end}
+.wt-wday .wd-fill i{display:block;width:100%;border-radius:var(--radius-sm);background:var(--fit);transition:height .4s var(--ease)}
+.wt-wday .wd-ml{font-size:11px;color:var(--muted);font-weight:600;font-variant-numeric:tabular-nums}
+.wt-wday.today{border-color:var(--fit);background:var(--fit-tint)}
+.wt-wday.today .wd-name{color:var(--fit)}
+.wt-wday.miss .wd-fill i{background:var(--line)}
+/* responsive */
+@media(max-width:1024px){
+  .wt-layout{grid-template-columns:1fr;gap:22px}
+  .wt-cups{grid-template-columns:repeat(8,1fr)}
+  .wt-week{grid-template-columns:repeat(7,1fr)}
+}
+@media(max-width:640px){
+  .wt-sec{padding:36px 0}
+  .wt-cups{grid-template-columns:repeat(6,1fr);gap:8px}
+  .wt-cup{font-size:16px}
+  .wt-stat-grid{grid-template-columns:1fr 1fr}
+  .wt-week{grid-template-columns:repeat(4,1fr)}
+  .wt-history{padding:30px 0}
+}
+/* ===== /SU İÇME TAKİBİ ===== */
+
+/* ============ ADIM 3 — KABUK: brand-switch band (Fit, .bs-fit aktif) ============ */
+/* NOT: .bs-gastro --bs-c LİTERAL #E14827 — bu sayfada --fit YEŞİL'e swap'lı (Fit aksanı),
+ var(--fit) kullanılsaydı Gastro pill'i yeşil render olurdu. Diğer markalar page-bağımsız token. */
+
+</style>
+<style>
+/* ===== Footer marka hizalama (Gastro footer dili; marka-nötr, sızma yok) ===== */
+
+</style>
+<!-- Metin yaslama katmani (tek kaynak) — sayfa stillerinden SONRA yuklenir,
+     boylece sayfa ici text-align kurallari yaslamayi geri alamaz -->
+<link rel="stylesheet" href="assets/css/fit-type.css" />
+</head>
+<body data-brand="fit" data-fit-page="challenge-v1">
+
+<!-- KABUK: ust katman (topbar+header+drawer+alt bar+gorus+cerez) — ortak kabuk JS basar -->
+<div id="fitShellTop"></div>
+
+<main class="page-main" id="pageMain">
+
+<!-- ===== 1 · HERO ===== -->
+<section class="chl-hero">
+  <div class="wrap">
+    <nav class="rd-crumb chl-crumb" aria-label="Sayfa yolu">
+      <a href="dadafit-hub-v1.html" class="crumb-home"><i class="fa-solid fa-house" aria-hidden="true"></i><span class="sr-only">DadaFit ana sayfa</span></a>
+      <i class="fa-solid fa-chevron-right"></i>
+      <!-- F3 · "Programlar" ara basamağı kaldırıldı: Challenge F1'de kendi
+           üst düzey menü kalemi oldu, artık Programlar'ın altında değil.
+           Geri dönüş yolu doğru ebeveyne gidiyor: Challenge Merkezi. -->
+      <a href="challenge-merkezi-v1.html">Challenge Merkezi</a>
+      <i class="fa-solid fa-chevron-right"></i>
+      <span class="cur" data-ch="ad">Challenge</span>
+    </nav>
+    <div class="chl-grid">
+      <div class="chl-lead">
+        <div class="chl-eyebrow-row">
+          <span class="eyebrow"><i class="fa-solid fa-flag-checkered"></i> <span data-ch="donem">Challenge</span></span>
+          <span class="chl-live" data-ch="durum-rozet"><span class="dot"></span> <span data-ch="durum">Şu an aktif</span></span>
+        </div>
+        <h1 data-ch="baslik">30 günde <em>hareket alışkanlığı</em></h1>
+        <p class="chl-sub" data-ch="ozet">Büyük hedef değil, küçük süreklilik. Her gün 10–15 dakika ufak bir hareket; ayın sonunda bir alışkanlık. Kaçırdığın gün suçluluk yok — kaldığın yerden devam et.</p>
+        <!-- F3 · ZAMAN ÇİZELGESİ — başlangıç · süre · bitiş TEK bileşende.
+             ÖNCE (ölçüldü): zaman bilgisi üç ayrı yere dağılmıştı ve çelişiyordu —
+             hero'da "30 gün / gün bitime" (değer TOPLAM süre, etiket KALAN süre
+             diyor), ilerleme kartında "7 / 30 gün tamam", aşağıdaki şeritte
+             "KALAN 23 gün". Başlangıç ve bitiş tarihi ise HİÇBİR YERDE yoktu. -->
+        <div class="chl-cta">
+          <button class="btn btn-fit" type="button" id="chJoin"><i class="fa-solid fa-plus"></i> Challenge'a Katıl</button>
+          <button class="btn-line" type="button" id="chDay" hidden><i class="fa-solid fa-check"></i> Bugünün görevini tamamla</button>
+          <button class="btn-line" type="button" id="chLeave" hidden><i class="fa-solid fa-xmark"></i> Challenge'ı bırak</button>
+          <a class="btn-line" href="#nasil"><i class="fa-solid fa-circle-info"></i> Nasıl çalışır?</a>
+          <!-- EK GÖREV · kaydetme düğmesi (K4) — sözleşme fit-kayit.js:203,
+               desen antrenor-detay-v1.html'in `.cp-mini`si (tek ikon, satır
+               içi). data-slug/ad/href/gorsel/meta sayfanın kendi script'i
+               `K` (katalog kaydı) çözülünce doldurur — challenge `?slug=`
+               ile değiştiği için statik değer yazılamaz. -->
+          <button class="chl-save" type="button" id="chlSave" data-kaydet aria-pressed="false"
+                  data-tur="challenge" data-slug="" data-ad="" data-href="" data-gorsel="" data-meta=""
+                  aria-label="Challenge'ı kaydet"><i class="fa-regular fa-bookmark" aria-hidden="true"></i></button>
+        </div>
+        <!-- Burada bir avatar yığını ve "Bu ay 2.840 kişi birlikte hareket
+             ediyor" cümlesi vardı. Sayıyı üretecek bir kayıt hiçbir yerde
+             yok; hero'nun ilk cümlesi uydurma olamaz. Yerine challenge'ın
+             KENDİ doğrusu geldi: ödülü ve neyin kanıt sayıldığı. -->
+        <div class="chl-join">
+          <p data-ch="kanit">İlerlemen antrenman kayıtlarından hesaplanır.</p>
+        </div>
+      </div>
+
+      <!-- cam panel: kompakt ilerleme önizleme -->
+      
+    </div>
+  </div>
+</section>
+
+<!-- ===== GÖVDE BANDI — DİKİŞ (R15/5) ==========================
+     Ölçülen kusur: banner'ın altında hiç dikiş yoktu. Banner tam genişlik,
+     üst yarıçap 0; sonraki blok `.wrap.fit-band-panel` üst yarıçap 0, zemin
+     SAYDAM ve banner'la arası +32 px BOŞLUK (bindirme değil). Yani ne
+     yuvarlaklık, ne bindirme, ne opak gövde.
+
+     Kalıp `antrenor-detay-v1.html`den ölçülerek alındı (üç genişlikte
+     birebir aynı çıktı): gövde `margin-top:-22px` ile banner'ın üstüne
+     biner, üst köşeleri 22 px, zemini OPAK `--bg-white`, `position:relative`.
+     Banner alt dolgusu 48 px → görünen nefes 48−22 = 26 px.
+
+     ⚠ Yuvarlaklık `.fit-band-panel`e VERİLMEDİ: o, kabuk yorumunda yazdığı
+     gibi "banner kenarına bilerek oturtulmuş saydam yüzen kart"tır ve
+     kabuğun "dikişi rayın dibine çek" bloğu saydam blokları gövdeye taşır.
+     Dikiş, onları İÇİNE ALAN gerçek gövde bandına verildi. -->
+<div class="chl-body">
+
+<!-- R15 · İKİNCİL PANEL BANNER'DAN ÇIKARILDI: 30 günlük zaman çizelgesi
+     (187.2 px) sabit 560 px kutuya sığmıyordu (içerik 550.1 / kutu 386). -->
+<div class="wrap fit-band-panel">
+        <div class="chl-time" role="group" aria-labelledby="ctTitle">
+          <p class="ct-title" id="ctTitle"><i class="fa-solid fa-calendar-days"></i> Challenge takvimi</p>
+          <div class="ct-line">
+            <div class="ct-end">
+              <span class="ct-lbl">Başlangıç</span>
+              <b data-ch="basla">1 Ağustos</b>
+            </div>
+            <div class="ct-track">
+              <span class="ct-bar"><i data-ch="ilerlemeYuzde" style="width:23%"></i></span>
+              <span class="ct-now" data-ch="bugun">Bugün · Gün 7</span>
+            </div>
+            <div class="ct-end is-right">
+              <span class="ct-lbl">Bitiş</span>
+              <b data-ch="bitis">30 Ağustos</b>
+            </div>
+          </div>
+          <ul class="ct-facts">
+            <li><b data-ch="toplam">30 gün</b><span>toplam süre</span></li>
+            <li><b data-ch="kalan">23 gün</b><span>kaldı</span></li>
+            <li><b data-ch="sure">10–15 dk</b><span>günlük süre</span></li>
+            <li><b data-ch="katilimci">+250</b><span>rozet puanı</span></li>
+          </ul>
+        </div>
+</div>
+
+
+<!-- ===== "İLERLEMEN" KARTI — TEK KART, GERÇEK VERİ (R15/5) =========
+     Burada İKİ kart vardı ve ikisi de AYNI ŞEYİ anlatıyordu:
+       .chl-card      → tamamen sabit HTML (%23 · "7 / 30 gün tamam" ·
+                        "5 gün üst üste" + otuz sabit mini kutu)
+       #chStateWrap   → aynı bilginin gerçek veriye bağlı kopyası
+     İki kart aynı soruya iki farklı cevap veriyordu. Sabit olanın GÖRSELİ
+     tutuldu, VERİSİ motordan bağlandı; kopya kart kaldırıldı. Katılım
+     düğmeleri de bu kartın içine alındı.
+
+     Genişlik: `.chl-time` 640 px, `.chl-card` 1176 px (@1440) idi — 536 px
+     fark. İkisinin de kendi `max-width`i söküldü; artık ikisi de bandın
+     tam genişliğinde ve aynı sol kenarda. -->
+<div class="wrap fit-band-panel">
+  <div class="chl-card" id="chCard"></div>
+</div>
+
+<!-- ===== SEKME ŞERİDİ — kabuğun ortak bileşeni (docs/fit-kit.md §6) =====
+     `role`/`aria-*`/klavye/roving-tabindex KABUKTA kurulur, burada yazılmaz.
+     Anahtarlar sayfadaki çapalarla (#takip · #nasil) ve `?slug=` ile
+     çakışmıyor. -->
+<div class="pf-tabbar fp-tabbar">
+  <div class="wrap">
+    <nav class="fit-tabs" data-fit-tabs="challenge" aria-label="Challenge bölümleri">
+      <button class="fit-tab active" type="button" data-tab="challenge" aria-selected="true"><i class="fa-solid fa-flag-checkered"></i> Hareket Challenge</button>
+      <button class="fit-tab" type="button" data-tab="su" aria-selected="false"><i class="fa-solid fa-droplet"></i> Su İçme Takibi</button>
+    </nav>
+  </div>
+</div>
+
+<!-- ===== TAB 1 · CHALLENGE İÇERİĞİ ===== -->
+<div class="fit-pane" data-pane="challenge">
+
+<!-- ===== 2 · TAKİP: tam-genişlik 30 günlük takvim (signature) ===== -->
+<section class="chl-track" id="takip">
+  <div class="wrap">
+    <div class="sec-head sec-fit">
+      <div>
+        <!-- R16/1 · BAŞLIK TİPE GÖRE. Üç tip aynı şeyi ölçmüyor: alışkanlık
+             gün sayar, seri adım sayar, süreli hedef sayı biriktirir. Sabit
+             "her gün bir kutu" başlığı yedi adımlık bir serinin üstünde
+             yanlış şeyi anlatıyordu. -->
+        <span class="eyebrow"><i class="fa-solid fa-calendar-days"></i> <span data-ch="takvimBaslik">Takvim</span></span>
+        <h2 data-ch="izlekBaslik">Her gün bir kutu — kaldığın yerden devam</h2>
+        <p class="lead" data-ch="izlekLead">Kayıt düşen günler yeşile döner, bugün vurgulu. Boş bir kutu iddia taşımaz — o gün bir kayıt olmadığı anlamına gelir, başka bir şey değil.</p>
+      </div>
+    </div>
+
+    <div class="track-wrap">
+      <!-- Özet şerit GERÇEK kayıttan doldurulur; dört hücrenin ne ölçtüğü
+           challenge tipine göre değişir (R15/5). Eskiden dört sayı da sabitti. -->
+      <div class="track-summary" id="trackSummary"></div>
+
+      <!-- ilerleme bar -->
+      <div class="track-bar-wrap" id="trackBar">
+        <div class="track-bar-top"><span>İlerlemen</span><b>%0</b></div>
+        <div class="track-bar"><i style="width:0%"></i></div>
+      </div>
+
+      <!-- tam-genişlik daygrid — ALIŞKANLIK ve SÜRELİ tiplerde -->
+      <div class="track-grid-wrap" id="trackGridWrap">
+        <!-- Otuz kutu SABİT HTML'di ve hiçbir veriye bağlı değildi (yedi
+             "done", üç "rest", biri "today"). Artık motor dolduruyor. -->
+        <div class="track-grid" id="trackGrid"></div>
+      </div>
+
+      <!-- ADIM LİSTESİ — YALNIZ EGZERSİZ SERİSİ tipinde (R16/1).
+           Bu tipte gün kutusu YANLIŞ bileşendi: seri günleri değil ADIMLARI
+           sayar ve adımlar sıralıdır. Yedi adımlık bir seride yedi gün kutusu
+           çizmek iki farklı sayıyı tesadüfen aynı gösteriyordu. Liste kabuğun
+           kendi `.fp-list`/`.fp-row` bileşenidir — yeni sınıf üretilmedi. -->
+      <div id="trackSteps" hidden></div>
+
+      <!-- legend + bugünün hareketi CTA -->
+      <div class="track-legend" id="trackLegend">
+        <span class="tl-item"><span class="tl-swatch done"></span> Tamamlandı</span>
+        <span class="tl-item"><span class="tl-swatch today"></span> Bugün</span>
+        <span class="tl-item"><span class="tl-swatch todo"></span> Gelecek gün</span>
+        <!-- R16/1 · EYLEM TAKVİMİN YANINA GELDİ.
+             ÖLÇÜLEN KUSUR: sayfanın tek katılma düğmesi hero'daydı, alışkanlık
+             tipinin "bugünü işaretle" düğmesi de öyle. Takvime inen kullanıcı
+             otuz kutuya bakıyor ve yapabileceği hiçbir şey görmüyordu; geri
+             yukarı kaydırması gerektiğini söyleyen bir şey de yoktu. -->
+        <span class="track-cta" id="trackCta"></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 3 · NASIL ÇALIŞIR (adım sırası → numara meşru) ===== -->
+<section class="chl-how" id="nasil">
+  <div class="wrap">
+    <div class="sec-head sec-fit">
+      <div>
+        <span class="eyebrow"><i class="fa-solid fa-route"></i> Nasıl Çalışır</span>
+        <h2>Dört adımda başla</h2>
+        <p class="lead">Karmaşık değil. Katıl, her gün açılan kısa hareketi yap, kutunu işaretle — gerisi kendiliğinden gelir.</p>
+      </div>
+    </div>
+    <div class="how-grid">
+      <div class="how-step">
+        <span class="how-num">1</span>
+        <i class="fa-solid fa-user-plus ic"></i>
+        <h3>Katıl</h3>
+        <p>Tek dokunuşla challenge'a katıl. Hesabın takvimini açar, ilk günden başlarsın.</p>
+      </div>
+      <div class="how-step">
+        <span class="how-num">2</span>
+        <i class="fa-solid fa-calendar-day ic"></i>
+        <h3>Günü aç</h3>
+        <p>Her gün 10–15 dakikalık kısa bir hareket önerilir — esneme, yürüyüş ya da hafif kuvvet.</p>
+      </div>
+      <div class="how-step">
+        <span class="how-num">3</span>
+        <i class="fa-solid fa-square-check ic"></i>
+        <h3>Kutunu işaretle</h3>
+        <p>Yaptığında günü tamamla. Takvimin yeşile döner, serin uzar — ufak ama motive eden bir iz.</p>
+      </div>
+      <div class="how-step">
+        <span class="how-num">4</span>
+        <i class="fa-solid fa-medal ic"></i>
+        <h3>Rozetini al</h3>
+        <p>Kilometre taşlarında rozet kazanırsın. Kaçırdığın gün olursa kaldığın yerden devam — baştan başlamaz.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 4 · KAZANIMLAR / ROZETLER (kapsayıcı) ===== -->
+<section class="chl-earn">
+  <div class="wrap">
+    <div class="sec-head sec-fit">
+      <div>
+        <span class="eyebrow"><i class="fa-solid fa-award"></i> Yol Boyunca Kazandıkların</span>
+        <h2>Her adımın bir karşılığı var</h2>
+        <p class="lead">Rozetler kıyas için değil, kendi yolculuğunu işaretlemek için. Herkesin temposu kendine; önemli olan devam etmek.</p>
+      </div>
+    </div>
+    <div class="earn-grid">
+      <div class="earn-card">
+        <div class="earn-badge"><i class="fa-solid fa-seedling"></i></div>
+        <h3>İlk Adım</h3>
+        <p>İlk günü tamamladın. Başlamak en zor kısımdı — onu çoktan geçtin.</p>
+        <span class="earn-tag"><i class="fa-solid fa-check"></i> Kazanıldı</span>
+      </div>
+      <div class="earn-card">
+        <div class="earn-badge"><i class="fa-solid fa-fire-flame-curved"></i></div>
+        <h3>5 Gün Seri</h3>
+        <p>Üst üste beş gün hareket ettin. Ritim oturmaya başladı bile.</p>
+        <span class="earn-tag"><i class="fa-solid fa-check"></i> Kazanıldı</span>
+      </div>
+      <div class="earn-card locked">
+        <div class="earn-badge"><i class="fa-solid fa-mountain-sun"></i><span class="lock"><i class="fa-solid fa-lock"></i></span></div>
+        <h3>Yarı Yol</h3>
+        <p>15 günü tamamlayınca açılır. Tam ortadasın — gerisi yokuş aşağı.</p>
+        <span class="earn-tag">8 gün kaldı</span>
+      </div>
+      <div class="earn-card locked">
+        <div class="earn-badge"><i class="fa-solid fa-trophy"></i><span class="lock"><i class="fa-solid fa-lock"></i></span></div>
+        <h3>30 Gün Tamam</h3>
+        <p>Ayın sonunda alışkanlık rozeti senin. Bir ay sürekliliğin kanıtı.</p>
+        <span class="earn-tag">Bitişte</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 5 · TOPLULUK ===== -->
+<section class="chl-comm">
+  <div class="wrap">
+    <div class="sec-head sec-fit">
+      <div>
+        <span class="eyebrow"><i class="fa-solid fa-people-group"></i> Yalnız Değilsin</span>
+        <h2>Birlikte hareket eden bir topluluk</h2>
+        <p class="lead">Aynı takvimi paylaşan binlerce kişiyle aynı yoldasın. Kimse kimseyle yarışmıyor; herkes kendi temposunda ilerliyor.</p>
+      </div>
+    </div>
+    <!-- 🔴 TEK DÜRÜST ŞERİT (docs/fit-kit.md §11) — bu bölümdeki sayılar ve
+         sözler MAKET. Prototipte sunucu yok; "1.612 kişi" gibi bir sayıyı
+         üretecek bir kayıt hiçbir yerde tutulmuyor. Şerit sayıların yanına
+         değil bölümün başına konur, düğme başına rozet serpilmez. -->
+    <div class="hr-note">
+      <i class="fa-solid fa-circle-info"></i>
+      <p><b>Bu bölüm maket:</b> prototipte sunucu ve başka kullanıcı verisi yok, aşağıdaki sayılar ve sözler örnektir. <b>Gerçek olan senin ilerlemen</b> — takvimin, serin ve rozetlerin tarayıcındaki kendi kayıtlarından geliyor.</p>
+    </div>
+    <div class="comm-grid">
+      <!-- sol: koyu topluluk paneli -->
+      <div class="comm-panel">
+        <span class="eyebrow"><i class="fa-solid fa-bolt"></i> Bugün</span>
+        <div class="comm-num"><b>1.612</b><span>kişi hareket etti</span></div>
+        <div class="comm-sub">Son 24 saatte günlük hareketini tamamlayanlar</div>
+        <p>Sabah esneyen de var, akşam yürüyüşe çıkan da. Önemli olan ne zaman değil, yapmış olman.</p>
+        <div class="comm-movers">
+          <div class="avastack">
+            <span style="background-image:url('https://images.unsplash.com/photo-1502823403499-6ccfcf4fb453?w=120&q=80&auto=format&fit=crop')"></span>
+            <span style="background-image:url('https://images.unsplash.com/photo-1554151228-14d9def656e4?w=120&q=80&auto=format&fit=crop')"></span>
+            <span style="background-image:url('https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=120&q=80&auto=format&fit=crop')"></span>
+            <span class="more">+1.6K</span>
+          </div>
+          <span class="mv-txt"><b>Zeynep, Aslı ve 1.610 kişi</b> bugün kutusunu işaretledi.</span>
+        </div>
+      </div>
+      <!-- sağ: katılımcı sözleri -->
+      <div class="comm-voices">
+        <div class="voice-card">
+          <p class="quote">Spor salonu fikri beni hep korkuturdu. Burada günde 12 dakika, evde, kendi halimde. İlk kez bir şeyi bırakmadım.</p>
+          <div class="voice-who">
+            <span class="ava" style="background-image:url('https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=120&q=80&auto=format&fit=crop')"></span>
+            <div><b>Merve K.</b><small>Örnek katılımcı</small></div>
+            <span class="day">Gün 19</span>
+          </div>
+        </div>
+        <div class="voice-card">
+          <p class="quote">İki gün kaçırdım, panik yapmadım. Kaldığım yerden devam ettim — suçluluk olmadan. Asıl fark bu oldu benim için.</p>
+          <div class="voice-who">
+            <span class="ava" style="background-image:url('https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=120&q=80&auto=format&fit=crop')"></span>
+            <div><b>Selin A.</b><small>Örnek katılımcı</small></div>
+            <span class="day">Gün 24</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 6 · GEÇMİŞ / YAKLAŞAN CHALLENGE'LAR ===== -->
+<section class="chl-more">
+  <div class="wrap">
+    <div class="sec-head sec-fit">
+      <div>
+        <span class="eyebrow"><i class="fa-solid fa-layer-group"></i> Diğer Challenge'lar</span>
+        <h2>Bittikten sonra durma</h2>
+        <p class="lead">Her ay yeni bir tema. Tamamladıklarını rozetlerinde sakla, yaklaşanlara şimdiden katılma listene ekle.</p>
+      </div>
+    </div>
+      <!-- Üç kart SABİTTİ ve kataloğa AYKIRIYDI: "Haziran · 30 gün",
+           "Temmuz · 21 gün", "3.120 kişi tamamladı" — hiçbiri doğru değildi
+           (Sabah Esneme 7 gün, Adım Adım Yürüyüş 21 gün; katılımcı sayısını
+           tutan bir yer hiç yok). Kartlar artık katalogdan basılıyor. -->
+      <div class="more-grid" id="moreGrid"></div>
+  </div>
+</section>
+
+<!-- ===== 7 · KAPANIŞ CTA ===== -->
+<section class="chl-cta-sec">
+  <div class="wrap">
+      <!-- Panel "Haziran Challenge · Bugün başla, 23 gün önünde" diyordu.
+           Üç sayı da sabitti ve hangi challenge açık olursa olsun aynı
+           kalıyordu. Artık bu sayfanın kendi challenge'ından okunuyor. -->
+      <div class="chl-cta-panel" id="ctaPanel"></div>
+  </div>
+</section>
+
+</div><!-- /.fit-pane[data-pane=challenge] -->
+
+<!-- ===== TAB 2 · SU İÇME TAKİBİ ===== -->
+<div class="fit-pane" data-pane="su" hidden>
+
+<!-- günlük takip + hesaplayıcı -->
+<section class="wt-sec">
+  <div class="wrap">
+    <div class="wt-layout">
+
+      <!-- SOL: günlük sayaç + bardak ızgarası -->
+      <div class="wt-card">
+        <h3>Bugünkü Su Takibin</h3>
+        <p class="sub">Her bardak = 200 ml. İç, ikonuna dokun — günün güncellenir.</p>
+
+        <div class="wt-prog-row">
+          <b id="wtMl">1.400<small>ml</small></b>
+          <span>Hedef: <b style="color:var(--fit)">2.200 ml</b></span>
+        </div>
+        <div class="wt-bar"><i id="wtBar" style="width:64%"></i></div>
+        <p style="font-size:12px;color:var(--muted);font-weight:600;margin-bottom:16px">
+          <span id="wtCups">7</span> / 11 bardak · <span id="wtPct">64</span>% tamamlandı
+        </p>
+
+        <!-- Bardak sayısı HEDEFE bağlı; sabit 11 kutu değil (R15/7). -->
+        <div class="wt-cups" id="wtCupsGrid" aria-label="Su bardakları (dolu = içildi)"></div>
+        <p class="wt-cup-note">1 bardak = 200 ml · tamamlandı ✓ yeşil, boş ○ henüz içilmedi</p>
+
+        <div class="wt-actions">
+          <button class="btn btn-fit" type="button" id="wtAdd"><i class="fa-solid fa-plus"></i> Bir Bardak Ekle</button>
+          <button class="btn btn-ghost" type="button" id="wtReset"><i class="fa-solid fa-rotate-left"></i> Günü Sıfırla</button>
+        </div>
+      </div>
+
+      <!-- SAĞ: istatistik + hedef hesaplayıcı -->
+      <div class="wt-side">
+        <div class="wt-stats-card">
+          <h4><i class="fa-solid fa-chart-bar"></i> Bu Hafta</h4>
+          <!-- Dört sayı da SABİTTİ (5 gün · 13.8 L · 1.97 L · 3 gün). Motor dolduruyor. -->
+          <div class="wt-stat-grid" id="wtStats"></div>
+        </div>
+
+        <div class="wt-calc">
+          <h4><i class="fa-solid fa-calculator" style="color:var(--fit)"></i> Kişisel Hedef</h4>
+          <p>Kilona göre önerilen günlük su miktarını hesapla.</p>
+          <div style="display:flex;gap:10px;align-items:flex-end">
+            <div style="flex:1">
+              <label style="font-size:13px;font-weight:700;color:var(--slate);display:block;margin-bottom:7px">Kilo (kg)</label>
+              <div style="position:relative"><input type="number" id="wtKilo" value="68" min="30" max="200"
+                style="width:100%;font-family:inherit;font-size:14px;font-weight:500;color:var(--slate);background:var(--bg);border:1px solid var(--line);border-radius:var(--radius-md);padding:12px 42px 12px 14px;outline:none;transition:border-color .2s"
+                oninput="calcWater()" onfocus="this.style.borderColor='var(--fit)'" onblur="this.style.borderColor='var(--line)'">
+              <span style="position:absolute;right:13px;top:50%;transform:translateY(-50%);font-size:12px;font-weight:700;color:var(--muted);pointer-events:none">kg</span></div>
+            </div>
+            <button class="btn btn-fit" type="button" onclick="calcWater()" style="padding:12px 20px;font-size:13.5px;flex:none">Hesapla</button>
+          </div>
+          <div class="wt-calc-result" id="wtCalcResult">
+            <i class="fa-solid fa-droplet"></i>
+            <div><b id="wtCalcLitre">2.2 litre/gün</b><span id="wtCalcNote">68 kg için önerilen · ≈ 11 bardak</span></div>
+            <button class="btn btn-ghost" type="button" id="wtCalcUygula" style="margin-left:auto;flex:none"><i class="fa-solid fa-check"></i> Hedefim yap</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- 7 günlük geçmiş -->
+<section class="wt-history">
+  <div class="wrap">
+    <div class="sec-head sec-fit">
+      <div>
+        <span class="eyebrow"><i class="fa-solid fa-calendar-week"></i> Geçmiş</span>
+        <h2>Son 7 Günün</h2>
+        <p class="lead">Her günün çubuğu toplam miktarı gösterir — yeşil çubuk hedefe ulaştığını işaret eder.</p>
+      </div>
+    </div>
+    <!-- Yedi gün SABİT HTML'di ("9 Haz" gibi tarihler dahil). Motor dolduruyor. -->
+    <div class="wt-week" id="wtWeek"></div>
+  </div>
+</section>
+
+</div><!-- /.fit-pane[data-pane=su] -->
+
+</div><!-- /.chl-body -->
+
+</main><!-- /.page-main -->
+
+<!-- KABUK: alt katman (giris kapisi + footer + basa don) -->
+<div id="fitShellBottom"></div>
+
+<!-- DadaFit ortak kabuk JS (tek kaynak): markup + davranis -->
+<script src="assets/js/fit-shell.js"></script>
+<script src="assets/js/fit-mesaj.js"></script>
+<!-- KAYIT (favori) SÖZLEŞMESİ (R15/1) — EK GÖREV: [data-kaydet] köprüsü -->
+<script src="assets/js/fit-kayit.js"></script>
+<!-- CHALLENGE MOTORU (R15/5) — katalog, üç tip, ilerleme hesabı -->
+<script src="assets/js/fit-challenge.js"></script>
+<!-- SU TAKİBİ SÖZLEŞMESİ (R15/7) — bu sekmenin bütün sayıları buradan -->
+<script src="assets/js/fit-su.js"></script>
+<!-- ROZET · PUAN — challenge bitince rozet buradan mühürlenir -->
+<script src="assets/js/fit-rozet.js"></script>
+<script>
+/* =====================================================================
+   CHALLENGE DETAY   (R15/5)
+   ---------------------------------------------------------------------
+   ESKİ HÂL: bu sayfa kendi `VERI` kümesini taşıyordu (üç challenge'ın
+   metni, süresi, "gecen" günü ve 2.840 gibi bir KATILIMCI SAYISI) ve
+   ilerlemeyi `challengeGunTamamla()` ile artırıyordu.
+   İki kusur vardı:
+     1. Katalog iki yerdeydi (burada ve Challenge'larım'da) — ayrışabilirdi.
+     2. `gecen` ve katılımcı sayısı UYDURMAYDI; sunucu yok, başka kullanıcı
+        yok. "2.840 katılımcı" tutulamayan bir sözdü, kaldırıldı.
+   Artık tek kaynak `fit-challenge.js`. Sayılar hesaplanır, artırılmaz.
+   ===================================================================== */
+(function(){
+  var C = window.FIT_CHALLENGE;
+  if(!C) return;
+  var slug = new URLSearchParams(location.search).get('slug') || 'hareket-aliskanligi';
+  var K = C.bul(slug) || C.KATALOG[0];
+  slug = K.slug;
+  var T = C.TIP[K.tip];
+
+  /* EK GÖREV · kaydet düğmesi — challenge `?slug=`ye göre değiştiği için
+     data-* alanları statik yazılamaz, K çözülür çözülmez burada doldurulur. */
+  (function(){
+    var kytBtn = document.getElementById('chlSave');
+    if(!kytBtn) return;
+    kytBtn.setAttribute('data-slug', K.slug);
+    kytBtn.setAttribute('data-ad', K.ad);
+    kytBtn.setAttribute('data-href', 'challenge-v1.html?slug=' + K.slug);
+    kytBtn.setAttribute('data-gorsel', K.gorsel || '');
+    kytBtn.setAttribute('data-meta', (T.etiket || '') + ' · ' + K.gun + ' gün');
+    if(window.FIT_KAYIT) FIT_KAYIT.tazele();
+  })();
+
+  function esc(t){ return String(t==null?'':t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+  function n(x){ return Number(x||0).toLocaleString('tr-TR'); }
+  function tarih(iso){
+    if(!iso) return '—';
+    var t=new Date(iso); if(isNaN(t)) return '—';
+    return t.toLocaleDateString('tr-TR',{day:'numeric',month:'long'});
+  }
+  function set(k,v){ document.querySelectorAll('[data-ch="'+k+'"]').forEach(function(el){ el.innerHTML=v; }); }
+
+  var kart=document.getElementById('chCard');
+  var join=document.getElementById('chJoin'), day=document.getElementById('chDay'),
+      leave=document.getElementById('chLeave');
+
+  /* "Bugünü kaçırdım" düğmesi KALKTI. Kaçırılan gün bir VERİ DEĞİL, verinin
+     YOKLUĞUDUR: o güne kayıt düşmemesi zaten kaçırıldığı anlamına gelir.
+     Kullanıcıya "kaçırdım" diye bastırmak, olmayan bir şeyi kaydetmekti. */
+
+  function boya(){
+    var i = C.ilerleme(slug);
+
+    /* ---- sabit sunum alanları (katalogdan) ---- */
+    set('ad', esc(K.ad));
+    set('donem', esc(K.donem || T.etiket));
+    set('baslik', K.baslik || esc(K.ad));
+    set('ozet', esc(K.uzunOzet || K.ozet));
+    set('sure', esc(K.gunlukSure || '—'));
+    set('toplam', K.gun + ' gün');
+    /* Uydurma katılımcı sayısı yerine tutulabilir bir sayı: challenge'ın ödülü. */
+    set('katilimci', '+' + K.odul.puan);
+    /* İzleğin adı ve cümlesi TİPE GÖRE — üçü aynı şeyi ölçmüyor. */
+    if(K.tip === 'seri'){
+      set('takvimBaslik', K.adimlar.length + ' Adımlık Seri');
+      set('izlekBaslik', 'Adım adım — biri kapanmadan sonraki açılmaz');
+      set('izlekLead', 'Her adım, o hareketin kendi sayfasında bitirdiğin antrenmanla kapanır. Sıradaki adımın düğmesi seni doğrudan oraya götürür; kilitli adımlar iddia taşımaz, sadece henüz sıraları gelmemiştir.');
+    } else if(K.tip === 'sureli'){
+      set('takvimBaslik', K.gun + ' Günlük Pencere');
+      set('izlekBaslik', 'Biriken hedef — her kayıt üstüne koyar');
+      set('izlekLead', 'Çubuk hedefe ne kadar yaklaştığını, kutular hangi günlerde kayıt düştüğünü gösterir. Boş bir kutu iddia taşımaz — o gün bir kayıt olmadığı anlamına gelir.');
+    } else {
+      set('takvimBaslik', K.gun + ' Günlük Takvim');
+      set('izlekBaslik', 'Her gün bir kutu — kaldığın yerden devam');
+      set('izlekLead', 'Kayıt düşen günler yeşile döner, bugün vurgulu. Boş bir kutu iddia taşımaz — o gün bir kayıt olmadığı anlamına gelir, başka bir şey değil.');
+    }
+    set('kanit', esc(T.kanit) + ' Bitirince <b>+' + K.odul.puan + ' puan</b> ve rozet.');
+    set('durum', i.katildi
+      ? (i.durum==='tamamlandi' ? 'Tamamladın' : i.suresiDoldu ? 'Süre doldu' : 'Katıldın')
+      : esc(T.etiket));
+
+    /* ---- takvim penceresi: KATILDIĞIN GÜN başlar ----
+       Sabit "1 Ağustos – 30 Ağustos" bir takvim yalanıydı; pencere kullanıcının
+       katıldığı güne bağlıdır ve katılmadıysa henüz yoktur. */
+    if(i.katildi){
+      var bas = new Date(i.baslangic);
+      var son = new Date(bas.getTime()); son.setDate(son.getDate() + K.gun - 1);
+      set('basla', tarih(bas.toISOString()));
+      set('bitis', tarih(son.toISOString()));
+      set('kalan', i.kalanGun + ' gün');
+      set('bugun', i.durum==='tamamlandi' ? 'Tamamlandı'
+                 : i.suresiDoldu ? 'Süre doldu'
+                 : 'Bugün · ' + i.gecenGun + '. gün');
+      document.querySelectorAll('[data-ch="ilerlemeYuzde"]').forEach(function(el){
+        el.style.width = Math.round(i.gecenGun / K.gun * 100) + '%';
+      });
+    } else {
+      set('basla', 'Katıldığın gün');
+      set('bitis', K.gun + '. gün');
+      set('kalan', K.gun + ' gün');
+      set('bugun', 'Henüz katılmadın');
+      document.querySelectorAll('[data-ch="ilerlemeYuzde"]').forEach(function(el){ el.style.width='0%'; });
+    }
+
+    /* ---- "İlerlemen" kartı — tek kart, gerçek veri ---- */
+    var mine = i.katildi && i.durum !== 'birakildi';
+    join.hidden = !!(mine && i.durum === 'devam');
+    join.innerHTML = i.katildi && i.durum !== 'devam'
+      ? '<i class="fa-solid fa-rotate-right"></i> Yeniden başla'
+      : '<i class="fa-solid fa-plus"></i> Challenge\'a Katıl';
+    /* Günlük işaretleme YALNIZ alışkanlık tipinde anlamlı. Süreli hedef ve
+       egzersiz serisi kendi kayıtlarından beslenir; oraya "günü işaretle"
+       düğmesi koymak kanıtsız ilerleme üretirdi. */
+    day.hidden = !(mine && i.durum === 'devam' && K.tip === 'aliskanlik');
+    day.disabled = !!i.bugunIsaretli;
+    day.innerHTML = i.bugunIsaretli
+      ? '<i class="fa-solid fa-check"></i> Bugün işaretlendi'
+      : '<i class="fa-solid fa-check"></i> Bugünün görevini tamamla';
+    leave.hidden = !(mine && i.durum === 'devam');
+
+    kartBas(i, mine);
+
+    takvimBas(i);
+    digerBas();
+    ctaBas(i);
+    document.title = K.ad + ' — Challenge | DadaFit';
+  }
+
+  /* ---- "İlerlemen" kartı ----
+     Kartın GÖRSELİ eski sabit karttan (mini takvim + yüzde + alt not),
+     VERİSİ motordan. Katılmadıysan sahte bir ilerleme çubuğu basılmaz;
+     kart challenge'ın ne istediğini anlatır ve katılma davetiyle biter. */
+  function kartBas(i, mine){
+    if(!kart) return;
+    /* MİNİ TAKVİM BURADAN ÇIKARILDI. Kart 520 px'lik dar bir yan karttı ve
+       otuz mini kutu orada bir ÖNİZLEMEydi. Kart bandın tam genişliğine
+       (1176 px) çıkınca önizleme 611 px'lik dev bir ızgaraya dönüştü ve
+       hemen altındaki gerçek 30 günlük takvimin AYNISINI ikinci kez çizdi —
+       iki kartı zaten bu yüzden birleştirmiştik. Takvim tek yerde. */
+    kart.innerHTML =
+      '<div class="chl-card-top"><span class="ttl"><i class="' + T.ikon + '"></i> ' +
+        (mine ? 'İlerlemen' : esc(T.etiket)) + '</span>' +
+        '<span class="pct">' + (mine ? '%' + i.oran : '+' + K.odul.puan + ' puan') + '</span></div>' +
+      '<div class="chl-bar"><i style="width:' + (mine ? i.oran : 0) + '%"></i></div>' +
+      '<div class="chl-card-meta">' + (mine
+        ? '<span>' + olcuMetni(i) + '</span><span>' + yanMetni(i) + '</span>'
+        : '<span>' + esc(T.aciklama) + '</span><span><b>' + K.gun + '</b> günlük</span>') + '</div>' +
+      '<div class="chl-card-foot"><i class="fa-solid fa-fire-flame-curved"></i> ' + (mine
+        ? (i.durum === 'tamamlandi'
+            ? 'Tamamladın. Rozetin ve <b>+' + K.odul.puan + ' puanın</b> Rozetlerim’de.'
+            : i.suresiDoldu
+              ? 'Süre doldu. Hedefe ulaşmadın ama kazandığın rozetler sende kaldı.'
+              : esc(T.kanit) + ' Günü gün takip etmek için <b>aşağıdaki takvime</b> bak.')
+        : 'Katıldığın gün pencere açılır; ilerlemen antrenman kayıtlarından hesaplanır.') + '</div>' +
+      (mine ? '<div class="chl-card-acts"><a class="btn btn-ghost" href="fit-rozetlerim.html">' +
+              '<i class="fa-solid fa-medal"></i> Rozetlerimde gör</a>' +
+              '<a class="btn btn-ghost" href="#takip"><i class="fa-solid fa-calendar-days"></i> Takvime git</a></div>' : '');
+  }
+
+  /* Sağ taraf: tipin İKİNCİ ölçüsü. Soldakiyle aynı sayıyı tekrar etmez. */
+  function yanMetni(i){
+    if(K.tip === 'aliskanlik') return 'Telafi hakkı: <b>' + i.telafiKalan + '</b> / ' + C.TELAFI_HAKKI;
+    if(K.tip === 'seri')       return 'Sırada: <b>' + esc(i.siradaki ? i.siradaki.ad : 'kalmadı') + '</b>';
+    return '<b>' + i.gecenGun + ' / ' + K.gun + '</b> gün geçti';
+  }
+
+  function olcuMetni(i){
+    if(K.tip === 'sureli') return '<b>' + n(i.biriken) + ' / ' + n(i.hedef) + '</b> ' + esc(i.birimAd);
+    if(K.tip === 'seri')   return '<b>' + i.biriken + ' / ' + i.hedef + '</b> adım';
+    return '<b>' + i.biriken + ' / ' + i.hedef + '</b> gün · <b>' + i.seri + '</b> gün üst üste';   /* alışkanlık */
+  }
+
+  /* ---- diğer challenge'lar: katalogdan, durumu GERÇEK katılımdan ---- */
+  function digerBas(){
+    var kok = document.getElementById('moreGrid'); if(!kok) return;
+    kok.innerHTML = C.KATALOG.map(function(k){
+      var j = C.ilerleme(k.slug);
+      var t = C.TIP[k.tip];
+      var rozet, git;
+      if(j.durum === 'tamamlandi'){ rozet='<span class="cc-state past"><i class="fa-solid fa-check"></i> Tamamladın</span>'; git='Rozetini gör <i class="fa-solid fa-medal"></i>'; }
+      else if(j.durum === 'devam'){ rozet='<span class="cc-state live"><i class="fa-solid fa-circle" style="font-size:7px"></i> Katıldın</span>'; git='Devam et <i class="fa-solid fa-arrow-right"></i>'; }
+      else { rozet='<span class="cc-state"><i class="'+t.ikon+'"></i> '+esc(t.etiket)+'</span>'; git='Katıl ve başla <i class="fa-solid fa-arrow-right"></i>'; }
+      var hedef = k.tip==='sureli' ? n(k.hedef.deger)+' '+esc(k.hedef.ad)
+                : k.tip==='seri'   ? k.adimlar.length+' adım'
+                : 'her gün işaretle';
+      return '<a class="cc-card'+(j.durum==='tamamlandi'?' is-past':'')+'" href="challenge-v1.html?slug='+esc(k.slug)+'"'+
+             ' style="background-image:url(\''+esc(k.gorsel)+'\')">'+rozet+
+             '<div class="cc-body"><div class="meta"><i class="fa-regular fa-calendar"></i> '+k.gun+' gün · '+hedef+'</div>'+
+             '<h3>'+esc(k.ad)+'</h3><p>'+esc(k.ozet)+'</p>'+
+             '<span class="cc-go">'+git+'</span></div></a>';
+    }).join('');
+  }
+
+  /* ---- kapanış paneli: bu challenge'ın kendi sayıları ---- */
+  function ctaBas(i){
+    var kok = document.getElementById('ctaPanel'); if(!kok) return;
+    var bitti = i.durum === 'tamamlandi';
+    kok.innerHTML =
+      '<span class="eyebrow"><i class="'+T.ikon+'"></i> '+esc(K.donem || T.etiket)+'</span>'+
+      '<h2>'+(bitti ? 'Bitirdin — sırada ne var?'
+             : i.katildi ? (i.kalanGun+' gün önünde')
+             : 'Bugün başla, '+K.gun+' gün önünde')+'</h2>'+
+      '<p>'+(bitti
+        ? 'Rozetin ve +'+K.odul.puan+' puanın Rozetlerim’de. Aynı challenge’a yeniden katılabilir ya da başka bir tipi deneyebilirsin.'
+        : i.katildi
+          ? 'İlerlemen antrenman kayıtlarından hesaplanıyor. '+esc(T.kanit)
+          : 'Kusursuz olmana gerek yok — sadece başlamana. Katıldığın gün pencere açılır, ilerleme kayıtlarından işler.')+'</p>'+
+      '<div class="cta-acts">'+
+        (bitti || !i.katildi
+          ? '<button class="btn btn-fit" type="button" id="ctaJoin"><i class="fa-solid fa-'+(bitti?'rotate-right':'plus')+'"></i> '+(bitti?'Yeniden başla':'Challenge\'a Katıl')+'</button>'
+          : '<a class="btn btn-fit" href="#takip"><i class="fa-solid fa-calendar-days"></i> Takvimine dön</a>')+
+        '<a class="btn-line" href="fit-rozetlerim.html"><i class="fa-solid fa-medal"></i> Rozetlerim</a>'+
+      '</div>'+
+      '<p class="chl-cta-note"><i class="fa-solid fa-circle-check"></i> Ücretsiz · İstediğin an ara ver, kaldığın yerden devam et</p>';
+    var cj = document.getElementById('ctaJoin');
+    if(cj) cj.addEventListener('click', function(){ C.katil(slug); });
+  }
+
+  /* ---- 30 günlük takvim: GERÇEK kayıtlardan ----
+     Eskiden otuz kutunun hepsi sabit HTML'di (yedi "done", üç "rest", biri
+     "today") ve hiçbir veriye bağlı değildi. Artık her kutu challenge
+     penceresindeki gerçek kayda bakar. */
+  /* ---- ADIM LİSTESİ (yalnız `seri`) ----
+     Kabuğun `.fp-card > .fp-list > .fp-row` bileşeni; yeni sınıf yok.
+     Üç durum üç ikon: kapandı (check) · sırada (bolt) · kilitli (lock).
+     Bağlantı YALNIZ sıradaki adımda var — kilitli bir adımın sayfasına
+     götüren düğme, kapanmayacak bir işi davet etmek olurdu. */
+  function adimBas(i){
+    var kok = document.getElementById('trackSteps');
+    if(!kok) return;
+    var siradakiIx = -1;
+    i.adimlar.forEach(function(a, ix){ if(siradakiIx < 0 && !a.tamam) siradakiIx = ix; });
+
+    kok.innerHTML = '<div class="fp-card"><div class="fp-list">' +
+      i.adimlar.map(function(a, ix){
+        var kapali  = a.tamam;
+        var sirada  = (ix === siradakiIx) && i.katildi && i.durum === 'devam';
+        var ico = kapali ? 'fa-solid fa-check' : sirada ? 'fa-solid fa-bolt' : 'fa-solid fa-lock';
+        /* HİYERARŞİ: `.fp-row .ico` kabukta HER satıra aynı yeşil yıkamayı
+           veriyor. Yedi satırın beşi kilitliyken beş yeşil kutu, tek
+           eyleme açık satırdan daha çok yer kaplıyor ve göz nereye bakacağını
+           bulamıyordu. Kilitli satır nötre alındı — yeni renk üretilmedi,
+           kitin kendi `--line` / `--muted` tokenleri kullanıldı. */
+        var icoStil = (kapali || sirada) ? '' : ' style="background:var(--line);color:var(--muted)"';
+        var alt = kapali ? ('Kapandı · ' + tarih(a.tarih))
+                : sirada ? 'Sırada — bu hareketin antrenmanını bitir, adım kendiliğinden kapanır'
+                : i.katildi ? ('Önceki ' + (ix - (siradakiIx < 0 ? ix : siradakiIx)) + ' adım kapanınca açılır')
+                : 'Katıldığında ' + (ix + 1) + '. sırada açılır';
+        var uc = kapali
+          ? '<span class="fp-badge ok"><i class="fa-solid fa-check"></i> Kapandı</span>'
+          : sirada
+            ? '<a class="btn btn-primary" href="egzersiz-detay-v1.html?slug=' + esc(a.slug) + '"><i class="fa-solid fa-play"></i> Aç</a>'
+            : '<span class="fp-badge off"><i class="fa-solid fa-lock"></i> Kilitli</span>';
+        return '<div class="fp-row">' +
+          '<span class="ico"' + icoStil + '><i class="' + ico + '"></i></span>' +
+          '<span class="txt"><b>' + (ix + 1) + '. ' + esc(a.ad) + '</b><small>' + esc(alt) + '</small></span>' +
+          '<span class="end">' + uc + '</span></div>';
+      }).join('') + '</div></div>';
+  }
+
+  function takvimBas(i){
+    var grid = document.getElementById('trackGrid');
+    if(!grid) return;
+
+    /* Hangi izlek gösterilecek: seri ADIM listesi, diğer ikisi GÜN takvimi.
+       Aynı anda ikisi birden basılsaydı sayfa aynı ilerlemeyi iki kez
+       çizerdi — bu depoda üç kez temizlenen kusurun tam kendisi. */
+    var seriMi = (K.tip === 'seri');
+    var sarmal = document.getElementById('trackGridWrap');
+    var adimKok = document.getElementById('trackSteps');
+    var efsane = document.getElementById('trackLegend');
+    if(sarmal)  sarmal.hidden  = seriMi;
+    if(adimKok) adimKok.hidden = !seriMi;
+    /* Efsane (Tamamlandı · Bugün · Gelecek gün) YALNIZ okunacak bir takvim
+       varken anlamlı. Seri tipinde takvim yok; katılmadan önce de takvim
+       kimsenin günlerini göstermiyor — o hâlde üç renk açıklaması, olmayan
+       bir duruma anahtar veriyor ve boş kutuları canlıymış gibi gösteriyordu.
+       Eylem düğmesi (`.track-cta`) her hâlde kalır. */
+    if(efsane)  efsane.querySelectorAll('.tl-item').forEach(function(x){ x.hidden = seriMi || !i.katildi; });
+    if(seriMi){ adimBas(i); }
+    var isaretli = {};
+    (i.gunler || []).forEach(function(g){ isaretli[g] = 1; });
+    var bas = i.katildi ? new Date(i.baslangic) : null;
+    var bugun = new Date(); bugun.setHours(0,0,0,0);
+
+    var html='';
+    for(var d=0; d<K.gun; d++){
+      var cls='tg-day', ico='fa-regular fa-circle';
+      if(bas){
+        var t=new Date(bas.getTime()); t.setHours(0,0,0,0); t.setDate(t.getDate()+d);
+        var anahtar = t.getFullYear()+'-'+String(t.getMonth()+1).padStart(2,'0')+'-'+String(t.getDate()).padStart(2,'0');
+        if(isaretli[anahtar]){ cls+=' done'; ico='fa-solid fa-check'; }
+        else if(t.getTime()===bugun.getTime()){ cls+=' today'; ico='fa-solid fa-bolt'; }
+        else if(t < bugun){ ico='fa-regular fa-circle'; }   /* geçmiş ve boş: iddia yok */
+      }
+      if(d===K.gun-1 && !/done/.test(cls)) ico='fa-solid fa-flag-checkered';
+      html += '<div class="'+cls+'"><span class="n">'+(d+1)+'</span><i class="'+ico+' ic"></i></div>';
+    }
+    grid.innerHTML = html;
+
+    /* KATILMADAN ÖNCE: sıfır dolu bir gösterge paneli basma.
+       ÖLÇÜLEN KUSUR: katılmamış bir ziyaretçi "0/30 gün · 0 gün seri ·
+       2/2 telafi · 30 gün kalan" ve %0'lık bir çubuk görüyordu. Dördü de
+       teknik olarak doğruydu ama ekran, challenge'ın ORTASINDAymış gibi
+       okunuyordu: sıfırlar bir başarısızlık gibi duruyor, otuz boş kutu
+       tıklanabilir sanılıyor ve sayfanın ne istediği hiçbir yerde
+       yazmıyordu. Katılmadan önce ölçülecek bir ilerleme YOK; o yüzden
+       aynı bileşen ilerlemeyi değil KURALI gösterir — ne sayılır, ne
+       sayılmaz, ne kadar sürer, karşılığında ne var. */
+    var bar = document.getElementById('trackBar');
+    if(bar) bar.hidden = !i.katildi;
+
+    var ozet = document.getElementById('trackSummary');
+    if(ozet && !i.katildi){
+      var kural = [
+        ['fa-solid fa-hourglass-half','Süre', K.gun, 'gün', 'Katıldığın gün başlar'],
+        /* ⚠ Alışkanlıkta bu hücre `K.gun` basıyordu ve soldaki SÜRE hücresiyle
+           AYNI sayıyı tekrarlıyordu ("30 gün" · "30 gün"). Alışkanlığın hedefi
+           bir sayı değil bir davranıştır; hücre onu söyler. */
+        [T.ikon,'Hedef',
+          (K.tip==='sureli' ? n(K.hedef.deger) : K.tip==='seri' ? K.adimlar.length : 'Her gün'),
+          (K.tip==='sureli' ? ' '+esc(K.hedef.ad) : K.tip==='seri' ? ' adım' : ' işaretle'), T.etiket],
+        ['fa-solid fa-shield-halved','Ne sayılır', K.tip==='aliskanlik' ? 'Beyan' : 'Ölçülmüş', 'kayıt', T.kanit],
+        ['fa-solid fa-medal','Ödül', '+'+K.odul.puan, 'puan', 've challenge rozeti']
+      ];
+      ozet.innerHTML = kural.map(function(x){
+        return '<div class="ts-cell"><span class="lbl"><i class="'+x[0]+'"></i> '+esc(x[1])+'</span>'+
+               '<b>'+esc(String(x[2]))+'<small>'+esc(x[3])+'</small></b><div class="note">'+esc(x[4])+'</div></div>';
+      }).join('');
+      ctaSeridi(i);
+      return;
+    }
+    ctaSeridi(i);
+
+    if(ozet){
+      var m = K.tip==='sureli'
+        ? [['fa-solid fa-route','Biriken', n(i.biriken), '/'+n(i.hedef)+' '+i.birimAd, 'Yalnız ölçülmüş ve cihaz kaydı'],
+           ['fa-solid fa-calendar-day','Geçen gün', i.gecenGun, '/'+K.gun+' gün', 'Pencere katıldığın gün başladı'],
+           ['fa-solid fa-clipboard-check','Sayılan kayıt', n(i.sayilanKayit||0), 'kayıt', (i.elenenBeyan||0)+' beyan kaydı sayılmadı'],
+           ['fa-solid fa-hourglass-half','Kalan', i.kalanGun, 'gün', i.kalanGun? 'Bitişe var':'Süre doldu']]
+        : K.tip==='seri'
+          ? [['fa-solid fa-list-ol','Kapanan adım', i.biriken, '/'+i.hedef, 'Sırayla açılır'],
+             ['fa-solid fa-forward','Sırada', i.siradaki?(i.adimlar.indexOf(i.siradaki)+1):'—', '. adım', i.siradaki?i.siradaki.ad:'Seri tamam'],
+             ['fa-solid fa-calendar-day','Geçen gün', i.gecenGun, '/'+K.gun+' gün', 'Pencere katıldığın gün başladı'],
+             ['fa-solid fa-hourglass-half','Kalan', i.kalanGun, 'gün', i.kalanGun? 'Bitişe var':'Süre doldu']]
+          : [['fa-solid fa-circle-check','İşaretlenen', i.biriken, '/'+K.gun+' gün', i.biriken?'İyi gidiyorsun':'İlk günü işaretle'],
+             ['fa-solid fa-fire-flame-curved','Üst üste seri', i.seri, 'gün', 'En uzun serin: '+i.enUzunSeri+' gün'],
+             ['fa-solid fa-heart-crack','Telafi hakkı', i.telafiKalan, '/'+C.TELAFI_HAKKI, 'Kaçırdığın gün seriyi sıfırlamaz'],
+             ['fa-solid fa-hourglass-half','Kalan', i.kalanGun, 'gün', i.kalanGun? 'Bitişe var':'Süre doldu']];
+      ozet.innerHTML = m.map(function(x){
+        return '<div class="ts-cell"><span class="lbl"><i class="'+x[0]+'"></i> '+esc(x[1])+'</span>'+
+               '<b>'+x[2]+'<small>'+esc(x[3])+'</small></b><div class="note">'+esc(x[4])+'</div></div>';
+      }).join('');
+    }
+
+    if(bar){
+      bar.querySelector('.track-bar-top b').textContent = '%'+i.oran;
+      bar.querySelector('.track-bar i').style.width = i.oran+'%';
+    }
+  }
+
+  /* ---- takvimin yanındaki tek eylem ----
+     Üç hâl, tek düğme: katılmadıysan KATIL, alışkanlıkta günü İŞARETLE,
+     diğer tiplerde sıradaki işi AÇ. İkinci bir düğme koymadık; hero'daki
+     düğmelerle aynı işi yapan bir kopya, "aynı soruya iki cevap"ın
+     etkileşim hâli olurdu. Bu şerit hero'nun kopyası değil, hero'nun
+     ekranda görünmediği yerdeki tek karşılığıdır. */
+  function ctaSeridi(i){
+    var kok = document.getElementById('trackCta'); if(!kok) return;
+    if(!i.katildi || i.durum === 'birakildi'){
+      kok.innerHTML = '<button class="btn btn-fit" type="button" data-ch-katil="1">' +
+        '<i class="fa-solid fa-plus"></i> Challenge\'a Katıl</button>';
+    } else if(i.durum === 'devam' && K.tip === 'aliskanlik'){
+      kok.innerHTML = '<button class="btn btn-fit" type="button" data-ch-isaretle="1"' +
+        (i.bugunIsaretli ? ' disabled' : '') + '><i class="fa-solid fa-check"></i> ' +
+        (i.bugunIsaretli ? 'Bugün işaretlendi' : 'Bugünü işaretle') + '</button>';
+    } else if(i.durum === 'devam' && K.tip === 'seri' && i.siradaki){
+      kok.innerHTML = '<a class="btn btn-fit" href="egzersiz-detay-v1.html?slug=' + esc(i.siradaki.slug) + '">' +
+        '<i class="fa-solid fa-play"></i> Sıradaki: ' + esc(i.siradaki.ad) + '</a>';
+    } else if(i.durum === 'devam' && K.tip === 'sureli'){
+      kok.innerHTML = '<a class="btn btn-fit" href="egzersiz-kutuphane-v1.html">' +
+        '<i class="fa-solid fa-dumbbell"></i> Antrenman yap</a>';
+    } else {
+      kok.innerHTML = '<a class="btn btn-fit" href="fit-rozetlerim.html">' +
+        '<i class="fa-solid fa-medal"></i> Rozetini gör</a>';
+    }
+  }
+
+  /* Takvim şeridindeki düğmeler hero'daki düğmelerle AYNI motor uçlarına
+     bağlanır; ikinci bir katılma/işaretleme yolu açılmadı. */
+  document.addEventListener('click', function(e){
+    if(!e.target.closest) return;
+    if(e.target.closest('[data-ch-katil]'))    { C.katil(slug); return; }
+    if(e.target.closest('[data-ch-isaretle]')) { C.isaretle(slug); return; }
+  });
+
+  join.addEventListener('click', function(){ C.katil(slug); });
+  day.addEventListener('click', function(){ C.isaretle(slug); });
+  leave.addEventListener('click', function(){
+    if(window.confirm('"'+K.ad+'" bırakılsın mı? O güne kadar kazandığın rozetler sende kalır.')) C.birak(slug);
+  });
+  C.dinle(boya);
+})();
+</script>
+<script>
+/* ===== R15/5 · SAHTE DÜĞME KALDIRILDI =====
+   Burada otuz gün kutusuna `role="button"` ve `tabindex="0"` veren bir blok
+   vardı. Kutuların hiçbir tıklama davranışı YOKTU: klavye kullanıcısı otuz
+   kez sekme tuşuna basıp otuz "düğmeye" uğruyor, hiçbiri bir şey yapmıyordu.
+   Ayrıca 390 px'te kutular 26×26 px, yani dokunma hedefi tabanının (44×44,
+   WCAG 2.5.8) altında — düğme oldukları sürece bu bir erişilebilirlik
+   kusuruydu. Kutular artık ne oldukları gibi duruyor: ilerlemenin GÖRÜNTÜSÜ.
+   Günü işaretleme tek yerde, hero'daki düğmede. */
+
+/* ===== SAYFANIN KENDİ SEKME MOTORU SİLİNDİ (R15/5) =====
+   Panelleri artık kabuğun ortak bileşeni yönetiyor (.fit-pane[data-pane]).
+   Bu motor ayrıca her geçişte `window.scrollTo` çağırıyordu; kabuk bileşeni
+   bilerek çağırmıyor ("SAYFA ZIPLAMASI YOK" — sözleşmesinde yazılı). */
+
+/* ===== SU İÇME TAKİBİ — FIT_SU'ya bağlandı (R15/7) ====================
+   ESKİ HÂL: bu sekmenin kendi sayacı vardı ve TAMAMEN BELLEKTEYDİ —
+   `cups=7` ile açılıyor, yenilemede sıfırlanıyordu; "Günü Sıfırla" bile
+   sıfıra değil 7'ye dönüyordu. Hedef (2200 ml), bardak sayısı (11), haftalık
+   istatistikler ve yedi günlük geçmiş de sabitti. Enerji Defteri'ndeki su
+   ekranıyla aynı gün için iki farklı sayı gösteriyorlardı.
+   Artık tek kaynak `FIT_SU`; bu blok yalnız çiziyor. */
+(function(){
+  var SU = window.FIT_SU; if(!SU) return;
+  var n = function(x){ return Number(x||0).toLocaleString('tr-TR'); };
+  var GUN_AD = ['Paz','Pzt','Sal','Çar','Per','Cum','Cmt'];
+  var AY_KISA = ['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara'];
+  var ML_PER_KG = 33;      /* sayfanın kendi hesabı: 68 kg → 2,2 L */
+
+  function boya(){
+    var g = SU.bugun(), h = SU.haftalik(), sr = SU.seri();
+    var adet = Math.max(1, Math.round(g.tabanMl / g.bardakMl));
+    var dolu = Math.floor(g.ml / g.bardakMl);
+
+    var el;
+    if((el=document.getElementById('wtMl')))
+      el.innerHTML = g.ml >= 1000 ? (g.ml/1000).toFixed(1)+'<small>L</small>' : n(g.ml)+'<small>ml</small>';
+    if((el=document.getElementById('wtBar'))) el.style.width = g.oran+'%';
+    if((el=document.getElementById('wtCups'))) el.textContent = dolu;
+    if((el=document.getElementById('wtPct'))) el.textContent = g.oran;
+
+    var not = document.querySelector('.wt-cup-note');
+    if(not) not.innerHTML = dolu + ' / ' + adet + ' bardak · %' + g.oran + ' tamamlandı' +
+      (g.ekMl ? ' · <b>bugün antrenman payı +' + n(g.ekMl) + ' ml</b>' : '');
+
+    var grid = document.getElementById('wtCupsGrid');
+    if(grid){
+      var out='';
+      for(var i=1;i<=adet;i++){
+        out += '<button class="wt-cup'+(i<=dolu?' filled':'')+'" type="button" data-cup="'+i+'"'+
+               ' aria-label="Bardak '+i+' — '+(i<=dolu?'içildi':'içilmedi')+'">'+
+               '<i class="fa-solid fa-droplet"></i></button>';
+      }
+      grid.innerHTML = out;
+    }
+
+    var st = document.getElementById('wtStats');
+    if(st) st.innerHTML =
+      '<div class="wt-stat"><b>'+h.tutan+'</b><span>günlük hedef tamamlandı</span></div>'+
+      '<div class="wt-stat"><b>'+(h.toplamMl/1000).toFixed(1)+'<small style="font-size:13px">L</small></b><span>haftalık toplam</span></div>'+
+      '<div class="wt-stat"><b>'+(h.ortalamaMl/1000).toFixed(2)+'<small style="font-size:13px">L</small></b><span>kayıtlı gün ortalaması</span></div>'+
+      '<div class="wt-stat"><b>'+sr.guncel+'</b><span>gün üst üste hedef</span></div>';
+
+    var wk = document.getElementById('wtWeek');
+    if(wk){
+      var enY = Math.max.apply(null, h.gunler.map(function(x){return x.ml;}).concat([1]));
+      wk.innerHTML = h.gunler.map(function(x){
+        var t = new Date(x.tarih+'T00:00:00');
+        return '<div class="wt-wday'+(x.tamam?'':' miss')+'">'+
+          '<div class="wd-name">'+GUN_AD[t.getDay()]+'</div>'+
+          '<div class="wd-date">'+t.getDate()+' '+AY_KISA[t.getMonth()]+'</div>'+
+          '<div class="wd-fill"><i style="height:'+Math.max(4,Math.round(x.ml/enY*100))+'%"></i></div>'+
+          '<div class="wd-ml">'+(x.kayitVar ? n(x.ml)+' ml' : 'kayıt yok')+'</div></div>';
+      }).join('');
+    }
+  }
+
+  document.addEventListener('click', function(e){
+    var c = e.target.closest('#wtCupsGrid .wt-cup');
+    if(c){
+      var i = +c.getAttribute('data-cup'), g = SU.bugun();
+      var hedef = (i*g.bardakMl === Math.round(g.ml)) ? (i-1)*g.bardakMl : i*g.bardakMl;
+      SU.ekleMl(hedef - g.ml); return;
+    }
+    if(e.target.closest('#wtAdd')){ SU.bardakEkle(1); return; }
+    /* "Günü Sıfırla" GERÇEKTEN sıfırlıyor. Eskiden 7 bardağa dönüyordu. */
+    if(e.target.closest('#wtReset')){ SU.sifirla(); return; }
+    if(e.target.closest('#wtCalcUygula')){
+      var kg = parseFloat((document.getElementById('wtKilo')||{}).value);
+      if(kg) SU.hedefAyarla(Math.round(kg*ML_PER_KG), 'ml');
+      return;
+    }
+  });
+
+  SU.dinle(boya);
+
+  /* Kilo → önerilen günlük su. Katsayı sayfanın kendi hesabından geliyor
+     (68 kg → 2,2 L ≈ 11 bardak, yani ~33 ml/kg) ve TEK YERDE duruyor;
+     "Hedefim yap" düğmesi de aynı katsayıyı kullanıyor.
+     Global çünkü alanın satır içi `oninput="calcWater()"` bağı var. */
+  window.calcWater = function(){
+    var kg = parseFloat((document.getElementById('wtKilo')||{}).value);
+    var lt = document.getElementById('wtCalcLitre'), no = document.getElementById('wtCalcNote');
+    if(!lt || !no) return;
+    if(!kg || kg < 30 || kg > 200){ no.textContent = 'Kiloyu 30–200 kg arasında gir.'; return; }
+    var ml = Math.round(kg * ML_PER_KG);
+    var g = SU.bugun();
+    lt.textContent = (ml/1000).toFixed(1) + ' litre/gün';
+    no.textContent = kg + ' kg için önerilen · ≈ ' + Math.round(ml/g.bardakMl) + ' bardak';
+  };
+  calcWater();
+})();
+</script>
+
+
+<!-- DADAFIT-ACTIVE-NAV — aktif nav item boş-tık feedback'i (aria-current + self smooth-scroll) -->
+
+
+
+
+
+</body>
+</html>

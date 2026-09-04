@@ -1,0 +1,453 @@
+/* =====================================================================
+   DadaFit · ANTRENÖR SOHBETİ — görsel katman   (R15/5 · 2026-08-29)
+   ---------------------------------------------------------------------
+   KAYNAK: docs/fit-kit.md. Bu dosyada yeni renk, yeni yarıçap, yeni gölge
+   YOKTUR — hepsi kabuğun tokenlerinden (`--fit`, `--fit-tint`, `--fit-line`,
+   `--paper`, `--bg`, `--line`, `--slate`, `--slate-2`, `--radius-*`,
+   `--sh-lg`, `--ease`) okunur.
+
+   ÜÇ YÜZEN KALEM AYNI KÖŞEDE — ölçülmüş konumlar (fit-shell.css):
+     .feedback-tab  right:0 · top:var(--fb-top,50%) · translateY(-50%)
+                    52×144 · z-index 72 · ≤640px'te display:none
+     .fb-rail       right:0 · top:0 · 8px × 100dvh · z-index 71
+     .to-top        right:22px · bottom:92px · 54×54 · z-index 55
+                    ≤640px: right:16px · bottom:148px · 48×48
+     .bottom-nav    left/right:16px · bottom:14px · z-index 90 · YALNIZ ≤640px
+
+   Sohbet düğmesi bu üçünün BOŞ BIRAKTIĞI yere oturur:
+     ≥641px : right:22px · bottom:22px → üst kenarı 78px, .to-top 92px'te
+              başlıyor → 14px boşluk. .feedback-tab dikey ortada, sohbet
+              düğmesi dipte → kesişim yok.
+     ≤640px : right:16px · bottom:85px. Burada bant DAR: .bottom-nav'ın
+              üstü 78px, .to-top'un dibi 148px → 70px'lik boşluğa 56px'lik
+              düğme oturuyor. 85px ikisine de EŞİT 7px pay bırakır
+              (ölçüldü @390×844: nav boşluğu 7 · başa dön boşluğu 7).
+   Sayılar `docs/qa/mesaj-olcum.mjs` ile ölçülür; CSS'ten göz kararı
+   kopyalanmaz.
+
+   DOKUNMA HEDEFİ: yüzen düğme 56×56, kapat 44×44, gönder 44×44, ek 44×44,
+   kişi seçici 44 yükseklikte — hepsi WCAG 2.5.8 (44×44) üstünde.
+   ===================================================================== */
+
+/* =====================================================================
+   1 · YÜZEN DÜĞME
+   ===================================================================== */
+.msj-fab{
+  position:fixed;right:22px;bottom:22px;z-index:73;
+  width:56px;height:56px;
+  display:inline-flex;align-items:center;justify-content:center;gap:10px;
+  font-family:inherit;font-size:14.5px;font-weight:700;line-height:1.2;
+  text-decoration:none;text-align:left;
+  color:#fff;background:var(--fit-deep);border:none;
+  border-radius:var(--radius-lg);
+  box-shadow:0 8px 20px rgba(33,30,22,.16);
+  cursor:pointer;
+  transition:background .2s var(--ease),transform .2s var(--ease);
+}
+.msj-fab i{font-size:18px;flex:none}
+.msj-fab:hover{background:var(--fit-deeper);transform:translateY(-2px)}
+.msj-fab:focus-visible{outline:3px solid var(--fit-bright);outline-offset:3px}
+.msj-fab[hidden]{display:none}
+/* çerez şeridi düğmenin üstüne bindiğinde düğme çekilir — kabuğun
+   "ekranda en fazla 1 sabit alt şerit" kuralı (bkz. fit-mesaj.js) */
+.msj-fab.msj-cerez{display:none}
+
+/* randevusu olmayan üye: düğme yuvarlak rozet değil, DOĞRUYU SÖYLEYEN bir
+   satırdır. "Sohbet" yazıp boş panel açmak yalan olurdu. */
+.msj-fab.is-bos{
+  width:auto;height:52px;padding:0 20px;
+  border-radius:var(--radius-lg);
+}
+.msj-fab.is-bos i{font-size:15px}
+
+/* okunmamış sayacı — kit `.fp-badge.stop` renkleri (yeni renk üretilmedi) */
+.msj-fab-rozet{
+  position:absolute;top:-6px;right:-6px;
+  min-width:22px;height:22px;padding:0 6px;
+  display:inline-flex;align-items:center;justify-content:center;
+  font-size:11.5px;font-weight:800;letter-spacing:.02em;
+  background:#fff2ee;color:#a8391c;border:1px solid #f3cdc0;
+  border-radius:var(--radius-sm);
+}
+.msj-fab-rozet[hidden]{display:none}
+
+@media (max-width:640px){
+  .msj-fab{right:16px;bottom:calc(85px + env(safe-area-inset-bottom,0px))}
+  .msj-fab.is-bos{max-width:calc(100vw - 32px);height:auto;padding:11px 16px;
+                  white-space:normal;line-height:1.4}
+}
+@media (prefers-reduced-motion:reduce){
+  .msj-fab{transition:background .15s linear}
+  .msj-fab:hover{transform:none}
+}
+
+/* =====================================================================
+   2 · SAĞDAN AÇILAN PANEL
+   ---------------------------------------------------------------------
+   z-index 95 — `.feedback-tab` (72) ve `.fb-rail` (71) ÜSTÜNDE, kabuğun
+   görüş modalının (97/98) ALTINDA. İki panel aynı anda açılmaz; sıra
+   çakışırsa kabuğunki üstte kalır, kabuk sahibi biziz değiliz.
+   ===================================================================== */
+.msj-ortu{
+  position:fixed;inset:0;z-index:94;
+  background:rgba(20,18,12,.5);
+  opacity:0;visibility:hidden;
+  transition:opacity .25s var(--ease),visibility .25s;
+}
+.msj-ortu.acik{opacity:1;visibility:visible}
+
+.msj-panel{
+  position:fixed;top:0;right:0;z-index:95;
+  width:min(420px,100%);height:100dvh;
+  display:flex;flex-direction:column;
+  background:var(--paper);
+  box-shadow:var(--sh-lg);
+  transform:translateX(100%);
+  visibility:hidden;
+  transition:transform .3s var(--ease),visibility .3s;
+}
+.msj-panel.acik{transform:none;visibility:visible}
+@media (prefers-reduced-motion:reduce){
+  .msj-ortu,.msj-panel{transition:opacity .15s linear,visibility .15s}
+  .msj-panel{transform:none}
+  .msj-panel:not(.acik){display:none}
+}
+
+/* --- BAŞLIK = KİMLİK ŞERİDİ ------------------------------------------
+   Beyar: "sohbet panelinde konuştuğum kişi gözükmüyor — WhatsApp'taki
+   gibi olsun." Başlık artık panelin adını değil KİŞİYİ taşıyor:
+   monogram + antrenörün adı + randevu satırı. Panelin kendi adı
+   `aria-label`da yaşıyor, ekranda yer kaplamıyor.
+
+   ÖLÇÜ HESABI (420px panel): 32 dolgu + 44 monogram + 10 + 44 + 6 + 44
+   = 180 → kimlik kolonuna 240px kalıyor. "Tümünü gör" bu yüzden metin
+   değil 44×44 ikon düğme: metin hâli 115px yiyor ve randevu satırını
+   30 karakterin altına düşürüyordu (ölçüldü). Tam metin `title` ve
+   `aria-label`da duruyor.
+   ------------------------------------------------------------------- */
+.msj-bas{
+  flex:none;display:flex;align-items:center;gap:10px;
+  padding:14px 16px;border-bottom:1px solid var(--line);
+}
+.msj-bas-id{flex:1;min-width:0}
+.msj-bas h2{
+  font-size:17.5px;font-weight:700;letter-spacing:-.35px;color:var(--slate);
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+/* Randevunun GERÇEK durumu — önce durum, sonra hizmet, sonra tarih.
+   Sıra kasıtlı: kolon daralınca kırpılan ilk şey en az kritik olan
+   tarih olsun. Renk tek başına anlam taşımıyor, kelime de yazılı
+   (kabuk §14.3: "renge EK OLARAK metin"). */
+.msj-bas-alt{
+  margin-top:2px;font-size:12.5px;font-weight:500;color:var(--slate-2);
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.msj-tumu{
+  flex:none;width:44px;height:44px;border-radius:var(--radius-md);
+  display:grid;place-items:center;text-decoration:none;
+  border:1px solid var(--line);background:var(--paper);color:var(--fit-deep);
+  font-size:14px;transition:.2s var(--ease);
+}
+.msj-tumu:hover{border-color:var(--fit-deep);background:var(--fit-tint)}
+.msj-tumu:focus-visible{outline:3px solid var(--fit-tint);outline-offset:2px}
+.msj-kapat{
+  flex:none;width:44px;height:44px;border-radius:var(--radius-md);
+  border:1px solid var(--line);background:var(--paper);color:var(--slate);
+  font-size:16px;cursor:pointer;display:grid;place-items:center;
+  transition:.2s var(--ease);
+}
+.msj-kapat:hover{border-color:var(--fit);color:var(--fit)}
+.msj-kapat:focus-visible{outline:3px solid var(--fit-tint);outline-offset:2px}
+
+/* =====================================================================
+   3 · ANTRENÖR SEÇİCİ — "kulübe"
+   ---------------------------------------------------------------------
+   Tek imza kalem: her antrenör bir monogram diski, diskin köşesinde
+   RANDEVUNUN GERÇEK DURUMU (`FIT_SHELL.state.randevuRozet`) duruyor.
+   Renkler `.fp-badge.ok/.wait/.off/.stop` ailesinden alındı; süs değil,
+   gerçek veri taşıyor. Avatar görseli UYDURULMAZ — randevu kaydında
+   görsel alanı yok, o yüzden adın baş harfi basılıyor.
+   ===================================================================== */
+.msj-kisiler{
+  flex:none;display:flex;gap:8px;overflow-x:auto;
+  padding:12px 20px;border-bottom:1px solid var(--line);
+  scrollbar-width:thin;
+}
+.msj-kisiler[hidden]{display:none}
+.msj-kisi{
+  flex:none;display:inline-flex;align-items:center;gap:9px;
+  min-height:44px;padding:5px 14px 5px 5px;
+  font-family:inherit;font-size:13.5px;font-weight:700;color:var(--slate-2);
+  background:var(--paper);border:1px solid var(--line);
+  border-radius:var(--radius-md);cursor:pointer;white-space:nowrap;
+  transition:.18s var(--ease);
+}
+.msj-kisi:hover{border-color:var(--fit-line);color:var(--fit-deep)}
+.msj-kisi[aria-pressed="true"]{
+  background:var(--fit-tint);border-color:var(--fit-deep);color:var(--fit-deep);
+}
+.msj-kisi:focus-visible{outline:3px solid var(--fit-tint);outline-offset:2px}
+
+/* Kit avatar dili YUVARLAK (`.fp-ava` 44×44 · --radius-circle) — monogram
+   da yuvarlak. Fotoğraf UYDURULMUYOR: randevu kaydında görsel alanı yok,
+   adın baş harfleri basılıyor. Kabuğun `AVA` sabiti KULLANILMAZ, o
+   KULLANICININ avatarı; antrenörün yerine koymak yanlış kişiyi gösterirdi. */
+.msj-mono{
+  position:relative;flex:none;
+  width:34px;height:34px;border-radius:var(--radius-circle);
+  display:grid;place-items:center;
+  font-size:13px;font-weight:800;letter-spacing:.02em;
+  background:var(--fit-tint);color:var(--fit-deep);
+}
+/* başlıktaki hâl — kit `.fp-ava` ölçüsü birebir */
+.msj-mono.buyuk{width:44px;height:44px;font-size:15px}
+.msj-mono.buyuk::after{width:13px;height:13px;right:-1px;bottom:-1px}
+.msj-mono[hidden]{display:none}
+.msj-mono::after{
+  content:"";position:absolute;right:-2px;bottom:-2px;
+  width:11px;height:11px;border-radius:var(--radius-circle);
+  border:2px solid var(--paper);
+}
+.msj-mono.ok::after  {background:var(--fit-deep)}
+.msj-mono.wait::after{background:#8a6410}
+.msj-mono.off::after {background:var(--muted)}
+.msj-mono.stop::after{background:#a8391c}
+.msj-kisi[aria-pressed="true"] .msj-mono{background:var(--paper)}
+
+/* okunmamış işareti — sayı değil nokta; sayaç yüzen düğmede duruyor */
+.msj-kisi .msj-nokta{
+  flex:none;width:8px;height:8px;border-radius:var(--radius-sm);
+  background:#a8391c;
+}
+.msj-kisi .msj-nokta[hidden]{display:none}
+
+/* =====================================================================
+   4 · DÜRÜSTLÜK ŞERİDİ
+   ---------------------------------------------------------------------
+   Kit §11: maket ekran başında TEK dürüst şerit taşır. Kalem kabuğun
+   `.hr-note`u — yeni sınıf üretilmedi, yalnız panelin dar kolonunda
+   üst boşluğu sıfırlanıyor ve köşesi kaldırılıyor (kenardan kenara).
+   ===================================================================== */
+.msj-panel .hr-note{
+  flex:none;margin-top:0;border-radius:0;border-left:none;border-right:none;
+  padding:14px 20px;
+}
+.msj-panel .hr-note p{font-size:13px;line-height:1.55}
+
+/* =====================================================================
+   5 · MESAJ AKIŞI
+   ===================================================================== */
+.msj-akis{
+  flex:1;min-height:0;overflow-y:auto;
+  display:flex;flex-direction:column;gap:10px;
+  padding:20px;background:var(--bg);
+}
+/* Az mesaj varken yazışma yazma kutusunun DİBİNE yaslanır, tepede asılı
+   kalmaz. `justify-content:flex-end` taşan kabın tepesini kırpar; ilk
+   kalemin `margin-top:auto`su boşluk varken iter, taşarken hiçbir şey
+   yapmaz. Boş durum kartı ise ortalanır — o bir akış değil, davettir. */
+.msj-akis > .msj-gun:first-child,
+.msj-akis > .msj-balon:first-child{margin-top:auto}
+.msj-akis > .fpx-bos{margin-block:auto}
+
+.msj-gun{
+  align-self:center;
+  font-size:11.5px;font-weight:700;letter-spacing:.02em;color:var(--slate-2);
+  background:#f4f4f3;border:1px solid var(--line);
+  border-radius:var(--radius-sm);padding:4px 10px;
+  margin:4px 0 2px;
+}
+.msj-balon{
+  max-width:78%;padding:12px 14px;
+  font-size:14px;font-weight:500;line-height:1.6;color:var(--slate);
+  border:1px solid;border-radius:var(--radius-md);
+  overflow-wrap:anywhere;
+}
+.msj-balon p{margin:0;color:inherit;font-size:inherit;line-height:inherit}
+/* HİZA + RENK birlikte: tek başına hiza da tek başına renk de yeterli değil */
+.msj-balon.uye{
+  align-self:flex-end;
+  background:var(--fit-tint);border-color:var(--fit-line);
+  border-bottom-right-radius:var(--radius-sm);
+}
+.msj-balon.antrenor{
+  align-self:flex-start;
+  background:var(--paper);border-color:var(--line);
+  border-bottom-left-radius:var(--radius-sm);
+}
+.msj-kunye{
+  display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+  margin-top:7px;font-size:11.5px;font-weight:700;color:var(--slate-2);
+}
+.msj-kunye .fp-badge{font-size:10.5px;padding:3px 8px}
+
+/* dosya eki künyesi — gerçek ad ve gerçek boyut, uydurma yok */
+.msj-ek{
+  display:inline-flex;align-items:center;gap:9px;
+  margin-top:9px;padding:9px 12px;
+  background:var(--paper);border:1px solid var(--line);
+  border-radius:var(--radius-sm);
+  font-size:12.5px;font-weight:600;color:var(--slate-2);
+  max-width:100%;
+}
+.msj-balon.antrenor .msj-ek{background:var(--bg)}
+.msj-ek i{color:var(--fit-deep);font-size:13px;flex:none}
+.msj-ek b{font-weight:700;color:var(--slate);overflow-wrap:anywhere}
+.msj-ek small{font-weight:600;color:var(--muted)}
+
+/* boş durum — kit §9 dört parçalı yapı */
+.msj-akis .fpx-bos,
+.msj-sayfa .fpx-bos{
+  align-self:stretch;
+  display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;
+  background:var(--paper);border:1px solid var(--line);
+  border-radius:var(--radius-lg);box-shadow:var(--sh-sm);
+  padding:38px 24px;
+}
+.msj-akis .fpx-bos .pe-ico,
+.msj-sayfa .fpx-bos .pe-ico{
+  width:56px;height:56px;border-radius:var(--radius-circle,50%);
+  display:grid;place-items:center;
+  background:var(--fit-tint);color:var(--fit-deep);font-size:20px;
+}
+.msj-akis .fpx-bos h4,
+.msj-sayfa .fpx-bos h4{font-size:16.5px;font-weight:700;color:var(--slate);letter-spacing:-.01em}
+.msj-akis .fpx-bos p,
+.msj-sayfa .fpx-bos p{font-size:14px;font-weight:500;color:var(--muted);line-height:1.65;max-width:56ch}
+
+/* =====================================================================
+   6 · YAZMA KUTUSU
+   ===================================================================== */
+.msj-yaz{
+  flex:none;border-top:1px solid var(--line);background:var(--paper);
+  padding:14px 16px calc(14px + env(safe-area-inset-bottom,0px));
+}
+.msj-yaz form{display:flex;align-items:flex-end;gap:8px}
+.msj-yaz textarea{
+  flex:1;min-width:0;min-height:44px;max-height:132px;resize:none;
+  font-family:inherit;font-size:14px;font-weight:500;color:var(--slate);
+  background:var(--paper);border:1px solid var(--line);
+  border-radius:var(--radius-md);padding:11px 15px;outline:none;
+  line-height:1.55;
+  transition:border-color .2s var(--ease);
+}
+.msj-yaz textarea::placeholder{color:#a7a7a7}
+.msj-yaz textarea:focus{border-color:var(--fit)}
+.msj-btn{
+  flex:none;width:44px;height:44px;border-radius:var(--radius-md);
+  display:grid;place-items:center;font-size:15px;cursor:pointer;
+  transition:.2s var(--ease);
+}
+.msj-btn.gonder{background:var(--fit);color:#fff;border:none}
+.msj-btn.gonder:hover{background:var(--fit-deep)}
+.msj-btn.gonder:disabled{background:#f4f4f3;color:var(--muted);cursor:not-allowed}
+.msj-btn.ek{background:var(--paper);color:var(--slate-2);border:1px solid var(--line)}
+.msj-btn.ek:hover{border-color:var(--fit);color:var(--fit)}
+.msj-btn.ek.is-dolu{border-color:var(--fit-deep);color:var(--fit-deep);background:var(--fit-tint)}
+.msj-btn:focus-visible{outline:3px solid var(--fit-tint);outline-offset:2px}
+.msj-yaz input[type="file"]{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+
+/* seçilen ek — gönderilmeden önceki şerit */
+.msj-secilen{
+  display:flex;align-items:center;gap:9px;
+  margin-bottom:9px;padding:9px 12px;
+  background:var(--bg);border:1px solid var(--line);border-radius:var(--radius-sm);
+  font-size:12.5px;font-weight:600;color:var(--slate-2);
+}
+.msj-secilen[hidden]{display:none}
+.msj-secilen i{color:var(--fit-deep);flex:none}
+.msj-secilen b{font-weight:700;color:var(--slate);min-width:0;overflow:hidden;
+               text-overflow:ellipsis;white-space:nowrap}
+.msj-secilen small{font-weight:600;color:var(--muted);flex:none}
+.msj-secilen button{
+  margin-left:auto;flex:none;width:32px;height:32px;
+  border:none;background:none;color:var(--slate-2);cursor:pointer;
+  border-radius:var(--radius-sm);font-size:13px;
+}
+.msj-secilen button:hover{color:#a8391c}
+
+/* depolama kapalıysa (gizli kip / kota) — sessizce "gitti" DEMEZ */
+.msj-uyari{
+  margin-top:9px;font-size:12.5px;font-weight:600;color:#a8391c;line-height:1.5;
+}
+.msj-uyari[hidden]{display:none}
+.msj-ipucu{margin-top:8px;font-size:12px;font-weight:500;color:var(--muted)}
+
+/* =====================================================================
+   7 · TAM EKRAN SAYFA (mesajlarim-v1.html)
+   ---------------------------------------------------------------------
+   Modül okuma kolonu 860px, ortalı (kit §8). Sol kolon 260 + 20 boşluk +
+   sağ 580 = 860.
+   ===================================================================== */
+.msj-kol{max-width:860px;margin-inline:auto}
+.msj-sayfa{
+  display:grid;grid-template-columns:260px 1fr;gap:20px;align-items:start;
+  max-width:860px;margin-inline:auto;
+}
+@media (max-width:900px){
+  .msj-sayfa{grid-template-columns:1fr}
+}
+
+.msj-panel-kart{
+  background:var(--paper);border:1px solid var(--line);
+  border-radius:var(--radius-lg);box-shadow:var(--sh-sm);overflow:hidden;
+}
+.msj-kart-bas{
+  display:flex;align-items:center;gap:12px;
+  padding:16px 18px;border-bottom:1px solid var(--line);
+}
+.msj-kart-bas h3{font-size:17.5px;font-weight:700;letter-spacing:-.35px;color:var(--slate)}
+/* Tam ekran sayfada da başlık KİŞİYİ taşır — panelle aynı kimlik dili. */
+.msj-kart-bas .msj-mono{margin-right:2px}
+.msj-kart-bas > div{min-width:0}
+.msj-kart-bas small{display:block;margin-top:2px;font-size:12.5px;font-weight:500;color:var(--muted)}
+.msj-kart-bas .fp-badge{margin-left:auto;flex:none}
+
+/* sol kolon: yazışma listesi */
+.msj-liste{display:flex;flex-direction:column}
+.msj-liste-oge{
+  display:flex;align-items:center;gap:11px;width:100%;
+  min-height:76px;padding:14px 16px;text-align:left;
+  font-family:inherit;background:var(--paper);border:none;
+  border-bottom:1px solid var(--line);cursor:pointer;
+  transition:background .18s var(--ease);
+}
+.msj-liste-oge:last-child{border-bottom:none}
+.msj-liste-oge:hover{background:var(--bg)}
+.msj-liste-oge[aria-pressed="true"]{background:var(--fit-tint)}
+.msj-liste-oge:focus-visible{outline:3px solid var(--fit-tint);outline-offset:-3px}
+.msj-liste-txt{min-width:0;flex:1}
+.msj-liste-txt b{display:block;font-size:14px;font-weight:700;color:var(--slate);
+                 overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.msj-liste-txt small{display:block;margin-top:3px;font-size:12.5px;font-weight:500;
+                     color:var(--slate-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* sağ kolon: akış + yazma kutusu, panelle AYNI bileşenler */
+.msj-sayfa .msj-akis{max-height:480px;padding:20px}
+.msj-sayfa .msj-yaz{padding:14px 16px}
+
+/* arama */
+.msj-ara{
+  display:flex;align-items:center;gap:11px;
+  height:44px;padding:0 14px;margin-bottom:16px;
+  background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-sm);
+  transition:border-color .2s var(--ease);
+}
+.msj-ara:focus-within{border-color:var(--fit)}
+.msj-ara i{color:var(--muted);font-size:14px;flex:none}
+.msj-ara input{
+  flex:1;min-width:0;border:none;outline:none;background:none;
+  font-family:inherit;font-size:14px;font-weight:500;color:var(--slate);
+}
+.msj-ara input::placeholder{color:#a7a7a7}
+.msj-ara button{
+  flex:none;width:32px;height:32px;border:none;background:none;
+  color:var(--slate-2);cursor:pointer;border-radius:var(--radius-sm);font-size:13px;
+}
+.msj-ara button[hidden]{display:none}
+.msj-ara button:hover{color:var(--fit-deep)}
+
+.msj-sonuc{margin-bottom:16px}
+.msj-sonuc[hidden]{display:none}
+.msj-sonuc-not{font-size:13px;font-weight:600;color:var(--muted);margin-bottom:10px}
+.msj-vurgu{background:var(--fit-tint);color:var(--fit-deep);font-weight:700;border-radius:3px}

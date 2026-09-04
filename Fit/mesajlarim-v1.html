@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8" />
+<meta name="robots" content="noindex, nofollow" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Mesajlarım — DadaFit</title>
+<link rel="icon" type="image/svg+xml" href="../kanon/varlik/dadafit-isaret.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="../kanon/varlik/dadafit-isaret-32.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="../kanon/varlik/dadafit-isaret-180.png" />
+<!-- FontAwesome 6.5.2 (kilitli ikon seti) -->
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+      integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+      crossorigin="anonymous" referrerpolicy="no-referrer" />
+<!-- DadaFit ortak kabuk (tek kaynak) -->
+<!-- KANON · yukleme sirasi: tokenlar -> markalar/fit (bilesenler YUKLENMEZ) -->
+<link rel="stylesheet" href="../kanon/tokenlar.css" />
+<link rel="stylesheet" href="../kanon/markalar/fit.css" />
+<link rel="stylesheet" href="assets/css/fit-shell.css" />
+<!-- Fit Planım ailesi CSS (tek kaynak) — kabuktan SONRA, fit-type.css'ten ÖNCE -->
+<link rel="stylesheet" href="assets/css/fit-planim.css" />
+<!-- Antrenör sohbeti görsel katmanı. fit-mesaj.js bu dosyayı kendi de
+     enjekte eder (kendi kendine yeten modül); burada BAŞTA duruyor ki
+     sayfa stilsiz bir an geçirmesin. Modül çift yükleme yapmaz. -->
+<link rel="stylesheet" href="assets/css/fit-mesaj.css" />
+<!-- Metin yaslama katmani (tek kaynak) — sayfa stillerinden SONRA yuklenir -->
+<link rel="stylesheet" href="assets/css/fit-type.css" />
+</head>
+<body data-brand="fit" data-fit-page="mesajlarim-v1">
+
+<!-- KABUK: ust katman (topbar+header+drawer+alt bar+gorus+cerez) — ortak kabuk JS basar -->
+<div id="fitShellTop"></div>
+
+<main class="page-main" id="pageMain">
+
+<!-- MODÜL KABUĞU: kimlik kartı + (bu modülde) sekmesiz tek ekran.
+     `data-modul-tabs` BOŞ → şerit hiç basılmaz; boş bir şerit basmak yalan olurdu. -->
+<div id="fitModulTop"
+     data-modul="mesajlarim"
+     data-modul-title="Mesajlarım"
+     data-modul-sub="Randevu aldığın antrenörlerle yazışman. Geçmiş, arama ve dosya eki burada; hızlı yanıt için her sayfadaki sohbet düğmesi yeter."
+     data-modul-tabs=""
+     data-modul-aktif=""></div>
+
+<div class="modul-govde">
+<div class="fit-pane" data-pane="mesajlarim">
+<section class="fp-body">
+  <div class="wrap">
+
+    <!-- ===== DÜRÜSTLÜK ŞERİDİ — sayfanın TAMAMI için TEK kalem ==========
+         Kit §11: maket ekran başında tek dürüst şerit taşır, düğme başına
+         rozet serpilmez. Kalem kabuğun `.hr-note`u — yeni sınıf üretilmedi.
+         İkinci bir "prototipte iletilmez" cümlesi sayfaya dağıtılmadı;
+         ifade tek yerde yaşıyor (panelde de aynı cümle duruyor). -->
+    <div class="hr-note msj-kol" style="margin-top:0">
+      <i class="fa-solid fa-flask" aria-hidden="true"></i>
+      <p><b>Bu ekran maket: mesajın kaydedilir ama antrenöre iletilmez.</b>
+      Yazdıkların yalnız bu tarayıcıda durur, karşı taraftan yanıt gelmez ve
+      örnek yazışma açılış içeriğidir. Dosya ekinde dosyanın adı ve boyutu
+      gerçekten kaydedilir; dosyanın kendisi hiçbir yere yüklenmez.</p>
+    </div>
+
+    <!-- ===== ARAMA — tüm sohbetlerde metin ve dosya adı ===== -->
+    <div class="msj-kol" style="margin-top:24px">
+      <label class="sr-only" for="msjAra">Mesajlarda ara</label>
+      <div class="msj-ara">
+        <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+        <input type="search" id="msjAra" placeholder="Mesajlarda ara — en az 2 harf" autocomplete="off" />
+        <button type="button" id="msjAraSil" aria-label="Aramayı temizle" hidden>
+          <i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
+      </div>
+    </div>
+
+    <!-- arama sonucu — akış yerine değil, akışın ÜSTÜNDE. Sohbeti
+         kaybetmeden sonuca bakılır; sonuca tıklanınca sohbet açılır. -->
+    <div class="msj-sonuc msj-kol" id="msjSonuc" hidden></div>
+
+    <!-- ===== YAZIŞMALAR ===== -->
+    <div id="msjKok"></div>
+
+  </div>
+</section>
+</div>
+</div>
+
+</main>
+
+<!-- KABUK: alt katman (giris kapisi + footer + basa don) -->
+<div id="fitShellBottom"></div>
+
+<!-- DadaFit ortak kabuk JS (tek kaynak): markup + davranis -->
+<script src="assets/js/fit-shell.js"></script>
+<!-- ANTRENÖR SOHBETİ SÖZLEŞMESİ — bu sayfa buradan OKUR ve buraya YAZAR -->
+<script src="assets/js/fit-mesaj.js"></script>
+<script>
+/* =====================================================================
+   MESAJLARIM — tam ekran yazışma  (R15/5)
+   ---------------------------------------------------------------------
+   Şartname: "tam ekran: geçmiş, dosya eki, arama."
+
+   BU SAYFA DEPOLAMA KODU YAZMAZ. Okuma, yazma, okundu işareti, arama ve
+   balon HTML'i `FIT_MESAJ`dan gelir — panel ile bu sayfa AYNI motoru
+   kullanır. İki yüzeyde iki ayrı gönderme kodu olsaydı biri sessizce
+   bozulurdu (fit-kayit.js / fit-plan-kayit.js dersi).
+
+   🔴 Antrenör cevabı üretilmez. Kullanıcı yazınca hiçbir simülasyon
+   çalışmaz; ekranda tek değişen, kendi mesajının akışa düşmesidir.
+   ===================================================================== */
+(function () {
+  'use strict';
+
+  var M = window.FIT_MESAJ;
+  var kokEl = document.getElementById('msjKok');
+  var araEl = document.getElementById('msjAra');
+  var araSil = document.getElementById('msjAraSil');
+  var sonucEl = document.getElementById('msjSonuc');
+  if (!M || !kokEl) return;
+
+  var esc = M.esc;
+  var secili = null;
+
+  /* ---- 0 · GİRİŞ KAPISI VE BOŞ DURUM ------------------------------
+     Kit §9: boş ekran bir davettir. Dört parça da yazılır. */
+  function bosKart(ikon, baslik, metin, eylem) {
+    return '<div class="fp-card fpx-bos msj-kol">' +
+      '<span class="pe-ico"><i class="' + ikon + '" aria-hidden="true"></i></span>' +
+      '<h4>' + baslik + '</h4>' +
+      '<p>' + metin + '</p>' +
+      (eylem || '') +
+      '</div>';
+  }
+
+  /* ---- 1 · SOHBET LİSTESİ + AKIŞ ---------------------------------- */
+  function iskeletBas() {
+    var liste = M.antrenorler();
+
+    if (!document.body.classList.contains('is-auth')) {
+      kokEl.innerHTML = bosKart('fa-solid fa-lock', 'Mesajların girişin arkasında',
+        'Antrenör yazışmaları hesabına bağlı. Giriş yaptığında randevu aldığın antrenörler burada listelenir.',
+        '<a class="btn btn-primary" href="fit-giris.html">Giriş yap</a>');
+      return false;
+    }
+
+    if (!liste.length) {
+      kokEl.innerHTML = bosKart('fa-solid fa-user-tie', 'Henüz antrenörün yok',
+        'Yazışma randevuyla açılır: bir antrenörden hizmet aldığında sohbetiniz burada başlar.',
+        '<a class="btn btn-primary" href="antrenorler-v1.html">Antrenörlere göz at</a>');
+      return false;
+    }
+
+    if (!secili || !liste.some(function (a) { return a.slug === secili; })) secili = liste[0].slug;
+
+    kokEl.innerHTML =
+      '<div class="msj-sayfa">' +
+        '<div class="msj-panel-kart">' +
+          '<div class="msj-kart-bas"><div><h3>Yazışmalar</h3>' +
+            '<small id="msjSayi"></small></div></div>' +
+          '<div class="msj-liste" id="msjListe" role="group" aria-label="Antrenörlerin"></div>' +
+        '</div>' +
+        '<div class="msj-panel-kart">' +
+          '<div class="msj-kart-bas" id="msjTepe"></div>' +
+          '<div class="msj-akis" id="msjAkisS" tabindex="0" aria-live="polite" aria-label="Mesaj akışı"></div>' +
+          M.yazHtml('msjS') +
+        '</div>' +
+      '</div>';
+
+    M.yazBagla(kokEl, 'msjS', function () { return secili; }, function () { akisBas(); listeBas(); });
+
+    document.getElementById('msjListe').addEventListener('click', function (e) {
+      var b = e.target.closest('[data-slug]'); if (!b) return;
+      secili = b.getAttribute('data-slug');
+      M.okunduIsaretle(secili);
+      listeBas(); akisBas();
+    });
+    return true;
+  }
+
+  function listeBas() {
+    var el = document.getElementById('msjListe');
+    var sayiEl = document.getElementById('msjSayi');
+    if (!el) return;
+    var liste = M.antrenorler();
+    if (sayiEl) sayiEl.textContent = liste.length + ' antrenör · ' + M.toplamSayi() + ' mesaj';
+
+    el.innerHTML = liste.map(function (a) {
+      var on = a.slug === secili;
+      var son = M.sonMesaj(a.slug);
+      var n = M.okunmamisSayi(a.slug);
+      var onizleme = son
+        ? (son.yon === 'uye' ? 'Sen: ' : '') + (son.metin || (son.ek ? son.ek.ad : ''))
+        : 'Henüz mesaj yok';
+      return '<button class="msj-liste-oge" type="button" data-slug="' + esc(a.slug) + '" ' +
+             'aria-pressed="' + (on ? 'true' : 'false') + '">' +
+               '<span class="msj-mono ' + esc(M.durumRozet(a.durum)) + '" aria-hidden="true">' +
+                 esc(M.monogram(a.antrenor)) + '</span>' +
+               '<span class="msj-liste-txt"><b>' + esc(a.antrenor) + '</b>' +
+                 '<small>' + esc(onizleme) + '</small></span>' +
+               (n ? '<span class="fp-badge stop">' + n + '</span>' : '') +
+             '</button>';
+    }).join('');
+  }
+
+  function akisBas() {
+    var el = document.getElementById('msjAkisS');
+    var tepe = document.getElementById('msjTepe');
+    if (!el || !secili) return;
+    var a = M.antrenorler().filter(function (x) { return x.slug === secili; })[0];
+    if (!a) return;
+
+    /* Başlık KİŞİYİ taşır (panelle aynı kimlik dili): monogram + ad +
+       randevu satırı + durum rozeti. Durum kabuğun etiket/rozet
+       tablosundan okunuyor, burada ikinci bir eşleme tutulmuyor.
+       Avatar fotoğrafı uydurulmaz — randevu kaydında görsel alanı yok. */
+    tepe.innerHTML =
+      '<span class="msj-mono buyuk ' + esc(M.durumRozet(a.durum)) + '" aria-hidden="true">' +
+        esc(M.monogram(a.antrenor)) + '</span>' +
+      '<div><h3>' + esc(a.antrenor) + '</h3>' +
+      '<small>' + esc(a.hizmet || 'Randevu') +
+        (a.tarih ? ' · ' + esc(a.tarih) : '') + (a.saat ? ' ' + esc(a.saat) : '') + '</small></div>' +
+      '<span class="fp-badge ' + esc(M.durumRozet(a.durum)) + '">' + esc(M.durumEtiket(a.durum)) + '</span>';
+
+    var m = M.mesajlar(secili);
+    el.innerHTML = m.length
+      ? M.akisHtml(m)
+      : '<div class="fp-card fpx-bos">' +
+          '<span class="pe-ico"><i class="fa-solid fa-comment-dots" aria-hidden="true"></i></span>' +
+          '<h4>' + esc(a.antrenor) + ' ile ilk mesaj sende</h4>' +
+          '<p>Randevundan önce sormak istediğini buraya yaz. Maket ekranda mesajın kaydedilir, karşı tarafa iletilmez.</p>' +
+        '</div>';
+    el.scrollTop = el.scrollHeight;
+  }
+
+  /* ---- 2 · ARAMA --------------------------------------------------
+     Sonuç akışın YERİNE geçmez, üstünde durur. Sonuca tıklanınca o
+     sohbet açılır ve akış dibe kaydırılır. */
+  function vurgula(metin, q) {
+    var h = esc(metin);
+    if (!q) return h;
+    var i = h.toLocaleLowerCase('tr-TR').indexOf(esc(q).toLocaleLowerCase('tr-TR'));
+    if (i < 0) return h;
+    var n = esc(q).length;
+    return h.slice(0, i) + '<mark class="msj-vurgu">' + h.slice(i, i + n) + '</mark>' + h.slice(i + n);
+  }
+
+  function aramaBas() {
+    if (!sonucEl) return;
+    var q = (araEl && araEl.value || '').trim();
+    if (araSil) araSil.hidden = !q;
+
+    if (q.length < 2) { sonucEl.hidden = true; sonucEl.innerHTML = ''; return; }
+    var bulunan = M.ara(q);
+    sonucEl.hidden = false;
+
+    if (!bulunan.length) {
+      sonucEl.innerHTML =
+        '<div class="fp-card fpx-bos">' +
+          '<span class="pe-ico"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i></span>' +
+          '<h4>"' + esc(q) + '" için sonuç yok</h4>' +
+          '<p>Arama yazışma metinlerinde ve eklenen dosya adlarında çalışır. Başka bir kelime dene.</p>' +
+        '</div>';
+      return;
+    }
+
+    sonucEl.innerHTML =
+      '<p class="msj-sonuc-not">' + bulunan.length + ' mesaj bulundu — birine tıkla, sohbeti açsın.</p>' +
+      '<div class="msj-panel-kart"><div class="msj-liste">' +
+      bulunan.slice(0, 20).map(function (s) {
+        var m = s.mesaj;
+        var govde = m.metin || (m.ek ? m.ek.ad : '');
+        return '<button class="msj-liste-oge" type="button" data-git="' + esc(s.slug) + '">' +
+                 '<span class="msj-mono" aria-hidden="true">' + esc(M.monogram(s.antrenor)) + '</span>' +
+                 '<span class="msj-liste-txt"><b>' + esc(s.antrenor) +
+                   ' · ' + esc(M.gunMetni(m.tarih)) + ' ' + esc(M.saatMetni(m.tarih)) + '</b>' +
+                   '<small>' + vurgula(govde, q) + '</small></span>' +
+               '</button>';
+      }).join('') +
+      '</div></div>' +
+      (bulunan.length > 20 ? '<p class="msj-sonuc-not" style="margin:10px 0 0">İlk 20 sonuç gösteriliyor.</p>' : '');
+  }
+
+  if (araEl) araEl.addEventListener('input', aramaBas);
+  if (araSil) araSil.addEventListener('click', function () {
+    araEl.value = ''; aramaBas(); araEl.focus();
+  });
+  if (sonucEl) sonucEl.addEventListener('click', function (e) {
+    var b = e.target.closest('[data-git]'); if (!b) return;
+    secili = b.getAttribute('data-git');
+    M.okunduIsaretle(secili);
+    listeBas(); akisBas();
+    var akis = document.getElementById('msjAkisS');
+    if (akis) akis.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  });
+
+  /* ---- 3 · İLK BASIM VE TAZELEME ---------------------------------- */
+  function hepsi() {
+    if (!iskeletBas()) return;
+    listeBas(); akisBas();
+    M.okunduIsaretle(secili);
+    listeBas();
+  }
+
+  /* ⚠ AKIŞ DA YENİLENİR — panelde kapatılan kusurun aynısı: form yerine
+     `FIT_MESAJ.gonder(...)` doğrudan çağrılınca (konsol, başka modül)
+     mesaj depoya giriyor ama açık akış yenilemeye kadar eski kalıyordu. */
+  window.addEventListener('fit-mesaj-degisti', function () {
+    if (!document.getElementById('msjListe')) return;
+    listeBas(); akisBas();
+  });
+  document.addEventListener('fit:state', hepsi);
+  window.addEventListener('storage', function (e) {
+    if (e && (e.key === M.ANAHTAR || e.key === 'dm_fit')) hepsi();
+  });
+
+  hepsi();
+})();
+</script>
+
+</body>
+</html>

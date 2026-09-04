@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8" />
+  <meta name="robots" content="noindex, nofollow" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<!-- BENZERSİZ title (belge §19) -->
+<title>Fit Testi Sonucun — başlangıç seviyen ve önerilen program | DadaFit</title>
+<!-- BENZERSİZ meta description (belge §19) -->
+<meta name="description" content="Tamamladığın Fit Testinin sonuç özeti, sana uygun başlangıç seviyesi, önerilen program ve antrenöre danışma yönlendirmesi. Karşılaştırma başkasıyla değil, kendi başlangıç noktanla." />
+<link rel="icon" type="image/svg+xml" href="../kanon/varlik/dadafit-isaret.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="../kanon/varlik/dadafit-isaret-32.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="../kanon/varlik/dadafit-isaret-180.png" />
+<!-- FontAwesome 6.5.2 (kilitli ikon seti) -->
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+      integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+      crossorigin="anonymous" referrerpolicy="no-referrer" />
+<!-- DadaFit ortak kabuk (TEK KAYNAK — token, header, footer, kart/çip/banner kitleri) -->
+<!-- KANON · yukleme sirasi: tokenlar -> markalar/fit (bilesenler YUKLENMEZ) -->
+<link rel="stylesheet" href="../kanon/tokenlar.css" />
+<link rel="stylesheet" href="../kanon/markalar/fit.css" />
+<link rel="stylesheet" href="assets/css/fit-shell.css" />
+<link rel="stylesheet" href="assets/css/fit-mesaj.css" />
+<style>
+/* =====================================================================
+ SAYFA CSS — FİT TESTİ SONUCU
+ ---------------------------------------------------------------------
+ Kabuktan gelen ve BURADA TEKRAR TANIMLANMAYAN kitler:
+ .lib-top + .lib-crumb + .lib-stats (banner), .fp-body / .fp-grid /
+ .fp-card / .fp-head / .fp-stats / .fp-list / .fp-row / .fp-badge /
+ .fp-chart (sonuç görselleştirme dili — fit-planim-ilerleme-v1 ile aynı),
+
+ Burada YALNIZ tek bir sayfaya özgü ölçü var: üç kademeli seviye
+ şeridi (.ts-scale). Kabukta üç kademeli "sen buradasın" göstergesi
+ yok — .fp-days 7'li ızgara, .fp-bar tek çubuk. Raporda kabuğa
+ taşınması önerildi.
+ ===================================================================== */
+
+/* üç kademeli başlangıç seviyesi şeridi — "senin sonucun" YALNIZ renkle
+   değil, metin + ikon ile de işaretlenir (belge §20) */
+.ts-scale{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:2px 0 4px}
+.ts-step{border:1px solid var(--line);background:#f7f7f6;border-radius:var(--radius-md);padding:13px 10px;text-align:center}
+.ts-step b{display:block;font-size:13.5px;font-weight:800;color:var(--slate);letter-spacing:-.01em}
+.ts-step small{display:block;font-size:11.5px;font-weight:600;color:var(--muted);margin-top:3px;line-height:1.4}
+.ts-step .ts-you{display:none}
+.ts-step.on{background:var(--fit-tint);border-color:var(--fit)}
+.ts-step.on b,.ts-step.on small{color:var(--fit-deep)}
+.ts-step.on .ts-you{display:inline-flex;align-items:center;gap:5px;margin-top:7px;
+  font-size:10.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;
+  color:#fff;background:var(--fit);padding:4px 9px;border-radius:var(--radius-sm)}
+.ts-step.on .ts-you i{font-size:9.5px}
+
+   okunaklı (14.8:1) ama kardeş sayfalarla AYNI DİLDE DEĞİL. 1440'ta ölçtüm:
+     pro-v1 · pro-odeme-v1 · reklam-ver-v1 · fit-testleri-v1  → CAM  rgba(255,255,255,.12)
+     sss-v1 · (bu sayfa, düzeltmeden önce)                     → KREM rgb(247,241,230)
+   Dört sayfa aynı satırı kendi <style>'ında tekrar ediyor; kabukta 0.
+/* GEÇİCİ ÇÖZÜM (sayfa içi) — kabuğun .fp-chart kusuru
+   ÖLÇÜM: .fp-col 150px, ama val + lbl + iki 8px boşluk 52px yiyor; .bar'ın
+   height:%N değeri 150px'e göre çözülüyor ve kalan 98px'te flex-shrink ile
+   kırpılıyor. Sonuç: %66 üzerindeki her değer AYNI 98px'e düşüyor.
+   programlarim-v1.html#ilerleme'de de böyle: %76 ve %96 → ikisi de 98px.
+   Burada .bar'ı, kalan boşluğu alan bir raya (.ts-track) koyuyorum; yüzde
+   artık gerçek çubuk alanına göre çözülüyor. Kabuğa taşınması raporda önerildi. */
+.ts-track{flex:1 1 auto;min-height:0;width:100%;display:flex;align-items:flex-end}
+.ts-track>.bar{width:100%}
+
+/* test seçici çip rayı — dar ekranda yatay kayar, taşma sayılmaz */
+.ts-pick{overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:none;margin-bottom:18px}
+.ts-pick::-webkit-scrollbar{display:none}
+.ts-pick .fgroup{flex-wrap:nowrap;padding-top:0}
+
+/* "planıma eklendi" durum satırı — ikon + metin, renkten bağımsız okunur */
+.ts-status{display:none;align-items:center;gap:9px;margin-top:14px;font-size:13px;font-weight:700;color:var(--fit-deep)}
+.ts-status.show{display:flex}
+.ts-status i{font-size:13px}
+
+.ts-acts{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+
+@media (max-width:640px){
+  .ts-scale{grid-template-columns:minmax(0,1fr)}
+  .ts-acts .btn{width:100%;justify-content:center}
+}
+</style>
+<!-- Metin yaslama katmanı (tek kaynak) — sayfa stillerinden SONRA yüklenir -->
+<link rel="stylesheet" href="assets/css/fit-type.css" />
+</head>
+<body data-brand="fit" data-fit-page="fit-testi-sonuc-v1">
+
+<!-- KABUK: üst katman (üst bant + header + drawer + alt bar + görüş + çerez) -->
+<div id="fitShellTop"></div>
+
+<main class="page-main" id="pageMain">
+
+<!-- ===== BANNER + BREADCRUMB ===================================== -->
+<section class="lib-top" style="--lib-img:url('https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=1680&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-18');--lib-pos:center 38%">
+  <div class="wrap">
+    <nav class="lib-crumb" aria-label="Sayfa yolu">
+      <a href="dadafit-hub-v1.html" class="crumb-home"><i class="fa-solid fa-house" aria-hidden="true"></i><span class="sr-only">DadaFit ana sayfa</span></a>
+      <i class="fa-solid fa-chevron-right"></i>
+      <a href="fit-testleri-v1.html">Fit Testleri</a>
+      <i class="fa-solid fa-chevron-right"></i>
+      <span class="cur">Test Sonucun</span>
+    </nav>
+    <span class="eyebrow"><i class="fa-solid fa-clipboard-check"></i> Fit Testi Sonucu</span>
+    <!-- TEK H1 (belge §19) — testin adı JS ile yazılır, JS yoksa bu metin kalır -->
+    <h1 id="tsTitle">Başlangıç Seviyesi Testi — sonucun</h1>
+    <p class="lib-sub" id="tsSub">Bu sayfa testin sonucunu <b>tanı olarak değil</b>, nereden başlamanın sana uygun olduğunu gösteren bir yön tarifi olarak sunar. Karşılaştırma başkasıyla değil, senin kendi başlangıç noktanla yapılır.</p>
+    <p style="margin-top:14px"> </p>
+    <div class="chips" style="margin-top:18px">
+      <a class="btn btn-primary" id="tsRetry" href="fit-testi-detay-v1.html?test=baslangic-seviyesi"><i class="fa-solid fa-rotate-right"></i> Testi tekrar yap</a>
+      <a class="btn btn-ghost" href="fit-testleri-v1.html"><i class="fa-solid fa-list-check"></i> Tüm Fit Testleri</a>
+    </div>
+    <div class="lib-stats">
+      <div class="lib-stat"><b id="tsStatLevel">Başlangıç</b><span>uygun başlangıç seviyesi</span></div>
+      <div class="lib-stat"><b id="tsStatDate">17 Ağustos 2026</b><span>testi tamamladığın tarih</span></div>
+      <div class="lib-stat"><b id="tsStatProg">4 hafta</b><span>önerilen program süresi</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== GÖVDE =================================================== -->
+<section class="fp-body">
+  <div class="wrap">
+
+    <!-- ---- test seçici: ?test=<slug> ile bağlı (belge §23) ---- -->
+    <h2 style="font-size:20px;margin-bottom:12px">Sonucunu görüntülediğin test</h2>
+    <div class="ts-pick">
+      <div class="fgroup" id="tsPick" role="group" aria-label="Sonucu görüntülenecek test">
+        <button type="button" class="df-fchip" data-test="baslangic-seviyesi" aria-pressed="true">Başlangıç Seviyesi Testi</button>
+        <button type="button" class="df-fchip" data-test="mobilite" aria-pressed="false">Mobilite Değerlendirmesi</button>
+        <button type="button" class="df-fchip" data-test="denge" aria-pressed="false">Denge Değerlendirmesi</button>
+        <button type="button" class="df-fchip" data-test="temel-kuvvet" aria-pressed="false">Temel Kuvvet Değerlendirmesi</button>
+        <button type="button" class="df-fchip" data-test="dayaniklilik" aria-pressed="false">Dayanıklılık Değerlendirmesi</button>
+        <button type="button" class="df-fchip" data-test="masa-basi-yasam" aria-pressed="false">Masa Başı Yaşam Değerlendirmesi</button>
+        <button type="button" class="df-fchip" data-test="hareket-aliskanligi" aria-pressed="false">Hareket Alışkanlığı Testi</button>
+      </div>
+    </div>
+
+    <h2 style="font-size:20px;margin:26px 0 14px">Sonucun</h2>
+
+    <div class="fp-grid">
+
+      <!-- ---- §8 · SONUÇ ÖZETİ ---- -->
+      <div class="fp-card span-2">
+        <div class="fp-head">
+          <h3><i class="fa-solid fa-clipboard-check"></i> Sonuç özeti</h3>
+          <span class="fp-badge ok" id="tsBadge"><i class="fa-solid fa-flag"></i> Başlangıç bandı</span>
+        </div>
+        <p id="tsSummary" style="font-size:14.5px;color:var(--slate-2);font-weight:500;line-height:1.65">Verdiğin yanıtlar, düzenli harekete yeni başlayan bir noktada olduğunu gösteriyor.</p>
+        <p style="font-size:13px;color:var(--muted);font-weight:500;line-height:1.6;margin-top:10px">
+          Bu özet <b>bir tanı değildir</b>. Bir hastalığı işaret etmez, bir tedavi önermez;
+          yalnız verdiğin yanıtlara göre hangi zorluk bandından başlamanın sana daha
+          uygun olduğunu söyler.</p>
+        <div class="ts-acts">
+          <a class="btn btn-ghost" id="tsDetail" href="fit-testi-detay-v1.html?test=baslangic-seviyesi"><i class="fa-solid fa-circle-info"></i> Bu testin adımlarına dön</a>
+          <a class="btn btn-ghost" href="fit-ilerlemem.html"><i class="fa-solid fa-chart-line"></i> İlerlememde gör</a>
+        </div>
+      </div>
+
+      <!-- ---- §8 · UYGUN BAŞLANGIÇ SEVİYESİ ---- -->
+      <div class="fp-card">
+        <div class="fp-head">
+          <h3><i class="fa-solid fa-stairs"></i> Uygun başlangıç seviyesi</h3> </div>
+        <div class="ts-scale" id="tsScale" role="group" aria-label="Üç kademeli başlangıç seviyesi; senin sonucun işaretli">
+          <div class="ts-step" data-lv="1"><b>Başlangıç</b><small>Temel hareket kalıpları, düşük tempo</small><span class="ts-you"><i class="fa-solid fa-check"></i> Senin sonucun</span></div>
+          <div class="ts-step" data-lv="2"><b>Orta</b><small>Yük ve hacim artışı, çeşitlenen hareketler</small><span class="ts-you"><i class="fa-solid fa-check"></i> Senin sonucun</span></div>
+          <div class="ts-step" data-lv="3"><b>İleri</b><small>Yoğun tempo, ileri teknik gerektiren hareketler</small><span class="ts-you"><i class="fa-solid fa-check"></i> Senin sonucun</span></div>
+        </div>
+        <p id="tsLevelNote" style="font-size:13.5px;color:var(--muted);font-weight:500;line-height:1.6;margin-top:12px">Seviye adı üstteki kutuda yazılı — durumu yalnız renkten okumak zorunda değilsin.</p>
+        <!-- §22: bu bant sabit örnek kayıttan geliyor, testte hesaplanmıyor.
+             İbare olmazsa kullanıcı testte "Başlangıç" alıp burada "Orta" görebilir. -->
+        <p style="font-size:12.5px;color:var(--muted);font-weight:500;line-height:1.55;margin-top:8px">
+          <b>Prototip notu:</b> buradaki bant örnek bir kayıttan geliyor, az önce yaptığın
+          testten hesaplanmıyor. Gerçek üründe seviye, testte verdiğin yanıtlardan üretilir —
+          bu yüzden test ekranında gördüğün bant ile burada gördüğün bant farklı olabilir.</p>
+      </div>
+
+      <!-- ---- ÖLÇTÜKLERİN (testin kendi çıktıları) ---- -->
+      <div class="fp-card">
+        <div class="fp-head">
+          <h3><i class="fa-solid fa-ruler"></i> Bu testte ölçtüklerin</h3> </div>
+        <div class="fp-list" id="tsMeasures"></div>
+      </div>
+
+      <!-- ---- §4 · KENDİ BAŞLANGICINLA KARŞILAŞTIRMA ---- -->
+      <div class="fp-card span-2">
+        <div class="fp-head">
+          <h3><i class="fa-solid fa-code-compare"></i> Kendi başlangıcınla karşılaştırma</h3> </div>
+        <p style="font-size:13.5px;color:var(--slate-2);font-weight:500;line-height:1.6;margin-bottom:14px">
+          DadaFit seni başka kullanıcılarla kıyaslamaz. Yüzdelik dilim, sıralama ya da
+          liderlik tablosu göstermez. Tek kıyas noktan <b>senin ilk testin</b>.</p>
+        <div class="fp-chart" id="tsChart" role="img" aria-label="Kendi test geçmişin">
+        </div>
+        <div class="fp-list" style="margin-top:16px" id="tsCompare"></div>
+      </div>
+
+      <!-- ---- §8 · ÖNERİLEN PROGRAM ---- -->
+      <div class="fp-card">
+        <div class="fp-head">
+          <h3><i class="fa-solid fa-dumbbell"></i> Önerilen program</h3>
+          <a class="fp-act" href="program-liste-v1.html">Tüm programlar <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+        <div class="fp-list" id="tsProgram"></div>
+        <p id="tsProgramNote" style="font-size:13px;color:var(--muted);font-weight:500;line-height:1.6;margin-top:12px"></p>
+        <div class="ts-acts">
+          <a class="btn btn-primary" id="tsProgLink" href="program-detay-v1.html?slug=4-hafta-ev-antrenmani"><i class="fa-solid fa-arrow-right"></i> Programı incele</a>
+          <button class="btn btn-ghost" type="button" id="tsProgAdd"><i class="fa-solid fa-plus"></i> Planıma ekle</button>
+        </div>
+        <p class="ts-status" id="tsProgStatus" role="status" aria-live="polite"></p>
+      </div>
+
+      <!-- ---- §8 · ANTRENÖRE DANIŞMA YÖNLENDİRMESİ ---- -->
+      <div class="fp-card">
+        <div class="fp-head">
+          <h3><i class="fa-solid fa-user-doctor"></i> Antrenöre danışma</h3>
+          <span class="fp-badge wait" id="tsCoachBadge"><i class="fa-solid fa-comments"></i> Önerilir</span>
+        </div>
+        <p id="tsCoachNote" style="font-size:14px;color:var(--slate-2);font-weight:500;line-height:1.65"></p>
+        <div class="ts-acts">
+          <a class="btn btn-primary" href="antrenorler-v1.html"><i class="fa-solid fa-user-check"></i> Antrenörlere bak</a>
+          <a class="btn btn-ghost" href="fit-antrenorum.html"><i class="fa-solid fa-calendar-check"></i> Randevularım</a>
+        </div>
+      </div>
+
+    </div><!-- /.fp-grid -->
+
+    <!-- ---- §8 · SAĞLIK SINIRI (zorunlu, bu sayfada da yazılı) ---- -->
+    <div class="hr-note">
+      <i class="fa-solid fa-circle-info"></i>
+      <div>
+        <p><b>Bu sonuç bir tanı değildir.</b> Fit Testleri tıbbi teşhis, hastalık tanısı
+        veya tedavi önerisi üretmez; verdiğin yanıtlara göre hangi zorluk seviyesinden
+        başlamanın uygun olduğunu gösterir.</p>
+        <p>Ağrı, baş dönmesi, göğüs sıkışması, nefes darlığı ya da bilinen bir sağlık
+        durumun varsa hareket etmeden önce bir sağlık profesyoneline danış. Ayrıntı:
+        <a href="saglik-bilgilendirme-v1.html">Sağlık Bilgilendirmesi</a> ·
+        <a href="antrenorler-v1.html">Antrenörler</a>.</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+</main><!-- /.page-main -->
+
+<!-- KABUK: alt katman (giriş kapısı + footer + başa dön) -->
+<div id="fitShellBottom"></div>
+
+<!-- DadaFit ortak kabuk JS (tek kaynak): markup + davranış -->
+<script src="assets/js/fit-shell.js"></script>
+<script src="assets/js/fit-mesaj.js"></script>
+<script>
+/* ===== SAYFA JS — FİT TESTİ SONUCU ==================================
+   · ?test=<slug> tek doğruluk kaynağı. Çip seçimi pushState ile URL'ye
+     yansır, geri/ileri çalışır, yenilemede seçim korunur (belge §23).
+   · Çiplerde aria-pressed (belge §20).
+   · REKABETÇİ GÖSTERİM YOK (belge §4 · §21): yüzdelik dilim, sıralama,
+     "kullanıcıların %X'i" gibi hiçbir alan üretilmez. Karşılaştırma
+     dizisi YALNIZ kullanıcının kendi test geçmişidir.
+   · Sonuç TANI GİBİ sunulmaz (belge §8): metinlerde hastalık adı,
+     teşhis ya da tedavi önerisi yok.
+   · Enerji dili (belge §13): enerji değerleri yalnız "yaklaşık" ibaresiyle.
+   · Program ekleme merkezî duruma yazar (FIT_SHELL.state), yeni depo açmaz.
+   ==================================================================== */
+(function(){
+  'use strict';
+
+  var SEVIYE = { 1:'Başlangıç', 2:'Orta', 3:'İleri' };
+
+  /* Programlar diskteki gerçek slug'lar (program-detay-v1.html VERI listesi) */
+  var TESTS = {
+    'baslangic-seviyesi': {
+      ad:'Başlangıç Seviyesi Testi', tarih:'17 Ağustos 2026', lv:1,
+      rozet:{k:'ok', i:'fa-flag', t:'Başlangıç bandı'},
+      ozet:'Verdiğin yanıtlar, düzenli harekete yeni başlayan bir noktada olduğunu gösteriyor. Kesintisiz hareket süren ve haftalık aktif gün sayın, temel hareket kalıplarıyla kurulmuş bir başlangıç programına uygun. Bu bir eksiklik değil; ölçülen başlangıç noktan.',
+      lvNot:'Başlangıç bandı, hareketleri düşük tempoda ve temel kalıplarla öğrenmeni öngörür. Bant adı kutuda yazılı; yalnız renkten okumak zorunda değilsin.',
+      olcum:[
+        {i:'fa-stopwatch', b:'Kesintisiz hareket süresi', s:'Testte zorlanmadan sürdürdüğün süre', e:'12 dk'},
+        {i:'fa-heart-pulse', b:'Kendini toparlama süresi', s:'Hareketten sonra normale dönme', e:'3 dk'},
+        {i:'fa-calendar-week', b:'Haftalık aktif gün', s:'Son dört haftanın ortalaması', e:'2 gün'}
+      ],
+      seri:[{l:'İlk test',v:12,p:50},{l:'2. test',v:18,p:75},{l:'Bu test',v:24,p:100}],
+      seriBirim:'dakika kesintisiz hareket',
+      kiyas:[
+        {i:'fa-flag', b:'İlk testin — 21 Temmuz 2026', s:'12 dk kesintisiz hareket · haftada 2 aktif gün', e:'başlangıç'},
+        {i:'fa-location-dot', b:'Bugünkü testin', s:'24 dk kesintisiz hareket · haftada 3 aktif gün', e:'+12 dk'}
+      ],
+      prog:{slug:'4-hafta-ev-antrenmani', ad:'4 Hafta Ev Antrenmanı', sure:'4 hafta', gun:'Haftada 3 gün', ek:'Ekipmansız', toplam:12},
+      progNot:'Bu program başlangıç bandı için hazırlandı: temel hareket kalıpları, düşük tempo ve kısa seanslar.',
+      antrenor:{k:'wait', i:'fa-comments', t:'Önerilir',
+        n:'İlk dört haftada hareketleri doğru yaptığından emin olmak istersen bir antrenörle tek seans yeterli olabilir. Zorunlu değil; programa antrenörsüz de başlayabilirsin.'}
+    },
+
+    'mobilite': {
+      ad:'Mobilite Değerlendirmesi', tarih:'14 Ağustos 2026', lv:1,
+      rozet:{k:'ok', i:'fa-child-reaching', t:'Başlangıç bandı'},
+      ozet:'Omuz ve kalça hareket açıklığın, günlük hareketleri rahat yapmana yetiyor ama antrenman hareketlerinin tam menzilinde sınırlanıyor. Ayak bileği açıklığın iyi. Bu tablo, mobiliteye ağırlık veren bir başlangıç programına uygun.',
+      lvNot:'Mobilite bandında öncelik yük değil menzil: hareketi tam açıklıkta, kontrollü ve ağrısız yapabilmek.',
+      olcum:[
+        {i:'fa-arrows-up-down', b:'Omuz açıklığı', s:'Duvar testi — kollar baş üstünde', e:'Sınırlı'},
+        {i:'fa-person', b:'Kalça bükülmesi', s:'Derin çömelme menzili', e:'Orta'},
+        {i:'fa-shoe-prints', b:'Ayak bileği açıklığı', s:'Diz-duvar mesafesi', e:'İyi'}
+      ],
+      seri:[{l:'İlk test',v:4,p:44},{l:'2. test',v:5,p:56},{l:'Bu test',v:6,p:67}],
+      seriBirim:'mobilite puanı (9 üzerinden, kendi ölçümün)',
+      kiyas:[
+        {i:'fa-flag', b:'İlk testin — 3 Temmuz 2026', s:'Omuz sınırlı · kalça sınırlı · ayak bileği orta', e:'başlangıç'},
+        {i:'fa-location-dot', b:'Bugünkü testin', s:'Omuz sınırlı · kalça orta · ayak bileği iyi', e:'iki alanda ilerleme'}
+      ],
+      prog:{slug:'8-hafta-mobilite', ad:'8 Hafta Mobilite Planı', sure:'8 hafta', gun:'Haftada 4 gün', ek:'Ekipmansız', toplam:32},
+      progNot:'Program menzil çalışmasıyla başlar; yük eklemek ikinci ayın konusu.',
+      antrenor:{k:'wait', i:'fa-comments', t:'Önerilir',
+        n:'Omuz açıklığındaki sınırlanma kendi başına bir sorun değil, ama hareketi doğru kurmak farkı büyütür. Bir antrenörle tek seans, menzil çalışmasını yerinde ayarlamana yeter.'}
+    },
+
+    'denge': {
+      ad:'Denge Değerlendirmesi', tarih:'11 Ağustos 2026', lv:1, dikkat:true,
+      rozet:{k:'stop', i:'fa-triangle-exclamation', t:'Önce uzman görüşü'},
+      ozet:'Tek ayak duruş sürelerin iki taraf arasında belirgin biçimde farklı ve tarama sorularında baş dönmesi yaşadığını işaretledin. Bu yüzden sana kişisel bir egzersiz reçetesi çıkarılmıyor; akış burada duruyor ve seni uzman desteğine yönlendiriyoruz.',
+      lvNot:'Uzman görüşü gelene kadar seviye bandı yalnız bilgi amaçlı gösteriliyor; program başlatma önerisi verilmiyor.',
+      olcum:[
+        {i:'fa-shoe-prints', b:'Tek ayak duruş — sağ', s:'Gözler açık', e:'14 sn'},
+        {i:'fa-shoe-prints', b:'Tek ayak duruş — sol', s:'Gözler açık', e:'9 sn'},
+        {i:'fa-eye-slash', b:'Gözler kapalı duruş', s:'Destekli ortamda', e:'4 sn'}
+      ],
+      seri:[{l:'İlk test',v:8,p:57},{l:'2. test',v:11,p:79},{l:'Bu test',v:14,p:100}],
+      seriBirim:'saniye tek ayak duruş (sağ, kendi ölçümün)',
+      kiyas:[
+        {i:'fa-flag', b:'İlk testin — 24 Haziran 2026', s:'Sağ 8 sn · sol 6 sn · baş dönmesi işaretli', e:'başlangıç'},
+        {i:'fa-location-dot', b:'Bugünkü testin', s:'Sağ 14 sn · sol 9 sn · baş dönmesi hâlâ işaretli', e:'+6 sn'}
+      ],
+      prog:{slug:'8-hafta-mobilite', ad:'8 Hafta Mobilite Planı', sure:'8 hafta', gun:'Haftada 4 gün', ek:'Ekipmansız', toplam:32},
+      progNot:'Bu öneri seni bekliyor ama şimdi başlatılması önerilmiyor: baş dönmesi işaretlediğin için önce bir sağlık profesyoneliyle konuşman gerekir.',
+      antrenor:{k:'stop', i:'fa-triangle-exclamation', t:'Şimdi gerekli',
+        n:'Baş dönmesi işaretledin. Bu bir teşhis değil, ama denge çalışmasına tek başına başlaman uygun değil. Önce bir sağlık profesyoneline danış; sonra antrenörle güvenli bir başlangıç kurabilirsin.'}
+    },
+
+    'temel-kuvvet': {
+      ad:'Temel Kuvvet Değerlendirmesi', tarih:'9 Ağustos 2026', lv:2,
+      rozet:{k:'ok', i:'fa-dumbbell', t:'Orta bant'},
+      ozet:'Gövde dayanımın ve alt beden tekrar sayıların, temel hareket kalıplarını öğrenme aşamasını geçtiğini gösteriyor. Üst beden itiş hareketlerinde hâlâ destekli varyasyonlardasın. Bu tablo, yük ve hacmi kademeli artıran orta bant bir programa uygun.',
+      lvNot:'Orta bantta hareket sayısı değil, aynı hareketin yükü ve hacmi artar.',
+      olcum:[
+        {i:'fa-hand-fist', b:'Şınav (dizden)', s:'Formu bozulmadan yapılan tekrar', e:'9 tekrar'},
+        {i:'fa-person', b:'Vücut ağırlığı squat', s:'30 saniyede tekrar', e:'14 tekrar'},
+        {i:'fa-stopwatch', b:'Plank', s:'Bel çökmeden korunan süre', e:'45 sn'}
+      ],
+      seri:[{l:'İlk test',v:20,p:44},{l:'2. test',v:32,p:71},{l:'Bu test',v:45,p:100}],
+      seriBirim:'saniye plank (kendi ölçümün)',
+      kiyas:[
+        {i:'fa-flag', b:'İlk testin — 12 Haziran 2026', s:'Şınav 4 · squat 9 · plank 20 sn', e:'başlangıç'},
+        {i:'fa-location-dot', b:'Bugünkü testin', s:'Şınav 9 · squat 14 · plank 45 sn', e:'+25 sn plank'}
+      ],
+      prog:{slug:'12-hafta-guc-temeli', ad:'12 Hafta Güç Temeli', sure:'12 hafta', gun:'Haftada 3 gün', ek:'Dambıl · Pro', toplam:36},
+      progNot:'Bu program DadaFit Pro kapsamında. Yük artışını haftalık planlar ve her hareketin destekli varyasyonunu da içerir.',
+      antrenor:{k:'wait', i:'fa-comments', t:'Önerilir',
+        n:'Yük eklemeye başladığın aşamada tekniğin bir kez yerinde kontrol edilmesi, ilerlemenin en hızlandığı noktadır. Bir antrenörle tek değerlendirme seansı yeterli olur.'}
+    },
+
+    'dayaniklilik': {
+      ad:'Dayanıklılık Değerlendirmesi', tarih:'6 Ağustos 2026', lv:2,
+      rozet:{k:'ok', i:'fa-person-running', t:'Orta bant'},
+      ozet:'Altı dakikalık yürüyüş mesafen ve toparlanma hızın, sürekli tempoda çalışabildiğini gösteriyor. Tempo değişimlerinde zorlanıyorsun. Bu tablo, aralıklı tempo çalışmasını kademeli ekleyen orta bant bir programa uygun.',
+      lvNot:'Orta bantta hedef daha uzun süre değil, aynı sürede daha kontrollü tempo değişimi.',
+      olcum:[
+        {i:'fa-route', b:'6 dakika yürüyüş mesafesi', s:'Düz zeminde, kendi temponda', e:'520 m'},
+        {i:'fa-heart-pulse', b:'Toparlanma', s:'İsteğe bağlı nabız bilgisi bağlıysa ölçülür', e:'Hızlı'},
+        {i:'fa-bolt', b:'Yaklaşık enerji kullanımı', s:'Test süresince — yaklaşık değerdir', e:'~60 kcal'}
+      ],
+      seri:[{l:'İlk test',v:380,p:73},{l:'2. test',v:450,p:87},{l:'Bu test',v:520,p:100}],
+      seriBirim:'metre / 6 dakika (kendi ölçümün)',
+      kiyas:[
+        {i:'fa-flag', b:'İlk testin — 29 Mayıs 2026', s:'380 m · toparlanma yavaş', e:'başlangıç'},
+        {i:'fa-location-dot', b:'Bugünkü testin', s:'520 m · toparlanma hızlı', e:'+140 m'}
+      ],
+      prog:{slug:'8-hafta-salon-kondisyon', ad:'8 Hafta Salon Kondisyon', sure:'8 hafta', gun:'Haftada 4 gün', ek:'Salon · Pro', toplam:32},
+      progNot:'Bu program DadaFit Pro kapsamında. Enerji değerleri programda da yaklaşık olarak gösterilir.',
+      antrenor:{k:'off', i:'fa-comments', t:'İsteğe bağlı',
+        n:'Sonuçların bir antrenör desteği gerektirmiyor. Yine de tempo aralıklarını kendine göre ayarlamak istersen bir antrenörle konuşabilirsin.'}
+    },
+
+    'masa-basi-yasam': {
+      ad:'Masa Başı Yaşam Değerlendirmesi', tarih:'3 Ağustos 2026', lv:1,
+      rozet:{k:'wait', i:'fa-chair', t:'Başlangıç bandı'},
+      ozet:'Gün içindeki kesintisiz oturma süren uzun ve ekran molası sayın düşük. Boyun ile omuz bölgesinde gün sonuna doğru yorgunluk tarif ediyorsun. Bu tablo, gün içine dağılan kısa hareket molalarıyla kurulmuş bir başlangıç programına uygun.',
+      lvNot:'Bu bantta hedef antrenman süresi değil, gün içindeki hareketsiz blokları kısaltmak.',
+      olcum:[
+        {i:'fa-chair', b:'Kesintisiz oturma', s:'Gün içindeki en uzun blok', e:'95 dk'},
+        {i:'fa-person-walking', b:'Günlük ayakta süre', s:'Aktivite kaynağından', e:'1 sa 20 dk'},
+        {i:'fa-mug-hot', b:'Ekran molası', s:'Günde verdiğin mola sayısı', e:'2 mola'}
+      ],
+      seri:[{l:'İlk test',v:130,p:100},{l:'2. test',v:110,p:85},{l:'Bu test',v:95,p:73}],
+      seriBirim:'dakika en uzun kesintisiz oturma (azalması iyi — kendi ölçümün)',
+      kiyas:[
+        {i:'fa-flag', b:'İlk testin — 17 Temmuz 2026', s:'130 dk kesintisiz oturma · günde 1 mola', e:'başlangıç'},
+        {i:'fa-location-dot', b:'Bugünkü testin', s:'95 dk kesintisiz oturma · günde 2 mola', e:'−35 dk'}
+      ],
+      prog:{slug:'8-hafta-mobilite', ad:'8 Hafta Mobilite Planı', sure:'8 hafta', gun:'Haftada 4 gün', ek:'Ekipmansız', toplam:32},
+      progNot:'Program seansları kısa; gün içine dağıtılabilir ve masa başında yapılabilen varyasyonlar içerir.',
+      antrenor:{k:'wait', i:'fa-comments', t:'Önerilir',
+        n:'Boyun ve omuzdaki gün sonu yorgunluğu sürüyorsa bir antrenörle çalışma düzenini konuşmak işe yarar. Ağrıya dönüşürse önce bir sağlık profesyoneline danış.'}
+    },
+
+    'hareket-aliskanligi': {
+      ad:'Hareket Alışkanlığı Testi', tarih:'31 Temmuz 2026', lv:2,
+      rozet:{k:'ok', i:'fa-repeat', t:'Orta bant'},
+      ozet:'Haftalık aktif gün sayın istikrarlı ve planladığın ile yaptığın arasındaki fark küçük. Zorlandığın nokta yoğun haftalarda devamlılık. Bu tablo, esnek devam kuralı olan ve kısa seanslarla sürdürülebilen bir programa uygun.',
+      lvNot:'Orta bantta hedef daha çok antrenman değil, yoğun haftalarda da kopmadan devam edebilmek.',
+      olcum:[
+        {i:'fa-calendar-week', b:'Haftalık aktif gün', s:'Son dört haftanın ortalaması', e:'3 gün'},
+        {i:'fa-fire', b:'En uzun seri', s:'Kesintisiz hareket ettiğin gün sayısı', e:'9 gün'},
+        {i:'fa-list-check', b:'Planlanan ile yapılan farkı', s:'Haftalık ortalama', e:'1 gün'}
+      ],
+      seri:[{l:'İlk test',v:4,p:44},{l:'2. test',v:6,p:67},{l:'Bu test',v:9,p:100}],
+      seriBirim:'gün en uzun seri (kendi ölçümün)',
+      kiyas:[
+        {i:'fa-flag', b:'İlk testin — 5 Haziran 2026', s:'Haftada 2 aktif gün · en uzun seri 4 gün', e:'başlangıç'},
+        {i:'fa-location-dot', b:'Bugünkü testin', s:'Haftada 3 aktif gün · en uzun seri 9 gün', e:'+5 gün'}
+      ],
+      prog:{slug:'4-hafta-ev-antrenmani', ad:'4 Hafta Ev Antrenmanı', sure:'4 hafta', gun:'Haftada 3 gün', ek:'Ekipmansız', toplam:12},
+      progNot:'Kısa seanslar yoğun haftalarda kopmayı azaltır. Bir gün kaçırmak seriyi sıfırlamaz; esnek devam kuralı geçerlidir.',
+      antrenor:{k:'off', i:'fa-comments', t:'İsteğe bağlı',
+        n:'Devamlılık tarafında bir antrenöre ihtiyacın görünmüyor. Program içeriğini kendine göre şekillendirmek istersen görüşebilirsin.'}
+    }
+  };
+
+  var VARSAYILAN = 'baslangic-seviyesi';
+  var $ = function(id){ return document.getElementById(id); };
+  var esc = function(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); };
+
+  function slugFromUrl(){
+    var s = new URLSearchParams(location.search).get('test');
+    return (s && TESTS[s]) ? s : VARSAYILAN;
+  }
+
+  function rowsHtml(list){
+    return list.map(function(r){
+      return '<div class="fp-row"><span class="ico"><i class="fa-solid ' + r.i + '"></i></span>' +
+             '<span class="txt"><b>' + esc(r.b) + '</b><small>' + esc(r.s) + '</small></span>' +
+             '<span class="end">' + esc(r.e) + '</span></div>';
+    }).join('');
+  }
+
+  function render(slug){
+    var T = TESTS[slug];
+
+    /* --- banner --- */
+    $('tsTitle').textContent = T.ad + ' — sonucun';
+    $('tsStatLevel').textContent = SEVIYE[T.lv];
+    $('tsStatDate').textContent  = T.tarih;
+    $('tsStatProg').textContent  = T.prog.sure;
+    $('tsRetry').setAttribute('href',  'fit-testi-detay-v1.html?test=' + slug);
+    $('tsDetail').setAttribute('href', 'fit-testi-detay-v1.html?test=' + slug);
+    document.title = T.ad + ' — sonucun | DadaFit';
+
+    /* --- sonuç özeti --- */
+    var b = $('tsBadge');
+    b.className = 'fp-badge ' + T.rozet.k;
+    b.innerHTML = '<i class="fa-solid ' + T.rozet.i + '"></i> ' + esc(T.rozet.t);
+    $('tsSummary').textContent = T.ozet;
+
+    /* --- uygun başlangıç seviyesi (üç kademe, metinli işaret) --- */
+    [].forEach.call($('tsScale').children, function(st){
+      var on = (+st.getAttribute('data-lv') === T.lv);
+      st.classList.toggle('on', on);
+    });
+    $('tsScale').setAttribute('aria-label',
+      'Üç kademeli başlangıç seviyesi. Senin sonucun: ' + SEVIYE[T.lv] + ' bandı.');
+    $('tsLevelNote').textContent = T.lvNot;
+
+    /* --- ölçtüklerin --- */
+    $('tsMeasures').innerHTML = rowsHtml(T.olcum);
+
+    /* --- §4 kendi başlangıcınla karşılaştırma (rekabetçi gösterim YOK) --- */
+    $('tsChart').innerHTML = T.seri.map(function(s){
+      return '<span class="fp-col"><span class="val">' + esc(s.v) + '</span>' +
+             '<span class="ts-track"><span class="bar" style="height:' + s.p + '%"></span></span>' +
+             '<span class="lbl">' + esc(s.l) + '</span></span>';
+    }).join('');
+    $('tsChart').setAttribute('aria-label',
+      'Kendi test geçmişin — ' + T.seriBirim + ': ' +
+      T.seri.map(function(s){ return s.l + ' ' + s.v; }).join(', ') +
+      '. Bu grafik yalnız senin ölçümlerini gösterir, başka kullanıcıyla kıyas içermez.');
+    $('tsCompare').innerHTML = rowsHtml(T.kiyas);
+
+    /* --- önerilen program --- */
+    $('tsProgram').innerHTML = rowsHtml([
+      {i:'fa-dumbbell',  b:T.prog.ad, s:T.prog.gun + ' · ' + T.prog.ek, e:T.prog.sure}
+    ]);
+    $('tsProgramNote').textContent = T.progNot;
+    $('tsProgLink').setAttribute('href', 'program-detay-v1.html?slug=' + T.prog.slug);
+    $('tsProgAdd').setAttribute('aria-label', T.prog.ad + ' programını planıma ekle');
+    var st = $('tsProgStatus');
+    st.className = 'ts-status'; st.textContent = '';
+
+    /* --- antrenöre danışma yönlendirmesi --- */
+    var cb = $('tsCoachBadge');
+    cb.className = 'fp-badge ' + T.antrenor.k;
+    cb.innerHTML = '<i class="fa-solid ' + T.antrenor.i + '"></i> ' + esc(T.antrenor.t);
+    $('tsCoachNote').textContent = T.antrenor.n;
+
+    /* --- çip durumları (belge §20 aria-pressed) --- */
+    [].forEach.call($('tsPick').querySelectorAll('.df-fchip'), function(c){
+      var on = (c.getAttribute('data-test') === slug);
+      c.classList.toggle('on', on);
+      c.setAttribute('aria-pressed', on ? 'true' : 'false');
+    });
+  }
+
+  /* ---- URL ↔ görünüm bağı (belge §23) ---- */
+  function go(slug, push){
+    if(!TESTS[slug]) slug = VARSAYILAN;
+    if(push){
+      var u = location.pathname + '?test=' + slug;
+      history.pushState({test:slug}, '', u);
+    }
+    render(slug);
+  }
+
+  $('tsPick').addEventListener('click', function(e){
+    var c = e.target.closest('.df-fchip');
+    if(!c) return;
+    var slug = c.getAttribute('data-test');
+    if(slug === slugFromUrl()) return;      /* durum korumalı */
+    go(slug, true);
+  });
+
+  window.addEventListener('popstate', function(){ render(slugFromUrl()); });
+
+  /* ---- programı merkezî duruma ekle (yeni depo açma — HANDOFF §1) ---- */
+  $('tsProgAdd').addEventListener('click', function(){
+    var T = TESTS[slugFromUrl()];
+    var st = $('tsProgStatus');
+    var S = window.FIT_SHELL && window.FIT_SHELL.state;
+    if(!S){
+      st.className = 'ts-status show';
+      st.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> Plan durumu bu tarayıcıda okunamadı — programı sayfasından başlatabilirsin.';
+      return;
+    }
+    S.programBasla({ slug:T.prog.slug, ad:T.prog.ad, toplam:T.prog.toplam });
+    st.className = 'ts-status show';
+    st.innerHTML = '<i class="fa-solid fa-circle-check"></i> ' + esc(T.prog.ad) +
+                   ' planına eklendi — <a href="fit-programlarim.html" style="text-decoration:underline;text-underline-offset:2px">Programım</a>';
+  });
+
+  render(slugFromUrl());
+})();
+</script>
+</body>
+</html>

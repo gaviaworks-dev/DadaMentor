@@ -1,0 +1,1515 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8" />
+  <meta name="robots" content="noindex, nofollow" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<!-- BENZERSİZ title (belge §19) -->
+<title>Fit Testi Detayı — uygunluk taraması ve adım adım uygulama | DadaFit</title>
+<!-- BENZERSİZ meta description (belge §19) -->
+<meta name="description" content="Seçtiğin Fit Testinin amacı, kimler için uygun olduğu, süresi, ekipmanı ve adım adım uygulaması. Test öncesi fiziksel aktivite uygunluk taraması zorunludur; riskli yanıtta test başlamaz." />
+<link rel="icon" type="image/svg+xml" href="../kanon/varlik/dadafit-isaret.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="../kanon/varlik/dadafit-isaret-32.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="../kanon/varlik/dadafit-isaret-180.png" />
+<!-- FontAwesome 6.5.2 (kilitli ikon seti) -->
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+      integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+      crossorigin="anonymous" referrerpolicy="no-referrer" />
+<!-- DadaFit ortak kabuk (TEK KAYNAK — token, header, footer, kart/çip/banner kitleri) -->
+<!-- KANON · yukleme sirasi: tokenlar -> markalar/fit (bilesenler YUKLENMEZ) -->
+<link rel="stylesheet" href="../kanon/tokenlar.css" />
+<link rel="stylesheet" href="../kanon/markalar/fit.css" />
+<link rel="stylesheet" href="assets/css/fit-shell.css" />
+<link rel="stylesheet" href="assets/css/fit-mesaj.css" />
+<style>
+/* =====================================================================
+ SAYFA CSS — FİT TESTİ DETAYI (§8)
+ ---------------------------------------------------------------------
+ Kabuktan gelenler burada TEKRAR TANIMLANMADI: token'lar, .wrap, .sec,
+ .btn/.btn-ghost, .lib-top + .lib-crumb + .lib-stats banner'ı, .lib-grid,
+ .hr-note, .fp-card/.fp-head/.fp-list/.fp-row/.fp-badge kitleri.
+ Burada yalnız bu sayfaya özgü ölçüler var: iki kolon kurgusu, uygunluk
+ taraması paneli, kilitli adım bloğu, durdurma paneli ve sonuç paneli.
+ Bunların hiçbiri başka sayfada yok — kabuğa taşınacak ortak kit değiller.
+ ===================================================================== */
+
+/* sayfa genel: yeşil eyebrow (fit bölümleri) — diğer 24 fit sayfasıyla aynı iki satır */
+.sec-fit .eyebrow{color:var(--fit-deep)}
+.sec-fit .eyebrow::before{background:var(--fit)}
+
+/* ---- İKİ KOLON: sol akış · sağ sabit özet ---- */
+/* R8/29: alt dolgu 0'di — .ft-body → .ft-coach sinirinda ara 74 px cikiyor,
+ hemen altindaki .ft-coach → #diger sinirinda 148 px. Iki farkli deger.
+ Kabugun kendi ayni-isi-yapan idiomu kullanildi (fit-shell.css:1557 .note-band):
+ ust siki nefes, alt tam nefes. Sabit px yok → K-A rampasiyla birlikte hareket eder. */
+.ft-body{padding:var(--sec-pad-sm) 0 var(--sec-pad);background:var(--bg-white)}
+.ft-lay{display:grid;grid-template-columns:minmax(0,1fr) 348px;gap:40px;align-items:start;margin-top:26px}
+.ft-col{min-width:0}
+
+/* ---- BLOK BAŞLIĞI (sol kolon h2'leri) ---- */
+/* R8/29: kolon ici dikey ritim TEK degiskene baglandi. Onceki hal olculdu:
+ .ft-blk 44/34 · .ft-tier 46 · .ft-flow 30 · .ft-flow-act 30 →
+ @1440 iki farkli ara (44·46), @768 uc (30·44·46), @390 uc (30·34·46).
+ Kirilma noktasi 900 degil 640: kabuk rampasi (--sec-pad) 640'ta dusuyor,
+ ritim de orada dussun ki ikisi ayni anda degissin (K-A ile tutarli). */
+.ft-col{--ft-ara:44px}
+@media (max-width:640px){ .ft-col{--ft-ara:34px} }
+.ft-blk{margin-top:var(--ft-ara);scroll-margin-top:120px}
+.ft-blk:first-child{margin-top:0}
+/* R9 · "Önce oku" üçlüsü AKORDİYON oldu (Beyar): test amacı varsayılan
+   açık, "kimler için uygun" ve "güvenlik uyarısı" katlı. Üç blok birden
+   açıkken sayfa "sonra uygula" bölümüne inmeden önce çok uzuyordu. */
+.ft-blk-h{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+h2.ft-acc-h{margin:0;font-size:inherit;font-weight:inherit;letter-spacing:normal}
+button.ft-blk-h{width:100%;text-align:left;background:none;border:none;padding:0;
+  font-family:inherit;cursor:pointer;color:inherit}
+button.ft-blk-h:hover h2{color:var(--fit-deep)}
+button.ft-blk-h:focus-visible{outline:2px solid var(--fit-deep);outline-offset:4px;border-radius:var(--radius-sm,6px)}
+.ft-acc-ok{margin-left:auto;flex:none;font-size:12px;color:var(--muted);transition:transform .18s var(--ease)}
+button.ft-blk-h[aria-expanded="false"] .ft-acc-ok{transform:rotate(-90deg)}
+button.ft-blk-h[aria-expanded="false"]{margin-bottom:0}
+.ft-acc-govde[hidden]{display:none}
+.ft-blk-h .ic{flex:none;width:40px;height:40px;border-radius:var(--radius-md);background:var(--fit-tint);color:var(--fit-deep);display:grid;place-items:center;font-size:16px}
+.ft-blk-h h2{font-size:22px;letter-spacing:-.02em}
+.ft-blk-h p{font-size:13px;color:var(--muted);font-weight:500;margin-top:2px}
+.ft-lead{font-size:15px;font-weight:500;color:var(--slate-2);line-height:1.65}
+
+/* ---- E6/it2 · OKUNABİLİRLİK: SATIR ÖLÇÜSÜ VE YASLAMA ----------------
+ ÖLÇÜM (it1, 1440px): sol kolon akan metninde satır ölçüsü 47–157 karakter,
+ 11 paragraf 80 karakteri aşıyordu. Tipografide okunur aralık 45–75 karakter;
+ 157 karakterlik satırda göz satır başını kaybediyor.
+ Çözüm: akan metne 68ch ölçü sınırı. Kart ızgaraları ve kutular etkilenmez —
+ sınır YALNIZ sol kolonun akan metnine uygulanır. */
+.ft-col .ft-lead,
+.ft-col .ft-ul li,
+.ft-col .ft-safe li,
+.ft-col .ft-scr-note,
+.ft-col > .ft-blk > p,
+.ft-coach-in p{max-width:var(--measure)}
+
+/* ---- E6/it1 · AKIŞ RAYI ------------------------------------------
+ Sorun (it0 ölçümü): sol kolon altı eşit ağırlıklı bölüm olarak okunuyordu;
+ "bu testi yapmak için ne yapmam gerek" sorusunun cevabı hiçbir yerde yoktu
+ ve asıl eylem (uygunluk taraması) 700px kaydırmadan görünmüyordu.
+ Çözüm: bilgi blokları ile UYGULAMA blokları ayrıldı; uygulama üç numaralı
+ adıma indi ve sayfanın başında bir ray olarak gösteriliyor. */
+.ft-flow{
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;
+  margin:0 0 var(--ft-ara);padding:0;list-style:none
+}
+.ft-flow a{
+  display:flex;align-items:flex-start;gap:12px;height:100%;
+  background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);
+  padding:14px 16px;transition:.2s var(--ease)
+}
+.ft-flow a:hover{border-color:var(--fit);box-shadow:var(--sh-sm);transform:translateY(-2px)}
+.ft-flow .n{
+  flex:none;width:26px;height:26px;border-radius:var(--radius-circle);
+  background:var(--fit-deep);color:#fff;display:grid;place-items:center;
+  font-size:12.5px;font-weight:800;font-variant-numeric:tabular-nums
+}
+.ft-flow b{display:block;font-size:14px;color:var(--slate);letter-spacing:-.01em}
+.ft-flow span{display:block;font-size:12px;font-weight:500;color:var(--muted);margin-top:3px;line-height:1.45}
+.ft-flow .st{
+  margin-top:7px;display:inline-flex;align-items:center;gap:6px;
+  font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--fit-deep)
+}
+/* it2 · kilitli adım YEŞİL görünmemeli — "açık" sinyali veriyordu */
+.ft-flow .st.is-locked{color:var(--muted)}
+.ft-flow a:has(.is-locked){background:var(--bg)}
+/* uygulama bloklarının başlığında ikon yerine ADIM NUMARASI */
+.ft-blk.is-step .ft-blk-h .ic{background:var(--fit-deep);color:#fff;font-size:15px;font-weight:800;font-variant-numeric:tabular-nums}
+/* bilgi blokları ile uygulama blokları arasına görünür bir eşik */
+.ft-tier{
+  display:flex;align-items:center;gap:12px;margin:var(--ft-ara) 0 22px;
+  font-size:11.5px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)
+}
+.ft-tier::after{content:"";flex:1;height:1px;background:var(--line)}
+.ft-tier:first-child{margin-top:0}
+@media (max-width:900px){ .ft-flow{grid-template-columns:minmax(0,1fr);gap:9px} }
+
+/* ---- E6/it3 · MOBİLDE ASIL EYLEME ERİŞİM --------------------------
+ ÖLÇÜM (it2, 390px): testi başlatan birincil düğme yalnız sağ kolonda
+ duruyordu ve o kolon mobilde içeriğin SONUNA düşüyordu — düğmenin sayfa
+ üstünden uzaklığı 5514px, yani kullanıcı testi başlatmak için sayfanın
+ %60'ını kaydırmak zorundaydı.
+ Çözüm: akış rayının hemen altına, YALNIZ ≤900px'te görünen bir eylem
+ satırı. Masaüstünde sağ kolon zaten taşıdığı için tekrar basılmaz. */
+.ft-flow-act{display:none}
+@media (max-width:900px){
+  .ft-flow-act{display:flex;flex-direction:column;gap:9px;margin:0 0 var(--ft-ara)}
+  .ft-flow-act .btn{width:100%}
+}
+
+/* madde listesi (amaç maddeleri) */
+.ft-ul{list-style:none;display:flex;flex-direction:column;gap:9px;margin-top:16px}
+.ft-ul li{display:flex;gap:11px;font-size:14px;font-weight:500;color:var(--slate-2);line-height:1.55}
+.ft-ul li i{flex:none;margin-top:3px;font-size:13px;color:var(--fit-deep)}
+
+/* ---- KİMLER İÇİN UYGUN: uygun / şimdilik uygun değil ---- */
+.ft-two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.ft-who{border:1px solid var(--line);border-radius:var(--radius-lg);padding:18px 20px;background:var(--paper)}
+.ft-who.is-ok{border-color:var(--fit-line);background:var(--fit-tint)}
+.ft-who.is-no{border-color:#e8d5a8;background:#fff6e6}
+.ft-who h3{font-size:14.5px;display:flex;align-items:center;gap:9px;margin-bottom:12px}
+.ft-who.is-ok h3 i{color:var(--fit-deep)}
+.ft-who.is-no h3 i{color:#8a6410}
+.ft-who ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+.ft-who li{position:relative;padding-left:17px;font-size:13.5px;font-weight:500;color:var(--slate-2);line-height:1.5}
+.ft-who li::before{content:"";position:absolute;left:0;top:8px;width:7px;height:7px;border-radius:var(--radius-circle);background:var(--fit)}
+.ft-who.is-no li::before{background:#c99a2e}
+
+/* ---- GÜVENLİK UYARISI ---- */
+.ft-safe{border:1px solid #e8d5a8;background:#fff6e6;border-radius:var(--radius-lg);padding:20px 22px}
+.ft-safe h3{font-size:15px;display:flex;align-items:center;gap:10px;margin-bottom:12px;color:#7a5608}
+.ft-safe h3 i{color:#8a6410}
+.ft-safe ul{list-style:none;display:flex;flex-direction:column;gap:10px}
+.ft-safe li{display:flex;gap:11px;font-size:13.5px;font-weight:500;color:#5f4a1e;line-height:1.55}
+.ft-safe li i{flex:none;margin-top:3px;font-size:12px;color:#8a6410}
+
+/* ---- UYGUNLUK TARAMASI (§8 — testin ÖNÜNDEKİ kapı) ---- */
+.ft-scr{border:1px solid var(--line);border-radius:var(--radius-xl);background:var(--paper);box-shadow:var(--sh-sm);overflow:hidden}
+.ft-scr-h{display:flex;align-items:flex-start;gap:13px;padding:20px 22px;background:linear-gradient(160deg,var(--marka-koyu-zemin-yesil),#211E16);color:#fff}
+.ft-scr-h .ic{flex:none;width:40px;height:40px;border-radius:var(--radius-md);background:color-mix(in srgb, var(--marka) 24%, transparent);border:1px solid color-mix(in srgb, var(--marka-parlak) 40%, transparent);color:#fff;display:grid;place-items:center;font-size:16px}
+/* R12/R7: seçici torun <b>'leri de yakalıyordu — açıklama içindeki "Evet" ve
+   "Her soruyu bir kez yanıtlarsın" vurguları blok olup cümleyi üçe bölüyordu.
+   Başlık <b>'si .ft-scr-h > div'in DOĞRUDAN çocuğu, small içindekiler değil —
+   seçici buna göre daraltıldı, cümle artık tek akan paragraf. */
+.ft-scr-h > div > b{display:block;font-size:16px;font-weight:700}
+.ft-scr-h small{display:block;font-size:12.5px;font-weight:500;color:rgba(255,255,255,.7);margin-top:3px;line-height:1.5}
+.ft-scr-h small b{display:inline;font-size:inherit;font-weight:700;color:#fff}
+/* R12/R8: 6px'ti — <legend> fieldset'in padding-top'unu atladığı için (bkz.
+   docs/lessons.md §3) ilk sorunun ÜSTÜNDE gerçek nefes yoktu. 22px'e çıkarıldı:
+   R11/M13'te kurulan "ayraç ↔ soru = 22px" grup-arası ritmiyle birebir aynı
+   değer — yeni boşluk mevcut dikey ritmi bozmuyor, onunla tutarlı. */
+.ft-scr-body{padding:22px 22px 22px}
+
+/* R9 · soru–şık ritmi sıkıldı (Beyar: "sorular ve şıklar arasında çok
+   boşluk var"). Ölçüm: soru alt kenarı → şık kabı üstü 27px, blok
+   dolgusu 16+16. Tek satırlık bir soru için 14px font üstünde ~1.8×
+   satır boşluğu; şıklar sorudan kopuk okunuyordu. */
+/* R11/M13 · SORU SATIRI RİTMİ — Beyar: "test soruları kötü olmuş, mesela
+   divider'a üstten çok yakın; boşluk hiyerarşisini tekrardan revize et."
+
+   ÖLÇÜLEN İKİ KUSUR:
+   1) `<legend>` fieldset'in `padding-top`'unu ATLIYOR — legend kutusu
+      fieldset'in kenarlık bandına yerleşir, dolgu kutusunun üstünde kalır.
+      Ölçüm: ayraç çizgisi → soru metni = **0px**. 13px dolgu hiç işlemiyordu.
+      Çözüm: nefes legend'in KENDİ üst dolgusundan veriliyor.
+   2) YAKINLIK TERSTİ (Gestalt): soru metni ↔ seçenekler **21px**,
+      seçenekler ↔ alttaki ayraç **14px**. Yani seçenekler kendi sorusundan
+      çok BİR SONRAKİ soruya yapışık okunuyordu. Birbirine ait olan yakın,
+      ayrı olan uzak olmalı — oran ters çevrildi:
+        ayraç ↔ soru      22px   (gruplar arası)
+        soru  ↔ seçenek   14px   (grup içi)
+        seçenek ↔ ayraç   22px   (gruplar arası)
+   Değerler 4px ızgarasına oturuyor (tests/uiux-denetim.mjs · başlık 7). */
+.ft-q{border:none;border-bottom:1px solid var(--line);padding:0 0 22px}
+/* R9 · adımlar bitince sonuç girişini açan düğme */
+.ft-steps-done{margin-top:18px;display:flex;justify-content:flex-start}
+.ft-q:last-of-type{border-bottom:none}
+.ft-q legend{font-size:14px;font-weight:600;color:var(--slate);line-height:1.5;
+  /* üst nefes BURADAN geliyor — fieldset'in padding-top'u legend'e işlemiyor */
+  padding:22px 0 0;margin-bottom:14px}
+.ft-q:first-of-type legend{padding-top:0}
+.ft-q legend .n{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:var(--radius-sm);background:var(--bg);color:var(--slate-2);font-size:11.5px;font-weight:800;margin-right:9px;font-variant-numeric:tabular-nums}
+.ft-opts{display:flex;gap:9px;flex-wrap:wrap}
+.ft-opt{position:relative;display:inline-flex}
+.ft-opt input{position:absolute;opacity:0;width:1px;height:1px;margin:0}
+.ft-opt span{display:inline-flex;align-items:center;gap:8px;font-size:13.5px;font-weight:600;color:var(--slate);background:var(--paper);border:1px solid var(--line);padding:9px 17px;border-radius:var(--radius-sm);cursor:pointer;transition:.18s var(--ease);min-height:40px}
+.ft-opt span i{font-size:12px;color:var(--muted)}
+.ft-opt span:hover{border-color:var(--fit);color:var(--fit-deep);background:var(--fit-tint)}
+.ft-opt input:checked+span{border-color:var(--fit);background:var(--fit);color:#fff}
+.ft-opt input:checked+span i{color:#fff}
+/* seçili boş daire → işaretli daire (fa-circle-check). Riskli seçenek kendi
+ uyarı ikonunu taşıdığı için değiştirilmez — ikon farkı renkten bağımsız sinyal. */
+.ft-opt input:checked+span i.fa-circle::before{content:"\f058"}
+/* riskli yanıt: renk TEK sinyal değil — ikon değişir ve metin "Evet" yazar */
+.ft-opt input[data-risk="1"]:checked+span{border-color:#d9a441;background:#fff6e6;color:#7a5608}
+.ft-opt input[data-risk="1"]:checked+span i{color:#8a6410}
+.ft-opt input:focus-visible+span{outline:3px solid var(--fit);outline-offset:2px}
+
+/* ---- R14 (5. tur) · YANITLANAN SORU KİLİTLENİR ----------------------
+   Beyar: "Bir seçenek tıklandığında yanlış olduğu gösteriliyor ama diğer
+   seçenekler hâlâ tıklanabiliyor — kullanıcı yanlışı gördükten sonra
+   doğruyu da tıklayıp puanını değiştirebiliyor."
+   Ölçüldü (7 test slug'ında): 14 şıktan KİLİTLİ 0; riskli yanıt geri
+   alınıp test açılabiliyordu. Kapı kapı değildi.
+   Kilit yalnız görsel değil: input `disabled` + `aria-disabled` + odak
+   sırasından çıkarılıyor. Seçilmeyen şık soluyor, seçilen tam opak kalıyor
+   ki kullanıcı ne yanıtladığını okumaya devam edebilsin. */
+.ft-q.is-locked .ft-opt span{cursor:default}
+.ft-q.is-locked .ft-opt input:disabled+span{opacity:.5}
+.ft-q.is-locked .ft-opt input:disabled:checked+span{opacity:1}
+.ft-q.is-locked .ft-opt span:hover{border-color:var(--line);color:var(--slate);background:var(--paper)}
+.ft-q.is-locked .ft-opt input:disabled:checked+span:hover{border-color:var(--fit);background:var(--fit);color:#fff}
+.ft-q.is-locked .ft-opt input[data-risk="1"]:disabled:checked+span:hover{border-color:#d9a441;background:#fff6e6;color:#7a5608}
+/* riskli yanıt verildiğinde GÜVENLİ şık ayrıca işaretlenir — kullanıcı
+   neyin "temiz yanıt" sayıldığını görsün diye. */
+.ft-q .ft-opt.is-safe{position:relative}
+.ft-q .ft-opt.is-safe span{border-style:dashed;border-color:var(--fit)}
+.ft-q .ft-opt.is-safe::after{
+  content:"Temiz yanıt";position:absolute;left:0;top:calc(100% + 5px);
+  font-size:11px;font-weight:700;letter-spacing:.02em;color:var(--fit-deep);white-space:nowrap
+}
+.ft-q.is-locked .ft-opts{margin-bottom:20px}
+.ft-q.is-risk .ft-lockmsg{color:#7a5608}
+.ft-lockmsg{
+  display:flex;align-items:flex-start;gap:8px;margin:10px 0 0;
+  font-size:12.5px;font-weight:600;color:var(--muted);line-height:1.5
+}
+.ft-lockmsg i{flex:none;font-size:11px;margin-top:3px}
+/* yanıtlanmayan soru: sol şerit + ikonlu metin (yalnız renkle anlatılmıyor — §20) */
+.ft-q.is-err{border-left:3px solid #a8391c;padding-left:14px;background:#fff8f6}
+.ft-qerr{display:none;align-items:center;gap:8px;font-size:12.5px;font-weight:700;color:#a8391c;margin-top:10px}
+.ft-q.is-err .ft-qerr{display:flex}
+
+.ft-scr-acts{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px;padding-top:18px;border-top:1px solid var(--line)}
+.ft-scr-note{display:flex;gap:10px;font-size:12px;font-weight:500;color:var(--muted);line-height:1.55;margin-top:14px}
+.ft-scr-note i{flex:none;margin-top:3px;color:var(--fit-deep)}
+.ft-formerr{display:none;align-items:center;gap:10px;font-size:13.5px;font-weight:700;color:#a8391c;background:#fff2ee;border:1px solid #f3cdc0;border-radius:var(--radius-md);padding:12px 15px;margin-top:16px}
+.ft-formerr.show{display:flex}
+
+/* ---- DURDURMA PANELİ (riskli yanıt → test açılmaz) ---- */
+.ft-stop{border:1px solid #f3cdc0;background:#fff2ee;border-radius:var(--radius-xl);padding:24px 26px;margin-top:22px}
+.ft-stop h3{display:flex;align-items:center;gap:11px;font-size:18px;color:#8f3018;margin-bottom:10px}
+.ft-stop h3 i{flex:none;width:38px;height:38px;border-radius:var(--radius-md);background:#fadcd2;color:#a8391c;display:grid;place-items:center;font-size:16px}
+.ft-stop p{font-size:14px;font-weight:500;color:#6d3626;line-height:1.65}
+.ft-stop p+p{margin-top:10px}
+.ft-stop ul{list-style:none;display:flex;flex-direction:column;gap:8px;margin:14px 0 0}
+.ft-stop li{position:relative;padding-left:17px;font-size:13.5px;font-weight:500;color:#6d3626;line-height:1.5}
+.ft-stop li::before{content:"";position:absolute;left:0;top:8px;width:7px;height:7px;border-radius:var(--radius-circle);background:#c2694c}
+.ft-stop-acts{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+.ft-stop .btn-stop{background:#a8391c;color:#fff}
+.ft-stop .btn-stop:hover{background:#8f3018;transform:translateY(-2px)}
+.ft-stop .btn-line{background:#fff;color:#8f3018;border:1px solid #f0c3b4}
+.ft-stop .btn-line:hover{border-color:#a8391c;transform:translateY(-2px)}
+
+/* ---- KİLİTLİ ADIM BLOĞU (tarama geçilmeden görünen yer tutucu) ---- */
+.ft-lock{border:1px dashed var(--line);border-radius:var(--radius-xl);background:var(--bg);padding:34px 26px;text-align:center}
+.ft-lock .ic{width:56px;height:56px;border-radius:var(--radius-circle);background:#fff;border:1px solid var(--line);color:var(--muted);display:grid;place-items:center;font-size:21px;margin:0 auto 14px}
+.ft-lock h3{font-size:16.5px;margin-bottom:7px}
+/* R11/M13 · 420px, 924px'lik kartın %45'i = 47 karakter/satır — okunur
+   bandın (45–75) en dibinde ve kartın içinde yarım kalmış duruyordu.
+   560px'e çıkarıldı: %61 · ~63 karakter/satır (bandın ortası).
+   560 uydurma değil — deponun kendi ölçüsü (`.lib-sub{max-width:560px}`). */
+.ft-lock p{font-size:13.5px;font-weight:500;color:var(--muted);line-height:1.6;max-width:560px;margin:0 auto 18px}
+
+/* ---- ADIM ADIM UYGULAMA ---- */
+.ft-steps{list-style:none;counter-reset:ftstep;display:flex;flex-direction:column;gap:2px}
+.ft-steps li{display:flex;gap:16px;padding:15px 4px 15px 0;border-bottom:1px solid var(--line)}
+.ft-steps li:last-child{border-bottom:none}
+.ft-steps li::before{counter-increment:ftstep;content:counter(ftstep);flex:none;width:30px;height:30px;border-radius:var(--radius-md);background:var(--fit);color:#fff;font-size:13.5px;font-weight:700;display:grid;place-items:center;font-variant-numeric:tabular-nums}
+.ft-steps li b{display:block;font-size:15px;font-weight:700;color:var(--slate);margin-bottom:3px}
+.ft-steps li span{display:block;font-size:14px;font-weight:500;color:var(--slate-2);line-height:1.55}
+
+/* ---- ÖLÇÜM FORMU + SONUÇ ---- */
+.ft-mform{border:1px solid var(--line);border-radius:var(--radius-lg);background:var(--paper);box-shadow:var(--sh-sm);padding:20px 22px}
+.ft-mform .ft-q{border-bottom:none;padding:0}
+.ft-mform .ft-opts{flex-direction:column;align-items:stretch}
+.ft-mform .ft-opt{display:flex}
+.ft-mform .ft-opt span{width:100%;justify-content:flex-start}
+.ft-mact{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+
+.ft-res{border:1px solid var(--fit-line);border-radius:var(--radius-xl);background:var(--fit-tint);padding:24px 26px;margin-top:20px}
+.ft-res h3{font-size:18px;margin-bottom:10px;display:flex;align-items:center;gap:11px}
+.ft-res h3 i{flex:none;width:38px;height:38px;border-radius:var(--radius-md);background:#fff;color:var(--fit-deep);display:grid;place-items:center;font-size:16px}
+.ft-res-p{font-size:14px;font-weight:500;color:var(--slate-2);line-height:1.65}
+.ft-res-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:18px}
+.ft-res-k{background:#fff;border:1px solid var(--fit-line);border-radius:var(--radius-lg);padding:16px 18px}
+.ft-res-k .lab{display:block;font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:7px}
+.ft-res-k b{display:block;font-size:17px;font-weight:800;color:var(--slate);letter-spacing:-.01em}
+.ft-res-k small{display:block;font-size:12.5px;font-weight:500;color:var(--slate-2);margin-top:5px;line-height:1.5}
+.ft-res-k a{color:var(--fit-deep);font-weight:700;text-decoration:underline;text-underline-offset:2px}
+.ft-res-acts{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+
+/* ---- SAĞ KOLON: sabit özet kartı ---- */
+.ft-side{position:sticky;top:128px;display:flex;flex-direction:column;gap:16px}
+.ft-side-card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-xl);box-shadow:var(--sh-md);overflow:hidden}
+.ft-side-h{display:flex;align-items:center;gap:12px;padding:18px 20px;border-bottom:1px solid var(--line)}
+.ft-side-h h2{font-size:15.5px}
+.ft-side-h .ic{flex:none;width:36px;height:36px;border-radius:var(--radius-md);background:var(--fit-tint);color:var(--fit-deep);display:grid;place-items:center;font-size:14px}
+.ft-side-body{padding:6px 20px 18px}
+.ft-fact{display:flex;gap:13px;align-items:flex-start;padding:14px 0;border-bottom:1px solid var(--line)}
+.ft-fact:last-child{border-bottom:none}
+.ft-fact>i{flex:none;width:34px;height:34px;border-radius:var(--radius-md);background:var(--bg);color:var(--slate-2);display:grid;place-items:center;font-size:13px}
+.ft-fact .tx{min-width:0;flex:1}
+.ft-fact h3{font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.ft-fact b{display:block;font-size:14.5px;font-weight:700;color:var(--slate)}
+.ft-fact small{display:block;font-size:12.5px;font-weight:500;color:var(--slate-2);margin-top:3px;line-height:1.5}
+.ft-eq{list-style:none;display:flex;flex-direction:column;gap:6px;margin-top:6px}
+.ft-eq li{display:flex;gap:9px;font-size:12.5px;font-weight:500;color:var(--slate-2);line-height:1.45}
+.ft-eq li i{flex:none;margin-top:2px;font-size:11px;color:var(--fit-deep)}
+.ft-status{display:flex;align-items:center;gap:10px;padding:14px 20px;border-top:1px solid var(--line);background:var(--bg)}
+.ft-status .lab{font-size:12px;font-weight:600;color:var(--muted)}
+.ft-side-cta{padding:0 20px 20px;display:flex;flex-direction:column;gap:9px}
+.ft-side-cta .btn{width:100%}
+.ft-side-cta .btn-line{background:var(--paper);color:var(--slate);border:1px solid var(--line)}
+.ft-side-cta .btn-line:hover{border-color:var(--fit);color:var(--fit-deep);transform:translateY(-2px)}
+
+/* ---- DİĞER TESTLER RAYI ---- */
+.ft-rail{display:flex;flex-wrap:wrap;gap:10px;margin-top:6px}
+.ft-rail a{display:inline-flex;align-items:center;gap:9px;font-size:13.5px;font-weight:600;color:var(--slate);background:var(--paper);border:1px solid var(--line);padding:10px 16px;border-radius:var(--radius-sm);transition:.18s var(--ease)}
+.ft-rail a i{font-size:12px;color:var(--fit-deep)}
+.ft-rail a:hover{border-color:var(--fit);color:var(--fit-deep);background:var(--fit-tint);transform:translateY(-2px)}
+.ft-rail a[aria-current="page"]{border-color:var(--fit);background:var(--fit);color:#fff}
+.ft-rail a[aria-current="page"] i{color:#fff}
+
+/* ---- ANTRENÖRE DANIŞMA BANDI ---- */
+.ft-coach{padding:var(--sec-pad) 0 var(--sec-pad);background:var(--bg-cream);border-top:1px solid var(--line)}
+.ft-coach-in{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:30px;align-items:center;background:linear-gradient(160deg,var(--marka-koyu-zemin-yesil),#211E16);border-radius:var(--radius-xl);padding:var(--sec-pad-sm) 32px;color:#fff}
+.ft-coach-in h2{color:#fff;font-size:24px;margin-bottom:10px}
+.ft-coach-in p{font-size:14.5px;font-weight:500;color:rgba(255,255,255,.78);line-height:1.65}
+.ft-coach-in p+p{margin-top:9px}
+.ft-coach-acts{display:flex;flex-direction:column;gap:10px}
+.ft-coach-acts .btn{width:100%}
+.ft-coach-acts .btn-line{background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.24)}
+.ft-coach-acts .btn-line:hover{background:rgba(255,255,255,.18);transform:translateY(-2px)}
+
+/* ---- DAR EKRAN ---- */
+@media (max-width:1024px){
+  .ft-lay{grid-template-columns:1fr;gap:30px}
+  .ft-side{position:static;top:auto}
+  .ft-coach-in{grid-template-columns:1fr;gap:22px}
+}
+@media (max-width:640px){
+  .ft-body{padding-top:var(--sec-pad-sm)}
+  .ft-two,.ft-res-grid{grid-template-columns:1fr}
+  /* R8/29: .ft-blk margin-top artik --ft-ara token'inda (640 kirilimi) */
+  .ft-blk-h h2{font-size:19px}
+  .ft-scr-body,.ft-side-body{padding-left:16px;padding-right:16px}
+  .ft-scr-h{padding:16px}
+  .ft-stop,.ft-res{padding:20px 18px}
+  .ft-coach{padding:var(--sec-pad) 0 var(--sec-pad)}
+  .ft-coach-in{padding:22px 18px}
+  .ft-coach-in h2{font-size:20px}
+  .ft-opt span{width:100%;justify-content:center}
+  .ft-opts{flex-direction:column;align-items:stretch}
+  .ft-opt{display:flex}
+}
+</style>
+<!-- Metin yaslama katmanı (tek kaynak) — sayfa stillerinden SONRA yüklenir,
+     böylece sayfa içi text-align kuralları yaslamayı geri alamaz (HANDOFF §5) -->
+<link rel="stylesheet" href="assets/css/fit-type.css" />
+</head>
+<body data-brand="fit" data-fit-page="fit-testi-detay-v1">
+
+<!-- KABUK: üst katman (üst bant + header + drawer + alt bar + görüş + çerez) -->
+<div id="fitShellTop"></div>
+
+<main class="page-main" id="pageMain">
+
+<!-- ===== BANNER + BREADCRUMB ===================================== -->
+<section class="lib-top" id="ftTop" style="--lib-img:url('https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=1680&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-16');--lib-pos:center 30%">
+  <div class="wrap">
+    <nav class="lib-crumb" aria-label="Sayfa yolu">
+      <a href="dadafit-hub-v1.html" class="crumb-home"><i class="fa-solid fa-house" aria-hidden="true"></i><span class="sr-only">DadaFit ana sayfa</span></a>
+      <i class="fa-solid fa-chevron-right"></i>
+      <a href="fit-testleri-v1.html">Fit Testleri</a>
+      <i class="fa-solid fa-chevron-right"></i>
+      <span class="cur" data-tt="ad">Fit Testi</span>
+    </nav>
+    <span class="eyebrow"><i class="fa-solid fa-clipboard-check"></i> <span data-tt="kategori">Fit Testi</span></span>
+    <!-- TEK H1 (belge §19) -->
+    <h1 data-tt="ad">Fit Testi</h1>
+    <p class="lib-sub" data-tt="ozet">Bu test, bugünkü durumunu kendi başlangıcınla kıyaslaman için kurgulandı.</p>
+    <div class="chips">
+      <a class="btn btn-fit" href="#uygunluk"><i class="fa-solid fa-shield-heart"></i> Uygunluk taramasıyla başla</a>
+      <a class="btn btn-ghost" href="fit-testleri-v1.html"><i class="fa-solid fa-list-ul"></i> Tüm Fit Testleri</a>
+    </div>
+    <div class="lib-stats">
+      <div class="lib-stat"><b data-tt="sureKisa">8–10 dk</b><span>tahmini süre</span></div>
+      <div class="lib-stat"><b data-tt="adimSayi">5</b><span>uygulama adımı</span></div>
+      <div class="lib-stat"><b>7</b><span>tarama sorusu</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== GÖVDE ================================================== -->
+<section class="sec sec-fit ft-body">
+  <div class="wrap">
+
+    <!-- §8 SAĞLIK SINIRI — sayfanın en üstünde, testten önce -->
+    <div class="hr-note">
+      <i class="fa-solid fa-circle-info"></i>
+      <p><b>Fit Testleri tıbbi teşhis, hastalık tanısı ya da tedavi önerisi üretmez.</b>
+      Sonuç bir sağlık raporu değildir; yalnız sana uygun içerik ve başlangıç yoğunluğunu seçmene yardım eder.
+      Bir rahatsızlığın varsa ya da ilaç kullanıyorsan önce hekimine danış. Ayrıntı:
+      <a href="saglik-bilgilendirme-v1.html">Sağlık Bilgilendirmesi</a>.</p>
+    </div>
+
+    <div class="ft-lay">
+
+      <!-- ======================= SOL KOLON ======================= -->
+      <div class="ft-col">
+
+        <!-- E6/it1 · AKIŞ RAYI — testin üç adımı, sayfanın en başında -->
+        <nav class="ft-flow" aria-label="Test akışı">
+          <a href="#uygunluk"><span class="n">1</span><span><b>Uygunluk taraması</b><span>7 soru · 1 dakikadan kısa</span><span class="st" id="ftFlowS1"><i class="fa-solid fa-hourglass-half"></i> Yapılmadı</span></span></a>
+          <a href="#adimlar"><span class="n">2</span><span><b>Adım adım uygulama</b><span>5 adım · ısınma ve soğuma dahil</span><span class="st is-locked"><i class="fa-solid fa-lock"></i> Tarama sonrası açılır</span></span></a>
+          <a href="#sonuc"><span class="n">3</span><span><b>Sonucunu gir</b><span>Kendi başlangıcınla kıyaslanır</span><span class="st"><i class="fa-solid fa-flag-checkered"></i> Son adım</span></span></a>
+        </nav>
+
+        <div class="ft-flow-act">
+          <a class="btn btn-fit" href="#uygunluk"><i class="fa-solid fa-shield-heart"></i> Uygunluk taramasıyla başla</a>
+          <a class="btn btn-ghost" href="fit-testleri-v1.html"><i class="fa-solid fa-list-ul"></i> Diğer testler</a>
+        </div>
+
+        <p class="ft-tier">Önce oku</p>
+
+        <!-- 1 · TEST AMACI -->
+        <div class="ft-blk" id="amac">
+          <h2 class="ft-acc-h"><button type="button" class="ft-blk-h ft-acc" aria-expanded="true" aria-controls="ftacc-amac">
+            <span class="ic"><i class="fa-solid fa-bullseye"></i></span>
+            <div>
+              <h2>Test amacı</h2>
+              <p>Bu test neyi görmene yarar, neyi görmez.</p>
+            </div>
+            <i class="fa-solid fa-chevron-down ft-acc-ok" aria-hidden="true"></i>
+          </button></h2>
+          <div class="ft-acc-govde" id="ftacc-amac">
+          <p class="ft-lead" data-tt="amac">—</p>
+          <ul class="ft-ul" id="ftAmacList"></ul>
+          </div>
+        </div>
+
+        <!-- 2 · KİMLER İÇİN UYGUN -->
+        <div class="ft-blk" id="kimler">
+          <h2 class="ft-acc-h"><button type="button" class="ft-blk-h ft-acc" aria-expanded="false" aria-controls="ftacc-kimler">
+            <span class="ic"><i class="fa-solid fa-user-check"></i></span>
+            <div>
+              <h2>Kimler için uygun olduğu</h2>
+              <p>Testin hedeflediği kişi ve şimdilik ertelemesi gerekenler.</p>
+            </div>
+            <i class="fa-solid fa-chevron-down ft-acc-ok" aria-hidden="true"></i>
+          </button></h2>
+          <div class="ft-acc-govde" id="ftacc-kimler" hidden>
+          <!-- R11/M13 · İŞARETLEME HATASI DÜZELTİLDİ.
+               `.ft-two` ızgarası burada ERKEN KAPANIYORDU: "is-ok" kutusundan
+               sonra fazladan bir </div> vardı, "is-no" kutusu ızgaranın
+               DIŞINDA kalıyordu. Sonuç: yeşil kutu yarım kolon (640px),
+               sarı kutu tam genişlik (1300px) — Beyar'ın "buralar saçma
+               olmuş" dediği görüntü tam olarak buydu. İkisi de artık aynı
+               ızgarada, eşit kolonda. -->
+          <div class="ft-two">
+            <div class="ft-who is-ok">
+              <h3><i class="fa-solid fa-circle-check"></i> Bu test sana uygun olabilir</h3>
+              <ul id="ftUygun"></ul>
+            </div>
+            <div class="ft-who is-no">
+              <h3><i class="fa-solid fa-hand"></i> Şimdilik erteleyip uzmana danış</h3>
+              <ul id="ftUygunDegil"></ul>
+            </div>
+          </div>
+          </div>
+        </div><!-- /#kimler.ft-blk — R12/R6: bu kapanış eksikti, aside sağ
+                   kolona değil .ft-col'un dibine düşüyordu (kaskad kayması) -->
+
+        <!-- 3 · GÜVENLİK UYARISI -->
+        <div class="ft-blk" id="guvenlik">
+          <h2 class="ft-acc-h"><button type="button" class="ft-blk-h ft-acc" aria-expanded="false" aria-controls="ftacc-guvenlik">
+            <span class="ic"><i class="fa-solid fa-triangle-exclamation"></i></span>
+            <div>
+              <h2>Güvenlik uyarısı</h2>
+              <p>Testi hangi durumda durduracağını önceden bil.</p>
+            </div>
+            <i class="fa-solid fa-chevron-down ft-acc-ok" aria-hidden="true"></i>
+          </button></h2>
+          <div class="ft-acc-govde" id="ftacc-guvenlik" hidden>
+          <div class="ft-safe">
+            <h3><i class="fa-solid fa-hand-dots"></i> Testi hemen bırakman gereken durumlar</h3>
+            <ul id="ftGuvenlik"></ul>
+          </div>
+          </div>
+        </div>
+
+        <!-- 4 · FİZİKSEL AKTİVİTE UYGUNLUK TARAMASI (§8 — kapı) -->
+        <p class="ft-tier">Sonra uygula</p>
+
+        <div class="ft-blk is-step" id="uygunluk">
+          <div class="ft-blk-h">
+            <span class="ic" aria-hidden="true">1</span>
+            <div>
+              <h2>Fiziksel aktivite uygunluk taraması</h2>
+              <p>Test adımları bu tarama tamamlanmadan açılmaz.</p>
+            </div>
+          </div>
+
+          <form class="ft-scr" id="ftScr" novalidate>
+            <div class="ft-scr-h">
+              <span class="ic"><i class="fa-solid fa-clipboard-question"></i></span>
+              <div>
+                <b>7 soru · 1 dakikadan kısa</b>
+                <small>Bu bir teşhis aracı değildir. Yalnız bugün bu testi güvenle yapıp yapamayacağını
+                anlamak için soruluyor. Bir soruya bile <b>“Evet”</b> dersen test başlamaz ve seni uzman
+                desteğine yönlendiririz. <b>Her soruyu bir kez yanıtlarsın</b> — yanıt kilitlenir.
+                Değiştirmen gerekirse “Taramayı sıfırla” ile baştan başla.</small>
+              </div>
+            </div>
+
+            <div class="ft-scr-body">
+
+              <fieldset class="ft-q" data-q="1">
+                <legend><span class="n" aria-hidden="true">1</span>Bir hekim sana kalp rahatsızlığın olduğunu ve yalnız hekim önerisiyle fiziksel aktivite yapman gerektiğini söyledi mi?</legend>
+                <div class="ft-opts">
+                  <label class="ft-opt"><input type="radio" name="q1" value="hayir" /><span><i class="fa-regular fa-circle"></i> Hayır</span></label>
+                  <label class="ft-opt"><input type="radio" name="q1" value="evet" data-risk="1" /><span><i class="fa-solid fa-triangle-exclamation"></i> Evet</span></label>
+                </div>
+                <p class="ft-qerr"><i class="fa-solid fa-circle-exclamation"></i> Bu soru yanıtlanmadı.</p>
+              </fieldset>
+
+              <fieldset class="ft-q" data-q="2">
+                <legend><span class="n" aria-hidden="true">2</span>Hareket ederken ya da dinlenirken göğsünde ağrı, baskı veya sıkışma hissediyor musun?</legend>
+                <div class="ft-opts">
+                  <label class="ft-opt"><input type="radio" name="q2" value="hayir" /><span><i class="fa-regular fa-circle"></i> Hayır</span></label>
+                  <label class="ft-opt"><input type="radio" name="q2" value="evet" data-risk="1" /><span><i class="fa-solid fa-triangle-exclamation"></i> Evet</span></label>
+                </div>
+                <p class="ft-qerr"><i class="fa-solid fa-circle-exclamation"></i> Bu soru yanıtlanmadı.</p>
+              </fieldset>
+
+              <fieldset class="ft-q" data-q="3">
+                <legend><span class="n" aria-hidden="true">3</span>Son 12 ayda baş dönmesi yaşadın ya da dengeni kaybedip düştün mü?</legend>
+                <div class="ft-opts">
+                  <label class="ft-opt"><input type="radio" name="q3" value="hayir" /><span><i class="fa-regular fa-circle"></i> Hayır</span></label>
+                  <label class="ft-opt"><input type="radio" name="q3" value="evet" data-risk="1" /><span><i class="fa-solid fa-triangle-exclamation"></i> Evet</span></label>
+                </div>
+                <p class="ft-qerr"><i class="fa-solid fa-circle-exclamation"></i> Bu soru yanıtlanmadı.</p>
+              </fieldset>
+
+              <fieldset class="ft-q" data-q="4">
+                <legend><span class="n" aria-hidden="true">4</span>Hareket ettiğinde kötüleşen bir kemik, eklem ya da kas sorunun var mı?</legend>
+                <div class="ft-opts">
+                  <label class="ft-opt"><input type="radio" name="q4" value="hayir" /><span><i class="fa-regular fa-circle"></i> Hayır</span></label>
+                  <label class="ft-opt"><input type="radio" name="q4" value="evet" data-risk="1" /><span><i class="fa-solid fa-triangle-exclamation"></i> Evet</span></label>
+                </div>
+                <p class="ft-qerr"><i class="fa-solid fa-circle-exclamation"></i> Bu soru yanıtlanmadı.</p>
+              </fieldset>
+
+              <fieldset class="ft-q" data-q="5">
+                <legend><span class="n" aria-hidden="true">5</span>Tansiyon ya da kalp rahatsızlığı için düzenli olarak ilaç kullanıyor musun?</legend>
+                <div class="ft-opts">
+                  <label class="ft-opt"><input type="radio" name="q5" value="hayir" /><span><i class="fa-regular fa-circle"></i> Hayır</span></label>
+                  <label class="ft-opt"><input type="radio" name="q5" value="evet" data-risk="1" /><span><i class="fa-solid fa-triangle-exclamation"></i> Evet</span></label>
+                </div>
+                <p class="ft-qerr"><i class="fa-solid fa-circle-exclamation"></i> Bu soru yanıtlanmadı.</p>
+              </fieldset>
+
+              <fieldset class="ft-q" data-q="6">
+                <legend><span class="n" aria-hidden="true">6</span>Gebelik, yeni doğum ya da yakın zamanda geçirilmiş bir ameliyat gibi hareketini sınırlayan bir durumun var mı?</legend>
+                <div class="ft-opts">
+                  <label class="ft-opt"><input type="radio" name="q6" value="hayir" /><span><i class="fa-regular fa-circle"></i> Hayır</span></label>
+                  <label class="ft-opt"><input type="radio" name="q6" value="evet" data-risk="1" /><span><i class="fa-solid fa-triangle-exclamation"></i> Evet</span></label>
+                </div>
+                <p class="ft-qerr"><i class="fa-solid fa-circle-exclamation"></i> Bu soru yanıtlanmadı.</p>
+              </fieldset>
+
+              <fieldset class="ft-q" data-q="7">
+                <legend><span class="n" aria-hidden="true">7</span>Bugün kendini iyi hissetmiyor musun (ateş, enfeksiyon, aşırı yorgunluk)?</legend>
+                <div class="ft-opts">
+                  <label class="ft-opt"><input type="radio" name="q7" value="hayir" /><span><i class="fa-regular fa-circle"></i> Hayır</span></label>
+                  <label class="ft-opt"><input type="radio" name="q7" value="evet" data-risk="1" /><span><i class="fa-solid fa-triangle-exclamation"></i> Evet</span></label>
+                </div>
+                <p class="ft-qerr"><i class="fa-solid fa-circle-exclamation"></i> Bu soru yanıtlanmadı.</p>
+              </fieldset>
+
+              <p class="ft-formerr" id="ftFormErr" role="alert">
+                <i class="fa-solid fa-circle-exclamation"></i>
+                <span id="ftFormErrTxt">Tarama tamamlanmadı.</span>
+              </p>
+
+              <div class="ft-scr-acts">
+                <button class="btn btn-fit" type="submit" id="ftScrSubmit"><i class="fa-solid fa-shield-heart"></i> Taramayı tamamla</button>
+                <button class="btn btn-ghost" type="button" id="ftScrReset"><i class="fa-solid fa-rotate-left"></i> Taramayı sıfırla</button>
+              </div>
+
+              <p class="ft-scr-note">
+                <i class="fa-solid fa-lock"></i>
+                <span>Tarama yanıtların hiçbir yere kaydedilmez — ne adres çubuğuna, ne tarayıcı deposuna,
+                ne de bir sunucuya. Sayfayı yenilersen tarama bilinçli olarak baştan başlar; güvenlik kapısı
+                her oturumda yeniden geçilir.</span>
+              </p>
+            </div>
+          </form>
+
+          <!-- DURDURMA PANELİ — riskli yanıtta görünür, test adımları AÇILMAZ -->
+          <div class="ft-stop" id="ftStop" role="status" hidden>
+            <h3><i class="fa-solid fa-hand"></i> Test durduruldu</h3>
+            <p>Tarama yanıtlarından en az biri, bu testi bugün <b>kendi başına</b> yapmanın uygun
+            olmayabileceğini gösteriyor. Bu bir teşhis değildir ve bir rahatsızlığın olduğu anlamına
+            gelmez — yalnız bu testi bir uzmanın gözetimi olmadan yapmamanı öneriyoruz.</p>
+            <p><b>Şimdi ne yapmalısın?</b></p>
+            <ul>
+              <li>Önce hekimine danış; “Evet” dediğin maddeleri ona olduğu gibi aktar.</li>
+              <li>Hareket etmeye devam etmek istiyorsan bir antrenörle çalış — uygun yoğunluğu birlikte belirleyin.</li>
+              <li>Düşük etkili, eklem dostu içeriklerle başlamak istersen Hareket Rehberi’ndeki başlangıç bölümüne bak.</li>
+            </ul>
+            <div class="ft-stop-acts">
+              <a class="btn btn-stop" href="antrenorler-v1.html"><i class="fa-solid fa-user-tie"></i> Uzman desteği al — antrenörler</a>
+              <a class="btn btn-line" href="saglik-bilgilendirme-v1.html"><i class="fa-solid fa-shield-heart"></i> Sağlık Bilgilendirmesi</a>
+              <a class="btn btn-line" href="hareket-yeni-baslayanlar-v1.html"><i class="fa-solid fa-seedling"></i> Yeni başlayanlar rehberi</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5 · ADIM ADIM UYGULAMA — TARAMA GEÇİLMEDEN AÇILMAZ -->
+        <div class="ft-blk is-step" id="adimlar">
+          <div class="ft-blk-h">
+            <span class="ic" aria-hidden="true">2</span>
+            <div>
+              <h2>Adım adım uygulama</h2>
+              <p>Kendi temponda ilerle; hiçbir adımı zorlayarak tamamlama.</p>
+            </div>
+          </div>
+
+          <!-- kilitli yer tutucu (tarama geçilene kadar) -->
+          <div class="ft-lock" id="ftLock">
+            <span class="ic"><i class="fa-solid fa-lock"></i></span>
+            <h3>Adımlar henüz açık değil</h3>
+            <p>Test adımlarını görebilmen için önce yukarıdaki <b>fiziksel aktivite uygunluk taramasını</b>
+            tamamlaman gerekiyor. Bu, belge gereği testin önündeki güvenlik kapısıdır.</p>
+            <a class="btn btn-fit" href="#uygunluk"><i class="fa-solid fa-arrow-up"></i> Taramaya git</a>
+          </div>
+
+          <!-- gerçek adımlar — hidden; yalnız tarama temiz çıkarsa açılır -->
+          <div id="ftSteps" hidden>
+            <ol class="ft-steps" id="ftStepList"></ol>
+            <!-- R9 (Beyar): sonuç girişi adımlarla BİRLİKTE açılmıyor artık.
+                 Aşama aşama: tarama → adımlar → sonuç. -->
+            <div class="ft-steps-done">
+              <button type="button" class="btn btn-fit" id="ftStepsDone">
+                <i class="fa-solid fa-check"></i> Adımları tamamladım — sonucu gir
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6 · SONUÇ ÖZETİ — adımlarla birlikte açılır -->
+        <div class="ft-blk is-step" id="sonuc">
+          <div class="ft-blk-h">
+            <span class="ic" aria-hidden="true">3</span>
+            <div>
+              <h2>Sonuç özeti</h2>
+              <p>Ölçtüğün değeri gir; özet, başlangıç seviyen ve önerilen program burada oluşur.</p>
+            </div>
+          </div>
+
+          <div class="ft-lock" id="ftResLock">
+            <span class="ic"><i class="fa-solid fa-lock"></i></span>
+            <h3>Sonuç girişi kapalı</h3>
+            <p id="ftResLockTxt">Sonucunu yalnız testi uyguladıysan girebilirsin. Önce yukarıdaki
+            <b>uygunluk taramasını</b> tamamla.</p>
+            <a class="btn btn-fit" id="ftResLockCta" href="#uygunluk"><i class="fa-solid fa-arrow-up"></i> Taramaya git</a>
+          </div>
+
+          <div id="ftResArea" hidden>
+            <form class="ft-mform" id="ftMForm" novalidate>
+              <fieldset class="ft-q" data-q="olcum">
+                <legend id="ftOlcumSoru">Ölçtüğün değeri seç</legend>
+                <div class="ft-opts" id="ftOlcumOpts"></div>
+                <p class="ft-qerr"><i class="fa-solid fa-circle-exclamation"></i> Sonucunu seçmeden özet oluşturulamaz.</p>
+              </fieldset>
+              <div class="ft-mact">
+                <button class="btn btn-fit" type="submit"><i class="fa-solid fa-wand-magic-sparkles"></i> Sonuç özetini oluştur</button>
+                <button class="btn btn-ghost" type="button" id="ftMReset"><i class="fa-solid fa-rotate-left"></i> Temizle</button>
+              </div>
+            </form>
+
+            <div class="ft-res" id="ftRes" role="status" hidden>
+              <h3><i class="fa-solid fa-clipboard-check"></i> <span>Sonuç özetin</span></h3>
+              <p class="ft-res-p" id="ftResOzet">—</p>
+              <div class="ft-res-grid">
+                <div class="ft-res-k">
+                  <span class="lab">Uygun başlangıç seviyesi</span>
+                  <b id="ftResSeviye">—</b>
+                  <small id="ftResSeviyeNot">Bu seviye başkasıyla değil, yalnız senin kendi başlangıcınla ilgilidir.</small>
+                </div>
+                <div class="ft-res-k">
+                  <span class="lab">Önerilen program</span>
+                  <b id="ftResProgAd">—</b>
+                  <small><a id="ftResProgLink" href="program-liste-v1.html">Programı incele</a> · <a href="program-liste-v1.html">tüm programlar</a></small>
+                </div>
+              </div>
+              <div class="ft-res-acts">
+                <a class="btn btn-fit" id="ftResDetay" href="fit-testi-sonuc-v1.html"><i class="fa-solid fa-file-lines"></i> Ayrıntılı sonuç sayfası</a>
+                <a class="btn btn-ghost" href="antrenorler-v1.html"><i class="fa-solid fa-user-tie"></i> Antrenöre danış</a>
+              </div>
+              <div class="hr-note">
+                <i class="fa-solid fa-circle-info"></i>
+                <p>Bu özet bir <b>tanı değildir</b>; ölçülen tek bir değeri programa çevirir. Aynı testi dört
+                hafta sonra tekrarlayıp kendi ilk sayınla kıyaslaman, tek seferlik sonuçtan daha anlamlıdır.
+                Sonuçla ilgili tereddüdün varsa <a href="antrenorler-v1.html">bir antrenöre</a> ya da hekimine danış.</p>
+                <p> Bu prototipin arka ucu yoktur: yukarıdaki özet <b>kaydedilmez</b> ve
+                <b>Ayrıntılı sonuç sayfası</b> senin girdiğin değeri değil, o test için hazırlanmış
+                <b>örnek bir senaryoyu</b> gösterir. İki sayfadaki seviye bu yüzden farklı olabilir.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /.ft-col -->
+
+      <!-- ======================= SAĞ KOLON ======================= -->
+      <aside class="ft-side">
+        <div class="ft-side-card">
+          <div class="ft-side-h">
+            <span class="ic"><i class="fa-solid fa-circle-info"></i></span>
+            <h2>Test künyesi</h2>
+          </div>
+          <div class="ft-side-body">
+            <div class="ft-fact">
+              <i class="fa-regular fa-clock"></i>
+              <div class="tx">
+                <h3>Tahmini süre</h3>
+                <b data-tt="sure">—</b>
+                <small data-tt="sureNot">Isınma ve soğuma dahil.</small>
+              </div>
+            </div>
+            <div class="ft-fact">
+              <i class="fa-solid fa-toolbox"></i>
+              <div class="tx">
+                <h3>Gerekli ekipman</h3>
+                <ul class="ft-eq" id="ftEkipman"></ul>
+              </div>
+            </div>
+            <div class="ft-fact">
+              <i class="fa-solid fa-signal"></i>
+              <div class="tx">
+                <h3>Uygun başlangıç seviyesi</h3>
+                <b id="ftSideSeviye">Test sonunda belirlenir</b>
+                <small>Sonucunu girdiğinde burada da görünür.</small>
+              </div>
+            </div>
+          </div>
+          <div class="ft-status">
+            <span class="lab">Tarama durumu</span>
+            <span class="fp-badge off" id="ftStatusBadge"><i class="fa-solid fa-hourglass-half"></i> Yapılmadı</span>
+          </div>
+          <div class="ft-side-cta">
+            <a class="btn btn-fit" href="#uygunluk"><i class="fa-solid fa-shield-heart"></i> Uygunluk taraması</a>
+            <a class="btn btn-line" href="fit-testleri-v1.html"><i class="fa-solid fa-list-ul"></i> Diğer testler</a>
+          </div>
+        </div>
+
+        <div class="ft-side-card">
+          <div class="ft-side-h">
+            <span class="ic"><i class="fa-solid fa-eye"></i></span>
+            <h2>Bu sayfadaki veriler</h2>
+          </div>
+          <div class="ft-side-body">
+            <p style="font-size:13px;font-weight:500;color:var(--slate-2);line-height:1.6;padding:12px 0"> <br />
+              Test içerikleri prototip amaçlı örnek metinlerdir; gerçek bir ölçüm protokolü ya da
+              klinik bir değerlendirme aracı değildir. Sonuç, girdiğin tek değerden üretilir ve
+              hiçbir yere kaydedilmez.
+            </p>
+          </div>
+        </div>
+      </aside>
+
+    </div><!-- /.ft-lay -->
+  </div>
+</section>
+
+<!-- ===== ANTRENÖRE DANIŞMA YÖNLENDİRMESİ ======================== -->
+<section class="ft-coach" id="antrenor">
+  <div class="wrap">
+    <div class="ft-coach-in">
+      <div>
+        <h2>Emin olamadığın her yerde antrenöre danış</h2>
+        <p id="ftCoachNot">Test sırasında bir hareket sana ters geldiyse, ağrı hissettiysen ya da sonucun
+        beklediğinden çok farklı çıktıysa tek başına yorumlama. DadaFit antrenörleri testini birlikte
+        gözden geçirir ve sana uygun yoğunluğu belirler.</p>
+        <p>Antrenör görüşmesi bir hekim muayenesinin yerine geçmez. Tanı gerektiren bir durumda
+        önce hekimine başvur.</p>
+      </div>
+      <div class="ft-coach-acts">
+        <a class="btn btn-fit" href="antrenorler-v1.html"><i class="fa-solid fa-user-tie"></i> Antrenör bul</a>
+        <a class="btn btn-line" href="fit-antrenorum.html"><i class="fa-regular fa-calendar-check"></i> Randevularım</a>
+        <a class="btn btn-line" href="saglik-bilgilendirme-v1.html"><i class="fa-solid fa-shield-heart"></i> Sağlık Bilgilendirmesi</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== DİĞER TESTLER ========================================== -->
+<section class="sec sec-fit" style="padding-top:var(--sec-pad);padding-bottom:var(--sec-pad);background:var(--bg-white)" id="diger">
+  <div class="wrap">
+    <div class="sec-head sec-fit">
+      <div>
+        <span class="eyebrow"><i class="fa-solid fa-clipboard-list"></i> Yedi değerlendirme</span>
+        <h2>Diğer Fit Testleri</h2>
+        <p class="lead">Her testin kendi uygunluk taraması vardır; birinden diğerine geçtiğinde tarama yeniden yapılır.</p>
+      </div>
+      <a class="see-all" href="fit-testleri-v1.html">Fit Testleri sayfası <i class="fa-solid fa-arrow-right"></i></a>
+    </div>
+    <nav class="ft-rail" id="ftRail" aria-label="Diğer Fit Testleri"></nav>
+  </div>
+</section>
+
+</main><!-- /.page-main -->
+
+<!-- KABUK: alt katman (giriş kapısı + footer + başa dön) -->
+<div id="fitShellBottom"></div>
+
+<!-- DadaFit ortak kabuk JS (tek kaynak): markup + davranış -->
+<script src="assets/js/fit-shell.js"></script>
+<script src="assets/js/fit-mesaj.js"></script>
+<script>
+/* =====================================================================
+ SAYFA JS — FİT TESTİ DETAYI (§8)
+ ---------------------------------------------------------------------
+ İki bağımsız iş yapar:
+
+ 1) ?test=<slug> ile sayfayı o teste göre doldurur (yedi test için gerçek
+    içerik; tanınmayan slug 'baslangic-seviyesi'ne düşer).
+
+ 2) FİZİKSEL AKTİVİTE UYGUNLUK TARAMASI — bu bir dekor değil, KAPI.
+    · Eksik yanıt varsa: hata (ikon + metin, yalnız renk değil), akış açılmaz.
+    · Yanıtlardan biri bile riskliyse: #ftSteps ve #ftResArea `hidden`
+      KALIR, #ftStop görünür, kullanıcı uzman desteğine yönlendirilir.
+    · Yalnız yedi yanıtın hepsi temizse adımlar ve sonuç girişi açılır.
+
+ Tarama yanıtları bilinçli olarak hiçbir yere yazılmaz (URL/localStorage
+ dahil): sağlık verisi prototip deposunda tutulmaz ve güvenlik kapısı her
+ yüklemede yeniden geçilir. Test seçimi ise URL'de (?test=) taşınır, bu
+ yüzden geri/ileri ve yenileme testi korur.
+ ===================================================================== */
+(function(){
+  'use strict';
+
+  /* ---------------- test içerikleri ---------------- */
+  /* Program tablosu doğrudan program-detay-v1.html slug'ıyla anahtarlanır.
+     Kısa anahtarlar ('ev'/'mobilite'/'guc'/'kondisyon') bilinçli kaldırıldı:
+     'mobilite' hem burada hem TESTS kaydında anahtardı ve dosyadan veri
+     çıkaran naif bir regex ilk eşleşmeye kilitlenip yanlış bloktan okuyordu
+     (kardeş ajanın ölçümünde bir kez oldu). Artık iki anahtar uzayı ayrık
+     ve aradaki dolaylılık da kalktı — bant doğrudan slug'ı taşıyor. */
+  var PROG = {
+    '4-hafta-ev-antrenmani':  '4 Hafta Ev Antrenmanı',
+    '8-hafta-mobilite':       '8 Hafta Mobilite Planı',
+    '12-hafta-guc-temeli':    '12 Hafta Güç Temeli',
+    '8-hafta-salon-kondisyon':'8 Hafta Salon Kondisyon'
+  };
+
+  /* Seviye adları TEK KAYNAK. Site konvansiyonu (program-liste-v1.html:308-310 ve
+     egzersiz-kutuphane-v1.html:291-293 seviye filtreleri) ve fit-testi-sonuc-v1.html:256
+     ile birebir aynı sayısal eşleme: 1=Başlangıç · 2=Orta · 3=İleri.
+     Bantlarda yalnız `lv` sayısı tutulur, ad buradan türer — ad ile sayı ayrışamaz.
+     NOT: program-liste-v1.html bugün `location.search` okumuyor, bu yüzden
+     `?seviye=<lv>` bağlantısı ÜRETİLMİYOR (ölü hedef olurdu, §23). Eşleme hazır. */
+  var SEVIYE = { 1:'Başlangıç', 2:'Orta', 3:'İleri' };
+
+  var DUR = [
+    'Göğüs ağrısı, baskı ya da sıkışma hissedersen testi hemen bırak.',
+    'Baş dönmesi, bulanık görme, mide bulantısı ya da soğuk terleme başlarsa dur.',
+    'Nefes darlığı geçmiyorsa ya da konuşamayacak kadar zorlanıyorsan dur.',
+    'Herhangi bir eklemde keskin ya da batıcı ağrı olursa o adımı tamamlama.'
+  ];
+
+  var VERI = {
+
+    'baslangic-seviyesi':{
+      ad:'Başlangıç Seviyesi Testi',
+      kategori:'Genel değerlendirme',
+      img:'photo-1571019613454-1cb2f99b2d8b',
+      ozet:'Düzenli harekete başlarken hangi noktadan başlaman gerektiğini görmen için kurgulanmış kısa bir değerlendirme.',
+      amac:'Bu test seni bir puana indirgemez. Bugünkü bacak dayanıklılığını kendi başlangıcınla kıyaslar ve ilk dört haftanın temposunu seçmene yardım eder. Amaç “ne kadar iyisin” değil, “bugün nereden başlaman güvenli”dir.',
+      amacList:[
+        'Bugünkü hareket kapasiteni tek bir gözlemle görünür kılar.',
+        'Sana uygun program yoğunluğunu daraltır.',
+        'Dört hafta sonra aynı testi tekrarlayınca kendi ilerlemeni ölçebilirsin.'
+      ],
+      uygun:['Uzun süredir düzenli hareket etmeyenler','Ara verip yeniden başlamak isteyenler','Hangi programa gireceğine karar veremeyenler'],
+      uygunDegil:['Şu an ağrılı ya da yeni bir yaralanman varsa','Hekimin hareketine sınır koyduysa','Bugün hasta, ateşli ya da çok yorgunsan'],
+      sure:'8–10 dakika', sureKisa:'8–10 dk', sureNot:'Isınma ve soğuma dahil.',
+      ekipman:['Kaymayan bir zemin ya da mat','Sabit, kolçaksız bir sandalye','Kronometre veya telefon saati','Yanında su'],
+      guvenlikEk:['Sandalyenin sabit durduğundan emin ol; tekerlekli sandalye kullanma.'],
+      adimlar:[
+        {b:'Isın',              t:'3 dakika yerinde yürüyüş, omuz ve kalça çemberleri. Nefesin hafif hızlansın ama konuşabiliyor olmalısın.'},
+        {b:'Düzeneği kur',      t:'Sabit sandalyeye otur, ayakların yere tam bassın, kolların göğsünde çapraz dursun.'},
+        {b:'30 saniyeyi başlat',t:'Destek almadan kalk ve otur. Amaç sayıyı zorlamak değil formu korumak: dizler içe kaymasın, sırtın nötr kalsın.'},
+        {b:'Tekrarları say',    t:'Süre dolduğunda tam kalkıp oturduğun tekrar sayısını not et. Yarım tekrarları sayma.'},
+        {b:'Soğu ve not al',    t:'2 dakika yürüyüp nefesini topla. Zorlanma hissini ve varsa rahatsızlığı yaz.'}
+      ],
+      olcumSoru:'30 saniyede destek almadan kaç kez tam kalkıp oturdun?',
+      olcum:[
+        {t:'0–7 tekrar', lv:1, prog:'4-hafta-ev-antrenmani',
+         ozet:'Bacak dayanıklılığın şu an düşük tempoda çalışmaya uygun. Bu bir eksiklik değil, senin başlangıç noktan — dört hafta sonra aynı testi tekrarladığında farkı kendi sayınla göreceksin.'},
+        {t:'8–12 tekrar', lv:2, prog:'4-hafta-ev-antrenmani',
+         ozet:'Günlük hareketler için yeterli bir bacak dayanıklılığın var. Haftada üç güne yayılmış, ilerlemesi kademeli bir programla rahatça başlayabilirsin.'},
+        {t:'13 tekrar ve üzeri', lv:3, prog:'12-hafta-guc-temeli',
+         ozet:'Bacak dayanıklılığın iyi düzeyde. Yük ilerlemesi olan bir programa geçebilirsin; formu bozmadan kademeli artırmaya dikkat et.'}
+      ]
+    },
+
+    'mobilite':{
+      ad:'Mobilite Değerlendirmesi',
+      kategori:'Hareket açıklığı',
+      img:'photo-1518611012118-696072aa579a',
+      ozet:'Eklem hareket açıklığını ve gündelik hareketlerde nerede takıldığını görmen için kısa bir gözlem.',
+      amac:'Bu test esnekliğine not vermez. Programında hangi ısınma ve açma çalışmalarının öne çıkması gerektiğini belirlemek için bugünkü hareket açıklığını gözlemler.',
+      amacList:[
+        'Kalça, omuz ve arka zincirdeki kısıtları görünür kılar.',
+        'Isınma bloğunun içeriğini sana göre daraltır.',
+        'Kuvvet çalışmasına geçmeden önce hangi hareketleri düzenlemen gerektiğini gösterir.'
+      ],
+      uygun:['Masa başında uzun süre oturanlar','Sabah tutukluğu hissedenler','Kuvvet çalışmasına hazırlanmak isteyenler'],
+      uygunDegil:['Eklemde şişlik, kızarıklık ya da ateş varsa','Yakın zamanda ameliyat ya da yaralanma geçirdiysen','Herhangi bir uzanmada keskin ağrı oluşuyorsa'],
+      sure:'6–8 dakika', sureKisa:'~8 dk', sureNot:'Isınma dahil; germe yarışması değildir.',
+      /* "Sabit bir sandalye" buradan çıkarıldı: beş adımın hiçbiri sandalye
+         kullanmıyor (yere oturuluyor, sonra duvarda omuz kontrolü yapılıyor).
+         Gerekli ekipman listesi adımlarda gerçekten kullanılanı saymalı. */
+      ekipman:['Mat ya da kaymayan zemin','Boş bir duvar yüzeyi','İstersen mezura (zorunlu değil)'],
+      guvenlikEk:['Hiçbir uzanmayı yaylanarak zorlama; ağrı sınırında değil, gerginlik sınırında dur.'],
+      adimlar:[
+        {b:'Isın',             t:'2 dakika yerinde yürüyüş + 10 kalça çemberi. Soğuk kasla hareket açıklığı ölçülmez.'},
+        {b:'Otur-uzan kurulumu',t:'Yere otur, bacaklar önde ve düz, ayak uçları yukarı baksın. Sırtın uzasın.'},
+        {b:'Öne uzan',         t:'Dizlerini bükmeden, nefes vererek yavaşça öne uzan. Zorlamadan, kendini çekmeden; 2 saniye bekle.'},
+        {b:'Duvarda omuz kontrolü',t:'Sırtın duvarda, kolların duvara temas ederek yukarı kayar. Bel duvardan kopuyorsa orada dur.'},
+        {b:'Not al',           t:'Ellerinin nereye ulaştığını ve duvarda kolların hangi noktada koptuğunu yaz.'}
+      ],
+      olcumSoru:'Dizlerini bükmeden öne uzandığında ellerin nereye ulaştı?',
+      olcum:[
+        {t:'Dizlerimin üzerinde kaldı', lv:1, prog:'8-hafta-mobilite',
+         ozet:'Arka zincirin şu an kısıtlı. Bu, günün büyük kısmını oturarak geçiren çoğu kişide görülür ve düzenli çalışmayla değişir; hedefin başkasına yetişmek değil, kendi mesafeni açmak.'},
+        {t:'Baldır / ayak bileği hizasına ulaştı', lv:2, prog:'8-hafta-mobilite',
+         ozet:'Günlük hareketler için yeterli bir hareket açıklığın var. Isınmaya kalça ve arka bacak çalışmaları ekleyerek rahatça ilerleyebilirsin.'},
+        {t:'Avuç içim ayak tabanına değdi', lv:3, prog:'12-hafta-guc-temeli',
+         ozet:'Hareket açıklığın rahat. Artık mobiliteyi korumaya, kuvvet çalışmasını ise ilerletmeye odaklanabilirsin.'}
+      ]
+    },
+
+    'denge':{
+      ad:'Denge Değerlendirmesi',
+      kategori:'Denge ve kontrol',
+      img:'photo-1518310383802-640c2de311b2',
+      ozet:'Tek ayak üstünde kontrolünü gözlemleyen, düşme riskini azaltmaya yönelik kısa bir değerlendirme.',
+      amac:'Bu test bugünkü denge kontrolünü gözlemler. Denge, kuvvet ve mobiliteyle birlikte gelişen bir beceridir; programına denge çalışması eklenip eklenmeyeceğini belirlemek için ölçülür.',
+      amacList:[
+        'Tek ayak kontrolünü ve ayak bileği stabilitesini gözlemler.',
+        'Programına denge bloğu eklenip eklenmeyeceğini belirler.',
+        'Gündelik hayattaki takılma ve dengesizlik hissini bağlama oturtur.'
+      ],
+      uygun:['Dengesini geliştirmek isteyenler','Yürürken ara ara takıldığını hissedenler','Kuvvet programına denge çalışması eklemek isteyenler'],
+      uygunDegil:['Baş dönmesi ya da denge kaybı yaşıyorsan','Yakın zamanda düştüysen','İç kulak veya nörolojik bir durum için takipteysen'],
+      sure:'5–7 dakika', sureKisa:'~7 dk', sureNot:'İki taraf için ayrı ayrı.',
+      ekipman:['Kaymayan zemin','Tutunabileceğin bir duvar ya da sandalye','Kronometre veya telefon saati'],
+      guvenlikEk:['Bu testi mutlaka tutunabileceğin bir yüzeyin yanında yap.','Yalnızsan ve dengeni kolay kaybediyorsan testi erteleyip bir uzmana danış.'],
+      adimlar:[
+        {b:'Güvenli alan hazırla',t:'Duvarın ya da sandalyenin yanında dur; bir kolun uzanınca tutunabileceği mesafede olsun.'},
+        {b:'Isın',               t:'1 dakika yerinde yürüyüş + 10 ayak bileği çemberi (her iki taraf).'},
+        {b:'Tek ayağa geç',      t:'Bir ayağını yerden kes, dizini hafif öne kaldır. Gözlerin açık, bakışın sabit bir noktada kalsın.'},
+        {b:'Süreyi tut',         t:'Dengeni bozup ayağını yere koyduğun ana kadar say; en fazla 45 saniye. Tutunursan süre orada biter.'},
+        {b:'Diğer tarafı ölç',   t:'1 dakika dinlen, diğer ayakla tekrarla. Kısa olan süreyi not et.'}
+      ],
+      olcumSoru:'Gözlerin açıkken tek ayak üstünde kaç saniye dengede kalabildin? (kısa olan taraf)',
+      olcum:[
+        {t:'10 saniyeden az', lv:1, prog:'4-hafta-ev-antrenmani',
+         ozet:'Denge kontrolün şu an sınırlı. Bu değiştirilebilir bir beceridir: günde birkaç dakikalık, tutunma destekli denge çalışması birkaç haftada belirgin fark yaratır.'},
+        {t:'10–29 saniye', lv:2, prog:'4-hafta-ev-antrenmani',
+         ozet:'Günlük hareketler için yeterli bir denge kontrolün var. Programına haftada iki kez kısa denge bloğu ekleyerek süreyi kendi ölçümüne göre uzatabilirsin.'},
+        {t:'30 saniye ve üzeri', lv:3, prog:'12-hafta-guc-temeli',
+         ozet:'Denge kontrolün iyi. Denge çalışmasını koruma amaçlı sürdürüp asıl odağını kuvvet ilerlemesine kaydırabilirsin.'}
+      ]
+    },
+
+    'temel-kuvvet':{
+      ad:'Temel Kuvvet Değerlendirmesi',
+      kategori:'Kuvvet',
+      img:'photo-1534438327276-14e5300c3a48',
+      ozet:'Üst vücut itiş kuvvetini kendi vücut ağırlığınla gözlemleyen kısa bir değerlendirme.',
+      amac:'Bu test bir rekor denemesi değildir. Formunu bozmadan yapabildiğin tekrar sayısını gözlemleyerek programının başlangıç yükünü ve ilerleme hızını belirler.',
+      amacList:[
+        'Formunu koruyabildiğin tekrar aralığını gösterir.',
+        'Programın başlangıç yükünü ve haftalık artışını belirler.',
+        'Aynı testi tekrarladığında kendi ilerlemeni sayıyla görürsün.'
+      ],
+      uygun:['Kuvvet çalışmasına başlamak isteyenler','Programının yükünü ayarlamak isteyenler','Ara verdikten sonra nereden devam edeceğini bilmeyenler'],
+      uygunDegil:['Omuz, dirsek ya da bilekte ağrın varsa','Yakın zamanda üst vücut yaralanması geçirdiysen','Tansiyonun kontrolsüzse ya da baş dönmen varsa'],
+      sure:'8–10 dakika', sureKisa:'8–10 dk', sureNot:'Isınma, deneme seti ve soğuma dahil.',
+      ekipman:['Kaymayan zemin ya da mat','Sağlam bir duvar veya masa kenarı (kolay varyasyon için)','Kronometre veya telefon saati'],
+      guvenlikEk:['Formun bozulduğu ilk tekrarda dur — bozuk formla yapılan tekrar sayılmaz ve risk üretir.','Nefesini tutma; itişte ver, inişte al.'],
+      adimlar:[
+        {b:'Isın',              t:'3 dakika yerinde yürüyüş + 10 omuz çemberi + 5 yavaş duvar şınavı.'},
+        {b:'Varyasyonunu seç',  t:'Duvar şınavı, masa kenarı şınavı, diz şınavı ya da tam şınav. En zorlusunu değil, formunu koruyabildiğini seç.'},
+        {b:'Deneme seti',       t:'3 tekrar yap ve dur. Omuz veya bilekte rahatsızlık varsa daha kolay varyasyona geç.'},
+        {b:'Tek set uygula',    t:'Formunu bozmadan yapabildiğin kadar tekrar yap. Kalça düşerse, bel çökerse ya da tempo bozulursa orada bitir.'},
+        {b:'Not al',            t:'Varyasyonu ve tekrar sayısını birlikte yaz — tekrar sayısı yalnız varyasyonla anlamlıdır.'}
+      ],
+      olcumSoru:'Seçtiğin varyasyonda formunu bozmadan kaç tekrar yaptın?',
+      olcum:[
+        {t:'0–5 tekrar', lv:1, prog:'4-hafta-ev-antrenmani',
+         ozet:'İtiş kuvvetin şu an düşük tekrar aralığında. Daha kolay bir varyasyonla çok sayıda kaliteli tekrar yapmak, zor varyasyonla az sayıda bozuk tekrardan hızlı ilerletir.'},
+        {t:'6–14 tekrar', lv:2, prog:'4-hafta-ev-antrenmani',
+         ozet:'Günlük hareketler için yeterli bir itiş kuvvetin var. Haftada iki kuvvet günü ve kademeli varyasyon zorlaştırması ile ilerleyebilirsin.'},
+        {t:'15 tekrar ve üzeri', lv:3, prog:'12-hafta-guc-temeli',
+         ozet:'İtiş kuvvetin iyi düzeyde. Tekrar sayısını artırmak yerine varyasyonu zorlaştırıp yük ilerlemesi olan bir programa geçmen daha verimli.'}
+      ]
+    },
+
+    'dayaniklilik':{
+      ad:'Dayanıklılık Değerlendirmesi',
+      kategori:'Kalp–solunum dayanıklılığı',
+      img:'photo-1476480862126-209bfaa8edc8',
+      ozet:'Tempolu yürüyüş sırasında konuşma testiyle bugünkü dayanıklılığını gözlemleyen kısa bir değerlendirme.',
+      amac:'Bu test bir kondisyon puanı üretmez ve kalp sağlığı hakkında bilgi vermez. Yalnız bugünkü tempolu yürüyüş toleransını gözlemleyerek programının süre ve tempo başlangıcını belirler.',
+      amacList:[
+        'Rahatça sürdürebildiğin tempoyu görünür kılar.',
+        'Programındaki yürüyüş/kondisyon bloklarının süresini belirler.',
+        'Yaklaşık enerji kullanımı değil, sürdürebilirlik ölçülür.'
+      ],
+      uygun:['Kondisyonunu artırmak isteyenler','Yürüyüşü düzenli hale getirmek isteyenler','Program temposunu ayarlamak isteyenler'],
+      uygunDegil:['Nefes darlığı ya da göğüs ağrısı yaşıyorsan','Kalp veya solunum rahatsızlığı için takipteysen','Bugün ateşin ya da enfeksiyon belirtin varsa'],
+      sure:'10–12 dakika', sureKisa:'~12 dk', sureNot:'3 dakikası ölçüm, kalanı ısınma ve soğuma.',
+      ekipman:['Düz ve güvenli bir yürüyüş alanı','Rahat ayakkabı','Kronometre veya telefon saati','Yanında su'],
+      guvenlikEk:['Konuşamayacak kadar zorlanıyorsan tempoyu düşür; testi yarıda bırakmak başarısızlık değildir.','Sıcak havada dışarıda uygulama, kapalı ve serin bir alan seç.'],
+      adimlar:[
+        {b:'Isın',            t:'3 dakika rahat tempoda yürü. Nefesin normal kalmalı.'},
+        {b:'Tempoyu yükselt', t:'Konuşmakta hafif zorlanacağın ama cümle kurabileceğin bir tempo bul. Koşma.'},
+        {b:'3 dakika sürdür', t:'Bu tempoyu üç dakika koru. Zorlanırsan yavaşla; test o an biter ve bu da bir sonuçtur.'},
+        {b:'Konuşma testi',   t:'Üçüncü dakikanın sonunda yüksek sesle iki cümle söyle ve ne kadar rahat söyleyebildiğini gözlemle.'},
+        {b:'Soğu',            t:'3 dakika yavaş yürüyerek nefesini normale döndür, sonra sonucunu not et.'}
+      ],
+      olcumSoru:'Üçüncü dakikanın sonunda konuşma testinde neredeydin?',
+      olcum:[
+        {t:'Cümle kuramadım, nefesim yetmedi', lv:1, prog:'4-hafta-ev-antrenmani',
+         ozet:'Bugünkü tempo senin için yüksekti. Daha kısa ve daha yavaş yürüyüşlerle başlayıp süreyi haftalık olarak artırmak, tempoyu zorlamaktan daha hızlı sonuç verir.'},
+        {t:'Kısa cümlelerle konuşabildim', lv:2, prog:'12-hafta-guc-temeli',
+         ozet:'Tempolu yürüyüş toleransın orta düzeyde. Haftada üç yürüyüşle süreyi kademeli uzatabilir, arada kuvvet günü ekleyebilirsin.'},
+        {t:'Rahatça konuşabildim', lv:3, prog:'8-hafta-salon-kondisyon',
+         ozet:'Bu tempo senin için rahat. Kondisyon çalışmasında süreyi ya da eğimi kademeli artıran bir programa geçebilirsin.'}
+      ]
+    },
+
+    'masa-basi-yasam':{
+      ad:'Masa Başı Yaşam Değerlendirmesi',
+      kategori:'Gün içi hareket',
+      img:'photo-1541534741688-6078c6bfb5c5',
+      ozet:'Gün içindeki oturma süresini ve mola düzenini gözden geçiren kısa bir değerlendirme.',
+      amac:'Bu test bir yaşam tarzı yargısı üretmez. Gün içindeki hareketsiz blokların nerede biriktiğini görünür kılar ve günlük hareket dengeni kurmak için nereye kısa mola ekleyeceğini gösterir.',
+      amacList:[
+        'Uzun oturma bloklarının gün içinde nerede biriktiğini gösterir.',
+        'Masa başı için kısa mola ve açma çalışmalarını programına yerleştirir.',
+        'Haftalık hareket hedefini gerçekçi bir noktadan kurmanı sağlar.'
+      ],
+      uygun:['Günün büyük kısmını oturarak geçirenler','Boyun, omuz ve bel tutukluğu hissedenler','Gün içine hareket sığdırmakta zorlananlar'],
+      uygunDegil:['Bel ya da boyunda yayılan ağrın varsa','Uyuşma ya da güç kaybı hissediyorsan','Hekim takibinde bir omurga sorunun varsa'],
+      sure:'6–8 dakika', sureKisa:'~8 dk', sureNot:'Gözden geçirme ve iki kısa hareket kontrolü.',
+      ekipman:['Çalışma masan ve sandalyen','Boş bir duvar yüzeyi','Telefon saati'],
+      guvenlikEk:['Boyun hareketlerini yavaş yap; baş dönmesi başlarsa dur.'],
+      adimlar:[
+        {b:'Gününü geri sar',   t:'Dünkü tipik iş gününü düşün: kaç saat oturdun, kaç kez ayağa kalktın? Kabaca yaz.'},
+        {b:'Mola aralığını ölç',t:'Ortalama kaç dakikada bir ayağa kalktığını belirle. Emin değilsen bugün bir saat boyunca not tut.'},
+        {b:'Duvar kontrolü',    t:'Sırtını duvara ver; topuk, kalça, sırt ve başın duvara rahat değiyor mu bak. Zorlamadan gözlemle.'},
+        {b:'Oturma testi',      t:'Sandalyende otururken omuzlarını geriye al ve 20 saniye koru. Ne kadar zorlandığını not et.'},
+        {b:'Sonucunu yaz',      t:'Günlük ortalama oturma süreni saat cinsinden not et; aşağıdaki seçeneklerden birine denk gelecek.'}
+      ],
+      olcumSoru:'Ortalama bir iş gününde kaç saatini oturarak geçiriyorsun?',
+      olcum:[
+        {t:'9 saat ve üzeri', lv:1, prog:'4-hafta-ev-antrenmani',
+         ozet:'Gün içindeki hareketsiz bloklar oldukça uzun. Buradaki en etkili adım uzun antrenman değil, saat başı 2–3 dakikalık ayağa kalkma molasıdır; bedeninin bugünkü durumu buna hızlı yanıt verir.'},
+        {t:'6–8 saat', lv:2, prog:'8-hafta-mobilite',
+         ozet:'Oturma süren tipik masa başı aralığında. Molalarını düzenli hale getirip haftaya iki kısa mobilite seansı eklemek yeterli fark yaratır.'},
+        {t:'5 saat ve altı', lv:3, prog:'12-hafta-guc-temeli',
+         ozet:'Gün içi hareket dengen iyi görünüyor. Artık odağını kuvvet ve dayanıklılık çalışmasına kaydırabilirsin.'}
+      ]
+    },
+
+    'hareket-aliskanligi':{
+      ad:'Hareket Alışkanlığı Testi',
+      kategori:'Süreklilik',
+      img:'photo-1500648767791-00dcc994a43e',
+      ozet:'Son dört haftadaki hareket sürekliliğini ve önündeki engelleri gözden geçiren kısa bir değerlendirme.',
+      amac:'Bu test performansını değil sürekliliğini ölçer. Programın kaç günlük olacağını ve hangi engelin önce çözülmesi gerektiğini belirlemek için son dört haftana bakar.',
+      amacList:[
+        'Hareket sıklığını gerçek veriyle, tahminle değil, görünür kılar.',
+        'Programın haftalık gün sayısını gerçekçi biçimde belirler.',
+        'Sürekliliğini bozan engeli adlandırmanı sağlar.'
+      ],
+      uygun:['Başlayıp bırakma döngüsünden çıkmak isteyenler','Programını hayatına oturtmakta zorlananlar','Haftalık hareket hedefini yeniden kurmak isteyenler'],
+      uygunDegil:['Şu an hareketi kısıtlayan bir sağlık durumun varsa','Yaralanma sonrası dönüş sürecindeysen — önce uzmana danış'],
+      sure:'5–6 dakika', sureKisa:'~6 dk', sureNot:'Yalnız gözden geçirme; fiziksel yük yoktur.',
+      ekipman:['Takvimin ya da telefon takvimin','Varsa aktivite kaydın','Not alacak bir yer'],
+      guvenlikEk:['Bu testte fiziksel yük yoktur; yine de gözden geçirme sonrası hareket edeceksen ısınmayı atlama.'],
+      adimlar:[
+        {b:'Dört haftayı aç',   t:'Takvimini son dört haftaya kaydır. Tahmin etme, gördüğün kayda bak.'},
+        {b:'Günleri işaretle',  t:'En az 20 dakika kesintisiz hareket ettiğin günleri işaretle: yürüyüş, antrenman, bisiklet, seans.'},
+        {b:'Haftalık ortalamayı bul',t:'İşaretli gün sayısını 4’e böl. Ondalık çıkarsa aşağı yuvarla.'},
+        {b:'Engeli adlandır',   t:'Hareket etmediğin günlerde en sık hangi engel vardı? Süre, yorgunluk, alan, motivasyon — tek kelimeyle yaz.'},
+        {b:'Hedefi yaz',        t:'Gelecek hafta için mevcut ortalamanın yalnız bir gün üstünü hedef olarak yaz.'}
+      ],
+      olcumSoru:'Son dört haftada haftada ortalama kaç gün en az 20 dakika hareket ettin?',
+      olcum:[
+        {t:'0–1 gün', lv:1, prog:'4-hafta-ev-antrenmani',
+         ozet:'Süreklilik henüz kurulmamış. Burada doğru hedef uzun antrenman değil, haftada iki kısa ve kesin gün belirlemektir; süre sonra kendiliğinden uzar.'},
+        {t:'2–3 gün', lv:2, prog:'4-hafta-ev-antrenmani',
+         ozet:'Alışkanlığın kurulmaya başlamış. Haftalık hareket hedefini bir gün artırmak, seans süresini uzatmaktan daha kalıcı sonuç verir.'},
+        {t:'4 gün ve üzeri', lv:3, prog:'12-hafta-guc-temeli',
+         ozet:'Sürekliliğin oturmuş. Artık gün sayısını değil, içeriğin kalitesini ve yük ilerlemesini konuşabiliriz.'}
+      ]
+    }
+
+  };
+
+  var ORDER = ['baslangic-seviyesi','mobilite','denge','temel-kuvvet','dayaniklilik','masa-basi-yasam','hareket-aliskanligi'];
+  var RAIL_ICON = {
+    'baslangic-seviyesi':'fa-flag-checkered','mobilite':'fa-arrows-up-down-left-right','denge':'fa-person-walking',
+    'temel-kuvvet':'fa-dumbbell','dayaniklilik':'fa-heart-pulse','masa-basi-yasam':'fa-chair','hareket-aliskanligi':'fa-calendar-check'
+  };
+  /* eş anlamlı slug'lar — dışarıdan gelen kısa yazım da doğru teste düşsün */
+  var ALIAS = {'masa-basi':'masa-basi-yasam','kuvvet':'temel-kuvvet','baslangic':'baslangic-seviyesi'};
+
+  /* ---------------- seçilen test ---------------- */
+  var SLUG = new URLSearchParams(location.search).get('test');
+  if(SLUG && ALIAS[SLUG]) SLUG = ALIAS[SLUG];
+  if(!SLUG || !VERI[SLUG]) SLUG = 'baslangic-seviyesi';
+  var T = VERI[SLUG];
+
+  function el(id){ return document.getElementById(id); }
+  function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+  /* ---------------- sayfayı doldur ---------------- */
+  document.querySelectorAll('[data-tt]').forEach(function(n){
+    var k = n.getAttribute('data-tt');
+    if(T[k] != null) n.textContent = T[k];
+  });
+  document.title = T.ad + ' — Fit Testi · uygunluk taraması ve adım adım uygulama | DadaFit';
+  var md = document.querySelector('meta[name="description"]');
+  if(md) md.setAttribute('content', T.ad + ': ' + T.ozet + ' Test öncesi fiziksel aktivite uygunluk taraması zorunludur; riskli yanıtta test başlamaz.');
+  el('ftTop').style.setProperty('--lib-img',
+    "url('https://images.unsplash.com/" + T.img + "?w=1680&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-16')");
+  el('ftTop').querySelector('[data-tt="sureKisa"]').textContent = T.sureKisa;
+  document.querySelector('[data-tt="adimSayi"]').textContent = T.adimlar.length;
+
+  function fillPlain(id, arr){
+    var n = el(id); if(!n) return;
+    n.innerHTML = arr.map(function(x){ return '<li>' + esc(x) + '</li>'; }).join('');
+  }
+  fillPlain('ftUygun', T.uygun);
+  fillPlain('ftUygunDegil', T.uygunDegil);
+
+  el('ftAmacList').innerHTML = T.amacList.map(function(x){
+    return '<li><i class="fa-solid fa-circle-check"></i><span>' + esc(x) + '</span></li>';
+  }).join('');
+
+  el('ftGuvenlik').innerHTML = DUR.concat(T.guvenlikEk || []).map(function(x){
+    return '<li><i class="fa-solid fa-circle-stop"></i><span>' + esc(x) + '</span></li>';
+  }).join('');
+
+  el('ftEkipman').innerHTML = T.ekipman.map(function(x){
+    return '<li><i class="fa-solid fa-check"></i><span>' + esc(x) + '</span></li>';
+  }).join('');
+
+  /* Adım metinleri ve ölçüm seçenekleri BAŞLANGIÇTA BASILMAZ.
+     `hidden` görsel bir kapıdır; asıl kapı içeriğin DOM'a hiç girmemesidir —
+     tarama durdurulduğunda kullanıcı adımları hiçbir yolla okuyamaz. */
+  function renderSteps(){
+    el('ftStepList').innerHTML = T.adimlar.map(function(s){
+      return '<li><div><b>' + esc(s.b) + '</b><span>' + esc(s.t) + '</span></div></li>';
+    }).join('');
+    el('ftOlcumSoru').textContent = T.olcumSoru;
+    el('ftOlcumOpts').innerHTML = T.olcum.map(function(o,i){
+      return '<label class="ft-opt"><input type="radio" name="olcum" value="' + i + '" />' +
+             '<span><i class="fa-regular fa-circle"></i> ' + esc(o.t) + '</span></label>';
+    }).join('');
+  }
+  function clearSteps(){
+    el('ftStepList').innerHTML = '';
+    el('ftOlcumOpts').innerHTML = '';
+    el('ftOlcumSoru').textContent = 'Ölçtüğün değeri seç';
+  }
+
+  /* diğer testler rayı — gerçek bağlantı, geçerli olan aria-current taşır */
+  el('ftRail').innerHTML = ORDER.map(function(s){
+    var cur = (s === SLUG);
+    return '<a href="fit-testi-detay-v1.html?test=' + s + '"' + (cur ? ' aria-current="page"' : '') + '>' +
+           '<i class="fa-solid ' + RAIL_ICON[s] + '"></i> ' + esc(VERI[s].ad) + '</a>';
+  }).join('');
+
+  /* ====================================================================
+     UYGUNLUK TARAMASI — GERÇEK KAPI
+     ==================================================================== */
+  var QN    = ['q1','q2','q3','q4','q5','q6','q7'];
+  var form  = el('ftScr');
+  var steps = el('ftSteps');
+  var lock  = el('ftLock');
+  var stop  = el('ftStop');
+  var resArea = el('ftResArea');
+  var resLock = el('ftResLock');
+  var badge = el('ftStatusBadge');
+  var formErr = el('ftFormErr');
+  var formErrTxt = el('ftFormErrTxt');
+
+  function setBadge(kind, txt, icon){
+    badge.className = 'fp-badge ' + kind;
+    badge.innerHTML = '<i class="fa-solid ' + icon + '"></i> ' + txt;
+  }
+
+  function clearErrors(){
+    form.querySelectorAll('.ft-q.is-err').forEach(function(q){
+      q.classList.remove('is-err');
+      q.removeAttribute('aria-invalid');
+    });
+    formErr.classList.remove('show');
+  }
+
+  /* ==================================================================
+     R14 · YANIT KİLİDİ — ilk tıklama cevabı sabitler
+     ------------------------------------------------------------------
+     Beyar: "Bir seçenek tıklandığında yanlış olduğu gösteriliyor ama
+     diğer seçenekler hâlâ tıklanabiliyor." Ölçüldü: yedi test slug'ının
+     hepsinde 14 şıktan kilitli 0; riskli yanıt geri alınıp test
+     açılabiliyordu — yani güvenlik kapısı kapı değildi.
+
+     Kilit üç katmanlı, çünkü yalnız görsel kilit kilit değildir:
+       1. `disabled`          → tıklama ve klavye seçimi biter
+       2. `aria-disabled`     → ekran okuyucu durumu duyurur
+       3. `tabindex="-1"`     → odak sırasından çıkar
+     `disabled` bir radyoyu `:checked` olmaktan ÇIKARMAZ, bu yüzden
+     gönderim mantığı (`input:checked` + `data-risk`) olduğu gibi çalışır.
+
+     Riskli şık seçilirse GÜVENLİ şık ayrıca işaretlenir ("Temiz yanıt") —
+     kullanıcı neyin temiz sayıldığını görmeden kilitlenmiş olmasın.
+     ================================================================== */
+  function kilitle(name){
+    var fs = form.querySelector('.ft-q[data-q="' + name.slice(1) + '"]');
+    if(!fs || fs.classList.contains('is-locked')) return;
+    var sel = form.querySelector('input[name="' + name + '"]:checked');
+    if(!sel) return;
+    var riskli = sel.getAttribute('data-risk') === '1';
+
+    form.querySelectorAll('input[name="' + name + '"]').forEach(function(i){
+      i.disabled = true;
+      i.setAttribute('aria-disabled','true');
+      i.tabIndex = -1;
+    });
+    fs.classList.add('is-locked');
+    fs.setAttribute('aria-readonly','true');
+
+    var msg = document.createElement('p');
+    msg.className = 'ft-lockmsg';
+    if(riskli){
+      fs.classList.add('is-risk');
+      var safe = form.querySelector('input[name="' + name + '"]:not([data-risk])');
+      if(safe && safe.closest('.ft-opt')) safe.closest('.ft-opt').classList.add('is-safe');
+      msg.innerHTML = '<i class="fa-solid fa-lock"></i><span>Yanıtın kilitlendi. Bu yanıt taramayı ' +
+                      'durdurur; temiz yanıt yukarıda işaretli. Değiştirmek için taramayı sıfırla.</span>';
+    } else {
+      msg.innerHTML = '<i class="fa-solid fa-lock"></i><span>Yanıtın kilitlendi. Değiştirmek için ' +
+                      'taramayı sıfırla.</span>';
+    }
+    fs.appendChild(msg);
+  }
+
+  /* sıfırlama: kilit üç katmanıyla birlikte kalkar */
+  function kilitleriAc(){
+    form.querySelectorAll('.ft-q').forEach(function(fs){
+      fs.classList.remove('is-locked','is-risk');
+      fs.removeAttribute('aria-readonly');
+      var m = fs.querySelector('.ft-lockmsg'); if(m) m.remove();
+      fs.querySelectorAll('.ft-opt.is-safe').forEach(function(o){ o.classList.remove('is-safe'); });
+    });
+    form.querySelectorAll('input[type="radio"]').forEach(function(i){
+      i.disabled = false;
+      i.removeAttribute('aria-disabled');
+      i.removeAttribute('tabindex');
+    });
+  }
+
+  /* akışı kapat: adım ve ölçüm içeriği DOM'dan da SİLİNİR */
+  function closeFlow(){
+    steps.hidden = true;
+    resArea.hidden = true;
+    lock.hidden = false;
+    resLock.hidden = false;
+    el('ftRes').hidden = true;
+    var t = el('ftResLockTxt'), c = el('ftResLockCta');
+    if (t) t.innerHTML = 'Sonucunu yalnız testi uyguladıysan girebilirsin. Önce yukarıdaki ' +
+                         '<b>uygunluk taramasını</b> tamamla.';
+    if (c) { c.setAttribute('href', '#uygunluk');
+             c.innerHTML = '<i class="fa-solid fa-arrow-up"></i> Taramaya git'; }
+    clearSteps();
+  }
+
+  /* R9 · ÜÇ AŞAMA (Beyar): "dikeyde değil, o aşamayı geçtikçe".
+     1) tarama → 2) adımlar → 3) sonuç girişi. Önce 2 ve 3 birlikte
+     açılıyordu; sonuç girişi artık adımlar tamamlanmadan görünmüyor. */
+  function openFlow(){
+    renderSteps();
+    steps.hidden = false;
+    lock.hidden = true;
+    kapatSonuc();          // 3. aşama hâlâ kapalı
+  }
+  function kapatSonuc(){
+    resArea.hidden = true;
+    resLock.hidden = false;
+    var t = el('ftResLockTxt'), c = el('ftResLockCta');
+    if (t) t.innerHTML = 'Tarama tamam. Şimdi <b>test adımlarını</b> uygula; ' +
+                         'bitirince bu bölüm açılır ve sonucunu girersin.';
+    if (c) { c.setAttribute('href', '#adimlar');
+             c.innerHTML = '<i class="fa-solid fa-arrow-up"></i> Adımlara git'; }
+  }
+  function acSonuc(){
+    resArea.hidden = false;
+    resLock.hidden = true;
+  }
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    clearErrors();
+
+    var eksik = [], riskli = 0;
+    QN.forEach(function(name){
+      var sel = form.querySelector('input[name="' + name + '"]:checked');
+      var fs  = form.querySelector('.ft-q[data-q="' + name.slice(1) + '"]');
+      if(!sel){
+        eksik.push(name);
+        if(fs){ fs.classList.add('is-err'); fs.setAttribute('aria-invalid','true'); }
+        return;
+      }
+      if(sel.getAttribute('data-risk') === '1') riskli++;
+    });
+
+    /* 1 · eksik yanıt → akış AÇILMAZ */
+    if(eksik.length){
+      stop.hidden = true;
+      closeFlow();
+      formErrTxt.textContent = eksik.length + ' soru yanıtlanmadı. Tarama tamamlanmadan test adımları açılmaz.';
+      formErr.classList.add('show');
+      setBadge('off','Tamamlanmadı','fa-hourglass-half');
+      var ilk = form.querySelector('.ft-q.is-err input');
+      if(ilk) ilk.focus();
+      return;
+    }
+
+    /* 2 · riskli yanıt → TEST DURUR, uzman desteğine yönlendir */
+    if(riskli > 0){
+      closeFlow();
+      stop.hidden = false;
+      setBadge('stop','Test durduruldu','fa-hand');
+      el('ftSideSeviye').textContent = 'Belirlenmedi — test durduruldu';
+      stop.setAttribute('tabindex','-1');
+      stop.focus();
+      stop.scrollIntoView({block:'center'});
+      return;
+    }
+
+    /* 3 · temiz → adımlar ve sonuç girişi açılır */
+    stop.hidden = true;
+    openFlow();
+    setBadge('ok','Tamamlandı — test açık','fa-circle-check');
+    el('adimlar').scrollIntoView({block:'start'});
+  });
+
+  el('ftScrReset').addEventListener('click', function(){
+    kilitleriAc();          /* R14 · önce kilit kalkar, sonra reset */
+    form.reset();
+    clearErrors();
+    stop.hidden = true;
+    closeFlow();
+    setBadge('off','Yapılmadı','fa-hourglass-half');
+    el('ftSideSeviye').textContent = 'Test sonunda belirlenir';
+    el('ftMForm').reset();
+    el('uygunluk').scrollIntoView({block:'start'});
+  });
+
+  /* riskli seçenek işaretlenince tarama sonucu bayatlar — akışı hemen kapat */
+  form.addEventListener('change', function(e){
+    if(e.target.name && QN.indexOf(e.target.name) > -1){
+      var fs = e.target.closest('.ft-q');
+      if(fs){ fs.classList.remove('is-err'); fs.removeAttribute('aria-invalid'); }
+      kilitle(e.target.name);   /* R14 · ilk tıklama cevabı sabitler */
+      if(!steps.hidden || !stop.hidden){
+        closeFlow();
+        stop.hidden = true;
+        setBadge('off','Yeniden tamamla','fa-hourglass-half');
+      }
+    }
+  });
+
+  /* ---------------- sonuç özeti ---------------- */
+  /* R9 · 2. aşama → 3. aşama geçişi */
+  (function(){
+    var d = el('ftStepsDone');
+    if (!d) return;
+    d.addEventListener('click', function(){
+      acSonuc();
+      var a = el('ftResArea');
+      if (a) { a.scrollIntoView({ block: 'start', behavior: 'smooth' });
+               var ilk = a.querySelector('input,button,select,textarea');
+               if (ilk) ilk.focus({ preventScroll: true }); }
+    });
+  })();
+
+  /* R9 · "Önce oku" akordiyonu — R12/R29: aynı anda en fazla 1 bölüm açık.
+     Tıklanan zaten açıksa hepsi kapanır (hepsi-kapalı serbest); değilse
+     önce hepsi kapatılır, sonra yalnız tıklanan açılır. Buton native
+     click davranışı sayesinde Enter/Space de aynı yoldan geçer. */
+  document.addEventListener('click', function(e){
+    var b = e.target.closest ? e.target.closest('button.ft-acc') : null;
+    if (!b) return;
+    var acik = b.getAttribute('aria-expanded') === 'true';
+    document.querySelectorAll('button.ft-acc').forEach(function(btn){
+      btn.setAttribute('aria-expanded', 'false');
+      var gg = document.getElementById(btn.getAttribute('aria-controls'));
+      if (gg) gg.hidden = true;
+    });
+    if (!acik) {
+      b.setAttribute('aria-expanded', 'true');
+      var g = document.getElementById(b.getAttribute('aria-controls'));
+      if (g) g.hidden = false;
+    }
+  });
+
+  var mform = el('ftMForm');
+  mform.addEventListener('submit', function(e){
+    e.preventDefault();
+    var fs  = mform.querySelector('.ft-q');
+    var sel = mform.querySelector('input[name="olcum"]:checked');
+    if(!sel){
+      fs.classList.add('is-err');
+      fs.setAttribute('aria-invalid','true');
+      el('ftRes').hidden = true;
+      return;
+    }
+    fs.classList.remove('is-err');
+    fs.removeAttribute('aria-invalid');
+
+    /* R20 · K3'ün EK GÖREVİ · test-ilk / test-3 rozetleri (fit-rozet.js)
+       hangi testlerin çözüldüğünü sayar. `:865`teki ürün kararı DURUYOR:
+       tarama yanıtları, ölçüm seçimi, seviye ya da sonuç metni HİÇBİR
+       YERE yazılmaz — bu bir slug sayacıdır, sağlık verisi değildir. */
+    try{
+      var TK = 'dm_fit_test_v1';
+      var td = JSON.parse(localStorage.getItem(TK) || 'null');
+      if(!td || !Array.isArray(td.cozulen)) td = {surum:1, cozulen:[], guncelleme:null};
+      if(td.cozulen.indexOf(SLUG) < 0) td.cozulen.push(SLUG);
+      td.guncelleme = new Date().toISOString();
+      localStorage.setItem(TK, JSON.stringify(td));
+    }catch(e){}
+
+    var o = T.olcum[+sel.value];
+    el('ftResOzet').textContent = o.ozet;
+    el('ftResSeviye').textContent = SEVIYE[o.lv];
+    el('ftRes').setAttribute('data-lv', o.lv);
+    el('ftResProgAd').textContent = PROG[o.prog];
+    el('ftResProgLink').setAttribute('href','program-detay-v1.html?slug=' + o.prog);
+    el('ftResDetay').setAttribute('href','fit-testi-sonuc-v1.html?test=' + SLUG);
+    el('ftSideSeviye').textContent = SEVIYE[o.lv];
+    el('ftRes').hidden = false;
+    el('ftRes').scrollIntoView({block:'center'});
+  });
+
+  el('ftMReset').addEventListener('click', function(){
+    mform.reset();
+    mform.querySelector('.ft-q').classList.remove('is-err');
+    el('ftRes').hidden = true;
+    el('ftSideSeviye').textContent = 'Test sonunda belirlenir';
+  });
+
+  /* başlangıç durumu: kapı kapalı */
+  closeFlow();
+})();
+</script>
+</body>
+</html>

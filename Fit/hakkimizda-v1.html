@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8" />
+<meta name="robots" content="noindex, nofollow" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>DadaFit Hakkında — Hareket, Enerji ve Denge Platformu</title>
+<meta name="description" content="DadaFit; günlük hareketi, egzersizleri, antrenman programlarını, enerji dengesini, toparlanmayı ve antrenör desteğini tek bir deneyimde birleştiren bağımsız hareket ve sağlıklı yaşam platformudur. Hikâyemiz, değerlerimiz, ekibimiz ve künye bilgileri." />
+<link rel="icon" type="image/svg+xml" href="../kanon/varlik/dadafit-isaret.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="../kanon/varlik/dadafit-isaret-32.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="../kanon/varlik/dadafit-isaret-180.png" />
+<!-- DadaFit ortak kabuk (tek kaynak) -->
+<!-- KANON · yukleme sirasi: tokenlar -> markalar/fit (bilesenler YUKLENMEZ) -->
+<link rel="stylesheet" href="../kanon/tokenlar.css" />
+<link rel="stylesheet" href="../kanon/markalar/fit.css" />
+<link rel="stylesheet" href="assets/css/fit-shell.css" />
+<link rel="stylesheet" href="assets/css/fit-mesaj.css" />
+<!-- FontAwesome 6.5.2 (kilitli ikon seti) -->
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+      integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+      crossorigin="anonymous" referrerpolicy="no-referrer" />
+<style>
+/* =====================================================================
+ SAYFAYA ÖZGÜ CSS — kabuk kuralları fit-shell.css'e devredildi.
+ Buradaki hiçbir kuralın seçicisi fit-shell.css'te YOK; kabuk kopyası değil.
+
+ Faz 2 göçünde bu bloktan ÇIKARILANLAR (ve nedeni):
+ · .lst-top / .lst-hero / .lst-stats / .rd-crumb / .lh-chips (~90 satır)
+   → sayfanın kendi banner lehçesiydi. Kabuğun kanonik banner kiti
+     (.lib-top + .lib-crumb + .lib-sub + .lib-stats) kullanıldı; böylece
+     sayfa da diğer 16 banner sayfası gibi body[data-fit-over="1"] şeffaf
+     header moduna giriyor (fit-shell.js OVER_MODE yalnız .lib-top/.fp-top arar).
+ · html,body{overflow-x:hidden} → HANDOFF §4: kökü yatay kaydırma
+   konteynerine çevirip odak zıplamasına ve sticky bozulmasına yol açıyordu.
+   Kabuk overflow-x:clip + scrollbar-gutter:stable kullanıyor; bu satır
+   kalsaydı kabuğun kararını EZERDİ.
+ · @keyframes fadeUp → fit-shell.css:139'da aynen tanımlı (kopya).
+ · .nav-div, .row-nav button:hover → sökülen kabuğun artığı, markup'ı yok.
+ · Sabit turuncu kalıntıları rgba(225,72,39,…) → DadaFit yeşiline çevrildi.
+ ===================================================================== */
+
+/* ---- banner içi çapa çipleri (koyu zemin varyantı) ----
+ Kabuğun .chip'i açık zemin için tanımlı; banner koyu olduğu için
+ cam-yeşil varyant. .chips flex-wrap taşıdığı için dar ekranda alt alta
+ düşer — yatay kaydırma rayı kurulmadı, taşma riski yok. */
+.about-jump{margin-top:22px}
+.about-jump .chip{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.24);color:#fff;font-weight:600}
+.about-jump .chip:hover{background:var(--fit);border-color:var(--fit);color:#fff}
+.about-jump .chip:focus-visible{outline:3px solid rgba(255,255,255,.55);outline-offset:2px}
+
+/* ============ HAKKIMIZDA — marka hikâyesi + künye ============ */
+
+/* ---- hikâye bloğu (seo-prose dili) ---- */
+.about-sec{background:var(--bg-white)}
+.about-grid{display:grid;grid-template-columns:minmax(0,1fr) 420px;gap:54px;align-items:start}
+.seo-prose h2{font-size:26px;margin-bottom:14px}
+.seo-prose h3{font-size:18px;margin:26px 0 10px}
+.seo-prose p{font-size:15px;color:var(--slate-2);font-weight:500;line-height:1.7;margin-bottom:12px}
+.seo-prose p:last-child{margin-bottom:0}
+.seo-prose strong{color:var(--slate);font-weight:700}
+.seo-prose a.inline{color:var(--fit-deep);font-weight:700;text-decoration:underline;text-underline-offset:2px}
+.about-quote{margin:20px 0;padding:18px 22px;border-left:3px solid var(--fit);background:var(--fit-wash);border-radius:0 var(--radius-md) var(--radius-md) 0;font-size:15.5px;font-weight:700;color:var(--slate);line-height:1.55}
+
+/* görsel sütunu: büyük yatay + iki kare */
+.about-figs{display:grid;grid-template-columns:1fr 1fr;gap:14px;position:sticky;top:130px}
+.about-figs .fig{border-radius:var(--radius-lg);background-size:cover;background-position:center;aspect-ratio:1/1}
+.about-figs .fig.tall{grid-column:1/-1;aspect-ratio:16/10}
+.about-badge{grid-column:1/-1;display:flex;align-items:center;gap:13px;background:var(--bg-cream);border:1px solid var(--line);border-radius:var(--radius-md);padding:13px 16px}
+.about-badge i{flex:none;width:40px;height:40px;border-radius:var(--radius-md);background:var(--fit-wash);color:var(--fit);display:grid;place-items:center;font-size:16px}
+.about-badge b{display:block;font-size:13.5px;color:var(--slate)}
+.about-badge span{font-size:12px;color:var(--muted);font-weight:500}
+
+/* ---- misyon/vizyon/değerler kart şeridi ---- */
+.values-sec{background:var(--bg-cream)}
+.val-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.val-card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);padding:26px;transition:.25s var(--ease)}
+.val-card:hover{transform:translateY(-4px);box-shadow:var(--sh-md)}
+.val-card .vi{width:50px;height:50px;border-radius:var(--radius-md);background:var(--fit-wash);color:var(--fit);display:grid;place-items:center;font-size:20px;margin-bottom:16px}
+.val-card h3{font-size:18px;margin-bottom:9px}
+.val-card p{font-size:14px;color:var(--slate-2);font-weight:500;line-height:1.65}
+
+/* ---- Sayılarla DadaFit — koyu sabit-zemin band ---- */
+.statband{
+  background-image:linear-gradient(90deg,rgba(24,26,22,.93),rgba(27,30,25,.80)),
+    url('https://images.unsplash.com/photo-1502224562085-639556652f33?w=1600&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-14');
+  background-size:cover;background-position:center;background-attachment:fixed;
+  padding:var(--sec-pad) 0;
+}
+.statband .sb-head{text-align:center;margin-bottom:34px}
+.statband .sb-head .eyebrow{color:var(--fit-bright);justify-content:center}
+.statband .sb-head h2{color:#fff;font-size:30px;margin-top:12px}
+.statband .sb-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:18px;text-align:center}
+.statband .st{padding:var(--sec-pad-sm) 8px;border-radius:var(--radius-md);background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12)}
+.statband .st b{display:block;font-size:32px;font-weight:700;color:#fff;letter-spacing:-.02em;line-height:1.1}
+.statband .st b small{font-size:18px;font-weight:700;color:var(--fit-bright)}
+.statband .st span{display:block;margin-top:6px;font-size:12.5px;color:#b4bcb2;font-weight:500}
+/* §22 — demo veri gerçek gibi sunulmaz */
+.statband .sb-note{margin-top:20px;text-align:center;font-size:12px;font-weight:600;letter-spacing:.03em;color:rgba(255,255,255,.58)}
+
+/* ---- ekip bandı ---- */
+.team-sec{background:var(--bg-white)}
+.team-row{display:grid;grid-template-columns:repeat(6,1fr);gap:18px;align-items:stretch}
+.team-card{display:flex;flex-direction:column;align-items:center;text-align:center}
+.team-av{
+  width:96px;height:96px;border-radius:var(--radius-circle);background-size:cover;background-position:center;
+  border:3px solid #fff;box-shadow:var(--sh-sm);transition:.25s var(--ease);
+}
+.team-card:hover .team-av{border-color:var(--fit);transform:translateY(-4px)}
+.team-card b{font-size:15.5px;font-weight:700;color:var(--slate);margin-top:13px;line-height:1.2}
+.team-card>span{font-size:12.5px;color:var(--muted);font-weight:500;margin-top:3px}
+.team-cta{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center;
+  border:2px dashed #d9d9d9;border-radius:var(--radius-lg);padding:18px 12px;transition:.25s var(--ease);
+}
+.team-cta i{font-size:30px;color:var(--fit)}
+.team-cta b{font-size:14.5px;font-weight:700;color:var(--slate)}
+.team-cta span{font-size:12px;color:var(--muted);font-weight:500}
+.team-cta:hover{border-color:var(--fit);background:var(--fit-wash);transform:translateY(-3px)}
+
+/* ---- ekosistem + sponsor/partner (belge §14 ve §16) ---- */
+.part-sec{background:var(--bg-cream)}
+.eco-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:22px;margin-bottom:16px}
+.eco-card{display:flex;align-items:flex-start;gap:16px;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);box-shadow:var(--sh-sm);padding:22px 24px;transition:.25s var(--ease)}
+.eco-card:hover{transform:translateY(-3px);box-shadow:var(--sh-md);border-color:color-mix(in srgb, var(--marka) 35%, transparent)}
+.eco-card .ei{flex:none;width:46px;height:46px;border-radius:var(--radius-md);background:var(--fit-wash);color:var(--fit);display:grid;place-items:center;font-size:19px}
+.eco-card .eb{min-width:0}
+.eco-card h3{font-size:16.5px;margin-bottom:6px}
+.eco-card p{font-size:13.5px;color:var(--slate-2);font-weight:500;line-height:1.6}
+.eco-card .ego{display:inline-flex;align-items:center;gap:7px;margin-top:11px;font-size:13px;font-weight:700;color:var(--fit-deep)}
+.eco-card:hover .ego i{transform:translateX(3px)}
+.eco-card .ego i{transition:transform .2s var(--ease)}
+
+.part-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:26px}
+.part-card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-md);box-shadow:var(--sh-sm);padding:20px 18px}
+.part-card .pi{width:40px;height:40px;border-radius:var(--radius-sm);background:var(--fit-wash);color:var(--fit);display:grid;place-items:center;font-size:16px;margin-bottom:13px}
+.part-card b{display:block;font-size:14px;color:var(--slate);line-height:1.35}
+.part-card span{display:block;font-size:12.5px;color:var(--muted);font-weight:500;margin-top:5px;line-height:1.5}
+/* ortak satır içi bilgi/demo notu (ekip + partner bölümleri) */
+.pg-note{display:flex;align-items:flex-start;gap:10px;margin-top:22px;font-size:12.5px;color:var(--muted);font-weight:500;line-height:1.55}
+.pg-note i{color:var(--fit);margin-top:2px;flex:none}
+.pg-note a{color:var(--fit-deep);font-weight:700;text-decoration:underline;text-underline-offset:2px}
+
+/* ---- KÜNYE ---- */
+.kunye-sec{background:var(--bg-white)}
+.kunye-grid{display:grid;grid-template-columns:1fr;gap:30px;align-items:start}
+.kunye-card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);box-shadow:var(--sh-sm);overflow:hidden}
+.kunye-rows{display:grid;grid-template-columns:1fr 1fr}
+.kunye-row{display:flex;align-items:flex-start;gap:13px;padding:18px 24px;border-bottom:1px solid var(--line)}
+.kunye-row:nth-child(odd){border-right:1px solid var(--line)}
+.kunye-row:nth-last-child(-n+2){border-bottom:none}
+.kunye-row i{flex:none;width:34px;height:34px;border-radius:var(--radius-sm);background:var(--fit-wash);color:var(--fit);display:grid;place-items:center;font-size:13px;margin-top:2px}
+.kunye-row .kl{min-width:0}
+.kunye-row .kl span{display:block;font-size:11.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+.kunye-row .kl b{display:block;font-size:14px;color:var(--slate);font-weight:700;margin-top:3px;line-height:1.45;overflow-wrap:anywhere}
+.kunye-note{display:flex;align-items:flex-start;gap:9px;font-size:12.5px;color:var(--muted);font-weight:500;line-height:1.55;padding:16px 24px;background:var(--bg)}
+.kunye-note i{color:var(--fit);margin-top:2px;flex:none}
+.kunye-note a{color:var(--fit-deep);font-weight:700;text-decoration:underline;text-underline-offset:2px}
+
+/* Yasal Metinler — kart ızgarası */
+/* R8/33: künye kartı ile "Yasal Metinler" bloğu arası 6 px'ti — üç genişlikte de
+ 6 px, yani rampaya hiç tepki vermiyordu (ölçüldü @1440·1024·390).
+ İkisi tek section içinde iki ayrı blok; Beyar ikisini iki bölüm olarak okuyor.
+ Sabit px yerine kabuğun bölüm nefesi token'ı: K-A rampasıyla birlikte hareket
+ eder (74 @1440·1024·768 · 44 @390) ve section sınırlarının (148/88) tam yarısı. */
+.legal-block{margin-top:var(--sec-pad)}
+.legal-head{display:flex;align-items:center;gap:13px;margin-bottom:20px}
+.legal-head .lh-ico{flex:none;width:42px;height:42px;border-radius:var(--radius-md);background:var(--fit-wash);color:var(--fit);display:grid;place-items:center;font-size:17px}
+.legal-head h3{font-size:20px;color:var(--slate);letter-spacing:-.01em;line-height:1.2}
+.legal-head p{font-size:13px;color:var(--muted);font-weight:500;margin-top:3px;line-height:1.4}
+.legal-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.legal-card{display:flex;align-items:flex-start;gap:13px;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-md);box-shadow:var(--sh-sm);padding:16px 17px;transition:transform .2s var(--ease),box-shadow .2s var(--ease),border-color .2s var(--ease)}
+.legal-card:hover{transform:translateY(-3px);box-shadow:var(--sh-md);border-color:color-mix(in srgb, var(--marka) 35%, transparent)}
+.legal-card .lc-ico{flex:none;width:36px;height:36px;border-radius:var(--radius-sm);background:var(--fit-wash);color:var(--fit);display:grid;place-items:center;font-size:14px;margin-top:1px}
+.legal-card .lc-body{flex:1;min-width:0;display:block}
+.legal-card .lc-body b{display:block;font-size:14px;font-weight:700;color:var(--slate);line-height:1.35}
+.legal-card .lc-body span{display:block;font-size:12px;color:var(--muted);font-weight:500;margin-top:3px;line-height:1.45}
+.legal-card .lc-arr{flex:none;color:var(--muted);font-size:12px;margin-top:3px;transition:transform .2s var(--ease),color .2s var(--ease)}
+.legal-card:hover .lc-arr{color:var(--fit);transform:translateX(3px)}
+.legal-card.is-report .lc-ico{background:color-mix(in srgb, var(--marka) 14%, transparent);color:var(--fit)}
+
+/* ---- kapanış CTA köprüleri ---- */
+.bridge-sec{background:var(--bg-cream)}
+.bridge-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.bridge-card{
+  position:relative;display:flex;flex-direction:column;gap:13px;background:var(--paper);
+  border:1px solid var(--line);border-radius:var(--radius-lg);padding:28px;overflow:hidden;
+  transition:.25s var(--ease);
+}
+.bridge-card:hover{transform:translateY(-5px);box-shadow:var(--sh-md);border-color:color-mix(in srgb, var(--marka) 35%, transparent)}
+.bridge-card .bi{width:52px;height:52px;border-radius:var(--radius-md);background:var(--fit-wash);color:var(--fit);display:grid;place-items:center;font-size:21px}
+.bridge-card h3{font-size:19px}
+.bridge-card p{font-size:13.5px;color:var(--slate-2);font-weight:500;line-height:1.6;flex:1}
+.bridge-card .bgo{display:inline-flex;align-items:center;gap:9px;font-size:13.5px;font-weight:700;color:var(--fit-deep)}
+.bridge-card .bgo i{transition:transform .2s var(--ease)}
+.bridge-card:hover .bgo i{transform:translateX(4px)}
+
+/* ===== TABLET (≤1024px) ===== */
+@media (max-width:1024px){
+  .about-grid{grid-template-columns:1fr;gap:34px}
+  .about-figs{position:static;grid-template-columns:1fr 1fr}
+  .val-grid{grid-template-columns:1fr 1fr}
+  .statband{background-attachment:scroll}
+  .statband .sb-grid{grid-template-columns:repeat(3,1fr)}
+  .team-row{grid-template-columns:repeat(3,1fr);gap:22px 14px}
+  .eco-grid{grid-template-columns:1fr}
+  .part-grid{grid-template-columns:repeat(2,1fr)}
+  .kunye-grid{grid-template-columns:1fr}
+  .legal-grid{grid-template-columns:repeat(2,1fr)}
+  .bridge-grid{grid-template-columns:1fr}
+}
+/* ===== MOBİL (≤640px) ===== */
+@media (max-width:640px){
+  .val-grid{grid-template-columns:1fr}
+  .statband{padding:var(--sec-pad) 0}
+  .statband .sb-head h2{font-size:23px}
+  .statband .sb-grid{grid-template-columns:1fr 1fr;gap:10px}
+  /* 5 kutu 2 kolona sığmıyor; tek kalan kutu yarım satırda öksüz durmasın */
+  .statband .sb-grid .st:last-child{grid-column:1/-1}
+  .statband .st b{font-size:24px}
+  .team-row{grid-template-columns:repeat(2,1fr);gap:22px 12px}
+  .part-grid{grid-template-columns:1fr}
+  .legal-grid{grid-template-columns:1fr}
+  .kunye-rows{grid-template-columns:1fr}
+  .kunye-row{padding:15px 18px}
+  .kunye-row:nth-child(odd){border-right:none}
+  .kunye-row:nth-last-child(-n+2){border-bottom:1px solid var(--line)}
+  .kunye-row:last-child{border-bottom:none}
+}
+</style>
+
+<!-- Metin yaslama katmani (tek kaynak) — sayfa stillerinden SONRA yuklenir,
+     boylece sayfa ici text-align kurallari yaslamayi geri alamaz -->
+<link rel="stylesheet" href="assets/css/fit-type.css" />
+</head>
+<body data-brand="fit" data-fit-page="hakkimizda">
+
+<!-- KABUK: üst katman (üst bant + header + drawer + alt bar + görüş + çerez) -->
+<div id="fitShellTop"></div>
+
+<main class="page-main" id="pageMain">
+
+<!-- ===================== BANNER (kanonik .lib-top kiti) =====================
+ .below-header VERİLMEZ: .lib-top kendi üst payını taşıyor ve fit-shell.js
+ bu sınıfı görüp body[data-fit-over="1"] moduna geçiyor (şeffaf header). -->
+<section class="lib-top" style="--lib-img:url('https://images.unsplash.com/photo-1534258936925-c58bed479fcb?w=1680&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-16')">
+  <div class="wrap">
+    <nav class="lib-crumb" aria-label="Sayfa yolu">
+      <a href="dadafit-hub-v1.html" class="crumb-home"><i class="fa-solid fa-house" aria-hidden="true"></i><span class="sr-only">DadaFit ana sayfa</span></a>
+      <i class="fa-solid fa-chevron-right"></i>
+      <span class="cur">Hakkımızda</span>
+    </nav>
+    <span class="eyebrow"><i class="fa-solid fa-heart-pulse"></i> Hikâyemiz</span>
+    <h1>Hareketi, enerjiyi ve dengeyi birlikte gören bir platform</h1>
+    <p class="lib-sub">DadaFit yalnızca bir hareket arşivi ya da vücut geliştirme uygulaması değil; günlük hareketini, programlarını, enerji dengeni, toparlanmanı ve antrenör desteğini tek deneyimde birleştiren bağımsız bir hareket ve sağlıklı yaşam platformu.</p>
+    <div class="chips about-jump">
+      <a class="chip" href="#hikaye">Hikâyemiz</a>
+      <a class="chip" href="#degerler">Değerlerimiz</a>
+      <a class="chip" href="#ekip">Ekibimiz</a>
+      <a class="chip" href="#partnerler">Sponsorlar ve Partnerler</a>
+      <a class="chip" href="#kunye">Künye</a>
+    </div>
+    <div class="lib-stats">
+      <div class="lib-stat"><b>25</b><span>hareket ve egzersiz</span></div>
+      <div class="lib-stat"><b>12</b><span>program ve challenge</span></div>
+      <div class="lib-stat"><b>40+</b><span>onaylı antrenör</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ---- hikâye ---- -->
+<section class="sec about-sec" id="hikaye">
+  <div class="wrap">
+    <div class="about-grid">
+      <div class="seo-prose">
+        <span class="eyebrow"><i class="fa-solid fa-book-open"></i> Nasıl Başladı</span>
+        <h2 style="margin-top:12px">Sorumuz şuydu: hareket etmeye başlamak neden kolay, sürdürmek neden zor?</h2>
+        <p>Hareket uygulamalarının çoğu tek bir soruyu yanıtlıyordu: <em>bugün ne kadar egzersiz yaptın?</em> Oysa bir insanın günü egzersizden ibaret değil. Ne kadar yürüdüğü, ne kadar oturduğu, ne kadar enerji aldığı, ne kadar su içtiği, ne kadar dinlendiği — hepsi aynı günün parçası. <strong>Hareket, ancak günün geri kalanıyla birlikte görüldüğünde sürdürülebilir hâle geliyor.</strong></p>
+        <p>DadaFit'i bu yüzden tek bir egzersiz listesi olarak değil, bir denge fikri üzerine kurduk. Kullanıcı burada yalnızca ne kadar hareket ettiğini değil, <strong>hareket – beslenme – günlük yaşam dengesini birlikte</strong> görüyor. Bu, DadaFit'i bir vücut geliştirme uygulamasından ayıran temel fark.</p>
+        <div class="about-quote">Kimseye &ldquo;şu kadarını telafi etmelisin&rdquo; demiyoruz. Bugün ne kadar hareket ettiğini, ne kadar enerji aldığını ve ikisinin birlikte nereye gittiğini gösteriyoruz. Kararı sen veriyorsun.</div>
+        <p>Bugün <a class="inline" href="egzersiz-kutuphane-v1.html">DadaFit Egzersizleri</a>, <a class="inline" href="programlar-merkezi-v1.html">antrenman programları</a>, <a class="inline" href="challenge-merkezi-v1.html">challenge sistemi</a>, <a class="inline" href="fit-enerji-defterim.html">Enerji Defteri</a> ve <a class="inline" href="antrenorler-v1.html">DadaFit Onaylı antrenör kadrosu</a> ile büyümeye devam ediyoruz.</p>
+
+        <h3>Ne yapıyoruz?</h3>
+        <p>Hareketi aranabilir, filtrelenebilir ve anlaşılır hâle getiriyoruz: her egzersiz doğru form anlatımıyla, her program süresi ve seviyesiyle, her rutin gereken ekipmanla birlikte yayınlanıyor. Günlük aktiviteni, su takibini ve toparlanmanı aynı yerde tutuyoruz; ilerlemeni tek bir rakama indirmiyoruz — süre, aktif gün, kuvvet günü, çeşitlilik ve dinlenme birlikte sayılıyor.</p>
+        <p>&ldquo;Bugün ne yapsam?&rdquo; sorusuna beş dakikalık <a class="inline" href="hareket-masa-basi-v1.html">masa başı hareketinden</a> on iki haftalık programa kadar, kendi seviyene uygun bir cevap veriyoruz.</p>
+
+        <h3>Neyi yapmıyoruz?</h3>
+        <p>DadaFit tanı koymaz, tedavi önermez ve kişiye özel tıbbi ya da beslenme tavsiyesi vermez. Kilo hedefi üzerinden vaat kurmayız, suçlayan bir dil kullanmayız. Sağlık durumunla ilgili kararlar için hekimine ve uzmanına danışman gerekir.</p>
+        <div class="hr-note">
+          <i class="fa-solid fa-circle-info"></i>
+          <p>Platformdaki içerikler genel bilgilendirme amaçlıdır, kişisel tavsiye yerine geçmez. Ayrıntı için <a href="saglik-bilgilendirme-v1.html">Sağlık Bilgilendirmesi</a> sayfasına bakabilirsin.</p>
+        </div>
+      </div>
+      <div class="about-figs">
+        <div class="fig tall" style="background-image:url('https://images.unsplash.com/photo-1486218119243-13883505764c?w=840&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-9')"></div>
+        <div class="fig" style="background-image:url('https://images.unsplash.com/photo-1591258370814-01609b341790?w=420&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-9')"></div>
+        <div class="fig" style="background-image:url('https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?w=420&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-9')"></div>
+        <div class="about-badge">
+          <i class="fa-solid fa-person-walking"></i>
+          <div><b>Her seviyeye açık</b><span>Masa başı beş dakikadan on iki haftalık programa kadar, kendi ritminde.</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ---- misyon / vizyon / değerler ---- -->
+<section class="sec values-sec" id="degerler">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <span class="eyebrow"><i class="fa-solid fa-compass"></i> Pusulamız</span>
+        <h2>Misyon, vizyon ve değerlerimiz</h2>
+        <p class="lead">Her ürün kararında bize yön veren üç cümle.</p>
+      </div>
+    </div>
+    <div class="val-grid">
+      <div class="val-card">
+        <span class="vi"><i class="fa-solid fa-bullseye"></i></span>
+        <h3>Misyonumuz</h3>
+        <p>Hareketi günlük hayatın doğal bir parçası hâline getirmek; herkesin kendi ritminde, güvenli ve sürdürülebilir biçimde hareket etmesini kolaylaştırmak.</p>
+      </div>
+      <div class="val-card">
+        <span class="vi"><i class="fa-solid fa-eye"></i></span>
+        <h3>Vizyonumuz</h3>
+        <p>Türkiye'de hareketi, enerji dengesini ve toparlanmayı birlikte gösteren en güvenilir dijital hareket ve sağlıklı yaşam platformu olmak.</p>
+      </div>
+      <div class="val-card">
+        <span class="vi"><i class="fa-solid fa-hand-holding-heart"></i></span>
+        <h3>Değerlerimiz</h3>
+        <p>Güvenlik önce gelir: her egzersiz doğru form ve güvenlik notuyla yayınlanır, her antrenörün sertifikası doğrulanır. Yol gösteren bir dil kullanırız; reklam ile içerik asla karışmaz.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ---- sayılarla DadaFit ---- -->
+<section class="statband">
+  <div class="wrap">
+    <div class="sb-head">
+      <span class="eyebrow"><i class="fa-solid fa-chart-simple"></i> Sayılarla</span>
+      <h2>Sayılarla DadaFit</h2>
+    </div>
+    <div class="sb-grid">
+      <div class="st"><b>25</b><span>hareket ve egzersiz</span></div>
+      <div class="st"><b>12</b><span>program ve challenge</span></div>
+      <div class="st"><b>40<small>+</small></b><span>onaylı antrenör</span></div>
+      <div class="st"><b>8</b><span>rehber konusu</span></div>
+      <div class="st"><b>5&ndash;30</b><span>dakikalık rutin</span></div>
+    </div>
+    <p class="sb-note">Prototipteki sayılar örnek amaçlıdır.</p>
+  </div>
+</section>
+
+<!-- ---- ekip ---- -->
+<section class="sec team-sec" id="ekip">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <span class="eyebrow"><i class="fa-solid fa-people-group"></i> DadaFit'in Arkasındakiler</span>
+        <h2>Küçük ekip, geniş topluluk</h2>
+        <p class="lead">İçerik, ürün ve sağlık ekibimiz — artı sertifikası doğrulanmış antrenör kadromuz.</p>
+      </div>
+    </div>
+    <div class="team-row">
+      <div class="team-card">
+        <div class="team-av" style="background-image:url('https://images.unsplash.com/photo-1560250097-0b93528c311a?w=300&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-9')"></div>
+        <b>Yasin Yavuz</b><span>Kurucu</span>
+      </div>
+      <div class="team-card">
+        <div class="team-av" style="background-image:url('https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=300&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-9')"></div>
+        <b>Elif Sarıkaya</b><span>Hareket İçeriği &amp; Editörlük</span>
+      </div>
+      <div class="team-card">
+        <div class="team-av" style="background-image:url('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-9')"></div>
+        <b>Kerem Aksoy</b><span>Ürün &amp; Teknoloji</span>
+      </div>
+      <div class="team-card">
+        <div class="team-av" style="background-image:url('https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=300&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-9')"></div>
+        <b>Dyt. Merve Demir</b><span>Enerji Dengesi Editörü</span>
+      </div>
+      <div class="team-card">
+        <div class="team-av" style="background-image:url('https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=300&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-9')"></div>
+        <b>Burak Çetin</b><span>Video Prodüksiyon</span>
+      </div>
+      <a class="team-cta" href="fit-antrenor-ol.html">
+        <i class="fa-solid fa-circle-plus"></i>
+        <b>Kadroda yerin hazır</b>
+        <span>Sertifikanı doğrula, DadaFit Onaylı antrenör ol</span>
+      </a>
+    </div>
+    <p class="pg-note">
+      <i class="fa-solid fa-circle-info"></i>
+      <span>Prototipteki isimler, roller ve fotoğraflar örnek amaçlıdır. Doğrulanmış antrenör kadrosunu <a href="antrenorler-v1.html">antrenör dizininde</a> görebilirsin.</span>
+    </p>
+  </div>
+</section>
+
+<!-- ---- ekosistem + sponsorlar ve partnerler (belge §14 ve §16) ---- -->
+<section class="sec part-sec" id="partnerler">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <span class="eyebrow"><i class="fa-solid fa-handshake-angle"></i> Ekosistem ve İş Birlikleri</span>
+        <h2>Sponsorlar ve partnerler</h2>
+        <p class="lead">DadaFit bağımsız bir platform. Kardeş ürünlerle bağlantı kurulabilir, ama bu bağlantı her zaman kullanıcının izniyle ve tek tek açılır.</p>
+      </div>
+    </div>
+
+    <div class="eco-grid">
+      <div class="eco-card">
+        <span class="ei"><i class="fa-solid fa-utensils"></i></span>
+        <div class="eb">
+          <h3>DadaGastro</h3>
+          <p>Tarif ve mutfak tarafı. Yalnızca kullanıcı istediğinde, öğün tarafındaki verinin Enerji Defteri'ne akmasını sağlar.</p>
+          <a class="ego" href="https://by4r.github.io/dadamutfak-view/v7-6cu356/anasayfa-portal-v3a.html" target="_blank" rel="noopener">DadaGastro'ya git <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+        </div>
+      </div>
+      <div class="eco-card">
+        <span class="ei"><i class="fa-solid fa-leaf"></i></span>
+        <div class="eb">
+          <h3>DadaDiet</h3>
+          <p>Diyetisyen desteği tarafı. Beslenme planı gerektiren durumlarda, izin verdiğin ölçüde hareket verini uzmanla paylaşabilirsin.</p>
+          <a class="ego" href="https://by4r.github.io/dadamutfak-view/v7-6cu356/saglik-hub-v1.html" target="_blank" rel="noopener">DadaDiet'e git <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+        </div>
+      </div>
+    </div>
+
+    <p class="pg-note">
+      <i class="fa-solid fa-shield-halved"></i>
+      <span>Her paylaşımda hangi verinin, hangi sisteme, hangi amaçla gittiğini gösteriyoruz; izni dilediğin an geri alabilirsin. Bağlantının nasıl çalıştığını <a href="fit-enerji-defterim.html">Enerji Defteri</a>'nde, izinlerini <a href="fit-planim-veri-izin-v1.html">Veri ve İzinlerim</a> ekranından görebilirsin.</span>
+    </p>
+
+    <div class="part-grid">
+      <div class="part-card">
+        <span class="pi"><i class="fa-solid fa-dumbbell"></i></span>
+        <b>Spor tesisi iş birlikleri</b>
+        <span>Salon ve stüdyolarla üyelere özel içerik ve etkinlik.</span>
+      </div>
+      <div class="part-card">
+        <span class="pi"><i class="fa-solid fa-heart-pulse"></i></span>
+        <b>Giyilebilir cihaz üreticileri</b>
+        <span>Adım, aktif süre ve nabız verisinin izinli aktarımı.</span>
+      </div>
+      <div class="part-card">
+        <span class="pi"><i class="fa-solid fa-building-user"></i></span>
+        <b>Kurumsal sağlık programları</b>
+        <span>Şirket içi hareket challenge'ları ve masa başı rutinleri.</span>
+      </div>
+      <div class="part-card">
+        <span class="pi"><i class="fa-solid fa-graduation-cap"></i></span>
+        <b>Spor bilimleri iş birlikleri</b>
+        <span>İçeriğin bilimsel gözden geçirmesi ve form doğrulaması.</span>
+      </div>
+    </div>
+
+    <p class="pg-note">
+      <i class="fa-solid fa-circle-info"></i>
+      <span>Yukarıdaki başlıklar iş birliği kategorilerini gösterir, gerçek sponsor listesi değildir. İş birliği ve sponsorluk için <a href="reklam-ver-v1.html">iş birliği sayfasına</a> ya da <a href="iletisim-v1.html">iletişim formuna</a> bakabilirsin.</span>
+    </p>
+  </div>
+</section>
+
+<!-- ---- KÜNYE ---- -->
+<section class="sec kunye-sec" id="kunye">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <span class="eyebrow"><i class="fa-solid fa-stamp"></i> Resmî Bilgiler</span>
+        <h2>Künye</h2>
+        <p class="lead">5651 sayılı kanun kapsamında yayıncı ve yer sağlayıcı bilgileri.</p>
+      </div>
+    </div>
+    <div class="kunye-grid">
+      <div class="kunye-card">
+        <div class="kunye-rows">
+          <div class="kunye-row"><i class="fa-solid fa-building"></i><div class="kl"><span>Ticari Ünvan</span><b>DadaFit Spor ve Dijital Sağlık Hizmetleri A.Ş.</b></div></div>
+          <div class="kunye-row"><i class="fa-solid fa-user-tie"></i><div class="kl"><span>Tüzel Kişi Temsilcisi</span><b>Yasin Yavuz</b></div></div>
+          <div class="kunye-row"><i class="fa-solid fa-location-dot"></i><div class="kl"><span>Yönetim Yeri</span><b>Maslak Mah. Büyükdere Cad. No:237 K:4, Sarıyer / İstanbul</b></div></div>
+          <div class="kunye-row"><i class="fa-solid fa-phone"></i><div class="kl"><span>İletişim Telefonu</span><b>0 (212) 000 00 00</b></div></div>
+          <div class="kunye-row"><i class="fa-solid fa-envelope"></i><div class="kl"><span>Kurumsal E-posta</span><b>kurumsal@dadafit.com</b></div></div>
+          <div class="kunye-row"><i class="fa-solid fa-file-shield"></i><div class="kl"><span>UETS Adresi</span><b>25801-22000-00000</b></div></div>
+          <div class="kunye-row"><i class="fa-solid fa-server"></i><div class="kl"><span>Yer Sağlayıcı</span><b>Gavia Bilişim Teknolojileri Ltd. Şti. — İstanbul</b></div></div>
+          <div class="kunye-row"><i class="fa-solid fa-pen-nib"></i><div class="kl"><span>Yayın Yönetmeni</span><b>Elif Sarıkaya</b></div></div>
+        </div>
+        <div class="kunye-note"><i class="fa-solid fa-circle-info"></i><span>Bu künye prototip amaçlı örnek bilgilerle doldurulmuştur. İçerik ihlali bildirimleri için sağ kenardaki <b>Görüş Bildir</b> penceresinden &ldquo;İhlal bildirimi&rdquo; konusunu seçebilir ya da <a href="iletisim-v1.html">iletişim formunu</a> kullanabilirsin.</span></div>
+      </div>
+    </div>
+
+    <div class="legal-block">
+      <div class="legal-head">
+        <span class="lh-ico"><i class="fa-solid fa-scale-balanced"></i></span>
+        <div>
+          <h3>Yasal Metinler</h3>
+          <p>Sözleşmeler, politikalar ve bilgilendirme metinleri — tek tıkla aç.</p>
+        </div>
+      </div>
+      <div class="legal-grid">
+        <a class="legal-card" href="yasal-v1.html?metin=kvkk"><span class="lc-ico"><i class="fa-solid fa-shield-halved"></i></span><span class="lc-body"><b>KVKK Politikası</b><span>Kişisel verilerin korunması</span></span><i class="fa-solid fa-arrow-right lc-arr"></i></a>
+        <a class="legal-card" href="yasal-v1.html?metin=kullanim"><span class="lc-ico"><i class="fa-solid fa-file-lines"></i></span><span class="lc-body"><b>Kullanım Koşulları</b><span>Platform kullanım kuralları</span></span><i class="fa-solid fa-arrow-right lc-arr"></i></a>
+        <a class="legal-card" href="yasal-v1.html?metin=cerez"><span class="lc-ico"><i class="fa-solid fa-cookie-bite"></i></span><span class="lc-body"><b>Çerez Politikası</b><span>Çerez ve gizlilik tercihleri</span></span><i class="fa-solid fa-arrow-right lc-arr"></i></a>
+        <a class="legal-card" href="yasal-v1.html?metin=uyelik"><span class="lc-ico"><i class="fa-solid fa-user-check"></i></span><span class="lc-body"><b>Üyelik ve İptal Koşulları</b><span>Üyelik hak ve yükümlülükleri</span></span><i class="fa-solid fa-arrow-right lc-arr"></i></a>
+        <a class="legal-card" href="yasal-v1.html?metin=veri-izin"><span class="lc-ico"><i class="fa-solid fa-sliders"></i></span><span class="lc-body"><b>Veri ve İzin Politikası</b><span>Hangi veri, nereye, hangi izinle</span></span><i class="fa-solid fa-arrow-right lc-arr"></i></a>
+        <a class="legal-card" href="yasal-v1.html?metin=teslimat"><span class="lc-ico"><i class="fa-solid fa-credit-card"></i></span><span class="lc-body"><b>Ödeme ve Erişim Koşulları</b><span>DadaFit Pro ödeme ve erişimi</span></span><i class="fa-solid fa-arrow-right lc-arr"></i></a>
+        <a class="legal-card" href="yasal-v1.html?metin=iade"><span class="lc-ico"><i class="fa-solid fa-rotate-left"></i></span><span class="lc-body"><b>Cayma ve İade Koşulları</b><span>Abonelik cayma hakkı</span></span><i class="fa-solid fa-arrow-right lc-arr"></i></a>
+        <a class="legal-card" href="yasal-v1.html?metin=aydinlatma"><span class="lc-ico"><i class="fa-solid fa-circle-info"></i></span><span class="lc-body"><b>Aydınlatma Metni</b><span>KVKK aydınlatma metni</span></span><i class="fa-solid fa-arrow-right lc-arr"></i></a>
+        <a class="legal-card is-report" href="yasal-v1.html?metin=bilgilendirme"><span class="lc-ico"><i class="fa-solid fa-triangle-exclamation"></i></span><span class="lc-body"><b>İhlal Bildir</b><span>İçerik ihlali bildirim usulü</span></span><i class="fa-solid fa-arrow-right lc-arr"></i></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ---- kapanış CTA köprüleri ---- -->
+<section class="sec bridge-sec">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <span class="eyebrow"><i class="fa-solid fa-handshake"></i> Birlikte Büyüyelim</span>
+        <h2>DadaFit'te sana da yer var</h2>
+      </div>
+    </div>
+    <div class="bridge-grid">
+      <a class="bridge-card" href="egzersiz-kutuphane-v1.html">
+        <span class="bi"><i class="fa-solid fa-person-running"></i></span>
+        <h3>Hareket Et</h3>
+        <p>Beş dakikalık masa başı rutininden on iki haftalık programa kadar, seviyene uygun hareketi bul ve bugün başla.</p>
+        <span class="bgo">DadaFit Egzersizleri <i class="fa-solid fa-arrow-right"></i></span>
+      </a>
+      <a class="bridge-card" href="fit-antrenor-ol.html">
+        <span class="bi"><i class="fa-solid fa-id-badge"></i></span>
+        <h3>Antrenör Ol</h3>
+        <p>Sertifikası doğrulanmış antrenör kadromuza katıl, online ya da yüz yüze danışan kabul et.</p>
+        <span class="bgo">Başvur <i class="fa-solid fa-arrow-right"></i></span>
+      </a>
+      <a class="bridge-card" href="reklam-ver-v1.html">
+        <span class="bi"><i class="fa-solid fa-rectangle-ad"></i></span>
+        <h3>İş Birliği Yap</h3>
+        <p>Sponsorluk, marka iş birliği ve kurumsal hareket programı seçeneklerini incele.</p>
+        <span class="bgo">İş Birliği <i class="fa-solid fa-arrow-right"></i></span>
+      </a>
+    </div>
+  </div>
+</section>
+
+</main><!-- /.page-main -->
+
+<!-- KABUK: alt katman (giriş kapısı + footer + başa dön) -->
+<div id="fitShellBottom"></div>
+
+<!-- DadaFit ortak kabuk JS (tek kaynak) -->
+<script src="assets/js/fit-shell.js"></script>
+<script src="assets/js/fit-mesaj.js"></script>
+<!-- Faz 2 NOTU — bu sayfada SAYFA JS'i kalmadı.
+ Aracın "KORUNDU" dediği iki blok elle incelendi ve KALDIRILDI:
+ · mobil alt katman yöneticisi (1397 krkt) → fit-shell.js:1148-1168'de
+   birebir aynı kanonik sürüm var; iki kopya aynı window.__bnUpdate'i
+   yazıp aynı scroll dinleyicisini iki kez kurardı.
+ · dm_business IIFE (457 krkt) → gövdesi boş bir yorumdu; rol state'i
+   fit-shell.js:696-727'deki tek dm_user token'ında (C1). Ölü kod.
+ -->
+</body>
+</html>

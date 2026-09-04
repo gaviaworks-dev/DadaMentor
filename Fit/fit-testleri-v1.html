@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8" />
+  <meta name="robots" content="noindex, nofollow" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<!-- BENZERSİZ title (belge §19) -->
+<title>Fit Testleri — hareket kapasiteni ölç | DadaFit</title>
+<!-- BENZERSİZ meta description (belge §19) -->
+<meta name="description" content="DadaFit Fit Testleri: yedi değerlendirme kategorisiyle hareketliliğini, dengeni, kuvvetini ve günlük hareket alışkanlığını ölç. Sonuç uygun başlangıç seviyeni ve önerilen programı gösterir." />
+<link rel="icon" type="image/svg+xml" href="../kanon/varlik/dadafit-isaret.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="../kanon/varlik/dadafit-isaret-32.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="../kanon/varlik/dadafit-isaret-180.png" />
+<!-- FontAwesome 6.5.2 (kilitli ikon seti) -->
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+      integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+      crossorigin="anonymous" referrerpolicy="no-referrer" />
+<!-- DadaFit ortak kabuk (TEK KAYNAK — token, header, footer, kart/çip/banner kitleri) -->
+<!-- KANON · yukleme sirasi: tokenlar -> markalar/fit (bilesenler YUKLENMEZ) -->
+<link rel="stylesheet" href="../kanon/tokenlar.css" />
+<link rel="stylesheet" href="../kanon/markalar/fit.css" />
+<link rel="stylesheet" href="assets/css/fit-shell.css" />
+<link rel="stylesheet" href="assets/css/fit-mesaj.css" />
+<style>
+/* =====================================================================
+ SAYFA CSS — FİT TESTLERİ (liste sayfası, belge §8)
+ ---------------------------------------------------------------------
+ Kabuktan GELEN ve burada TEKRAR TANIMLANMAYAN her şey:
+ token'lar · .wrap · .btn/.btn-primary/.btn-ghost · .lib-top + .lib-crumb
+ (banner) · .lib-grid ızgarası · .hub-card/.hub-media/.hub-cat/.hub-body/
+ .hub-foot kart kabuğu · .df-fchip + .fgroup · .ff filtre bileşeni ·
+ .lib-empty · .hr-note · .sec/.sec-head/.eyebrow.
+
+ Banner görseli BİLİNÇLİ EKLENMEDİ (--lib-img:none) — Faz 9 harici
+ Unsplash bağlantılarını üretimden kaldırmak istiyor; pro-v1 · sss-v1 ·
+ reklam-ver-v1 · pro-odeme-v1 ile aynı karar. Bu sayfada hiç <img> yok,
+ dolayısıyla CLS kaynağı da yok (§18).
+ ===================================================================== */
+
+/* ---- KOYU BANNER'DA DEMO ETİKETİ ----------------------------------
+ ama .fp-top'un cam varyantıyla aynı dilde durmuyor. Bu tek satırlık
+ kural bugün pro-v1:64 · pro-odeme-v1:53 · reklam-ver-v1:54'te BİREBİR
+ tekrar ediyor, kabukta yok. Kabuğa taşınınca buradan silinmeli. */
+/* ---- SONUÇ ÇUBUĞU: sayı + sıralama --------------------------------
+ GEÇİCİ KOPYA: .lib-bar / .lib-count / .lib-sort / .sort-seg bugün 12
+ sayfada birebir aynı şekilde tekrar ediliyor (antrenorler, egzersiz-
+ kutuphane, program-liste, 9 rehber sayfası). Kabuğa taşınması gereken
+ bir kittir — raporda bildirildi. Buraya sapmasın diye BİREBİR kopya. */
+/* ================= R8/28 · SAĞLIK NOTU + FİLTRE DIVIDER =================
+ (a) Not artık bölümün sonunda. Kutusu zaten içerik kolonu genişliğindeydi
+     (ölçüldü: kutu 1176 · #ftGrid 1176 · fark 0) ama paragraf kabuğun
+     --measure kapağıyla 688 px'te bitiyordu — kutunun 488 px'i boştu.
+     Kapak kaldırılıp iki kolona bölündü: genişlik dolar, satır uzunluğu
+     (~63 karakter) okunur kalır. Kabuğun --measure kuralı DEĞİŞMEDİ,
+     yalnız bu tek not için ezildi.
+ (b) Filtre satırındaki dikey çizgi kabuktan geliyordu
+     (`.ff-bar .ff-count::before`, 1×20 px, #ECECEC) — ORTAK bileşen.
+     Önce burada sayfa-yerel kapattım; sonra Beyar kararıyla LEAD kuralı
+     kabuktan tümden kaldırdı (7 sayfa). Sayfa-yerel ezme artık gereksiz,
+     silindi. Kaldırma sonrası ölçüm: çubuk yüksekliği hâlâ 62 px @1440,
+     sayaç ↔ sıralama dikey ortası farkı 0, taşma 0 — hiza bozulmadı. */
+.ft-hr-son{margin-top:34px}
+.ft-hr-son p{max-width:none}
+/* R12/EK · R16 · Beyar: "burdaki yazıyı niye böldün" — iki kolona bölünen
+   sağlık uyarısı tek cümleyi sütun sınırında kesiyordu. Önceki turun
+   "ÖZ ELEŞTİRİ 2" kolon çizgisi denemesi (column-count:2 + column-rule)
+   geri alındı: metin tek akışta, kutuyu tam genişlik dolduruyor. R11/M5
+   kararı ("metin kutuyu doldurur") aynen sürüyor — egzersiz-kutuphane-v1
+   aynı bilgi kutusunda da tek akış var. */
+.lib-bar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:22px;flex-wrap:wrap}
+.lib-count{font-size:14px;font-weight:600;color:var(--slate-2)}
+.lib-count b{color:var(--slate);font-weight:800}
+.lib-sort{display:flex;align-items:center;gap:8px}
+.lib-sort .lbl{font-size:12.5px;font-weight:600;color:var(--muted)}
+.sort-seg{display:inline-flex;background:var(--bg);border:1px solid var(--line);border-radius:var(--radius-md);padding:3px}
+.sort-seg button{
+  font-family:inherit;font-size:13px;font-weight:700;color:var(--slate-2);
+  background:none;border:none;border-radius:var(--radius-sm);padding:8px 15px;cursor:pointer;
+  transition:.18s var(--ease);
+}
+.sort-seg button:hover{color:var(--fit-deep)}
+.sort-seg button.on{background:var(--fit);color:#fff}
+.sort-seg button:focus-visible{outline:3px solid var(--fit-tint);outline-offset:2px}
+
+/* ---- TEST KARTI — kabuğun .hub-card kabuğu + sayfaya özgü iç ölçüler ---- */
+/* iskelet kuralı: kart başlıkları h3 (§19 hiyerarşi). Kabuk .hub-body h4'ü
+ biçimliyor; h3 karşılığı sayfa-yerel (egzersiz-kutuphane'nin .ex-body h3
+ deseniyle aynı ölçüler). */
+.ft-card .hub-body h3{font-size:16.5px;margin-bottom:8px;letter-spacing:-.01em;transition:color .2s var(--ease)}
+.ft-card:hover .hub-body h3{color:var(--fit-deep)}
+/* R12/S4 · Beyar: "hepsinin dividerı aynı hizada olacak". Açıklama paragrafı
+   kartına göre 3 ya da 4 satır sürüyor; kabuğun `.hub-foot{margin-top:auto}`
+   kuralı yalnız ft-meta'dan SONRAKİ boşluğu yutuyor, ft-meta düz akışta
+   kaldığı için 4 satırlık kartlarda ~21px (=1 satır) aşağı kayıyordu — alt
+   çizgi hizalı kalıyordu ama çip rayı değil (ölçüm: docs/lessons.md §R5).
+   Paragrafa 4 satırlık min-height ayrılınca 3 satırlık metin de aynı kutuyu
+   dolduruyor, ft-meta her kartta aynı y'de başlıyor. `min-height` seçildi,
+   `height`+overflow değil: 6.2em'i (1.55 satır-yüksekliği × 4) aşan bir metin
+   gelirse kutu büyür — hiza bozulabilir ama metin KIRPILMAZ. */
+.ft-card .hub-body p{min-height:6.2em}
+.ft-card .hub-media.icon{height:132px}
+/* kart içi künye satırı: süre · ekipman · kimler için */
+/* R11/M12 · Beyar: "buradaki taglı yapılar tek satır olması gerekiyor,
+   sliderlı olsun."
+   Önce `flex-wrap:wrap` ile iki satıra taşıyordu; kart yükseklikleri
+   etikete göre değişiyor, ızgara dişli görünüyordu.
+   Kaydırma deyimi UYDURULMADI — kabuktaki `.row-track` şeridiyle aynı:
+   gizli çubuk · x-snap · overscroll kapalı · dokunma momentumu.
+   `.row-track`ın kendisi kullanılmadı çünkü o kart rayı (`>*{width:274px}`),
+   burada çip var. */
+.ft-meta{
+  display:flex;flex-wrap:nowrap;gap:8px;margin-top:13px;
+  overflow-x:auto;scroll-snap-type:x proximity;
+  scrollbar-width:none;overscroll-behavior-x:contain;
+  -webkit-overflow-scrolling:touch;padding-bottom:2px;
+}
+.ft-meta::-webkit-scrollbar{display:none}
+/* KAYDIRILABİLİRLİK İŞARETİ — çubuk gizli olduğu için şeridin devam ettiği
+   başka türlü anlaşılmıyordu (ölçüm: @1440'ta 7 kartın 5'inde, @390'da
+   7'sinde içerik taşıyor ve son çip kelime ortasından kesiliyordu).
+   Sağ uçta 22px soluklaşma, "devamı var" demenin en sessiz yolu.
+   Taşma yokken son çip zaten soluklaşmadan önce bitiyor, zarar vermiyor. */
+.ft-meta{
+  -webkit-mask-image:linear-gradient(to right,#000 calc(100% - 22px),transparent);
+  mask-image:linear-gradient(to right,#000 calc(100% - 22px),transparent);
+}
+.ft-meta span{flex:none;scroll-snap-align:start;
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:11.5px;font-weight:700;color:var(--slate-2);
+  background:var(--bg);border:1px solid var(--line);
+  padding:5px 10px;border-radius:var(--radius-sm);
+}
+.ft-meta span i{font-size:11px;color:var(--fit-deep)}
+/* R12/EK · R17 · Beyar (iki kez): "slider chiplerin altındaki divider çok
+   yakın boşluk bırakıyor". `margin-top:auto` çip rayının altında kalan artan
+   boşluğu tümüyle yutuyordu (R5'te paragraf min-height ile sabitlenince artan
+   boşluk 0'a indi). Kabuğun `.hub-foot{margin-top:16px}` değeri geri
+   kazanılsın diye sayfa-yerel override kaldırıldı — kart içeriği (başlık +
+   min-height'lı paragraf + tek satır çip rayı) satır içinde zaten sabit
+   yükseklikte olduğundan auto'nun sağladığı "karta yasla" etkisine ihtiyaç
+   yoktu; R5'in kart eşitliği ölçümle doğrulandı (aşağıda). */
+
+/* ---- "NASIL İŞLER" — numaralı adım kartı ---- */
+.ft-how{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px}
+.ft-howc{
+  background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);
+  padding:24px 22px;box-shadow:var(--sh-sm);
+}
+.ft-howc .st-num{
+  width:34px;height:34px;border-radius:var(--radius-circle);
+  background:var(--fit-tint);color:var(--fit-deep);
+  display:grid;place-items:center;font-size:14px;font-weight:800;margin-bottom:14px;
+}
+.ft-howc h3{font-size:16.5px;margin-bottom:8px}
+.ft-howc p{font-size:13.5px;color:var(--muted);font-weight:500;line-height:1.55}
+.ft-howc p+p{margin-top:9px}
+.ft-howc a{color:var(--fit-deep);font-weight:700;text-decoration:underline;text-underline-offset:2px}
+
+/* ===================== SAYFA RESPONSIVE ===================== */
+@media (max-width:1024px){
+  .ft-how{grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+}
+@media (max-width:640px){
+  .lib-bar{margin-bottom:18px}
+  .lib-sort{width:100%;justify-content:space-between}
+  .sort-seg button{padding:8px 12px;font-size:12.5px}
+  .ft-how{grid-template-columns:minmax(0,1fr);gap:14px}
+  .ft-card .hub-media.icon{height:110px}
+}
+</style>
+<!-- Metin yaslama katmanı (tek kaynak) — sayfa stillerinden SONRA yüklenir,
+     böylece sayfa içi text-align kuralları yaslamayı geri alamaz (HANDOFF §5) -->
+<link rel="stylesheet" href="assets/css/fit-type.css" />
+</head>
+<body data-brand="fit" data-fit-page="fit-testleri-v1">
+
+<!-- KABUK: üst katman (üst bant + header + drawer + alt bar + görüş + çerez) -->
+<div id="fitShellTop"></div>
+
+<main class="page-main" id="pageMain">
+
+<!-- ===== BANNER + BREADCRUMB =====================================
+     Banner'a arama input'u KONMADI (A3/A4 kuralı). Arama header'ın arama
+     ikonundan (arama-fit-v1.html) ve sayfanın kendi filtre bileşeninden
+     sürüyor.
+     ============================================================== -->
+<section class="lib-top">
+  <div class="wrap">
+    <nav class="lib-crumb" aria-label="Sayfa yolu">
+      <a href="dadafit-hub-v1.html" class="crumb-home"><i class="fa-solid fa-house" aria-hidden="true"></i><span class="sr-only">DadaFit ana sayfa</span></a>
+      <i class="fa-solid fa-chevron-right"></i>
+      <a href="programlar-merkezi-v1.html">Programlar</a>
+      <i class="fa-solid fa-chevron-right"></i>
+      <span class="cur">Fit Testleri</span>
+    </nav>
+    <span class="eyebrow"><i class="fa-solid fa-clipboard-check"></i> Fit Testleri</span>
+    <!-- TEK H1 (belge §19) -->
+    <h1>Nerede olduğunu ölç, oradan başla</h1>
+    <p class="lib-sub">Yedi kısa değerlendirme; hareketliliğini, dengeni, kuvvetini, dayanıklılığını ve
+    günlük hareket alışkanlığını ölçer. Fit Testleri <b>bağımsız bir alandır</b> — Programını Bul
+    sihirbazından ayrı çalışır, sonuçları sihirbazın önerisini destekler.</p>
+    <div class="chips">
+      <!-- R13 — sihirbaz kendi sayfasına taşındı -->
+      <a class="btn btn-primary" href="programini-bul-v1.html"><i class="fa-solid fa-wand-magic-sparkles"></i> Programını Bul</a>
+      <a class="btn btn-ghost" href="antrenorler-v1.html"><i class="fa-solid fa-user-check"></i> Antrenöre danış</a>
+    </div>
+    <!-- §22: "7 test kategorisi" belgenin kendi listesi (demo DEĞİL), ama
+         süre aralığı ve ekipmansız test sayısı prototip içeriğinden türüyor.
+         Etiket bu yüzden sayıların yanında duruyor — pro-v1 · pro-odeme-v1 ·
+         reklam-ver-v1 · sss-v1 banner'larındaki desenin aynısı. -->
+    <div class="lib-stats">
+      <div class="lib-stat"><b>7</b><span>test kategorisi</span></div>
+      <div class="lib-stat"><b>6–12 dk</b><span>test süresi</span></div>
+      <div class="lib-stat"><b>2</b><span>ekipmansız test</span></div> </div>
+  </div>
+</section>
+
+<!-- ===== TEST LİSTESİ ===================================== -->
+<section class="sec sec-fit" style="background:var(--bg-white)">
+  <div class="wrap">
+
+    <div class="sec-head">
+      <div>
+        <span class="eyebrow"><i class="fa-solid fa-list-check"></i> Yedi kategori</span>
+        <h2>Neyi ölçmek istiyorsun?</h2>
+        <p class="lead">Her test ayrı bir kapasiteyi ölçer. Hangisinden başlayacağını bilmiyorsan
+        <b>Başlangıç Seviyesi Testi</b> ile başla. Fit Testleri Pro paketinde açılır —
+        <a href="pro-v1.html" style="color:var(--fit-deep);font-weight:700;text-decoration:underline;text-underline-offset:2px">paketleri karşılaştır</a>.</p>
+        <div class="sec-tools">
+          <a class="see-all" href="program-liste-v1.html">Tüm Programlar <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+      </div>
+    </div>
+
+    <!-- FİLTRE — kabuğun ortak .ff bileşeni (masaüstünde bar+popover,
+         ≤900px'te alttan çekmece). Seçim URL parametresine yansır,
+         geri/ileri çalışır, yenilemede korunur (belge §23). -->
+    <div class="lib-filters ff" id="ftFilters"
+         data-ff data-ff-count=".lib-count" data-ff-sort=".lib-sort" data-ff-clear="#ftClear">
+      <div class="fgroup" data-group="odak" role="group" aria-label="Ölçtüğü alan filtresi">
+        <span class="lbl">Ölçtüğü alan</span>
+        <button class="df-fchip on" type="button" data-val="all">Tümü</button>
+        <button class="df-fchip" type="button" data-val="genel"><i class="fa-solid fa-flag-checkered" aria-hidden="true"></i> Genel seviye</button>
+        <button class="df-fchip" type="button" data-val="hareketlilik"><i class="fa-solid fa-child-reaching" aria-hidden="true"></i> Hareketlilik</button>
+        <button class="df-fchip" type="button" data-val="denge"><i class="fa-solid fa-scale-balanced" aria-hidden="true"></i> Denge</button>
+        <button class="df-fchip" type="button" data-val="kuvvet"><i class="fa-solid fa-dumbbell" aria-hidden="true"></i> Kuvvet</button>
+        <button class="df-fchip" type="button" data-val="dayaniklilik"><i class="fa-solid fa-heart-pulse" aria-hidden="true"></i> Dayanıklılık</button>
+        <button class="df-fchip" type="button" data-val="gunluk"><i class="fa-solid fa-calendar-day" aria-hidden="true"></i> Günlük yaşam</button>
+      </div>
+      <div class="fgroup" data-group="sure" role="group" aria-label="Süre filtresi">
+        <span class="lbl">Süre</span>
+        <button class="df-fchip on" type="button" data-val="all">Tümü</button>
+        <button class="df-fchip" type="button" data-val="kisa">7 dk ve altı</button>
+        <button class="df-fchip" type="button" data-val="orta">8–10 dk</button>
+        <button class="df-fchip" type="button" data-val="uzun">11 dk ve üstü</button>
+      </div>
+      <!-- ekipman: bir test birden fazla değer taşıyabilir (data-ekipman boşlukla
+           ayrılmış); seçili değerlerden HERHANGİ biri eşleşirse kart görünür -->
+      <div class="fgroup" data-group="ekipman" role="group" aria-label="Ekipman filtresi">
+        <span class="lbl">Ekipman</span>
+        <button class="df-fchip on" type="button" data-val="all">Tümü</button>
+        <button class="df-fchip" type="button" data-val="yok"><i class="fa-solid fa-person" aria-hidden="true"></i> Ekipman gerekmez</button>
+        <button class="df-fchip" type="button" data-val="mat"><i class="fa-solid fa-square" aria-hidden="true"></i> Mat / kaymayan zemin</button>
+        <button class="df-fchip" type="button" data-val="destek"><i class="fa-solid fa-chair" aria-hidden="true"></i> Sandalye / duvar desteği</button>
+        <button class="fclear" type="button" id="ftClear"><i class="fa-solid fa-rotate-left" aria-hidden="true"></i> Filtreyi sıfırla</button>
+      </div>
+    </div>
+
+    <!-- SONUÇ ÇUBUĞU (kabuğun .ff bileşeni bu iki bloğu .ff-res satırına taşır) -->
+    <div class="lib-bar">
+      <div class="lib-count"><b id="ftCount">7</b> test gösteriliyor </div>
+      <div class="lib-sort">
+        <span class="lbl" id="ftSortLbl">Sırala</span>
+        <div class="sort-seg" id="ftSort" role="group" aria-labelledby="ftSortLbl">
+          <button class="on" type="button" data-sort="onerilen" aria-pressed="true">Önerilen</button>
+          <button type="button" data-sort="sure" aria-pressed="false">Süre</button>
+          <button type="button" data-sort="az" aria-pressed="false">A-Z</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TEST IZGARASI — yedi kategori (belge §8, tam liste)
+         Süre, ekipman, "kimler için" ve tek satırlık amaç metinleri
+         fit-testi-detay-v1.html'deki TESTS kaydından alınmıştır; iki sayfa
+         çelişmesin diye orada değişirse burası da değişmeli. -->
+    <div class="lib-grid cols-3" id="ftGrid">
+
+      <div class="hub-card ft-card"
+         data-odak="genel" data-sure="orta" data-ekipman="mat destek" data-dk="10" data-order="1"
+         data-name="Başlangıç Seviyesi Testi">
+        <button class="kyt-btn" type="button" data-kaydet aria-pressed="false" data-tur="test" data-slug="baslangic-seviyesi" data-ad="Başlangıç Seviyesi Testi" data-href="fit-testi-detay-v1.html?test=baslangic-seviyesi" data-gorsel="" data-meta="Genel seviye · ~10 dk"><i class="fa-regular fa-bookmark"></i></button>
+        <div class="hub-media icon">
+          <i class="fa-solid fa-flag-checkered" aria-hidden="true"></i>
+          <span class="hub-cat fit">Genel seviye</span>
+        </div>
+        <div class="hub-body">
+          <h3><a class="kyt-link" href="fit-testi-detay-v1.html?test=baslangic-seviyesi">Başlangıç Seviyesi Testi</a></h3>
+          <p>Bugünkü bacak dayanıklılığını kendi başlangıcınla kıyaslar. Soru "ne kadar iyisin"
+          değil, "bugün nereden başlaman güvenli" — ilk dört haftanın temposunu seçmene yardım eder.</p>
+          <div class="ft-meta">
+            <span><i class="fa-regular fa-clock" aria-hidden="true"></i> ~10 dk</span>
+            <span><i class="fa-solid fa-square" aria-hidden="true"></i> Mat + sandalye</span>
+            <span><i class="fa-solid fa-user-check" aria-hidden="true"></i> Yeniden başlayanlar</span>
+          </div>
+          <div class="hub-foot"><span>Uygunluk taramasıyla başlar</span><span class="go">Teste git <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span></div>
+        </div>
+      </div>
+
+      <div class="hub-card ft-card"
+         data-odak="hareketlilik" data-sure="orta" data-ekipman="mat destek" data-dk="8" data-order="2"
+         data-name="Mobilite Değerlendirmesi">
+        <button class="kyt-btn" type="button" data-kaydet aria-pressed="false" data-tur="test" data-slug="mobilite" data-ad="Mobilite Değerlendirmesi" data-href="fit-testi-detay-v1.html?test=mobilite" data-gorsel="" data-meta="Hareketlilik · ~8 dk"><i class="fa-regular fa-bookmark"></i></button>
+        <div class="hub-media icon">
+          <i class="fa-solid fa-child-reaching" aria-hidden="true"></i>
+          <span class="hub-cat fit">Hareketlilik</span>
+        </div>
+        <div class="hub-body">
+          <h3><a class="kyt-link" href="fit-testi-detay-v1.html?test=mobilite">Mobilite Değerlendirmesi</a></h3>
+          <p>Esnekliğine not vermez. Bugünkü hareket açıklığını gözlemleyerek programında hangi
+          ısınma ve açma çalışmalarının öne çıkması gerektiğini belirler.</p>
+          <div class="ft-meta">
+            <span><i class="fa-regular fa-clock" aria-hidden="true"></i> ~8 dk</span>
+            <span><i class="fa-solid fa-square" aria-hidden="true"></i> Mat + duvar</span>
+            <span><i class="fa-solid fa-user-check" aria-hidden="true"></i> Masa başında oturanlar</span>
+          </div>
+          <div class="hub-foot"><span>Uygunluk taramasıyla başlar</span><span class="go">Teste git <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span></div>
+        </div>
+      </div>
+
+      <div class="hub-card ft-card"
+         data-odak="denge" data-sure="kisa" data-ekipman="mat destek" data-dk="7" data-order="3"
+         data-name="Denge Değerlendirmesi">
+        <button class="kyt-btn" type="button" data-kaydet aria-pressed="false" data-tur="test" data-slug="denge" data-ad="Denge Değerlendirmesi" data-href="fit-testi-detay-v1.html?test=denge" data-gorsel="" data-meta="Denge · ~7 dk"><i class="fa-regular fa-bookmark"></i></button>
+        <div class="hub-media icon">
+          <i class="fa-solid fa-scale-balanced" aria-hidden="true"></i>
+          <span class="hub-cat fit">Denge</span>
+        </div>
+        <div class="hub-body">
+          <h3><a class="kyt-link" href="fit-testi-detay-v1.html?test=denge">Denge Değerlendirmesi</a></h3>
+          <p>Bugünkü denge kontrolünü gözlemler; programına denge bloğu eklenip eklenmeyeceğini
+          belirler. Tutunabileceğin bir duvar ya da sandalyenin yanında uygulanır.</p>
+          <div class="ft-meta">
+            <span><i class="fa-regular fa-clock" aria-hidden="true"></i> ~7 dk</span>
+            <span><i class="fa-solid fa-chair" aria-hidden="true"></i> Tutunacak bir yer</span>
+            <span><i class="fa-solid fa-user-check" aria-hidden="true"></i> Dengesini geliştirmek isteyenler</span>
+          </div>
+          <div class="hub-foot"><span>Uygunluk taramasıyla başlar</span><span class="go">Teste git <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span></div>
+        </div>
+      </div>
+
+      <div class="hub-card ft-card"
+         data-odak="kuvvet" data-sure="orta" data-ekipman="mat" data-dk="10" data-order="4"
+         data-name="Temel Kuvvet Değerlendirmesi">
+        <button class="kyt-btn" type="button" data-kaydet aria-pressed="false" data-tur="test" data-slug="temel-kuvvet" data-ad="Temel Kuvvet Değerlendirmesi" data-href="fit-testi-detay-v1.html?test=temel-kuvvet" data-gorsel="" data-meta="Kuvvet · ~10 dk"><i class="fa-regular fa-bookmark"></i></button>
+        <div class="hub-media icon">
+          <i class="fa-solid fa-dumbbell" aria-hidden="true"></i>
+          <span class="hub-cat fit">Kuvvet</span>
+        </div>
+        <div class="hub-body">
+          <h3><a class="kyt-link" href="fit-testi-detay-v1.html?test=temel-kuvvet">Temel Kuvvet Değerlendirmesi</a></h3>
+          <p>Bir rekor denemesi değildir. Formunu bozmadan yapabildiğin tekrar sayısını gözlemleyerek
+          programının başlangıç yükünü ve ilerleme hızını belirler.</p>
+          <div class="ft-meta">
+            <span><i class="fa-regular fa-clock" aria-hidden="true"></i> ~10 dk</span>
+            <span><i class="fa-solid fa-square" aria-hidden="true"></i> Mat + duvar</span>
+            <span><i class="fa-solid fa-user-check" aria-hidden="true"></i> Kuvvete başlayanlar</span>
+          </div>
+          <div class="hub-foot"><span>Uygunluk taramasıyla başlar</span><span class="go">Teste git <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span></div>
+        </div>
+      </div>
+
+      <div class="hub-card ft-card"
+         data-odak="dayaniklilik" data-sure="uzun" data-ekipman="yok" data-dk="12" data-order="5"
+         data-name="Dayanıklılık Değerlendirmesi">
+        <button class="kyt-btn" type="button" data-kaydet aria-pressed="false" data-tur="test" data-slug="dayaniklilik" data-ad="Dayanıklılık Değerlendirmesi" data-href="fit-testi-detay-v1.html?test=dayaniklilik" data-gorsel="" data-meta="Dayanıklılık · ~12 dk"><i class="fa-regular fa-bookmark"></i></button>
+        <div class="hub-media icon">
+          <i class="fa-solid fa-heart-pulse" aria-hidden="true"></i>
+          <span class="hub-cat fit">Dayanıklılık</span>
+        </div>
+        <div class="hub-body">
+          <h3><a class="kyt-link" href="fit-testi-detay-v1.html?test=dayaniklilik">Dayanıklılık Değerlendirmesi</a></h3>
+          <p>Kondisyon puanı üretmez, kalp sağlığı hakkında bilgi vermez. Yalnız bugünkü tempolu
+          yürüyüş toleransını gözlemleyerek programının süre ve tempo başlangıcını belirler.</p>
+          <div class="ft-meta">
+            <span><i class="fa-regular fa-clock" aria-hidden="true"></i> ~12 dk</span>
+            <span><i class="fa-solid fa-person-walking" aria-hidden="true"></i> Yürüyüş alanı</span>
+            <span><i class="fa-solid fa-user-check" aria-hidden="true"></i> Kondisyonunu artırmak isteyenler</span>
+          </div>
+          <div class="hub-foot"><span>Uygunluk taramasıyla başlar</span><span class="go">Teste git <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span></div>
+        </div>
+      </div>
+
+      <div class="hub-card ft-card"
+         data-odak="gunluk" data-sure="orta" data-ekipman="destek" data-dk="8" data-order="6"
+         data-name="Masa Başı Yaşam Değerlendirmesi">
+        <button class="kyt-btn" type="button" data-kaydet aria-pressed="false" data-tur="test" data-slug="masa-basi-yasam" data-ad="Masa Başı Yaşam Değerlendirmesi" data-href="fit-testi-detay-v1.html?test=masa-basi-yasam" data-gorsel="" data-meta="Günlük yaşam · ~8 dk"><i class="fa-regular fa-bookmark"></i></button>
+        <div class="hub-media icon">
+          <i class="fa-solid fa-chair" aria-hidden="true"></i>
+          <span class="hub-cat fit">Günlük yaşam</span>
+        </div>
+        <div class="hub-body">
+          <h3><a class="kyt-link" href="fit-testi-detay-v1.html?test=masa-basi-yasam">Masa Başı Yaşam Değerlendirmesi</a></h3>
+          <p>Bir yaşam tarzı yargısı üretmez. Gün içindeki hareketsiz blokların nerede biriktiğini
+          görünür kılar ve nereye kısa mola ekleyeceğini gösterir.</p>
+          <div class="ft-meta">
+            <span><i class="fa-regular fa-clock" aria-hidden="true"></i> ~8 dk</span>
+            <span><i class="fa-solid fa-chair" aria-hidden="true"></i> Masa ve sandalye</span>
+            <span><i class="fa-solid fa-user-check" aria-hidden="true"></i> Gün boyu oturanlar</span>
+          </div>
+          <div class="hub-foot"><span>Uygunluk taramasıyla başlar</span><span class="go">Teste git <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span></div>
+        </div>
+      </div>
+
+      <div class="hub-card ft-card"
+         data-odak="gunluk" data-sure="kisa" data-ekipman="yok" data-dk="6" data-order="7"
+         data-name="Hareket Alışkanlığı Testi">
+        <button class="kyt-btn" type="button" data-kaydet aria-pressed="false" data-tur="test" data-slug="hareket-aliskanligi" data-ad="Hareket Alışkanlığı Testi" data-href="fit-testi-detay-v1.html?test=hareket-aliskanligi" data-gorsel="" data-meta="Günlük yaşam · ~6 dk"><i class="fa-regular fa-bookmark"></i></button>
+        <div class="hub-media icon">
+          <i class="fa-solid fa-seedling" aria-hidden="true"></i>
+          <span class="hub-cat fit">Günlük yaşam</span>
+        </div>
+        <div class="hub-body">
+          <h3><a class="kyt-link" href="fit-testi-detay-v1.html?test=hareket-aliskanligi">Hareket Alışkanlığı Testi</a></h3>
+          <p>Performansını değil sürekliliğini ölçer. Son dört haftana bakarak programın kaç günlük
+          olacağını ve hangi engelin önce çözülmesi gerektiğini belirler. Fiziksel yük yoktur.</p>
+          <div class="ft-meta">
+            <span><i class="fa-regular fa-clock" aria-hidden="true"></i> ~6 dk</span>
+            <span><i class="fa-solid fa-calendar-day" aria-hidden="true"></i> Takvim ve not</span>
+            <span><i class="fa-solid fa-user-check" aria-hidden="true"></i> Başlayıp bırakanlar</span>
+          </div>
+          <div class="hub-foot"><span>Uygunluk taramasıyla başlar</span><span class="go">Teste git <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- BOŞ DURUM -->
+    <div class="lib-empty" id="ftEmpty">
+      <div class="ico"><i class="fa-solid fa-clipboard-question" aria-hidden="true"></i></div>
+      <h3>Bu filtreyle test bulamadık</h3>
+      <p>Seçimini gevşetmeyi dene — bir süre aralığı ya da ekipman çıkarınca daha çok test görünür.</p>
+      <button class="btn btn-primary" type="button" id="ftEmptyReset"><i class="fa-solid fa-rotate-left" aria-hidden="true"></i> Filtreyi sıfırla</button>
+    </div>
+
+    <!-- R8/28 · SAĞLIK SINIRI (belge §8 — zorunlu) — bölümün SONUNA taşındı.
+         Önce bölümün en üstündeydi (y=618 @1440): kullanıcı testleri görmeden
+         önce bir uyarı duvarı okuyordu. Sınır kaybolmadı, listenin altına indi.
+         Paragrafın --measure kapağı burada kaldırıldı ve iki kolona bölündü:
+         kutu zaten içerik kolonu genişliğindeydi (1176) ama metin 688 px'te
+         bitiyordu. İki kolon hem genişliği doldurur hem satır uzunluğunu korur. -->
+    <div class="hr-note ft-hr-son" id="ftHrNot">
+      <i class="fa-solid fa-circle-info"></i>
+      <p><b>Fit Testleri tıbbi teşhis, hastalık tanısı ya da tedavi önerisi üretmez.</b>
+      Sonuçlar yalnızca hareket programını hangi seviyeden kurabileceğini gösterir; bir sağlık
+      raporu, sakatlık tanısı veya tedavi planı değildir. Ağrı, baş dönmesi, göğüste sıkışma ya da
+      nefes darlığı hissedersen testi bırak ve bir sağlık profesyoneline başvur.
+      Ayrıntı: <a href="saglik-bilgilendirme-v1.html">Sağlık Bilgilendirmesi</a> ·
+      Kişiye özel yönlendirme için <a href="antrenorler-v1.html">bir antrenöre danış</a>.</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- ===== TEST NASIL İŞLER ===================================== -->
+<section class="sec sec-fit" style="background:var(--bg-cream)">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <span class="eyebrow"><i class="fa-solid fa-diagram-project"></i> Akış</span>
+        <h2>Bir test üç adımda ilerler</h2>
+        <p class="lead">Hangi testi seçersen seç akış aynıdır: önce güvenlik taraması, sonra adım adım
+        uygulama, en sonunda sonuç ve önerilen program.</p>
+      </div>
+    </div>
+
+    <div class="ft-how">
+      <div class="ft-howc">
+        <span class="st-num">1</span>
+        <h3>Fiziksel aktivite uygunluk taraması</h3>
+        <p>Test başlamadan önce kısa bir uygunluk taraması gösterilir: göğüs ağrısı, baş dönmesi,
+        kontrolsüz tansiyon, yeni geçirilmiş ameliyat ve benzeri durumlar sorulur.</p>
+        <p><b>Riskli bir yanıt verirsen test başlamaz</b> — akış orada durur ve uzman desteğine
+        yönlendirilirsin. Bu tarama bir teşhis aracı değildir; tek işi riskli durumda seni durdurmaktır.</p>
+      </div>
+      <div class="ft-howc">
+        <span class="st-num">2</span>
+        <h3>Adım adım uygulama</h3>
+        <p>Her adımda ne yapacağın, kaç tekrar ya da kaç saniye süreceği ve nelere dikkat edeceğin
+        yazılıdır. Ağrı hissedersen adımı bırakabilir, testi istediğin an durdurabilirsin.</p>
+        <p>Gerekli ekipman ve güvenlik uyarısı testin kendi sayfasında, başlamadan önce görünür.</p>
+      </div>
+      <div class="ft-howc">
+        <span class="st-num">3</span>
+        <h3>Sonuç ve önerilen program</h3>
+        <!-- §8 sonuç alanları — dördü de sayılıyor; adlandırma
+             fit-testi-sonuc-v1.html'deki kart başlıklarıyla birebir tutar. -->
+        <p>Sonuç sayfasında sonuç özeti, uygun başlangıç seviyesi, önerilen program ve gerekiyorsa
+        antrenöre danışma yönlendirmesi yer alır. Karşılaştırma başkasıyla değil, kendi
+        başlangıcınladır.</p>
+        <p>Önerilen programı <a href="program-liste-v1.html">Tüm Programlar</a> içinden açabilir,
+        kararsız kaldığında <a href="antrenorler-v1.html">bir antrenöre danışabilirsin</a>.</p>
+      </div>
+    </div>
+
+    <!-- SAĞLIK SINIRI — akış tarafındaki karşılığı (belge §8/§9) -->
+    <div class="hr-note">
+      <i class="fa-solid fa-triangle-exclamation"></i>
+      <p>Uygunluk taraması ve test sonuçları <b>tıbbi teşhis, hastalık tanısı veya tedavi önerisi
+      değildir</b> ve bir hekim muayenesinin yerini tutmaz. Bilinen bir kalp-damar rahatsızlığın,
+      hamileliğin, yeni bir ameliyatın ya da hekimin koyduğu bir hareket kısıtın varsa teste
+      başlamadan önce hekimine danış. Süre ve ekipman bilgileri örnek değerlerdir, kişiye göre değişir.</p>
+    </div>
+  </div>
+</section>
+
+</main><!-- /.page-main -->
+
+<!-- KABUK: alt katman (giriş kapısı + footer + başa dön) -->
+<div id="fitShellBottom"></div>
+
+<!-- DadaFit ortak kabuk JS (tek kaynak): markup + davranış -->
+<script src="assets/js/fit-shell.js"></script>
+<script src="assets/js/fit-mesaj.js"></script>
+<script src="assets/js/fit-kayit.js"></script>
+<script>
+/* ===== SAYFA JS — FİT TESTLERİ ======================================
+   · Filtre seçimi ve sıralama URL parametresine yansır (?odak= &sure=
+     &ekipman= &sirala=), tarayıcı geri/ileri tuşu çalışır, yenilemede
+     seçim korunur (belge §23).
+   · Her filtre düğmesinde aria-pressed (belge §20).
+   · Kabuğun .ff bileşeni bu dosyadan ÖNCE koştu: .fgroup kutuları
+     popover/çekmece içine TAŞINDI ama panelin torunu olarak kaldı —
+     bu yüzden sorgular hâlâ #ftFilters kapsamında çalışır.
+   ==================================================================== */
+(function(){
+  'use strict';
+  var panel = document.getElementById('ftFilters');
+  var grid  = document.getElementById('ftGrid');
+  if(!panel || !grid) return;
+
+  var cards   = Array.prototype.slice.call(grid.querySelectorAll('.ft-card'));
+  var countEl = document.getElementById('ftCount');
+  var emptyEl = document.getElementById('ftEmpty');
+  var sortSeg = document.getElementById('ftSort');
+
+  var GROUPS = ['odak','sure','ekipman'];
+  var SORTS  = ['onerilen','sure','az'];
+  var SAFE   = /^[a-z0-9-]+$/;
+
+  var sel  = {odak:[], sure:[], ekipman:[]};
+  var sort = 'onerilen';
+
+  function groupEl(g){ return panel.querySelector('.fgroup[data-group="'+g+'"]'); }
+  function chipsOf(g){
+    var el = groupEl(g);
+    return el ? Array.prototype.slice.call(el.querySelectorAll('.df-fchip')) : [];
+  }
+  function has(g,v){ return sel[g].indexOf(v) > -1; }
+
+  /* ---- çip ve sıralama görünümü + aria-pressed (belge §20) ---- */
+  function paint(){
+    GROUPS.forEach(function(g){
+      chipsOf(g).forEach(function(c){
+        var v  = c.getAttribute('data-val');
+        var on = (v === 'all') ? (sel[g].length === 0) : has(g,v);
+        c.classList.toggle('on', on);
+        /* aria-pressed YAZILMAZ: çip ortak filtre bileşeninde `role="option"`
+           taşıyor ve durumunu `aria-selected` bildiriyor. İkisi aynı öğede
+           duramaz — doğrulama ajanı bu çakışmayı ölçtü. Durumu kabuk yazar. */
+        c.setAttribute('aria-selected', on ? 'true' : 'false');
+      });
+    });
+    if(sortSeg){
+      Array.prototype.slice.call(sortSeg.querySelectorAll('button')).forEach(function(b){
+        var on = b.getAttribute('data-sort') === sort;
+        b.classList.toggle('on', on);
+        b.setAttribute('aria-pressed', on ? 'true' : 'false');
+      });
+    }
+  }
+
+  /* Bir kart bir grupta BİRDEN FAZLA değer taşıyabilir (ör. hem mat hem
+     sandalye isteyen test). Grup içi seçim BİRLEŞİM: seçilenlerden herhangi
+     biri kartın değerleri arasındaysa kart geçer. Gruplar arası KESİŞİM. */
+  function tokens(card, g){
+    return (card.getAttribute('data-'+g) || '').split(/\s+/).filter(Boolean);
+  }
+  function matches(card){
+    for(var i=0;i<GROUPS.length;i++){
+      var g = GROUPS[i];
+      if(!sel[g].length) continue;
+      var t = tokens(card, g);
+      var hit = false;
+      for(var j=0;j<sel[g].length;j++){ if(t.indexOf(sel[g][j]) > -1){ hit = true; break; } }
+      if(!hit) return false;
+    }
+    return true;
+  }
+
+  function reorder(){
+    var arr = cards.slice();
+    if(sort === 'sure'){
+      arr.sort(function(a,b){ return (+a.getAttribute('data-dk')) - (+b.getAttribute('data-dk')); });
+    }else if(sort === 'az'){
+      arr.sort(function(a,b){ return a.getAttribute('data-name').localeCompare(b.getAttribute('data-name'),'tr'); });
+    }else{
+      arr.sort(function(a,b){ return (+a.getAttribute('data-order')) - (+b.getAttribute('data-order')); });
+    }
+    arr.forEach(function(c){ grid.appendChild(c); });
+  }
+
+  function render(){
+    var shown = 0;
+    cards.forEach(function(c){
+      var ok = matches(c);
+      c.style.display = ok ? '' : 'none';
+      if(ok) shown++;
+    });
+    if(countEl) countEl.textContent = shown;
+    if(emptyEl) emptyEl.classList.toggle('show', shown === 0);
+    grid.style.display = shown === 0 ? 'none' : '';
+    reorder();
+    paint();
+  }
+
+  /* ---- URL <-> durum ---- */
+  function toQuery(){
+    var qs = [];
+    GROUPS.forEach(function(g){ if(sel[g].length) qs.push(g + '=' + sel[g].join(',')); });
+    if(sort !== 'onerilen') qs.push('sirala=' + sort);
+    return qs.length ? '?' + qs.join('&') : '';
+  }
+  function readQuery(){
+    var p = new URLSearchParams(location.search);
+    GROUPS.forEach(function(g){
+      sel[g] = [];
+      var raw = p.get(g);
+      if(!raw) return;
+      raw.split(',').forEach(function(v){
+        v = v.trim();
+        if(!v || !SAFE.test(v) || has(g,v)) return;
+        if(groupEl(g) && groupEl(g).querySelector('.df-fchip[data-val="'+v+'"]')) sel[g].push(v);
+      });
+    });
+    var s = p.get('sirala');
+    sort = (SORTS.indexOf(s) > 0) ? s : 'onerilen';
+  }
+  function push(){
+    var next = location.pathname + toQuery() + location.hash;
+    var cur  = location.pathname + location.search + location.hash;
+    if(next !== cur) history.pushState(null, '', next);
+  }
+
+  /* ---- çip tıklaması (çoklu seçim; "Tümü" = filtre yok) ---- */
+  GROUPS.forEach(function(g){
+    chipsOf(g).forEach(function(btn){
+      btn.addEventListener('click', function(){
+        var v = btn.getAttribute('data-val');
+        if(v === 'all'){ sel[g] = []; }
+        else if(has(g,v)){ sel[g].splice(sel[g].indexOf(v), 1); }
+        else { sel[g].push(v); }
+        render(); push();
+      });
+    });
+  });
+
+  /* ---- sıralama ---- */
+  if(sortSeg){
+    Array.prototype.slice.call(sortSeg.querySelectorAll('button')).forEach(function(b){
+      b.addEventListener('click', function(){
+        var v = b.getAttribute('data-sort');
+        if(SORTS.indexOf(v) < 0 || v === sort) return;
+        sort = v; render(); push();
+      });
+    });
+  }
+
+  /* ---- sıfırla: panelin kendi düğmesi (.ff bileşeni de bunu tıklar) ve boş durum ---- */
+  function resetAll(){
+    GROUPS.forEach(function(g){ sel[g] = []; });
+    sort = 'onerilen';
+    render(); push();
+  }
+  var clearBtn = document.getElementById('ftClear');
+  if(clearBtn) clearBtn.addEventListener('click', resetAll);
+  var emptyBtn = document.getElementById('ftEmptyReset');
+  if(emptyBtn) emptyBtn.addEventListener('click', resetAll);
+
+  /* ---- geri / ileri ---- */
+  window.addEventListener('popstate', function(){ readQuery(); render(); });
+
+  /* ---- ilk kurulum: URL'deki seçimi geri yükle, geçmişe yazma ---- */
+  readQuery();
+  render();
+})();
+</script>
+</body>
+</html>

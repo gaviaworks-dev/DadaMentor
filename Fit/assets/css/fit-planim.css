@@ -1,0 +1,970 @@
+/* =====================================================================
+ DADAFIT — FİT PLANIM AİLESİ CSS (TEK KAYNAK)
+ ---------------------------------------------------------------------
+ R7 · madde 10. Bu blok R6'da yedi sayfaya BİREBİR kopyalanmıştı
+ (7 × ~7 KB); §0b "sayfa içi style" kuralı öyle okunmuştu. Tek kaynağa
+ çıkarıldı — HİÇBİR SEÇİCİ, HİÇBİR DEĞER DEĞİŞMEDİ, yalnız yeri değişti.
+
+ YÜKLEME SIRASI ZORUNLU (kaldırılan <style> ile birebir aynı yer):
+     assets/css/fit-shell.css  →  BU DOSYA  →  assets/css/fit-type.css
+ Kabuk önce gelir (bu dosya kabuk ölçülerini okur), fit-type.css sonra
+ gelir (yaslama katmanı sayfa içi text-align'ı geri alamasın diye).
+ Sıra bozulursa `.fp-card p.fpx-note` ailesinin özgüllük dengesi de bozulur
+ — bkz. fit-type.css "ÖZGÜLLÜK NOTU".
+
+ Kullanan yedi sayfa: fit-planim-v1 · -gecmis · -ilerleme · -kaydettiklerim
+ · -randevular · -rozetler · -saglik-profil
+ ===================================================================== */
+
+/* SAYFA CSS — Fit Planım ailesi · ÜST ÖZET KARTI ve plan kalemleri
+ Kabuk, banner, sekme rayı, kart/liste/rozet/izin kitleri
+ assets/css/fit-shell.css'te tek kaynakta (AJAN-A). Burada yalnız bu ailenin
+ kendi ölçüleri; hepsi `fpx-` önekli, kabuk sınıfı ezilmiyor.
+
+ ÖLÇÜLEN REFERANS (R6 · madde 19 · Playwright, @1440):
+ · dadagastro.com/bugun-ne-pisirsem → .bnp-head iki kolon, column-gap 44px;
+   sağ kolon flex-column, gap 16px, border-left 1px, padding-left 38px;
+   sayı 29px/700, etiket 12.5px/500
+ · dadadiet.com/giris → .au-card (kişisel alanın kartı) radius 24px,
+   padding 34px 38px 36px, kenarlık 1px #ececec (= --line), gölge .04 alfa
+ · dadadiet.com/hesaplayicilar → .sec-head h2 34px, margin-bottom 34px;
+   kart ikon kutusu 50px, radius 16px
+ Bu ölçüler token'a çevrildi: 24px = --radius-xl · #ececec = --line ·
+ gölge = --sh-sm. Elle renk uydurulmadı. */
+
+/* ---- üst özet kartı ---- */
+.fpx-sum{
+  display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:44px;align-items:center;
+  background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-xl);
+  box-shadow:var(--sh-sm);padding:34px 38px 36px;
+}
+.fpx-sum-main{min-width:0}
+.fpx-kicker{
+  display:inline-flex;align-items:center;gap:9px;font-size:12px;font-weight:800;
+  letter-spacing:.09em;text-transform:uppercase;color:var(--fit-deep);margin-bottom:12px;
+}
+.fpx-kicker::before{content:"";width:26px;height:2px;background:currentColor;border-radius:var(--radius-sm)}
+.fpx-sum h2{font-size:25px;line-height:1.16;letter-spacing:-.02em;margin:0}
+.fpx-sum-sub{font-size:15px;line-height:1.6;font-weight:500;color:var(--slate-2);margin:10px 0 0;max-width:var(--measure,560px)}
+.fpx-sum .fp-bar{margin-top:18px}
+.fpx-sum-meta{display:flex;gap:18px;flex-wrap:wrap;font-size:12.5px;font-weight:600;color:var(--muted);margin-top:12px}
+.fpx-sum-meta b{color:var(--slate);font-weight:800}
+.fpx-acts{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+
+/* sağ dikey istatistik kolonu — referans .bnp-stats birebir */
+.fpx-stats{
+  display:flex;flex-direction:column;gap:16px;
+  border-left:1px solid var(--line);padding-left:38px;min-width:132px;
+}
+.fpx-stat b{display:block;font-size:29px;font-weight:700;line-height:1.05;letter-spacing:-.02em;color:var(--slate)}
+.fpx-stat b small{font-size:14px;font-weight:700;letter-spacing:0}
+.fpx-stat span{display:block;font-size:12.5px;font-weight:500;color:var(--muted);margin-top:3px}
+.fpx-stat.is-fit b{color:var(--fit-deep)}
+
+/* kayıt yokken: dürüst boş durum — sağ kolon hiç basılmaz */
+.fpx-sum.is-empty{grid-template-columns:minmax(0,1fr)}
+.fpx-sum.is-empty .fpx-stats{display:none}
+
+/* hidden özniteliği sınıf seçicilerini yenmeli (0,2,0 > 0,1,0) */
+.fpx-sum-meta[hidden],.fpx-gunler[hidden],.fpx-acts[hidden],
+.fpx-sum-sub[hidden],.fpx-sum .fp-bar[hidden],.fp-badge[hidden]{display:none}
+
+/* ---- plan günü şeridi ---- */
+.fpx-gunler{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
+.fpx-gun{
+  display:inline-flex;align-items:center;gap:7px;min-height:36px;padding:0 13px;
+  border:1px solid var(--line);border-radius:var(--radius-chip);background:var(--paper);
+  font-size:13px;font-weight:700;color:var(--slate-2);
+}
+.fpx-gun.is-on{background:var(--fit-tint);border-color:var(--fit-line);color:var(--fit-deep)}
+.fpx-gun.is-now{border-color:var(--fit-deep);color:var(--fit-deep);box-shadow:inset 0 0 0 1px var(--fit-deep)}
+.fpx-gun small{font-weight:600;color:var(--muted)}
+.fpx-gun.is-on small,.fpx-gun.is-now small{color:inherit;opacity:.72}
+
+/* ---- hareket işaretleme düğmesi (sözleşme: FIT_PLAN.isaretle) ---- */
+.fpx-mark{
+  flex:none;display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  min-height:44px;padding:0 15px;border:1px solid var(--line);border-radius:var(--radius-md);
+  background:var(--paper);color:var(--slate-2);font-size:13px;font-weight:700;
+  cursor:pointer;transition:.22s var(--ease);font-family:inherit;
+}
+.fpx-mark:hover{border-color:var(--slate)}
+.fpx-mark[aria-pressed="true"]{background:var(--fit-tint);border-color:var(--fit-line);color:var(--fit-deep)}
+.fpx-mark:focus-visible{outline:3px solid var(--fit-tint);outline-offset:2px}
+.fpx-row-done .txt b{text-decoration:line-through;text-decoration-color:var(--fit-line)}
+
+/* gün tamamlandı bildirimi — kart içinde, listenin hemen altında */
+.fpx-gun-not{
+  margin-top:16px;padding:12px 14px;border-radius:var(--radius-md);
+  background:var(--fit-tint);border:1px solid var(--fit-line);
+  color:var(--fit-deep);font-size:13.5px;font-weight:600;
+}
+.fpx-gun-not[hidden]{display:none}
+
+/* ---- satır içi ölçü/etiket (eski inline style'ların karşılığı) ---- */
+.fpx-lead{font-size:19px;font-weight:800;display:block}
+.fpx-note{font-size:13.5px;font-weight:500;color:var(--muted);line-height:1.6;margin-top:6px}
+.fpx-note-sm{font-size:13px;font-weight:500;color:var(--muted);margin-top:14px}
+.fpx-body{font-size:14px;font-weight:500;color:var(--slate-2);line-height:1.6;margin-top:6px}
+.fpx-btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.fpx-band{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.fpx-band b{font-size:16px}
+.fpx-unit{font-size:13px;font-weight:600}
+
+/* ---- süzgeç grubu etiketi (inline style yerine) ---- */
+.fgroup-lbl{
+  font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--muted);min-width:60px;
+}
+/* gün ilerleme satırındaki çubuk kendi üst boşluğunu taşımaz */
+.fpx-gunbar-row .fp-bar{margin:0}
+
+/* ---- veri tablosu (set kaydı) — inline style'ların karşılığı ---- */
+.fpx-tablo-kutu{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.fpx-tablo{width:100%;border-collapse:collapse;min-width:420px}
+.fpx-tablo th{
+  text-align:left;padding:10px 8px;font-size:12px;font-weight:800;
+  letter-spacing:.05em;text-transform:uppercase;color:var(--muted);
+  border-bottom:1px solid var(--line);white-space:nowrap;
+}
+.fpx-tablo td{padding:11px 8px;font-size:14px;font-weight:600;color:var(--slate)}
+.fpx-tablo tbody tr{border-bottom:1px solid var(--line)}
+.fpx-tablo tbody tr:last-child{border-bottom:none}
+.fpx-tablo .is-up{color:var(--fit-deep)}
+.fpx-tablo .is-flat{color:var(--muted)}
+
+/* ---- rozet kartı ızgarası (rozetler sayfası) ---- */
+.fpx-rozet{text-align:center;padding:20px 16px}
+.fpx-rozet-ico{
+  width:52px;height:52px;border-radius:var(--radius-circle);background:var(--fit-tint);
+  color:var(--fit-deep);display:grid;place-items:center;font-size:21px;margin:0 auto 10px;
+}
+.fpx-rozet-ico.is-off{background:#f2f2f1;color:var(--muted)}
+.fpx-rozet b{font-size:15px}
+.fpx-rozet p{font-size:12.5px;color:var(--muted);font-weight:500;margin-top:5px}
+.fpx-rozet .fp-badge{margin-top:10px}
+
+/* ---- plan gün ilerleme satırı (İlerlemem) ---- */
+.fpx-gunbar{display:flex;flex-direction:column;gap:14px;margin-top:4px}
+.fpx-gunbar-row{display:grid;grid-template-columns:minmax(96px,150px) minmax(0,1fr) auto;gap:14px;align-items:center}
+.fpx-gunbar-row b{font-size:14px;color:var(--slate)}
+.fpx-gunbar-row small{display:block;font-size:12px;font-weight:600;color:var(--muted)}
+.fpx-gunbar-row .end{font-size:12.5px;font-weight:800;color:var(--slate);white-space:nowrap}
+@media (max-width:640px){
+  .fpx-gunbar-row{grid-template-columns:minmax(0,1fr) auto;row-gap:8px}
+  .fpx-gunbar-row .fp-bar{grid-column:1/-1;margin:0}
+}
+
+/* son kalan satır içi ölçüler sınıfa çevrildi (dinamik yüzdeler hariç) */
+.fpx-band .fpx-btns{margin-top:0}
+.fpx-mt-sm{margin-top:16px}
+.fpx-mt-xs{margin-top:6px}
+.fpx-gap-sm{gap:14px}
+.fgroup.fpx-flat{border:none;padding-top:0}
+
+/* ---- bölüm ritmi ----
+ GEÇİŞ 3 · referansla kıyas: kendi ezmelerim sayfaları hem referanstan hem
+ sitenin geri kalanından UZAKLAŞTIRIYORDU. Ölçülen (dadadiet.com/hesaplayicilar):
+   sec-head h2 34px / ls -0.68px · sec-head margin-bottom 34px · lead 15.5px
+ Bendeki ilk kurulum: 26px / -0.52px / 22px / 14.5px. Üç ezme de KALDIRILDI;
+ kabuğun kendi .sec-head değerleri referansla zaten birebir (34px, -.02em,
+ 34px, 15.5px). Geriye yalnız bloklar arası dikey nefes kalıyor. */
+.fpx-sec{margin-top:44px}
+/* NOT — burada bir zamanlar `.fpx-sec .eyebrow{color:var(--fit-deep)}` yaması
+   vardı: kabuğun taban `.eyebrow` rengi `--fit` idi ve krem zeminde 3.36:1
+   ile AA altında kalıyordu. AJAN-A tabanı `--fit-deep`e çevirdi (fit-shell.css
+   `.eyebrow`), ölçüldü: krem 5.18:1 · beyaz 5.45:1. Yama gereksizleşti ve
+   kaldırıldı — kabukla aynı işi iki yerde yapmıyoruz. Aynı turda `--muted` da
+   #7E7E7E → #717171 oldu (beyaz 4.88:1 · krem 4.64:1), bu ailedeki bütün
+   ikincil etiketler bedava AA'ya geçti. */
+
+/* =====================================================================
+   GEÇİŞ 2 — kendi işimi eleştirdikten sonra kapatılan üç kusur
+   ---------------------------------------------------------------------
+   K1 · YASLAMA NEHİRLERİ. fit-type.css akan metni iki yana yaslıyor.
+        Range API ile ölçüldü (@390): .lead en geniş kelime arası 26.1px
+        (kaydettiklerim) · 22.8px (bugün) · .fpx-sum-sub 18.2px ·
+        .fpx-note 18.0px — normal aralık ~4px, yani 4.5–6.5 KAT.
+        fit-type.css'in kendi yorumu bu tuzağı zaten anlatıyor ve
+        .lib-sub / .wz-risk gibi KISA blokları istisnaya almış; bu ailenin
+        yeni sınıfları o listeye giremezdi (kabuk dosyası AJAN-A'nın).
+        Çözüm sayfa içinde ve YALNIZ bu ailede: kısa blok yaslanmaz.
+   K2 · DOKUNMA HEDEFİ. @390 ölçümü: .fp-act 13–21px · .fp-actbtn 16px ·
+        .see-all 21px · .df-fchip 35px — hepsi 44px altında.
+        Görünüm dili değişmesin diye yalnız ≤640px'te dikey kutu büyütülür.
+   K3 · ÇİFT BOŞ DURUM. Kayıt yokken üst özet kartı "Kayıtlı planın yok" +
+        "Plan oluştur" diyordu, hemen altındaki kart AYNI mesajı ve AYNI
+        düğmeyi tekrar basıyordu. Ölçüm: kart 438px, içindeki .lib-empty
+        323px (dolgu 54px). Alttaki blok kompaktlaştı ve ikinci CTA kalktı.
+   ===================================================================== */
+
+/* K1 — kısa bilgi blokları sola yaslı (fit-type.css §3'ün kuralı)
+
+   `.fpx-note` · `.fpx-note-sm` · `.fpx-body` istisnası KABUĞA taşındı
+   (`fit-type.css` §3, `.fp-card p.fpx-note` = 0,2,1). Aynı işi iki yerde
+   çözmüyoruz; ölçüldü, kabuk hallediyor.
+
+   `.fpx-sum-sub` KABUKTA YOK ve olmamalı da: `.fp-card` içinde değil, üst
+   özet kartının (`.fpx-sum`, bir <section>) alt metni. Kabuğun `.fp-card p…`
+   istisnası ona ulaşmıyor, taban `p` kuralı (0,0,1) yaslıyor. Ölçüldü:
+   ezmesiz @390'da kelime arası **40.4 px** (normal 3.8 px — 10.6×), @1440'ta
+   8.5 px. Blok orada 3–5 satır ve 560px ölçüde; fit-type.css'in "kısa blok
+   yaslanmaz" ölçütüne giriyor. Bu yüzden burada kalıyor. */
+.fpx-sum-sub{
+  text-align:left;text-align-last:auto;
+}
+
+/* K2 — dokunma hedefi. Buradaki `min-height:44px` yaması KALDIRILDI:
+   AJAN-A kabukta ≤640px için görünmez `::after` örtüsü kurdu
+   (`.see-all,.fp-act,.fp-actbtn{position:relative}` + 44px örtü) — kutuyu
+   büyütmüyor, satır ritmini bozmuyor, benim yamam ise büyütüyordu ve sitenin
+   geri kalanından ayrışıyordu. `.df-fchip` de kalktı: ölçülen 34 px, WCAG
+   2.5.8 (AA) eşiği 24 px — geçiyor; 44 px 2.5.5 yani AAA. Tek sayfa ailesinde
+   44'e çıkarmak süzgeç şeridini sitenin geri kalanından ayırırdı.
+   Kendi düğmem `.fpx-mark` zaten 44 px min-height taşıyor. */
+
+/* K3 — birincil CTA yalnız üst özet kartında. Bu hüküm MARKUP'ta yaşıyor
+   (ikinci CTA kaldırıldı) ve DEĞİŞMEDİ.
+   §D2 · §D4 (Dalga 4, 2026-08-29) — K3'ün ÖLÇÜ ezmesi kaldırıldı.
+   Gerekçe: ezme, kabuğun o günkü 54px dolgusuna karşı yazılmıştı
+   ("kart 438px, içindeki .lib-empty 323px"). Kabuk §D2 gereği 44px 24px'e
+   indi; ezme kalsaydı üye boş durumunun ÜÇÜNCÜ bir değer kümesi olurdu ve
+   §D4 tek kit ister. Kompaktlığın asıl kaynağı zaten CTA'nın kalkmasıydı. */
+
+/* kart üstü tek değerli boşluk — inline "margin-top:22px" yerine */
+.fpx-mt{margin-top:22px}
+
+@media (max-width:900px){
+  .fpx-sum{grid-template-columns:minmax(0,1fr);row-gap:24px;padding:24px 20px 26px}
+  .fpx-sum h2{font-size:22px}
+  .fpx-stats{
+    flex-direction:row;flex-wrap:wrap;gap:18px 30px;
+    border-left:0;border-top:1px solid var(--line);padding-left:0;padding-top:20px;
+  }
+  .fpx-stat b{font-size:24px}
+  .fpx-sec{margin-top:34px}
+}
+
+/* =====================================================================
+   R9 · BELGE §3 — BUGÜN SAYFASININ ÜÇ EKSİĞİ
+   ---------------------------------------------------------------------
+   Belge "DadaFit Giriş Sonrası Kullanıcı Alanı" §3.1 (gün ve tarih),
+   §3.2 (plansız kullanıcı aksiyonları) ve §3.7 (gün sonu tamamlama)
+   maddelerinin karşılığı. YALNIZ YENİ SINIF eklendi; yukarıdaki hiçbir
+   seçici ve hiçbir değer değişmedi.
+
+   Renk uydurulmadı: hepsi kabuk token'ı (--fit-deep · --fit-tint ·
+   --fit-line · --line · --muted · --slate · --slate-2 · --paper).
+   Ölçü ritmi bu ailenin kendi değerlerinden alındı: kart dolgusu
+   .fpx-sum'dan (34/38), chip yüksekliği .fpx-mark'tan (44px), başlık
+   boyutu .fpx-lead'den (19px), not boyutu .fpx-note'tan (13.5px).
+   ===================================================================== */
+
+/* ---- §3.1 · gün ve tarih şeridi -------------------------------------
+   Kart DEĞİL: sayfanın ilk satırı bir tarih olsun diye tek satırlık
+   sessiz bir şerit. Üst özet kartının kendi .fpx-kicker'ıyla yarışmasın
+   diye 13px/600 muted kaldı — kart 25px/800 ile hâlâ sayfanın girişi. */
+.fpx-bugun{
+  display:flex;align-items:center;justify-content:space-between;gap:14px;
+  flex-wrap:wrap;margin-bottom:18px;
+}
+.fpx-bugun-tarih{
+  display:inline-flex;align-items:center;gap:9px;
+  font-size:13px;font-weight:600;color:var(--slate-2);
+}
+.fpx-bugun-tarih i{color:var(--fit-deep);font-size:13px}
+.fpx-bugun-tarih b{font-weight:800;color:var(--slate)}
+
+/* ---- §3.7 · gün sonu tamamlama --------------------------------------
+   .fpx-band ("Bugünü tamamla") YERİNDE DURUYOR; bu kart onun altında
+   açılan katlanır alan. Band'ın düğmesi aria-expanded taşır, kart
+   [hidden] ile kapanır. K3 kuralı korunuyor: ikinci bir birincil CTA
+   açılmıyor, kartın kendi düğmesi günü kapatan tek eylem. */
+.fpx-gunsonu{margin-top:14px;padding:26px 30px 28px}
+.fpx-gunsonu[hidden]{display:none}
+.fpx-gunsonu-bas{font-size:19px;font-weight:800;display:block;letter-spacing:-.01em}
+
+/* alan bloğu — hairline ile ayrılır, son alan çizgisiz.
+
+   ÜÇ KUSUR ÖLÇÜLDÜ VE KAPATILDI (@1440, gün sonu formu açıkken):
+   K1 · Aşağıdaki `fieldset{border:0}` sıfırlaması (0,1,1) buradaki
+        `border-bottom`u (0,1,0) eziyordu → ÜÇ fieldset'in de ayırıcısı
+        yoktu, yalnız iki <div> blokta çizgi vardı. Sıfırlama artık
+        yalnız yan/üst kenarları siliyor.
+   K2 · `:last-of-type` TÜR BAŞINA çalışır. Kardeşler arasında son
+        <fieldset> "Enerji durumun", son <div> ise `.fpx-gunsonu-kuyruk`
+        idi; yani "çizgisiz son blok" kuralı YANLIŞ elemana düşüyor,
+        gerçek son blok ("Günlük not") çizgisini koruyordu. Artık açık
+        `.fpx-alan-son` sınıfı var — eleman türünden bağımsız.
+   K3 · İlk blok 20px, diğerleri 18px üst dolgu taşıyordu. Üçü eşitlendi;
+        giriş cümlesiyle arasındaki nefes bloğun dolgusundan değil,
+        cümlenin kendi alt boşluğundan geliyor. */
+.fpx-alan{padding:18px 0;border-bottom:1px solid var(--line)}
+.fpx-alan.fpx-alan-son{border-bottom:none;padding-bottom:4px}
+.fpx-alan>legend,.fpx-alan>.fpx-alan-bas{
+  display:block;font-size:14px;font-weight:800;color:var(--slate);
+  padding:0;margin-bottom:4px;
+}
+.fpx-alan>.fpx-alan-not{font-size:12.5px;font-weight:500;color:var(--muted);margin:0 0 12px;line-height:1.55}
+
+/* giriş cümlesi ile ilk alan arasındaki nefes — blok dolgusuna
+   dokunmadan, tek yerden */
+.fpx-gunsonu>.fpx-gunsonu-giris{margin-bottom:6px}
+
+/* fieldset'in tarayıcı varsayılanları — kabuk sıfırlamıyor.
+   `border:0` DEĞİL: alt çizgi `.fpx-alan`ın işi (bkz. K1). */
+.fpx-gunsonu fieldset{
+  border-top:0;border-right:0;border-left:0;margin:0;min-width:0;padding-inline:0;
+}
+
+/* seçim çipleri — .fpx-mark'ın ölçüsü, radio davranışı
+   Görme dışında da okunabilsin diye seçili çip yalnız renkle değil
+   işaretle de belli olur (::before onay çubuğu). */
+.fpx-secim{display:flex;flex-wrap:wrap;gap:8px}
+.fpx-chip{position:relative;display:inline-flex}
+.fpx-chip input{position:absolute;opacity:0;width:100%;height:100%;margin:0;cursor:pointer}
+.fpx-chip span{
+  display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 15px;
+  border:1px solid var(--line);border-radius:var(--radius-md);background:var(--paper);
+  color:var(--slate-2);font-size:13px;font-weight:700;transition:.22s var(--ease);
+}
+.fpx-chip input:hover+span{border-color:var(--slate)}
+.fpx-chip input:checked+span{background:var(--fit-tint);border-color:var(--fit-line);color:var(--fit-deep)}
+.fpx-chip input:checked+span::before{
+  content:"\f00c";font-family:"Font Awesome 6 Free";font-weight:900;font-size:11px;
+}
+.fpx-chip input:focus-visible+span{outline:3px solid var(--fit-tint);outline-offset:2px}
+
+/* 1–10 efor ölçeği — .fp-days ızgarasının on sütunlu kardeşi.
+   Sayı kutunun içinde yazılı; durum yalnız renkten okunmuyor.
+
+   ÖLÇÜLDÜ (@1440, ilk kurulum): sütunlar 110px'e açılıyordu ve
+   `aspect-ratio:1` 110px yüksekliğinde devasa kutular üretiyordu; üstelik
+   .fpx-chip inline-flex olduğu için span genişliği içeriğe düşüyor,
+   kenarlık hiç çizilmiyordu. İkisi de burada kapatıldı:
+   chip grid öğesi olarak flex, span tam genişlik, ızgara .fp-days
+   ölçüsüne (~46px kutu) yakın dursun diye max-width ile sınırlı. */
+.fpx-olcek{
+  display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:6px;
+  margin-top:2px;max-width:520px;
+}
+.fpx-olcek .fpx-chip{display:flex}
+.fpx-olcek .fpx-chip span{
+  width:100%;min-height:0;aspect-ratio:1;padding:0;justify-content:center;
+  border-radius:var(--radius-sm);font-size:12px;font-weight:700;
+}
+.fpx-olcek-uc{max-width:520px}
+.fpx-olcek .fpx-chip input:checked+span::before{content:none}
+.fpx-olcek .fpx-chip input:checked+span{background:var(--fit);border-color:var(--fit);color:#fff}
+.fpx-olcek-uc{
+  display:flex;justify-content:space-between;gap:12px;margin-top:8px;
+  font-size:12px;font-weight:600;color:var(--muted);
+}
+.fpx-olcek-oku{font-size:13px;font-weight:700;color:var(--fit-deep);margin-top:10px;min-height:20px}
+
+/* serbest metin — hesabim-v1'in .fk-textarea ölçüsüyle aynı aile */
+.fpx-metin{
+  width:100%;min-height:96px;padding:12px 14px;border:1px solid var(--line);
+  border-radius:var(--radius-md);background:var(--paper);color:var(--slate);
+  font-family:inherit;font-size:14px;font-weight:500;line-height:1.6;resize:vertical;
+}
+.fpx-metin:focus-visible{outline:3px solid var(--fit-tint);outline-offset:1px;border-color:var(--fit-line)}
+.fpx-sayac{float:right;font-size:12px;font-weight:600;color:var(--muted)}
+
+/* ağrı bildirimi — açıldığında güvenlik metni de açılır.
+   Uyarı kutusu kırmızı DEĞİL: bu bir hata değil, bir bildirim.
+   Kabuğun .hr-note dili korunuyor, yalnız kart içine giriyor. */
+.fpx-agri-alan[hidden]{display:none}
+.fpx-agri-uyari{
+  margin-top:12px;padding:12px 14px;border-radius:var(--radius-md);
+  background:var(--fit-tint);border:1px solid var(--fit-line);
+  color:var(--fit-deep);font-size:13px;font-weight:600;line-height:1.6;
+}
+.fpx-agri-uyari a{color:inherit;text-decoration:underline}
+
+/* kart kuyruğu */
+.fpx-gunsonu-kuyruk{
+  display:flex;align-items:center;justify-content:space-between;gap:16px;
+  flex-wrap:wrap;margin-top:20px;padding-top:18px;border-top:1px solid var(--line);
+}
+.fpx-gunsonu-kuyruk .fpx-btns{margin-top:0}
+.fpx-gunsonu-durum{font-size:13px;font-weight:700;color:var(--fit-deep)}
+.fpx-gunsonu-durum[hidden]{display:none}
+
+@media (max-width:640px){
+  .fpx-gunsonu{padding:20px 18px 22px}
+  .fpx-olcek{grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+  .fpx-gunsonu-kuyruk{align-items:flex-start;flex-direction:column;gap:12px}
+}
+
+/* =====================================================================
+   R9 · BELGE §11 — ANTRENÖRÜM SAYFASININ İKİ EKSİĞİ
+   §11.1 antrenör bilgi kartı · §11.4 paylaşılan dosyalar + indirme geçmişi.
+   Yine yalnız YENİ sınıf; mevcut hiçbir seçici değişmedi.
+   ===================================================================== */
+
+/* ---- §11.1 · antrenör bilgi kartı ----------------------------------
+   İki kolon: solda kimlik (foto + ad + doğrulama), sağda çalışma
+   bilgileri. .fpx-sum'un ızgara mantığı, .fp-card'ın kabuğu. */
+.fpx-ant{display:grid;grid-template-columns:auto minmax(0,1fr);gap:26px;align-items:start}
+.fpx-ant-kimlik{display:flex;flex-direction:column;align-items:center;text-align:center;min-width:150px}
+.fpx-ant-foto{
+  width:88px;height:88px;border-radius:var(--radius-circle);
+  background-size:cover;background-position:center;border:1px solid var(--line);
+}
+/* <b> ve <span> satır içi öğeler: block'a çevrilmezse ad, rol ve rozet
+   yan yana akıyor (@1440 ölçüldü — kimlik kolonu kartın yarısını yiyordu). */
+.fpx-ant-ad{display:block;font-size:17px;font-weight:800;color:var(--slate);margin-top:12px;letter-spacing:-.01em}
+.fpx-ant-rol{display:block;font-size:12.5px;font-weight:600;color:var(--muted);margin-top:3px}
+.fpx-ant-kimlik .fp-badge{margin-top:10px}
+
+/* sağ kolon — etiket/değer çiftleri */
+.fpx-ant-bilgi{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px 24px}
+.fpx-ant-alan{min-width:0}
+.fpx-ant-alan dt{
+  font-size:11.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:5px;
+}
+.fpx-ant-alan dd{margin:0;font-size:14px;font-weight:600;color:var(--slate);line-height:1.55}
+.fpx-ant-alan dd small{display:block;font-size:12.5px;font-weight:500;color:var(--muted);margin-top:2px}
+
+/* sertifika çipleri — süs değil, doğrulanmış belge listesi */
+.fpx-sert{display:flex;flex-wrap:wrap;gap:7px;margin-top:6px}
+.fpx-sert span{
+  display:inline-flex;align-items:center;gap:6px;padding:5px 11px;
+  border:1px solid var(--fit-line);border-radius:var(--radius-chip);
+  background:var(--fit-tint);color:var(--fit-deep);font-size:12px;font-weight:700;
+}
+.fpx-sert span i{font-size:10.5px}
+
+/* ---- §11.4 · paylaşılan dosyalar -----------------------------------
+   .fp-row'un üstüne dosya türü ikonu ve indirme düğmesi biner. */
+.fpx-dosya-ico{
+  flex:none;width:38px;height:38px;border-radius:var(--radius-sm);
+  display:grid;place-items:center;font-size:15px;
+  background:var(--fit-tint);color:var(--fit-deep);
+}
+.fpx-dosya-ico.is-belge{background:#f4f1e9;color:#8a6d2f}
+.fpx-dosya-ico.is-medya{background:#eef1f7;color:#4a5878}
+
+/* indirme geçmişi — ikincil, kartın kuyruğunda */
+.fpx-indirme{margin-top:16px;padding-top:14px;border-top:1px solid var(--line)}
+.fpx-indirme summary{
+  cursor:pointer;font-size:13px;font-weight:700;color:var(--slate-2);
+  list-style:none;display:inline-flex;align-items:center;gap:8px;padding:6px 0;
+}
+.fpx-indirme summary::-webkit-details-marker{display:none}
+.fpx-indirme summary::before{
+  content:"\f105";font-family:"Font Awesome 6 Free";font-weight:900;font-size:12px;
+  color:var(--muted);transition:transform .2s var(--ease);
+}
+.fpx-indirme[open] summary::before{transform:rotate(90deg)}
+.fpx-indirme summary:focus-visible{outline:3px solid var(--fit-tint);outline-offset:2px;border-radius:var(--radius-sm)}
+.fpx-indirme-liste{margin:8px 0 0;padding:0;list-style:none;display:grid;gap:8px}
+.fpx-indirme-liste li{
+  display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;
+  font-size:13px;font-weight:600;color:var(--slate-2);
+}
+.fpx-indirme-liste time{font-weight:500;color:var(--muted);font-size:12.5px}
+
+@media (max-width:760px){
+  .fpx-ant{grid-template-columns:minmax(0,1fr);gap:20px}
+  .fpx-ant-kimlik{flex-direction:row;align-items:center;text-align:left;gap:14px;min-width:0}
+  .fpx-ant-foto{width:64px;height:64px}
+  .fpx-ant-ad{margin-top:0}
+  .fpx-ant-kimlik .fp-badge{margin-top:6px}
+  .fpx-ant-kimlik>div{min-width:0}
+  .fpx-ant-bilgi{grid-template-columns:minmax(0,1fr)}
+}
+
+/* =====================================================================
+   R9 · BELGE §8 — KAYDETTİKLERİM
+   §8 üç tür daha (video seansı · challenge · fit test sonucu), kayıt
+   aksiyonları ve koleksiyonlar. Yalnız YENİ sınıf.
+   ===================================================================== */
+
+/* ---- kayıt aksiyonları ----------------------------------------------
+   Beş aksiyon satır içine sığmaz; bildirim akışındaki desenin kardeşi:
+   sessiz dururlar, satıra gelince/odaklanınca belirirler. Dokunmatikte
+   hover yok — orada hep görünür (coarse pointer). */
+.fpx-ops{display:inline-flex;align-items:center;gap:2px;opacity:0;transition:opacity .18s var(--ease)}
+.fp-row:hover .fpx-ops,.fp-row:focus-within .fpx-ops{opacity:1}
+@media (hover:none),(pointer:coarse){.fpx-ops{opacity:1}}
+.fpx-op{
+  display:grid;place-items:center;width:34px;height:34px;flex:none;
+  border:1px solid transparent;border-radius:var(--radius-sm);
+  background:none;color:var(--muted);font-size:12.5px;cursor:pointer;
+  font-family:inherit;transition:.18s var(--ease);
+}
+.fpx-op:hover{background:var(--paper);border-color:var(--line);color:var(--slate)}
+.fpx-op:focus-visible{opacity:1;outline:3px solid var(--fit-tint);outline-offset:1px;border-color:var(--fit-deep)}
+.fpx-op[aria-pressed="true"]{color:var(--fit-deep);background:var(--fit-tint);border-color:var(--fit-line)}
+.fpx-op[data-op="kaldir"]:hover{color:#a2261a;border-color:#e8cfcb}
+
+/* aksiyon geri bildirimi — satırın altında tek satır, sonra söner */
+.fpx-op-durum{
+  display:block;font-size:12.5px;font-weight:700;color:var(--fit-deep);
+  margin-top:8px;min-height:18px;
+}
+
+/* ---- koleksiyonlar (§8) ---------------------------------------------
+   Kayıtları kullanıcının kendi adlandırdığı kümelere ayırır. Kart değil
+   çip değil: sayısı görünen, tıklanınca listeyi süzen bir küme. */
+.fpx-kol{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px;margin-top:4px}
+.fpx-kol-oge{
+  display:flex;align-items:center;gap:13px;padding:14px 16px;text-align:left;
+  border:1px solid var(--line);border-radius:var(--radius-md);background:var(--paper);
+  font-family:inherit;cursor:pointer;transition:.2s var(--ease);width:100%;
+}
+.fpx-kol-oge:hover{border-color:var(--fit-line);background:var(--fit-tint)}
+.fpx-kol-oge:focus-visible{outline:3px solid var(--fit-tint);outline-offset:2px}
+.fpx-kol-oge[aria-pressed="true"]{border-color:var(--fit-deep);background:var(--fit-tint)}
+.fpx-kol-ico{
+  flex:none;width:38px;height:38px;border-radius:var(--radius-sm);display:grid;place-items:center;
+  background:var(--fit-tint);color:var(--fit-deep);font-size:15px;
+}
+.fpx-kol-oge[aria-pressed="true"] .fpx-kol-ico{background:var(--paper)}
+.fpx-kol-txt{min-width:0}
+.fpx-kol-txt b{display:block;font-size:14px;font-weight:700;color:var(--slate);line-height:1.35}
+.fpx-kol-txt small{display:block;font-size:12.5px;font-weight:500;color:var(--muted);margin-top:2px}
+
+@media (max-width:640px){
+  .fpx-op{width:38px;height:38px}
+  .fpx-kol{grid-template-columns:minmax(0,1fr)}
+}
+
+/* =====================================================================
+   R9 · BELGE §10 — FİT TEST SONUÇLARIM
+   Yeni sayfa: fit-test-sonuclarim-v1.html. §10.1 testlerim · §10.2 test
+   kategorileri · §10.3 sonuç karşılaştırması. Yalnız YENİ sınıf.
+   ===================================================================== */
+
+/* ---- §10.2 · kategori kapsamı --------------------------------------
+   Sayfanın imza öğesi. Belge sekiz kategori sayıyor; katalogda altısının
+   testi var, ikisinin (esneklik · postür farkındalığı) yok. Izgara bunu
+   SAKLAMIYOR: ölçülmemiş kategori de kutusunu alır ve neden boş olduğunu
+   söyler. "Ölçmediğimiz şeyi ölçmüş gibi göstermeyiz" kuralının görsel
+   karşılığı. */
+.fpx-kat{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px;margin-top:4px}
+.fpx-kat-oge{
+  display:flex;gap:13px;padding:15px 16px;
+  border:1px solid var(--line);border-radius:var(--radius-md);background:var(--paper);
+}
+.fpx-kat-oge.is-bos{background:var(--bg);border-style:dashed}
+.fpx-kat-ico{
+  flex:none;width:38px;height:38px;border-radius:var(--radius-sm);display:grid;place-items:center;
+  background:var(--fit-tint);color:var(--fit-deep);font-size:15px;
+}
+.fpx-kat-oge.is-bos .fpx-kat-ico{background:#f2f2f1;color:var(--muted)}
+.fpx-kat-txt{min-width:0;flex:1}
+.fpx-kat-txt b{display:block;font-size:14px;font-weight:700;color:var(--slate);line-height:1.35}
+.fpx-kat-txt small{display:block;font-size:12.5px;font-weight:500;color:var(--muted);margin-top:3px;line-height:1.5}
+.fpx-kat-txt a{color:var(--fit-deep);font-weight:700}
+.fpx-kat-txt .fp-badge{margin-top:9px}
+
+/* ---- §10.3 · ilk ↔ bugün kıyas şeridi ------------------------------
+   İki uç ve aradaki değişim. Ok yalnız süs değil: hangi yönde okunacağını
+   söylüyor. Değişim rakamı renge EK OLARAK metinle de yazılı. */
+.fpx-kiyas{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:14px;align-items:stretch;margin-top:4px}
+.fpx-kiyas-uc{
+  padding:15px 16px;border:1px solid var(--line);border-radius:var(--radius-md);background:var(--paper);
+}
+.fpx-kiyas-uc.is-simdi{border-color:var(--fit-line);background:var(--fit-tint)}
+.fpx-kiyas-et{
+  display:block;font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:6px;
+}
+.fpx-kiyas-uc.is-simdi .fpx-kiyas-et{color:var(--fit-deep)}
+.fpx-kiyas-uc b{display:block;font-size:14.5px;font-weight:700;color:var(--slate);line-height:1.4}
+.fpx-kiyas-uc small{display:block;font-size:12.5px;font-weight:500;color:var(--slate-2);margin-top:5px;line-height:1.55}
+.fpx-kiyas-ok{display:grid;place-items:center;color:var(--muted);font-size:15px;padding:0 2px}
+.fpx-kiyas-degisim{
+  display:inline-flex;align-items:center;gap:8px;margin-top:14px;padding:8px 13px;
+  border-radius:var(--radius-chip);background:var(--fit-tint);border:1px solid var(--fit-line);
+  color:var(--fit-deep);font-size:13px;font-weight:800;
+}
+.fpx-kiyas-degisim.is-notr{background:var(--bg);border-color:var(--line);color:var(--slate-2)}
+
+/* güçlü / geliştirilebilecek alan listeleri */
+.fpx-alan-ikili{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:4px}
+.fpx-alan-kutu{padding:15px 16px;border:1px solid var(--line);border-radius:var(--radius-md);background:var(--paper)}
+.fpx-alan-kutu h4{
+  display:flex;align-items:center;gap:8px;margin:0 0 10px;
+  font-size:12px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);
+}
+.fpx-alan-kutu.is-guclu h4{color:var(--fit-deep)}
+.fpx-alan-kutu ul{margin:0;padding:0;list-style:none;display:grid;gap:9px}
+.fpx-alan-kutu li{
+  display:flex;gap:9px;font-size:13.5px;font-weight:600;color:var(--slate);line-height:1.5;
+}
+.fpx-alan-kutu li i{flex:none;margin-top:3px;font-size:11px;color:var(--muted)}
+.fpx-alan-kutu.is-guclu li i{color:var(--fit-deep)}
+.fpx-alan-kutu li small{display:block;font-weight:500;color:var(--muted);font-size:12.5px;margin-top:2px}
+
+@media (max-width:760px){
+  .fpx-kiyas{grid-template-columns:minmax(0,1fr);gap:10px}
+  .fpx-kiyas-ok{transform:rotate(90deg);padding:2px 0}
+  .fpx-alan-ikili{grid-template-columns:minmax(0,1fr)}
+  .fpx-kat{grid-template-columns:minmax(0,1fr)}
+}
+
+/* satır kuyruğunda rozet + eylem yan yana. Kabuğun `.fp-row .end`i
+   display:block; iki öğe koyunca aralarında yalnız metin boşluğu
+   kalıyordu (@1440 ölçüldü: 3 px). Kabuğu değiştirmek yerine kendi
+   sınıfımızı ekliyoruz — özgüllük yükseltme, ezme yok. */
+.fpx-end-ikili{display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:flex-end}
+@media (max-width:640px){ .fpx-end-ikili{justify-content:flex-start;gap:10px} }
+
+/* yeni koleksiyon alanı — yerel prompt() yerine satır içi form */
+.fpx-kol-yeni{margin-bottom:14px}
+.fpx-kol-yeni[hidden]{display:none}
+.fpx-kol-yeni-satir{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:8px}
+.fpx-kol-giris{min-height:0;height:44px;flex:1;min-width:200px;max-width:320px;resize:none}
+@media (max-width:640px){ .fpx-kol-giris{max-width:none} }
+
+/* kapılı düğmelerin ortak geri bildirim satırı (Antrenörüm sayfası) */
+.fpx-eylem-durum{
+  margin-top:22px;padding:13px 16px;border-radius:var(--radius-md);
+  background:var(--fit-tint);border:1px solid var(--fit-line);
+  color:var(--fit-deep);font-size:13.5px;font-weight:600;line-height:1.55;
+}
+.fpx-eylem-durum[hidden]{display:none}
+
+/* =====================================================================
+   R10 · KANIT KADEMESİ · §5.2 · §5.4 · §5.8 · §7.4
+   ---------------------------------------------------------------------
+   Yalnız YENİ sınıf; mevcut hiçbir seçici değişmedi.
+
+   KANIT KADEMESİ (`.fpx-kanit`) bu turun imza öğesi. Aynı "antrenman
+   tamamlandı" dört ayrı yerde dört farklı kalitede kayıt üretiyordu;
+   artık her kayıt neye dayandığını söylüyor. Kademe RENKLE TEK BAŞINA
+   anlatılmıyor — üç kanal birden taşıyor:
+     1. kelime  ("kronometreyle ölçüldü" · "senin beyanın")
+     2. ikon    (kronometre · oynat · saat · kalem)
+     3. çerçeve (düz · kesikli · noktalı) — renk körü ve gri baskıda da ayrık
+   ===================================================================== */
+.fpx-kanit{
+  display:inline-flex;align-items:center;gap:6px;white-space:nowrap;
+  padding:3px 9px;border-radius:var(--radius-chip);
+  font-size:11.5px;font-weight:700;line-height:1.5;
+  border:1px solid var(--line);background:var(--bg);color:var(--slate-2);
+}
+.fpx-kanit i{font-size:10.5px}
+.fpx-kanit.is-olculdu{border-style:solid;border-color:var(--fit-line);background:var(--fit-tint);color:var(--fit-deep)}
+.fpx-kanit.is-video{border-style:dashed;border-color:var(--fit-line);color:var(--fit-deep)}
+.fpx-kanit.is-cihaz{border-style:solid;border-color:var(--line);color:var(--slate-2)}
+.fpx-kanit.is-beyan{border-style:dotted;border-color:var(--line);color:var(--muted)}
+
+/* kademe sözlüğü — kart kuyruğunda, dört kademeyi bir kez açıklar */
+.fpx-kanit-legend{
+  display:flex;flex-wrap:wrap;gap:10px 18px;margin-top:16px;padding-top:14px;
+  border-top:1px solid var(--line);
+}
+.fpx-kanit-legend > span{
+  display:inline-flex;align-items:center;gap:8px;
+  font-size:12px;font-weight:500;color:var(--muted);line-height:1.5;
+}
+
+/* ---- §5.2 · tahmini bitiş -------------------------------------------
+   Tarih büyük, hesabın kendisi hemen altında. Uydurulmuş bir tarih
+   göstermektense hesabı göstermek: kullanıcı sayının nereden geldiğini
+   görmezse tarihe güvenemez. */
+.fpx-bitis{display:flex;align-items:flex-start;gap:22px;flex-wrap:wrap}
+.fpx-bitis-ana{min-width:0;flex:1 1 240px}
+.fpx-bitis-tarih{
+  display:block;font-size:27px;font-weight:800;letter-spacing:-.02em;
+  color:var(--fit-deep);line-height:1.1;font-variant-numeric:tabular-nums;
+}
+.fpx-bitis-tarih.is-bos{color:var(--muted);font-size:19px;letter-spacing:-.01em}
+.fpx-bitis-alt{display:block;font-size:13px;font-weight:600;color:var(--slate-2);margin-top:7px;line-height:1.6}
+.fpx-bitis-hesap{
+  margin:0;padding:12px 15px;border-radius:var(--radius-md);
+  background:var(--bg);border:1px solid var(--line);
+  font-size:12.5px;font-weight:500;color:var(--muted);line-height:1.6;
+  flex:1 1 260px;min-width:0;
+}
+.fpx-bitis-hesap b{color:var(--slate);font-weight:800;font-variant-numeric:tabular-nums}
+
+/* ---- §5.4 · hareket bazlı gelişim -----------------------------------
+   İlk kayıt → son kayıt → en iyi kayıt. Üçü de METİNLE yazılı; ok yalnız
+   yönü söyler, veriyi taşımaz. */
+.fpx-hgel-olcu{
+  display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+  font-variant-numeric:tabular-nums;
+}
+.fpx-hgel-olcu i{font-size:10px;color:var(--muted)}
+.fpx-hgel-eniyi{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:11.5px;font-weight:700;color:var(--fit-deep);
+  padding:3px 9px;border-radius:var(--radius-chip);
+  background:var(--fit-tint);border:1px solid var(--fit-line);
+  font-variant-numeric:tabular-nums;
+}
+
+/* hareket seçici — hangi hareketin kayıt tablosu açık (aria-pressed) */
+.fpx-secpil{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+.fpx-secpil button{
+  font-family:inherit;font-size:12.5px;font-weight:700;color:var(--slate-2);
+  background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-chip);
+  padding:8px 14px;cursor:pointer;transition:.18s var(--ease);
+}
+.fpx-secpil button:hover{border-color:var(--fit-line);color:var(--fit-deep)}
+.fpx-secpil button[aria-pressed="true"]{background:var(--fit-tint);border-color:var(--fit-deep);color:var(--fit-deep)}
+.fpx-secpil button:focus-visible{outline:3px solid var(--fit-tint);outline-offset:2px}
+.fpx-secpil small{font-weight:600;color:var(--muted);margin-left:5px}
+.fpx-secpil button[aria-pressed="true"] small{color:inherit;opacity:.72}
+
+/* ---- §5.8 · raporlama ------------------------------------------------
+   Rapor sayfada ÜRETİLİR ve ekranda okunur; indirme gerçek bir dosyadır
+   (CSV, Blob). Sahte indirme yok, sahte paylaşım yok. */
+.fpx-rapor-sec{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:4px}
+.fpx-rapor-sec button{
+  font-family:inherit;font-size:13px;font-weight:700;color:var(--slate-2);
+  background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-md);
+  padding:9px 16px;cursor:pointer;transition:.18s var(--ease);
+}
+.fpx-rapor-sec button:hover{border-color:var(--fit-line);color:var(--fit-deep)}
+.fpx-rapor-sec button[aria-pressed="true"]{background:var(--fit);border-color:var(--fit);color:#fff}
+.fpx-rapor-sec button:focus-visible{outline:3px solid var(--fit-tint);outline-offset:2px}
+
+.fpx-rapor{margin-top:18px}
+.fpx-rapor-bas{
+  display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:14px;
+}
+.fpx-rapor-bas b{font-size:16px;font-weight:800;color:var(--slate);letter-spacing:-.01em}
+.fpx-rapor-bas span{font-size:12.5px;font-weight:600;color:var(--muted);font-variant-numeric:tabular-nums}
+.fpx-rapor-izgara{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;
+  background:var(--line);border:1px solid var(--line);border-radius:var(--radius-md);overflow:hidden;
+}
+.fpx-rapor-hucre{background:var(--paper);padding:15px 16px;min-width:0}
+.fpx-rapor-hucre b{
+  display:block;font-size:22px;font-weight:800;color:var(--slate);
+  letter-spacing:-.02em;line-height:1.15;font-variant-numeric:tabular-nums;
+}
+.fpx-rapor-hucre b small{font-size:13px;font-weight:700;color:var(--muted);margin-left:4px}
+.fpx-rapor-hucre span{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-top:4px;line-height:1.45}
+.fpx-rapor-hucre.is-fit b{color:var(--fit-deep)}
+
+/* ---- ortak: dürüst durum satırı (indirildi · paylaşılmadı · eklendi) --
+   `.fpx-eylem-durum`un kardeşi ama kart İÇİNDE, üstü boşluklu değil. */
+.fpx-durum{
+  margin-top:16px;padding:12px 15px;border-radius:var(--radius-md);
+  background:var(--fit-tint);border:1px solid var(--fit-line);
+  color:var(--fit-deep);font-size:13px;font-weight:600;line-height:1.6;
+}
+.fpx-durum[hidden]{display:none}
+.fpx-durum a{color:inherit;font-weight:800;text-decoration:underline;text-underline-offset:2px}
+.fpx-durum.is-notr{background:var(--bg);border-color:var(--line);color:var(--slate-2)}
+
+/* ---- §7.4 · süzgeç kuyruğu ------------------------------------------
+   Kabuğun .ff bileşeni çipleri kendi popover'ına taşır; sayfanın yalnız
+   sonuç sayacı ve sıfırlama düğmesi için yeri kalır. */
+.fpx-filtre-say{font-size:14px;font-weight:600;color:var(--slate-2)}
+.fpx-filtre-say b{color:var(--slate);font-weight:800;font-variant-numeric:tabular-nums}
+.fpx-filtre-sifirla{
+  font-family:inherit;font-size:12.5px;font-weight:700;color:var(--muted);
+  background:none;border:none;cursor:pointer;display:inline-flex;align-items:center;gap:7px;padding:8px 2px;
+}
+.fpx-filtre-sifirla:hover{color:var(--fit-deep)}
+.fpx-filtre-sifirla:focus-visible{outline:3px solid var(--fit-tint);outline-offset:2px;border-radius:var(--radius-sm)}
+
+@media (max-width:640px){
+  .fpx-bitis{gap:16px}
+  .fpx-bitis-tarih{font-size:23px}
+  .fpx-rapor-hucre b{font-size:19px}
+}
+
+/* =====================================================================
+   §3.3 · BUGÜNKÜ ANTRENMAN — hareket kartı  (R10)
+   ---------------------------------------------------------------------
+   Belgenin §3.3'ü bugüne kadar tek düğmeye ("Yaptım") inmişti. Depoda
+   0 dosyada geçen altı şey buraya girdi: ısınma · setler arası dinlenme ·
+   gereken ekipman · form sayfası · form/güvenlik uyarısı · alternatif
+   hareket; artı "hareketi geç" ve "antrenmanı bitir".
+
+   Hepsi PLANDAN gelir (şema v2). Alan yoksa satır BASILMAZ — yarım dolu
+   kart, sahte dolu karttan iyidir. Eski (v1) planlar bu yüzden kırılmaz:
+   yalnız ad + ölçü + Yaptım görünür, aynı eski hâli.
+
+   Renk üretilmedi: uyarı şeridi kabuğun `.fp-badge.wait` ailesinden
+   (#fff6e6 · #e8d5a8 · #8a6410 — egzersiz-detay `#edFallback` ile aynı).
+   ===================================================================== */
+
+/* --- günün ısınması: kartın ilk işi, listeden önce --- */
+.fpx-isinma{
+  display:flex;gap:12px;align-items:flex-start;
+  margin:0 0 4px;padding:14px 16px;border-radius:var(--radius-md);
+  background:var(--fit-tint);border:1px solid var(--fit-line);
+}
+.fpx-isinma[hidden]{display:none}
+.fpx-isinma>i{flex:none;margin-top:2px;color:var(--fit-deep);font-size:14px}
+.fpx-isinma b{
+  display:block;font-size:11.5px;font-weight:800;letter-spacing:.05em;
+  text-transform:uppercase;color:var(--fit-deep);margin-bottom:4px;
+}
+.fpx-isinma p{font-size:13.5px;font-weight:500;color:var(--slate-2);line-height:1.6;margin:0}
+.fpx-isinma a{color:var(--fit-deep);font-weight:700;text-decoration:underline;text-underline-offset:2px}
+
+/* --- ölçülen süre çipi: "olculdu" kanıt kademesinin görünen yüzü.
+       Sayı tabular — saniye ilerlerken satır zıplamasın. --- */
+.fpx-kron{
+  display:inline-flex;align-items:center;gap:9px;min-height:44px;padding:0 14px;
+  border:1px solid var(--line);border-radius:var(--radius-pill);background:var(--paper);
+  font-family:inherit;font-size:13px;font-weight:700;color:var(--slate-2);
+  cursor:pointer;transition:.22s var(--ease);
+}
+.fpx-kron:hover{border-color:var(--slate)}
+.fpx-kron:focus-visible{outline:3px solid var(--fit-tint);outline-offset:2px}
+.fpx-kron.is-run{border-color:var(--fit-line);background:var(--fit-tint);color:var(--fit-deep)}
+.fpx-kron .sn{font-variant-numeric:tabular-nums;letter-spacing:.02em}
+
+/* --- hareket kalemi --- */
+.fpx-ex{
+  display:grid;grid-template-columns:34px 1fr;gap:6px 14px;
+  padding:16px 0;border-top:1px solid var(--line);
+}
+.fpx-ex:first-child{border-top:none;padding-top:6px}
+.fpx-ex-no{
+  grid-row:1/2;flex:none;width:34px;height:34px;border-radius:var(--radius-sm);
+  background:#ececeb;color:var(--slate-2);display:grid;place-items:center;
+  font-size:13px;font-weight:800;font-variant-numeric:tabular-nums;
+}
+.fpx-ex.is-done .fpx-ex-no{background:var(--fit-tint);color:var(--fit-deep)}
+.fpx-ex.is-skip .fpx-ex-no{opacity:.55}
+.fpx-ex-bas{grid-column:2;display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.fpx-ex-bas b{font-size:15px;font-weight:700;color:var(--slate);line-height:1.35;display:block}
+.fpx-ex.is-done .fpx-ex-bas b{text-decoration:line-through;text-decoration-color:var(--fit-line)}
+.fpx-ex.is-skip .fpx-ex-bas b{color:var(--muted)}
+.fpx-ex-olcu{
+  display:block;font-size:12.5px;font-weight:600;color:var(--muted);margin-top:3px;
+  font-variant-numeric:tabular-nums;
+}
+.fpx-ex-kayitli{display:block;font-size:12.5px;font-weight:700;color:var(--fit-deep);margin-top:3px}
+
+/* meta şeridi: ekipman + form sayfası + alternatif — hepsi tek satırda */
+.fpx-ex-meta{grid-column:2;display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.fpx-ekip{
+  display:inline-flex;align-items:center;gap:7px;padding:4px 11px;
+  border:1px solid var(--line);border-radius:var(--radius-pill);background:var(--paper);
+  font-size:11.5px;font-weight:700;color:var(--slate-2);
+}
+.fpx-ekip i{font-size:10.5px;color:var(--muted)}
+.fpx-ex-bag{
+  display:inline-flex;align-items:center;gap:7px;padding:4px 2px;
+  font-size:12.5px;font-weight:700;color:var(--fit-deep);
+}
+.fpx-ex-bag:hover{text-decoration:underline;text-underline-offset:2px}
+.fpx-ex-bag:focus-visible{outline:3px solid var(--fit-tint);outline-offset:2px;border-radius:var(--radius-sm)}
+.fpx-ex-bag i{font-size:11px}
+
+/* form / güvenlik uyarısı */
+.fpx-ex-uyari{
+  grid-column:2;display:flex;gap:9px;align-items:flex-start;
+  padding:10px 12px;border-radius:var(--radius-sm);
+  background:#fff6e6;border:1px solid #e8d5a8;
+  font-size:12.5px;font-weight:500;color:#6b4f0c;line-height:1.55;margin:2px 0 0;
+}
+.fpx-ex-uyari>i{flex:none;margin-top:2px;color:#8a6410;font-size:12px}
+
+/* eylemler */
+.fpx-ex-acts{grid-column:2;display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.fpx-ex-acts .fpx-mark{font-size:12.5px}   /* min-height 44px kabuk kuralından gelir — dokunma hedefi küçültülmez */
+.fpx-gec{
+  flex:none;display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  min-height:44px;padding:0 14px;border:1px dashed var(--line);border-radius:var(--radius-md);
+  background:transparent;color:var(--muted);font-size:12.5px;font-weight:700;
+  cursor:pointer;transition:.22s var(--ease);font-family:inherit;
+}
+.fpx-gec:hover{border-color:var(--slate);color:var(--slate-2)}
+.fpx-gec[aria-pressed="true"]{border-style:solid;background:#f4f4f2;color:var(--slate-2)}
+.fpx-gec:focus-visible{outline:3px solid var(--fit-tint);outline-offset:2px}
+
+/* --- isteğe bağlı performans girdisi (§5.3 · §5.4) --- */
+.fpx-perf{
+  grid-column:2;display:flex;flex-wrap:wrap;align-items:flex-end;gap:12px;
+  margin-top:8px;padding:14px 15px;border:1px solid var(--line);
+  border-radius:var(--radius-md);background:#fbfbfa;
+}
+.fpx-perf[hidden]{display:none}
+.fpx-perf-alan{display:flex;flex-direction:column;gap:5px;min-width:0}
+.fpx-perf-alan label{font-size:11.5px;font-weight:700;color:var(--muted);letter-spacing:.02em}
+.fpx-perf-alan input,.fpx-perf-alan select{
+  font-family:inherit;font-size:14px;font-weight:600;color:var(--slate);
+  min-height:42px;width:92px;padding:0 11px;border:1px solid var(--line);
+  border-radius:var(--radius-sm);background:var(--paper);
+}
+.fpx-perf-alan select{width:112px}
+.fpx-perf-alan input:focus-visible,.fpx-perf-alan select:focus-visible{
+  outline:3px solid var(--fit-tint);outline-offset:1px;border-color:var(--fit-line);
+}
+.fpx-perf-not{flex:1 1 100%;font-size:12px;font-weight:500;color:var(--muted);margin:0;line-height:1.55}
+
+/* --- antrenmanı bitir bandı --- */
+.fpx-bitir{
+  display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
+  margin-top:18px;padding:16px 17px;border-radius:var(--radius-md);
+  background:var(--paper);border:1px solid var(--line);
+}
+.fpx-bitir b{display:block;font-size:14.5px;font-weight:700;color:var(--slate)}
+.fpx-bitir p{font-size:12.5px;font-weight:500;color:var(--muted);margin:3px 0 0;line-height:1.55}
+.fpx-bitir .btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.fpx-bitir.is-done{background:var(--fit-tint);border-color:var(--fit-line)}
+.fpx-bitir.is-done b{color:var(--fit-deep)}
+
+@media (max-width:640px){
+  .fpx-ex{grid-template-columns:28px 1fr;gap:6px 11px}
+  .fpx-ex-no{width:28px;height:28px;font-size:12px}
+  .fpx-perf-alan input{width:78px}
+  .fpx-perf-alan select{width:100px}
+  .fpx-bitir{flex-direction:column;align-items:stretch}
+}
+
+/* "antrenör verdi" — planı KİMİN yazdığı. Kanıt kademesiyle (kaydın neye
+   DAYANDIĞI) karıştırılmasın diye ayrı bir görsel sözlük: çerçevesiz,
+   dolgulu, nötr. */
+.fpx-veren{
+  display:inline-flex;align-items:center;gap:6px;white-space:nowrap;
+  padding:3px 9px;border-radius:var(--radius-chip);
+  font-size:11.5px;font-weight:700;line-height:1.5;
+  background:#eef1f7;color:#3d4a68;
+}
+.fpx-veren i{font-size:10.5px}
+
+
+/* =====================================================================
+ R15/2 · MODÜL SAYFASI EKLERİ — üç eksik kap
+ ---------------------------------------------------------------------
+ Var olan kitte karşılığı OLMAYAN üç şey: dürüst boş durum kartı,
+ koleksiyon açma formu, koleksiyon silme çarpısı. Diğer her şey
+ (.fp-card/.fp-row/.fpx-kol-oge/.df-fchip) zaten vardı ve aynen kullanıldı.
+ ===================================================================== */
+.fpx-bos{
+  display:flex;flex-direction:column;align-items:center;text-align:center;
+  gap:10px;padding:38px 24px;
+}
+.fpx-bos .pe-ico{
+  width:56px;height:56px;border-radius:50%;display:grid;place-items:center;
+  background:var(--fit-tint);color:var(--fit-deep);font-size:21px;
+}
+.fpx-bos h4{font-size:16.5px;font-weight:700;color:var(--slate);letter-spacing:-.01em}
+.fpx-bos p{font-size:14px;font-weight:500;color:var(--muted);line-height:1.65;max-width:56ch}
+.fpx-bos .btn{margin-top:6px}
+
+.fpx-kolform{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.fpx-kolform input{
+  flex:1;min-width:200px;height:44px;padding:0 14px;
+  border:1px solid var(--line);border-radius:var(--radius-sm);
+  font:inherit;font-size:14px;font-weight:500;color:var(--slate);background:var(--paper);
+}
+.fpx-kolform input:focus-visible{outline:3px solid var(--fit-tint);outline-offset:1px;border-color:var(--fit-deep)}
+.fpx-kolform .btn{height:44px}
+
+/* silme çarpısı düğmenin İÇİNDE ayrı bir düğme DEĞİL (iç içe düğme geçersiz):
+   tıklama olayı üst düğmede yakalanıp data-kolsil'e göre ayrıştırılıyor. */
+.fpx-kol-sil{
+  margin-left:auto;width:26px;height:26px;flex:0 0 26px;border-radius:50%;
+  display:grid;place-items:center;color:var(--muted);font-size:12px;
+  transition:background .2s var(--ease),color .2s var(--ease);
+}
+.fpx-kol-oge:hover .fpx-kol-sil{background:rgba(20,18,12,.06);color:var(--slate)}

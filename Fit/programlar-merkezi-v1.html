@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8" />
+  <meta name="robots" content="noindex, nofollow" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Programlar Merkezi — DadaFit · Programlar ve Challenge'lar tek çatı altında</title>
+<link rel="icon" type="image/svg+xml" href="../kanon/varlik/dadafit-isaret.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="../kanon/varlik/dadafit-isaret-32.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="../kanon/varlik/dadafit-isaret-180.png" />
+<!-- FontAwesome 6.5.2 (kilitli ikon seti) -->
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+      integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+      crossorigin="anonymous" referrerpolicy="no-referrer" />
+<!-- DadaFit ortak kabuk (tek kaynak) -->
+<!-- KANON · yukleme sirasi: tokenlar -> markalar/fit (bilesenler YUKLENMEZ) -->
+<link rel="stylesheet" href="../kanon/tokenlar.css" />
+<link rel="stylesheet" href="../kanon/markalar/fit.css" />
+<link rel="stylesheet" href="assets/css/fit-shell.css" />
+<link rel="stylesheet" href="assets/css/fit-mesaj.css" />
+<style>
+/* =====================================================================
+ SAYFA CSS — PROGRAMLAR MERKEZİ (belge §8.1)
+ Kabuk/banner/kart/çip/boş durum assets/css/fit-shell.css'te tek kaynakta.
+ Burada yalnız bu sayfaya özgü ölçüler var; yeni sınıf ailesi üretilmedi.
+ ===================================================================== */
+.lib-top{--lib-img:url('https://images.unsplash.com/photo-1518611012118-696072aa579a?w=1680&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-16');--lib-pos:center 28%}
+
+/* devam eden program şeridi (ziyaretçide örnek görünüm) */
+
+/* filtre paneli */
+.pm-panel{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);box-shadow:var(--sh-sm);padding:20px 24px}
+.pm-panel .fgroup .lbl{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);min-width:118px}
+.pm-count{margin:22px 0 18px;font-size:14px;font-weight:600;color:var(--muted)}
+.pm-count b{color:var(--slate);font-weight:800}
+
+/* kart üstü rozetler */
+.pm-len{position:absolute;top:12px;left:12px;z-index:2;background:var(--fit);color:#fff;font-size:11.5px;font-weight:800;padding:6px 12px;border-radius:var(--radius-sm)}
+.pm-kind{position:absolute;bottom:12px;left:12px;z-index:2;display:inline-flex;align-items:center;gap:6px;background:rgba(20,18,12,.72);color:#fff;font-size:11px;font-weight:700;padding:6px 10px;border-radius:var(--radius-sm);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
+
+
+@media (max-width:1024px){
+  .sec{padding:var(--sec-pad) 0}
+}
+@media (max-width:640px){
+  .pm-panel{padding:16px}
+  .pm-panel .fgroup .lbl{min-width:100%}
+  .sec{padding:var(--sec-pad) 0}
+}
+
+/* E3'ün satır içi sihirbaz barındırıcısı KALDIRILDI — R13 (5. tur).
+   Sihirbaz artık kendi tam sayfası (programini-bul-v1.html); bu sayfada
+   ikinci bir kopyası çalışmıyor, banner'daki düğme o sayfaya gidiyor. */
+</style>
+<!-- Metin yaslama katmani (tek kaynak) — sayfa stillerinden SONRA yuklenir,
+     boylece sayfa ici text-align kurallari yaslamayi geri alamaz -->
+<link rel="stylesheet" href="assets/css/fit-type.css" />
+</head>
+<body data-brand="fit" data-fit-page="programlar-merkezi-v1">
+
+<!-- KABUK: ust katman (topbar+header+drawer+alt bar+gorus+cerez) — ortak kabuk JS basar -->
+<div id="fitShellTop"></div>
+
+<main class="page-main" id="pageMain">
+
+<!-- ===== 1 · BANNER + BREADCRUMB ===== -->
+<section class="lib-top">
+  <div class="wrap">
+    <nav class="lib-crumb" aria-label="Sayfa yolu">
+      <a href="dadafit-hub-v1.html" class="crumb-home"><i class="fa-solid fa-house" aria-hidden="true"></i><span class="sr-only">DadaFit ana sayfa</span></a>
+      <i class="fa-solid fa-chevron-right"></i>
+      <span class="cur">Programlar Merkezi</span>
+    </nav>
+    <span class="eyebrow"><i class="fa-solid fa-clipboard-list"></i> Programlar</span>
+    <h1>Bir günlük rutinden on iki haftalık plana</h1>
+    <p class="lib-sub">Hazır programlar ve challenge'lar aynı çatı altında. Challenge ayrı bir ürün değil — süreli bir program türü.</p>
+    <!-- Banner içi arama formu KALDIRILDI (Beyar, hareket-merkezi ile aynı karar):
+         banner'ın dikey uzunluğunu tek başına 70px büyütüyordu ve liste
+         sayfalarının banner'larını birbirinden ayırıyordu. Arama header
+         ikonundan ve sayfanın kendi filtre bileşeninden sürüyor. -->
+    <div class="lib-cta">
+      <a class="btn btn-fit" href="programini-bul-v1.html">
+        <i class="fa-solid fa-wand-magic-sparkles"></i> Programını Bul
+      </a>
+      <a class="btn btn-ghost lib-cta-ghost" href="program-liste-v1.html">Tüm Programlar</a>
+    </div>
+    <div class="lib-stats">
+      <div class="lib-stat"><b>12</b><span>program ve challenge</span></div>
+      <div class="lib-stat"><b>1 gün – 12 hafta</b><span>süre aralığı</span></div>
+      <div class="lib-stat"><b>3</b><span>seviye</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 1b · SATIR İÇİ SİHİRBAZ BÖLÜMÜ KALDIRILDI — R13 (5. tur) =====
+     E3'te sihirbaz modal'dan çıkarılıp bu sayfanın içine alınmıştı. 5. turda
+     Beyar: "Pop-up tamamen kalksın; sihirbaz kendi tam sayfası olsun."
+     Referans dadadiet.com/diyetisyen-bul. Motor programini-bul-v1.html'e
+     taşındı; burada ikinci bir kopya tutmak tek kaynak kuralını bozardı.
+     Kapı kaybolmadı: banner'ın birincil düğmesi o sayfaya gidiyor. -->
+
+<!-- ===== 2 · İLERLEME BÖLÜMÜ KALDIRILDI (E2) =====
+     Beyar: "kaldığın yerden devam et, ilerleme kısmı, oradaki section'ı da kaldır."
+     Aktif program ilerlemesi zaten Fit Planım'ın işi (fit-planim-programim-v1);
+     merkez sayfasında ziyaretçiye örnek bir ilerleme çubuğu göstermek hem
+     ikinci bir doğruluk kaynağı üretiyordu hem de ilk gerçek içeriği aşağı itiyordu. -->
+
+<!-- ===== 2 · VİDEO SEANSLARI BÖLÜMÜ KALDIRILDI — Beyar, 2026-08-29 =====
+     Modülün tamamı kalktı (menü kalemi · iki sayfa · Pro matrisi satırı ·
+     reklam envanteri yuvası · Kaydettiklerim çipi · destek talebi).
+     Bu bölüm E4'te eklenmişti ("video seansları çok arka planda kalmış,
+     ön plana çıkartabiliriz"); modül olmayınca bölüm de anlamını yitirdi.
+     Ardından gelen zebra sırası korundu: bu bölüm beyazdı, altındaki
+     "#tumu" gri — bölüm kalkınca üstündeki beyaz ile altındaki gri
+     komşu oldu, §B11 bozulmadı (ölçüldü). -->
+
+<!-- ===== 3 · FİLTRE + PROGRAM/CHALLENGE IZGARASI ===== -->
+<section class="sec sec-fit" id="tumu" style="background:var(--bg-cream);scroll-margin-top:120px">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <span class="eyebrow"><i class="fa-solid fa-layer-group"></i> Programlar ve challenge'lar</span>
+        <h2>Hedefine, süreye ve ekipmanına göre</h2>
+        <p class="lead">Aynı listede hem çok haftalık programlar hem de 7–30 günlük challenge'lar var. Süre filtresiyle ayırabilirsin.</p>
+        <div class="sec-tools">
+          <a class="see-all" href="challenge-merkezi-v1.html">Challenge Merkezi <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+      </div>
+    </div>
+
+    <div class="pm-panel ff" data-ff data-ff-count=".pm-count" data-ff-clear="#pmReset">
+      <div class="fgroup" data-group="tur" role="group" aria-label="Tür seç">
+        <span class="lbl">Tür</span>
+        <button class="df-fchip on" type="button" data-val="all">Tümü</button>
+        <button class="df-fchip" type="button" data-val="rutin"><i class="fa-solid fa-bolt"></i> Tek günlük rutin</button>
+        <button class="df-fchip" type="button" data-val="challenge"><i class="fa-solid fa-trophy"></i> Challenge (7–30 gün)</button>
+        <button class="df-fchip" type="button" data-val="program"><i class="fa-solid fa-clipboard-list"></i> Program (4–12 hafta)</button>
+      </div>
+      <div class="fgroup" data-group="hedef" role="group" aria-label="Hedef seç">
+        <span class="lbl">Hedef</span>
+        <button class="df-fchip on" type="button" data-val="all">Tümü</button>
+        <button class="df-fchip" type="button" data-val="guc"><i class="fa-solid fa-dumbbell"></i> Güç</button>
+        <button class="df-fchip" type="button" data-val="mobilite"><i class="fa-solid fa-child-reaching"></i> Mobilite</button>
+        <button class="df-fchip" type="button" data-val="kondisyon"><i class="fa-solid fa-heart-pulse"></i> Kondisyon</button>
+        <button class="df-fchip" type="button" data-val="aliskanlik"><i class="fa-solid fa-seedling"></i> Hareket alışkanlığı</button>
+      </div>
+      <div class="fgroup" data-group="seviye" role="group" aria-label="Seviye seç">
+        <span class="lbl">Seviye</span>
+        <button class="df-fchip on" type="button" data-val="all">Tümü</button>
+        <button class="df-fchip" type="button" data-val="baslangic">Başlangıç</button>
+        <button class="df-fchip" type="button" data-val="orta">Orta</button>
+        <button class="df-fchip" type="button" data-val="ileri">İleri</button>
+      </div>
+      <div class="fgroup" data-group="ekipman" role="group" aria-label="Ekipman ve mekân seç">
+        <span class="lbl">Ekipman &amp; mekân</span>
+        <button class="df-fchip on" type="button" data-val="all">Tümü</button>
+        <button class="df-fchip" type="button" data-val="yok"><i class="fa-solid fa-house"></i> Evde, ekipmansız</button>
+        <button class="df-fchip" type="button" data-val="dambil"><i class="fa-solid fa-dumbbell"></i> Dambıl / bant</button>
+        <button class="df-fchip" type="button" data-val="salon"><i class="fa-solid fa-building"></i> Salon</button>
+      </div>
+      <!-- S1 · 7. oturum — "Ücretsiz" ROZETLERİ DE KALDIRILDI (3 adet).
+           Beyar S1'de PRO rozetleri için şunu söyledi: "süzemediğin bir farkı
+           göstermek kullanıcıyı sadece rahatsız ediyor." Aynı mantık ters
+           kutupta da geçerliydi: bu sayfada "Erişim" ekseni E1'de kalktığı
+           için (aşağıdaki not) 9 ücretsiz kartın yalnız 3'ü rozetliydi ve
+           kullanıcı bu farkı SÜZEMİYORDU — hem eksik hem işlevsiz.
+           (Karşılaştırma yapılan video-seanslari-v1 sayfası 2026-08-29'da
+           modülüyle birlikte kalktı; buradaki karar değişmedi.) -->
+      <!-- "Erişim" ekseni (Ücretsiz / Pro) E1 ile kaldırıldı — Beyar erişim
+           kısmının bu sayfada olmamasını istedi. Paket ayrımı tek yerde: pro-v1.html -->
+    </div>
+
+    <p class="pm-count"><b id="pmCount">8</b> program ve challenge gösteriliyor</p>
+
+    <div class="hub-grid" id="pmGrid">
+      <a class="hub-card" href="program-detay-v1.html?slug=4-hafta-ev-antrenmani" data-tur="program" data-hedef="guc" data-seviye="baslangic" data-ekipman="yok" data-erisim="ucretsiz" data-name="4 Hafta Ev Antrenmanı">
+        <div class="hub-media" style="background-image:url('https://images.unsplash.com/photo-1518611012118-696072aa579a?w=640&q=80&auto=format&fit=crop&exp=7&sat=-14')">
+          <span class="pm-len">4 hafta</span>
+          <span class="pm-kind"><i class="fa-solid fa-clipboard-list"></i> Program</span>
+        </div>
+        <div class="hub-body">
+          <h4>4 Hafta Ev Antrenmanı</h4>
+          <p>Ekipmansız başlangıç planı — haftada 3 gün, seans başına 25 dakika, dinlenme günleri dahil.</p>
+          <div class="hub-foot"><span>Başlangıç · Ücretsiz</span><span class="go">İncele <i class="fa-solid fa-arrow-right"></i></span></div>
+        </div>
+      </a>
+      <a class="hub-card" href="challenge-v1.html?slug=hareket-aliskanligi" data-tur="challenge" data-hedef="aliskanlik" data-seviye="baslangic" data-ekipman="yok" data-erisim="ucretsiz" data-name="30 Günde Hareket Alışkanlığı">
+        <div class="hub-media" style="background-image:url('https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=640&q=80&auto=format&fit=crop&exp=7&sat=-14')">
+          <span class="pm-len">30 gün</span>
+          <span class="pm-kind"><i class="fa-solid fa-trophy"></i> Challenge</span>
+        </div>
+        <div class="hub-body">
+          <h4>30 Günde Hareket Alışkanlığı</h4>
+          <p>Her gün 10–15 dakika. Büyük hedef değil, küçük süreklilik — kaçırdığın gün seri sıfırlanmaz.</p>
+          <div class="hub-foot"><span>Başlangıç · Ücretsiz</span><span class="go">İncele <i class="fa-solid fa-arrow-right"></i></span></div>
+        </div>
+      </a>
+      <a class="hub-card" href="hareket-sureye-gore-v1.html" data-tur="rutin" data-hedef="mobilite" data-seviye="baslangic" data-ekipman="yok" data-erisim="ucretsiz" data-name="Sabah 5 dakika esneme">
+        <div class="hub-media" style="background-image:url('https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=640&q=80&auto=format&fit=crop&exp=7&sat=-14')">
+          <span class="pm-len">1 gün</span>
+          <span class="pm-kind"><i class="fa-solid fa-bolt"></i> Rutin</span>
+        </div>
+        <div class="hub-body">
+          <h4>Sabah 5 Dakika Esneme</h4>
+          <p>Tek seferlik, plan gerektirmeyen rutin. Programa başlamak istemiyorsan buradan gir.</p>
+          <div class="hub-foot"><span>Başlangıç · Ücretsiz</span><span class="go">İncele <i class="fa-solid fa-arrow-right"></i></span></div>
+        </div>
+      </a>
+      <a class="hub-card" href="program-detay-v1.html?slug=8-hafta-mobilite" data-tur="program" data-hedef="mobilite" data-seviye="baslangic" data-ekipman="yok" data-erisim="ucretsiz" data-name="8 Hafta Mobilite">
+        <div class="hub-media" style="background-image:url('https://images.unsplash.com/photo-1552196563-55cd4e45efb3?w=640&q=80&auto=format&fit=crop&exp=7&sat=-14')">
+          <span class="pm-len">8 hafta</span>
+          <span class="pm-kind"><i class="fa-solid fa-clipboard-list"></i> Program</span>
+        </div>
+        <div class="hub-body">
+          <h4>8 Hafta Mobilite Planı</h4>
+          <p>Kalça, omuz ve omurga hareketliliği — masa başında çalışanlar için kademeli ilerleyen plan.</p>
+          <div class="hub-foot"><span>Başlangıç · Ücretsiz</span><span class="go">İncele <i class="fa-solid fa-arrow-right"></i></span></div>
+        </div>
+      </a>
+      <a class="hub-card" href="challenge-v1.html?slug=bin-tekrar" data-tur="challenge" data-hedef="kondisyon" data-seviye="orta" data-ekipman="yok" data-erisim="ucretsiz" data-name="21 Günde 1.000 Tekrar">
+        <div class="hub-media" style="background-image:url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=640&q=80&auto=format&fit=crop&exp=7&sat=-14')">
+          <span class="pm-len">21 gün</span>
+          <span class="pm-kind"><i class="fa-solid fa-trophy"></i> Challenge</span>
+        </div>
+        <div class="hub-body">
+          <h4>21 Günde 1.000 Tekrar</h4>
+          <p>Yirmi bir günde toplam bin tekrar. Antrenman sayfasında kapattığın her set hedefe sayılır.</p>
+          <div class="hub-foot"><span>Orta · Ücretsiz</span><span class="go">İncele <i class="fa-solid fa-arrow-right"></i></span></div>
+        </div>
+      </a>
+      <a class="hub-card" href="program-detay-v1.html?slug=12-hafta-guc-temeli" data-tur="program" data-hedef="guc" data-seviye="orta" data-ekipman="dambil" data-erisim="pro" data-name="12 Hafta Güç Temeli">
+        <div class="hub-media" style="background-image:url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=640&q=80&auto=format&fit=crop&exp=7&sat=-14')">
+          <span class="pm-len">12 hafta</span>
+          <span class="pm-kind"><i class="fa-solid fa-clipboard-list"></i> Program</span>
+        </div>
+        <div class="hub-body">
+          <h4>12 Hafta Güç Temeli</h4>
+          <p>Dambıl ve bantla kademeli yüklenme; set–tekrar–ağırlık takibi ve dönem karşılaştırması.</p>
+          <div class="hub-foot"><span>Orta · Pro</span><span class="go">İncele <i class="fa-solid fa-arrow-right"></i></span></div>
+        </div>
+      </a>
+      <a class="hub-card" href="challenge-v1.html?slug=ekipmansiz-temel" data-tur="challenge" data-hedef="mobilite" data-seviye="baslangic" data-ekipman="yok" data-erisim="ucretsiz" data-name="7 Gün Ekipmansız Temel Seri">
+        <div class="hub-media" style="background-image:url('https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=640&q=80&auto=format&fit=crop&exp=7&sat=-14')">
+          <span class="pm-len">7 gün</span>
+          <span class="pm-kind"><i class="fa-solid fa-trophy"></i> Challenge</span>
+        </div>
+        <div class="hub-body">
+          <h4>7 Gün Ekipmansız Temel Seri</h4>
+          <p>Yedi ekipmansız temel hareket, sırayla. Her adım o hareketin kendi kaydıyla kapanır.</p>
+          <div class="hub-foot"><span>Başlangıç · Ücretsiz</span><span class="go">İncele <i class="fa-solid fa-arrow-right"></i></span></div>
+        </div>
+      </a>
+      <a class="hub-card" href="program-detay-v1.html?slug=8-hafta-salon-kondisyon" data-tur="program" data-hedef="kondisyon" data-seviye="ileri" data-ekipman="salon" data-erisim="pro" data-name="8 Hafta Salon Kondisyon">
+        <div class="hub-media" style="background-image:url('https://images.unsplash.com/photo-1534258936925-c58bed479fcb?w=640&q=80&auto=format&fit=crop&exp=7&sat=-14')">
+          <span class="pm-len">8 hafta</span>
+          <span class="pm-kind"><i class="fa-solid fa-clipboard-list"></i> Program</span>
+        </div>
+        <div class="hub-body">
+          <h4>8 Hafta Salon Kondisyon</h4>
+          <p>Salon ekipmanıyla dayanıklılık ve kapasite — haftada 4 gün, uzman kontrolünden geçmiş plan.</p>
+          <div class="hub-foot"><span>İleri · Pro</span><span class="go">İncele <i class="fa-solid fa-arrow-right"></i></span></div>
+        </div>
+      </a>
+    </div>
+
+    <div class="lib-empty" id="pmEmpty">
+      <span class="ico"><i class="fa-solid fa-magnifying-glass"></i></span>
+      <h3>Bu seçimle program bulamadık</h3>
+      <p>Filtreyi gevşetebilir ya da bir antrenörden sana özel plan isteyebilirsin.</p>
+      <div class="sec-tools">
+        <button class="btn btn-primary" type="button" id="pmReset"><i class="fa-solid fa-rotate-left"></i> Filtreyi sıfırla</button>
+              <!-- §D5 · boş durum kartında TEK eylem düğmesi bulunur.
+                   İkincil düğme kaldırıldı; kalan düğme bu yüzeyin
+                   birincil eylemidir (süzgeci sıfırlamak). -->
+      </div>
+    </div>
+
+    <!-- ===== R6 · MADDE 6 — YASAL NOT KENDİ SECTION'INDAN ÇIKTI =====
+         Not, yalnız kendisini taşıyan ayrı bir `<section class="sec">` içindeydi:
+         @1440'ta 209.2 px'lik bir bölüm, tek kalemlik içerik ve iki yanında
+         tam bölüm dolgusu (50/50). Sayfanın ritminde "yetim bölüm" olarak
+         okunuyordu.
+         REFERANS ÖLÇÜMÜ: dadadiet.com/beslenme'de aynı işi gören `.reh-note`
+         KENDİ BÖLÜMÜ DEĞİL — son içerik bölümünün (`section.sec sec-green`)
+         kuyruğunda duruyor. Aynısı yapıldı: not `#tumu` bölümünün son öğesi.
+         Metin ve iki bağlantı birebir korundu.
+         GERİ ALMA: bloğu `</section>`den sonra kendi `<section class="sec
+         sec-fit"><div class="wrap">…</div></section>` sarmalına geri koymak. -->
+    <div class="hr-note">
+      <i class="fa-solid fa-circle-info"></i>
+      <p>Programlar <b>genel bilgilendirme amaçlıdır</b>, kişiye özel antrenman reçetesi değildir. Kronik bir rahatsızlığın, sakatlığın ya da özel bir durumun varsa programa başlamadan önce <a href="antrenorler-v1.html">bir uzmana danış</a>. Ayrıntı: <a href="saglik-bilgilendirme-v1.html">Sağlık Bilgilendirmesi</a>.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 4 · ERİŞİM (ÜCRETSİZ / PRO) BÖLÜMÜ KALDIRILDI (E1) =====
+     Beyar: "burada erişim kısmında ücretsiz, pro kısmı olmayacak, bu section'ı kaldır."
+     Paket karşılaştırması tek yerde kalıyor: pro-v1.html. Bölümün İÇİNDEKİ sağlık
+     notu (§ zorunlu) kaybolmadı — R6 madde 6 ile `#tumu` bölümünün kuyruğuna girdi. -->
+
+</main>
+
+<!-- KABUK: alt katman (giris kapisi + footer + basa don) -->
+<div id="fitShellBottom"></div>
+
+<!-- DadaFit ortak kabuk JS (tek kaynak): markup + davranis -->
+<script src="assets/js/fit-shell.js"></script>
+<script src="assets/js/fit-mesaj.js"></script>
+<script>
+/* ===== SAYFA JS — PROGRAMLAR MERKEZİ ===== */
+(function(){
+  var grid=document.getElementById('pmGrid');
+  if(!grid)return;
+  var cards=Array.prototype.slice.call(grid.querySelectorAll('.hub-card'));
+  var countEl=document.getElementById('pmCount');
+  var emptyEl=document.getElementById('pmEmpty');
+  var search=document.getElementById('pmSearch');
+  /* Eksen listesi TEK YERDE: markup'taki .fgroup[data-group] kalemlerinden
+     türer. "Erişim" ekseni E1'de kalktı; motor artık listeyi kendi okuduğu
+     için burada elle silinecek bir satır kalmıyor. */
+  var sel={};
+  document.querySelectorAll('.pm-panel .fgroup[data-group]').forEach(function(g){
+    sel[g.getAttribute('data-group')]=new Set();
+  });
+
+  function matches(card){
+    var q=search && search.value.trim().toLocaleLowerCase('tr');
+    if(q && card.getAttribute('data-name').toLocaleLowerCase('tr').indexOf(q)<0) return false;
+    return Object.keys(sel).every(function(g){
+      if(!sel[g].size) return true;
+      return sel[g].has(card.getAttribute('data-'+g));
+    });
+  }
+  function apply(){
+    var shown=0;
+    cards.forEach(function(c){
+      var ok=matches(c);
+      c.style.display=ok?'':'none';
+      if(ok)shown++;
+    });
+    countEl.textContent=shown;
+    emptyEl.classList.toggle('show',shown===0);
+    grid.style.display=shown===0?'none':'';
+    /* filtre seçimi URL'ye yansısın, geri tuşu korusun (belge §13) */
+    var qs=[];
+    Object.keys(sel).forEach(function(g){ if(sel[g].size) qs.push(g+'='+Array.from(sel[g]).join(',')); });
+    var url=location.pathname+(qs.length?'?'+qs.join('&'):'')+location.hash;
+    history.replaceState(null,'',url);
+  }
+  document.querySelectorAll('.pm-panel .fgroup[data-group]').forEach(function(g){
+    var group=g.getAttribute('data-group');
+    g.querySelectorAll('.df-fchip').forEach(function(btn){
+      btn.addEventListener('click',function(){
+        var val=btn.getAttribute('data-val');
+        if(val==='all'){
+          sel[group].clear();
+          g.querySelectorAll('.df-fchip').forEach(function(x){x.classList.toggle('on',x===btn);});
+        }else{
+          if(sel[group].has(val)){sel[group].delete(val);btn.classList.remove('on');}
+          else{sel[group].add(val);btn.classList.add('on');}
+          var all=g.querySelector('.df-fchip[data-val="all"]');
+          if(all)all.classList.toggle('on',sel[group].size===0);
+        }
+        apply();
+      });
+    });
+  });
+  function reset(){
+    Object.keys(sel).forEach(function(g){sel[g].clear();});
+    document.querySelectorAll('.pm-panel .fgroup[data-group] .df-fchip').forEach(function(c){
+      c.classList.toggle('on',c.getAttribute('data-val')==='all');
+    });
+    if(search)search.value='';
+    apply();
+  }
+  var rb=document.getElementById('pmReset');
+  if(rb)rb.addEventListener('click',reset);
+  if(search)search.addEventListener('input',apply);
+
+  /* derin bağlantı: ?tur=challenge gibi parametrelerle gelince çipleri aç */
+  (function readDeepLink(){
+    var p=new URLSearchParams(location.search);
+    Object.keys(sel).forEach(function(g){
+      var raw=p.get(g); if(!raw)return;
+      raw.split(',').forEach(function(v){
+        var btn=document.querySelector('.pm-panel .fgroup[data-group="'+g+'"] .df-fchip[data-val="'+v+'"]');
+        if(btn){sel[g].add(v);btn.classList.add('on');}
+      });
+      var all=document.querySelector('.pm-panel .fgroup[data-group="'+g+'"] .df-fchip[data-val="all"]');
+      if(all&&sel[g].size)all.classList.remove('on');
+    });
+  })();
+  apply();
+})();
+
+/* Ziyaretçi/üye ayrımı: giriş yapılmışsa "örnek görünüm" işaretleri kalkar. */
+(function(){
+  if(document.body.classList.contains('is-auth')){
+    document.querySelectorAll('[data-lg-only]').forEach(function(el){el.style.display='none';});
+  }
+})();
+</script>
+</body>
+</html>

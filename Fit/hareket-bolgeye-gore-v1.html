@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8" />
+  <meta name="robots" content="noindex, nofollow" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Bölgeye Göre Egzersizler — Hareket Rehberi</title>
+<link rel="icon" type="image/svg+xml" href="../kanon/varlik/dadafit-isaret.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="../kanon/varlik/dadafit-isaret-32.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="../kanon/varlik/dadafit-isaret-180.png" />
+<!-- FontAwesome 6.5.2 (kilitli ikon seti) -->
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+      integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+      crossorigin="anonymous" referrerpolicy="no-referrer" />
+<!-- DadaFit ortak kabuk (tek kaynak) -->
+<!-- KANON · yukleme sirasi: tokenlar -> markalar/fit (bilesenler YUKLENMEZ) -->
+<link rel="stylesheet" href="../kanon/tokenlar.css" />
+<link rel="stylesheet" href="../kanon/markalar/fit.css" />
+<link rel="stylesheet" href="assets/css/fit-shell.css" />
+<link rel="stylesheet" href="assets/css/fit-mesaj.css" />
+<style>
+/* =====================================================================
+ EGZERSİZ KÜTÜPHANESİ — DadaFit liste/filtre sayfası
+ Chrome (token+topbar+header+drawer+bottom-nav+footer+modal+JS) hub'dan
+ BİREBİR taşındı (dadafit-hub-v1.html). DadaFit recolor: --fit → #009d4f.
+ Sayfa içeriği "SAYFA CSS" altına eklendi. Mega menü/chrome KİLİTLİ.
+ ===================================================================== */
+
+/* =====================================================================
+ SAYFA CSS — EGZERSİZ KÜTÜPHANESİ
+ ===================================================================== */
+:root{
+  --fit:var(--marka);          /* DadaFit aksanı (Pantone 7482 C) */
+  --fit-deep:var(--marka-koyu);     /* hover / gradient ucu */
+  --fit-tint:var(--marka-yikama-2);     /* yumuşak yeşil yıkama */
+  --fit-line:var(--marka-cizgi);     /* yeşil-nötr hairline */
+  --fit-bright:var(--marka-parlak);   /* koyu zeminde okunur aksan metni */
+  --fit-dark:#211E16;     /* vurgu/hero zemini */
+}
+.sec-fit .eyebrow{color:var(--fit-deep)}
+.sec-fit .eyebrow::before{background:var(--fit)}
+
+/* ---- ÜST PANEL: koyu band + breadcrumb + başlık + arama (signature carry-over) ---- */
+.lib-top{
+  position:relative;overflow:hidden;margin-top:112px;
+  /* hub df-hero-media deseni: desatüre görsel + koyu gradient overlay (metin solda okunur, görsel sağda belirir) */
+  background:
+    radial-gradient(820px 360px at 84% 14%,color-mix(in srgb, var(--marka) 20%, transparent),transparent 62%),
+    linear-gradient(90deg,rgba(33,30,22,.94) 0%,rgba(29,26,20,.82) 46%,rgba(27,25,19,.74) 100%),
+    linear-gradient(180deg,rgba(33,30,22,0) 58%,rgba(24,22,16,.62) 100%),
+    url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=1680&q=80&auto=format&fit=crop&exp=7&gam=6&sat=-16') center 26%/cover no-repeat,
+    #1b1913;
+  padding:40px 0 38px;
+}
+.lib-top .wrap{position:relative;z-index:2}
+.lib-crumb{display:flex;align-items:center;gap:9px;font-size:12.5px;font-weight:600;color:rgba(255,255,255,.6);margin-bottom:18px}
+.lib-crumb a{color:rgba(255,255,255,.6);transition:color .2s var(--ease)}
+.lib-crumb a:hover{color:#fff}
+.lib-crumb i{font-size:9px;color:rgba(255,255,255,.34)}
+.lib-crumb .cur{color:var(--fit-bright)}
+.lib-top .eyebrow{color:var(--fit-bright)}
+.lib-top .eyebrow::before{background:var(--fit-bright)}
+.lib-top h1{color:#fff;font-size:39px;letter-spacing:-.02em;margin:14px 0 10px;max-width:680px}
+.lib-top .lib-sub{color:rgba(255,255,255,.78);font-size:15.5px;font-weight:500;max-width:560px;line-height:1.55}
+/* arama input — cam panel */
+/* ==================================================================
+ YENİ BAŞLAYANLAR — makale (Fit yeşil)
+ Anatomi: beslenme-dengeli-tabak (qa accordion + reh-bridge + reh-note)
+ → Fit token'larıyla yeniden kuruldu (mint literal YOK, sızmaz).
+ ================================================================== */
+.art-wrap{max-width:840px}
+.art-intro{font-size:16.5px;color:var(--slate-2);font-weight:500;line-height:1.75}
+.art-intro p+p{margin-top:15px}
+.art-intro strong{color:var(--slate);font-weight:700}
+/* accordion (tek-seferde-bir açık) */
+.qa-list{display:flex;flex-direction:column;gap:12px}
+.qa{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);overflow:hidden;transition:border-color .25s var(--ease),box-shadow .25s var(--ease)}
+.qa.open{border-color:var(--fit-line);box-shadow:var(--sh-sm)}
+.qa-head{display:flex;align-items:center;gap:14px;width:100%;background:none;border:none;font-family:inherit;font-size:15.5px;font-weight:700;color:var(--slate);padding:18px 22px;cursor:pointer;text-align:left;transition:color .2s var(--ease)}
+.qa-head:hover,.qa.open .qa-head{color:var(--fit-deep)}
+.qa-ico{flex:none;width:34px;height:34px;border-radius:var(--radius-md);background:var(--fit-tint);color:var(--fit-deep);display:grid;place-items:center;font-size:14px}
+.qa-car{margin-left:auto;flex:none;font-size:12px;color:var(--muted);transition:transform .25s var(--ease)}
+.qa.open .qa-car{transform:rotate(180deg);color:var(--fit-deep)}
+.qa-body{max-height:0;overflow:hidden;transition:max-height .32s var(--ease)}
+.qa-body p{padding:0 26px 18px 70px;font-size:14.5px;color:var(--slate-2);font-weight:500;line-height:1.7}
+.qa-body p+p{padding-top:0;margin-top:-6px}
+.qa-body .qa-sub{padding:2px 26px 10px 70px;font-size:13.5px;font-weight:700;color:var(--slate)}
+.qa-ul{list-style:none;padding:0 26px 20px 70px;display:flex;flex-direction:column;gap:9px}
+.qa-ul li{position:relative;padding-left:20px;font-size:14px;color:var(--slate-2);font-weight:500;line-height:1.6}
+.qa-ul li::before{content:"";position:absolute;left:2px;top:9px;width:7px;height:7px;border-radius:50%;background:var(--fit)}
+/* cross-brand köprü kartları */
+.reh-bridge{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+.brg-card{display:flex;flex-direction:column;gap:11px;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);padding:22px;transition:transform .25s var(--ease),border-color .25s var(--ease),box-shadow .25s var(--ease)}
+.brg-card:hover{transform:translateY(-4px);border-color:var(--fit);box-shadow:var(--sh-md)}
+/* R11/M7 · Etiket artık kabuktaki `.brand-tag` bileşeni (fit-shell.css →
+   "MARKA ETİKETİ"): Dada kalın + marka adı ince + markanın kendi rengi.
+   Eski kuralın rengi (`--slate-2`) ve BÜYÜK HARF'i bileşeni EZİYORDU —
+   sayfa CSS'i kabuktan sonra yükleniyor. İkisi de kaldırıldı; yerleşim
+   (gap · hizalama) burada kaldı, kimlik bileşenden geliyor. */
+.brg-brand{display:inline-flex;align-items:center;gap:7px}
+/* ikon rengi de bileşenin `--bt-c`'sinden gelir; aşağıdaki `.food` istisnası
+   artık gereksiz ama SİLİNMEDİ — `.brg-card.food .brg-go` hâlâ kullanıyor. */
+.brg-card h4{font-size:16.5px;letter-spacing:-.01em}
+.brg-card p{font-size:13.5px;color:var(--muted);font-weight:500;line-height:1.55;flex:1}
+.brg-go{display:inline-flex;align-items:center;gap:8px;color:var(--fit-deep);font-weight:700;font-size:13.5px}
+.brg-card:hover .brg-go i{transform:translateX(3px)}
+.brg-go i{transition:.2s var(--ease)}
+/* Gastro köprüsü — tomato aksan */
+.brg-card.food:hover{border-color:var(--food)}
+.brg-card.food .brg-brand i,.brg-card.food .brg-go{color:var(--food)}
+/* disclaimer + CTA */
+.hr-note{display:flex;gap:14px;align-items:flex-start;background:var(--fit-tint);border:1px solid var(--fit-line);border-radius:var(--radius-lg);padding:20px 22px}
+.hr-note>i{color:var(--fit-deep);font-size:18px;margin-top:2px;flex:none}
+.hr-note p{font-size:14px;color:var(--slate-2);font-weight:500;line-height:1.6;margin:0}
+.hr-note p a{color:var(--fit-deep);font-weight:700;text-decoration:underline;text-underline-offset:2px}
+.hr-note .btn{margin-top:14px}
+@media (max-width:1024px){.reh-bridge{grid-template-columns:1fr}}
+@media (max-width:640px){.qa-body p,.qa-ul,.qa-body .qa-sub{padding-left:24px}.qa-ul li{padding-left:18px}}
+
+/* ===================== SAYFA RESPONSIVE ===================== */
+@media (max-width:1024px){
+  .lib-top{margin-top:112px}
+  .lib-filters{top:112px}
+  .lib-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .lib-top h1{font-size:33px}
+  .fgroup .lbl{min-width:88px}
+}
+@media (max-width:760px){
+  .lib-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:640px){
+  .lib-top{margin-top:62px;padding:30px 0 30px}
+  .lib-top h1{font-size:27px}
+  .lib-top .lib-sub{font-size:14px}
+  .lib-search{max-width:none}
+  .lib-stats{gap:18px;margin-top:20px}
+  .lib-stat b{font-size:18px}
+  .lib-body{padding:var(--sec-pad-sm) 0 var(--sec-pad)}
+  /* sticky filtre bar mobilde tek satır yatay kaydır */
+  .lib-filters{top:62px;padding:14px 14px 12px}
+  .fgroup{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;padding-bottom:5px}
+  .fgroup::-webkit-scrollbar{display:none}
+  .fgroup .lbl{position:sticky;left:0;background:rgba(255,255,255,.96);min-width:auto;padding-right:6px;z-index:1}
+  .df-fchip{flex:none;white-space:nowrap}
+  .fclear{flex:none}
+  .lib-bar{margin-bottom:18px}
+  .lib-sort{width:100%;justify-content:space-between}
+  .sort-seg button{padding:8px 12px;font-size:12.5px}
+  .lib-grid{grid-template-columns:1fr 1fr;gap:14px}
+  .ex-media{height:148px}
+  .ex-body{padding:13px 14px 15px}
+  .ex-body h3{font-size:15px}
+}
+@media (max-width:400px){
+  .lib-grid{grid-template-columns:1fr}
+  .ex-media{height:200px}
+}
+
+/* ============ KABUK: topbar social + acct-pro + gw imza (hub parite) ============ */
+
+</style>
+<style>
+/* ===== Footer marka hizalama (Gastro footer dili; marka-nötr, sızma yok) ===== */
+
+</style>
+<!-- Metin yaslama katmani (tek kaynak) — sayfa stillerinden SONRA yuklenir,
+     boylece sayfa ici text-align kurallari yaslamayi geri alamaz -->
+<link rel="stylesheet" href="assets/css/fit-type.css" />
+</head>
+<body data-brand="fit" data-fit-page="hareket-bolgeye-gore-v1">
+
+<!-- KABUK: ust katman (topbar+header+drawer+alt bar+gorus+cerez) — ortak kabuk JS basar -->
+<div id="fitShellTop"></div>
+
+<main class="page-main" id="pageMain">
+<!-- SAYFA İÇERİĞİ — HAREKET REHBERİ · YENİ BAŞLAYANLAR (pilot makale) -->
+
+<section class="lib-top">
+  <div class="wrap">
+    <button class="kyt-btn" type="button" data-kaydet aria-pressed="false" data-tur="rehber" data-slug="hareket-bolgeye-gore" data-ad="Bölgeye Göre Egzersizler" data-href="hareket-bolgeye-gore-v1.html" data-gorsel="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=1680&amp;q=80&amp;auto=format&amp;fit=crop&amp;exp=7&amp;gam=6&amp;sat=-16" data-meta="Hareket Rehberi"><i class="fa-regular fa-bookmark"></i></button>
+    <nav class="lib-crumb" aria-label="Sayfa yolu">
+      <a href="dadafit-hub-v1.html" class="crumb-home"><i class="fa-solid fa-house" aria-hidden="true"></i><span class="sr-only">DadaFit ana sayfa</span></a>
+      <i class="fa-solid fa-chevron-right"></i>
+      <a href="hareket-rehberi-v1.html">Hareket Rehberi</a>
+      <i class="fa-solid fa-chevron-right"></i>
+      <span class="cur">Bölgeye Göre</span>
+    </nav>
+    <span class="eyebrow"><i class="fa-solid fa-child-reaching"></i> Hareket Rehberi · Bölgeye Göre</span>
+    <h1>Çalışmak istediğin bölgeye göre hareket</h1>
+    <p class="lib-sub">Karın, bacak, sırt ya da kol… Belirli bir bölgeye odaklanmak isteyebilirsin. Bunun ne anlama geldiğini sade bir dille anlatalım; ama unutma, beden bir bütün.</p>
+  </div>
+</section>
+
+<section class="sec sec-fit" style="background:var(--bg-white)">
+  <div class="wrap art-wrap">
+    <div class="art-intro reveal">
+      <p>Çoğu zaman aynaya bakıp "şu bölgeyi biraz daha çalışsam" diye düşünürüz. Bu son derece doğal. <strong>Bölgesel çalışmak</strong>, hareketlerini belli bir kas grubuna yoğunlaştırmak anlamına gelir; örneğin bir gün karın ve core bölgesine, başka bir gün bacaklara ağırlık vermek gibi.</p>
+      <p>Ama önemli bir noktayı baştan söyleyelim: beden tek bir bölgeden ibaret değil. Bir kası çalıştırırken çevresindeki pek çok kas ona destek olur. Bu yüzden en sağlıklı yaklaşım, tek bir bölgeye saplanıp kalmak değil, <strong>dengeli</strong> bir program içinde odak noktaları belirlemektir. Aşağıdaki başlıklar sana hangi bölgenin kabaca neyi kapsadığını gösterir.</p>
+    </div>
+  </div>
+</section>
+
+<section class="sec sec-fit" style="background:var(--bg-cream)">
+  <div class="wrap art-wrap">
+    <div class="sec-head">
+      <div>
+        <span class="eyebrow"><i class="fa-solid fa-circle-question"></i> Bölge bölge</span>
+        <h2>Hangi bölge neyi kapsar?</h2>
+        <p class="lead">Her başlık, o bölgede genel olarak nelerin çalıştığını kavramsal düzeyde özetler. Spesifik hareket ya da açı talimatı değil, bir yön duygusu.</p>
+      </div>
+    </div>
+    <div class="qa-list">
+      <div class="qa open">
+        <button class="qa-head" type="button" aria-expanded="true">
+          <span class="qa-ico"><i class="fa-solid fa-shield"></i></span>
+          Karın &amp; core
+          <i class="fa-solid fa-chevron-down qa-car"></i>
+        </button>
+        <div class="qa-body">
+          <p>Core, gövdenin merkezi demek: karın kasları, yan bölgeler ve sırtın alt kısmı birlikte çalışır. Sanıldığının aksine sadece "karın kası" değildir; bedeni dik tutan, dengeni sağlayan bütün bir bölgedir.</p>
+          <p class="qa-sub">Genel olarak neye yarar</p>
+          <ul class="qa-ul"><li>Duruşu ve dengeyi destekler</li><li>Günlük hareketlerde belini korumaya yardımcı olur</li><li>Neredeyse tüm hareketlerin temelini oluşturur</li></ul>
+        </div>
+      </div>
+      <div class="qa">
+        <button class="qa-head" type="button" aria-expanded="false">
+          <span class="qa-ico"><i class="fa-solid fa-person-running"></i></span>
+          Bacak &amp; kalça
+          <i class="fa-solid fa-chevron-down qa-car"></i>
+        </button>
+        <div class="qa-body">
+          <p>Bacak ve kalça, bedenin en büyük kas gruplarını barındırır. Yürümek, merdiven çıkmak, oturup kalkmak gibi günlük her hareket bu bölgeyle iç içedir.</p>
+          <p class="qa-sub">Genel olarak neye yarar</p>
+          <ul class="qa-ul"><li>Günlük hareketliliği ve dayanıklılığı destekler</li><li>Alt beden gücünü kavramsal olarak geliştirir</li><li>Büyük kas grupları olduğu için genel enerji dengesine katkı sağlar</li></ul>
+        </div>
+      </div>
+      <div class="qa">
+        <button class="qa-head" type="button" aria-expanded="false">
+          <span class="qa-ico"><i class="fa-solid fa-user"></i></span>
+          Sırt &amp; bel
+          <i class="fa-solid fa-chevron-down qa-car"></i>
+        </button>
+        <div class="qa-body">
+          <p>Sırt ve bel bölgesi, gün boyu farkında olmadan en çok yorulan yerlerden biridir; özellikle masa başında çok vakit geçiriyorsan. Bu bölgeyi tanımak, duruşunu daha bilinçli değerlendirmeni sağlar.</p>
+          <p class="qa-sub">Genel olarak neye yarar</p>
+          <ul class="qa-ul"><li>Dik ve rahat bir duruşa katkıda bulunur</li><li>Core ile birlikte gövdeyi dengeler</li><li>Uzun süre oturmanın verdiği yorgunluğu dengelemeye yardımcı olur</li></ul>
+        </div>
+      </div>
+      <div class="qa">
+        <button class="qa-head" type="button" aria-expanded="false">
+          <span class="qa-ico"><i class="fa-solid fa-hand-fist"></i></span>
+          Kol &amp; omuz
+          <i class="fa-solid fa-chevron-down qa-car"></i>
+        </button>
+        <div class="qa-body">
+          <p>Kol ve omuz bölgesi, taşımak, itmek, çekmek gibi üst beden hareketlerinin merkezidir. Görece küçük kas grupları olsalar da günlük hayatta sık kullanılırlar.</p>
+          <p class="qa-sub">Genel olarak neye yarar</p>
+          <ul class="qa-ul"><li>Üst beden hareketlerini destekler</li><li>Omuz bölgesinin rahat ve hareketli kalmasına katkı sağlar</li><li>Günlük taşıma-tutma işlerini kolaylaştırır</li></ul>
+        </div>
+      </div>
+      <div class="qa">
+        <button class="qa-head" type="button" aria-expanded="false">
+          <span class="qa-ico"><i class="fa-solid fa-arrows-to-circle"></i></span>
+          Tüm vücut / kombine
+          <i class="fa-solid fa-chevron-down qa-car"></i>
+        </button>
+        <div class="qa-body">
+          <p>Bölgeleri tek tek düşünmek yerine, birçok kas grubunu aynı anda harekete katan bir yaklaşım da vardır. Kombine çalışmak, bedeni bir bütün olarak ele alır ve genellikle yeni başlayanlar için de dengeli bir başlangıçtır.</p>
+          <p class="qa-sub">Genel olarak neye yarar</p>
+          <ul class="qa-ul"><li>Bedeni dengeli bir şekilde çalıştırır</li><li>Zamanı verimli kullanmayı sağlar</li><li>Tek bir bölgeyi ihmal etme riskini azaltır</li></ul>
+        </div>
+      </div>
+      <div class="qa">
+        <button class="qa-head" type="button" aria-expanded="false">
+          <span class="qa-ico"><i class="fa-solid fa-circle-question"></i></span>
+          Bölge çalışmak oradan yağ yakar mı?
+          <i class="fa-solid fa-chevron-down qa-car"></i>
+        </button>
+        <div class="qa-body">
+          <p>Bu, çok yaygın bir sorudur: "Karın çalışırsam karnım incelir mi?" Egzersiz biliminde genel olarak kabul edilen yaklaşım, belirli bir bölgeyi çalışarak <strong>sadece oradan yağ yakmanın</strong> mümkün olmadığı yönündedir. Buna çoğu zaman "nokta yağ yakımı miti" denir.</p>
+          <p>Beden, yağı bölgesel bir komutla değil, genel bir denge içinde kullanır. Yani bir bölgeyi çalışmak o bölgenin kaslarını güçlendirebilir, ama yağ kullanımı bütünsel bir süreçtir; uyku, hareket alışkanlıkları ve genel yaşam düzeniyle ilişkilidir.</p>
+          <p class="qa-sub">Aklında kalsın</p>
+          <ul class="qa-ul"><li>Tek bölge çalışmak o bölgeden seçici yağ yakmaz</li><li>Bölgesel güçlenme ile yağ kullanımı farklı şeylerdir</li><li>Dengeli hareket ve genel yaşam düzeni bütününe odaklanmak daha gerçekçidir</li></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec sec-fit" style="background:var(--bg-white)">
+  <!-- R13/K17 · Beyar: "kutu, sayfanın geri kalanından dar … en üstteki
+       header menü genişliğinde olsun". ÖLÇÜM: kutu (776px) üstündeki üç
+       kartlık ızgarayla ZATEN piksel piksel hizalıydı — dar olan tek kutu
+       değil, makale kolonunun tamamıydı (`.art-wrap` 840px). Kanon genişlik
+       sayfadan alındı, uydurulmadı: header menüsünün ve koyu bannerın `.wrap`i
+       (max-width 1240 · 32px dolgu → içerik 1176px, sol 132 / sağ 1308).
+       Köprü kartları ve bilgilendirme kutusu o genişliğe çıktı; ÜSTTEKİ İKİ
+       BÖLÜM (giriş metni ve gövde akordeonu) okuma kolonu olduğu için
+       840px'te BIRAKILDI. -->
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <span class="eyebrow"><i class="fa-solid fa-arrow-right-long"></i> Sırada</span>
+        <h2>Bir sonraki adım</h2>
+        <p class="lead">Bölgeleri tanıdın; şimdi bunları gerçek hareketlere ve dengeli bir programa bağlamanın zamanı.</p>
+      </div>
+    </div>
+    <div class="reh-bridge">
+      <a class="brg-card" href="egzersiz-kutuphane-v1.html">
+        <span class="brg-brand brand-tag bt-fit"><i class="fa-solid fa-dumbbell" aria-hidden="true"></i><span class="bt-name"><span class="bd">dada</span><span class="sf">fit</span></span></span>
+        <h4>DadaFit Egzersizleri</h4><p>Bölgelere göre filtreleyip hareketleri tek tek keşfet. Her hareketin ne işe yaradığını gör.</p>
+        <span class="brg-go">DadaFit Egzersizleri'ne git <i class="fa-solid fa-arrow-right"></i></span>
+      </a>
+      <a class="brg-card" href="program-liste-v1.html">
+        <span class="brg-brand brand-tag bt-fit"><i class="fa-solid fa-dumbbell" aria-hidden="true"></i><span class="bt-name"><span class="bd">dada</span><span class="sf">fit</span></span></span>
+        <h4>Hazır programlar</h4><p>Bölgeleri dengeli biçimde bir araya getiren, adım adım ilerleyen program akışlarına bak.</p>
+        <span class="brg-go">Programları gör <i class="fa-solid fa-arrow-right"></i></span>
+      </a>
+      <a class="brg-card" href="dadafit-hub-v1.html">
+        <span class="brg-brand brand-tag bt-fit"><i class="fa-solid fa-dumbbell" aria-hidden="true"></i><span class="bt-name"><span class="bd">dada</span><span class="sf">fit</span></span></span>
+        <h4>DadaFit ana sayfa</h4><p>Hareket, program ve rehberlerin tümünü bir arada gör; nereden başlayacağına birlikte karar verelim.</p>
+        <span class="brg-go">DadaFit'e dön <i class="fa-solid fa-arrow-right"></i></span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="sec sec-fit" style="background:var(--bg-white);padding-top:0">
+  <!-- R13/K17 · kanon genişlik — gerekçe yukarıdaki notta. -->
+  <div class="wrap">
+    <div class="hr-note reveal">
+      <i class="fa-solid fa-circle-info"></i>
+      <div>
+        <p>Buradaki bilgiler genel bir bakış sunar, kişiye özel bir program yerine geçmez. Bir sağlık durumun varsa ya da nereden başlayacağından emin değilsen, sana uygun dengeli bir plan için bir antrenörle konuşmak en sağlıklısıdır.</p>
+        <a class="btn btn-fit" href="antrenorler-v1.html"><i class="fa-solid fa-dumbbell"></i> Bir Antrenöre Danış</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main><!-- /.page-main -->
+
+<script>
+/* ===== ACCORDION — tek-seferde-bir açık, ilki açık (marka-agnostik) ===== */
+(function(){
+  var items=[].slice.call(document.querySelectorAll('.qa-list .qa'));
+  if(!items.length)return;
+  function setH(qa){var b=qa.querySelector('.qa-body');b.style.maxHeight=b.scrollHeight+'px';}
+  function openQa(qa){qa.classList.add('open');qa.querySelector('.qa-head').setAttribute('aria-expanded','true');setH(qa);}
+  function closeQa(qa){qa.classList.remove('open');qa.querySelector('.qa-head').setAttribute('aria-expanded','false');qa.querySelector('.qa-body').style.maxHeight='0px';}
+  items.forEach(function(qa){
+    qa.querySelector('.qa-head').addEventListener('click',function(){
+      var isOpen=qa.classList.contains('open');
+      items.forEach(closeQa);
+      if(!isOpen)openQa(qa);
+    });
+  });
+  var first=items.filter(function(q){return q.classList.contains('open');})[0]||items[0];
+  openQa(first);
+  window.addEventListener('resize',function(){items.forEach(function(q){if(q.classList.contains('open'))setH(q);});});
+})();
+</script>
+
+<!-- KABUK: alt katman (giris kapisi + footer + basa don) -->
+<div id="fitShellBottom"></div>
+
+<!-- DadaFit ortak kabuk JS (tek kaynak): markup + davranis -->
+<script src="assets/js/fit-shell.js"></script>
+<script src="assets/js/fit-mesaj.js"></script>
+<script src="assets/js/fit-kayit.js"></script>
+<script>
+/* ===== SAYFA JS — EGZERSİZ KÜTÜPHANESİ ===== */
+(function(){
+  var grid=document.getElementById('libGrid');
+  if(!grid)return;
+  var cards=Array.prototype.slice.call(grid.querySelectorAll('.ex-card'));
+  var filters=document.getElementById('libFilters');
+  var countEl=document.getElementById('libCount');
+  var moreSeen=document.getElementById('moreSeen');
+  var emptyEl=document.getElementById('libEmpty');
+  var moreWrap=document.getElementById('libMore');
+ // aktif seçim: her grup için Set (all = filtre yok)
+  var sel={kas:new Set(),ekipman:new Set(),seviye:new Set()};
+
+  function chipClick(group,btn){
+    var val=btn.getAttribute('data-val');
+    var groupEl=filters.querySelector('.fgroup[data-group="'+group+'"]');
+    if(val==='all'){
+      sel[group].clear();
+      groupEl.querySelectorAll('.df-fchip').forEach(function(c){c.classList.toggle('on',c.getAttribute('data-val')==='all');});
+    }else{
+ // çoklu seçim toggle; "Tümü" kapanır
+      if(sel[group].has(val)){sel[group].delete(val);btn.classList.remove('on');}
+      else{sel[group].add(val);btn.classList.add('on');}
+      var allBtn=groupEl.querySelector('.df-fchip[data-val="all"]');
+      if(sel[group].size===0){sel[group].clear();allBtn.classList.add('on');}
+      else{allBtn.classList.remove('on');}
+    }
+    apply();
+  }
+
+  function matches(card){
+    var k=card.getAttribute('data-kas');
+    var e=card.getAttribute('data-ekipman');
+    var s=card.getAttribute('data-seviye');
+    if(sel.kas.size && !sel.kas.has(k))return false;
+    if(sel.ekipman.size && !sel.ekipman.has(e))return false;
+    if(sel.seviye.size && !sel.seviye.has(s))return false;
+    return true;
+  }
+
+  function apply(){
+    var shown=0;
+    cards.forEach(function(card){
+      var ok=matches(card);
+      card.style.display=ok?'':'none';
+      if(ok)shown++;
+    });
+    countEl.textContent=shown;
+    if(moreSeen)moreSeen.textContent=shown;
+    emptyEl.classList.toggle('show',shown===0);
+    if(moreWrap)moreWrap.style.display=shown===0?'none':'';
+  }
+
+  filters.querySelectorAll('.fgroup').forEach(function(g){
+    var group=g.getAttribute('data-group');
+    g.querySelectorAll('.df-fchip').forEach(function(btn){
+      btn.addEventListener('click',function(){chipClick(group,btn);});
+    });
+  });
+
+  function resetAll(){
+    Object.keys(sel).forEach(function(g){sel[g].clear();});
+    filters.querySelectorAll('.fgroup').forEach(function(g){
+      g.querySelectorAll('.df-fchip').forEach(function(c){c.classList.toggle('on',c.getAttribute('data-val')==='all');});
+    });
+    apply();
+  }
+  var fClear=document.getElementById('fClear');
+  if(fClear)fClear.addEventListener('click',resetAll);
+  var emptyReset=document.getElementById('emptyReset');
+  if(emptyReset)emptyReset.addEventListener('click',resetAll);
+
+ // sıralama
+  var sortSeg=document.querySelector('.sort-seg');
+  if(sortSeg){
+    sortSeg.querySelectorAll('button').forEach(function(b){
+      b.addEventListener('click',function(){
+        sortSeg.querySelectorAll('button').forEach(function(x){x.classList.remove('on')});
+        b.classList.add('on');
+        var mode=b.getAttribute('data-sort');
+        var arr=cards.slice();
+        if(mode==='pop')arr.sort(function(a,c){return (+c.getAttribute('data-pop'))-(+a.getAttribute('data-pop'));});
+        else if(mode==='yeni')arr.reverse();
+        else if(mode==='az')arr.sort(function(a,c){return a.getAttribute('data-name').localeCompare(c.getAttribute('data-name'),'tr');});
+        arr.forEach(function(card){grid.appendChild(card);});
+      });
+    });
+  }
+
+ // arama → kart adına göre süz (üst panel + filtre birlikte)
+  var searchInput=document.getElementById('libSearchInput');
+  if(searchInput){
+    searchInput.addEventListener('input',function(){
+      var q=searchInput.value.trim().toLocaleLowerCase('tr');
+      var shown=0;
+      cards.forEach(function(card){
+        var nameOk=!q || card.getAttribute('data-name').toLocaleLowerCase('tr').indexOf(q)>-1;
+        var ok=matches(card)&&nameOk;
+        card.style.display=ok?'':'none';
+        if(ok)shown++;
+      });
+      countEl.textContent=shown;
+      if(moreSeen)moreSeen.textContent=shown;
+      emptyEl.classList.toggle('show',shown===0);
+      if(moreWrap)moreWrap.style.display=shown===0?'none':'';
+    });
+  }
+
+ // "daha fazla yükle" — mockup: aynı kartları klonlayıp ekler (gerçekte API sayfası)
+  var loadMore=document.getElementById('loadMore');
+  if(loadMore){
+    var loaded=false;
+    loadMore.addEventListener('click',function(){
+      if(loaded){loadMore.parentElement.style.display='none';return;}
+      cards.slice(0,8).forEach(function(card){
+        var clone=card.cloneNode(true);
+        grid.appendChild(clone);
+        cards.push(clone);
+      });
+      loaded=true;
+      apply();
+      loadMore.innerHTML='<i class="fa-solid fa-check"></i> Tüm hareketler yüklendi';
+    });
+  }
+
+ // deep-link: dropdown'dan ?bolge= / ?ekipman= ile gelince ilgili chip'leri auto-activate et
+ // (dropdown taksonomisi → kütüphane data-val eşlemesi)
+  var DEEPLINK_MAP={
+    bolge:{
+      'ust-vucut':{kas:['sirt','gogus','omuz','kol']},
+      'alt-vucut':{kas:['bacak']},
+      'karin':{kas:['karin']}
+    },
+    ekipman:{
+      'vucut-agirligi':{ekipman:['vucut']},
+      'agirlik':{ekipman:['dambil','kettlebell','bant']}
+    }
+  };
+  function activateChips(group,vals){
+    var groupEl=filters.querySelector('.fgroup[data-group="'+group+'"]');
+    if(!groupEl)return;
+    var allBtn=groupEl.querySelector('.df-fchip[data-val="all"]');
+    vals.forEach(function(val){
+      var btn=groupEl.querySelector('.df-fchip[data-val="'+val+'"]');
+      if(!btn || sel[group].has(val))return;
+      sel[group].add(val);
+      btn.classList.add('on');
+    });
+    if(sel[group].size>0 && allBtn)allBtn.classList.remove('on');
+  }
+  (function readDeepLink(){
+    var params=new URLSearchParams(window.location.search);
+    Object.keys(DEEPLINK_MAP).forEach(function(param){
+      var raw=params.get(param);
+      if(!raw)return;
+      var mapping=DEEPLINK_MAP[param][raw];
+      if(!mapping)return;
+      Object.keys(mapping).forEach(function(group){
+        activateChips(group,mapping[group]);
+      });
+    });
+  })();
+
+  apply();
+})();
+</script>
+
+
+<!-- DADAFIT-ACTIVE-NAV — aktif nav item boş-tık feedback'i (aria-current + self smooth-scroll) -->
+
+
+
+
+
+</body>
+</html>
