@@ -9,8 +9,12 @@
 <link rel="stylesheet" href="../../kanon/tokenlar.css">
 <link rel="stylesheet" href="../../kanon/markalar/gastro.css">
 <link rel="stylesheet" href="../../kanon/bilesenler.css">
+<!-- ADMIN-KIT:CSS:BAS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.css">
+<link rel="stylesheet" href="../../kanon/admin.css">
+<!-- ADMIN-KIT:CSS:SON -->
 </head>
-<body class="yetkili">
+<body class="yetkili" data-marka="gastro">
 <!-- ═══ GASTRO ADMIN · KANONİK KABUK — lead üretti, agent DEĞİŞTİRMEZ.
      Kaynak: deneme/admin-fit/_ortak/kabuk.html · üretim: scripts/olcum/gadm-kabuk-uret.mjs
      Şerh ve ikon kaynakları: deneme/admin-gastro/_ortak/kabuk-serh.txt ═══ -->
@@ -19,22 +23,34 @@
   <a class="panel-ray-ikon aktif" href="#" style="--eko:var(--eko-gastro)"
      aria-current="true" title="DadaGastro" aria-label="DadaGastro"><i class="fa-solid fa-utensils"></i></a>
   <span class="panel-ray-ayrac" role="presentation"></span>
+  <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-diet)"    title="DadaDiet"    aria-label="DadaDiet"><i class="fa-solid fa-heart-pulse"></i></a>
+  <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-gourmet)" title="DadaGourmet" aria-label="DadaGourmet"><i class="fa-solid fa-map-location-dot"></i></a>
   <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-fit)"  title="DadaFit"  aria-label="DadaFit"><i class="fa-solid fa-dumbbell"></i></a>
-  <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-diet)"    title="DadaDiet"    aria-label="DadaDiet"><i class="fa-solid fa-leaf"></i></a>
-  <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-gourmet)" title="DadaGourmet" aria-label="DadaGourmet"><i class="fa-solid fa-wine-glass"></i></a>
   <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-campus)"  title="DadaCampus"  aria-label="DadaCampus"><i class="fa-solid fa-graduation-cap"></i></a>
+  <span class="panel-ray-ikon kilitli" title="DadaStore — erişimin yok" aria-label="DadaStore, erişim yok"><i class="fa-solid fa-bag-shopping"></i></span>
   <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-mentor)"  title="DadaMentor"  aria-label="DadaMentor"><i class="fa-solid fa-compass"></i></a>
-  <span class="panel-ray-ikon kilitli" title="DadaStore — erişimin yok" aria-label="DadaStore, erişim yok"><i class="fa-solid fa-lock"></i></span>
   <div class="panel-ray-alt">
     <a class="panel-ray-ikon" href="#" title="Yardım" aria-label="Yardım"><i class="fa-solid fa-circle-question"></i></a>
+<!-- ADMIN-KIT:IMZA:BAS -->
+    <a class="panel-ray-imza" href="https://gaviaworks.com" target="_blank" rel="noopener"
+       title="Gaviaworks" aria-label="Gaviaworks — gaviaworks.com">
+      <span class="yalniz-okuyucu">Gaviaworks</span>
+    </a>
+<!-- ADMIN-KIT:IMZA:SON -->
   </div>
 </aside>
 
 <!-- ── MODÜL MENÜSÜ · DÖRT KATEGORİ ───────────────────────────────── -->
 <nav class="panel-menu" id="panelMenu" aria-label="Modüller">
+<!-- ADMIN-KIT:KABUK:BAS -->
   <div class="panel-menu-bas">
-    <b>DadaGastro</b><span>Yönetim paneli</span>
+    <a class="panel-marka" href="admin-genel-bakis.html" aria-label="DadaGastro yönetim paneli">
+      <span class="yalniz-okuyucu">DadaGastro · Yönetim paneli</span>
+    </a>
   </div>
+  <button type="button" class="panel-katla" aria-pressed="false"
+          aria-label="Menüyü daralt"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i></button>
+<!-- ADMIN-KIT:KABUK:SON -->
   <div class="panel-menu-govde">
 
     <div class="panel-menu-bolum">01 Genel</div>
@@ -146,9 +162,9 @@
              önce nerede kullanıldığı sorulur.</p>
         </div>
         <div class="eylem-satiri">
-          <button class="dugme hayalet" type="button" data-yetki="disa-aktar"><i class="fa-solid fa-file-arrow-down" aria-hidden="true"></i> Envanteri dışa aktar</button>
+          <button class="dugme hayalet" type="button" data-yetki="disa-aktar" data-eylem="calistir" data-ad="Envanteri dışa aktar"><i class="fa-solid fa-file-arrow-down" aria-hidden="true"></i> Envanteri dışa aktar</button>
           <button class="dugme hayalet" type="button"><i class="fa-solid fa-folder-plus" aria-hidden="true"></i> Yeni klasör</button>
-          <button class="dugme birincil" type="button"><i class="fa-solid fa-cloud-arrow-up" aria-hidden="true"></i> Dosya yükle</button>
+          <button class="dugme birincil" type="button" data-eylem="git"><i class="fa-solid fa-cloud-arrow-up" aria-hidden="true"></i> Dosya yükle</button>
         </div>
       </div>
 
@@ -247,7 +263,7 @@
               <span>Dosya türü</span><span class="sayi" data-sayi="0"></span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
             </button>
             <div class="acilir-yuzey suzgec" id="mdTur-yuzey" role="group" aria-label="Dosya türü süzgeci" hidden>
-              <div class="acilir-bas"><span>Dosya türü</span><button type="button">Temizle</button></div>
+              <div class="acilir-bas"><span>Dosya türü</span><button type="button" data-eylem="suzgec-temizle">Temizle</button></div>
               <button class="cip suzgec aktif" type="button" aria-pressed="true">Tümü</button>
               <button class="cip suzgec" type="button" aria-pressed="false">Görsel</button>
               <button class="cip suzgec" type="button" aria-pressed="false">Video</button>
@@ -260,7 +276,7 @@
               <span>Klasör</span><span class="sayi" data-sayi="0"></span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
             </button>
             <div class="acilir-yuzey suzgec" id="mdKlasor-yuzey" role="group" aria-label="Klasör süzgeci" hidden>
-              <div class="acilir-bas"><span>Klasör</span><button type="button">Temizle</button></div>
+              <div class="acilir-bas"><span>Klasör</span><button type="button" data-eylem="suzgec-temizle">Temizle</button></div>
               <button class="cip suzgec aktif" type="button" aria-pressed="true">Tümü</button>
               <button class="cip suzgec" type="button" aria-pressed="false">Kurumsal</button>
               <button class="cip suzgec" type="button" aria-pressed="false">Tarifler</button>
@@ -275,7 +291,7 @@
               <span>Yükleyen</span><span class="sayi" data-sayi="0"></span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
             </button>
             <div class="acilir-yuzey suzgec" id="mdYukleyen-yuzey" role="group" aria-label="Yükleyen süzgeci" hidden>
-              <div class="acilir-bas"><span>Yükleyen</span><button type="button">Temizle</button></div>
+              <div class="acilir-bas"><span>Yükleyen</span><button type="button" data-eylem="suzgec-temizle">Temizle</button></div>
               <button class="cip suzgec aktif" type="button" aria-pressed="true">Tümü</button>
               <button class="cip suzgec" type="button" aria-pressed="false">Yasin Yavuz</button>
               <button class="cip suzgec" type="button" aria-pressed="false">Elif Yıldırım</button>
@@ -288,7 +304,7 @@
               <span>Boyut</span><span class="sayi" data-sayi="0"></span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
             </button>
             <div class="acilir-yuzey suzgec" id="mdBoyut-yuzey" role="group" aria-label="Boyut süzgeci" hidden>
-              <div class="acilir-bas"><span>Boyut</span><button type="button">Temizle</button></div>
+              <div class="acilir-bas"><span>Boyut</span><button type="button" data-eylem="suzgec-temizle">Temizle</button></div>
               <button class="cip suzgec aktif" type="button" aria-pressed="true">Tümü</button>
               <button class="cip suzgec" type="button" aria-pressed="false">1 MB altı</button>
               <button class="cip suzgec" type="button" aria-pressed="false">1–10 MB</button>
@@ -297,11 +313,11 @@
           </div>
           <div class="sag">
           <div class="coklu-secim">
-            <button class="suzgec-dugme" type="button" id="mdKolon" aria-haspopup="true" aria-expanded="false" aria-controls="mdKolon-yuzey">
+            <button class="suzgec-dugme" type="button" id="mdKolon" aria-haspopup="true" aria-expanded="false" aria-controls="mdKolon-yuzey" data-eylem="kolonlar">
               <i class="fa-solid fa-table-columns" aria-hidden="true"></i><span>Kolonlar</span>
             </button>
             <div class="acilir-yuzey saga kolon-secim" id="mdKolon-yuzey" role="group" aria-label="Görünen kolonlar" hidden>
-              <div class="acilir-bas"><span>Görünen kolonlar</span><button type="button">Sıfırla</button></div>
+              <div class="acilir-bas"><span>Görünen kolonlar</span><button type="button" data-eylem="suzgec-temizle">Sıfırla</button></div>
               <label class="acilir-kalem kilitli"><input type="checkbox" checked disabled> Dosya</label>
               <label class="acilir-kalem"><input type="checkbox" checked> Tür</label>
               <label class="acilir-kalem"><input type="checkbox" checked> Boyut</label>
@@ -342,7 +358,7 @@
                   <td>Kurumsal</td>
                   <td><span class="kisi-hucre"><span class="kisi-avatar">EY</span><span class="kisi-bilgi"><span class="kisi-ad">Elif Yıldırım</span></span></span></td>
                   <td>04.09.2026</td>
-                  <td class="eylem"><div class="satir-eylem"><button class="ikon-dugme" type="button" aria-label="sponsor-kapak.webp adresini kopyala" title="sponsor-kapak.webp adresini kopyala"><i class="fa-solid fa-link" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="sponsor-kapak.webp dosyasını yeniden adlandır" title="sponsor-kapak.webp dosyasını yeniden adlandır"><i class="fa-solid fa-pen" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" aria-label="sponsor-kapak.webp dosyasını çöp kutusuna at" title="sponsor-kapak.webp dosyasını çöp kutusuna at"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
+                  <td class="eylem"><div class="satir-eylem"><button class="ikon-dugme" type="button" aria-label="sponsor-kapak.webp adresini kopyala" title="sponsor-kapak.webp adresini kopyala" data-eylem="calistir" data-ad="sponsor-kapak.webp adresini kopyala"><i class="fa-solid fa-link" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="sponsor-kapak.webp dosyasını yeniden adlandır" title="sponsor-kapak.webp dosyasını yeniden adlandır" data-islem="duzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" aria-label="sponsor-kapak.webp dosyasını çöp kutusuna at" title="sponsor-kapak.webp dosyasını çöp kutusuna at" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
                 </tr>
                 <tr>
                   <td class="sec"><label><input type="checkbox" aria-label="sote-teknigi.mp4 dosyasını seç"></label></td>
@@ -352,7 +368,7 @@
                   <td>Tarifler</td>
                   <td><span class="kisi-hucre"><span class="kisi-avatar">BŞ</span><span class="kisi-bilgi"><span class="kisi-ad">Burak Şahin</span></span></span></td>
                   <td>03.09.2026</td>
-                  <td class="eylem"><div class="satir-eylem"><button class="ikon-dugme" type="button" aria-label="sote-teknigi.mp4 adresini kopyala" title="sote-teknigi.mp4 adresini kopyala"><i class="fa-solid fa-link" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="sote-teknigi.mp4 dosyasını yeniden adlandır" title="sote-teknigi.mp4 dosyasını yeniden adlandır"><i class="fa-solid fa-pen" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" aria-label="sote-teknigi.mp4 dosyasını çöp kutusuna at" title="sote-teknigi.mp4 dosyasını çöp kutusuna at"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
+                  <td class="eylem"><div class="satir-eylem"><button class="ikon-dugme" type="button" aria-label="sote-teknigi.mp4 adresini kopyala" title="sote-teknigi.mp4 adresini kopyala" data-eylem="calistir" data-ad="sote-teknigi.mp4 adresini kopyala"><i class="fa-solid fa-link" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="sote-teknigi.mp4 dosyasını yeniden adlandır" title="sote-teknigi.mp4 dosyasını yeniden adlandır" data-islem="duzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" aria-label="sote-teknigi.mp4 dosyasını çöp kutusuna at" title="sote-teknigi.mp4 dosyasını çöp kutusuna at" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
                 </tr>
                 <tr>
                   <td class="sec"><label><input type="checkbox" aria-label="uyelik-sozlesmesi-v4.pdf dosyasını seç"></label></td>
@@ -362,7 +378,7 @@
                   <td>Yasal</td>
                   <td><span class="kisi-hucre"><span class="kisi-avatar">HE</span><span class="kisi-bilgi"><span class="kisi-ad">Hukuk Ekibi</span></span></span></td>
                   <td>01.09.2026</td>
-                  <td class="eylem"><div class="satir-eylem"><button class="ikon-dugme" type="button" aria-label="uyelik-sozlesmesi-v4.pdf adresini kopyala" title="uyelik-sozlesmesi-v4.pdf adresini kopyala"><i class="fa-solid fa-link" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="uyelik-sozlesmesi-v4.pdf dosyasını yeniden adlandır" title="uyelik-sozlesmesi-v4.pdf dosyasını yeniden adlandır"><i class="fa-solid fa-pen" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" aria-label="uyelik-sozlesmesi-v4.pdf dosyasını çöp kutusuna at" title="uyelik-sozlesmesi-v4.pdf dosyasını çöp kutusuna at"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
+                  <td class="eylem"><div class="satir-eylem"><button class="ikon-dugme" type="button" aria-label="uyelik-sozlesmesi-v4.pdf adresini kopyala" title="uyelik-sozlesmesi-v4.pdf adresini kopyala" data-eylem="calistir" data-ad="uyelik-sozlesmesi-v4.pdf adresini kopyala"><i class="fa-solid fa-link" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="uyelik-sozlesmesi-v4.pdf dosyasını yeniden adlandır" title="uyelik-sozlesmesi-v4.pdf dosyasını yeniden adlandır" data-islem="duzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" aria-label="uyelik-sozlesmesi-v4.pdf dosyasını çöp kutusuna at" title="uyelik-sozlesmesi-v4.pdf dosyasını çöp kutusuna at" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
                 </tr>
                 <tr>
                   <td class="sec"><label><input type="checkbox" aria-label="sef-selin-portre.jpg dosyasını seç"></label></td>
@@ -372,7 +388,7 @@
                   <td>Şefler</td>
                   <td><span class="kisi-hucre"><span class="kisi-avatar">SA</span><span class="kisi-bilgi"><span class="kisi-ad">Selin Aksoy</span></span></span></td>
                   <td>31.08.2026</td>
-                  <td class="eylem"><div class="satir-eylem"><button class="ikon-dugme" type="button" aria-label="sef-selin-portre.jpg adresini kopyala" title="sef-selin-portre.jpg adresini kopyala"><i class="fa-solid fa-link" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="sef-selin-portre.jpg dosyasını yeniden adlandır" title="sef-selin-portre.jpg dosyasını yeniden adlandır"><i class="fa-solid fa-pen" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" aria-label="sef-selin-portre.jpg dosyasını çöp kutusuna at" title="sef-selin-portre.jpg dosyasını çöp kutusuna at"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
+                  <td class="eylem"><div class="satir-eylem"><button class="ikon-dugme" type="button" aria-label="sef-selin-portre.jpg adresini kopyala" title="sef-selin-portre.jpg adresini kopyala" data-eylem="calistir" data-ad="sef-selin-portre.jpg adresini kopyala"><i class="fa-solid fa-link" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="sef-selin-portre.jpg dosyasını yeniden adlandır" title="sef-selin-portre.jpg dosyasını yeniden adlandır" data-islem="duzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" aria-label="sef-selin-portre.jpg dosyasını çöp kutusuna at" title="sef-selin-portre.jpg dosyasını çöp kutusuna at" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
                 </tr>
                 <tr>
                   <td class="sec"><label><input type="checkbox" aria-label="sonbahar-kampanya-og.png dosyasını seç"></label></td>
@@ -382,7 +398,7 @@
                   <td>Kampanyalar</td>
                   <td><span class="kisi-hucre"><span class="kisi-avatar">BŞ</span><span class="kisi-bilgi"><span class="kisi-ad">Burak Şahin</span></span></span></td>
                   <td>30.08.2026</td>
-                  <td class="eylem"><div class="satir-eylem"><button class="ikon-dugme" type="button" aria-label="sonbahar-kampanya-og.png adresini kopyala" title="sonbahar-kampanya-og.png adresini kopyala"><i class="fa-solid fa-link" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="sonbahar-kampanya-og.png dosyasını yeniden adlandır" title="sonbahar-kampanya-og.png dosyasını yeniden adlandır"><i class="fa-solid fa-pen" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" aria-label="sonbahar-kampanya-og.png dosyasını çöp kutusuna at" title="sonbahar-kampanya-og.png dosyasını çöp kutusuna at"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
+                  <td class="eylem"><div class="satir-eylem"><button class="ikon-dugme" type="button" aria-label="sonbahar-kampanya-og.png adresini kopyala" title="sonbahar-kampanya-og.png adresini kopyala" data-eylem="calistir" data-ad="sonbahar-kampanya-og.png adresini kopyala"><i class="fa-solid fa-link" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="sonbahar-kampanya-og.png dosyasını yeniden adlandır" title="sonbahar-kampanya-og.png dosyasını yeniden adlandır" data-islem="duzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" aria-label="sonbahar-kampanya-og.png dosyasını çöp kutusuna at" title="sonbahar-kampanya-og.png dosyasını çöp kutusuna at" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
                 </tr>
                 <tr>
                   <td class="sec"><label><input type="checkbox" aria-label="mayonez-puf.mp4 dosyasını seç"></label></td>
@@ -392,7 +408,7 @@
                   <td>Tarifler</td>
                   <td><span class="kisi-hucre"><span class="kisi-avatar">MA</span><span class="kisi-bilgi"><span class="kisi-ad">Mert Aydın</span></span></span></td>
                   <td>28.08.2026</td>
-                  <td class="eylem"><div class="satir-eylem"><button class="ikon-dugme" type="button" aria-label="mayonez-puf.mp4 adresini kopyala" title="mayonez-puf.mp4 adresini kopyala"><i class="fa-solid fa-link" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="mayonez-puf.mp4 dosyasını yeniden adlandır" title="mayonez-puf.mp4 dosyasını yeniden adlandır"><i class="fa-solid fa-pen" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" aria-label="mayonez-puf.mp4 dosyasını çöp kutusuna at" title="mayonez-puf.mp4 dosyasını çöp kutusuna at"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
+                  <td class="eylem"><div class="satir-eylem"><button class="ikon-dugme" type="button" aria-label="mayonez-puf.mp4 adresini kopyala" title="mayonez-puf.mp4 adresini kopyala" data-eylem="calistir" data-ad="mayonez-puf.mp4 adresini kopyala"><i class="fa-solid fa-link" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="mayonez-puf.mp4 dosyasını yeniden adlandır" title="mayonez-puf.mp4 dosyasını yeniden adlandır" data-islem="duzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" aria-label="mayonez-puf.mp4 dosyasını çöp kutusuna at" title="mayonez-puf.mp4 dosyasını çöp kutusuna at" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
                 </tr>
                 <tr>
                   <td class="sec"><label><input type="checkbox" aria-label="kvkk-aydinlatma-v3.pdf dosyasını seç"></label></td>
@@ -402,7 +418,7 @@
                   <td>Yasal</td>
                   <td><span class="kisi-hucre"><span class="kisi-avatar">HE</span><span class="kisi-bilgi"><span class="kisi-ad">Hukuk Ekibi</span></span></span></td>
                   <td>20.08.2026</td>
-                  <td class="eylem"><div class="satir-eylem"><button class="ikon-dugme" type="button" aria-label="kvkk-aydinlatma-v3.pdf adresini kopyala" title="kvkk-aydinlatma-v3.pdf adresini kopyala"><i class="fa-solid fa-link" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="kvkk-aydinlatma-v3.pdf dosyasını yeniden adlandır" title="kvkk-aydinlatma-v3.pdf dosyasını yeniden adlandır"><i class="fa-solid fa-pen" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" aria-label="kvkk-aydinlatma-v3.pdf dosyasını çöp kutusuna at" title="kvkk-aydinlatma-v3.pdf dosyasını çöp kutusuna at"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
+                  <td class="eylem"><div class="satir-eylem"><button class="ikon-dugme" type="button" aria-label="kvkk-aydinlatma-v3.pdf adresini kopyala" title="kvkk-aydinlatma-v3.pdf adresini kopyala" data-eylem="calistir" data-ad="kvkk-aydinlatma-v3.pdf adresini kopyala"><i class="fa-solid fa-link" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="kvkk-aydinlatma-v3.pdf dosyasını yeniden adlandır" title="kvkk-aydinlatma-v3.pdf dosyasını yeniden adlandır" data-islem="duzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" aria-label="kvkk-aydinlatma-v3.pdf dosyasını çöp kutusuna at" title="kvkk-aydinlatma-v3.pdf dosyasını çöp kutusuna at" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
                 </tr>
                 <tr>
                   <td class="sec"><label><input type="checkbox" aria-label="hub-hero-eski.jpg dosyasını seç"></label></td>
@@ -412,7 +428,7 @@
                   <td>— klasörsüz</td>
                   <td><span class="kisi-hucre"><span class="kisi-avatar">YY</span><span class="kisi-bilgi"><span class="kisi-ad">Yasin Yavuz</span></span></span></td>
                   <td>14.07.2026</td>
-                  <td class="eylem"><div class="satir-eylem"><button class="ikon-dugme" type="button" aria-label="hub-hero-eski.jpg adresini kopyala" title="hub-hero-eski.jpg adresini kopyala"><i class="fa-solid fa-link" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="hub-hero-eski.jpg dosyasını yeniden adlandır" title="hub-hero-eski.jpg dosyasını yeniden adlandır"><i class="fa-solid fa-pen" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" aria-label="hub-hero-eski.jpg dosyasını çöp kutusuna at" title="hub-hero-eski.jpg dosyasını çöp kutusuna at"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
+                  <td class="eylem"><div class="satir-eylem"><button class="ikon-dugme" type="button" aria-label="hub-hero-eski.jpg adresini kopyala" title="hub-hero-eski.jpg adresini kopyala" data-eylem="calistir" data-ad="hub-hero-eski.jpg adresini kopyala"><i class="fa-solid fa-link" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="hub-hero-eski.jpg dosyasını yeniden adlandır" title="hub-hero-eski.jpg dosyasını yeniden adlandır" data-islem="duzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" aria-label="hub-hero-eski.jpg dosyasını çöp kutusuna at" title="hub-hero-eski.jpg dosyasını çöp kutusuna at" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
                 </tr>
                 <tr>
                   <td class="sec"><label><input type="checkbox" aria-label="paket-matrisi.xlsx dosyasını seç"></label></td>
@@ -422,7 +438,7 @@
                   <td>Finans</td>
                   <td><span class="kisi-hucre"><span class="kisi-avatar">DK</span><span class="kisi-bilgi"><span class="kisi-ad">Deniz Korkmaz</span></span></span></td>
                   <td>11.07.2026</td>
-                  <td class="eylem"><div class="satir-eylem"><button class="ikon-dugme" type="button" aria-label="paket-matrisi.xlsx adresini kopyala" title="paket-matrisi.xlsx adresini kopyala"><i class="fa-solid fa-link" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="paket-matrisi.xlsx dosyasını yeniden adlandır" title="paket-matrisi.xlsx dosyasını yeniden adlandır"><i class="fa-solid fa-pen" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" aria-label="paket-matrisi.xlsx dosyasını çöp kutusuna at" title="paket-matrisi.xlsx dosyasını çöp kutusuna at"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
+                  <td class="eylem"><div class="satir-eylem"><button class="ikon-dugme" type="button" aria-label="paket-matrisi.xlsx adresini kopyala" title="paket-matrisi.xlsx adresini kopyala" data-eylem="calistir" data-ad="paket-matrisi.xlsx adresini kopyala"><i class="fa-solid fa-link" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="paket-matrisi.xlsx dosyasını yeniden adlandır" title="paket-matrisi.xlsx dosyasını yeniden adlandır" data-islem="duzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" aria-label="paket-matrisi.xlsx dosyasını çöp kutusuna at" title="paket-matrisi.xlsx dosyasını çöp kutusuna at" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
                 </tr>
                 <tr>
                   <td class="sec"><label><input type="checkbox" aria-label="rozet-seti.zip dosyasını seç"></label></td>
@@ -432,7 +448,7 @@
                   <td>Rozetler</td>
                   <td><span class="kisi-hucre"><span class="kisi-avatar">EY</span><span class="kisi-bilgi"><span class="kisi-ad">Elif Yıldırım</span></span></span></td>
                   <td>02.07.2026</td>
-                  <td class="eylem"><div class="satir-eylem"><button class="ikon-dugme" type="button" aria-label="rozet-seti.zip adresini kopyala" title="rozet-seti.zip adresini kopyala"><i class="fa-solid fa-link" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="rozet-seti.zip dosyasını yeniden adlandır" title="rozet-seti.zip dosyasını yeniden adlandır"><i class="fa-solid fa-pen" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" aria-label="rozet-seti.zip dosyasını çöp kutusuna at" title="rozet-seti.zip dosyasını çöp kutusuna at"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
+                  <td class="eylem"><div class="satir-eylem"><button class="ikon-dugme" type="button" aria-label="rozet-seti.zip adresini kopyala" title="rozet-seti.zip adresini kopyala" data-eylem="calistir" data-ad="rozet-seti.zip adresini kopyala"><i class="fa-solid fa-link" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="rozet-seti.zip dosyasını yeniden adlandır" title="rozet-seti.zip dosyasını yeniden adlandır" data-islem="duzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" aria-label="rozet-seti.zip dosyasını çöp kutusuna at" title="rozet-seti.zip dosyasını çöp kutusuna at" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
                 </tr>
                 <tr>
                   <td class="sec"><label><input type="checkbox" aria-label="anasayfa-tanitim.mp4 dosyasını seç"></label></td>
@@ -442,7 +458,7 @@
                   <td>Kurumsal</td>
                   <td><span class="kisi-hucre"><span class="kisi-avatar">YY</span><span class="kisi-bilgi"><span class="kisi-ad">Yasin Yavuz</span></span></span></td>
                   <td>18.06.2026</td>
-                  <td class="eylem"><div class="satir-eylem"><button class="ikon-dugme" type="button" aria-label="anasayfa-tanitim.mp4 adresini kopyala" title="anasayfa-tanitim.mp4 adresini kopyala"><i class="fa-solid fa-link" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="anasayfa-tanitim.mp4 dosyasını yeniden adlandır" title="anasayfa-tanitim.mp4 dosyasını yeniden adlandır"><i class="fa-solid fa-pen" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" aria-label="anasayfa-tanitim.mp4 dosyasını çöp kutusuna at" title="anasayfa-tanitim.mp4 dosyasını çöp kutusuna at"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
+                  <td class="eylem"><div class="satir-eylem"><button class="ikon-dugme" type="button" aria-label="anasayfa-tanitim.mp4 adresini kopyala" title="anasayfa-tanitim.mp4 adresini kopyala" data-eylem="calistir" data-ad="anasayfa-tanitim.mp4 adresini kopyala"><i class="fa-solid fa-link" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="anasayfa-tanitim.mp4 dosyasını yeniden adlandır" title="anasayfa-tanitim.mp4 dosyasını yeniden adlandır" data-islem="duzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" aria-label="anasayfa-tanitim.mp4 dosyasını çöp kutusuna at" title="anasayfa-tanitim.mp4 dosyasını çöp kutusuna at" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
                 </tr>
                 <tr>
                   <td class="sec"><label><input type="checkbox" aria-label="favicon-kaynak.svg dosyasını seç"></label></td>
@@ -452,7 +468,7 @@
                   <td>Marka</td>
                   <td><span class="kisi-hucre"><span class="kisi-avatar">YY</span><span class="kisi-bilgi"><span class="kisi-ad">Yasin Yavuz</span></span></span></td>
                   <td>02.06.2026</td>
-                  <td class="eylem"><div class="satir-eylem"><button class="ikon-dugme" type="button" aria-label="favicon-kaynak.svg adresini kopyala" title="favicon-kaynak.svg adresini kopyala"><i class="fa-solid fa-link" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="favicon-kaynak.svg dosyasını yeniden adlandır" title="favicon-kaynak.svg dosyasını yeniden adlandır"><i class="fa-solid fa-pen" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" aria-label="favicon-kaynak.svg dosyasını çöp kutusuna at" title="favicon-kaynak.svg dosyasını çöp kutusuna at"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
+                  <td class="eylem"><div class="satir-eylem"><button class="ikon-dugme" type="button" aria-label="favicon-kaynak.svg adresini kopyala" title="favicon-kaynak.svg adresini kopyala" data-eylem="calistir" data-ad="favicon-kaynak.svg adresini kopyala"><i class="fa-solid fa-link" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="favicon-kaynak.svg dosyasını yeniden adlandır" title="favicon-kaynak.svg dosyasını yeniden adlandır" data-islem="duzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" aria-label="favicon-kaynak.svg dosyasını çöp kutusuna at" title="favicon-kaynak.svg dosyasını çöp kutusuna at" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
                 </tr>
               </tbody>
             </table>
@@ -532,7 +548,7 @@
           <span class="bos-ikon"><i class="fa-solid fa-inbox" aria-hidden="true"></i></span>
           <h3>Bu klasörde dosya yok</h3>
           <p>İlk dosyayı yükleyerek başla.</p>
-          <button class="dugme hayalet" type="button">Dosya yükle</button>
+          <button class="dugme hayalet" type="button" data-eylem="git">Dosya yükle</button>
         </div>
 
         <!-- 3 · YETKİSİZ ERİŞİM — düğme YOK, sınır bir hata değildir -->
@@ -547,7 +563,7 @@
           <span class="bos-ikon"><i class="fa-solid fa-plug-circle-xmark" aria-hidden="true"></i></span>
           <h3>Liste yüklenemedi</h3>
           <p>Bağlantı kurulamadı. Yeniden dene.</p>
-          <button class="dugme hayalet" type="button"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i> Yeniden dene</button>
+          <button class="dugme hayalet" type="button" data-eylem="calistir" data-ad="Yeniden dene"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i> Yeniden dene</button>
           <p class="hata-izi">Destek talebine ekle: <code>MD-7742-LST</code></p>
         </div>
         </div>
@@ -555,18 +571,27 @@
         <div class="sayfalama kart-ayagi">
           <div class="sayfalama-bilgi"><b>1–12</b> / 6.384 dosya</div>
           <div class="dugmeler">
-            <button class="sayfa-dugme sade ok" type="button" disabled aria-label="Önceki sayfa"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i></button>
-            <button class="sayfa-dugme sade aktif" type="button" aria-current="page">1</button>
-            <button class="sayfa-dugme sade" type="button">2</button>
-            <button class="sayfa-dugme sade" type="button">3</button>
-            <button class="sayfa-dugme sade" type="button">4</button>
-            <button class="sayfa-dugme sade" type="button">5</button>
-            <button class="sayfa-dugme sade ok" type="button" aria-label="Sonraki sayfa"><i class="fa-solid fa-chevron-right" aria-hidden="true"></i></button>
+            <button class="sayfa-dugme sade ok" type="button" disabled aria-label="Önceki sayfa" data-eylem="sayfala"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i></button>
+            <button class="sayfa-dugme sade aktif" type="button" aria-current="page" data-eylem="sayfala">1</button>
+            <button class="sayfa-dugme sade" type="button" data-eylem="sayfala">2</button>
+            <button class="sayfa-dugme sade" type="button" data-eylem="sayfala">3</button>
+            <button class="sayfa-dugme sade" type="button" data-eylem="sayfala">4</button>
+            <button class="sayfa-dugme sade" type="button" data-eylem="sayfala">5</button>
+            <button class="sayfa-dugme sade ok" type="button" aria-label="Sonraki sayfa" data-eylem="sayfala"><i class="fa-solid fa-chevron-right" aria-hidden="true"></i></button>
           </div>
         </div>
       </div>
     </div>
   </main>
 <script src="_ortak/panel.js" defer></script>
+<!-- ADMIN-KIT:JS:BAS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/7.3.0/tinymce.min.js" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/l10n/tr.js"></script>
+<script src="../../kanon/admin-editor-tr.js"></script>
+<script src="../../kanon/admin-kit.js" defer></script>
+<script src="../../kanon/admin-editor.js" defer></script>
+<script src="../../kanon/admin-tarih.js" defer></script>
+<!-- ADMIN-KIT:JS:SON -->
 </body>
 </html>

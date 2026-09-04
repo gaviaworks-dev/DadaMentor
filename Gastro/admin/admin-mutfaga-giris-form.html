@@ -8,8 +8,12 @@
 <link rel="stylesheet" href="../../kanon/markalar/gastro.css">
 <link rel="stylesheet" href="../../kanon/bilesenler.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<!-- ADMIN-KIT:CSS:BAS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.css">
+<link rel="stylesheet" href="../../kanon/admin.css">
+<!-- ADMIN-KIT:CSS:SON -->
 </head>
-<body class="yetkili">
+<body class="yetkili" data-marka="gastro">
 <!-- ═══ GASTRO ADMIN · KANONİK KABUK — lead üretti, agent DEĞİŞTİRMEZ.
      Kaynak: deneme/admin-fit/_ortak/kabuk.html · üretim: scripts/olcum/gadm-kabuk-uret.mjs
      Şerh ve ikon kaynakları: deneme/admin-gastro/_ortak/kabuk-serh.txt ═══ -->
@@ -18,22 +22,34 @@
   <a class="panel-ray-ikon aktif" href="#" style="--eko:var(--eko-gastro)"
      aria-current="true" title="DadaGastro" aria-label="DadaGastro"><i class="fa-solid fa-utensils"></i></a>
   <span class="panel-ray-ayrac" role="presentation"></span>
+  <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-diet)"    title="DadaDiet"    aria-label="DadaDiet"><i class="fa-solid fa-heart-pulse"></i></a>
+  <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-gourmet)" title="DadaGourmet" aria-label="DadaGourmet"><i class="fa-solid fa-map-location-dot"></i></a>
   <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-fit)"  title="DadaFit"  aria-label="DadaFit"><i class="fa-solid fa-dumbbell"></i></a>
-  <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-diet)"    title="DadaDiet"    aria-label="DadaDiet"><i class="fa-solid fa-leaf"></i></a>
-  <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-gourmet)" title="DadaGourmet" aria-label="DadaGourmet"><i class="fa-solid fa-wine-glass"></i></a>
   <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-campus)"  title="DadaCampus"  aria-label="DadaCampus"><i class="fa-solid fa-graduation-cap"></i></a>
+  <span class="panel-ray-ikon kilitli" title="DadaStore — erişimin yok" aria-label="DadaStore, erişim yok"><i class="fa-solid fa-bag-shopping"></i></span>
   <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-mentor)"  title="DadaMentor"  aria-label="DadaMentor"><i class="fa-solid fa-compass"></i></a>
-  <span class="panel-ray-ikon kilitli" title="DadaStore — erişimin yok" aria-label="DadaStore, erişim yok"><i class="fa-solid fa-lock"></i></span>
   <div class="panel-ray-alt">
     <a class="panel-ray-ikon" href="#" title="Yardım" aria-label="Yardım"><i class="fa-solid fa-circle-question"></i></a>
+<!-- ADMIN-KIT:IMZA:BAS -->
+    <a class="panel-ray-imza" href="https://gaviaworks.com" target="_blank" rel="noopener"
+       title="Gaviaworks" aria-label="Gaviaworks — gaviaworks.com">
+      <span class="yalniz-okuyucu">Gaviaworks</span>
+    </a>
+<!-- ADMIN-KIT:IMZA:SON -->
   </div>
 </aside>
 
 <!-- ── MODÜL MENÜSÜ · DÖRT KATEGORİ ───────────────────────────────── -->
 <nav class="panel-menu" id="panelMenu" aria-label="Modüller">
+<!-- ADMIN-KIT:KABUK:BAS -->
   <div class="panel-menu-bas">
-    <b>DadaGastro</b><span>Yönetim paneli</span>
+    <a class="panel-marka" href="admin-genel-bakis.html" aria-label="DadaGastro yönetim paneli">
+      <span class="yalniz-okuyucu">DadaGastro · Yönetim paneli</span>
+    </a>
   </div>
+  <button type="button" class="panel-katla" aria-pressed="false"
+          aria-label="Menüyü daralt"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i></button>
+<!-- ADMIN-KIT:KABUK:SON -->
   <div class="panel-menu-govde">
 
     <div class="panel-menu-bolum">01 Genel</div>
@@ -190,7 +206,7 @@
                   <label for="rfSlug" class="alan-etiket">Adres <span class="zorunlu">*</span></label>
                   <div class="slug-alani">
                     <span class="slug-onek">dadagastro.com/mutfaga-giris/</span>
-                    <input class="alan-girdi" id="rfSlug" name="slug" type="text" required="" maxlength="60" pattern="[a-z0-9]+(-[a-z0-9]+)*" placeholder="tavada-pisirme-teknikleri">
+                    <input data-girdi="slug" class="alan-girdi" id="rfSlug" name="slug" type="text" required="" maxlength="60" pattern="[a-z0-9]+(-[a-z0-9]+)*" placeholder="tavada-pisirme-teknikleri">
                   </div>
                   <div class="alan-yardim"><span>Yalnız küçük harf, rakam ve tire. Ders adresleri
                     <b>konu sayfasından, 12 adımlık rotadan ve kardeş derslerden</b> bağlanıyor; bir kez
@@ -210,6 +226,27 @@
                     <div class="alan-yardim"><span>Havuz uydurulmadı: bugün ders sayfalarında ve bölüm başlıklarında <b id="rfIkonSay">40</b> ayrı ikon kullanılıyor, liste onlardan doğuyor.</span></div>
                   </div>
                 </div>
+                <div class="alan kart-izgara c3">
+                  <div class="alan">
+                    <label for="rfSure" class="alan-etiket">Ders süresi <span class="acilir-kalem">— dk</span></label>
+                    <input class="alan-girdi" id="rfSure" name="sure" type="number" data-girdi="sayi" min="1" max="240" placeholder="16">
+                    <div class="alan-yardim"><span>Ders banner'ında “Süre” künyesi olarak basılır; liste ekranının “Süre” sütunu ve merkez sayfanın toplam saati de bu değerden toplanır (ölçüldü: 8 ders · 12–20 dk).</span></div>
+                  </div>
+                  <div class="alan">
+                    <label for="rfSeviye" class="alan-etiket">Seviye</label>
+                    <select class="alan-secim" id="rfSeviye" name="seviye">
+                      <option value="baslangic" selected="">Başlangıç</option>
+                      <option value="orta">Orta</option>
+                      <option value="ileri">İleri</option>
+                    </select>
+                    <div class="alan-yardim"><span>Banner künyesinde “Seviye” olarak basılır. Üç değer uydurulmadı: hub sayfası rotayı <b>Başlangıç → Orta → İleri</b> diye yazıyor, ders sayfalarında ölçülen değerler <b>Başlangıç</b> ve <b>Orta</b>.</span></div>
+                  </div>
+                  <div class="alan">
+                    <label for="rfSonraki" class="alan-etiket">Sıradaki ders</label>
+                    <select class="alan-secim" id="rfSonraki" name="sonraki"><option value="" selected="">— yok —</option><option value="mutfak-duzeni-ve-calisma-alani">Mutfak Düzeni ve Çalışma Alanı</option><option value="mutfakta-kullanilan-temel-araclar">Mutfakta Kullanılan Temel Araçlar</option><option value="gida-guvenligi-ve-hijyen-kurallari">Gıda Güvenliği ve Hijyen Kuralları</option><option value="temel-bicak-turleri-ve-kullanimlari">Temel Bıçak Türleri ve Kullanımları</option><option value="sebze-ve-meyve-hazirlama-teknikleri">Sebze ve Meyve Hazırlama Teknikleri</option><option value="tavada-pisirme-teknikleri">Tavada Pişirme Teknikleri</option><option value="firinda-pisirme-teknikleri">Fırında Pişirme Teknikleri</option><option value="haslama-sudan-fazlasi">Haşlama: Sudan Fazlası</option></select>
+                    <div class="alan-yardim"><span>Ders sayfasının dibindeki <b>“Sıradaki adımlar”</b> bandı. Seçenekler uydurulmadı — Mutfağa Giriş listesindeki <b>8 dersin</b> kendisidir. “Önceki ders” bunun tersinden türer, ayrı alan tutulmaz.</span></div>
+                  </div>
+                </div>
                 <div class="alan">
                   <label for="rfOzet" class="alan-etiket">Kısa özet <span class="zorunlu">*</span>
                     <span class="acilir-kalem">— banner altındaki tek paragraf</span><span class="alan-sayac" data-say-for="rfOzet">0 / 320</span></label>
@@ -218,9 +255,37 @@
                 </div>
                 <div class="alan">
                   <label for="rfGiris" class="alan-etiket">Giriş metni <span class="acilir-kalem">— bölümlerden önceki prose bloğu</span></label>
-                  <textarea class="alan-metin" id="rfGiris" name="giris"></textarea><div class="metin-duzenleyici"><div class="duzenleyici-cubuk" role="toolbar" aria-label="Metin biçimlendirme"><button type="button" class="ikon-dugme" data-k="undo" title="Geri al" aria-label="Geri al"><i class="fa-solid fa-rotate-left" aria-hidden="true"></i></button><button type="button" class="ikon-dugme" data-k="redo" title="İleri al" aria-label="İleri al"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i></button><span class="duzenleyici-ayrac" aria-hidden="true"></span><select class="alan-secim" aria-label="Blok biçimi"><option value="p" selected="">Paragraf</option><option value="h2">Başlık 2</option><option value="blockquote">Alıntı</option></select><span class="duzenleyici-ayrac" aria-hidden="true"></span><button type="button" class="ikon-dugme" data-k="bold" title="Kalın" aria-label="Kalın"><i class="fa-solid fa-bold" aria-hidden="true"></i></button><button type="button" class="ikon-dugme" data-k="italic" title="İtalik" aria-label="İtalik"><i class="fa-solid fa-italic" aria-hidden="true"></i></button><span class="duzenleyici-ayrac" aria-hidden="true"></span><button type="button" class="ikon-dugme" data-k="insertUnorderedList" title="Madde listesi" aria-label="Madde listesi"><i class="fa-solid fa-list-ul" aria-hidden="true"></i></button><button type="button" class="ikon-dugme" data-k="insertOrderedList" title="Numaralı liste" aria-label="Numaralı liste"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></button><span class="duzenleyici-ayrac" aria-hidden="true"></span><button type="button" class="ikon-dugme" data-k="blockquote" title="Alıntı" aria-label="Alıntı"><i class="fa-solid fa-quote-left" aria-hidden="true"></i></button><button type="button" class="ikon-dugme" data-k="link" title="Bağlantı" aria-label="Bağlantı"><i class="fa-solid fa-link" aria-hidden="true"></i></button><span class="duzenleyici-ayrac" aria-hidden="true"></span><button type="button" class="ikon-dugme" data-k="removeFormat" title="Biçimi temizle" aria-label="Biçimi temizle"><i class="fa-solid fa-eraser" aria-hidden="true"></i></button><button type="button" class="ikon-dugme" data-k="code" title="Kaynağı gör" aria-label="Kaynağı gör"><i class="fa-solid fa-code" aria-hidden="true"></i></button></div><div class="duzenleyici-yuzey" contenteditable="true" role="textbox" aria-multiline="true" aria-label="İçerik" data-bos="Yazmaya başla…"></div><div class="duzenleyici-ayak"><span><b>0</b> kelime</span><span><b>0</b> karakter</span></div></div>
+                  <textarea class="alan-metin" id="rfGiris" name="giris"></textarea><div class="metin-duzenleyici"><div class="duzenleyici-cubuk" role="toolbar" aria-label="Metin biçimlendirme"><button type="button" class="ikon-dugme" data-k="undo" title="Geri al" aria-label="Geri al" data-eylem="calistir" data-ad="Geri al"><i class="fa-solid fa-rotate-left" aria-hidden="true"></i></button><button type="button" class="ikon-dugme" data-k="redo" title="İleri al" aria-label="İleri al" data-eylem="calistir" data-ad="İleri al"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i></button><span class="duzenleyici-ayrac" aria-hidden="true"></span><select class="alan-secim" aria-label="Blok biçimi"><option value="p" selected="">Paragraf</option><option value="h2">Başlık 2</option><option value="blockquote">Alıntı</option></select><span class="duzenleyici-ayrac" aria-hidden="true"></span><button type="button" class="ikon-dugme" data-k="bold" title="Kalın" aria-label="Kalın"><i class="fa-solid fa-bold" aria-hidden="true"></i></button><button type="button" class="ikon-dugme" data-k="italic" title="İtalik" aria-label="İtalik"><i class="fa-solid fa-italic" aria-hidden="true"></i></button><span class="duzenleyici-ayrac" aria-hidden="true"></span><button type="button" class="ikon-dugme" data-k="insertUnorderedList" title="Madde listesi" aria-label="Madde listesi"><i class="fa-solid fa-list-ul" aria-hidden="true"></i></button><button type="button" class="ikon-dugme" data-k="insertOrderedList" title="Numaralı liste" aria-label="Numaralı liste"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></button><span class="duzenleyici-ayrac" aria-hidden="true"></span><button type="button" class="ikon-dugme" data-k="blockquote" title="Alıntı" aria-label="Alıntı"><i class="fa-solid fa-quote-left" aria-hidden="true"></i></button><button type="button" class="ikon-dugme" data-k="link" title="Bağlantı" aria-label="Bağlantı" data-eylem="calistir" data-ad="Bağlantı"><i class="fa-solid fa-link" aria-hidden="true"></i></button><span class="duzenleyici-ayrac" aria-hidden="true"></span><button type="button" class="ikon-dugme" data-k="removeFormat" title="Biçimi temizle" aria-label="Biçimi temizle"><i class="fa-solid fa-eraser" aria-hidden="true"></i></button><button type="button" class="ikon-dugme" data-k="code" title="Kaynağı gör" aria-label="Kaynağı gör" data-eylem="calistir" data-ad="Kaynağı gör"><i class="fa-solid fa-code" aria-hidden="true"></i></button></div><div class="duzenleyici-yuzey" contenteditable="true" role="textbox" aria-multiline="true" aria-label="İçerik" data-bos="Yazmaya başla…"></div><div class="duzenleyici-ayak"><span><b>0</b> kelime</span><span><b>0</b> karakter</span></div></div>
                 </div>
               </div>
+            </div>
+
+            <div class="form-bolum">
+              <h3 class="form-bolum-bas">
+                <i class="fa-solid fa-list-check" aria-hidden="true"></i> Bu Derste Ne Öğreneceksin?
+                <span class="alan-sayac" id="rfKazanimSay">1 kazanım</span>
+              </h3>
+              <div class="adim-liste" id="rfKazanimlar">
+                <div class="adim-karti">
+                  <span class="adim-no" data-klon-metin="">1</span>
+                  <div class="adim-govde">
+                    <div class="alan">
+                      <label class="alan-etiket">Kazanım maddesi</label>
+                      <input class="alan-girdi" type="text" data-field="kazanim" name="kazanim[]" maxlength="180" placeholder="Örn. Tavanın ısındığını su damlası testiyle kontrol edebilecek">
+                    </div>
+                    <input type="hidden" data-field="position" value="0">
+                  </div>
+                  <div class="adim-yan">
+                    <button class="ikon-dugme tutamak" type="button" data-eylem="sirala" aria-label="Kazanımı sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır">
+                      <i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button>
+                    <button class="ikon-dugme yikici" type="button" data-islem="sil" data-ad="Kazanımı sil" aria-label="Kazanımı sil">
+                      <i class="fa-solid fa-trash-can" aria-hidden="true"></i></button>
+                  </div>
+                </div>
+              </div>
+              <button class="satir-ekle" type="button" id="rfKazanimEkle">
+                <i class="fa-solid fa-plus" aria-hidden="true"></i> Kazanım ekle</button>
+              <div class="alan-yardim"><span>Ders sayfasının <b>“Bu Derste Ne Öğreneceksin?”</b> sekmesi. Ölçüldü: 10 ders sayfasının dokuzunda <b>5</b>, birinde <b>4</b> madde var — sayı sabit değil, kayıttan gelir. Her madde “…ebilecek” ile biten tek cümledir.</span></div>
             </div>
 
             <div class="form-bolum">
@@ -264,21 +329,21 @@
         </div>
         <div class="alan">
           <label class="alan-etiket">Gövde</label>
-          <textarea class="alan-metin" data-field="govde" name="bolum_govde[]" placeholder="Bölümün paragrafları."></textarea><div class="metin-duzenleyici"><div class="duzenleyici-cubuk" role="toolbar" aria-label="Metin biçimlendirme"><button type="button" class="ikon-dugme" data-k="undo" title="Geri al" aria-label="Geri al"><i class="fa-solid fa-rotate-left" aria-hidden="true"></i></button><button type="button" class="ikon-dugme" data-k="redo" title="İleri al" aria-label="İleri al"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i></button><span class="duzenleyici-ayrac" aria-hidden="true"></span><select class="alan-secim" aria-label="Blok biçimi"><option value="p" selected="">Paragraf</option><option value="h2">Başlık 2</option><option value="blockquote">Alıntı</option></select><span class="duzenleyici-ayrac" aria-hidden="true"></span><button type="button" class="ikon-dugme" data-k="bold" title="Kalın" aria-label="Kalın"><i class="fa-solid fa-bold" aria-hidden="true"></i></button><button type="button" class="ikon-dugme" data-k="italic" title="İtalik" aria-label="İtalik"><i class="fa-solid fa-italic" aria-hidden="true"></i></button><span class="duzenleyici-ayrac" aria-hidden="true"></span><button type="button" class="ikon-dugme" data-k="insertUnorderedList" title="Madde listesi" aria-label="Madde listesi"><i class="fa-solid fa-list-ul" aria-hidden="true"></i></button><button type="button" class="ikon-dugme" data-k="insertOrderedList" title="Numaralı liste" aria-label="Numaralı liste"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></button><span class="duzenleyici-ayrac" aria-hidden="true"></span><button type="button" class="ikon-dugme" data-k="blockquote" title="Alıntı" aria-label="Alıntı"><i class="fa-solid fa-quote-left" aria-hidden="true"></i></button><button type="button" class="ikon-dugme" data-k="link" title="Bağlantı" aria-label="Bağlantı"><i class="fa-solid fa-link" aria-hidden="true"></i></button><span class="duzenleyici-ayrac" aria-hidden="true"></span><button type="button" class="ikon-dugme" data-k="removeFormat" title="Biçimi temizle" aria-label="Biçimi temizle"><i class="fa-solid fa-eraser" aria-hidden="true"></i></button><button type="button" class="ikon-dugme" data-k="code" title="Kaynağı gör" aria-label="Kaynağı gör"><i class="fa-solid fa-code" aria-hidden="true"></i></button></div><div class="duzenleyici-yuzey" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Bölümün paragrafları." data-bos="Bölümün paragrafları."></div><div class="duzenleyici-ayak"><span><b>0</b> kelime</span><span><b>0</b> karakter</span></div></div>
+          <textarea class="alan-metin" data-field="govde" name="bolum_govde[]" placeholder="Bölümün paragrafları."></textarea><div class="metin-duzenleyici"><div class="duzenleyici-cubuk" role="toolbar" aria-label="Metin biçimlendirme"><button type="button" class="ikon-dugme" data-k="undo" title="Geri al" aria-label="Geri al" data-eylem="calistir" data-ad="Geri al"><i class="fa-solid fa-rotate-left" aria-hidden="true"></i></button><button type="button" class="ikon-dugme" data-k="redo" title="İleri al" aria-label="İleri al" data-eylem="calistir" data-ad="İleri al"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i></button><span class="duzenleyici-ayrac" aria-hidden="true"></span><select class="alan-secim" aria-label="Blok biçimi"><option value="p" selected="">Paragraf</option><option value="h2">Başlık 2</option><option value="blockquote">Alıntı</option></select><span class="duzenleyici-ayrac" aria-hidden="true"></span><button type="button" class="ikon-dugme" data-k="bold" title="Kalın" aria-label="Kalın"><i class="fa-solid fa-bold" aria-hidden="true"></i></button><button type="button" class="ikon-dugme" data-k="italic" title="İtalik" aria-label="İtalik"><i class="fa-solid fa-italic" aria-hidden="true"></i></button><span class="duzenleyici-ayrac" aria-hidden="true"></span><button type="button" class="ikon-dugme" data-k="insertUnorderedList" title="Madde listesi" aria-label="Madde listesi"><i class="fa-solid fa-list-ul" aria-hidden="true"></i></button><button type="button" class="ikon-dugme" data-k="insertOrderedList" title="Numaralı liste" aria-label="Numaralı liste"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></button><span class="duzenleyici-ayrac" aria-hidden="true"></span><button type="button" class="ikon-dugme" data-k="blockquote" title="Alıntı" aria-label="Alıntı"><i class="fa-solid fa-quote-left" aria-hidden="true"></i></button><button type="button" class="ikon-dugme" data-k="link" title="Bağlantı" aria-label="Bağlantı" data-eylem="calistir" data-ad="Bağlantı"><i class="fa-solid fa-link" aria-hidden="true"></i></button><span class="duzenleyici-ayrac" aria-hidden="true"></span><button type="button" class="ikon-dugme" data-k="removeFormat" title="Biçimi temizle" aria-label="Biçimi temizle"><i class="fa-solid fa-eraser" aria-hidden="true"></i></button><button type="button" class="ikon-dugme" data-k="code" title="Kaynağı gör" aria-label="Kaynağı gör" data-eylem="calistir" data-ad="Kaynağı gör"><i class="fa-solid fa-code" aria-hidden="true"></i></button></div><div class="duzenleyici-yuzey" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Bölümün paragrafları." data-bos="Bölümün paragrafları."></div><div class="duzenleyici-ayak"><span><b>0</b> kelime</span><span><b>0</b> karakter</span></div></div>
         </div>
         <div class="alan">
           <label class="alan-etiket">Madde listesi <span class="acilir-kalem">— gövdenin altındaki maddeler</span></label>
           <div class="adim-liste" data-madde-liste=""></div>
-          <button class="satir-ekle" type="button" data-madde-ekle="">
+          <button class="satir-ekle" type="button" data-madde-ekle="" data-eylem="satir-ekle">
             <i class="fa-solid fa-plus" aria-hidden="true"></i> Madde ekle</button>
         </div>
       </div>
       <input type="hidden" data-field="position" value="0">
     </div>
     <div class="adim-yan">
-      <button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Bölümü sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır">
+      <button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Bölümü sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır" data-eylem="sirala">
         <i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button>
-      <button class="ikon-dugme yikici" type="button" title="Bölümü sil" aria-label="Bölümü sil">
+      <button class="ikon-dugme yikici" type="button" title="Bölümü sil" aria-label="Bölümü sil" data-islem="sil">
         <i class="fa-solid fa-trash-can" aria-hidden="true"></i></button>
     </div>
   </div></div>
@@ -306,7 +371,7 @@
                 </div>
                 <div class="alan">
                   <label for="rfCanon" class="alan-etiket">Canonical adres</label>
-                  <input class="alan-girdi" id="rfCanon" name="canonical" type="url" placeholder="https://dadagastro.com/mutfaga-giris/…">
+                  <input data-girdi="url" class="alan-girdi" id="rfCanon" name="canonical" type="url" placeholder="https://dadagastro.com/mutfaga-giris/…">
                   <div class="alan-yardim"><span>Ölçüldü: bugün <b>115 Gastro sayfasının 112'sinde</b> canonical boş; Mutfağa Giriş'in 15 sayfasının 15'inde de yok — Sayfalar ve SEO ekranı aynı eksiği gösteriyor.</span></div>
                 </div>
                 <div class="alan">
@@ -324,10 +389,10 @@
 
           <div class="form-eylem kart-alt">
             <a class="dugme hayalet" href="admin-mutfaga-giris.html">İptal</a>
-            <button class="dugme hayalet" type="button" id="rfTaslak">Taslak kaydet</button>
+            <button class="dugme hayalet" type="button" id="rfTaslak" data-eylem="taslak">Taslak kaydet</button>
             <button class="dugme birincil" type="button" id="rfKaydet">Dersi kaydet</button>
           </div>
-        <div class="bos-durum kart-ici" hidden=""><span class="bos-ikon"><i class="fa-solid fa-file-circle-question" aria-hidden="true"></i></span><h3>Bu adreste ders yok</h3><p>Adresteki slug Mutfağa Giriş'te karşılık bulmuyor. Listeye dön ve bir ders seç.</p><a class="dugme birincil" href="admin-mutfaga-giris.html">Mutfağa Giriş'e dön</a></div><div class="bos-durum kart-ici yetkisiz" data-durum="yetkisiz" hidden=""><span class="bos-ikon"><i class="fa-solid fa-lock" aria-hidden="true"></i></span><h3>Bu kaydı düzenleyemezsin</h3><p>Erişim istemek için yöneticinle görüş.</p></div><div class="bos-durum kart-ici servis-hatasi" data-durum="servis" hidden=""><span class="bos-ikon"><i class="fa-solid fa-plug-circle-xmark" aria-hidden="true"></i></span><h3>Kayıt yüklenemedi</h3><p>Bağlantı kurulamadı. Yeniden dene.</p><button class="dugme birincil" type="button"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i> Yeniden dene</button><div class="hata-izi">Referans kodu <code>GAS-ADM-5210</code></div></div></div>
+        <div class="bos-durum kart-ici" hidden=""><span class="bos-ikon"><i class="fa-solid fa-file-circle-question" aria-hidden="true"></i></span><h3>Bu adreste ders yok</h3><p>Adresteki slug Mutfağa Giriş'te karşılık bulmuyor. Listeye dön ve bir ders seç.</p><a class="dugme birincil" href="admin-mutfaga-giris.html">Mutfağa Giriş'e dön</a></div><div class="bos-durum kart-ici yetkisiz" data-durum="yetkisiz" hidden=""><span class="bos-ikon"><i class="fa-solid fa-lock" aria-hidden="true"></i></span><h3>Bu kaydı düzenleyemezsin</h3><p>Erişim istemek için yöneticinle görüş.</p></div><div class="bos-durum kart-ici servis-hatasi" data-durum="servis" hidden=""><span class="bos-ikon"><i class="fa-solid fa-plug-circle-xmark" aria-hidden="true"></i></span><h3>Kayıt yüklenemedi</h3><p>Bağlantı kurulamadı. Yeniden dene.</p><button class="dugme birincil" type="button" data-eylem="calistir" data-ad="Yeniden dene"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i> Yeniden dene</button><div class="hata-izi">Referans kodu <code>GAS-ADM-5210</code></div></div></div>
 
         <!-- ================= SAĞ KOLON ================= -->
         <aside class="form-yan">
@@ -371,7 +436,7 @@
             <div class="kart-govde">
               <div class="alan-yardim" style="margin-bottom:12px"><span>Silinen ders, ona bağlanan
                 <b id="rfBaglanti">0</b> konu sayfasından ve 12 adımlık rotadan da düşer; kırık bağlantı bırakmamak için önce o bağlantılar temizlenmeli.</span></div>
-              <button class="dugme hayalet tehlike tam-en" type="button" id="rfSil" data-yikici="Ders" data-fiil="sil" >
+              <button class="dugme hayalet tehlike tam-en" type="button" id="rfSil" data-yikici="Ders" data-fiil="sil"  data-islem="sil">
                 <i class="fa-solid fa-trash-can" aria-hidden="true"></i> Dersi sil</button>
             </div>
           </div>
@@ -383,4 +448,185 @@
   </div>
 </main>
 <script src="_ortak/panel.js" defer></script>
+<!-- ADMIN-KIT:JS:BAS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/7.3.0/tinymce.min.js" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/l10n/tr.js"></script>
+<script src="../../kanon/admin-editor-tr.js"></script>
+<script src="../../kanon/admin-kit.js" defer></script>
+<script src="../../kanon/admin-editor.js" defer></script>
+<script src="../../kanon/admin-tarih.js" defer></script>
+<!-- ADMIN-KIT:JS:SON -->
+<!-- KAYIT KAYNAGI — form kendi kayitlarini BILDIRIR (kit §5b).
+     ANAHTAR: satirin kendi `data-slug` degeri (merkez sayfa + 8 ders); 9/9 benzersiz.
+     baslik · slug · sure · yayin_tarihi  →  admin-mutfaga-giris.html satirlarindan.
+     `ust` satirin "Konu" sutunundan, formun kendi placeholder kalibiyla
+     ("Mutfaga Giris · <konu>") kuruldu — baska yerden gelmedi.
+     seviye · kazanim[] · sonraki · meta_*  →  dump/gastro/mutfaga-giris__<slug>.html
+     sayfasindan OLCULDU. Merkez sayfanin (mutfaga-giris) ders alanlari YOKTUR.
+     ⚠ firinda-pisirme-teknikleri sayfasi "Sıradaki ders" olarak
+        "Sos ve Karisim Hazirliklari"na isaret ediyor; bu ders admin listesinde
+        YOK, secenek uydurulmadi, alan bos birakildi. -->
+<script type="application/json" data-kayitlar>
+{
+ "mutfaga-giris": {
+  "baslik": "Mutfağa Giriş",
+  "slug": "mutfaga-giris",
+  "durum": "yayin",
+  "yayin_tarihi": "2026-08-21"
+ },
+ "mutfaga-giris__mutfak-duzeni-ve-calisma-alani": {
+  "baslik": "Mutfak Düzeni ve Çalışma Alanı",
+  "slug": "mutfak-duzeni-ve-calisma-alani",
+  "durum": "yayin",
+  "ust": "Mutfağa Giriş · Mutfak Temelleri ve Güvenlik",
+  "sure": 15,
+  "yayin_tarihi": "2026-08-19",
+  "seviye": "baslangic",
+  "kazanim": [
+   "Üç bölgeli çalışma düzenini kendi mutfağına uygulayabilecek",
+   "Mise en place alışkanlığını pişirmeye başlamadan önce uygulayabilecek",
+   "Tezgahı ve kesme tahtasını doğru mesafe ve sabitlikte kurabilecek",
+   "Aydınlatma ve kablo güvenliği açısından riskli noktaları fark edebilecek",
+   "Küçük bir mutfakta alanı verimli kullanmayı planlayabilecek"
+  ],
+  "meta_title": "Mutfak Düzeni ve Çalışma Alanı | Mutfağa Giriş",
+  "meta_desc": "Üç bölgeli çalışma düzenini, mise en place alışkanlığını ve tezgah güvenliğini öğrenerek mutfakta daha hızlı ve güvenli çalış.",
+  "sonraki": "temel-bicak-turleri-ve-kullanimlari"
+ },
+ "mutfaga-giris__mutfakta-kullanilan-temel-araclar": {
+  "baslik": "Mutfakta Kullanılan Temel Araçlar",
+  "slug": "mutfakta-kullanilan-temel-araclar",
+  "durum": "yayin",
+  "ust": "Mutfağa Giriş · Mutfak Temelleri ve Güvenlik",
+  "sure": 12,
+  "yayin_tarihi": "2026-08-19",
+  "seviye": "baslangic",
+  "kazanim": [
+   "Şef bıçağı, soyma bıçağı ve ekmek bıçağını doğru işe ayırabilecek",
+   "Kesme tahtasının yıpranma belirtilerini fark edebilecek",
+   "Tencere ve tavayı pişirme yöntemine göre seçebilecek",
+   "Kuru ve sıvı malzemeyi doğru araçla ölçebilecek",
+   "Fırın ekipmanlarını (tepsi, kalıp, ızgara) doğru işte kullanabilecek"
+  ],
+  "meta_title": "Mutfakta Kullanılan Temel Araçlar | Dada Gastro",
+  "meta_desc": "Bıçaktan kesme tahtasına, ölçü kaşığından fırın tepsisine mutfağındaki temel araçları tanı ve her birini doğru işte kullanmayı öğren.",
+  "sonraki": "mutfak-duzeni-ve-calisma-alani"
+ },
+ "mutfaga-giris__gida-guvenligi-ve-hijyen-kurallari": {
+  "baslik": "Gıda Güvenliği ve Hijyen Kuralları",
+  "slug": "gida-guvenligi-ve-hijyen-kurallari",
+  "durum": "yayin",
+  "ust": "Mutfağa Giriş · Mutfak Temelleri ve Güvenlik",
+  "sure": 15,
+  "yayin_tarihi": "2026-08-18",
+  "seviye": "baslangic",
+  "kazanim": [
+   "Elini ve çalışma yüzeylerini doğru şekilde temizleyebilecek",
+   "Çiğ ve pişmiş ürünleri ayrı ekipmanla işleyebilecek",
+   "Çapraz bulaşma riskini fark edip önleyebilecek",
+   "Yağ yangınında doğru ilk müdahaleyi yapabilecek",
+   "Buzdolabı ve dondurucu sıcaklıklarını kontrol edebilecek"
+  ],
+  "meta_title": "Mutfak Güvenliği ve Hijyen Kuralları | Dada Gastro",
+  "meta_desc": "El yıkamadan çapraz bulaşmaya, yağ yangınında doğru tepkiye kadar mutfak güvenliğinin temel kurallarını Mutfağa Giriş rotasının ilk dersinde öğren.",
+  "sonraki": "mutfak-duzeni-ve-calisma-alani"
+ },
+ "mutfaga-giris__temel-bicak-turleri-ve-kullanimlari": {
+  "baslik": "Temel Bıçak Türleri ve Kullanımları",
+  "slug": "temel-bicak-turleri-ve-kullanimlari",
+  "durum": "yayin",
+  "ust": "Mutfağa Giriş · Bıçak ve Hazırlık Teknikleri",
+  "sure": 20,
+  "yayin_tarihi": "2026-08-17",
+  "seviye": "baslangic",
+  "kazanim": [
+   "Şef, soyma, ekmek ve fileto bıçağının hangi işe uygun olduğunu ayırt edebilecek",
+   "Bıçağı kıskaç kavramayla tutabilecek",
+   "Rehber elini pençe tekniğiyle konumlandırabilecek",
+   "Perdahlama ile bileme arasındaki farkı bilip ikisini doğru sıklıkta uygulayabilecek",
+   "Bıçağı güvenli biçimde taşıyıp saklayabilecek"
+  ],
+  "meta_title": "Temel Bıçak Türleri ve Kullanımları | Mutfağa Giriş",
+  "meta_desc": "Şef, soyma, ekmek ve fileto bıçağının farkını, doğru kavramayı, pençe tekniğini ve bıçak bakımını öğren.",
+  "sonraki": "sebze-ve-meyve-hazirlama-teknikleri"
+ },
+ "mutfaga-giris__sebze-ve-meyve-hazirlama-teknikleri": {
+  "baslik": "Sebze ve Meyve Hazırlama Teknikleri",
+  "slug": "sebze-ve-meyve-hazirlama-teknikleri",
+  "durum": "yayin",
+  "ust": "Mutfağa Giriş · Bıçak ve Hazırlık Teknikleri",
+  "sure": 15,
+  "yayin_tarihi": "2026-08-17",
+  "seviye": "baslangic",
+  "kazanim": [
+   "Sebze ve meyveyi doğru yöntemle yıkayıp ayıklayabilecek",
+   "Julienne, brunoise ve chiffonade kesim tekniklerini uygulayabilecek",
+   "Kesilen sebze ve meyvede kararmayı (oksitlenmeyi) önleyebilecek",
+   "Meyveyi sebzeden farklı bir özenle hazırlayabilecek",
+   "Mise en place ilkesiyle hazırlığı pişirmeden önce tamamlayabilecek"
+  ],
+  "meta_title": "Sebze ve Meyve Hazırlama Teknikleri | Dada Gastro",
+  "meta_desc": "Sebze ve meyveyi doğru yıkamayı, julienne/brunoise kesim tekniklerini, kararmayı önlemeyi ve mise en place ilkesini Mutfağa Giriş rotasında öğren.",
+  "sonraki": "haslama-sudan-fazlasi"
+ },
+ "mutfaga-giris__tavada-pisirme-teknikleri": {
+  "baslik": "Tavada Pişirme Teknikleri",
+  "slug": "tavada-pisirme-teknikleri",
+  "durum": "yayin",
+  "ust": "Mutfağa Giriş · Temel Pişirme Teknikleri",
+  "sure": 16,
+  "yayin_tarihi": "2026-08-16",
+  "seviye": "orta",
+  "kazanim": [
+   "Tavanın ısındığını su damlası testiyle kontrol edebilecek",
+   "Malzemeye uygun yağı ve duman noktasını gözetebilecek",
+   "Tavayı doldurmadan malzemeyi tek katman hâlinde pişirebilecek",
+   "Kızarma (Maillard) ile buharlaşma arasındaki farkı ayırt edebilecek",
+   "Tavuklu veya kıymalı sote hazırlarken güvenli iç sıcaklığı kontrol edebilecek"
+  ],
+  "meta_title": "Tavada Pişirme Teknikleri: Soteleme ve Mühürleme",
+  "meta_desc": "Doğru tava seçimi, ısı kontrolü, yağ seçimi ve malzeme ekleme sırasıyla soteleme ve mühürleme tekniklerini adım adım öğren.",
+  "sonraki": "firinda-pisirme-teknikleri"
+ },
+ "mutfaga-giris__firinda-pisirme-teknikleri": {
+  "baslik": "Fırında Pişirme Teknikleri",
+  "slug": "firinda-pisirme-teknikleri",
+  "durum": "yayin",
+  "ust": "Mutfağa Giriş · Temel Pişirme Teknikleri",
+  "sure": 15,
+  "yayin_tarihi": "2026-08-16",
+  "seviye": "orta",
+  "kazanim": [
+   "Fırını hedef sıcaklığa gelene kadar önceden ısıtabilecek",
+   "Yemeğin türüne göre doğru raf konumunu seçebilecek",
+   "Fanlı ve fansız ayar arasındaki sıcaklık farkını hesaba katabilecek",
+   "Pişirme kabının malzemesine göre süreyi ayarlayabilecek",
+   "Fırında pişen tavuk ve balık gibi ürünlerde güvenli iç sıcaklığı kontrol edebilecek"
+  ],
+  "meta_title": "Fırında Pişirme Teknikleri: Isıtma, Raf ve Kap Seçimi",
+  "meta_desc": "Fırını önceden ısıtmayı, doğru raf konumunu, fanlı-fansız ayar farkını ve pişirme kabı seçimini adım adım öğrenerek tutarlı sonuçlar al."
+ },
+ "mutfaga-giris__haslama-sudan-fazlasi": {
+  "baslik": "Haşlama: Sudan Fazlası",
+  "slug": "haslama-sudan-fazlasi",
+  "durum": "yayin",
+  "ust": "Mutfağa Giriş · Temel Pişirme Teknikleri",
+  "sure": 20,
+  "yayin_tarihi": "2026-08-15",
+  "seviye": "baslangic",
+  "kazanim": [
+   "Haşlama suyunun tuz oranını doğru ayarlayabilecek",
+   "Yeşil sebzeyi rengini koruyarak haşlayabilecek",
+   "Şoklama adımını doğru zamanda uygulayabilecek",
+   "Buhar kabını su seviyesi ve kapak kullanımı açısından doğru kurabilecek",
+   "Haşlama ile buharda pişirme arasında duruma göre doğru seçim yapabilecek"
+  ],
+  "meta_title": "Haşlama ve Buharda Pişirme Teknikleri | Dada Gastro",
+  "meta_desc": "Sebzeyi doğru tuz oranıyla haşlamayı, rengini korumayı, şoklamayı ve buhar kabında güvenli pişirmeyi Mutfağa Giriş rotasında öğren.",
+  "sonraki": "tavada-pisirme-teknikleri"
+ }
+}
+</script>
+
 </body></html>

@@ -8,8 +8,12 @@
 <link rel="stylesheet" href="../../kanon/markalar/gastro.css">
 <link rel="stylesheet" href="../../kanon/bilesenler.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<!-- ADMIN-KIT:CSS:BAS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.css">
+<link rel="stylesheet" href="../../kanon/admin.css">
+<!-- ADMIN-KIT:CSS:SON -->
 </head>
-<body class="yetkili">
+<body class="yetkili" data-marka="gastro">
 <!-- ═══ GASTRO ADMIN · KANONİK KABUK — lead üretti, agent DEĞİŞTİRMEZ.
      Kaynak: deneme/admin-fit/_ortak/kabuk.html · üretim: scripts/olcum/gadm-kabuk-uret.mjs
      Şerh ve ikon kaynakları: deneme/admin-gastro/_ortak/kabuk-serh.txt ═══ -->
@@ -18,22 +22,34 @@
   <a class="panel-ray-ikon aktif" href="#" style="--eko:var(--eko-gastro)"
      aria-current="true" title="DadaGastro" aria-label="DadaGastro"><i class="fa-solid fa-utensils"></i></a>
   <span class="panel-ray-ayrac" role="presentation"></span>
+  <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-diet)"    title="DadaDiet"    aria-label="DadaDiet"><i class="fa-solid fa-heart-pulse"></i></a>
+  <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-gourmet)" title="DadaGourmet" aria-label="DadaGourmet"><i class="fa-solid fa-map-location-dot"></i></a>
   <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-fit)"  title="DadaFit"  aria-label="DadaFit"><i class="fa-solid fa-dumbbell"></i></a>
-  <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-diet)"    title="DadaDiet"    aria-label="DadaDiet"><i class="fa-solid fa-leaf"></i></a>
-  <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-gourmet)" title="DadaGourmet" aria-label="DadaGourmet"><i class="fa-solid fa-wine-glass"></i></a>
   <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-campus)"  title="DadaCampus"  aria-label="DadaCampus"><i class="fa-solid fa-graduation-cap"></i></a>
+  <span class="panel-ray-ikon kilitli" title="DadaStore — erişimin yok" aria-label="DadaStore, erişim yok"><i class="fa-solid fa-bag-shopping"></i></span>
   <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-mentor)"  title="DadaMentor"  aria-label="DadaMentor"><i class="fa-solid fa-compass"></i></a>
-  <span class="panel-ray-ikon kilitli" title="DadaStore — erişimin yok" aria-label="DadaStore, erişim yok"><i class="fa-solid fa-lock"></i></span>
   <div class="panel-ray-alt">
     <a class="panel-ray-ikon" href="#" title="Yardım" aria-label="Yardım"><i class="fa-solid fa-circle-question"></i></a>
+<!-- ADMIN-KIT:IMZA:BAS -->
+    <a class="panel-ray-imza" href="https://gaviaworks.com" target="_blank" rel="noopener"
+       title="Gaviaworks" aria-label="Gaviaworks — gaviaworks.com">
+      <span class="yalniz-okuyucu">Gaviaworks</span>
+    </a>
+<!-- ADMIN-KIT:IMZA:SON -->
   </div>
 </aside>
 
 <!-- ── MODÜL MENÜSÜ · DÖRT KATEGORİ ───────────────────────────────── -->
 <nav class="panel-menu" id="panelMenu" aria-label="Modüller">
+<!-- ADMIN-KIT:KABUK:BAS -->
   <div class="panel-menu-bas">
-    <b>DadaGastro</b><span>Yönetim paneli</span>
+    <a class="panel-marka" href="admin-genel-bakis.html" aria-label="DadaGastro yönetim paneli">
+      <span class="yalniz-okuyucu">DadaGastro · Yönetim paneli</span>
+    </a>
   </div>
+  <button type="button" class="panel-katla" aria-pressed="false"
+          aria-label="Menüyü daralt"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i></button>
+<!-- ADMIN-KIT:KABUK:SON -->
   <div class="panel-menu-govde">
 
     <div class="panel-menu-bolum">01 Genel</div>
@@ -192,7 +208,7 @@
                   <div class="slug-alani">
                     <span class="slug-onek">puf-noktalari/&lt;slug&gt;dadagastro.com/puf-noktalari/</span>
                     <!-- 🔴 TİRE KAÇIRILIYOR — gerekçe `admin-testler-v1.html:127`de. -->
-                    <input class="alan-girdi" id="tfSlug" name="slug" type="text" required="" maxlength="60" pattern="[a-z0-9\-]+" placeholder="pilav" data-zorunlu="1">
+                    <input data-girdi="slug" class="alan-girdi" id="tfSlug" name="slug" type="text" required="" maxlength="60" pattern="[a-z0-9\-]+" placeholder="pilav" data-zorunlu="1">
                   </div>
                   <div class="alan-yardim"><span>Yalnız küçük harf, rakam ve tire.</span></div>
                 </div>
@@ -237,8 +253,8 @@
                 <i class="fa-solid fa-list-check" aria-hidden="true"></i> Öne çıkan maddeler
                 <span class="alan-sayac" id="tfAmacSay">1 madde</span>
               </h3>
-              <div class="adim-liste" id="tfAmacList"><div class="adim-karti"><span class="adim-no">1</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-list-check" aria-hidden="true"></i> Madde</span><input class="alan-girdi" type="text" name="amac_madde[]" data-field="metin" placeholder="Örn. Pilavın neden lapa olduğunu tek bir ölçüyle görünür kılar."><input type="hidden" data-field="position" value="0"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Satırı sil" aria-label="Satırı sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div></div>
-              <button class="satir-ekle" type="button" id="tfAmacEkle">
+              <div class="adim-liste" id="tfAmacList"><div class="adim-karti"><span class="adim-no">1</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-list-check" aria-hidden="true"></i> Madde</span><input class="alan-girdi" type="text" name="amac_madde[]" data-field="metin" placeholder="Örn. Pilavın neden lapa olduğunu tek bir ölçüyle görünür kılar."><input type="hidden" data-field="position" value="0"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır" data-eylem="sirala"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Satırı sil" aria-label="Satırı sil" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div></div>
+              <button class="satir-ekle" type="button" id="tfAmacEkle" data-eylem="satir-ekle">
                 <i class="fa-solid fa-plus" aria-hidden="true"></i> Madde ekle</button>
               <div class="alan-yardim" style="margin-top:10px"><span>Giriş paragrafının altında madde madde basılır. Tutamağı sürükleyerek ya da odaktayken ↑ / ↓ ile taşı.</span></div>
             </div>
@@ -251,7 +267,7 @@
                 <i class="fa-solid fa-toolbox" aria-hidden="true"></i> Gerekli malzeme
                 <span class="alan-sayac" id="tfEkipmanSay">1 kalem</span>
               </h3>
-              <div class="adim-liste" id="tfEkipman"><div class="adim-karti"><span class="adim-no">1</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-basket-shopping" aria-hidden="true"></i> Malzeme</span><input class="alan-girdi" type="text" name="ekipman[]" data-field="metin" placeholder="Örn. Ölçü kabı veya mutfak terazisi"><input type="hidden" data-field="position" value="0"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Satırı sil" aria-label="Satırı sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div></div>
+              <div class="adim-liste" id="tfEkipman"><div class="adim-karti"><span class="adim-no">1</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-basket-shopping" aria-hidden="true"></i> Malzeme</span><input class="alan-girdi" type="text" name="ekipman[]" data-field="metin" placeholder="Örn. Ölçü kabı veya mutfak terazisi"><input type="hidden" data-field="position" value="0"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır" data-eylem="sirala"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Satırı sil" aria-label="Satırı sil" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div></div>
               <button class="satir-ekle" type="button" id="tfEkipmanEkle">
                 <i class="fa-solid fa-plus" aria-hidden="true"></i> Malzeme ekle</button>
               <div class="alan-yardim" style="margin-top:10px"><span>Liste, cevaplarda gerçekten geçeni saymalı — cevapta geçmeyen malzeme üyeye gereksiz bir engel koyar.</span></div>
@@ -262,8 +278,8 @@
                 <i class="fa-solid fa-shoe-prints" aria-hidden="true"></i> Soru–cevap dizisi
                 <span class="alan-sayac" id="tfAdimSay">1 adım</span>
               </h3>
-              <div class="adim-liste" id="tfAdimlar"><div class="adim-karti"><span class="adim-no">1</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-shoe-prints" aria-hidden="true"></i> Adım</span><input class="alan-girdi" type="text" name="adim_baslik[]" data-field="baslik" maxlength="60" placeholder="Soru başlığı — örn. Su oranı" aria-label="Soru başlığı"><textarea class="alan-metin" name="adim_metin[]" data-field="metin" placeholder="Sorunun cevabı — ne yapılacak, neye dikkat edilecek?" aria-label="Soru cevabı"></textarea><input type="hidden" data-field="position" value="0"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Adımı sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Adımı sil" aria-label="Adımı sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div></div>
-              <button class="satir-ekle" type="button" id="tfAdimEkle">
+              <div class="adim-liste" id="tfAdimlar"><div class="adim-karti"><span class="adim-no">1</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-shoe-prints" aria-hidden="true"></i> Adım</span><input class="alan-girdi" type="text" name="adim_baslik[]" data-field="baslik" maxlength="60" placeholder="Soru başlığı — örn. Su oranı" aria-label="Soru başlığı"><textarea class="alan-metin" name="adim_metin[]" data-field="metin" placeholder="Sorunun cevabı — ne yapılacak, neye dikkat edilecek?" aria-label="Soru cevabı"></textarea><input type="hidden" data-field="position" value="0"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Adımı sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır" data-eylem="sirala"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Adımı sil" aria-label="Adımı sil" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div></div>
+              <button class="satir-ekle" type="button" id="tfAdimEkle" data-eylem="satir-ekle">
                 <i class="fa-solid fa-plus" aria-hidden="true"></i> Adım ekle</button>
               <div class="alan-yardim" style="margin-top:10px"><span>Her sorunun <b>başlığı</b> ve
                 <b>cevabı</b> ayrı alanlardır; detay sayfası ikisini de basar. Sıra public tarafta aynen görünür. Ölçüldü: püf detayı serbest metin değil, dört soru başlığı taşıyor.</span></div>
@@ -274,8 +290,8 @@
                 <i class="fa-solid fa-user-check" aria-hidden="true"></i> Kimin işine yarar
                 <span class="alan-sayac" id="tfUygunSay">1 madde</span>
               </h3>
-              <div class="adim-liste" id="tfUygun"><div class="adim-karti"><span class="adim-no">1</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-user-check" aria-hidden="true"></i> Uygun</span><input class="alan-girdi" type="text" name="uygun[]" data-field="metin" placeholder="Örn. İlk kez pilav pişirenler"><input type="hidden" data-field="position" value="0"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Satırı sil" aria-label="Satırı sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div></div>
-              <button class="satir-ekle" type="button" id="tfUygunEkle">
+              <div class="adim-liste" id="tfUygun"><div class="adim-karti"><span class="adim-no">1</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-user-check" aria-hidden="true"></i> Uygun</span><input class="alan-girdi" type="text" name="uygun[]" data-field="metin" placeholder="Örn. İlk kez pilav pişirenler"><input type="hidden" data-field="position" value="0"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır" data-eylem="sirala"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Satırı sil" aria-label="Satırı sil" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div></div>
+              <button class="satir-ekle" type="button" id="tfUygunEkle" data-eylem="satir-ekle">
                 <i class="fa-solid fa-plus" aria-hidden="true"></i> Madde ekle</button>
             </div>
 
@@ -284,8 +300,8 @@
                 <i class="fa-solid fa-user-xmark" aria-hidden="true"></i> Kimin işine yaramaz
                 <span class="alan-sayac" id="tfUygunDegilSay">1 madde</span>
               </h3>
-              <div class="adim-liste" id="tfUygunDegil"><div class="adim-karti"><span class="adim-no">1</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-user-xmark" aria-hidden="true"></i> Uygun değil</span><input class="alan-girdi" type="text" name="uygun_degil[]" data-field="metin" placeholder="Örn. Glutensiz beslenmen gerekiyorsa"><input type="hidden" data-field="position" value="0"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Satırı sil" aria-label="Satırı sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div></div>
-              <button class="satir-ekle" type="button" id="tfUygunDegilEkle">
+              <div class="adim-liste" id="tfUygunDegil"><div class="adim-karti"><span class="adim-no">1</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-user-xmark" aria-hidden="true"></i> Uygun değil</span><input class="alan-girdi" type="text" name="uygun_degil[]" data-field="metin" placeholder="Örn. Glutensiz beslenmen gerekiyorsa"><input type="hidden" data-field="position" value="0"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır" data-eylem="sirala"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Satırı sil" aria-label="Satırı sil" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div></div>
+              <button class="satir-ekle" type="button" id="tfUygunDegilEkle" data-eylem="satir-ekle">
                 <i class="fa-solid fa-plus" aria-hidden="true"></i> Madde ekle</button>
               <div class="alan-yardim" style="margin-top:10px"><span>🔴 Bu liste püf noktasının alerjen taramasını besler: eşleşen bir madde varsa kayıt <b>başlamaz</b>.</span></div>
             </div>
@@ -295,7 +311,7 @@
                 <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> Ek alerjen notu
                 <span class="alan-sayac" id="tfGuvenlikSay">1 not</span>
               </h3>
-              <div class="adim-liste" id="tfGuvenlik"><div class="adim-karti"><span class="adim-no">1</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> Uyarı</span><input class="alan-girdi" type="text" name="guvenlik[]" data-field="metin" placeholder="Public sayfadaki alerjen notunu buraya taşı — yeniden yazma."><input type="hidden" data-field="position" value="0"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Satırı sil" aria-label="Satırı sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div></div>
+              <div class="adim-liste" id="tfGuvenlik"><div class="adim-karti"><span class="adim-no">1</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> Uyarı</span><input class="alan-girdi" type="text" name="guvenlik[]" data-field="metin" placeholder="Public sayfadaki alerjen notunu buraya taşı — yeniden yazma."><input type="hidden" data-field="position" value="0"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır" data-eylem="sirala"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Satırı sil" aria-label="Satırı sil" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div></div>
               <button class="satir-ekle" type="button" id="tfGuvenlikEkle">
                 <i class="fa-solid fa-plus" aria-hidden="true"></i> Not ekle</button>
               <div class="alan-yardim" style="margin-top:10px"><span>🔴 <b>Sağlık metni — taşınır, yeniden yazılmaz.</b> Bu püf noktasının bugünkü alerjen notları
@@ -311,8 +327,8 @@
                 <i class="fa-solid fa-circle-question" aria-hidden="true"></i> Sık sorulanlar
                 <span class="alan-sayac" id="tfSoruSay">1 soru</span>
               </h3>
-              <div class="adim-liste" id="tfSorular"><div class="adim-karti"><span class="adim-no">1</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-circle-question" aria-hidden="true"></i> SSS sorusu</span><textarea class="alan-metin" name="soru[]" data-field="soru" maxlength="200" placeholder="Detayın sonunda üyeye sorulan soru." aria-label="SSS sorusu"></textarea><input type="hidden" data-field="position" value="0"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Soruyu sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Soruyu sil" aria-label="Soruyu sil" disabled=""><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div></div>
-              <button class="satir-ekle" type="button" id="tfSoruEkle">
+              <div class="adim-liste" id="tfSorular"><div class="adim-karti"><span class="adim-no">1</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-circle-question" aria-hidden="true"></i> SSS sorusu</span><textarea class="alan-metin" name="soru[]" data-field="soru" maxlength="200" placeholder="Detayın sonunda üyeye sorulan soru." aria-label="SSS sorusu"></textarea><input type="hidden" data-field="position" value="0"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Soruyu sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır" data-eylem="sirala"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Soruyu sil" aria-label="Soruyu sil" disabled="" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div></div>
+              <button class="satir-ekle" type="button" id="tfSoruEkle" data-eylem="satir-ekle">
                 <i class="fa-solid fa-plus" aria-hidden="true"></i> Soru ekle</button>
               <div class="alan-yardim" style="margin-top:10px"><span>🔴 <b>YAPI KARARI — lead'e sorulacak.</b>
                 Bugün her püf noktası <b>dört soruludur</b>: veride <code>olcumSoru</code> dört başlık taşıyor ve gövde onların altına yazılıyor. Bu alan çoklu soru setine <b>hazır</b> kuruldu (tekrarlayan
@@ -327,13 +343,40 @@
                 <i class="fa-solid fa-diagram-project" aria-hidden="true"></i> Sonuç bantları
                 <span class="alan-sayac" id="tfBantSay">3 bant</span>
               </h3>
-              <div class="adim-liste" id="tfBantlar"><div class="adim-karti"><span class="adim-no">1</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-diagram-project" aria-hidden="true"></i> Bağ satırı</span><div class="alan kart-izgara c2"><div class="alan"><label class="alan-etiket">Bağ türü <span class="zorunlu">*</span></label><input class="alan-girdi" type="text" name="bant_olcut[]" data-field="olcut" maxlength="60" placeholder="Örn. tarif bağı" data-zorunlu="1"></div><div class="alan"><label class="alan-etiket">Hedef tür <span class="zorunlu">*</span></label><select class="alan-secim" name="bant_lv[]" data-field="lv" data-zorunlu="1"><option value="1" selected="">1 · Tarif</option><option value="2">2 · Ansiklopedi maddesi</option><option value="3">3 · Sözlük terimi</option></select></div></div><div class="alan"><label class="alan-etiket">Bağlanan kayıt <span class="zorunlu">*</span></label><select class="alan-secim" name="bant_prog[]" data-field="prog" data-zorunlu="1"><option value="" selected="">Kayıt seç…</option><option value="etli-kuru-fasulye">Etli Kuru Fasulye (tarif)</option><option value="adana-kebabi">Adana Kebabı (tarif)</option><option value="abaza-peyniri">Abaza Peyniri (madde)</option><option value="julyen">Jülyen (terim)</option></select></div><div class="alan"><label class="alan-etiket">Bağ özeti <span class="acilir-kalem">— sonuç sayfasında üyeye okunan metin</span></label><textarea class="alan-metin" name="bant_ozet[]" data-field="ozet" placeholder="Bu bağın hedefi üyeye ne söylüyor?"></textarea></div><input type="hidden" data-field="position" value="0"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Bandı sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Bandı sil" aria-label="Bandı sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div><div class="adim-karti"><span class="adim-no">2</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-diagram-project" aria-hidden="true"></i> Bağ satırı</span><div class="alan kart-izgara c2"><div class="alan"><label class="alan-etiket">Bağ türü <span class="zorunlu">*</span></label><input class="alan-girdi" type="text" name="bant_olcut[]" data-field="olcut" maxlength="60" placeholder="Örn. tarif bağı" data-zorunlu="1"></div><div class="alan"><label class="alan-etiket">Hedef tür <span class="zorunlu">*</span></label><select class="alan-secim" name="bant_lv[]" data-field="lv" data-zorunlu="1"><option value="1">1 · Tarif</option><option value="2" selected="">2 · Ansiklopedi maddesi</option><option value="3">3 · Sözlük terimi</option></select></div></div><div class="alan"><label class="alan-etiket">Bağlanan kayıt <span class="zorunlu">*</span></label><select class="alan-secim" name="bant_prog[]" data-field="prog" data-zorunlu="1"><option value="" selected="">Kayıt seç…</option><option value="etli-kuru-fasulye">Etli Kuru Fasulye (tarif)</option><option value="adana-kebabi">Adana Kebabı (tarif)</option><option value="abaza-peyniri">Abaza Peyniri (madde)</option><option value="julyen">Jülyen (terim)</option></select></div><div class="alan"><label class="alan-etiket">Bağ özeti <span class="acilir-kalem">— sonuç sayfasında üyeye okunan metin</span></label><textarea class="alan-metin" name="bant_ozet[]" data-field="ozet" placeholder="Bu bağın hedefi üyeye ne söylüyor?"></textarea></div><input type="hidden" data-field="position" value="1"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Bandı sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Bandı sil" aria-label="Bandı sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div><div class="adim-karti"><span class="adim-no">3</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-diagram-project" aria-hidden="true"></i> Bağ satırı</span><div class="alan kart-izgara c2"><div class="alan"><label class="alan-etiket">Bağ türü <span class="zorunlu">*</span></label><input class="alan-girdi" type="text" name="bant_olcut[]" data-field="olcut" maxlength="60" placeholder="Örn. tarif bağı" data-zorunlu="1"></div><div class="alan"><label class="alan-etiket">Hedef tür <span class="zorunlu">*</span></label><select class="alan-secim" name="bant_lv[]" data-field="lv" data-zorunlu="1"><option value="1">1 · Tarif</option><option value="2">2 · Ansiklopedi maddesi</option><option value="3" selected="">3 · Sözlük terimi</option></select></div></div><div class="alan"><label class="alan-etiket">Bağlanan kayıt <span class="zorunlu">*</span></label><select class="alan-secim" name="bant_prog[]" data-field="prog" data-zorunlu="1"><option value="" selected="">Kayıt seç…</option><option value="etli-kuru-fasulye">Etli Kuru Fasulye (tarif)</option><option value="adana-kebabi">Adana Kebabı (tarif)</option><option value="abaza-peyniri">Abaza Peyniri (madde)</option><option value="julyen">Jülyen (terim)</option></select></div><div class="alan"><label class="alan-etiket">Bağ özeti <span class="acilir-kalem">— sonuç sayfasında üyeye okunan metin</span></label><textarea class="alan-metin" name="bant_ozet[]" data-field="ozet" placeholder="Bu bağın hedefi üyeye ne söylüyor?"></textarea></div><input type="hidden" data-field="position" value="2"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Bandı sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Bandı sil" aria-label="Bandı sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div></div>
+              <div class="adim-liste" id="tfBantlar"><div class="adim-karti"><span class="adim-no">1</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-diagram-project" aria-hidden="true"></i> Bağ satırı</span><div class="alan kart-izgara c2"><div class="alan"><label class="alan-etiket">Bağ türü <span class="zorunlu">*</span></label><input class="alan-girdi" type="text" name="bant_olcut[]" data-field="olcut" maxlength="60" placeholder="Örn. tarif bağı" data-zorunlu="1"></div><div class="alan"><label class="alan-etiket">Hedef tür <span class="zorunlu">*</span></label><select class="alan-secim" name="bant_lv[]" data-field="lv" data-zorunlu="1"><option value="1" selected="">1 · Tarif</option><option value="2">2 · Ansiklopedi maddesi</option><option value="3">3 · Sözlük terimi</option></select></div></div><div class="alan"><label class="alan-etiket">Bağlanan kayıt <span class="zorunlu">*</span></label><select class="alan-secim" name="bant_prog[]" data-field="prog" data-zorunlu="1"><option value="" selected="">Kayıt seç…</option><option value="etli-kuru-fasulye">Etli Kuru Fasulye (tarif)</option><option value="adana-kebabi">Adana Kebabı (tarif)</option><option value="abaza-peyniri">Abaza Peyniri (madde)</option><option value="julyen">Jülyen (terim)</option></select></div><div class="alan"><label class="alan-etiket">Bağ özeti <span class="acilir-kalem">— sonuç sayfasında üyeye okunan metin</span></label><textarea class="alan-metin" name="bant_ozet[]" data-field="ozet" placeholder="Bu bağın hedefi üyeye ne söylüyor?"></textarea></div><input type="hidden" data-field="position" value="0"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Bandı sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır" data-eylem="sirala"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Bandı sil" aria-label="Bandı sil" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div><div class="adim-karti"><span class="adim-no">2</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-diagram-project" aria-hidden="true"></i> Bağ satırı</span><div class="alan kart-izgara c2"><div class="alan"><label class="alan-etiket">Bağ türü <span class="zorunlu">*</span></label><input class="alan-girdi" type="text" name="bant_olcut[]" data-field="olcut" maxlength="60" placeholder="Örn. tarif bağı" data-zorunlu="1"></div><div class="alan"><label class="alan-etiket">Hedef tür <span class="zorunlu">*</span></label><select class="alan-secim" name="bant_lv[]" data-field="lv" data-zorunlu="1"><option value="1">1 · Tarif</option><option value="2" selected="">2 · Ansiklopedi maddesi</option><option value="3">3 · Sözlük terimi</option></select></div></div><div class="alan"><label class="alan-etiket">Bağlanan kayıt <span class="zorunlu">*</span></label><select class="alan-secim" name="bant_prog[]" data-field="prog" data-zorunlu="1"><option value="" selected="">Kayıt seç…</option><option value="etli-kuru-fasulye">Etli Kuru Fasulye (tarif)</option><option value="adana-kebabi">Adana Kebabı (tarif)</option><option value="abaza-peyniri">Abaza Peyniri (madde)</option><option value="julyen">Jülyen (terim)</option></select></div><div class="alan"><label class="alan-etiket">Bağ özeti <span class="acilir-kalem">— sonuç sayfasında üyeye okunan metin</span></label><textarea class="alan-metin" name="bant_ozet[]" data-field="ozet" placeholder="Bu bağın hedefi üyeye ne söylüyor?"></textarea></div><input type="hidden" data-field="position" value="1"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Bandı sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır" data-eylem="sirala"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Bandı sil" aria-label="Bandı sil" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div><div class="adim-karti"><span class="adim-no">3</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-diagram-project" aria-hidden="true"></i> Bağ satırı</span><div class="alan kart-izgara c2"><div class="alan"><label class="alan-etiket">Bağ türü <span class="zorunlu">*</span></label><input class="alan-girdi" type="text" name="bant_olcut[]" data-field="olcut" maxlength="60" placeholder="Örn. tarif bağı" data-zorunlu="1"></div><div class="alan"><label class="alan-etiket">Hedef tür <span class="zorunlu">*</span></label><select class="alan-secim" name="bant_lv[]" data-field="lv" data-zorunlu="1"><option value="1">1 · Tarif</option><option value="2">2 · Ansiklopedi maddesi</option><option value="3" selected="">3 · Sözlük terimi</option></select></div></div><div class="alan"><label class="alan-etiket">Bağlanan kayıt <span class="zorunlu">*</span></label><select class="alan-secim" name="bant_prog[]" data-field="prog" data-zorunlu="1"><option value="" selected="">Kayıt seç…</option><option value="etli-kuru-fasulye">Etli Kuru Fasulye (tarif)</option><option value="adana-kebabi">Adana Kebabı (tarif)</option><option value="abaza-peyniri">Abaza Peyniri (madde)</option><option value="julyen">Jülyen (terim)</option></select></div><div class="alan"><label class="alan-etiket">Bağ özeti <span class="acilir-kalem">— sonuç sayfasında üyeye okunan metin</span></label><textarea class="alan-metin" name="bant_ozet[]" data-field="ozet" placeholder="Bu bağın hedefi üyeye ne söylüyor?"></textarea></div><input type="hidden" data-field="position" value="2"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Bandı sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır" data-eylem="sirala"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Bandı sil" aria-label="Bandı sil" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div></div>
               <button class="satir-ekle" type="button" id="tfBantEkle">
                 <i class="fa-solid fa-plus" aria-hidden="true"></i> Bağ ekle</button>
               <div class="alan-yardim" style="margin-top:10px"><span>Bantlar birlikte tüm sonuç uzayını
                 kaplamalı: boşluk kalırsa bazı yanıtlar hiçbir banda düşmez, çakışma olursa
                 aynı yanıt iki sonuç üretir. Bağlanan kayıt listesi detay sayfasının
                 gerçekten tanıdığı adreslerden gelir.</span></div>
+            </div>
+
+            <div class="form-bolum">
+              <h3 class="form-bolum-bas"><i class="fa-solid fa-lightbulb" aria-hidden="true"></i> Bunlar da işine yarar</h3>
+              <div>
+                <div class="alan">
+                  <label class="alan-etiket">İlişkili püf noktaları <span class="acilir-kalem">— detayın altındaki “Devam Et” bandında basılır</span></label>
+                  <div id="tfIlgili" class="coklu-secim" data-ad="ilgili"><div class="coklu-kutu"><input class="acilir-arama" type="text" placeholder="Püf noktası ara…" aria-label="Püf noktası ara" autocomplete="off" role="combobox" aria-expanded="false"></div><div class="acilir-yuzey" role="listbox" hidden=""></div></div>
+                  <div class="alan-yardim"><span>Sonuç bantlarından AYRIDIR: bant bir ölçüte göre
+                    yanıt üretir, bu bant üç ilişkili <b>püf noktası kaydını</b> gösterir.
+                    Boş bırakılırsa public taraf aynı kategoriden dolduran öneriyi basar.</span></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-bolum">
+              <h3 class="form-bolum-bas"><i class="fa-solid fa-comments" aria-hidden="true"></i> Yorum yönetimi</h3>
+              <div>
+                <div class="alan">
+                  <span>Yorumlara kapalı <span class="acilir-kalem">— detay sayfasında yorum bölümü hiç basılmaz</span></span>
+                  <label class="anahtar"><input type="checkbox" name="yorum_kapali">
+                    <span class="anahtar-ray"></span><span></span></label>
+                </div>
+                <div class="alan-yardim"><span>Yorumların kendisi burada değil
+                  <a href="admin-moderasyon.html">Moderasyon</a> ekranında incelenir; bu anahtar
+                  yalnız bu kayıtta yorum alınıp alınmayacağını belirler.</span></div>
+              </div>
             </div>
           </div>
 
@@ -354,7 +397,7 @@
                 </div>
                 <div class="alan">
                   <label for="tfCanon" class="alan-etiket">Canonical adres</label>
-                  <input class="alan-girdi" id="tfCanon" name="canonical" type="url" placeholder="https://dadagastro.com/puf-noktalari/…">
+                  <input data-girdi="url" class="alan-girdi" id="tfCanon" name="canonical" type="url" placeholder="https://dadagastro.com/puf-noktalari/…">
                 </div>
                 <div class="alan">
                   <label for="tfOdak" class="alan-etiket">Odak anahtar sözcük</label>
@@ -371,10 +414,10 @@
 
           <div class="form-eylem kart-alt">
             <a class="dugme hayalet" href="admin-puf-noktalari.html">İptal</a>
-            <button class="dugme hayalet" type="button" id="tfTaslak">Taslak kaydet</button>
+            <button class="dugme hayalet" type="button" id="tfTaslak" data-eylem="taslak">Taslak kaydet</button>
             <button class="dugme birincil" type="button" id="tfKaydet">Püf noktasını kaydet</button>
           </div>
-        <div class="bos-durum kart-ici" hidden=""><span class="bos-ikon"><i class="fa-solid fa-file-circle-question" aria-hidden="true"></i></span><h3>Bu adreste püf noktası yok</h3><p>Adresteki slug katalogda karşılık bulmuyor. Listeye dön ve bir püf noktası seç.</p><a class="dugme birincil" href="admin-puf-noktalari.html">Püf noktalarına dön</a></div><div class="bos-durum kart-ici yetkisiz" data-durum="yetkisiz" hidden=""><span class="bos-ikon"><i class="fa-solid fa-lock" aria-hidden="true"></i></span><h3>Bu kaydı düzenleyemezsin</h3><p>Erişim istemek için yöneticinle görüş.</p></div><div class="bos-durum kart-ici servis-hatasi" data-durum="servis" hidden=""><span class="bos-ikon"><i class="fa-solid fa-plug-circle-xmark" aria-hidden="true"></i></span><h3>Kayıt yüklenemedi</h3><p>Bağlantı kurulamadı. Yeniden dene.</p><button class="dugme birincil" type="button"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i> Yeniden dene</button><div class="hata-izi">Referans kodu <code>GAS-ADM-5207</code></div></div></div>
+        <div class="bos-durum kart-ici" hidden=""><span class="bos-ikon"><i class="fa-solid fa-file-circle-question" aria-hidden="true"></i></span><h3>Bu adreste püf noktası yok</h3><p>Adresteki slug katalogda karşılık bulmuyor. Listeye dön ve bir püf noktası seç.</p><a class="dugme birincil" href="admin-puf-noktalari.html">Püf noktalarına dön</a></div><div class="bos-durum kart-ici yetkisiz" data-durum="yetkisiz" hidden=""><span class="bos-ikon"><i class="fa-solid fa-lock" aria-hidden="true"></i></span><h3>Bu kaydı düzenleyemezsin</h3><p>Erişim istemek için yöneticinle görüş.</p></div><div class="bos-durum kart-ici servis-hatasi" data-durum="servis" hidden=""><span class="bos-ikon"><i class="fa-solid fa-plug-circle-xmark" aria-hidden="true"></i></span><h3>Kayıt yüklenemedi</h3><p>Bağlantı kurulamadı. Yeniden dene.</p><button class="dugme birincil" type="button" data-eylem="calistir" data-ad="Yeniden dene"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i> Yeniden dene</button><div class="hata-izi">Referans kodu <code>GAS-ADM-5207</code></div></div></div>
 
         <!-- ================= SAĞ KOLON ================= -->
         <aside class="form-yan">
@@ -424,7 +467,7 @@
             <div class="kart-bas"><h2 class="kart-baslik">Tehlikeli bölge</h2></div>
             <div class="kart-govde">
               <div class="alan-yardim" style="margin-bottom:12px"><span>Silinen püf noktası, Püf Noktaları sayfasındaki <b id="tfKart">0</b> karttan da düşer.</span></div>
-              <button class="dugme hayalet tehlike tam-en" type="button" id="tfSil" data-yikici="Püf noktası" data-fiil="sil" >
+              <button class="dugme hayalet tehlike tam-en" type="button" id="tfSil" data-yikici="Püf noktası" data-fiil="sil"  data-islem="sil">
                 <i class="fa-solid fa-trash-can" aria-hidden="true"></i> Püf noktasını sil</button>
             </div>
           </div>
@@ -436,4 +479,174 @@
   </div>
 </main>
 <script src="_ortak/panel.js" defer></script>
+<!-- ADMIN-KIT:JS:BAS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/7.3.0/tinymce.min.js" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/l10n/tr.js"></script>
+<script src="../../kanon/admin-editor-tr.js"></script>
+<script src="../../kanon/admin-kit.js" defer></script>
+<script src="../../kanon/admin-editor.js" defer></script>
+<script src="../../kanon/admin-tarih.js" defer></script>
+<!-- ADMIN-KIT:JS:SON -->
+<!-- KAYIT KAYNAĞI — form kendi kayıtlarını BİLDİRİR (admin-ui-kit §5b).
+     Anahtar = admin-puf-noktalari.html satırlarının `data-slug`ı (12 satır, çakışma yok).
+     ad · slug · kategori · adim_baslik ("Soru başlıkları" çipleri, 12×3)  → LİSTE SATIRI
+     ozet · ilgili                                                           → dump/gastro/puf-noktalari__<slug>.html (4 kayıt)
+     `adim_metin` (soru cevapları) HİÇBİR kayıtta bildirilmedi: listede cevap yok,
+     dump'taki H2 başlıkları da listedeki üç soruyla eşleşmiyor — uydurulmadı.
+     Formun 7 FAZLA alanı (ekipman/uygun/uygun_degil/guvenlik/soru/bant_*/tarama)
+     bilerek bildirilmedi; onlar bir BEYAR KARARI bekliyor (kapsama §4/3). -->
+<script type="application/json" data-kayitlar>
+{
+ "acilmis-domates-salcasi-nasil-saklanir": {
+  "ad": "Açılmış Domates Salçası Nasıl Saklanır?",
+  "slug": "acilmis-domates-salcasi-nasil-saklanir",
+  "kategori": "Nasıl Saklanır?",
+  "adim_baslik": [
+   "Kavanoz mu buzluk mu?",
+   "Üstüne yağ?",
+   "Ne kadar dayanır?"
+  ],
+  "ozet": "Açılmış domates salçası buzdolabında, ağzı sıkıca kapatılmış bir kapta yaklaşık 5-7 gün boyunca güvenle saklanabilir. Bu süre; salçanın saklama koşuluna, kabın temizliğine ve ürünün açıldıktan sonra ne kadar hijyenik koşullarda tutulduğuna göre değişebilir.",
+  "ilgili": [
+   "Ekmek Bayatlamadan Nasıl Saklanır?",
+   "Tavuk Buzdolabında Kaç Gün Saklanır?",
+   "Kıyma Buzdolabında ve Dondurucuda Kaç Gün Saklanır?",
+   "Pişmiş Pilav Buzdolabında Kaç Gün Saklanır?"
+  ]
+ },
+ "adacayinin-faydalari-ve-kullanimi": {
+  "ad": "Adaçayının Faydaları ve Kullanımı",
+  "slug": "adacayinin-faydalari-ve-kullanimi",
+  "kategori": "Malzeme Rehberi",
+  "adim_baslik": [
+   "Nasıl demlenir?",
+   "Günde kaç fincan?",
+   "Mutfakta kullanımı"
+  ],
+  "ozet": "Adaçayı, geçmişten günümüze insan sağlığına birçok katkısı olduğu düşünülen bitkilerden biridir. Yaprakları kaynatılarak çay olarak tüketilebildiği gibi, esansı aromatik yağ olarak da değerlendirilir.",
+  "ilgili": [
+   "Arı Ekmeği (Perga) Nedir, Nasıl Tüketilir?",
+   "Evde Mum Nasıl Yapılır?",
+   "Goji Berry Nedir, Nasıl Tüketilir?",
+   "Gün Boyu Tok Tutan Besinler Nelerdir?"
+  ]
+ },
+ "ananas-nasil-secilir-ve-hazirlanir": {
+  "ad": "Ananas Nasıl Seçilir ve Hazırlanır?",
+  "slug": "ananas-nasil-secilir-ve-hazirlanir",
+  "kategori": "Nasıl Seçilir ve Hazırlanır?",
+  "adim_baslik": [
+   "Olgunu nasıl anlaşılır?",
+   "Kabuğu nasıl soyulur?",
+   "Göbeği atılır mı?"
+  ],
+  "ozet": "Ananas nasıl seçilir ve hazırlanır sorusunun cevabı; ananasın tabanından tatlı bir koku alması, yapraklarının canlı yeşil ve kolayca çekilebilir olması ve kabuğun hafifçe bastırıldığında az miktarda esneklik göstermesidir. Kabuğun tamamen sarı olması şart değildir; bazı ananas çeşitleri yeşilimsi kabukla da olgun olabilir. Bu üç kontrol birlikte değerlendirildiğinde en güvenilir sonucu verir.",
+  "ilgili": [
+   "Taze Balık Nasıl Anlaşılır ve Seçilir?",
+   "Olgun Avokado Nasıl Seçilir ve Olgunlaştırılır?",
+   "Taze Karides Nasıl Seçilir ve Hazırlanır?",
+   "Kabak Nasıl Seçilir ve Hazırlanır?"
+  ]
+ },
+ "ancuez-yerine-ne-kullanilir": {
+  "ad": "Ançüez Yerine Ne Kullanılır?",
+  "slug": "ancuez-yerine-ne-kullanilir",
+  "kategori": "Yerine Ne Kullanılır?",
+  "adim_baslik": [
+   "Vejetaryen karşılığı",
+   "Tuz dengesi",
+   "Hangi soslarda?"
+  ],
+  "ozet": "Ançüez (tuzlu hamsi filetosu) yoksa en yakın tadı balık sosu ya da kapari ile birlikte az miktarda deniz tuzu verir; ikisi de ançüezin karakteristik tuzlu-umami notasını sosların ve soteler dibine büyük ölçüde taşır.",
+  "ilgili": [
+   "Kabartma Tozu Yerine Ne Kullanılır?",
+   "Keklerde Yumurta Yerine Ne Kullanılır?",
+   "Tereyağı Yerine Ne Kullanılır?",
+   "Süt Yerine Ne Kullanılır?"
+  ]
+ },
+ "pilav-neden-lapa-olur": {
+  "ad": "Pilav Neden Lapa Olur?",
+  "slug": "pilav-neden-lapa-olur",
+  "kategori": "Neden Olur?",
+  "adim_baslik": [
+   "Su oranı",
+   "Pirinç yıkanır mı?",
+   "Demlenme süresi"
+  ]
+ },
+ "tuzu-fazla-kacan-corba-nasil-duzeltilir": {
+  "ad": "Tuzu Fazla Kaçan Çorba Nasıl Düzeltilir?",
+  "slug": "tuzu-fazla-kacan-corba-nasil-duzeltilir",
+  "kategori": "Nasıl Düzeltilir?",
+  "adim_baslik": [
+   "Patates çeker mi?",
+   "Sulandırmak yeter mi?",
+   "Asit dengesi"
+  ]
+ },
+ "yumurtanin-bozuldugu-nasil-anlasilir": {
+  "ad": "Yumurtanın Bozulduğu Nasıl Anlaşılır?",
+  "slug": "yumurtanin-bozuldugu-nasil-anlasilir",
+  "kategori": "Bozulduğu Nasıl Anlaşılır?",
+  "adim_baslik": [
+   "Su testi",
+   "Koku ne söyler?",
+   "Sarısı dağılırsa?"
+  ]
+ },
+ "kuru-fasulye-kac-dakikada-piser": {
+  "ad": "Kuru Fasulye Kaç Dakikada Pişer?",
+  "slug": "kuru-fasulye-kac-dakikada-piser",
+  "kategori": "Kaç Dakikada / Kaç Derecede Pişer?",
+  "adim_baslik": [
+   "Islatma süreyi kısaltır mı?",
+   "Düdüklüde kaç dakika?",
+   "Tuz ne zaman?"
+  ]
+ },
+ "mercimek-corbasinin-yanina-ne-gider": {
+  "ad": "Mercimek Çorbasının Yanına Ne Gider?",
+  "slug": "mercimek-corbasinin-yanina-ne-gider",
+  "kategori": "Yanına Ne Gider?",
+  "adim_baslik": [
+   "Hangi ekmek uyar?",
+   "Limon şart mı?",
+   "Yanına salata?"
+  ]
+ },
+ "bir-dilim-karpuz-kac-kalori": {
+  "ad": "Bir Dilim Karpuz Kaç Kalori?",
+  "slug": "bir-dilim-karpuz-kac-kalori",
+  "kategori": "Kaç Kalori?",
+  "adim_baslik": [
+   "Porsiyon ölçüsü",
+   "Şeker oranı",
+   "Akşam yenir mi?"
+  ]
+ },
+ "et-suyunu-salmadan-nasil-muhurlenir": {
+  "ad": "Et Suyunu Salmadan Nasıl Mühürlenir?",
+  "slug": "et-suyunu-salmadan-nasil-muhurlenir",
+  "kategori": "Pişirme Püf Noktaları",
+  "adim_baslik": [
+   "Tava kaç derece?",
+   "Et oda sıcaklığında mı?",
+   "Tuz önce mi sonra mı?"
+  ]
+ },
+ "taze-maydanoz-nasil-saklanir": {
+  "ad": "Taze Maydanoz Nasıl Saklanır?",
+  "slug": "taze-maydanoz-nasil-saklanir",
+  "kategori": "Nasıl Saklanır?",
+  "adim_baslik": [
+   "Suda mı bezde mi?",
+   "Yıkanarak mı?",
+   "Kaç gün dayanır?"
+  ]
+ }
+}
+</script>
+
 </body></html>

@@ -9,8 +9,12 @@
 <link rel="stylesheet" href="../../kanon/tokenlar.css">
 <link rel="stylesheet" href="../../kanon/markalar/gastro.css">
 <link rel="stylesheet" href="../../kanon/bilesenler.css">
+<!-- ADMIN-KIT:CSS:BAS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.css">
+<link rel="stylesheet" href="../../kanon/admin.css">
+<!-- ADMIN-KIT:CSS:SON -->
 </head>
-<body class="yetkili">
+<body class="yetkili" data-marka="gastro">
 <!-- ═══ GASTRO ADMIN · KANONİK KABUK — lead üretti, agent DEĞİŞTİRMEZ.
      Kaynak: deneme/admin-fit/_ortak/kabuk.html · üretim: scripts/olcum/gadm-kabuk-uret.mjs
      Şerh ve ikon kaynakları: deneme/admin-gastro/_ortak/kabuk-serh.txt ═══ -->
@@ -19,22 +23,34 @@
   <a class="panel-ray-ikon aktif" href="#" style="--eko:var(--eko-gastro)"
      aria-current="true" title="DadaGastro" aria-label="DadaGastro"><i class="fa-solid fa-utensils"></i></a>
   <span class="panel-ray-ayrac" role="presentation"></span>
+  <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-diet)"    title="DadaDiet"    aria-label="DadaDiet"><i class="fa-solid fa-heart-pulse"></i></a>
+  <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-gourmet)" title="DadaGourmet" aria-label="DadaGourmet"><i class="fa-solid fa-map-location-dot"></i></a>
   <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-fit)"  title="DadaFit"  aria-label="DadaFit"><i class="fa-solid fa-dumbbell"></i></a>
-  <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-diet)"    title="DadaDiet"    aria-label="DadaDiet"><i class="fa-solid fa-leaf"></i></a>
-  <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-gourmet)" title="DadaGourmet" aria-label="DadaGourmet"><i class="fa-solid fa-wine-glass"></i></a>
   <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-campus)"  title="DadaCampus"  aria-label="DadaCampus"><i class="fa-solid fa-graduation-cap"></i></a>
+  <span class="panel-ray-ikon kilitli" title="DadaStore — erişimin yok" aria-label="DadaStore, erişim yok"><i class="fa-solid fa-bag-shopping"></i></span>
   <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-mentor)"  title="DadaMentor"  aria-label="DadaMentor"><i class="fa-solid fa-compass"></i></a>
-  <span class="panel-ray-ikon kilitli" title="DadaStore — erişimin yok" aria-label="DadaStore, erişim yok"><i class="fa-solid fa-lock"></i></span>
   <div class="panel-ray-alt">
     <a class="panel-ray-ikon" href="#" title="Yardım" aria-label="Yardım"><i class="fa-solid fa-circle-question"></i></a>
+<!-- ADMIN-KIT:IMZA:BAS -->
+    <a class="panel-ray-imza" href="https://gaviaworks.com" target="_blank" rel="noopener"
+       title="Gaviaworks" aria-label="Gaviaworks — gaviaworks.com">
+      <span class="yalniz-okuyucu">Gaviaworks</span>
+    </a>
+<!-- ADMIN-KIT:IMZA:SON -->
   </div>
 </aside>
 
 <!-- ── MODÜL MENÜSÜ · DÖRT KATEGORİ ───────────────────────────────── -->
 <nav class="panel-menu" id="panelMenu" aria-label="Modüller">
+<!-- ADMIN-KIT:KABUK:BAS -->
   <div class="panel-menu-bas">
-    <b>DadaGastro</b><span>Yönetim paneli</span>
+    <a class="panel-marka" href="admin-genel-bakis.html" aria-label="DadaGastro yönetim paneli">
+      <span class="yalniz-okuyucu">DadaGastro · Yönetim paneli</span>
+    </a>
   </div>
+  <button type="button" class="panel-katla" aria-pressed="false"
+          aria-label="Menüyü daralt"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i></button>
+<!-- ADMIN-KIT:KABUK:SON -->
   <div class="panel-menu-govde">
 
     <div class="panel-menu-bolum">01 Genel</div>
@@ -148,9 +164,9 @@
              · <span class="tur-rozeti">Abonelik</span> <span class="durum-hapi cozulen">Ödenmiş</span></p>
         </div>
         <div class="eylem-satiri">
-          <button class="dugme hayalet" type="button"><i class="fa-solid fa-envelope" aria-hidden="true"></i> E-posta gönder</button>
-          <button class="dugme hayalet" type="button" data-yetki="disa-aktar"><i class="fa-solid fa-file-export" aria-hidden="true"></i> Dışa aktar</button>
-          <button class="dugme birincil" type="button"><i class="fa-solid fa-file-pdf" aria-hidden="true"></i> PDF görüntüle</button>
+          <button class="dugme hayalet" type="button" data-eylem="calistir" data-ad="E-posta gönder"><i class="fa-solid fa-envelope" aria-hidden="true"></i> E-posta gönder</button>
+          <button class="dugme hayalet" type="button" data-yetki="disa-aktar" data-eylem="calistir" data-ad="Dışa aktar"><i class="fa-solid fa-file-export" aria-hidden="true"></i> Dışa aktar</button>
+          <button class="dugme birincil" type="button" data-eylem="calistir" data-ad="PDF görüntüle"><i class="fa-solid fa-file-pdf" aria-hidden="true"></i> PDF görüntüle</button>
         </div>
       </div>
 
@@ -182,7 +198,7 @@
           <span class="bos-ikon"><i class="fa-solid fa-plug-circle-xmark" aria-hidden="true"></i></span>
           <h3>Belge yüklenemedi</h3>
           <p>Bağlantı kurulamadı. Yeniden dene.</p>
-          <button class="dugme hayalet" type="button"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i> Yeniden dene</button>
+          <button class="dugme hayalet" type="button" data-eylem="calistir" data-ad="Yeniden dene"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i> Yeniden dene</button>
           <p class="hata-izi">Referans <code>FTR-1A55-77C3</code></p>
         </div>
       </div>
@@ -316,8 +332,8 @@
               </div>
             </div>
             <div class="kart-alt form-eylem">
-              <button class="dugme hayalet" type="button"><i class="fa-solid fa-ban" aria-hidden="true"></i> İptal başlat</button>
-              <button class="dugme hayalet" type="button"><i class="fa-solid fa-rotate-left" aria-hidden="true"></i> İade başlat</button>
+              <button class="dugme hayalet" type="button" data-islem="pasif"><i class="fa-solid fa-ban" aria-hidden="true"></i> İptal başlat</button>
+              <button class="dugme hayalet" type="button" data-eylem="yikici"><i class="fa-solid fa-rotate-left" aria-hidden="true"></i> İade başlat</button>
             </div>
           </div>
         </aside>
@@ -326,5 +342,14 @@
   </main>
 <script src="_ortak/panel.js" defer></script>
 <!-- gastro-ceviri:uygulandi -->
+<!-- ADMIN-KIT:JS:BAS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/7.3.0/tinymce.min.js" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/l10n/tr.js"></script>
+<script src="../../kanon/admin-editor-tr.js"></script>
+<script src="../../kanon/admin-kit.js" defer></script>
+<script src="../../kanon/admin-editor.js" defer></script>
+<script src="../../kanon/admin-tarih.js" defer></script>
+<!-- ADMIN-KIT:JS:SON -->
 </body>
 </html>

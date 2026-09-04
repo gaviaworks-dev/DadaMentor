@@ -8,8 +8,12 @@
 <link rel="stylesheet" href="../../kanon/markalar/gastro.css">
 <link rel="stylesheet" href="../../kanon/bilesenler.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<!-- ADMIN-KIT:CSS:BAS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.css">
+<link rel="stylesheet" href="../../kanon/admin.css">
+<!-- ADMIN-KIT:CSS:SON -->
 </head>
-<body class="yetkili">
+<body class="yetkili" data-marka="gastro">
 <!-- ═══ GASTRO ADMIN · KANONİK KABUK — lead üretti, agent DEĞİŞTİRMEZ.
      Kaynak: deneme/admin-fit/_ortak/kabuk.html · üretim: scripts/olcum/gadm-kabuk-uret.mjs
      Şerh ve ikon kaynakları: deneme/admin-gastro/_ortak/kabuk-serh.txt ═══ -->
@@ -18,22 +22,34 @@
   <a class="panel-ray-ikon aktif" href="#" style="--eko:var(--eko-gastro)"
      aria-current="true" title="DadaGastro" aria-label="DadaGastro"><i class="fa-solid fa-utensils"></i></a>
   <span class="panel-ray-ayrac" role="presentation"></span>
+  <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-diet)"    title="DadaDiet"    aria-label="DadaDiet"><i class="fa-solid fa-heart-pulse"></i></a>
+  <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-gourmet)" title="DadaGourmet" aria-label="DadaGourmet"><i class="fa-solid fa-map-location-dot"></i></a>
   <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-fit)"  title="DadaFit"  aria-label="DadaFit"><i class="fa-solid fa-dumbbell"></i></a>
-  <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-diet)"    title="DadaDiet"    aria-label="DadaDiet"><i class="fa-solid fa-leaf"></i></a>
-  <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-gourmet)" title="DadaGourmet" aria-label="DadaGourmet"><i class="fa-solid fa-wine-glass"></i></a>
   <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-campus)"  title="DadaCampus"  aria-label="DadaCampus"><i class="fa-solid fa-graduation-cap"></i></a>
+  <span class="panel-ray-ikon kilitli" title="DadaStore — erişimin yok" aria-label="DadaStore, erişim yok"><i class="fa-solid fa-bag-shopping"></i></span>
   <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-mentor)"  title="DadaMentor"  aria-label="DadaMentor"><i class="fa-solid fa-compass"></i></a>
-  <span class="panel-ray-ikon kilitli" title="DadaStore — erişimin yok" aria-label="DadaStore, erişim yok"><i class="fa-solid fa-lock"></i></span>
   <div class="panel-ray-alt">
     <a class="panel-ray-ikon" href="#" title="Yardım" aria-label="Yardım"><i class="fa-solid fa-circle-question"></i></a>
+<!-- ADMIN-KIT:IMZA:BAS -->
+    <a class="panel-ray-imza" href="https://gaviaworks.com" target="_blank" rel="noopener"
+       title="Gaviaworks" aria-label="Gaviaworks — gaviaworks.com">
+      <span class="yalniz-okuyucu">Gaviaworks</span>
+    </a>
+<!-- ADMIN-KIT:IMZA:SON -->
   </div>
 </aside>
 
 <!-- ── MODÜL MENÜSÜ · DÖRT KATEGORİ ───────────────────────────────── -->
 <nav class="panel-menu" id="panelMenu" aria-label="Modüller">
+<!-- ADMIN-KIT:KABUK:BAS -->
   <div class="panel-menu-bas">
-    <b>DadaGastro</b><span>Yönetim paneli</span>
+    <a class="panel-marka" href="admin-genel-bakis.html" aria-label="DadaGastro yönetim paneli">
+      <span class="yalniz-okuyucu">DadaGastro · Yönetim paneli</span>
+    </a>
   </div>
+  <button type="button" class="panel-katla" aria-pressed="false"
+          aria-label="Menüyü daralt"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i></button>
+<!-- ADMIN-KIT:KABUK:SON -->
   <div class="panel-menu-govde">
 
     <div class="panel-menu-bolum">01 Genel</div>
@@ -190,7 +206,7 @@
                   <label for="chSlug" class="alan-etiket">Adres <span class="zorunlu">*</span></label>
                   <div class="slug-alani">
                     <span class="slug-onek">onur-listesi-v1.html?sezon=</span>
-                    <input class="alan-girdi" id="chSlug" name="slug" type="text" required="" pattern="[a-z0-9]+(-[a-z0-9]+)*">
+                    <input data-girdi="slug" class="alan-girdi" id="chSlug" name="slug" type="text" required="" pattern="[a-z0-9]+(-[a-z0-9]+)*">
                   </div>
                 </div>
                 <div class="alan kart-izgara c3">
@@ -200,7 +216,7 @@
                   </div>
                   <div class="alan">
                     <label for="chGun" class="alan-etiket">Sezon uzunluğu <span class="acilir-kalem">— gün</span></label>
-                    <input class="alan-girdi" id="chGun" name="gun" type="number" min="1" max="365">
+                    <input data-girdi="sayi" class="alan-girdi" id="chGun" name="gun" type="number" min="1" max="365">
                   </div>
                   <div class="alan">
                     <label for="chDurum2" class="alan-etiket">Durum</label>
@@ -221,7 +237,7 @@
                 <i class="fa-solid fa-bullseye" aria-hidden="true"></i> Sıralama eşiği
                 <span class="alan-sayac" id="chHedefTip">Karma ölçüt</span>
               </h3>
-              <div id="chHedef"><div><div class="alan kart-izgara c2"><div class="alan"><label for="chAlisGun" class="alan-etiket">En az kaç tarif <span class="zorunlu">*</span></label><input class="alan-girdi" id="chAlisGun" name="alis_gun" type="number" min="1" max="365" required=""></div><div class="alan"><label for="chAlisSure" class="alan-etiket">En az kaç oy <span class="acilir-kalem">— oy</span></label><input class="alan-girdi" id="chAlisSure" name="alis_sure" type="number" min="0"></div></div><div class="uyari-kutu bilgi-notu"><i class="fa-solid fa-circle-info" aria-hidden="true"></i><div>İki ağırlığın toplamı 100 olmalı; eşik alanları aşağıda açılır.</div></div></div></div>
+              <div id="chHedef"><div><div class="alan kart-izgara c2"><div class="alan"><label for="chAlisGun" class="alan-etiket">En az kaç tarif <span class="zorunlu">*</span></label><input data-girdi="sayi" class="alan-girdi" id="chAlisGun" name="alis_gun" type="number" min="1" max="365" required=""></div><div class="alan"><label for="chAlisSure" class="alan-etiket">En az kaç oy <span class="acilir-kalem">— oy</span></label><input data-girdi="sayi" class="alan-girdi" id="chAlisSure" name="alis_sure" type="number" min="0"></div></div><div class="uyari-kutu bilgi-notu"><i class="fa-solid fa-circle-info" aria-hidden="true"></i><div>İki ağırlığın toplamı 100 olmalı; eşik alanları aşağıda açılır.</div></div></div></div>
             </div>
           </div>
 
@@ -276,13 +292,13 @@
                   </div>
                   <div class="alan">
                     <label for="chPuan" class="alan-etiket">İlk kaç şef dondurulacak <span class="zorunlu">*</span></label>
-                    <input class="alan-girdi" id="chPuan" name="odul_puan" type="number" min="0" required="">
+                    <input data-girdi="sayi" class="alan-girdi" id="chPuan" name="odul_puan" type="number" min="0" required="">
                     <div class="alan-yardim"><span>Ölçüldü: /onur-listesi “sezon ilk 10” basıyor — varsayılan 10.</span></div>
                   </div>
                 </div>
                 <div class="alan">
                   <label for="chTelafi" class="alan-etiket">Eşitlik durumunda <span class="acilir-kalem">— kaç şef sırayı paylaşsın</span></label>
-                  <input class="alan-girdi" id="chTelafi" name="telafi" type="number" min="0">
+                  <input data-girdi="sayi" class="alan-girdi" id="chTelafi" name="telafi" type="number" min="0">
                   <div class="alan-yardim" id="chTelafiNot"><span>Eşit puanlı şefler aynı sırayı paylaşır; varsayılan 2. Boş bırakılırsa bu değer kullanılır.</span></div>
                 </div>
               </div>
@@ -306,7 +322,7 @@
                 </div>
                 <div class="alan">
                   <label for="chCanon" class="alan-etiket">Canonical adres</label>
-                  <input class="alan-girdi" id="chCanon" name="canonical" type="url">
+                  <input data-girdi="url" class="alan-girdi" id="chCanon" name="canonical" type="url">
                 </div>
                 <div class="alan">
                   <label for="chOdak" class="alan-etiket">Odak anahtar sözcük</label>
@@ -323,10 +339,10 @@
 
           <div class="form-eylem kart-alt">
             <a class="dugme hayalet" href="admin-onur-listesi.html">İptal</a>
-            <button class="dugme hayalet" type="button" id="chTaslak">Taslak kaydet</button>
+            <button class="dugme hayalet" type="button" id="chTaslak" data-eylem="taslak">Taslak kaydet</button>
             <button class="dugme birincil" type="button" id="chKaydet">Sezonu kaydet</button>
           </div>
-        <div class="bos-durum kart-ici" hidden=""><span class="bos-ikon"><i class="fa-solid fa-file-circle-question" aria-hidden="true"></i></span><h3>Bu adreste sezon yok</h3><p>Adresteki sezon kaydı bulunamadı. Listeye dön ve bir sezon seç.</p><a class="dugme birincil" href="admin-onur-listesi.html">Listeye dön</a></div><div class="bos-durum kart-ici yetkisiz" data-durum="yetkisiz" hidden=""><span class="bos-ikon"><i class="fa-solid fa-lock" aria-hidden="true"></i></span><h3>Bu kaydı düzenleyemezsin</h3><p>Erişim istemek için yöneticinle görüş.</p></div><div class="bos-durum kart-ici servis-hatasi" data-durum="servis" hidden=""><span class="bos-ikon"><i class="fa-solid fa-plug-circle-xmark" aria-hidden="true"></i></span><h3>Kayıt yüklenemedi</h3><p>Bağlantı kurulamadı. Yeniden dene.</p><button class="dugme birincil" type="button"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i> Yeniden dene</button><div class="hata-izi">Referans kodu <code>GAS-ADM-6114</code></div></div></div>
+        <div class="bos-durum kart-ici" hidden=""><span class="bos-ikon"><i class="fa-solid fa-file-circle-question" aria-hidden="true"></i></span><h3>Bu adreste sezon yok</h3><p>Adresteki sezon kaydı bulunamadı. Listeye dön ve bir sezon seç.</p><a class="dugme birincil" href="admin-onur-listesi.html">Listeye dön</a></div><div class="bos-durum kart-ici yetkisiz" data-durum="yetkisiz" hidden=""><span class="bos-ikon"><i class="fa-solid fa-lock" aria-hidden="true"></i></span><h3>Bu kaydı düzenleyemezsin</h3><p>Erişim istemek için yöneticinle görüş.</p></div><div class="bos-durum kart-ici servis-hatasi" data-durum="servis" hidden=""><span class="bos-ikon"><i class="fa-solid fa-plug-circle-xmark" aria-hidden="true"></i></span><h3>Kayıt yüklenemedi</h3><p>Bağlantı kurulamadı. Yeniden dene.</p><button class="dugme birincil" type="button" data-eylem="calistir" data-ad="Yeniden dene"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i> Yeniden dene</button><div class="hata-izi">Referans kodu <code>GAS-ADM-6114</code></div></div></div>
 
         <aside class="form-yan">
           <div class="kart panel">
@@ -380,7 +396,7 @@
             <div class="kart-govde">
               <div class="alan-yardim" style="margin-bottom:12px"><span>Silinen sezon, dondurulmuş sıralamayı ve
                 Yılın Şefi kaydını da düşürür.</span></div>
-              <button class="dugme hayalet tehlike tam-en" type="button" id="chSil" data-yikici="Bu sezon" data-fiil="sil">
+              <button class="dugme hayalet tehlike tam-en" type="button" id="chSil" data-yikici="Bu sezon" data-fiil="sil" data-islem="sil">
                 <i class="fa-solid fa-trash-can" aria-hidden="true"></i> Sezonu sil</button>
             </div>
           </div>
@@ -392,4 +408,38 @@
   </div>
 </main>
 <script src="_ortak/panel.js" defer></script>
+<!-- ADMIN-KIT:JS:BAS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/7.3.0/tinymce.min.js" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/l10n/tr.js"></script>
+<script src="../../kanon/admin-editor-tr.js"></script>
+<script src="../../kanon/admin-kit.js" defer></script>
+<script src="../../kanon/admin-editor.js" defer></script>
+<script src="../../kanon/admin-tarih.js" defer></script>
+<!-- ADMIN-KIT:JS:SON -->
+
+<!-- KAYIT KAYNAGI — kit §19. TEK kayit var, cunku olculebilen tek sezon var.
+     anahtar 2026 = admin-onur-listesi.html satirinin data-slug degeri.
+     ad · donem · baslik  : bu formun KENDI yer tutucularindan (chDonem "2026 Sezonu",
+                            chBaslikM "<em>2026</em> Sezonu")
+     ozet                 : dump/gastro/onur-listesi.html giris cumlesi
+     odul_puan = 10       : formun kendi yardim satiri — "Olculdu: /onur-listesi
+                            'sezon ilk 10' basiyor — varsayilan 10"
+     durum = acik         : sezon KAPANMADI; public "Henuz kapanmis bir sezon yok" basiyor
+     baslangic · bitis · gun BILDIRILMEDI — sezonun tarihleri hicbir yerde olculemedi.
+     🔴 KAPANMIS SEZON KAYDI YOK ve uydurulmadi. -->
+<script type="application/json" data-kayitlar>
+{
+ "2026": {
+  "ad": "2026 Sezonu",
+  "slug": "2026",
+  "donem": "2026 Sezonu",
+  "baslik": "<em>2026</em> Sezonu",
+  "ozet": "Yıl yıl “Yılın Şefi” ve sezon ilk 10'u — topluluğun kalıcı onur kaydı.",
+  "odul_puan": "10",
+  "durum": "acik"
+ }
+}
+</script>
+
 </body></html>

@@ -9,8 +9,12 @@
 <link rel="stylesheet" href="../../kanon/tokenlar.css">
 <link rel="stylesheet" href="../../kanon/markalar/gastro.css">
 <link rel="stylesheet" href="../../kanon/bilesenler.css">
+<!-- ADMIN-KIT:CSS:BAS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.css">
+<link rel="stylesheet" href="../../kanon/admin.css">
+<!-- ADMIN-KIT:CSS:SON -->
 </head>
-<body class="yetkili">
+<body class="yetkili" data-marka="gastro">
 <!-- ═══ GASTRO ADMIN · KANONİK KABUK — lead üretti, agent DEĞİŞTİRMEZ.
      Kaynak: deneme/admin-fit/_ortak/kabuk.html · üretim: scripts/olcum/gadm-kabuk-uret.mjs
      Şerh ve ikon kaynakları: deneme/admin-gastro/_ortak/kabuk-serh.txt ═══ -->
@@ -19,22 +23,34 @@
   <a class="panel-ray-ikon aktif" href="#" style="--eko:var(--eko-gastro)"
      aria-current="true" title="DadaGastro" aria-label="DadaGastro"><i class="fa-solid fa-utensils"></i></a>
   <span class="panel-ray-ayrac" role="presentation"></span>
+  <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-diet)"    title="DadaDiet"    aria-label="DadaDiet"><i class="fa-solid fa-heart-pulse"></i></a>
+  <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-gourmet)" title="DadaGourmet" aria-label="DadaGourmet"><i class="fa-solid fa-map-location-dot"></i></a>
   <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-fit)"  title="DadaFit"  aria-label="DadaFit"><i class="fa-solid fa-dumbbell"></i></a>
-  <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-diet)"    title="DadaDiet"    aria-label="DadaDiet"><i class="fa-solid fa-leaf"></i></a>
-  <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-gourmet)" title="DadaGourmet" aria-label="DadaGourmet"><i class="fa-solid fa-wine-glass"></i></a>
   <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-campus)"  title="DadaCampus"  aria-label="DadaCampus"><i class="fa-solid fa-graduation-cap"></i></a>
+  <span class="panel-ray-ikon kilitli" title="DadaStore — erişimin yok" aria-label="DadaStore, erişim yok"><i class="fa-solid fa-bag-shopping"></i></span>
   <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-mentor)"  title="DadaMentor"  aria-label="DadaMentor"><i class="fa-solid fa-compass"></i></a>
-  <span class="panel-ray-ikon kilitli" title="DadaStore — erişimin yok" aria-label="DadaStore, erişim yok"><i class="fa-solid fa-lock"></i></span>
   <div class="panel-ray-alt">
     <a class="panel-ray-ikon" href="#" title="Yardım" aria-label="Yardım"><i class="fa-solid fa-circle-question"></i></a>
+<!-- ADMIN-KIT:IMZA:BAS -->
+    <a class="panel-ray-imza" href="https://gaviaworks.com" target="_blank" rel="noopener"
+       title="Gaviaworks" aria-label="Gaviaworks — gaviaworks.com">
+      <span class="yalniz-okuyucu">Gaviaworks</span>
+    </a>
+<!-- ADMIN-KIT:IMZA:SON -->
   </div>
 </aside>
 
 <!-- ── MODÜL MENÜSÜ · DÖRT KATEGORİ ───────────────────────────────── -->
 <nav class="panel-menu" id="panelMenu" aria-label="Modüller">
+<!-- ADMIN-KIT:KABUK:BAS -->
   <div class="panel-menu-bas">
-    <b>DadaGastro</b><span>Yönetim paneli</span>
+    <a class="panel-marka" href="admin-genel-bakis.html" aria-label="DadaGastro yönetim paneli">
+      <span class="yalniz-okuyucu">DadaGastro · Yönetim paneli</span>
+    </a>
   </div>
+  <button type="button" class="panel-katla" aria-pressed="false"
+          aria-label="Menüyü daralt"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i></button>
+<!-- ADMIN-KIT:KABUK:SON -->
   <div class="panel-menu-govde">
 
     <div class="panel-menu-bolum">01 Genel</div>
@@ -148,7 +164,7 @@
         </div>
         <div class="eylem-satiri">
           <a class="dugme hayalet" href="admin-faturalar.html"><i class="fa-solid fa-file-invoice" aria-hidden="true"></i> Fatura defteri</a>
-          <button class="dugme hayalet" type="button" data-yetki="disa-aktar"><i class="fa-solid fa-file-export" aria-hidden="true"></i> Dışa aktar</button>
+          <button class="dugme hayalet" type="button" data-yetki="disa-aktar" data-eylem="calistir" data-ad="Dışa aktar"><i class="fa-solid fa-file-export" aria-hidden="true"></i> Dışa aktar</button>
         </div>
       </div>
 
@@ -198,7 +214,7 @@
                 Durum <span class="sayi" data-sayi="0"></span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
               </button>
               <div class="acilir-yuzey suzgec" id="odSuzDurum" role="group" aria-label="Durum" hidden>
-                <div class="acilir-bas">Durum <button type="button">Temizle</button></div>
+                <div class="acilir-bas">Durum <button type="button" data-eylem="suzgec-temizle">Temizle</button></div>
                 <button class="cip suzgec" type="button" aria-pressed="false"><i class="fa-solid fa-play" aria-hidden="true"></i> Başlatıldı</button>
                 <button class="cip suzgec" type="button" aria-pressed="false"><i class="fa-solid fa-hourglass-half" aria-hidden="true"></i> Doğrulama bekliyor</button>
                 <button class="cip suzgec" type="button" aria-pressed="false"><i class="fa-solid fa-circle-check" aria-hidden="true"></i> Başarılı</button>
@@ -213,7 +229,7 @@
                 Yöntem <span class="sayi" data-sayi="0"></span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
               </button>
               <div class="acilir-yuzey suzgec" id="odSuzYontem" role="group" aria-label="Ödeme yöntemi" hidden>
-                <div class="acilir-bas">Ödeme yöntemi <button type="button">Temizle</button></div>
+                <div class="acilir-bas">Ödeme yöntemi <button type="button" data-eylem="suzgec-temizle">Temizle</button></div>
                 <button class="cip suzgec" type="button" aria-pressed="false">Kredi kartı</button>
                 <button class="cip suzgec" type="button" aria-pressed="false">Banka kartı</button>
                 <button class="cip suzgec" type="button" aria-pressed="false">Havale / EFT</button>
@@ -225,18 +241,18 @@
                 Sağlayıcı <span class="sayi" data-sayi="0"></span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
               </button>
               <div class="acilir-yuzey suzgec saga" id="odSuzSaglayici" role="group" aria-label="Sağlayıcı" hidden>
-                <div class="acilir-bas">Sağlayıcı <button type="button">Temizle</button></div>
+                <div class="acilir-bas">Sağlayıcı <button type="button" data-eylem="suzgec-temizle">Temizle</button></div>
                 <button class="cip suzgec" type="button" aria-pressed="false">iyzico</button>
                 <button class="cip suzgec" type="button" aria-pressed="false">PayTR</button>
                 <button class="cip suzgec" type="button" aria-pressed="false">Banka</button>
               </div>
             </div>
             <div class="coklu-secim">
-              <button class="suzgec-dugme" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="odKolon" aria-label="Kolon seçimi">
+              <button class="suzgec-dugme" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="odKolon" aria-label="Kolon seçimi" data-eylem="kolonlar">
                 <i class="fa-solid fa-table-columns" aria-hidden="true"></i> Kolonlar
               </button>
               <div class="acilir-yuzey saga kolon-secim" id="odKolon" role="group" aria-label="Görünecek kolonlar" hidden>
-                <div class="acilir-bas">Kolonlar <button type="button">Sıfırla</button></div>
+                <div class="acilir-bas">Kolonlar <button type="button" data-eylem="suzgec-temizle">Sıfırla</button></div>
                 <label class="acilir-kalem kilitli"><input type="checkbox" checked disabled> İşlem no <span class="yan">zorunlu</span></label>
                 <label class="acilir-kalem"><input type="checkbox" checked> Kullanıcı</label>
                 <label class="acilir-kalem"><input type="checkbox"> Referans</label>
@@ -256,10 +272,10 @@
         <div class="toplu-islem" id="odToplu" hidden>
           <b>0 kayıt seçildi</b>
           <div class="eylem-satiri">
-            <button class="dugme hayalet kucuk" type="button"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i> Yeniden sorgula</button>
-            <button class="dugme hayalet kucuk" type="button"><i class="fa-solid fa-paper-plane" aria-hidden="true"></i> Ödeme bağlantısı gönder</button>
+            <button class="dugme hayalet kucuk" type="button" data-eylem="calistir" data-ad="Yeniden sorgula"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i> Yeniden sorgula</button>
+            <button class="dugme hayalet kucuk" type="button" data-eylem="calistir" data-ad="Ödeme bağlantısı gönder"><i class="fa-solid fa-paper-plane" aria-hidden="true"></i> Ödeme bağlantısı gönder</button>
             <button class="dugme hayalet kucuk" type="button"><i class="fa-solid fa-note-sticky" aria-hidden="true"></i> Not ekle</button>
-            <button class="dugme hayalet kucuk" type="button"><i class="fa-solid fa-rotate-left" aria-hidden="true"></i> İade başlat</button>
+            <button class="dugme hayalet kucuk" type="button" data-eylem="yikici"><i class="fa-solid fa-rotate-left" aria-hidden="true"></i> İade başlat</button>
           </div>
 
         <!-- DURUM 5 · doğrulama hatası — toplu işlem kuralı geçmedi -->
@@ -288,7 +304,7 @@
           <span class="bos-ikon"><i class="fa-solid fa-receipt" aria-hidden="true"></i></span>
           <h3>Bu süzgeçle sonuç yok</h3>
           <p>Süzgeci genişlet ya da tarih aralığını değiştir.</p>
-          <button class="dugme hayalet" type="button"><i class="fa-solid fa-rotate-left" aria-hidden="true"></i> Süzgeci temizle</button>
+          <button class="dugme hayalet" type="button" data-eylem="suzgec-temizle"><i class="fa-solid fa-rotate-left" aria-hidden="true"></i> Süzgeci temizle</button>
         </div>
         <div class="bos-durum kart-ici yetkisiz" id="odYetkisiz" hidden>
           <span class="bos-ikon"><i class="fa-solid fa-lock" aria-hidden="true"></i></span>
@@ -299,7 +315,7 @@
           <span class="bos-ikon"><i class="fa-solid fa-plug-circle-xmark" aria-hidden="true"></i></span>
           <h3>Ödeme listesi yüklenemedi</h3>
           <p>Sağlayıcıya bağlanılamadı. Yeniden dene.</p>
-          <button class="dugme hayalet" type="button"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i> Yeniden dene</button>
+          <button class="dugme hayalet" type="button" data-eylem="calistir" data-ad="Yeniden dene"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i> Yeniden dene</button>
           <p class="hata-izi">Referans <code>ODM-2E90-B845</code></p>
         </div>
 
@@ -328,9 +344,9 @@
                   <td>Kredi kartı<small>Visa •••• 4242</small></td>
                   <td><span class="durum-hapi cozulen">Başarılı</span></td>
                   <td>15.08.2026<small>03:12</small></td>
-                  <td class="eylem"><span class="satir-eylem">
-                    <button class="ikon-dugme" type="button" title="Detay" aria-label="ODM-2026-118420 detayını aç"><i class="fa-solid fa-eye" aria-hidden="true"></i></button>
-                    <button class="ikon-dugme yikici" type="button" title="İade başlat" aria-label="ODM-2026-118420 için iade başlat"><i class="fa-solid fa-rotate-left" aria-hidden="true"></i></button>
+                  <td class="eylem"><span class="satir-eylem satir-islem">
+                    <button class="ikon-dugme" type="button" title="Detay" aria-label="ODM-2026-118420 detayını aç" data-eylem="panel-ac" data-hedef="odmDetay"><i class="fa-solid fa-eye" aria-hidden="true"></i></button>
+                    <button class="ikon-dugme yikici" type="button" title="İade başlat" aria-label="ODM-2026-118420 için iade başlat" data-eylem="calistir" data-ad="ODM-2026-118420 için iade başlat"><i class="fa-solid fa-rotate-left" aria-hidden="true"></i></button>
                   </span></td>
                 </tr>
                 <tr>
@@ -341,9 +357,9 @@
                   <td>Kredi kartı<small>Mastercard •••• 7781</small></td>
                   <td><span class="durum-hapi cozulen">Başarılı</span></td>
                   <td>14.08.2026<small>22:47</small></td>
-                  <td class="eylem"><span class="satir-eylem">
-                    <button class="ikon-dugme" type="button" title="Detay" aria-label="ODM-2026-118388 detayını aç"><i class="fa-solid fa-eye" aria-hidden="true"></i></button>
-                    <button class="ikon-dugme yikici" type="button" title="İade başlat" aria-label="ODM-2026-118388 için iade başlat"><i class="fa-solid fa-rotate-left" aria-hidden="true"></i></button>
+                  <td class="eylem"><span class="satir-eylem satir-islem">
+                    <button class="ikon-dugme" type="button" title="Detay" aria-label="ODM-2026-118388 detayını aç" data-eylem="panel-ac" data-hedef="odmDetay"><i class="fa-solid fa-eye" aria-hidden="true"></i></button>
+                    <button class="ikon-dugme yikici" type="button" title="İade başlat" aria-label="ODM-2026-118388 için iade başlat" data-eylem="calistir" data-ad="ODM-2026-118388 için iade başlat"><i class="fa-solid fa-rotate-left" aria-hidden="true"></i></button>
                   </span></td>
                 </tr>
                 <tr>
@@ -354,9 +370,9 @@
                   <td>Kredi kartı<small>Visa •••• 9034</small></td>
                   <td><span class="durum-hapi hata">Başarısız</span><small>Yetersiz bakiye</small></td>
                   <td>28.08.2026<small>04:05</small></td>
-                  <td class="eylem"><span class="satir-eylem">
-                    <button class="ikon-dugme" type="button" title="Yeniden sorgula" aria-label="ODM-2026-118301 işlemini yeniden sorgula"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i></button>
-                    <button class="ikon-dugme" type="button" title="Ödeme bağlantısı gönder" aria-label="ODM-2026-118301 için ödeme bağlantısı gönder"><i class="fa-solid fa-paper-plane" aria-hidden="true"></i></button>
+                  <td class="eylem"><span class="satir-eylem satir-islem">
+                    <button class="ikon-dugme" type="button" title="Yeniden sorgula" aria-label="ODM-2026-118301 işlemini yeniden sorgula" data-eylem="calistir" data-ad="ODM-2026-118301 işlemini yeniden sorgula"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i></button>
+                    <button class="ikon-dugme" type="button" title="Ödeme bağlantısı gönder" aria-label="ODM-2026-118301 için ödeme bağlantısı gönder" data-eylem="calistir" data-ad="ODM-2026-118301 için ödeme bağlantısı gönder"><i class="fa-solid fa-paper-plane" aria-hidden="true"></i></button>
                   </span></td>
                 </tr>
                 <tr>
@@ -367,9 +383,9 @@
                   <td>Havale / EFT<small>TR·· ···· 6614</small></td>
                   <td><span class="durum-hapi cozulen">Başarılı</span></td>
                   <td>02.03.2026<small>11:33</small></td>
-                  <td class="eylem"><span class="satir-eylem">
-                    <button class="ikon-dugme" type="button" title="Detay" aria-label="ODM-2026-118277 detayını aç"><i class="fa-solid fa-eye" aria-hidden="true"></i></button>
-                    <button class="ikon-dugme yikici" type="button" title="İade başlat" aria-label="ODM-2026-118277 için iade başlat"><i class="fa-solid fa-rotate-left" aria-hidden="true"></i></button>
+                  <td class="eylem"><span class="satir-eylem satir-islem">
+                    <button class="ikon-dugme" type="button" title="Detay" aria-label="ODM-2026-118277 detayını aç" data-eylem="panel-ac" data-hedef="odmDetay"><i class="fa-solid fa-eye" aria-hidden="true"></i></button>
+                    <button class="ikon-dugme yikici" type="button" title="İade başlat" aria-label="ODM-2026-118277 için iade başlat" data-eylem="calistir" data-ad="ODM-2026-118277 için iade başlat"><i class="fa-solid fa-rotate-left" aria-hidden="true"></i></button>
                   </span></td>
                 </tr>
                 <tr>
@@ -380,9 +396,9 @@
                   <td>Kredi kartı<small>Visa •••• 4242</small></td>
                   <td><span class="durum-hapi kapali">Tam iade</span></td>
                   <td>20.02.2026<small>16:02</small></td>
-                  <td class="eylem"><span class="satir-eylem">
-                    <button class="ikon-dugme" type="button" title="Detay" aria-label="ODM-2026-117994 detayını aç"><i class="fa-solid fa-eye" aria-hidden="true"></i></button>
-                    <button class="ikon-dugme" type="button" title="Muhasebe kaydı" aria-label="ODM-2026-117994 muhasebe kaydını aç"><i class="fa-solid fa-book" aria-hidden="true"></i></button>
+                  <td class="eylem"><span class="satir-eylem satir-islem">
+                    <button class="ikon-dugme" type="button" title="Detay" aria-label="ODM-2026-117994 detayını aç" data-eylem="panel-ac" data-hedef="odmDetay"><i class="fa-solid fa-eye" aria-hidden="true"></i></button>
+                    <button class="ikon-dugme" type="button" title="Muhasebe kaydı" aria-label="ODM-2026-117994 muhasebe kaydını aç" data-eylem="calistir" data-ad="ODM-2026-117994 muhasebe kaydını aç"><i class="fa-solid fa-book" aria-hidden="true"></i></button>
                   </span></td>
                 </tr>
                 <tr>
@@ -393,9 +409,9 @@
                   <td>Mobil ödeme<small>Operatör faturası</small></td>
                   <td><span class="durum-hapi acik">Doğrulama bekliyor</span></td>
                   <td>03.09.2026<small>09:58</small></td>
-                  <td class="eylem"><span class="satir-eylem">
-                    <button class="ikon-dugme" type="button" title="Yeniden sorgula" aria-label="ODM-2026-118466 işlemini yeniden sorgula"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i></button>
-                    <button class="ikon-dugme" type="button" title="Detay" aria-label="ODM-2026-118466 detayını aç"><i class="fa-solid fa-eye" aria-hidden="true"></i></button>
+                  <td class="eylem"><span class="satir-eylem satir-islem">
+                    <button class="ikon-dugme" type="button" title="Yeniden sorgula" aria-label="ODM-2026-118466 işlemini yeniden sorgula" data-eylem="calistir" data-ad="ODM-2026-118466 işlemini yeniden sorgula"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i></button>
+                    <button class="ikon-dugme" type="button" title="Detay" aria-label="ODM-2026-118466 detayını aç" data-eylem="panel-ac" data-hedef="odmDetay"><i class="fa-solid fa-eye" aria-hidden="true"></i></button>
                   </span></td>
                 </tr>
                 <tr>
@@ -406,9 +422,9 @@
                   <td>Kredi kartı<small>Mastercard •••• 2210</small></td>
                   <td><span class="durum-hapi cozulen">Başarılı</span></td>
                   <td>07.01.2026<small>13:20</small></td>
-                  <td class="eylem"><span class="satir-eylem">
-                    <button class="ikon-dugme" type="button" title="Detay" aria-label="ODM-2026-118118 detayını aç"><i class="fa-solid fa-eye" aria-hidden="true"></i></button>
-                    <button class="ikon-dugme yikici" type="button" title="İade başlat" aria-label="ODM-2026-118118 için iade başlat"><i class="fa-solid fa-rotate-left" aria-hidden="true"></i></button>
+                  <td class="eylem"><span class="satir-eylem satir-islem">
+                    <button class="ikon-dugme" type="button" title="Detay" aria-label="ODM-2026-118118 detayını aç" data-eylem="panel-ac" data-hedef="odmDetay"><i class="fa-solid fa-eye" aria-hidden="true"></i></button>
+                    <button class="ikon-dugme yikici" type="button" title="İade başlat" aria-label="ODM-2026-118118 için iade başlat" data-eylem="calistir" data-ad="ODM-2026-118118 için iade başlat"><i class="fa-solid fa-rotate-left" aria-hidden="true"></i></button>
                   </span></td>
                 </tr>
                 <tr>
@@ -419,9 +435,9 @@
                   <td>Kredi kartı<small>Visa •••• 3319</small></td>
                   <td><span class="durum-hapi bekleyen">Kısmi iade</span></td>
                   <td>21.08.2026<small>10:41</small></td>
-                  <td class="eylem"><span class="satir-eylem">
-                    <button class="ikon-dugme" type="button" title="Detay" aria-label="ODM-2026-118050 detayını aç"><i class="fa-solid fa-eye" aria-hidden="true"></i></button>
-                    <button class="ikon-dugme" type="button" title="Muhasebe kaydı" aria-label="ODM-2026-118050 muhasebe kaydını aç"><i class="fa-solid fa-book" aria-hidden="true"></i></button>
+                  <td class="eylem"><span class="satir-eylem satir-islem">
+                    <button class="ikon-dugme" type="button" title="Detay" aria-label="ODM-2026-118050 detayını aç" data-eylem="panel-ac" data-hedef="odmDetay"><i class="fa-solid fa-eye" aria-hidden="true"></i></button>
+                    <button class="ikon-dugme" type="button" title="Muhasebe kaydı" aria-label="ODM-2026-118050 muhasebe kaydını aç" data-eylem="calistir" data-ad="ODM-2026-118050 muhasebe kaydını aç"><i class="fa-solid fa-book" aria-hidden="true"></i></button>
                   </span></td>
                 </tr>
                 <tr>
@@ -432,9 +448,9 @@
                   <td>Banka kartı<small>Troy •••• 5502</small></td>
                   <td><span class="durum-hapi kapali">İptal</span><small>Üye vazgeçti</small></td>
                   <td>04.07.2026<small>18:12</small></td>
-                  <td class="eylem"><span class="satir-eylem">
-                    <button class="ikon-dugme" type="button" title="Detay" aria-label="ODM-2026-117840 detayını aç"><i class="fa-solid fa-eye" aria-hidden="true"></i></button>
-                    <button class="ikon-dugme" type="button" title="Muhasebe kaydı" aria-label="ODM-2026-117840 muhasebe kaydını aç"><i class="fa-solid fa-book" aria-hidden="true"></i></button>
+                  <td class="eylem"><span class="satir-eylem satir-islem">
+                    <button class="ikon-dugme" type="button" title="Detay" aria-label="ODM-2026-117840 detayını aç" data-eylem="panel-ac" data-hedef="odmDetay"><i class="fa-solid fa-eye" aria-hidden="true"></i></button>
+                    <button class="ikon-dugme" type="button" title="Muhasebe kaydı" aria-label="ODM-2026-117840 muhasebe kaydını aç" data-eylem="calistir" data-ad="ODM-2026-117840 muhasebe kaydını aç"><i class="fa-solid fa-book" aria-hidden="true"></i></button>
                   </span></td>
                 </tr>
                 <tr>
@@ -445,9 +461,9 @@
                   <td>Kredi kartı<small>Visa •••• 8877</small></td>
                   <td><span class="durum-hapi acik">Başlatıldı</span><small>Deneme doğrulaması</small></td>
                   <td>04.09.2026<small>07:02</small></td>
-                  <td class="eylem"><span class="satir-eylem">
-                    <button class="ikon-dugme" type="button" title="Yeniden sorgula" aria-label="ODM-2026-118512 işlemini yeniden sorgula"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i></button>
-                    <button class="ikon-dugme" type="button" title="Detay" aria-label="ODM-2026-118512 detayını aç"><i class="fa-solid fa-eye" aria-hidden="true"></i></button>
+                  <td class="eylem"><span class="satir-eylem satir-islem">
+                    <button class="ikon-dugme" type="button" title="Yeniden sorgula" aria-label="ODM-2026-118512 işlemini yeniden sorgula" data-eylem="calistir" data-ad="ODM-2026-118512 işlemini yeniden sorgula"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i></button>
+                    <button class="ikon-dugme" type="button" title="Detay" aria-label="ODM-2026-118512 detayını aç" data-eylem="panel-ac" data-hedef="odmDetay"><i class="fa-solid fa-eye" aria-hidden="true"></i></button>
                   </span></td>
                 </tr>
                 <tr>
@@ -458,9 +474,9 @@
                   <td>Kredi kartı<small>Visa •••• 4242</small></td>
                   <td><span class="durum-hapi hata">Başarısız</span><small>3D doğrulama iptal</small></td>
                   <td>30.08.2026<small>02:18</small></td>
-                  <td class="eylem"><span class="satir-eylem">
-                    <button class="ikon-dugme" type="button" title="Yeniden sorgula" aria-label="ODM-2026-117702 işlemini yeniden sorgula"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i></button>
-                    <button class="ikon-dugme" type="button" title="Ödeme bağlantısı gönder" aria-label="ODM-2026-117702 için ödeme bağlantısı gönder"><i class="fa-solid fa-paper-plane" aria-hidden="true"></i></button>
+                  <td class="eylem"><span class="satir-eylem satir-islem">
+                    <button class="ikon-dugme" type="button" title="Yeniden sorgula" aria-label="ODM-2026-117702 işlemini yeniden sorgula" data-eylem="calistir" data-ad="ODM-2026-117702 işlemini yeniden sorgula"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i></button>
+                    <button class="ikon-dugme" type="button" title="Ödeme bağlantısı gönder" aria-label="ODM-2026-117702 için ödeme bağlantısı gönder" data-eylem="calistir" data-ad="ODM-2026-117702 için ödeme bağlantısı gönder"><i class="fa-solid fa-paper-plane" aria-hidden="true"></i></button>
                   </span></td>
                 </tr>
                 <tr>
@@ -471,9 +487,9 @@
                   <td>Kredi kartı<small>Mastercard •••• 6018</small></td>
                   <td><span class="durum-hapi cozulen">Başarılı</span></td>
                   <td>12.09.2025<small>20:55</small></td>
-                  <td class="eylem"><span class="satir-eylem">
-                    <button class="ikon-dugme" type="button" title="Detay" aria-label="ODM-2025-109044 detayını aç"><i class="fa-solid fa-eye" aria-hidden="true"></i></button>
-                    <button class="ikon-dugme" type="button" title="Muhasebe kaydı" aria-label="ODM-2025-109044 muhasebe kaydını aç"><i class="fa-solid fa-book" aria-hidden="true"></i></button>
+                  <td class="eylem"><span class="satir-eylem satir-islem">
+                    <button class="ikon-dugme" type="button" title="Detay" aria-label="ODM-2025-109044 detayını aç" data-eylem="panel-ac" data-hedef="odmDetay"><i class="fa-solid fa-eye" aria-hidden="true"></i></button>
+                    <button class="ikon-dugme" type="button" title="Muhasebe kaydı" aria-label="ODM-2025-109044 muhasebe kaydını aç" data-eylem="calistir" data-ad="ODM-2025-109044 muhasebe kaydını aç"><i class="fa-solid fa-book" aria-hidden="true"></i></button>
                   </span></td>
                 </tr>
               </tbody>
@@ -483,12 +499,52 @@
 
         <div class="sayfalama kart-ayagi">
           <div class="sayfalama-bilgi"><b>1–12</b> / 324 işlem</div>
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         ÖDEME DETAYI — MARKUP'TA BİLDİRİLMİŞ YAN PANEL (kit §5b).
+         Ödeme kaydı YAZILMAZ, üretilir: düzenlenecek bir alanı yok, o
+         yüzden "Düzenle" konmadı — donör (deneme/admin-fit/admin-odemeler.html)
+         de böyle karar vermiş. Satırın "Detay" düğmesi ölüydü; artık
+         bildirilmiş bir yüzey açıyor.
+         ⚠ MAKET SINIRI: panel tek bir ödemenin künyesini gösteriyor ve
+           bunu KENDİSİ SÖYLÜYOR. Değerler tablonun ilk satırından.
+         ═══════════════════════════════════════════════════════════════ -->
+    <div class="kart panel" id="odmDetay" hidden>
+      <div class="kart-bas">
+        <h2 class="kart-baslik"><i class="fa-solid fa-receipt" aria-hidden="true"></i> Ödeme detayı — ODM-2026-118420</h2>
+        <div class="eylem-satiri">
+          <span class="durum-hapi cozulen">Başarılı</span>
+          <button class="dugme hayalet" type="button" data-eylem="panel-kapat" data-hedef="odmDetay">
+            <i class="fa-solid fa-xmark" aria-hidden="true"></i> Kapat</button>
+        </div>
+      </div>
+      <div class="kart-govde">
+        <dl class="kunye">
+          <div><dt>Referans</dt><dd>ODM-2026-118420</dd></div>
+          <div><dt>Üye</dt><dd>Ece Aşçı · ABN-2026-0412</dd></div>
+          <div><dt>Tutar</dt><dd>49,00 ₺</dd></div>
+          <div><dt>Yöntem</dt><dd>Kredi kartı · Visa •••• 4242</dd></div>
+          <div><dt>Tarih</dt><dd>15.08.2026 03:12</dd></div>
+          <div><dt>Sağlayıcı</dt><dd>iyzico · Canlı</dd></div>
+        </dl>
+        <div class="alan-yardim"><span>Ödeme kaydı <b>düzenlenmez</b> — sağlayıcıdan gelir.
+          Değiştirilebilecek tek şey iade kararıdır ve o ayrı bir kayıt açar.
+          Bu makette künye tek ödeme için basılıdır.</span></div>
+      </div>
+      <div class="kart-ayagi">
+        <div class="eylem-satiri">
+          <a class="dugme hayalet" href="admin-faturalar.html"><i class="fa-solid fa-file-invoice" aria-hidden="true"></i> İlgili faturaya git</a>
+          <button class="dugme hayalet tehlike" type="button" data-yikici="Ödeme" data-fiil="iade et" data-eylem="yikici" data-ad="İade başlat">
+            <i class="fa-solid fa-rotate-left" aria-hidden="true"></i> İade başlat</button>
+        </div>
+      </div>
+    </div>
           <div class="dugmeler">
-            <button class="sayfa-dugme sade" type="button" disabled aria-label="Önceki sayfa"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i></button>
-            <button class="sayfa-dugme sade aktif" type="button" aria-current="page">1</button>
-            <button class="sayfa-dugme sade" type="button">2</button>
-            <button class="sayfa-dugme sade" type="button">3</button>
-            <button class="sayfa-dugme sade" type="button" aria-label="Sonraki sayfa"><i class="fa-solid fa-chevron-right" aria-hidden="true"></i></button>
+            <button class="sayfa-dugme sade" type="button" disabled aria-label="Önceki sayfa" data-eylem="sayfala"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i></button>
+            <button class="sayfa-dugme sade aktif" type="button" aria-current="page" data-eylem="sayfala">1</button>
+            <button class="sayfa-dugme sade" type="button" data-eylem="sayfala">2</button>
+            <button class="sayfa-dugme sade" type="button" data-eylem="sayfala">3</button>
+            <button class="sayfa-dugme sade" type="button" aria-label="Sonraki sayfa" data-eylem="sayfala"><i class="fa-solid fa-chevron-right" aria-hidden="true"></i></button>
           </div>
         </div>
       </div>
@@ -503,5 +559,14 @@
   </main>
 <script src="_ortak/panel.js" defer></script>
 <!-- gastro-ceviri:uygulandi -->
+<!-- ADMIN-KIT:JS:BAS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/7.3.0/tinymce.min.js" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/l10n/tr.js"></script>
+<script src="../../kanon/admin-editor-tr.js"></script>
+<script src="../../kanon/admin-kit.js" defer></script>
+<script src="../../kanon/admin-editor.js" defer></script>
+<script src="../../kanon/admin-tarih.js" defer></script>
+<!-- ADMIN-KIT:JS:SON -->
 </body>
 </html>

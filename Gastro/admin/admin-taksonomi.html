@@ -9,8 +9,12 @@
 <link rel="stylesheet" href="../../kanon/tokenlar.css">
 <link rel="stylesheet" href="../../kanon/markalar/gastro.css">
 <link rel="stylesheet" href="../../kanon/bilesenler.css">
+<!-- ADMIN-KIT:CSS:BAS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.css">
+<link rel="stylesheet" href="../../kanon/admin.css">
+<!-- ADMIN-KIT:CSS:SON -->
 </head>
-<body class="yetkili">
+<body class="yetkili" data-marka="gastro">
 <!-- ═══ GASTRO ADMIN · KANONİK KABUK — lead üretti, agent DEĞİŞTİRMEZ.
      Kaynak: deneme/admin-fit/_ortak/kabuk.html · üretim: scripts/olcum/gadm-kabuk-uret.mjs
      Şerh ve ikon kaynakları: deneme/admin-gastro/_ortak/kabuk-serh.txt ═══ -->
@@ -19,22 +23,34 @@
   <a class="panel-ray-ikon aktif" href="#" style="--eko:var(--eko-gastro)"
      aria-current="true" title="DadaGastro" aria-label="DadaGastro"><i class="fa-solid fa-utensils"></i></a>
   <span class="panel-ray-ayrac" role="presentation"></span>
+  <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-diet)"    title="DadaDiet"    aria-label="DadaDiet"><i class="fa-solid fa-heart-pulse"></i></a>
+  <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-gourmet)" title="DadaGourmet" aria-label="DadaGourmet"><i class="fa-solid fa-map-location-dot"></i></a>
   <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-fit)"  title="DadaFit"  aria-label="DadaFit"><i class="fa-solid fa-dumbbell"></i></a>
-  <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-diet)"    title="DadaDiet"    aria-label="DadaDiet"><i class="fa-solid fa-leaf"></i></a>
-  <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-gourmet)" title="DadaGourmet" aria-label="DadaGourmet"><i class="fa-solid fa-wine-glass"></i></a>
   <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-campus)"  title="DadaCampus"  aria-label="DadaCampus"><i class="fa-solid fa-graduation-cap"></i></a>
+  <span class="panel-ray-ikon kilitli" title="DadaStore — erişimin yok" aria-label="DadaStore, erişim yok"><i class="fa-solid fa-bag-shopping"></i></span>
   <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-mentor)"  title="DadaMentor"  aria-label="DadaMentor"><i class="fa-solid fa-compass"></i></a>
-  <span class="panel-ray-ikon kilitli" title="DadaStore — erişimin yok" aria-label="DadaStore, erişim yok"><i class="fa-solid fa-lock"></i></span>
   <div class="panel-ray-alt">
     <a class="panel-ray-ikon" href="#" title="Yardım" aria-label="Yardım"><i class="fa-solid fa-circle-question"></i></a>
+<!-- ADMIN-KIT:IMZA:BAS -->
+    <a class="panel-ray-imza" href="https://gaviaworks.com" target="_blank" rel="noopener"
+       title="Gaviaworks" aria-label="Gaviaworks — gaviaworks.com">
+      <span class="yalniz-okuyucu">Gaviaworks</span>
+    </a>
+<!-- ADMIN-KIT:IMZA:SON -->
   </div>
 </aside>
 
 <!-- ── MODÜL MENÜSÜ · DÖRT KATEGORİ ───────────────────────────────── -->
 <nav class="panel-menu" id="panelMenu" aria-label="Modüller">
+<!-- ADMIN-KIT:KABUK:BAS -->
   <div class="panel-menu-bas">
-    <b>DadaGastro</b><span>Yönetim paneli</span>
+    <a class="panel-marka" href="admin-genel-bakis.html" aria-label="DadaGastro yönetim paneli">
+      <span class="yalniz-okuyucu">DadaGastro · Yönetim paneli</span>
+    </a>
   </div>
+  <button type="button" class="panel-katla" aria-pressed="false"
+          aria-label="Menüyü daralt"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i></button>
+<!-- ADMIN-KIT:KABUK:SON -->
   <div class="panel-menu-govde">
 
     <div class="panel-menu-bolum">01 Genel</div>
@@ -146,9 +162,9 @@
              sorulur: nerede ilan edilmiş, kaç kayıtta kullanılıyor.</p>
         </div>
         <div class="eylem-satiri">
-          <button class="dugme hayalet" type="button" data-yetki="disa-aktar"><i class="fa-solid fa-file-arrow-down" aria-hidden="true"></i> Dışa aktar</button>
+          <button class="dugme hayalet" type="button" data-yetki="disa-aktar" data-eylem="calistir" data-ad="Dışa aktar"><i class="fa-solid fa-file-arrow-down" aria-hidden="true"></i> Dışa aktar</button>
           <button class="dugme hayalet" type="button"><i class="fa-solid fa-code-merge" aria-hidden="true"></i> Terimleri birleştir</button>
-          <button class="dugme birincil" type="button"><i class="fa-solid fa-plus" aria-hidden="true"></i> Yeni terim</button>
+          <a class="dugme birincil" href="admin-taksonomi-form.html"><i class="fa-solid fa-plus" aria-hidden="true"></i> Yeni terim</a>
         </div>
       </div>
 
@@ -204,11 +220,11 @@
       <div class="toplu-islem" role="status" hidden>
         <b>3 kayıt seçildi</b>
         <div class="eylem-satiri">
-          <button class="dugme hayalet kucuk" type="button">Aktif yap</button>
-          <button class="dugme hayalet kucuk" type="button">Pasif yap</button>
+          <button class="dugme hayalet kucuk" type="button" data-eylem="calistir" data-ad="Aktif yap">Aktif yap</button>
+          <button class="dugme hayalet kucuk" type="button" data-eylem="calistir" data-ad="Pasif yap">Pasif yap</button>
           <button class="dugme hayalet kucuk" type="button">Üst kayda taşı</button>
-          <button class="dugme hayalet kucuk" type="button">Birleştir</button>
-          <button class="dugme hayalet kucuk" type="button">Arşivle</button>
+          <button class="dugme hayalet kucuk" type="button" data-eylem="calistir" data-ad="Birleştir">Birleştir</button>
+          <button class="dugme hayalet kucuk" type="button" data-eylem="calistir" data-ad="Arşivle">Arşivle</button>
         </div>
       </div>
 
@@ -240,7 +256,7 @@
               <span>Durum</span><span class="sayi" data-sayi="0"></span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
             </button>
             <div class="acilir-yuzey suzgec" id="txDurum-yuzey" role="group" aria-label="Durum süzgeci" hidden>
-              <div class="acilir-bas"><span>Durum</span><button type="button">Temizle</button></div>
+              <div class="acilir-bas"><span>Durum</span><button type="button" data-eylem="suzgec-temizle">Temizle</button></div>
               <button class="cip suzgec aktif" type="button" aria-pressed="true">Tümü</button>
               <button class="cip suzgec" type="button" aria-pressed="false">Aktif</button>
               <button class="cip suzgec" type="button" aria-pressed="false">Pasif</button>
@@ -252,7 +268,7 @@
               <span>Eksen</span><span class="sayi" data-sayi="0"></span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
             </button>
             <div class="acilir-yuzey suzgec" id="txUst-yuzey" role="group" aria-label="Eksen süzgeci" hidden>
-              <div class="acilir-bas"><span>Eksen</span><button type="button">Temizle</button></div>
+              <div class="acilir-bas"><span>Eksen</span><button type="button" data-eylem="suzgec-temizle">Temizle</button></div>
               <button class="cip suzgec aktif" type="button" aria-pressed="true">Tümü</button>
               <button class="cip suzgec" type="button" aria-pressed="false">Kategori</button>
               <button class="cip suzgec" type="button" aria-pressed="false">Mutfak</button>
@@ -265,7 +281,7 @@
               <span>Dil</span><span class="sayi" data-sayi="0"></span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
             </button>
             <div class="acilir-yuzey suzgec" id="txDil-yuzey" role="group" aria-label="Dil süzgeci" hidden>
-              <div class="acilir-bas"><span>Dil</span><button type="button">Temizle</button></div>
+              <div class="acilir-bas"><span>Dil</span><button type="button" data-eylem="suzgec-temizle">Temizle</button></div>
               <button class="cip suzgec aktif" type="button" aria-pressed="true">Tümü</button>
               <button class="cip suzgec" type="button" aria-pressed="false">Türkçe</button>
               <button class="cip suzgec" type="button" aria-pressed="false">İngilizce</button>
@@ -274,11 +290,11 @@
           </div>
             <div class="sag">
           <div class="coklu-secim">
-            <button class="suzgec-dugme" type="button" id="txKolon" aria-haspopup="true" aria-expanded="false" aria-controls="txKolon-yuzey">
+            <button class="suzgec-dugme" type="button" id="txKolon" aria-haspopup="true" aria-expanded="false" aria-controls="txKolon-yuzey" data-eylem="kolonlar">
               <i class="fa-solid fa-table-columns" aria-hidden="true"></i><span>Kolonlar</span>
             </button>
             <div class="acilir-yuzey saga kolon-secim" id="txKolon-yuzey" role="group" aria-label="Görünen kolonlar" hidden>
-              <div class="acilir-bas"><span>Görünen kolonlar</span><button type="button">Sıfırla</button></div>
+              <div class="acilir-bas"><span>Görünen kolonlar</span><button type="button" data-eylem="suzgec-temizle">Sıfırla</button></div>
               <label class="acilir-kalem kilitli"><input type="checkbox" checked disabled> Terim</label>
               <label class="acilir-kalem"><input type="checkbox" checked> Kullanım</label>
               <label class="acilir-kalem kilitli"><input type="checkbox" checked disabled> Durum</label>
@@ -312,84 +328,112 @@
                     <td><b>Sebze</b><small>sebze · eksen: Kategori</small></td>
                     <td class="num">269 kayıt</td>
                     <td><span class="durum-hapi ikonlu cozulen"><i class="fa-solid fa-circle-check" aria-hidden="true"></i> Aktif</span></td>
-                    <td class="eylem"><div class="satir-eylem"><button class="ikon-dugme" type="button" aria-label="Sebze terimini düzenle" title="Sebze terimini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="Sebze teriminin kullanıldığı içerikleri gör" title="Sebze teriminin kullanıldığı içerikleri gör"><i class="fa-solid fa-list" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" aria-label="Sebze terimini sil" title="Sebze terimini sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
+                    <td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" data-islem="duzenle" href="admin-taksonomi-form.html?id=sebze" aria-label="Sebze terimini düzenle" title="Sebze terimini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a><a class="ikon-dugme" href="admin-tarifler.html?taksonomi=Sebze" aria-label="Sebze teriminin kullanıldığı içerikleri gör" title="Sebze teriminin kullanıldığı içerikleri gör"><i class="fa-solid fa-list" aria-hidden="true"></i></a><button class="ikon-dugme yikici" type="button" data-islem="sil" aria-label="Sebze terimini sil" title="Sebze terimini sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
                   </tr>
                   <tr>
                     <td class="sec"><label><input type="checkbox" aria-label="Kırmızı Et terimini seç"></label></td>
                     <td><b>Kırmızı Et</b><small>kirmizi-et · eksen: Kategori</small></td>
                     <td class="num">229 kayıt</td>
                     <td><span class="durum-hapi ikonlu cozulen"><i class="fa-solid fa-circle-check" aria-hidden="true"></i> Aktif</span></td>
-                    <td class="eylem"><div class="satir-eylem"><button class="ikon-dugme" type="button" aria-label="Kırmızı Et terimini düzenle" title="Kırmızı Et terimini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="Kırmızı Et teriminin kullanıldığı içerikleri gör" title="Kırmızı Et teriminin kullanıldığı içerikleri gör"><i class="fa-solid fa-list" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" aria-label="Kırmızı Et terimini sil" title="Kırmızı Et terimini sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
+                    <td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" data-islem="duzenle" href="admin-taksonomi-form.html?id=kirmizi-et" aria-label="Kırmızı Et terimini düzenle" title="Kırmızı Et terimini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a><a class="ikon-dugme" href="admin-tarifler.html?taksonomi=K%C4%B1rm%C4%B1z%C4%B1%20Et" aria-label="Kırmızı Et teriminin kullanıldığı içerikleri gör" title="Kırmızı Et teriminin kullanıldığı içerikleri gör"><i class="fa-solid fa-list" aria-hidden="true"></i></a><button class="ikon-dugme yikici" type="button" data-islem="sil" aria-label="Kırmızı Et terimini sil" title="Kırmızı Et terimini sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
                   </tr>
                   <tr>
                     <td class="sec"><label><input type="checkbox" aria-label="Meze terimini seç"></label></td>
                     <td><b>Meze</b><small>meze · eksen: Kategori</small></td>
                     <td class="num">212 kayıt</td>
                     <td><span class="durum-hapi ikonlu cozulen"><i class="fa-solid fa-circle-check" aria-hidden="true"></i> Aktif</span></td>
-                    <td class="eylem"><div class="satir-eylem"><button class="ikon-dugme" type="button" aria-label="Meze terimini düzenle" title="Meze terimini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="Meze teriminin kullanıldığı içerikleri gör" title="Meze teriminin kullanıldığı içerikleri gör"><i class="fa-solid fa-list" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" aria-label="Meze terimini sil" title="Meze terimini sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
+                    <td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" data-islem="duzenle" href="admin-taksonomi-form.html?id=meze" aria-label="Meze terimini düzenle" title="Meze terimini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a><a class="ikon-dugme" href="admin-tarifler.html?taksonomi=Meze" aria-label="Meze teriminin kullanıldığı içerikleri gör" title="Meze teriminin kullanıldığı içerikleri gör"><i class="fa-solid fa-list" aria-hidden="true"></i></a><button class="ikon-dugme yikici" type="button" data-islem="sil" aria-label="Meze terimini sil" title="Meze terimini sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
                   </tr>
                   <tr>
                     <td class="sec"><label><input type="checkbox" aria-label="Atıştırmalık terimini seç"></label></td>
                     <td><b>Atıştırmalık</b><small>atistirmalik · eksen: Kategori</small></td>
                     <td class="num">206 kayıt</td>
                     <td><span class="durum-hapi ikonlu cozulen"><i class="fa-solid fa-circle-check" aria-hidden="true"></i> Aktif</span></td>
-                    <td class="eylem"><div class="satir-eylem"><button class="ikon-dugme" type="button" aria-label="Atıştırmalık terimini düzenle" title="Atıştırmalık terimini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="Atıştırmalık teriminin kullanıldığı içerikleri gör" title="Atıştırmalık teriminin kullanıldığı içerikleri gör"><i class="fa-solid fa-list" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" aria-label="Atıştırmalık terimini sil" title="Atıştırmalık terimini sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
+                    <td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" data-islem="duzenle" href="admin-taksonomi-form.html?id=atistirmalik" aria-label="Atıştırmalık terimini düzenle" title="Atıştırmalık terimini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a><a class="ikon-dugme" href="admin-tarifler.html?taksonomi=At%C4%B1%C5%9Ft%C4%B1rmal%C4%B1k" aria-label="Atıştırmalık teriminin kullanıldığı içerikleri gör" title="Atıştırmalık teriminin kullanıldığı içerikleri gör"><i class="fa-solid fa-list" aria-hidden="true"></i></a><button class="ikon-dugme yikici" type="button" data-islem="sil" aria-label="Atıştırmalık terimini sil" title="Atıştırmalık terimini sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
                   </tr>
                   <tr>
                     <td class="sec"><label><input type="checkbox" aria-label="Kahvaltılık terimini seç"></label></td>
                     <td><b>Kahvaltılık</b><small>kahvaltilik · eksen: Kategori</small></td>
                     <td class="num">201 kayıt</td>
                     <td><span class="durum-hapi ikonlu cozulen"><i class="fa-solid fa-circle-check" aria-hidden="true"></i> Aktif</span></td>
-                    <td class="eylem"><div class="satir-eylem"><button class="ikon-dugme" type="button" aria-label="Kahvaltılık terimini düzenle" title="Kahvaltılık terimini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="Kahvaltılık teriminin kullanıldığı içerikleri gör" title="Kahvaltılık teriminin kullanıldığı içerikleri gör"><i class="fa-solid fa-list" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" aria-label="Kahvaltılık terimini sil" title="Kahvaltılık terimini sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
+                    <td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" data-islem="duzenle" href="admin-taksonomi-form.html?id=kahvaltilik" aria-label="Kahvaltılık terimini düzenle" title="Kahvaltılık terimini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a><a class="ikon-dugme" href="admin-tarifler.html?taksonomi=Kahvalt%C4%B1l%C4%B1k" aria-label="Kahvaltılık teriminin kullanıldığı içerikleri gör" title="Kahvaltılık teriminin kullanıldığı içerikleri gör"><i class="fa-solid fa-list" aria-hidden="true"></i></a><button class="ikon-dugme yikici" type="button" data-islem="sil" aria-label="Kahvaltılık terimini sil" title="Kahvaltılık terimini sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
                   </tr>
                   <tr>
                     <td class="sec"><label><input type="checkbox" aria-label="Balık ve Deniz Ürünleri terimini seç"></label></td>
                     <td><b>Balık ve Deniz Ürünleri</b><small>balik-ve-deniz-urunleri · eksen: Kategori</small></td>
                     <td class="num">197 kayıt</td>
                     <td><span class="durum-hapi ikonlu cozulen"><i class="fa-solid fa-circle-check" aria-hidden="true"></i> Aktif</span></td>
-                    <td class="eylem"><div class="satir-eylem"><button class="ikon-dugme" type="button" aria-label="Balık ve Deniz Ürünleri terimini düzenle" title="Balık ve Deniz Ürünleri terimini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="Balık ve Deniz Ürünleri teriminin kullanıldığı içerikleri gör" title="Balık ve Deniz Ürünleri teriminin kullanıldığı içerikleri gör"><i class="fa-solid fa-list" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" aria-label="Balık ve Deniz Ürünleri terimini sil" title="Balık ve Deniz Ürünleri terimini sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
+                    <td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" data-islem="duzenle" href="admin-taksonomi-form.html?id=balik-ve-deniz-urunleri" aria-label="Balık ve Deniz Ürünleri terimini düzenle" title="Balık ve Deniz Ürünleri terimini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a><a class="ikon-dugme" href="admin-tarifler.html?taksonomi=Bal%C4%B1k%20ve%20Deniz%20%C3%9Cr%C3%BCnleri" aria-label="Balık ve Deniz Ürünleri teriminin kullanıldığı içerikleri gör" title="Balık ve Deniz Ürünleri teriminin kullanıldığı içerikleri gör"><i class="fa-solid fa-list" aria-hidden="true"></i></a><button class="ikon-dugme yikici" type="button" data-islem="sil" aria-label="Balık ve Deniz Ürünleri terimini sil" title="Balık ve Deniz Ürünleri terimini sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
                   </tr>
                   <tr>
                     <td class="sec"><label><input type="checkbox" aria-label="Çorba terimini seç"></label></td>
                     <td><b>Çorba</b><small>corba · eksen: Kategori</small></td>
                     <td class="num">192 kayıt</td>
                     <td><span class="durum-hapi ikonlu cozulen"><i class="fa-solid fa-circle-check" aria-hidden="true"></i> Aktif</span></td>
-                    <td class="eylem"><div class="satir-eylem"><button class="ikon-dugme" type="button" aria-label="Çorba terimini düzenle" title="Çorba terimini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="Çorba teriminin kullanıldığı içerikleri gör" title="Çorba teriminin kullanıldığı içerikleri gör"><i class="fa-solid fa-list" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" aria-label="Çorba terimini sil" title="Çorba terimini sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
+                    <td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" data-islem="duzenle" href="admin-taksonomi-form.html?id=corba" aria-label="Çorba terimini düzenle" title="Çorba terimini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a><a class="ikon-dugme" href="admin-tarifler.html?taksonomi=%C3%87orba" aria-label="Çorba teriminin kullanıldığı içerikleri gör" title="Çorba teriminin kullanıldığı içerikleri gör"><i class="fa-solid fa-list" aria-hidden="true"></i></a><button class="ikon-dugme yikici" type="button" data-islem="sil" aria-label="Çorba terimini sil" title="Çorba terimini sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
                   </tr>
                   <tr>
                     <td class="sec"><label><input type="checkbox" aria-label="Tavuk ve Hindi terimini seç"></label></td>
                     <td><b>Tavuk ve Hindi</b><small>tavuk-ve-hindi · eksen: Kategori</small></td>
                     <td class="num">192 kayıt</td>
                     <td><span class="durum-hapi ikonlu cozulen"><i class="fa-solid fa-circle-check" aria-hidden="true"></i> Aktif</span></td>
-                    <td class="eylem"><div class="satir-eylem"><button class="ikon-dugme" type="button" aria-label="Tavuk ve Hindi terimini düzenle" title="Tavuk ve Hindi terimini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="Tavuk ve Hindi teriminin kullanıldığı içerikleri gör" title="Tavuk ve Hindi teriminin kullanıldığı içerikleri gör"><i class="fa-solid fa-list" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" aria-label="Tavuk ve Hindi terimini sil" title="Tavuk ve Hindi terimini sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
+                    <td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" data-islem="duzenle" href="admin-taksonomi-form.html?id=tavuk-ve-hindi" aria-label="Tavuk ve Hindi terimini düzenle" title="Tavuk ve Hindi terimini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a><a class="ikon-dugme" href="admin-tarifler.html?taksonomi=Tavuk%20ve%20Hindi" aria-label="Tavuk ve Hindi teriminin kullanıldığı içerikleri gör" title="Tavuk ve Hindi teriminin kullanıldığı içerikleri gör"><i class="fa-solid fa-list" aria-hidden="true"></i></a><button class="ikon-dugme yikici" type="button" data-islem="sil" aria-label="Tavuk ve Hindi terimini sil" title="Tavuk ve Hindi terimini sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
                   </tr>
                   <tr>
                     <td class="sec"><label><input type="checkbox" aria-label="Pilav terimini seç"></label></td>
                     <td><b>Pilav</b><small>pilav · eksen: Kategori</small></td>
                     <td class="num">190 kayıt</td>
                     <td><span class="durum-hapi ikonlu cozulen"><i class="fa-solid fa-circle-check" aria-hidden="true"></i> Aktif</span></td>
-                    <td class="eylem"><div class="satir-eylem"><button class="ikon-dugme" type="button" aria-label="Pilav terimini düzenle" title="Pilav terimini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="Pilav teriminin kullanıldığı içerikleri gör" title="Pilav teriminin kullanıldığı içerikleri gör"><i class="fa-solid fa-list" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" aria-label="Pilav terimini sil" title="Pilav terimini sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
+                    <td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" data-islem="duzenle" href="admin-taksonomi-form.html?id=pilav" aria-label="Pilav terimini düzenle" title="Pilav terimini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a><a class="ikon-dugme" href="admin-tarifler.html?taksonomi=Pilav" aria-label="Pilav teriminin kullanıldığı içerikleri gör" title="Pilav teriminin kullanıldığı içerikleri gör"><i class="fa-solid fa-list" aria-hidden="true"></i></a><button class="ikon-dugme yikici" type="button" data-islem="sil" aria-label="Pilav terimini sil" title="Pilav terimini sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
                   </tr>
                   <tr>
                     <td class="sec"><label><input type="checkbox" aria-label="Tatlı terimini seç"></label></td>
                     <td><b>Tatlı</b><small>tatli · eksen: Kategori</small></td>
                     <td class="num">190 kayıt</td>
                     <td><span class="durum-hapi ikonlu cozulen"><i class="fa-solid fa-circle-check" aria-hidden="true"></i> Aktif</span></td>
-                    <td class="eylem"><div class="satir-eylem"><button class="ikon-dugme" type="button" aria-label="Tatlı terimini düzenle" title="Tatlı terimini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="Tatlı teriminin kullanıldığı içerikleri gör" title="Tatlı teriminin kullanıldığı içerikleri gör"><i class="fa-solid fa-list" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" aria-label="Tatlı terimini sil" title="Tatlı terimini sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
+                    <td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" data-islem="duzenle" href="admin-taksonomi-form.html?id=tatli" aria-label="Tatlı terimini düzenle" title="Tatlı terimini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a><a class="ikon-dugme" href="admin-tarifler.html?taksonomi=Tatl%C4%B1" aria-label="Tatlı teriminin kullanıldığı içerikleri gör" title="Tatlı teriminin kullanıldığı içerikleri gör"><i class="fa-solid fa-list" aria-hidden="true"></i></a><button class="ikon-dugme yikici" type="button" data-islem="sil" aria-label="Tatlı terimini sil" title="Tatlı terimini sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
+                  </tr>
+                  <tr>
+                    <td class="sec"><label><input type="checkbox" aria-label="Sandviç, Burger ve Dürüm terimini seç"></label></td>
+                    <td><b>Sandviç, Burger ve Dürüm</b><small>sandvic-burger-ve-durum · eksen: Kategori</small></td>
+                    <td class="num">187 kayıt</td>
+                    <td><span class="durum-hapi ikonlu cozulen"><i class="fa-solid fa-circle-check" aria-hidden="true"></i> Aktif</span></td>
+                    <td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" data-islem="duzenle" href="admin-taksonomi-form.html?id=sandvic-burger-ve-durum" aria-label="Sandviç, Burger ve Dürüm terimini düzenle" title="Sandviç, Burger ve Dürüm terimini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a><a class="ikon-dugme" href="admin-tarifler.html?taksonomi=Sandvi%C3%A7%2C%20Burger%20ve%20D%C3%BCr%C3%BCm" aria-label="Sandviç, Burger ve Dürüm teriminin kullanıldığı içerikleri gör" title="Sandviç, Burger ve Dürüm teriminin kullanıldığı içerikleri gör"><i class="fa-solid fa-list" aria-hidden="true"></i></a><button class="ikon-dugme yikici" type="button" data-islem="sil" aria-label="Sandviç, Burger ve Dürüm terimini sil" title="Sandviç, Burger ve Dürüm terimini sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
+                  </tr>
+                  <tr>
+                    <td class="sec"><label><input type="checkbox" aria-label="Meyve Tarifleri terimini seç"></label></td>
+                    <td><b>Meyve Tarifleri</b><small>meyve-tarifleri · eksen: Kategori</small></td>
+                    <td class="num">185 kayıt</td>
+                    <td><span class="durum-hapi ikonlu cozulen"><i class="fa-solid fa-circle-check" aria-hidden="true"></i> Aktif</span></td>
+                    <td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" data-islem="duzenle" href="admin-taksonomi-form.html?id=meyve-tarifleri" aria-label="Meyve Tarifleri terimini düzenle" title="Meyve Tarifleri terimini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a><a class="ikon-dugme" href="admin-tarifler.html?taksonomi=Meyve%20Tarifleri" aria-label="Meyve Tarifleri teriminin kullanıldığı içerikleri gör" title="Meyve Tarifleri teriminin kullanıldığı içerikleri gör"><i class="fa-solid fa-list" aria-hidden="true"></i></a><button class="ikon-dugme yikici" type="button" data-islem="sil" aria-label="Meyve Tarifleri terimini sil" title="Meyve Tarifleri terimini sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
+                  </tr>
+                  <tr>
+                    <td class="sec"><label><input type="checkbox" aria-label="İçecek terimini seç"></label></td>
+                    <td><b>İçecek</b><small>icecek · eksen: Kategori</small></td>
+                    <td class="num">184 kayıt</td>
+                    <td><span class="durum-hapi ikonlu cozulen"><i class="fa-solid fa-circle-check" aria-hidden="true"></i> Aktif</span></td>
+                    <td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" data-islem="duzenle" href="admin-taksonomi-form.html?id=icecek" aria-label="İçecek terimini düzenle" title="İçecek terimini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a><a class="ikon-dugme" href="admin-tarifler.html?taksonomi=%C4%B0%C3%A7ecek" aria-label="İçecek teriminin kullanıldığı içerikleri gör" title="İçecek teriminin kullanıldığı içerikleri gör"><i class="fa-solid fa-list" aria-hidden="true"></i></a><button class="ikon-dugme yikici" type="button" data-islem="sil" aria-label="İçecek terimini sil" title="İçecek terimini sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
+                  </tr>
+                  <tr>
+                    <td class="sec"><label><input type="checkbox" aria-label="Köfte ve Kebap terimini seç"></label></td>
+                    <td><b>Köfte ve Kebap</b><small>kofte-ve-kebap · eksen: Kategori</small></td>
+                    <td class="num">183 kayıt</td>
+                    <td><span class="durum-hapi ikonlu cozulen"><i class="fa-solid fa-circle-check" aria-hidden="true"></i> Aktif</span></td>
+                    <td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" data-islem="duzenle" href="admin-taksonomi-form.html?id=kofte-ve-kebap" aria-label="Köfte ve Kebap terimini düzenle" title="Köfte ve Kebap terimini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a><a class="ikon-dugme" href="admin-tarifler.html?taksonomi=K%C3%B6fte%20ve%20Kebap" aria-label="Köfte ve Kebap teriminin kullanıldığı içerikleri gör" title="Köfte ve Kebap teriminin kullanıldığı içerikleri gör"><i class="fa-solid fa-list" aria-hidden="true"></i></a><button class="ikon-dugme yikici" type="button" data-islem="sil" aria-label="Köfte ve Kebap terimini sil" title="Köfte ve Kebap terimini sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
                   </tr>
                   <tr>
                     <td class="sec"><label><input type="checkbox" aria-label="Ekmek terimini seç"></label></td>
                     <td><b>Ekmek</b><small>ekmek · eksen: Kategori</small></td>
                     <td class="num">168 kayıt</td>
                     <td><span class="durum-hapi ikonlu cozulen"><i class="fa-solid fa-circle-check" aria-hidden="true"></i> Aktif</span></td>
-                    <td class="eylem"><div class="satir-eylem"><button class="ikon-dugme" type="button" aria-label="Ekmek terimini düzenle" title="Ekmek terimini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="Ekmek teriminin kullanıldığı içerikleri gör" title="Ekmek teriminin kullanıldığı içerikleri gör"><i class="fa-solid fa-list" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" aria-label="Ekmek terimini sil" title="Ekmek terimini sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
+                    <td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" data-islem="duzenle" href="admin-taksonomi-form.html?id=ekmek" aria-label="Ekmek terimini düzenle" title="Ekmek terimini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a><a class="ikon-dugme" href="admin-tarifler.html?taksonomi=Ekmek" aria-label="Ekmek teriminin kullanıldığı içerikleri gör" title="Ekmek teriminin kullanıldığı içerikleri gör"><i class="fa-solid fa-list" aria-hidden="true"></i></a><button class="ikon-dugme yikici" type="button" data-islem="sil" aria-label="Ekmek terimini sil" title="Ekmek terimini sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
                   </tr>
                   <tr>
                     <td class="sec"><label><input type="checkbox" aria-label="Makarna terimini seç"></label></td>
                     <td><b>Makarna</b><small>makarna · eksen: Kategori</small></td>
                     <td class="num">167 kayıt</td>
                     <td><span class="durum-hapi ikonlu cozulen"><i class="fa-solid fa-circle-check" aria-hidden="true"></i> Aktif</span></td>
-                    <td class="eylem"><div class="satir-eylem"><button class="ikon-dugme" type="button" aria-label="Makarna terimini düzenle" title="Makarna terimini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="Makarna teriminin kullanıldığı içerikleri gör" title="Makarna teriminin kullanıldığı içerikleri gör"><i class="fa-solid fa-list" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" aria-label="Makarna terimini sil" title="Makarna terimini sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
+                    <td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" data-islem="duzenle" href="admin-taksonomi-form.html?id=makarna" aria-label="Makarna terimini düzenle" title="Makarna terimini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a><a class="ikon-dugme" href="admin-tarifler.html?taksonomi=Makarna" aria-label="Makarna teriminin kullanıldığı içerikleri gör" title="Makarna teriminin kullanıldığı içerikleri gör"><i class="fa-solid fa-list" aria-hidden="true"></i></a><button class="ikon-dugme yikici" type="button" data-islem="sil" aria-label="Makarna terimini sil" title="Makarna terimini sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
                   </tr>
                 </tbody>
               </table>
@@ -451,7 +495,7 @@
           <span class="bos-ikon"><i class="fa-solid fa-inbox" aria-hidden="true"></i></span>
           <h3>Bu süzgeçle sonuç yok</h3>
           <p>Süzgeci genişlet ya da aramayı değiştir.</p>
-          <button class="dugme hayalet" type="button">Süzgeci temizle</button>
+          <button class="dugme hayalet" type="button" data-eylem="suzgec-temizle">Süzgeci temizle</button>
         </div>
 
         <!-- 3 · YETKİSİZ ERİŞİM — düğme YOK, sınır bir hata değildir -->
@@ -466,7 +510,7 @@
           <span class="bos-ikon"><i class="fa-solid fa-plug-circle-xmark" aria-hidden="true"></i></span>
           <h3>Liste yüklenemedi</h3>
           <p>Bağlantı kurulamadı. Yeniden dene.</p>
-          <button class="dugme hayalet" type="button"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i> Yeniden dene</button>
+          <button class="dugme hayalet" type="button" data-eylem="calistir" data-ad="Yeniden dene"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i> Yeniden dene</button>
           <p class="hata-izi">Destek talebine ekle: <code>TX-3391-LST</code></p>
         </div>
           </div>
@@ -474,9 +518,9 @@
         <div class="sayfalama kart-ayagi">
           <div class="sayfalama-bilgi"><b>1–12</b> / 33 terim</div>
           <div class="dugmeler">
-            <button class="sayfa-dugme sade ok" type="button" disabled aria-label="Önceki sayfa"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i></button>
-            <button class="sayfa-dugme sade aktif" type="button" aria-current="page">1</button>
-            <button class="sayfa-dugme sade ok" type="button" aria-label="Sonraki sayfa"><i class="fa-solid fa-chevron-right" aria-hidden="true"></i></button>
+            <button class="sayfa-dugme sade ok" type="button" disabled aria-label="Önceki sayfa" data-eylem="sayfala"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i></button>
+            <button class="sayfa-dugme sade aktif" type="button" aria-current="page" data-eylem="sayfala">1</button>
+            <button class="sayfa-dugme sade ok" type="button" aria-label="Sonraki sayfa" data-eylem="sayfala"><i class="fa-solid fa-chevron-right" aria-hidden="true"></i></button>
           </div>
         </div>
         </div>
@@ -518,5 +562,14 @@
     </div>
   </main>
 <script src="_ortak/panel.js" defer></script>
+<!-- ADMIN-KIT:JS:BAS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/7.3.0/tinymce.min.js" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/l10n/tr.js"></script>
+<script src="../../kanon/admin-editor-tr.js"></script>
+<script src="../../kanon/admin-kit.js" defer></script>
+<script src="../../kanon/admin-editor.js" defer></script>
+<script src="../../kanon/admin-tarih.js" defer></script>
+<!-- ADMIN-KIT:JS:SON -->
 </body>
 </html>

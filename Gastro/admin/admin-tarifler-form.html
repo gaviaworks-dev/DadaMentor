@@ -8,8 +8,12 @@
 <link rel="stylesheet" href="../../kanon/markalar/gastro.css">
 <link rel="stylesheet" href="../../kanon/bilesenler.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<!-- ADMIN-KIT:CSS:BAS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.css">
+<link rel="stylesheet" href="../../kanon/admin.css">
+<!-- ADMIN-KIT:CSS:SON -->
 </head>
-<body class="yetkili">
+<body class="yetkili" data-marka="gastro">
 <!-- ═══ GASTRO ADMIN · KANONİK KABUK — lead üretti, agent DEĞİŞTİRMEZ.
      Kaynak: deneme/admin-fit/_ortak/kabuk.html · üretim: scripts/olcum/gadm-kabuk-uret.mjs
      Şerh ve ikon kaynakları: deneme/admin-gastro/_ortak/kabuk-serh.txt ═══ -->
@@ -18,22 +22,34 @@
   <a class="panel-ray-ikon aktif" href="#" style="--eko:var(--eko-gastro)"
      aria-current="true" title="DadaGastro" aria-label="DadaGastro"><i class="fa-solid fa-utensils"></i></a>
   <span class="panel-ray-ayrac" role="presentation"></span>
+  <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-diet)"    title="DadaDiet"    aria-label="DadaDiet"><i class="fa-solid fa-heart-pulse"></i></a>
+  <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-gourmet)" title="DadaGourmet" aria-label="DadaGourmet"><i class="fa-solid fa-map-location-dot"></i></a>
   <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-fit)"  title="DadaFit"  aria-label="DadaFit"><i class="fa-solid fa-dumbbell"></i></a>
-  <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-diet)"    title="DadaDiet"    aria-label="DadaDiet"><i class="fa-solid fa-leaf"></i></a>
-  <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-gourmet)" title="DadaGourmet" aria-label="DadaGourmet"><i class="fa-solid fa-wine-glass"></i></a>
   <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-campus)"  title="DadaCampus"  aria-label="DadaCampus"><i class="fa-solid fa-graduation-cap"></i></a>
+  <span class="panel-ray-ikon kilitli" title="DadaStore — erişimin yok" aria-label="DadaStore, erişim yok"><i class="fa-solid fa-bag-shopping"></i></span>
   <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-mentor)"  title="DadaMentor"  aria-label="DadaMentor"><i class="fa-solid fa-compass"></i></a>
-  <span class="panel-ray-ikon kilitli" title="DadaStore — erişimin yok" aria-label="DadaStore, erişim yok"><i class="fa-solid fa-lock"></i></span>
   <div class="panel-ray-alt">
     <a class="panel-ray-ikon" href="#" title="Yardım" aria-label="Yardım"><i class="fa-solid fa-circle-question"></i></a>
+<!-- ADMIN-KIT:IMZA:BAS -->
+    <a class="panel-ray-imza" href="https://gaviaworks.com" target="_blank" rel="noopener"
+       title="Gaviaworks" aria-label="Gaviaworks — gaviaworks.com">
+      <span class="yalniz-okuyucu">Gaviaworks</span>
+    </a>
+<!-- ADMIN-KIT:IMZA:SON -->
   </div>
 </aside>
 
 <!-- ── MODÜL MENÜSÜ · DÖRT KATEGORİ ───────────────────────────────── -->
 <nav class="panel-menu" id="panelMenu" aria-label="Modüller">
+<!-- ADMIN-KIT:KABUK:BAS -->
   <div class="panel-menu-bas">
-    <b>DadaGastro</b><span>Yönetim paneli</span>
+    <a class="panel-marka" href="admin-genel-bakis.html" aria-label="DadaGastro yönetim paneli">
+      <span class="yalniz-okuyucu">DadaGastro · Yönetim paneli</span>
+    </a>
   </div>
+  <button type="button" class="panel-katla" aria-pressed="false"
+          aria-label="Menüyü daralt"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i></button>
+<!-- ADMIN-KIT:KABUK:SON -->
   <div class="panel-menu-govde">
 
     <div class="panel-menu-bolum">01 Genel</div>
@@ -186,10 +202,16 @@
                   
                 <span class="alan-hata goster"><i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i> Tarif adı zorunlu.</span></div>
                 <div class="alan">
+                  <label for="hfAltBaslik" class="alan-etiket">Alt başlık <span class="acilir-kalem">— public H1'in ikinci parçası</span><span class="alan-sayac" data-say-for="hfAltBaslik">0 / 80</span></label>
+                  <input class="alan-girdi" id="hfAltBaslik" name="alt_baslik" type="text" maxlength="80" placeholder="Örn. Geleneksel Ev Yapımı Tarif">
+                  <div class="alan-yardim"><span>Detay sayfasının başlığı iki parçadır:
+                    <b>Tarif adı</b> | <b>alt başlık</b>. Boş bırakılırsa yalnız tarif adı basılır.</span></div>
+                </div>
+                <div class="alan">
                   <label for="hfSlug" class="alan-etiket">Adres <span class="zorunlu">*</span></label>
                   <div class="slug-alani">
                     <span class="slug-onek">dadagastro.com/tarif/</span>
-                    <input class="alan-girdi" id="hfSlug" name="slug" type="text" required="" pattern="[a-z0-9]+(-[a-z0-9]+)*" placeholder="etli-kuru-fasulye">
+                    <input data-girdi="slug" class="alan-girdi" id="hfSlug" name="slug" type="text" required="" pattern="[a-z0-9]+(-[a-z0-9]+)*" placeholder="etli-kuru-fasulye">
                   </div>
                   <div class="alan-yardim"><span>Yalnız küçük harf, rakam ve tire. Adres bir kez yayımlandıktan
                     sonra değiştirilirse eski bağlantılar kırılır.</span></div>
@@ -215,7 +237,23 @@
                   </div>
                   <div class="alan">
                     <label for="hfSure" class="alan-etiket">Porsiyon — kişi</label>
-                    <input class="alan-girdi" id="hfSure" name="sure" type="text" placeholder="4 kişi">
+                    <input class="alan-girdi" id="hfSure" name="porsiyon" type="text" placeholder="4 kişilik">
+                  </div>
+                </div>
+                <div class="alan kart-izgara c3">
+                  <div class="alan">
+                    <label for="hfHazirlik" class="alan-etiket">Hazırlık süresi <span class="acilir-kalem">— dk</span></label>
+                    <input class="alan-girdi" id="hfHazirlik" name="hazirlik_dk" type="number" min="0" data-girdi="sayi" placeholder="20">
+                  </div>
+                  <div class="alan">
+                    <label for="hfPisirme" class="alan-etiket">Pişirme süresi <span class="acilir-kalem">— dk</span></label>
+                    <input class="alan-girdi" id="hfPisirme" name="pisirme_dk" type="number" min="0" data-girdi="sayi" placeholder="90">
+                  </div>
+                  <div class="alan">
+                    <label for="hfSef" class="alan-etiket">Yazar / şef</label>
+                    <select class="alan-secim" id="hfSef" name="sef"><option value="" selected="">Seç…</option><option value="ece-asci">Ece Aşçı</option><option value="canan-komi">Canan Komi</option><option value="emel-abadan">Emel Abadan</option><option value="burcu-komi">Burcu Komi</option><option value="nurgul-karaca">Nurgül Karaca</option><option value="ruya-komi">Rüya Komi</option><option value="hatice-uslu">Hatice Uslu</option><option value="sema-aydin">Sema Aydın</option><option value="gulten-dogan">Gülten Doğan</option><option value="fatma-ozturk">Fatma Öztürk</option><option value="kerem-aslan">Kerem Aslan</option><option value="zehra-yilmaz">Zehra Yılmaz</option></select>
+                    <div class="alan-yardim"><span>Kayıtlar <a href="admin-sefler.html">Şefler ve Topluluk</a>
+                      ekranından gelir; public künyede ad, unvan ve avatar birlikte basılır.</span></div>
                   </div>
                 </div>
                 <div class="alan">
@@ -240,11 +278,29 @@
                 <div class="alan kart-izgara c2">
                   <div class="alan">
                     <label for="hfPop" class="alan-etiket">Popülerlik <span class="acilir-kalem">— sıralama ağırlığı, 0–100</span></label>
-                    <input class="alan-girdi" id="hfPop" name="pop" type="number" min="0" max="100" value="60">
+                    <input data-girdi="sayi" class="alan-girdi" id="hfPop" name="pop" type="number" min="0" max="100" value="60">
                   </div>
                   <div class="alan">
                     <label class="alan-etiket">Süre bandı <span class="acilir-kalem">— tarif hangi süre süzgecine girer</span></label>
                     <div class="cipler" id="hfBant"><label class="cip"><input type="checkbox" name="sureBant[]" value="0"> 0–15 dk</label><label class="cip"><input type="checkbox" name="sureBant[]" value="1"> 15–30 dk</label><label class="cip"><input type="checkbox" name="sureBant[]" value="2"> 30–45 dk</label><label class="cip"><input type="checkbox" name="sureBant[]" value="3"> 45–60 dk</label><label class="cip"><input type="checkbox" name="sureBant[]" value="4"> 1–2 saat</label><label class="cip"><input type="checkbox" name="sureBant[]" value="5"> 2 saat ve üzeri</label></div>
+                  </div>
+                </div>
+                <div class="alan">
+                  <label class="alan-etiket">Özellik rozetleri <span class="acilir-kalem">— künye şeridinde basılır</span></label>
+                  <div class="cipler" id="hfOzellik"><label class="cip"><input type="checkbox" name="ozellik[]" value="vegan"> Vegan</label><label class="cip"><input type="checkbox" name="ozellik[]" value="vejetaryen"> Vejetaryen</label><label class="cip"><input type="checkbox" name="ozellik[]" value="glutensiz"> Glutensiz</label><label class="cip"><input type="checkbox" name="ozellik[]" value="protein-agirlikli"> Protein Ağırlıklı</label><label class="cip"><input type="checkbox" name="ozellik[]" value="az-yagli"> Az Yağlı</label><label class="cip"><input type="checkbox" name="ozellik[]" value="glutenli"> Glutenli</label><label class="cip"><input type="checkbox" name="ozellik[]" value="laktozsuz"> Laktozsuz</label><label class="cip"><input type="checkbox" name="ozellik[]" value="sut-icermez"> Süt İçermez</label><label class="cip"><input type="checkbox" name="ozellik[]" value="yumurta-icermez"> Yumurta İçermez</label><label class="cip"><input type="checkbox" name="ozellik[]" value="seker-ilavesiz"> Şeker İlavesiz</label><label class="cip"><input type="checkbox" name="ozellik[]" value="yuksek-lifli"> Yüksek Lifli</label><label class="cip"><input type="checkbox" name="ozellik[]" value="tam-tahilli"> Tam Tahıllı</label><label class="cip"><input type="checkbox" name="ozellik[]" value="acili"> Acılı</label><label class="cip"><input type="checkbox" name="ozellik[]" value="baharatli"> Baharatlı</label><label class="cip"><input type="checkbox" name="ozellik[]" value="diyabete-uygun"> Diyabete Uygun</label><label class="cip"><input type="checkbox" name="ozellik[]" value="kalp-dostu"> Kalp Dostu</label><label class="cip"><input type="checkbox" name="ozellik[]" value="dusuk-kalorili"> Düşük Kalorili</label><label class="cip"><input type="checkbox" name="ozellik[]" value="pesketaryen"> Pesketaryen</label><label class="cip"><input type="checkbox" name="ozellik[]" value="kuruyemis-icermez"> Kuruyemiş İçermez</label><label class="cip"><input type="checkbox" name="ozellik[]" value="dusuk-karbonhidratli"> Düşük Karbonhidratlı</label><label class="cip"><input type="checkbox" name="ozellik[]" value="ketojenik"> Ketojenik</label></div>
+                  <div class="alan-yardim"><span>Küme public süzgecin <b>Beslenme / Tip</b> ekseninden gelir
+                    (21 değer); rozet ve süzgeç aynı listeyi kullanır.</span></div>
+                </div>
+                <div class="alan kart-izgara c2">
+                  <div class="alan">
+                    <label for="hfButce" class="alan-etiket">Bütçe <span class="acilir-kalem">— rozet şeridinin son hapı</span></label>
+                    <select class="alan-secim" id="hfButce" name="butce"><option value="" selected="">Seç…</option><option value="1">Ekonomik (₺)</option><option value="2">Orta Bütçe (₺₺)</option><option value="3">Premium (₺₺₺)</option></select>
+                  </div>
+                  <div class="alan">
+                    <label class="alan-etiket">Etiketler <span class="acilir-kalem">— public'te <code>#etiket</code> olarak basılır</span></label>
+                    <div id="hfEtiket" class="coklu-secim" data-ad="etiket"><div class="coklu-kutu"><input class="acilir-arama" type="text" placeholder="Etiket yaz ve Enter'a bas…" aria-label="Etiket yaz ve Enter'a bas" autocomplete="off" role="combobox" aria-expanded="false"></div><div class="acilir-yuzey" role="listbox" hidden=""></div></div>
+                    <div class="alan-yardim"><span>SEO odak anahtar sözcüğünden ayrıdır: etiketler
+                      public sayfada basılır, odak sözcük yalnız SEO denetiminde kullanılır.</span></div>
                   </div>
                 </div>
               </div>
@@ -258,21 +314,31 @@
                 <i class="fa-solid fa-list-ol" aria-hidden="true"></i> Hazırlanış — adımlar
                 <span class="alan-sayac" id="hfAdimSay">4 adım</span>
               </h3>
-              <div class="adim-liste" id="hfAdimlar"><div class="adim-karti"><span class="adim-no">1</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-shoe-prints" aria-hidden="true"></i> Adım</span><input class="alan-girdi" type="text" name="adimlar[]" data-field="metin" placeholder="Örn. Fasulyeyi bir gece önceden ıslat."><input type="hidden" data-field="position" value="0"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Satırı sil" aria-label="Satırı sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div><div class="adim-karti"><span class="adim-no">2</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-shoe-prints" aria-hidden="true"></i> Adım</span><input class="alan-girdi" type="text" name="adimlar[]" data-field="metin" placeholder="Örn. Fasulyeyi bir gece önceden ıslat."><input type="hidden" data-field="position" value="1"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Satırı sil" aria-label="Satırı sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div><div class="adim-karti"><span class="adim-no">3</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-shoe-prints" aria-hidden="true"></i> Adım</span><input class="alan-girdi" type="text" name="adimlar[]" data-field="metin" placeholder="Örn. Fasulyeyi bir gece önceden ıslat."><input type="hidden" data-field="position" value="2"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Satırı sil" aria-label="Satırı sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div><div class="adim-karti"><span class="adim-no">4</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-shoe-prints" aria-hidden="true"></i> Adım</span><input class="alan-girdi" type="text" name="adimlar[]" data-field="metin" placeholder="Örn. Fasulyeyi bir gece önceden ıslat."><input type="hidden" data-field="position" value="3"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Satırı sil" aria-label="Satırı sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div></div>
-              <button class="satir-ekle" type="button" id="hfAdimEkle">
+              <div class="adim-liste" id="hfAdimlar"><div class="adim-karti"><span class="adim-no">1</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-shoe-prints" aria-hidden="true"></i> Adım</span><input class="alan-girdi" type="text" name="adim_baslik[]" data-field="baslik" maxlength="60" placeholder="Adım başlığı — örn. Tuzunu ayarlayıp dinlendirin" aria-label="Adım başlığı"><input class="alan-girdi" type="number" name="adim_sure[]" data-field="sure" min="0" data-girdi="sayi" placeholder="Adım süresi — dk" aria-label="Adım süresi, dakika"><input class="alan-girdi" type="text" name="adimlar[]" data-field="metin" placeholder="Örn. Fasulyeyi bir gece önceden ıslat."><input type="hidden" data-field="position" value="0"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır" data-eylem="sirala"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Satırı sil" aria-label="Satırı sil" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div><div class="adim-karti"><span class="adim-no">2</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-shoe-prints" aria-hidden="true"></i> Adım</span><input class="alan-girdi" type="text" name="adim_baslik[]" data-field="baslik" maxlength="60" placeholder="Adım başlığı — örn. Tuzunu ayarlayıp dinlendirin" aria-label="Adım başlığı"><input class="alan-girdi" type="number" name="adim_sure[]" data-field="sure" min="0" data-girdi="sayi" placeholder="Adım süresi — dk" aria-label="Adım süresi, dakika"><input class="alan-girdi" type="text" name="adimlar[]" data-field="metin" placeholder="Örn. Fasulyeyi bir gece önceden ıslat."><input type="hidden" data-field="position" value="1"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır" data-eylem="sirala"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Satırı sil" aria-label="Satırı sil" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div><div class="adim-karti"><span class="adim-no">3</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-shoe-prints" aria-hidden="true"></i> Adım</span><input class="alan-girdi" type="text" name="adim_baslik[]" data-field="baslik" maxlength="60" placeholder="Adım başlığı — örn. Tuzunu ayarlayıp dinlendirin" aria-label="Adım başlığı"><input class="alan-girdi" type="number" name="adim_sure[]" data-field="sure" min="0" data-girdi="sayi" placeholder="Adım süresi — dk" aria-label="Adım süresi, dakika"><input class="alan-girdi" type="text" name="adimlar[]" data-field="metin" placeholder="Örn. Fasulyeyi bir gece önceden ıslat."><input type="hidden" data-field="position" value="2"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır" data-eylem="sirala"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Satırı sil" aria-label="Satırı sil" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div><div class="adim-karti"><span class="adim-no">4</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-shoe-prints" aria-hidden="true"></i> Adım</span><input class="alan-girdi" type="text" name="adim_baslik[]" data-field="baslik" maxlength="60" placeholder="Adım başlığı — örn. Tuzunu ayarlayıp dinlendirin" aria-label="Adım başlığı"><input class="alan-girdi" type="number" name="adim_sure[]" data-field="sure" min="0" data-girdi="sayi" placeholder="Adım süresi — dk" aria-label="Adım süresi, dakika"><input class="alan-girdi" type="text" name="adimlar[]" data-field="metin" placeholder="Örn. Fasulyeyi bir gece önceden ıslat."><input type="hidden" data-field="position" value="3"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır" data-eylem="sirala"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Satırı sil" aria-label="Satırı sil" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div></div>
+              <button class="satir-ekle" type="button" id="hfAdimEkle" data-eylem="satir-ekle">
                 <i class="fa-solid fa-plus" aria-hidden="true"></i> Adım ekle</button>
-              <div class="alan-yardim" style="margin-top:10px"><span>Sıra public tarafta aynen görünür.
+              <div class="alan-yardim" style="margin-top:10px"><span>Her adımın <b>başlığı</b>,
+                <b>süresi (dk)</b> ve <b>anlatımı</b> ayrı alanlardır; detay sayfası üçünü de basar
+                (“5 · Tuzunu ayarlayıp dinlendirin · 15 dk”). Sıra public tarafta aynen görünür.
                 Tutamağı sürükleyerek ya da odaktayken ↑ / ↓ ile taşı.</span></div>
             </div>
 
             <div class="form-bolum">
               <h3 class="form-bolum-bas">
-                <i class="fa-solid fa-lightbulb" aria-hidden="true"></i> Malzemeler
-                <span class="alan-sayac" id="hfIpucuSay">4 malzeme</span>
+                <i class="fa-solid fa-carrot" aria-hidden="true"></i> Malzemeler
+                <span class="alan-sayac" id="hfMalzemeSay">4 malzeme</span>
               </h3>
-              <div class="adim-liste" id="hfIpuclari"><div class="adim-karti"><span class="adim-no">1</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-lightbulb" aria-hidden="true"></i> Malzeme</span><input class="alan-girdi" type="text" name="ipuclari[]" data-field="metin" placeholder="Örn. Tuzu pişmeye yakın ekle."><input type="hidden" data-field="position" value="0"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Satırı sil" aria-label="Satırı sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div><div class="adim-karti"><span class="adim-no">2</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-lightbulb" aria-hidden="true"></i> Malzeme</span><input class="alan-girdi" type="text" name="ipuclari[]" data-field="metin" placeholder="Örn. Tuzu pişmeye yakın ekle."><input type="hidden" data-field="position" value="1"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Satırı sil" aria-label="Satırı sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div><div class="adim-karti"><span class="adim-no">3</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-lightbulb" aria-hidden="true"></i> Malzeme</span><input class="alan-girdi" type="text" name="ipuclari[]" data-field="metin" placeholder="Örn. Tuzu pişmeye yakın ekle."><input type="hidden" data-field="position" value="2"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Satırı sil" aria-label="Satırı sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div><div class="adim-karti"><span class="adim-no">4</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-lightbulb" aria-hidden="true"></i> Malzeme</span><input class="alan-girdi" type="text" name="ipuclari[]" data-field="metin" placeholder="Örn. Tuzu pişmeye yakın ekle."><input type="hidden" data-field="position" value="3"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Satırı sil" aria-label="Satırı sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div></div>
-              <button class="satir-ekle" type="button" id="hfIpucuEkle">
+              <div class="adim-liste" id="hfMalzemeler"><div class="adim-karti"><span class="adim-no">1</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-carrot" aria-hidden="true"></i> Malzeme</span><input class="alan-girdi" type="text" name="malzeme_miktar[]" data-field="miktar" maxlength="10" placeholder="Miktar — örn. 2 · 0,5 · 300" aria-label="Miktar"><select class="alan-secim" name="malzeme_birim[]" data-field="birim" aria-label="Birim"><option value="" selected="">Birim…</option><option value="su-bardagi">su bardağı</option><option value="cay-bardagi">çay bardağı</option><option value="yemek-kasigi">yemek kaşığı</option><option value="tatli-kasigi">tatlı kaşığı</option><option value="cay-kasigi">çay kaşığı</option><option value="kahve-fincani">kahve fincanı</option><option value="gram">g</option><option value="kg">kg</option><option value="ml">ml</option><option value="l">l</option><option value="adet">adet</option><option value="dis">diş</option><option value="tutam">tutam</option></select><input class="alan-girdi" type="text" name="malzeme_ad[]" data-field="ad" maxlength="60" placeholder="Malzeme — örn. Kuru fasulye" aria-label="Malzeme adı"><input class="alan-girdi" type="text" name="malzeme_not[]" data-field="not" maxlength="80" placeholder="Hazırlık notu — örn. bir gece önceden ıslatılmış" aria-label="Hazırlık notu"><input type="hidden" data-field="position" value="0"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır" data-eylem="sirala"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Satırı sil" aria-label="Satırı sil" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div><div class="adim-karti"><span class="adim-no">2</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-carrot" aria-hidden="true"></i> Malzeme</span><input class="alan-girdi" type="text" name="malzeme_miktar[]" data-field="miktar" maxlength="10" placeholder="Miktar — örn. 2 · 0,5 · 300" aria-label="Miktar"><select class="alan-secim" name="malzeme_birim[]" data-field="birim" aria-label="Birim"><option value="" selected="">Birim…</option><option value="su-bardagi">su bardağı</option><option value="cay-bardagi">çay bardağı</option><option value="yemek-kasigi">yemek kaşığı</option><option value="tatli-kasigi">tatlı kaşığı</option><option value="cay-kasigi">çay kaşığı</option><option value="kahve-fincani">kahve fincanı</option><option value="gram">g</option><option value="kg">kg</option><option value="ml">ml</option><option value="l">l</option><option value="adet">adet</option><option value="dis">diş</option><option value="tutam">tutam</option></select><input class="alan-girdi" type="text" name="malzeme_ad[]" data-field="ad" maxlength="60" placeholder="Malzeme — örn. Kuru fasulye" aria-label="Malzeme adı"><input class="alan-girdi" type="text" name="malzeme_not[]" data-field="not" maxlength="80" placeholder="Hazırlık notu — örn. bir gece önceden ıslatılmış" aria-label="Hazırlık notu"><input type="hidden" data-field="position" value="1"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır" data-eylem="sirala"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Satırı sil" aria-label="Satırı sil" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div><div class="adim-karti"><span class="adim-no">3</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-carrot" aria-hidden="true"></i> Malzeme</span><input class="alan-girdi" type="text" name="malzeme_miktar[]" data-field="miktar" maxlength="10" placeholder="Miktar — örn. 2 · 0,5 · 300" aria-label="Miktar"><select class="alan-secim" name="malzeme_birim[]" data-field="birim" aria-label="Birim"><option value="" selected="">Birim…</option><option value="su-bardagi">su bardağı</option><option value="cay-bardagi">çay bardağı</option><option value="yemek-kasigi">yemek kaşığı</option><option value="tatli-kasigi">tatlı kaşığı</option><option value="cay-kasigi">çay kaşığı</option><option value="kahve-fincani">kahve fincanı</option><option value="gram">g</option><option value="kg">kg</option><option value="ml">ml</option><option value="l">l</option><option value="adet">adet</option><option value="dis">diş</option><option value="tutam">tutam</option></select><input class="alan-girdi" type="text" name="malzeme_ad[]" data-field="ad" maxlength="60" placeholder="Malzeme — örn. Kuru fasulye" aria-label="Malzeme adı"><input class="alan-girdi" type="text" name="malzeme_not[]" data-field="not" maxlength="80" placeholder="Hazırlık notu — örn. bir gece önceden ıslatılmış" aria-label="Hazırlık notu"><input type="hidden" data-field="position" value="2"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır" data-eylem="sirala"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Satırı sil" aria-label="Satırı sil" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div><div class="adim-karti"><span class="adim-no">4</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-carrot" aria-hidden="true"></i> Malzeme</span><input class="alan-girdi" type="text" name="malzeme_miktar[]" data-field="miktar" maxlength="10" placeholder="Miktar — örn. 2 · 0,5 · 300" aria-label="Miktar"><select class="alan-secim" name="malzeme_birim[]" data-field="birim" aria-label="Birim"><option value="" selected="">Birim…</option><option value="su-bardagi">su bardağı</option><option value="cay-bardagi">çay bardağı</option><option value="yemek-kasigi">yemek kaşığı</option><option value="tatli-kasigi">tatlı kaşığı</option><option value="cay-kasigi">çay kaşığı</option><option value="kahve-fincani">kahve fincanı</option><option value="gram">g</option><option value="kg">kg</option><option value="ml">ml</option><option value="l">l</option><option value="adet">adet</option><option value="dis">diş</option><option value="tutam">tutam</option></select><input class="alan-girdi" type="text" name="malzeme_ad[]" data-field="ad" maxlength="60" placeholder="Malzeme — örn. Kuru fasulye" aria-label="Malzeme adı"><input class="alan-girdi" type="text" name="malzeme_not[]" data-field="not" maxlength="80" placeholder="Hazırlık notu — örn. bir gece önceden ıslatılmış" aria-label="Hazırlık notu"><input type="hidden" data-field="position" value="3"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır" data-eylem="sirala"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Satırı sil" aria-label="Satırı sil" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div></div>
+              <button class="satir-ekle" type="button" id="hfMalzemeEkle">
                 <i class="fa-solid fa-plus" aria-hidden="true"></i> Malzeme ekle</button>
+              <div class="alan-yardim"><span>Her kalem <b>dört</b> parçadır:
+                miktar · birim · malzeme · hazırlık notu — public listede dördü de ayrı basılır
+                (“2 | su bardağı | Kuru fasulye | bir gece önceden ıslatılmış”). Birim <b>kontrollü
+                listedir</b>: su bardağı · çay bardağı · yemek kaşığı · tatlı kaşığı · çay kaşığı ·
+                kahve fincanı seçilirse public kalemde <b>“Ölçü karşılığı”</b> köprüsü doğar
+                (ölçüldü: 93 kalemin 54'ü, ve köprü yalnız bu kaplarda çıkıyor). g · kg · ml · l ·
+                adet · diş · tutam köprü kurmaz. Serbest metin yazılamaz — eşleşmeyen birim
+                köprüyü kırar.</span></div>
             </div>
 
             <div class="form-bolum">
@@ -284,6 +350,79 @@
                   <div class="alan-yardim"><span>🔴 Sağlıkla ilgili metin. Genel alerjen uyarısı Ayarlar'da tek
                     yerden yönetilir; buraya yalnız <b>bu tarife özgü</b> olan yazılır.</span></div>
                 </div>
+              </div>
+            </div>
+
+            <div class="form-bolum">
+              <h3 class="form-bolum-bas"><i class="fa-solid fa-circle-info" aria-hidden="true"></i> Hatırlatma</h3>
+              <div>
+                <div class="alan">
+                  <label for="hfHatirlatma" class="alan-etiket">Hatırlatma metni <span class="acilir-kalem">— adımların altında, kendi bloğunda basılır</span></label>
+                  <textarea class="alan-metin" id="hfHatirlatma" name="hatirlatma" placeholder="Tarifin başında ya da sonunda hatırlanması gereken şey."></textarea>
+                  <div class="alan-yardim"><span>Alerjen uyarısından <b>ayrı</b> bir bloktur: bu kutu
+                    pişirme tekniğini hatırlatır, alerjen uyarısı sağlık metnidir.</span></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-bolum">
+              <h3 class="form-bolum-bas"><i class="fa-solid fa-pen-nib" aria-hidden="true"></i> Editör Notu</h3>
+              <div>
+                <div class="alan">
+                  <label for="hfEditorNot" class="alan-etiket">Editörün notu</label>
+                  <textarea class="alan-metin" id="hfEditorNot" name="editor_notu" placeholder="Test mutfağında ölçülen ek bilgi."></textarea>
+                </div>
+                <div class="alan">
+                  <label for="hfEditorImza" class="alan-etiket">İmza satırı <span class="acilir-kalem">— notun altında basılır</span></label>
+                  <input class="alan-girdi" id="hfEditorImza" name="editor_imza" type="text" maxlength="80" placeholder="Admin DadaGastro · test mutfağında doğrulandı">
+                  <div class="alan-yardim"><span>Boş bırakılırsa not imzasız basılır; kutu yine görünür.</span></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-bolum">
+              <h3 class="form-bolum-bas"><i class="fa-solid fa-heart-pulse" aria-hidden="true"></i> Besin Değerleri
+                <span class="alan-sayac">1 porsiyon</span></h3>
+              <div>
+                <div class="alan kart-izgara c4">
+                  <div class="alan">
+                    <label for="hfKcal" class="alan-etiket">Kalori <span class="acilir-kalem">— kcal</span></label>
+                    <input class="alan-girdi" id="hfKcal" name="kcal" type="number" min="0" step="0.1" data-girdi="sayi" placeholder="320">
+                  </div>
+                  <div class="alan">
+                    <label for="hfProtein" class="alan-etiket">Protein <span class="acilir-kalem">— g</span></label>
+                    <input class="alan-girdi" id="hfProtein" name="protein" type="number" min="0" step="0.1" data-girdi="sayi" placeholder="19">
+                  </div>
+                  <div class="alan">
+                    <label for="hfKarb" class="alan-etiket">Karbonhidrat <span class="acilir-kalem">— g</span></label>
+                    <input class="alan-girdi" id="hfKarb" name="karbonhidrat" type="number" min="0" step="0.1" data-girdi="sayi" placeholder="34">
+                  </div>
+                  <div class="alan">
+                    <label for="hfYag" class="alan-etiket">Yağ <span class="acilir-kalem">— g</span></label>
+                    <input class="alan-girdi" id="hfYag" name="yag" type="number" min="0" step="0.1" data-girdi="sayi" placeholder="12">
+                  </div>
+                </div>
+                <div class="alan kart-izgara c4">
+                  <div class="alan">
+                    <label for="hfLif" class="alan-etiket">Lif <span class="acilir-kalem">— g</span></label>
+                    <input class="alan-girdi" id="hfLif" name="lif" type="number" min="0" step="0.1" data-girdi="sayi" placeholder="9">
+                  </div>
+                  <div class="alan">
+                    <label for="hfSeker" class="alan-etiket">Şeker <span class="acilir-kalem">— g</span></label>
+                    <input class="alan-girdi" id="hfSeker" name="seker" type="number" min="0" step="0.1" data-girdi="sayi" placeholder="4">
+                  </div>
+                  <div class="alan">
+                    <label for="hfSodyum" class="alan-etiket">Sodyum <span class="acilir-kalem">— mg</span></label>
+                    <input class="alan-girdi" id="hfSodyum" name="sodyum" type="number" min="0" step="0.1" data-girdi="sayi" placeholder="480">
+                  </div>
+                  <div class="alan">
+                    <label for="hfDoymus" class="alan-etiket">Doymuş Yağ <span class="acilir-kalem">— g</span></label>
+                    <input class="alan-girdi" id="hfDoymus" name="doymus_yag" type="number" min="0" step="0.1" data-girdi="sayi" placeholder="3">
+                  </div>
+                </div>
+                <div class="alan-yardim"><span>Değerler <b>bir porsiyon</b> içindir; public sayfa
+                  “Değerler tahminidir” notuyla basar. Makro yüzdeleri protein · karbonhidrat · yağdan
+                  <b>hesaplanır</b>, ayrı alan değildir.</span></div>
               </div>
             </div>
           </div>
@@ -301,13 +440,13 @@
               <div>
                 <div class="alan">
                   <label for="hfVideo" class="alan-etiket">Video adresi — <code>video_id</code></label>
-                  <input class="alan-girdi" id="hfVideo" name="video" type="url" placeholder="https://…">
+                  <input data-girdi="url" class="alan-girdi" id="hfVideo" name="video" type="url" placeholder="https://…">
                   <div class="alan-yardim"><span>Doğru form videosu. Adres yoksa detay sayfasında video bölümü
                     hiç basılmaz — boş bir oynatıcı gösterilmez.</span></div>
                 </div>
                 <div class="alan">
                   <label for="hfVideoSure" class="alan-etiket">Video süresi <span class="acilir-kalem">— sn</span></label>
-                  <input class="alan-girdi" id="hfVideoSure" name="video_sure" type="number" min="0">
+                  <input data-girdi="sayi" class="alan-girdi" id="hfVideoSure" name="video_sure" type="number" min="0">
                 </div>
               </div>
             </div>
@@ -330,7 +469,7 @@
                 </div>
                 <div class="alan">
                   <label for="hfCanon" class="alan-etiket">Canonical adres</label>
-                  <input class="alan-girdi" id="hfCanon" name="canonical" type="url" placeholder="https://dadagastro.com/tarif/…">
+                  <input data-girdi="url" class="alan-girdi" id="hfCanon" name="canonical" type="url" placeholder="https://dadagastro.com/tarif/…">
                 </div>
                 <div class="alan">
                   <label for="hfOdak" class="alan-etiket">Odak anahtar sözcük</label>
@@ -347,10 +486,10 @@
 
           <div class="form-eylem kart-alt">
             <a class="dugme hayalet" href="admin-tarifler.html">İptal</a>
-            <button class="dugme hayalet" type="button" id="hfTaslak">Taslak kaydet</button>
+            <button class="dugme hayalet" type="button" id="hfTaslak" data-eylem="taslak">Taslak kaydet</button>
             <button class="dugme birincil" type="button" id="hfKaydet">Tarifi kaydet</button>
           </div>
-        <div class="bos-durum kart-ici" hidden=""><span class="bos-ikon"><i class="fa-solid fa-file-circle-question" aria-hidden="true"></i></span><h3>Bu adreste tarif yok</h3><p>Adresteki slug katalogda karşılık bulmuyor. Listeye dön ve bir tarif seç.</p><a class="dugme birincil" href="admin-tarifler.html">Kütüphaneye dön</a></div><div class="bos-durum kart-ici yetkisiz" data-durum="yetkisiz" hidden=""><span class="bos-ikon"><i class="fa-solid fa-lock" aria-hidden="true"></i></span><h3>Bu kaydı düzenleyemezsin</h3><p>Erişim istemek için yöneticinle görüş.</p></div><div class="bos-durum kart-ici servis-hatasi" data-durum="servis" hidden=""><span class="bos-ikon"><i class="fa-solid fa-plug-circle-xmark" aria-hidden="true"></i></span><h3>Kayıt yüklenemedi</h3><p>Bağlantı kurulamadı. Yeniden dene.</p><button class="dugme birincil" type="button"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i> Yeniden dene</button><div class="hata-izi">Referans kodu <code>GAS-ADM-5201</code></div></div></div>
+        <div class="bos-durum kart-ici" hidden=""><span class="bos-ikon"><i class="fa-solid fa-file-circle-question" aria-hidden="true"></i></span><h3>Bu adreste tarif yok</h3><p>Adresteki slug katalogda karşılık bulmuyor. Listeye dön ve bir tarif seç.</p><a class="dugme birincil" href="admin-tarifler.html">Kütüphaneye dön</a></div><div class="bos-durum kart-ici yetkisiz" data-durum="yetkisiz" hidden=""><span class="bos-ikon"><i class="fa-solid fa-lock" aria-hidden="true"></i></span><h3>Bu kaydı düzenleyemezsin</h3><p>Erişim istemek için yöneticinle görüş.</p></div><div class="bos-durum kart-ici servis-hatasi" data-durum="servis" hidden=""><span class="bos-ikon"><i class="fa-solid fa-plug-circle-xmark" aria-hidden="true"></i></span><h3>Kayıt yüklenemedi</h3><p>Bağlantı kurulamadı. Yeniden dene.</p><button class="dugme birincil" type="button" data-eylem="calistir" data-ad="Yeniden dene"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i> Yeniden dene</button><div class="hata-izi">Referans kodu <code>GAS-ADM-5201</code></div></div></div>
 
         <!-- ================= SAĞ KOLON ================= -->
         <aside class="form-yan">
@@ -399,7 +538,7 @@
             <div class="kart-govde">
               <div class="alan-yardim" style="margin-bottom:12px"><span>Silinen tarif, onu kullanan
                 <b id="hfKullanim">0</b> menü ve koleksiyondan da düşer.</span></div>
-              <button class="dugme hayalet tehlike tam-en" type="button" id="hfSil" data-yikici="Bulgar Split Squat" data-fiil="sil" >
+              <button class="dugme hayalet tehlike tam-en" type="button" id="hfSil" data-yikici="Bulgar Split Squat" data-fiil="sil"  data-islem="sil">
                 <i class="fa-solid fa-trash-can" aria-hidden="true"></i> Tarifi sil</button>
             </div>
           </div>
@@ -411,4 +550,1114 @@
   </div>
 </main>
 <script src="_ortak/panel.js" defer></script>
+<!-- KAYIT KAYNAĞI — form kendi kayıtlarını BİLDİRİR (admin-ui-kit §5b).
+     Anahtar = admin-tarifler.html satırlarının kendi `data-slug`ı (12 satır, çakışma yok).
+     ⚠ ZAMAN DAMGASI: bu blok `dump/gastro` 895 dosyalık hâlinden çıkarıldı
+       (tarif__ sayfası 480). Turun başında dump 118 dosyaydı ve 12 tarifin
+       yalnız 7'sinin sayfası vardı; paralel kulvar dump'ı büyüttü, blok
+       yeniden üretildi. 12/12 kaydın public sayfası artık var.
+     Değerlerin kaynağı:
+       · ad · slug · kategori · zorluk · mutfak · sureBant · durum   → LİSTE SATIRI
+       · alt_baslik · porsiyon · hazirlik_dk · pisirme_dk · ozet · ozellik ·
+         butce · adim_baslik/adim_sure/adimlar · hatirlatma · editor_notu ·
+         editor_imza · 8 besin değeri · etiket ·
+         malzeme_miktar/malzeme_birim/malzeme_ad/malzeme_not (93 kalem)
+                                                                    → dump/gastro/tarif__<slug>.html
+     `malzeme_birim` public markup'ın `data-u` anahtarını taşır (su-bardagi ·
+     gram · adet …) — form select'inin `value`si aynı sözlüktür, eşleşmeyen
+     birim 0 (ölçüldü).
+     `sef` HİÇBİR kayıtta bildirilmedi: listedeki 12 yazarın hiçbiri
+     admin-sefler'in 12 kaydıyla eşleşmiyor (kesişim 0) — uydurulmadı. -->
+<script type="application/json" data-kayitlar>
+{
+ "etli-kuru-fasulye-geleneksel-ev-yapimi-tarif": {
+  "ad": "Etli Kuru Fasulye",
+  "slug": "etli-kuru-fasulye-geleneksel-ev-yapimi-tarif",
+  "kategori": "Sebze",
+  "zorluk": "Kolay",
+  "alt_baslik": "Geleneksel Ev Yapımı Tarif",
+  "mutfak": "Türk",
+  "sureBant": [
+   "4"
+  ],
+  "durum": "yayin",
+  "porsiyon": "4 kişilik",
+  "hazirlik_dk": "20",
+  "pisirme_dk": "90",
+  "ozet": "Kuşbaşı etle uzun uzun pişirilen, tanesi dağılmadan yumuşacık olan geleneksel etli kuru fasulye. Türk mutfağının en sevilen tencere yemeklerinden biridir; yanında pilav ve turşuyla kurulan sofranın baş tacıdır.",
+  "ozellik": [
+   "glutensiz",
+   "yuksek-lifli"
+  ],
+  "butce": "1",
+  "adim_baslik": [
+   "Fasulyeyi hazırlayın",
+   "Eti kavurun",
+   "Soğan ve salçayı ekleyin",
+   "Pişirin",
+   "Tuzunu ayarlayıp dinlendirin"
+  ],
+  "adim_sure": [
+   "20",
+   "10",
+   "5",
+   "70",
+   "15"
+  ],
+  "adimlar": [
+   "Bir gece önceden ıslattığınız kuru fasulyenin suyunu süzün. Fasulyeleri ayrı bir tencerede, üzerini geçecek kadar suyla orta ateşte on beş dakika ön haşlama yapıp suyunu dökün; bu işlem gaz yapıcı etkiyi azaltır. Dikkat: Bu aşamada tuz eklemeyin.",
+   "Tencerede sıvı yağı kızdırın, kuşbaşı eti ekleyin ve orta-yüksek ateşte suyunu salıp çekene, kenarları hafif kızarana kadar kavurun. Etin mühürlenmesi suyunun içinde kalmasını sağlar.",
+   "Doğranmış soğanı ekleyip pembeleşene kadar kavurun. Domates ve biber salçasını katıp bir iki dakika daha, salçanın ham kokusu geçene kadar kavurmaya devam edin.",
+   "Ön haşlanmış fasulyeleri, karabiberi ve sıcak suyu ilave edin. Kapağı kapatıp kısık ateşte, fasulyeler yumuşayana ve suyu koyulaşana kadar pişirin. Ara sıra kontrol edip gerekirse sıcak su ekleyin.",
+   "Önemli: Fasulyeler tam yumuşadıktan sonra tuzu ekleyip beş dakika daha pişirin. Ocağı kapatıp on dakika dinlendirin; dinlenme suyunun kıvam almasını sağlar. Servis sırasında üzerine pul biber serpin, yanında pilav ve turşuyla sunun."
+  ],
+  "hatirlatma": "Kuru fasulyeyi bir gece önceden bol suda ıslatmak pişme süresini kısaltır ve hazımını kolaylaştırır. Önemli: Tuzu fasulye iyice yumuşadıktan sonra ekleyin; erken eklenen tuz kabukların sertleşmesine ve tanelerin geç pişmesine yol açar. Salça gibi paketli ürünlerin içerik ve çapraz temas uyarıları markaya göre değişebilir; etiketleri ayrıca kontrol edin.",
+  "editor_notu": "Fasulyenin suyunu koyulaştırmak için pişmenin son on dakikasında birkaç kaşık haşlanmış fasulyeyi ezip tencereye geri katın; nişasta doğal olarak salçayı bağlar ve daha kadifemsi bir suyunuz olur.",
+  "editor_imza": "Admin DadaGastro · test mutfağında doğrulandı",
+  "kcal": "320",
+  "protein": "19",
+  "karbonhidrat": "34",
+  "yag": "12",
+  "lif": "9",
+  "seker": "4",
+  "sodyum": "480",
+  "doymus_yag": "3",
+  "etiket": [
+   "kuru fasulye",
+   "etli yemek",
+   "bakliyat",
+   "tencere yemeği"
+  ],
+  "malzeme_miktar": [
+   "2",
+   "300",
+   "1",
+   "1",
+   "1",
+   "3",
+   "4",
+   "1",
+   "0,5",
+   "1"
+  ],
+  "malzeme_birim": [
+   "su-bardagi",
+   "gram",
+   "adet",
+   "yemek-kasigi",
+   "tatli-kasigi",
+   "yemek-kasigi",
+   "su-bardagi",
+   "cay-kasigi",
+   "cay-kasigi",
+   "cay-kasigi"
+  ],
+  "malzeme_ad": [
+   "Kuru fasulye",
+   "Kuşbaşı Dana Eti",
+   "kuru soğan",
+   "Domates salçası",
+   "Biber salçası",
+   "Sıvı yağ",
+   "sıcak su",
+   "Tuz",
+   "Karabiber",
+   "Pul biber"
+  ],
+  "malzeme_not": [
+   "bir gece önceden ıslatılmış",
+   "",
+   "yemeklik doğranmış",
+   "",
+   "isteğe bağlı",
+   "",
+   "",
+   "",
+   "",
+   "isteğe bağlı"
+  ]
+ },
+ "adana-kebabi-ev-yapimi-zirh-kiymali": {
+  "ad": "Adana Kebabı",
+  "slug": "adana-kebabi-ev-yapimi-zirh-kiymali",
+  "kategori": "Köfte ve Kebap",
+  "zorluk": "Orta",
+  "alt_baslik": "Ev Yapımı Zırh Kıymalı",
+  "mutfak": "Türk",
+  "sureBant": [
+   "3"
+  ],
+  "durum": "yayin",
+  "porsiyon": "4 kişilik",
+  "hazirlik_dk": "35",
+  "pisirme_dk": "15",
+  "ozet": "Kuyruk yağıyla harmanlanmış zırh kıymanın şişe yayılıp ateşte pişirildiği, közün acılı aromasını taşıyan ev yapımı Adana kebabı. Lavaş, közlenmiş biber ve soğan salatasıyla servis edilen, Güneydoğu mutfağının bu ateşli klasiğidir.",
+  "ozellik": [
+   "glutensiz",
+   "protein-agirlikli",
+   "acili",
+   "baharatli",
+   "dusuk-karbonhidratli"
+  ],
+  "butce": "2",
+  "adim_baslik": [
+   "Harcı yoğurun",
+   "Harcı dinlendirin",
+   "Şişe yayın",
+   "Kömür ateşinde pişirin",
+   "Servis edin"
+  ],
+  "adim_sure": [
+   "12",
+   "30",
+   "10",
+   "15",
+   "5"
+  ],
+  "adimlar": [
+   "Kıymayı, ince kıyılmış kuyruk yağını, kırmızı toz biberi, pul biberi, ezilmiş sarımsağı, tuz ve karabiberi geniş bir kaba alın. Harç macun kıvamına gelip yağ ile kıyma tam birleşene kadar 10 dakika avuçlayarak yoğurun.",
+   "Yoğurduğunuz harcın üzerini streçleyip buzdolabında 30 dakika dinlendirin. Soğuyan harç şişe daha kolay yapışır ve pişerken dağılmaz.",
+   "Harçtan aldığınız parçaları ıslak elle yassı ve geniş şişlere, ince ve uzun bir tabaka halinde bastırarak yayın. Kalınlığı her yerde eşit olsun ki eşit pişsin.",
+   "Kebapları közlenmiş kömür ateşi üzerinde, ara ara çevirerek pişirin. Dikkat: Her iki yüzü kızarıp kıyma tamamen pişmeli, iç sıcaklık 71°C'ye ulaşmalı; harcın içi pembe kalmamalıdır. Yaklaşık 12-15 dakikada pişer.",
+   "Aynı ateşte sivri biberleri közleyin, soğanı sumakla ovun. Kebabı sıcak lavaş üzerine alıp közlenmiş biber ve sumaklı soğanla birlikte servis edin."
+  ],
+  "hatirlatma": "Önemli: Adana kebabının kıvamı için kıymanın yağ oranı ve iyi yoğrulması şarttır; harcı buzdolabında 30 dakika dinlendirmek şişe yapışmasını kolaylaştırır. Dikkat: Kırmızı et içeren kebap harcını çiğ tatmayın; kıyma pişince iç sıcaklığı 71°C'ye ulaşmalıdır. Acı sevmiyorsanız pul biberi azaltabilir veya acı biberi çıkarabilirsiniz. Kuruyemiş içermez, gluten içermez.",
+  "editor_notu": "Şişiniz yoksa harcı fırın tepsisine yassı bir dikdörtgen halinde yayıp 200°C fırında pişirebilir, son birkaç dakika üst ızgarayı açarak köz etkisini taklit edebilirsiniz. Şişte yapacaksanız yassı ve geniş şiş kullanın; ince şişte harç düşer.",
+  "editor_imza": "Admin DadaGastro · test mutfağında doğrulandı",
+  "kcal": "460",
+  "protein": "28",
+  "karbonhidrat": "4",
+  "yag": "37",
+  "lif": "1",
+  "seker": "1",
+  "sodyum": "660",
+  "doymus_yag": "16",
+  "etiket": [
+   "kebap",
+   "adana kebabı",
+   "zırh kıyma",
+   "acılı",
+   "ızgara"
+  ],
+  "malzeme_miktar": [
+   "500",
+   "80",
+   "1",
+   "1",
+   "3",
+   "1",
+   "0,5",
+   "2",
+   "1",
+   "4"
+  ],
+  "malzeme_birim": [
+   "gram",
+   "gram",
+   "yemek-kasigi",
+   "cay-kasigi",
+   "dis",
+   "cay-kasigi",
+   "cay-kasigi",
+   "adet",
+   "adet",
+   "adet"
+  ],
+  "malzeme_ad": [
+   "kuzu veya dana kıyma",
+   "kuyruk yağı",
+   "Kırmızı toz biber",
+   "Pul biber",
+   "Sarımsak",
+   "Tuz",
+   "Karabiber",
+   "lavaş",
+   "kuru soğan",
+   "yeşil sivri biber"
+  ],
+  "malzeme_not": [
+   "zırhta çekilmiş, orta yağlı",
+   "ince kıyılmış",
+   "acılı",
+   "",
+   "ezilmiş",
+   "",
+   "",
+   "isteğe bağlı, ayrıca servis edilir",
+   "piyazlık, sumaklı",
+   "közlenmek üzere"
+  ]
+ },
+ "irmik-helvasi-fistikli-geleneksel-tarif": {
+  "ad": "İrmik Helvası",
+  "slug": "irmik-helvasi-fistikli-geleneksel-tarif",
+  "kategori": "Tatlı",
+  "zorluk": "Kolay",
+  "alt_baslik": "Fıstıklı Geleneksel Tarif",
+  "mutfak": "Türk",
+  "sureBant": [
+   "2"
+  ],
+  "durum": "yayin",
+  "porsiyon": "6 kişilik",
+  "hazirlik_dk": "10",
+  "pisirme_dk": "30",
+  "ozet": "Kavrulmuş irmiğin kokusuyla, taneli ve lokum kıvamındaki bu klasik Türk tatlısı hem günlük sofraların hem de misafir ikramlarının vazgeçilmezidir. Sıcak servis edildiğinde dolmalık fıstığın çıtırlığıyla enfes bir uyum yakalar.",
+  "ozellik": [
+   "vejetaryen"
+  ],
+  "butce": "1",
+  "adim_baslik": [
+   "Şerbeti hazırlayın",
+   "Fıstığı kavurun",
+   "İrmiği kavurun",
+   "Şerbeti ekleyin",
+   "Demlendirin ve servis edin"
+  ],
+  "adim_sure": [
+   "8",
+   "4",
+   "15",
+   "3",
+   "15"
+  ],
+  "adimlar": [
+   "Süt, su ve toz şekeri bir tencerede karıştırıp orta ateşte kaynatın. Şeker eridikten sonra ocağı kapatın ancak şerbeti sıcak tutun; helvaya kaynar hâlde eklenecektir.",
+   "Geniş bir tavada tereyağını eritin, dolmalık fıstıkları ekleyip kısık ateşte pembeleşene kadar kavurun. Fıstıklar hızlı kızarır; renk almaya başladığında bir sonraki adıma geçin.",
+   "İrmiği tavaya ekleyin ve kısık ateşte, sürekli karıştırarak kavurun. Dikkat: İrmik yanmaması için ateşi yükseltmeyin; renk açık kızıla dönüp kokusu çıkana kadar sabırla, yaklaşık on beş dakika karıştırın.",
+   "Ocağın altını kısın ve kaynar şerbeti kavrulmuş irmiğin üzerine dikkatlice ekleyin; karışım sıçrayabilir. Şerbeti çekene kadar birkaç dakika karıştırarak pişirin.",
+   "Ocağı kapatın, helvanın üzerine temiz bir kâğıt havlu ve kapak kapatıp on beş dakika demlenmeye bırakın. Demlenme, taneli kıvamı verir. Kaşıkla porsiyonlayıp sıcak servis edin; isteğe bağlı üzerine tarçın serpin."
+  ],
+  "hatirlatma": "Önemli: Helvanın taneli ve lokum kıvamında olması irmiğin sabırla, kısık ateşte kavrulmasına bağlıdır; acele edip ateşi yükseltirseniz irmik yanar ve acılaşır. Alerjen: Süt ve süt ürünleri (süt, tereyağı), gluten (irmik) ve sert kabuklu yemiş (dolmalık fıstık) içerir. Şerbeti sıcak helvaya ekleyeceğiniz için önceden hazırlayıp ılıtmayın.",
+  "editor_notu": "Şerbeti helvaya eklemeden hemen önce kaynar hâlde tutun; sıcak irmiğe sıcak şerbet eklendiğinde helva daha çabuk demlenir ve taneleri birbirine yapışmadan açılır.",
+  "editor_imza": "Admin DadaGastro · test mutfağında doğrulandı",
+  "kcal": "385",
+  "protein": "6",
+  "karbonhidrat": "55",
+  "yag": "16",
+  "lif": "2",
+  "seker": "33",
+  "sodyum": "60",
+  "doymus_yag": "9",
+  "etiket": [
+   "irmik helvası",
+   "helva",
+   "sütlü tatlı",
+   "ikram"
+  ],
+  "malzeme_miktar": [
+   "2",
+   "1",
+   "1,5",
+   "2",
+   "125",
+   "3",
+   "1"
+  ],
+  "malzeme_birim": [
+   "su-bardagi",
+   "su-bardagi",
+   "su-bardagi",
+   "su-bardagi",
+   "gram",
+   "yemek-kasigi",
+   "cay-kasigi"
+  ],
+  "malzeme_ad": [
+   "Süt",
+   "Su",
+   "Toz şeker",
+   "irmik",
+   "Tereyağı",
+   "dolmalık fıstık",
+   "Tarçın"
+  ],
+  "malzeme_not": [
+   "",
+   "",
+   "",
+   "iri çekilmiş",
+   "",
+   "",
+   "isteğe bağlı"
+  ]
+ },
+ "sebzeli-tavuk-sote-tavada-pratik": {
+  "ad": "Sebzeli Tavuk Sote",
+  "slug": "sebzeli-tavuk-sote-tavada-pratik",
+  "kategori": "Tavuk ve Hindi",
+  "zorluk": "Çok Kolay",
+  "alt_baslik": "Tavada Pratik",
+  "mutfak": "Türk",
+  "sureBant": [
+   "2"
+  ],
+  "durum": "yayin",
+  "porsiyon": "4 kişilik",
+  "hazirlik_dk": "15",
+  "pisirme_dk": "20",
+  "ozet": "Kuşbaşı tavuğun renkli biber, soğan ve mantarla kısa sürede kavrulduğu pratik tavuk sote. Az malzemeyle hazırlanan, pilav ya da makarna yanında yakışan, hafta içi akşamlarının hızlı ve doyurucu çözümüdür.",
+  "ozellik": [
+   "glutensiz",
+   "protein-agirlikli",
+   "az-yagli"
+  ],
+  "butce": "1",
+  "adim_baslik": [
+   "Tavuğu mühürleyin",
+   "Soğan ve salçayı ekleyin",
+   "Sebzeleri katın",
+   "Kısa süre pişirip servis edin"
+  ],
+  "adim_sure": [
+   "8",
+   "5",
+   "5",
+   "4"
+  ],
+  "adimlar": [
+   "Geniş bir tavada zeytinyağını yüksek ateşte kızdırın. Kuşbaşı tavukları ekleyip suyunu salıp çekene, dışı renk alana kadar 6-7 dakika kavurun.",
+   "Jülyen soğanı ekleyip pembeleşene kadar kavurun, ardından salçayı katıp kokusu açılana kadar 2 dakika karıştırın.",
+   "Kapya ve sivri biberleri, dilimlenmiş mantarı ekleyip yüksek ateşte 4 dakika kavurun. Küp domatesi, tuz, karabiber ve kekiği ilave edip karıştırın.",
+   "Domates suyunu salıp hafif koyulaşana, tavuk tamamen pişip iç sıcaklığı 74°C'ye ulaşana kadar 3-4 dakika daha pişirin. Sıcak sıcak, pilav ya da ekmek yanında servis edin."
+  ],
+  "hatirlatma": "Önemli: Tavuğu önce yüksek ateşte kendi başına kavurup mühürleyin, sonra sebzeleri ekleyin; hepsini birlikte atarsanız tavuk suyunu salıp haşlanır. Dikkat: Tavuğu az pişirmek gıda güvenliği açısından risklidir; etin ortası beyazlaşıp iç sıcaklığı 74°C'ye ulaşmalı, pembe kalmamalıdır. Artan sote buzdolabında 2 gün saklanır. Kuruyemiş içermez, gluten içermez.",
+  "editor_notu": "Sebzelerin diri ve renkli kalması için onları son 5 dakikada ekleyip yüksek ateşte hızlıca kavurun. Fazla pişen biber suyunu salıp sotenin cıvık olmasına yol açar.",
+  "editor_imza": "Admin DadaGastro · test mutfağında doğrulandı",
+  "kcal": "290",
+  "protein": "31",
+  "karbonhidrat": "9",
+  "yag": "14",
+  "lif": "3",
+  "seker": "5",
+  "sodyum": "520",
+  "doymus_yag": "2.5",
+  "etiket": [
+   "tavuk",
+   "tavuk sote",
+   "sebzeli tavuk",
+   "pratik yemek"
+  ],
+  "malzeme_miktar": [
+   "500",
+   "1",
+   "1",
+   "2",
+   "150",
+   "1",
+   "1",
+   "3",
+   "1",
+   "0,5",
+   "0,5"
+  ],
+  "malzeme_birim": [
+   "gram",
+   "adet",
+   "adet",
+   "adet",
+   "gram",
+   "adet",
+   "tatli-kasigi",
+   "yemek-kasigi",
+   "cay-kasigi",
+   "cay-kasigi",
+   "cay-kasigi"
+  ],
+  "malzeme_ad": [
+   "tavuk göğsü veya but eti",
+   "kuru soğan",
+   "kırmızı kapya biber",
+   "yeşil sivri biber",
+   "Mantar",
+   "Domates",
+   "salça",
+   "Zeytinyağı",
+   "Tuz",
+   "Karabiber",
+   "Kekik"
+  ],
+  "malzeme_not": [
+   "kuşbaşı doğranmış",
+   "julyen doğranmış",
+   "julyen doğranmış",
+   "doğranmış",
+   "dilimlenmiş",
+   "küp doğranmış",
+   "domates salçası",
+   "",
+   "",
+   "",
+   "kuru"
+  ]
+ },
+ "acem-pilavi-safranli-kus-uzumlu-osmanli-pilavi": {
+  "ad": "Acem Pilavı",
+  "slug": "acem-pilavi-safranli-kus-uzumlu-osmanli-pilavi",
+  "kategori": "Pilav",
+  "zorluk": "Orta",
+  "alt_baslik": "Safranlı Kuş Üzümlü Osmanlı Pilavı",
+  "sureBant": [
+   "3"
+  ],
+  "porsiyon": "4 kişilik",
+  "hazirlik_dk": "20",
+  "pisirme_dk": "40",
+  "ozet": "Osmanlı saray mutfağından günümüze ulaşan, safranla renklenen pirincin kuş üzümü ve tarçınla tatlandığı zarif bir pilav. Hafif tatlımsı notasıyla özel gün sofralarının gözde lezzetlerindendir.",
+  "ozellik": [
+   "vejetaryen",
+   "glutensiz",
+   "yumurta-icermez"
+  ],
+  "butce": "2",
+  "adim_baslik": [
+   "Kuş üzümünü ıslatın",
+   "Pirinci kavurun",
+   "Suyla pişirin",
+   "Safran ve kuş üzümünü ekleyin",
+   "Demlendirin"
+  ],
+  "adim_sure": [
+   "10",
+   "5",
+   "15",
+   "15",
+   "10"
+  ],
+  "adimlar": [
+   "Kuş üzümlerini ılık suda 10 dakika bekletip süzün, safranı da ayrı bir kaşık ılık suda bekletin.",
+   "Tereyağında yıkanmış pirinci birkaç dakika kavurun.",
+   "Sıcak su, tuz ve tarçını ekleyip kısık ateşte suyunu çekmeye başlayana kadar pişirin.",
+   "Safran suyunu, süzülmüş kuş üzümünü ve şekeri ekleyip hafifçe karıştırın, kısık ateşte pilav suyunu tamamen çekene kadar pişirmeye devam edin. Önemli: safran suyunu eşit dağıtmak için pilavı yavaşça harmanlayın.",
+   "Ocaktan alıp 10 dakika dinlendirdikten sonra servis edin."
+  ],
+  "hatirlatma": "Önemli: Safranı bir kaşık ılık suda birkaç dakika bekletip suyunu pilava ekleyin, doğrudan eklerseniz rengi ve aroması eşit dağılmaz. Alerjen: kuru üzüm sülfit kalıntısı taşıyabilir, hassasiyeti olanlar dikkatli olmalıdır.",
+  "editor_notu": "Safran bulamazsanız zerdeçalla renk verebilirsiniz, ancak aroması safrana göre farklı ve daha hafif olur.",
+  "editor_imza": "Admin DadaGastro · test mutfağında doğrulandı",
+  "etiket": [
+   "pilav",
+   "pirinç pilavı",
+   "tereyağlı",
+   "misafir sofrası",
+   "safranlı"
+  ],
+  "malzeme_miktar": [
+   "2",
+   "3",
+   "3",
+   "1",
+   "0,25",
+   "3",
+   "1",
+   "1"
+  ],
+  "malzeme_birim": [
+   "su-bardagi",
+   "yemek-kasigi",
+   "su-bardagi",
+   "cay-kasigi",
+   "cay-kasigi",
+   "yemek-kasigi",
+   "tutam",
+   "tatli-kasigi"
+  ],
+  "malzeme_ad": [
+   "Pirinç",
+   "Tereyağı",
+   "sıcak su",
+   "Tuz",
+   "Tarçın",
+   "Kuş üzümü",
+   "Safran",
+   "Şeker"
+  ],
+  "malzeme_not": [
+   "yıkanmış",
+   "",
+   "",
+   "",
+   "",
+   "",
+   "ılık suda bekletilmiş",
+   ""
+  ]
+ },
+ "yunan-usulu-coban-salatasi-klasik-horiatiki-tarifi": {
+  "ad": "Yunan Usulü Çoban Salatası",
+  "slug": "yunan-usulu-coban-salatasi-klasik-horiatiki-tarifi",
+  "kategori": "Meze",
+  "zorluk": "Çok Kolay",
+  "alt_baslik": "Klasik Horiatiki Tarifi",
+  "mutfak": "Yunan",
+  "sureBant": [
+   "0"
+  ],
+  "durum": "yayin",
+  "porsiyon": "4 kişilik",
+  "hazirlik_dk": "15",
+  "pisirme_dk": "0",
+  "ozet": "Olgun domates, salatalık ve beyaz peynirin sızma zeytinyağı ve kekikle buluştuğu, Yunan mutfağının en bilinen salatası horiatiki. Hiç pişirme gerektirmeyen bu ferah tarif, yaz sofralarının ve ızgara yemeklerinin yanında hafif bir seçenektir.",
+  "ozellik": [
+   "vejetaryen",
+   "glutensiz"
+  ],
+  "butce": "2",
+  "adim_baslik": [
+   "Sebzeleri doğrayın",
+   "Peynir ve zeytini ekleyin",
+   "Sosu hazırlayıp gezdirin"
+  ],
+  "adim_sure": [
+   "10",
+   "2",
+   "3"
+  ],
+  "adimlar": [
+   "Olgun domatesleri iri lokmalar hâlinde doğrayın. Salatalıkları kalın dilimleyin, yeşil biberi halka, kırmızı soğanı ince halka doğrayın. Geniş bir servis kâsesinde birleştirin.",
+   "Siyah zeytinleri sebzelerin üzerine dağıtın. Beyaz peyniri geleneksel sunumda olduğu gibi karıştırmadan, kalın bir dilim hâlinde salatanın üzerine yerleştirin.",
+   "Küçük bir kâsede sızma zeytinyağı, kırmızı şarap sirkesi ve kuru kekiği çırpın. Dikkat: Tuzu peynir ve zeytinin tuzluluğunu göz önünde bulundurarak en son ekleyin. Sosu servise hemen önce salatanın üzerinde gezdirin ve üzerine biraz daha kekik serpip sunun."
+  ],
+  "hatirlatma": "Salatanın sulanmaması için domatesleri iri doğrayın ve sosu servise yakın ekleyin. Süt ürünü içerir (beyaz peynir). Peynir ve zeytin doğal olarak tuzlu olduğundan tuzu en son, tadına bakarak ayarlayın.",
+  "editor_notu": "Geleneksel horiatikide beyaz peynir küp doğranmaz, salatanın üzerine kalın bir dilim hâlinde konur ve üzerine kekik serpilir; bu sunum peynirin dağılmadan servis edilmesini sağlar.",
+  "editor_imza": "Admin DadaGastro · test mutfağında doğrulandı",
+  "kcal": "210",
+  "protein": "7",
+  "karbonhidrat": "9",
+  "yag": "17",
+  "lif": "3",
+  "seker": "6",
+  "sodyum": "520",
+  "doymus_yag": "5",
+  "etiket": [
+   "zeytinyağlı",
+   "çoban salatası",
+   "horiatiki",
+   "akdeniz salatası"
+  ],
+  "malzeme_miktar": [
+   "3",
+   "2",
+   "1",
+   "0,5",
+   "10",
+   "150",
+   "3",
+   "1",
+   "1",
+   "1"
+  ],
+  "malzeme_birim": [
+   "adet",
+   "adet",
+   "adet",
+   "adet",
+   "adet",
+   "gram",
+   "yemek-kasigi",
+   "yemek-kasigi",
+   "cay-kasigi",
+   "tutam"
+  ],
+  "malzeme_ad": [
+   "Domates",
+   "Salatalık",
+   "Yeşil Biber",
+   "Kırmızı Soğan",
+   "siyah zeytin",
+   "Beyaz peynir",
+   "sızma zeytinyağı",
+   "kırmızı şarap sirkesi",
+   "kuru kekik",
+   "Tuz"
+  ],
+  "malzeme_not": [
+   "olgun, iri doğranmış",
+   "kalın dilimlenmiş",
+   "halka doğranmış",
+   "ince halka",
+   "",
+   "kalın dilim",
+   "",
+   "",
+   "",
+   "tadına göre"
+  ]
+ },
+ "trakya-usulu-hardaliye-hardal-tohumlu-fermente-uzum-icecegi": {
+  "ad": "Trakya Usulü Hardaliye",
+  "slug": "trakya-usulu-hardaliye-hardal-tohumlu-fermente-uzum-icecegi",
+  "kategori": "İçecek",
+  "zorluk": "Zor",
+  "alt_baslik": "Hardal Tohumlu Fermente Üzüm İçeceği",
+  "mutfak": "Türk",
+  "sureBant": [
+   "5"
+  ],
+  "durum": "taslak",
+  "porsiyon": "6 kişilik",
+  "hazirlik_dk": "40",
+  "pisirme_dk": "25",
+  "ozet": "Trakya'nın bağ bozumu sonrası hazırladığı hardaliye, siyah üzümün suyunun hardal tohumu ve turp dilimleriyle günler boyu fermente edilmesiyle ortaya çıkar. Fermentasyon süresini doğru tutturmak beceri ister, sonuç hafif ekşimsi, serinletici bir içecek.",
+  "butce": "1",
+  "adim_baslik": [
+   "Üzümü sıkın",
+   "Kaynatıp soğutun",
+   "Kavanoza doldurun",
+   "Fermente edin",
+   "Süzüp servis edin"
+  ],
+  "adim_sure": [
+   "15",
+   "10",
+   "10",
+   "4320",
+   "10"
+  ],
+  "adimlar": [
+   "Üzümleri ezip bir tülbentten süzerek suyunu çıkarın.",
+   "Üzüm suyunu şeker ve suyla karıştırıp kaynatın, 10 dakika kaynattıktan sonra ocaktan alıp soğumaya bırakın.",
+   "Soğuyan karışıma hardal tohumu ve turp dilimlerini ekleyip cam bir kavanoza doldurun, kapağını hafif aralık bırakın.",
+   "Oda sıcaklığında en az 3 gün fermente edin, tadına bakarak istediğiniz ekşiliğe ulaştığında buzdolabına alın.",
+   "Turp ve hardal tohumlarını süzgeçten geçirip ayıklayın, soğuk servis edin."
+  ],
+  "hatirlatma": "Kavanozun kapağını sıkıca kapatmayın, fermentasyon sırasında oluşan gazın çıkması gerekir, aksi halde kavanoz patlayabilir.",
+  "etiket": [
+   "Trakya"
+  ],
+  "malzeme_miktar": [
+   "1",
+   "2",
+   "0,5",
+   "1",
+   "2"
+  ],
+  "malzeme_birim": [
+   "kg",
+   "yemek-kasigi",
+   "su-bardagi",
+   "adet",
+   "su-bardagi"
+  ],
+  "malzeme_ad": [
+   "siyah üzüm",
+   "hardal tohumu",
+   "Şeker",
+   "kırmızı turp",
+   "Su"
+  ],
+  "malzeme_not": [
+   "çekirdekli, ezilmiş",
+   "",
+   "",
+   "dilimlenmiş",
+   ""
+  ]
+ },
+ "laz-boregi-karadeniz-usulu-muhallebili-tatli-borek": {
+  "ad": "Laz Böreği",
+  "slug": "laz-boregi-karadeniz-usulu-muhallebili-tatli-borek",
+  "kategori": "Tatlı",
+  "zorluk": "Zor",
+  "alt_baslik": "Karadeniz Usulü Muhallebili Tatlı Börek",
+  "sureBant": [
+   "4"
+  ],
+  "porsiyon": "8 dilim",
+  "hazirlik_dk": "35",
+  "pisirme_dk": "30",
+  "ozet": "Karadeniz mutfağının şaşırtıcı tatlısı Laz böreği, mısır unlu muhallebinin ince yufkalar arasında katmanlanıp fırınlanmasıyla hazırlanır. Tuzlu börek görünümündeki bu tatlı, hafif tatlılığı ve krema dokusuyla bilinir.",
+  "ozellik": [
+   "vejetaryen"
+  ],
+  "butce": "2",
+  "adim_baslik": [
+   "Muhallebiyi Pişirme",
+   "Soğutma",
+   "Katmanlama",
+   "Fırınlama",
+   "Sunum"
+  ],
+  "adim_sure": [
+   "15",
+   "20",
+   "15",
+   "30",
+   ""
+  ],
+  "adimlar": [
+   "Süt, şeker, nişasta ve yumurta sarısını telle karıştırıp **orta ateşte** sürekli karıştırarak koyulaşana kadar 12-15 dakika pişirin.",
+   "Muhallebinin üzerine streç film gererek **20 dakika** soğutun.",
+   "Fırın tepsisine yufkaların yarısını tereyağıyla yağlayarak serin, üzerine muhallebiyi yayın, kalan yufkaları yağlayarak kapatın.",
+   "Dilim dilim kesip **180°C'ye ısıtılmış fırında** üst yüzey altın rengi alana kadar 25-30 dakika pişirin.",
+   "Ilıdıktan sonra dilimleyip servis edin."
+  ],
+  "hatirlatma": "Buzdolabında kapalı kapta 3 gün saklanabilir; muhallebi içerdiğinden oda sıcaklığında uzun bekletilmemelidir.",
+  "kcal": "340",
+  "protein": "8",
+  "karbonhidrat": "38",
+  "yag": "17",
+  "lif": "1",
+  "seker": "16",
+  "sodyum": "210",
+  "doymus_yag": "9",
+  "etiket": [
+   "karadeniz"
+  ],
+  "malzeme_miktar": [
+   "1",
+   "0,75",
+   "4",
+   "2",
+   "8",
+   "100"
+  ],
+  "malzeme_birim": [
+   "l",
+   "su-bardagi",
+   "yemek-kasigi",
+   "adet",
+   "adet",
+   "gram"
+  ],
+  "malzeme_ad": [
+   "Süt",
+   "Toz şeker",
+   "mısır nişastası",
+   "yumurta sarısı",
+   "yufka",
+   "Tereyağı"
+  ],
+  "malzeme_not": [
+   "",
+   "",
+   "",
+   "",
+   "",
+   "eritilmiş"
+  ]
+ },
+ "karisik-antep-tursusu-bahce-sebzeleriyle-ev-yapimi-tursu": {
+  "ad": "Karışık Antep Turşusu",
+  "slug": "karisik-antep-tursusu-bahce-sebzeleriyle-ev-yapimi-tursu",
+  "kategori": "Meze",
+  "zorluk": "Orta",
+  "alt_baslik": "Bahçe Sebzeleriyle Ev Yapımı Turşu",
+  "mutfak": "Türk",
+  "sureBant": [
+   "3"
+  ],
+  "durum": "yayin",
+  "porsiyon": "8 kişilik",
+  "hazirlik_dk": "50",
+  "pisirme_dk": "10",
+  "ozet": "Gaziantep mutfağının bereketli sebze çeşitliliğinden ilham alan bu kavanoz karışımı, biber, havuç, salatalık ve lahananın tek kavanozda bekletilmesiyle hazırlanır. Çok sayıda sebzenin doğranması zaman alsa da işlemin kendisi kolaydır ve parti sofralarında meze tabağını tamamlar.",
+  "ozellik": [
+   "vegan",
+   "laktozsuz"
+  ],
+  "butce": "3",
+  "adim_baslik": [
+   "Sebzeleri hazırlayın",
+   "Kavanoza yerleştirin",
+   "Salamurayı hazırlayın",
+   "Bekletin"
+  ],
+  "adim_sure": [
+   "35",
+   "10",
+   "10",
+   "14400"
+  ],
+  "adimlar": [
+   "Biber, havuç, salatalık ve lahanayı iri parçalar halinde doğrayın, sarımsak dişlerini soyup bütün bırakın.",
+   "Doğranmış sebzeleri ve sarımsak dişlerini sterilize edilmiş büyük bir kavanoza sıkıca yerleştirin.",
+   "Su, sirke ve tuzu bir tencerede kaynatıp 5 dakika kaynatın, ardından ılıyıncaya kadar bekletin.",
+   "Ilık salamurayı kavanoza sebzeleri örtecek şekilde dökün, kapağını sıkıca kapatıp serin ve karanlık bir yerde en az 10 gün bekletin."
+  ],
+  "hatirlatma": "Kavanozu doldurmadan önce mutlaka kaynar suyla sterilize edin, aksi halde turşu birkaç gün içinde küflenir.",
+  "etiket": [
+   "Gaziantep"
+  ],
+  "malzeme_miktar": [
+   "4",
+   "2",
+   "3",
+   "0,25",
+   "4",
+   "2",
+   "2",
+   "3"
+  ],
+  "malzeme_birim": [
+   "adet",
+   "adet",
+   "adet",
+   "adet",
+   "dis",
+   "su-bardagi",
+   "su-bardagi",
+   "yemek-kasigi"
+  ],
+  "malzeme_ad": [
+   "Biber",
+   "Havuç",
+   "Salatalık",
+   "Lahana",
+   "Sarımsak",
+   "Sirke",
+   "Su",
+   "Tuz"
+  ],
+  "malzeme_not": [
+   "sivri ve dolmalık karışık",
+   "dilimlenmiş",
+   "orta boy",
+   "iri doğranmış",
+   "",
+   "",
+   "",
+   ""
+  ]
+ },
+ "firinda-balik-parmagi-cocuklar-icin-citir-tarif": {
+  "ad": "Fırında Balık Parmağı",
+  "slug": "firinda-balik-parmagi-cocuklar-icin-citir-tarif",
+  "kategori": "Balık ve Deniz Ürünleri",
+  "zorluk": "Kolay",
+  "alt_baslik": "Çocuklar İçin Çıtır Tarif",
+  "mutfak": "Amerikan",
+  "sureBant": [
+   "2"
+  ],
+  "durum": "yayin",
+  "porsiyon": "4 kişilik",
+  "hazirlik_dk": "30",
+  "pisirme_dk": "20",
+  "ozet": "Beyaz etli balık fileto parçalarının una, çırpılmış yumurtaya ve galeta ununa bulanıp fırında kızartılmasıyla hazırlanan bu tarif, yağda kızartmaya göre daha hafif bir alternatiftir. Özellikle çocukların severek tükettiği pratik bir atıştırmalıktır.",
+  "ozellik": [
+   "protein-agirlikli"
+  ],
+  "butce": "2",
+  "adim_baslik": [
+   "Balığı kaplama için hazırlayın",
+   "Una, yumurtaya ve galeta ununa bulayın",
+   "Fırın tepsisine dizin",
+   "Fırında pişirin"
+  ],
+  "adim_sure": [
+   "10",
+   "15",
+   "5",
+   "20"
+  ],
+  "adimlar": [
+   "Mezgit filetosunu parmak kalınlığında şeritler halinde kesip tuz ve karabiberle tatlandırın.",
+   "Balık şeritlerini önce una, sonra çırpılmış yumurtaya, en son galeta ununa bastırarak bulayın.",
+   "Kaplanan balık parçalarını yağlı kağıt serilmiş fırın tepsisine aralıklı şekilde dizin.",
+   "Önceden 200 derecede ısıtılmış fırında balık parmaklarını arada çevirerek her iki tarafı da altın rengi alana kadar pişirin."
+  ],
+  "hatirlatma": "Önemli: Balık parçaları fırına dizilmeden önce galeta ununa iyice bastırılmalı, aksi halde kaplama pişerken dökülür. Alerjen: Balık, yumurta ve gluten (galeta unu) içerir.",
+  "editor_notu": "Galeta ununa bir tutam kırmızı toz biber ve kimyon karıştırırsanız balık parmaklarının hem rengi hem de tadı belirgin şekilde zenginleşir.",
+  "editor_imza": "Admin DadaGastro · test mutfağında doğrulandı",
+  "etiket": [
+   "fırın",
+   "çıtır",
+   "çocuk yemeği",
+   "balık"
+  ],
+  "malzeme_miktar": [
+   "500",
+   "0,5",
+   "2",
+   "1",
+   "1",
+   "0,5"
+  ],
+  "malzeme_birim": [
+   "gram",
+   "su-bardagi",
+   "adet",
+   "su-bardagi",
+   "cay-kasigi",
+   "cay-kasigi"
+  ],
+  "malzeme_ad": [
+   "mezgit filetosu",
+   "Un",
+   "Yumurta",
+   "Galeta Unu",
+   "Tuz",
+   "Karabiber"
+  ],
+  "malzeme_not": [
+   "şeritler halinde kesilmiş",
+   "",
+   "çırpılmış",
+   "",
+   "",
+   ""
+  ]
+ },
+ "dana-sucuklu-yumurtali-pide-kahvaltilik-turk-usulu-ince-pide": {
+  "ad": "Dana Sucuklu Yumurtalı Pide",
+  "slug": "dana-sucuklu-yumurtali-pide-kahvaltilik-turk-usulu-ince-pide",
+  "kategori": "Kahvaltılık",
+  "zorluk": "Orta",
+  "alt_baslik": "Kahvaltılık Türk Usulü İnce Pide",
+  "mutfak": "Türk",
+  "sureBant": [
+   "4"
+  ],
+  "durum": "arsiv",
+  "porsiyon": "2 kişilik",
+  "hazirlik_dk": "15",
+  "pisirme_dk": "15",
+  "ozet": "Türk kahvaltı sofralarının doyurucu lezzeti dana sucuklu yumurtalı ince hamur, ince açılan hamurun üzerine dana sucuk dilimleri ve yumurtanın kırılıp fırında birlikte pişirilmesiyle hazırlanır. Premium malzemelerle hazırlanan bu tarif, sade tuzlu kahvaltılara alternatif sunar.",
+  "ozellik": [
+   "diyabete-uygun"
+  ],
+  "butce": "3",
+  "adim_baslik": [
+   "Hamuru Yoğurup Dinlendirin",
+   "Açıp Sucukla Kaplayın",
+   "Fırınlayın",
+   "Yumurtayı Kırıp Tamamlayın"
+  ],
+  "adim_sure": [
+   "10",
+   "5",
+   "10",
+   "5"
+  ],
+  "adimlar": [
+   "Ilık suda mayayı eritip un ve tuzla yoğurun, üzerini örtüp 10 dakika dinlendirin.",
+   "Hamuru ince bir oval halinde açıp dana sucuk dilimlerini ve kaşar peynirini dizin.",
+   "Önceden 220 dereceye ısıtılmış fırında 10 dakika pişirin.",
+   "Pideyi çıkarıp üzerine yumurtaları kırın, fırına geri koyup sarısı istediğiniz kıvama gelene kadar 5 dakika daha pişirin."
+  ],
+  "hatirlatma": "Yumurtayı fırının son 5 dakikasında kırın, erken eklerseniz sarısı tamamen katılaşır. Alerjen: buğday (gluten), yumurta içerir.",
+  "editor_notu": "Hamuru açmadan önce 10 dakika dinlendirirseniz elastikiyeti azalır ve istediğiniz ince kalınlığa çekmek kolaylaşır.",
+  "editor_imza": "Admin DadaGastro · test mutfağında doğrulandı",
+  "malzeme_miktar": [
+   "2",
+   "1",
+   "0,75",
+   "150",
+   "2",
+   "60",
+   "0,5"
+  ],
+  "malzeme_birim": [
+   "su-bardagi",
+   "tatli-kasigi",
+   "su-bardagi",
+   "gram",
+   "adet",
+   "gram",
+   "cay-kasigi"
+  ],
+  "malzeme_ad": [
+   "Un",
+   "maya",
+   "ılık su",
+   "dana sucuk",
+   "Yumurta",
+   "Kaşar peyniri",
+   "Tuz"
+  ],
+  "malzeme_not": [
+   "",
+   "kuru",
+   "",
+   "dilimlenmiş",
+   "",
+   "rendelenmiş",
+   ""
+  ]
+ },
+ "soda-ekmegi-mayasiz-kabuklu-irlanda-ekmegi": {
+  "ad": "Soda Ekmeği",
+  "slug": "soda-ekmegi-mayasiz-kabuklu-irlanda-ekmegi",
+  "kategori": "Atıştırmalık",
+  "zorluk": "Kolay",
+  "alt_baslik": "Mayasız Kabuklu İrlanda Ekmeği",
+  "sureBant": [
+   "3"
+  ],
+  "durum": "yayin",
+  "porsiyon": "8 dilim",
+  "hazirlik_dk": "15",
+  "pisirme_dk": "45",
+  "ozet": "Maya yerine karbonat ve ayranla kabartılan, kısa sürede hazırlanıp fırınlanan İrlanda usulü ekmek. Kalın çıtır kabuğu ve yoğun içiyle özellikle kahvaltı sofralarında tereyağıyla severek tüketilir.",
+  "ozellik": [
+   "vejetaryen"
+  ],
+  "butce": "1",
+  "adim_baslik": [
+   "Hamuru karıştırın",
+   "Şekil verin",
+   "Fırınlayın",
+   "Dinlendirin"
+  ],
+  "adim_sure": [
+   "10",
+   "5",
+   "35",
+   "15"
+  ],
+  "adimlar": [
+   "Un, karbonat ve tuzu karıştırıp ayranı ekleyin; yumuşak bir hamur oluşana kadar birkaç kez yoğurun, fazla yoğurmayın.",
+   "Hamuru unlanmış tezgâhta yuvarlak toparlayıp un serpilmiş tepsiye alın, üzerine keskin bıçakla derin bir haç çizin.",
+   "Önceden ısıtılmış fırında somun kızarana ve alttan vurulduğunda boş ses verene kadar pişirin. Dikkat: mayasız olduğundan kabarma sınırlıdır, bu normaldir.",
+   "Fırından çıkan ekmeği tel ızgara üzerinde en az 15 dakika soğutup dilimleyin."
+  ],
+  "hatirlatma": "Önemli: Hamur mayalanmadığı için mümkün olduğunca az yoğrulmalı, fazla yoğurma ekmeği sertleştirir. Gluten ve süt ürünleri içerir. En iyi pişirildiği gün tüketilir, kalanını dilimleyip dondurabilirsiniz.",
+  "editor_notu": "Somunun üzerine derin bir haç şekli çizmek yalnızca geleneksel görünüm için değil, ekmeğin ortasının da düzgün pişmesi için gereklidir.",
+  "editor_imza": "Admin DadaGastro · test mutfağında doğrulandı",
+  "etiket": [
+   "ekmek",
+   "çıtır ekmek",
+   "soda ekmeği"
+  ],
+  "malzeme_miktar": [
+   "3,5",
+   "1,5",
+   "1",
+   "1",
+   "1"
+  ],
+  "malzeme_birim": [
+   "su-bardagi",
+   "su-bardagi",
+   "cay-kasigi",
+   "cay-kasigi",
+   "yemek-kasigi"
+  ],
+  "malzeme_ad": [
+   "Un",
+   "Ayran",
+   "karbonat",
+   "Tuz",
+   "Un"
+  ],
+  "malzeme_not": [
+   "elenmiş",
+   "",
+   "",
+   "",
+   "şekillendirme için"
+  ]
+ }
+}
+</script>
+
+<!-- ADMIN-KIT:JS:BAS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/7.3.0/tinymce.min.js" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/l10n/tr.js"></script>
+<script src="../../kanon/admin-editor-tr.js"></script>
+<script src="../../kanon/admin-kit.js" defer></script>
+<script src="../../kanon/admin-editor.js" defer></script>
+<script src="../../kanon/admin-tarih.js" defer></script>
+<!-- ADMIN-KIT:JS:SON -->
 </body></html>

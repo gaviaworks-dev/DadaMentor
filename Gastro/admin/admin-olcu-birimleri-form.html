@@ -8,8 +8,12 @@
 <link rel="stylesheet" href="../../kanon/markalar/gastro.css">
 <link rel="stylesheet" href="../../kanon/bilesenler.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<!-- ADMIN-KIT:CSS:BAS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.css">
+<link rel="stylesheet" href="../../kanon/admin.css">
+<!-- ADMIN-KIT:CSS:SON -->
 </head>
-<body class="yetkili">
+<body class="yetkili" data-marka="gastro">
 <!-- ═══ GASTRO ADMIN · KANONİK KABUK — lead üretti, agent DEĞİŞTİRMEZ.
      Kaynak: deneme/admin-fit/_ortak/kabuk.html · üretim: scripts/olcum/gadm-kabuk-uret.mjs
      Şerh ve ikon kaynakları: deneme/admin-gastro/_ortak/kabuk-serh.txt ═══ -->
@@ -18,22 +22,34 @@
   <a class="panel-ray-ikon aktif" href="#" style="--eko:var(--eko-gastro)"
      aria-current="true" title="DadaGastro" aria-label="DadaGastro"><i class="fa-solid fa-utensils"></i></a>
   <span class="panel-ray-ayrac" role="presentation"></span>
+  <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-diet)"    title="DadaDiet"    aria-label="DadaDiet"><i class="fa-solid fa-heart-pulse"></i></a>
+  <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-gourmet)" title="DadaGourmet" aria-label="DadaGourmet"><i class="fa-solid fa-map-location-dot"></i></a>
   <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-fit)"  title="DadaFit"  aria-label="DadaFit"><i class="fa-solid fa-dumbbell"></i></a>
-  <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-diet)"    title="DadaDiet"    aria-label="DadaDiet"><i class="fa-solid fa-leaf"></i></a>
-  <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-gourmet)" title="DadaGourmet" aria-label="DadaGourmet"><i class="fa-solid fa-wine-glass"></i></a>
   <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-campus)"  title="DadaCampus"  aria-label="DadaCampus"><i class="fa-solid fa-graduation-cap"></i></a>
+  <span class="panel-ray-ikon kilitli" title="DadaStore — erişimin yok" aria-label="DadaStore, erişim yok"><i class="fa-solid fa-bag-shopping"></i></span>
   <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-mentor)"  title="DadaMentor"  aria-label="DadaMentor"><i class="fa-solid fa-compass"></i></a>
-  <span class="panel-ray-ikon kilitli" title="DadaStore — erişimin yok" aria-label="DadaStore, erişim yok"><i class="fa-solid fa-lock"></i></span>
   <div class="panel-ray-alt">
     <a class="panel-ray-ikon" href="#" title="Yardım" aria-label="Yardım"><i class="fa-solid fa-circle-question"></i></a>
+<!-- ADMIN-KIT:IMZA:BAS -->
+    <a class="panel-ray-imza" href="https://gaviaworks.com" target="_blank" rel="noopener"
+       title="Gaviaworks" aria-label="Gaviaworks — gaviaworks.com">
+      <span class="yalniz-okuyucu">Gaviaworks</span>
+    </a>
+<!-- ADMIN-KIT:IMZA:SON -->
   </div>
 </aside>
 
 <!-- ── MODÜL MENÜSÜ · DÖRT KATEGORİ ───────────────────────────────── -->
 <nav class="panel-menu" id="panelMenu" aria-label="Modüller">
+<!-- ADMIN-KIT:KABUK:BAS -->
   <div class="panel-menu-bas">
-    <b>DadaGastro</b><span>Yönetim paneli</span>
+    <a class="panel-marka" href="admin-genel-bakis.html" aria-label="DadaGastro yönetim paneli">
+      <span class="yalniz-okuyucu">DadaGastro · Yönetim paneli</span>
+    </a>
   </div>
+  <button type="button" class="panel-katla" aria-pressed="false"
+          aria-label="Menüyü daralt"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i></button>
+<!-- ADMIN-KIT:KABUK:SON -->
   <div class="panel-menu-govde">
 
     <div class="panel-menu-bolum">01 Genel</div>
@@ -192,7 +208,7 @@
                   <div class="slug-alani">
                     <span class="slug-onek">dadagastro.com/olcu-birimleri/#</span>
                     <!-- 🔴 TİRE KAÇIRILIYOR — gerekçe `admin-testler-v1.html:127`de. -->
-                    <input class="alan-girdi" id="tfSlug" name="slug" type="text" required="" maxlength="60" pattern="[a-z0-9\-]+" placeholder="nohut" data-zorunlu="1">
+                    <input data-girdi="slug" class="alan-girdi" id="tfSlug" name="slug" type="text" required="" maxlength="60" pattern="[a-z0-9\-]+" placeholder="nohut" data-zorunlu="1">
                   </div>
                   <div class="alan-yardim"><span>Yalnız küçük harf, rakam ve tire.</span></div>
                 </div>
@@ -237,8 +253,8 @@
                 <i class="fa-solid fa-list-check" aria-hidden="true"></i> Ölçüm kuralları
                 <span class="alan-sayac" id="tfAmacSay">1 madde</span>
               </h3>
-              <div class="adim-liste" id="tfAmacList"><div class="adim-karti"><span class="adim-no">1</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-list-check" aria-hidden="true"></i> Madde</span><input class="alan-girdi" type="text" name="amac_madde[]" data-field="metin" placeholder="Örn. 1 su bardağı nohut 180 g gelir; tarifteki gram buradan hesaplanır."><input type="hidden" data-field="position" value="0"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Satırı sil" aria-label="Satırı sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div></div>
-              <button class="satir-ekle" type="button" id="tfAmacEkle">
+              <div class="adim-liste" id="tfAmacList"><div class="adim-karti"><span class="adim-no">1</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-list-check" aria-hidden="true"></i> Madde</span><input class="alan-girdi" type="text" name="amac_madde[]" data-field="metin" placeholder="Örn. 1 su bardağı nohut 180 g gelir; tarifteki gram buradan hesaplanır."><input type="hidden" data-field="position" value="0"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır" data-eylem="sirala"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Satırı sil" aria-label="Satırı sil" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div></div>
+              <button class="satir-ekle" type="button" id="tfAmacEkle" data-eylem="satir-ekle">
                 <i class="fa-solid fa-plus" aria-hidden="true"></i> Madde ekle</button>
               <div class="alan-yardim" style="margin-top:10px"><span>Ölçüm notunun altında madde madde basılır. Tutamağı sürükleyerek ya da odaktayken ↑ / ↓ ile taşı.</span></div>
             </div>
@@ -251,7 +267,7 @@
                 <i class="fa-solid fa-toolbox" aria-hidden="true"></i> Standart kap
                 <span class="alan-sayac" id="tfEkipmanSay">1 kalem</span>
               </h3>
-              <div class="adim-liste" id="tfEkipman"><div class="adim-karti"><span class="adim-no">1</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-mug-hot" aria-hidden="true"></i> Kap</span><input class="alan-girdi" type="text" name="ekipman[]" data-field="metin" placeholder="Örn. Su Bardağı (200 ml)"><input type="hidden" data-field="position" value="0"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Satırı sil" aria-label="Satırı sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div></div>
+              <div class="adim-liste" id="tfEkipman"><div class="adim-karti"><span class="adim-no">1</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-mug-hot" aria-hidden="true"></i> Kap</span><input class="alan-girdi" type="text" name="ekipman[]" data-field="metin" placeholder="Örn. Su Bardağı (200 ml)"><input type="hidden" data-field="position" value="0"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır" data-eylem="sirala"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Satırı sil" aria-label="Satırı sil" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div></div>
               <button class="satir-ekle" type="button" id="tfEkipmanEkle">
                 <i class="fa-solid fa-plus" aria-hidden="true"></i> Kap ekle</button>
               <div class="alan-yardim" style="margin-top:10px"><span>Tablolar 200 ml’lik standart su bardağına ve silme doldurulmuş kaşığa göredir (ölçüldü). Listede olmayan bir kap tabloya da girmez.</span></div>
@@ -262,8 +278,8 @@
                 <i class="fa-solid fa-shoe-prints" aria-hidden="true"></i> Birim karşılıkları
                 <span class="alan-sayac" id="tfAdimSay">1 adım</span>
               </h3>
-              <div class="adim-liste" id="tfAdimlar"><div class="adim-karti"><span class="adim-no">1</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-shoe-prints" aria-hidden="true"></i> Adım</span><input class="alan-girdi" type="text" name="adim_baslik[]" data-field="baslik" maxlength="60" placeholder="Birim — örn. Su Bardağı" aria-label="Birim adı"><textarea class="alan-metin" name="adim_metin[]" data-field="metin" placeholder="Karşılığı — örn. 180 g" aria-label="Birim karşılığı"></textarea><input type="hidden" data-field="position" value="0"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Adımı sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Adımı sil" aria-label="Adımı sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div></div>
-              <button class="satir-ekle" type="button" id="tfAdimEkle">
+              <div class="adim-liste" id="tfAdimlar"><div class="adim-karti"><span class="adim-no">1</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-shoe-prints" aria-hidden="true"></i> Adım</span><input class="alan-girdi" type="text" name="adim_baslik[]" data-field="baslik" maxlength="60" placeholder="Birim — örn. Su Bardağı" aria-label="Birim adı"><textarea class="alan-metin" name="adim_metin[]" data-field="metin" placeholder="Karşılığı — örn. 180 g" aria-label="Birim karşılığı"></textarea><input type="hidden" data-field="position" value="0"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Adımı sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır" data-eylem="sirala"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Adımı sil" aria-label="Adımı sil" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div></div>
+              <button class="satir-ekle" type="button" id="tfAdimEkle" data-eylem="satir-ekle">
                 <i class="fa-solid fa-plus" aria-hidden="true"></i> Adım ekle</button>
               <div class="alan-yardim" style="margin-top:10px"><span>Her birimin <b>başlığı</b> ve
                 <b>anlatımı</b> ayrı alanlardır; tablo ikisini de basar. Sıra public tarafta aynen görünür.</span></div>
@@ -271,11 +287,25 @@
 
             <div class="form-bolum">
               <h3 class="form-bolum-bas">
+                <i class="fa-solid fa-arrows-rotate" aria-hidden="true"></i> Pratik Dönüştürücü
+                <span class="alan-sayac" id="tfConvSay">1 ölçü</span>
+              </h3>
+              <div class="adim-liste" id="tfConv"><div class="adim-karti"><span class="adim-no">1</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-arrows-rotate" aria-hidden="true"></i> Ölçü</span><input class="alan-girdi" type="text" name="conv_birim[]" data-field="baslik" maxlength="40" placeholder="Birim — örn. 1 su bardağı" aria-label="Birim adı"><input class="alan-girdi" type="number" name="conv_hacim[]" data-field="hacim" min="0" data-girdi="sayi" placeholder="Hacim — 200 ml" aria-label="Birimin hacmi, mililitre"><input class="alan-girdi" type="text" name="conv_karsilik[]" data-field="metin" maxlength="20" placeholder="Karşılığı — örn. 120 g" aria-label="Bu malzemedeki karşılığı"><input type="hidden" data-field="position" value="0"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır" data-eylem="sirala"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Satırı sil" aria-label="Satırı sil" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div></div>
+              <button class="satir-ekle" type="button" id="tfConvEkle">
+                <i class="fa-solid fa-plus" aria-hidden="true"></i> Ölçü ekle</button>
+              <div class="alan-yardim"><span>Public <b>Pratik Dönüştürücü</b>nün
+                çarpan tablosudur. Ölçülen beş kap ve hacmi: 1 su bardağı 200 ml · 1 çay bardağı 100 ml ·
+                1 yemek kaşığı 15 ml · 1 tatlı kaşığı 5 ml · 1 çay kaşığı 4 ml. Hacim <b>kabın</b>
+                özelliğidir, karşılık <b>malzemenin</b>; ikisi ayrı alandır.</span></div>
+            </div>
+
+            <div class="form-bolum">
+              <h3 class="form-bolum-bas">
                 <i class="fa-solid fa-user-check" aria-hidden="true"></i> Hangi hâlde geçerli
                 <span class="alan-sayac" id="tfUygunSay">1 madde</span>
               </h3>
-              <div class="adim-liste" id="tfUygun"><div class="adim-karti"><span class="adim-no">1</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-user-check" aria-hidden="true"></i> Uygun</span><input class="alan-girdi" type="text" name="uygun[]" data-field="metin" placeholder="Örn. Silme doldurulmuş kaşıkla ölçüldüğünde"><input type="hidden" data-field="position" value="0"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Satırı sil" aria-label="Satırı sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div></div>
-              <button class="satir-ekle" type="button" id="tfUygunEkle">
+              <div class="adim-liste" id="tfUygun"><div class="adim-karti"><span class="adim-no">1</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-user-check" aria-hidden="true"></i> Uygun</span><input class="alan-girdi" type="text" name="uygun[]" data-field="metin" placeholder="Örn. Silme doldurulmuş kaşıkla ölçüldüğünde"><input type="hidden" data-field="position" value="0"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır" data-eylem="sirala"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Satırı sil" aria-label="Satırı sil" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div></div>
+              <button class="satir-ekle" type="button" id="tfUygunEkle" data-eylem="satir-ekle">
                 <i class="fa-solid fa-plus" aria-hidden="true"></i> Madde ekle</button>
             </div>
 
@@ -284,8 +314,8 @@
                 <i class="fa-solid fa-user-xmark" aria-hidden="true"></i> Hangi hâlde geçersiz
                 <span class="alan-sayac" id="tfUygunDegilSay">1 madde</span>
               </h3>
-              <div class="adim-liste" id="tfUygunDegil"><div class="adim-karti"><span class="adim-no">1</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-user-xmark" aria-hidden="true"></i> Uygun değil</span><input class="alan-girdi" type="text" name="uygun_degil[]" data-field="metin" placeholder="Örn. Tepeleme doldurulmuşsa"><input type="hidden" data-field="position" value="0"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Satırı sil" aria-label="Satırı sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div></div>
-              <button class="satir-ekle" type="button" id="tfUygunDegilEkle">
+              <div class="adim-liste" id="tfUygunDegil"><div class="adim-karti"><span class="adim-no">1</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-user-xmark" aria-hidden="true"></i> Uygun değil</span><input class="alan-girdi" type="text" name="uygun_degil[]" data-field="metin" placeholder="Örn. Tepeleme doldurulmuşsa"><input type="hidden" data-field="position" value="0"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır" data-eylem="sirala"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Satırı sil" aria-label="Satırı sil" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div></div>
+              <button class="satir-ekle" type="button" id="tfUygunDegilEkle" data-eylem="satir-ekle">
                 <i class="fa-solid fa-plus" aria-hidden="true"></i> Madde ekle</button>
               <div class="alan-yardim" style="margin-top:10px"><span>🔴 Bu liste dönüşümün geçerlilik taramasını besler: eşleşen bir madde varsa dönüşüm <b>başlamaz</b>.</span></div>
             </div>
@@ -295,7 +325,7 @@
                 <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> Ek ölçüm notu
                 <span class="alan-sayac" id="tfGuvenlikSay">1 not</span>
               </h3>
-              <div class="adim-liste" id="tfGuvenlik"><div class="adim-karti"><span class="adim-no">1</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> Not</span><input class="alan-girdi" type="text" name="guvenlik[]" data-field="metin" placeholder="Public sayfadaki ölçüm notunu buraya taşı — yeniden yazma."><input type="hidden" data-field="position" value="0"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Satırı sil" aria-label="Satırı sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div></div>
+              <div class="adim-liste" id="tfGuvenlik"><div class="adim-karti"><span class="adim-no">1</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> Not</span><input class="alan-girdi" type="text" name="guvenlik[]" data-field="metin" placeholder="Public sayfadaki ölçüm notunu buraya taşı — yeniden yazma."><input type="hidden" data-field="position" value="0"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır" data-eylem="sirala"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Satırı sil" aria-label="Satırı sil" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div></div>
               <button class="satir-ekle" type="button" id="tfGuvenlikEkle">
                 <i class="fa-solid fa-plus" aria-hidden="true"></i> Not ekle</button>
               <div class="alan-yardim" style="margin-top:10px"><span>🔴 <b>Ölçüm metni — taşınır, yeniden yazılmaz.</b> Bu malzemenin bugünkü ölçüm notları
@@ -311,8 +341,8 @@
                 <i class="fa-solid fa-circle-question" aria-hidden="true"></i> Sık sorulanlar
                 <span class="alan-sayac" id="tfSoruSay">1 soru</span>
               </h3>
-              <div class="adim-liste" id="tfSorular"><div class="adim-karti"><span class="adim-no">1</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-circle-question" aria-hidden="true"></i> SSS sorusu</span><textarea class="alan-metin" name="soru[]" data-field="soru" maxlength="200" placeholder="Tablonun altında üyeye sorulan soru." aria-label="SSS sorusu"></textarea><input type="hidden" data-field="position" value="0"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Soruyu sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Soruyu sil" aria-label="Soruyu sil" disabled=""><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div></div>
-              <button class="satir-ekle" type="button" id="tfSoruEkle">
+              <div class="adim-liste" id="tfSorular"><div class="adim-karti"><span class="adim-no">1</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-circle-question" aria-hidden="true"></i> SSS sorusu</span><textarea class="alan-metin" name="soru[]" data-field="soru" maxlength="200" placeholder="Tablonun altında üyeye sorulan soru." aria-label="SSS sorusu"></textarea><input type="hidden" data-field="position" value="0"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Soruyu sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır" data-eylem="sirala"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Soruyu sil" aria-label="Soruyu sil" disabled="" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div></div>
+              <button class="satir-ekle" type="button" id="tfSoruEkle" data-eylem="satir-ekle">
                 <i class="fa-solid fa-plus" aria-hidden="true"></i> Soru ekle</button>
               <div class="alan-yardim" style="margin-top:10px"><span>🔴 <b>YAPI KARARI — lead'e sorulacak.</b>
                 Bugün her malzeme <b>dört birim taşır</b>: veride <code>olcumSoru</code> su bardağı · yemek kaşığı · tatlı kaşığı · çay kaşığı sabit dörtlüsü var. Bu alan çoklu soru setine <b>hazır</b> kuruldu (tekrarlayan
@@ -327,7 +357,7 @@
                 <i class="fa-solid fa-diagram-project" aria-hidden="true"></i> Sonuç bantları
                 <span class="alan-sayac" id="tfBantSay">3 bant</span>
               </h3>
-              <div class="adim-liste" id="tfBantlar"><div class="adim-karti"><span class="adim-no">1</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-diagram-project" aria-hidden="true"></i> Fırın kademesi</span><div class="alan kart-izgara c2"><div class="alan"><label class="alan-etiket">Tanım <span class="zorunlu">*</span></label><input class="alan-girdi" type="text" name="bant_olcut[]" data-field="olcut" maxlength="60" placeholder="Örn. Çok düşük" data-zorunlu="1"></div><div class="alan"><label class="alan-etiket">Malzeme grubu <span class="zorunlu">*</span></label><select class="alan-secim" name="bant_lv[]" data-field="lv" data-zorunlu="1"><option value="ut0" selected="">Bakliyatlar (8)</option><option value="ut1">Tahıllar (12)</option><option value="ut2">Baharatlar (7)</option><option value="ut3">Hamur ve Pastacılık Malzemeleri (7)</option><option value="ut4">Kahvaltılık Ürünler (5)</option><option value="ut5">Kuruyemişler ve Tohumlar (17)</option><option value="ut6">Sıvılar, Yağlar ve Sirkeler (12)</option><option value="ut7">Soslar ve Hazır Ürünler (10)</option><option value="ut8">Süt ve Süt Ürünleri (8)</option><option value="ut9">Şeker ve Tatlandırıcılar (8)</option><option value="ut10">Unlar ve Tozlar (11)</option></select></div></div><div class="alan"><label class="alan-etiket">Sıcaklık kademesi <span class="zorunlu">*</span></label><select class="alan-secim" name="bant_prog[]" data-field="prog" data-zorunlu="1"><option value="" selected="">Kademe seç…</option><option value="çok-düşük">Çok düşük · 110–130°C statik · 90–110°C fanlı</option><option value="düşük">Düşük · 140–150°C statik · 120–130°C fanlı</option><option value="orta-düşük">Orta-düşük · 160–170°C statik · 140–150°C fanlı</option><option value="orta">Orta · 180–190°C statik · 160–170°C fanlı</option><option value="orta-yüksek">Orta-yüksek · 200–220°C statik · 180–200°C fanlı</option><option value="yüksek">Yüksek · 230–250°C statik · 210–230°C fanlı</option></select></div><div class="alan"><label class="alan-etiket">Kademe notu <span class="acilir-kalem">— fırın rehberinde üyeye okunan metin</span></label><textarea class="alan-metin" name="bant_ozet[]" data-field="ozet" placeholder="Bu kademede ne pişiriliyor?"></textarea></div><input type="hidden" data-field="position" value="0"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Bandı sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Bandı sil" aria-label="Bandı sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div><div class="adim-karti"><span class="adim-no">2</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-diagram-project" aria-hidden="true"></i> Fırın kademesi</span><div class="alan kart-izgara c2"><div class="alan"><label class="alan-etiket">Tanım <span class="zorunlu">*</span></label><input class="alan-girdi" type="text" name="bant_olcut[]" data-field="olcut" maxlength="60" placeholder="Örn. Çok düşük" data-zorunlu="1"></div><div class="alan"><label class="alan-etiket">Malzeme grubu <span class="zorunlu">*</span></label><select class="alan-secim" name="bant_lv[]" data-field="lv" data-zorunlu="1"><option value="1">1 · Başlangıç</option><option value="2" selected="">2 · Orta</option><option value="3">3 · İleri</option></select></div></div><div class="alan"><label class="alan-etiket">Sıcaklık kademesi <span class="zorunlu">*</span></label><select class="alan-secim" name="bant_prog[]" data-field="prog" data-zorunlu="1"><option value="" selected="">Kademe seç…</option><option value="çok-düşük">Çok düşük · 110–130°C statik · 90–110°C fanlı</option><option value="düşük">Düşük · 140–150°C statik · 120–130°C fanlı</option><option value="orta-düşük">Orta-düşük · 160–170°C statik · 140–150°C fanlı</option><option value="orta">Orta · 180–190°C statik · 160–170°C fanlı</option><option value="orta-yüksek">Orta-yüksek · 200–220°C statik · 180–200°C fanlı</option><option value="yüksek">Yüksek · 230–250°C statik · 210–230°C fanlı</option></select></div><div class="alan"><label class="alan-etiket">Kademe notu <span class="acilir-kalem">— fırın rehberinde üyeye okunan metin</span></label><textarea class="alan-metin" name="bant_ozet[]" data-field="ozet" placeholder="Bu kademede ne pişiriliyor?"></textarea></div><input type="hidden" data-field="position" value="1"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Bandı sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Bandı sil" aria-label="Bandı sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div><div class="adim-karti"><span class="adim-no">3</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-diagram-project" aria-hidden="true"></i> Fırın kademesi</span><div class="alan kart-izgara c2"><div class="alan"><label class="alan-etiket">Tanım <span class="zorunlu">*</span></label><input class="alan-girdi" type="text" name="bant_olcut[]" data-field="olcut" maxlength="60" placeholder="Örn. Çok düşük" data-zorunlu="1"></div><div class="alan"><label class="alan-etiket">Malzeme grubu <span class="zorunlu">*</span></label><select class="alan-secim" name="bant_lv[]" data-field="lv" data-zorunlu="1"><option value="1">1 · Başlangıç</option><option value="2">2 · Orta</option><option value="3" selected="">3 · İleri</option></select></div></div><div class="alan"><label class="alan-etiket">Sıcaklık kademesi <span class="zorunlu">*</span></label><select class="alan-secim" name="bant_prog[]" data-field="prog" data-zorunlu="1"><option value="" selected="">Kademe seç…</option><option value="çok-düşük">Çok düşük · 110–130°C statik · 90–110°C fanlı</option><option value="düşük">Düşük · 140–150°C statik · 120–130°C fanlı</option><option value="orta-düşük">Orta-düşük · 160–170°C statik · 140–150°C fanlı</option><option value="orta">Orta · 180–190°C statik · 160–170°C fanlı</option><option value="orta-yüksek">Orta-yüksek · 200–220°C statik · 180–200°C fanlı</option><option value="yüksek">Yüksek · 230–250°C statik · 210–230°C fanlı</option></select></div><div class="alan"><label class="alan-etiket">Kademe notu <span class="acilir-kalem">— fırın rehberinde üyeye okunan metin</span></label><textarea class="alan-metin" name="bant_ozet[]" data-field="ozet" placeholder="Bu kademede ne pişiriliyor?"></textarea></div><input type="hidden" data-field="position" value="2"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Bandı sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Bandı sil" aria-label="Bandı sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div></div>
+              <div class="adim-liste" id="tfBantlar"><div class="adim-karti"><span class="adim-no">1</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-diagram-project" aria-hidden="true"></i> Fırın kademesi</span><div class="alan kart-izgara c2"><div class="alan"><label class="alan-etiket">Tanım <span class="zorunlu">*</span></label><input class="alan-girdi" type="text" name="bant_olcut[]" data-field="olcut" maxlength="60" placeholder="Örn. Çok düşük" data-zorunlu="1"></div><div class="alan"><label class="alan-etiket">Malzeme grubu <span class="zorunlu">*</span></label><select class="alan-secim" name="bant_lv[]" data-field="lv" data-zorunlu="1"><option value="ut0" selected="">Bakliyatlar (8)</option><option value="ut1">Tahıllar (12)</option><option value="ut2">Baharatlar (7)</option><option value="ut3">Hamur ve Pastacılık Malzemeleri (7)</option><option value="ut4">Kahvaltılık Ürünler (5)</option><option value="ut5">Kuruyemişler ve Tohumlar (17)</option><option value="ut6">Sıvılar, Yağlar ve Sirkeler (12)</option><option value="ut7">Soslar ve Hazır Ürünler (10)</option><option value="ut8">Süt ve Süt Ürünleri (8)</option><option value="ut9">Şeker ve Tatlandırıcılar (8)</option><option value="ut10">Unlar ve Tozlar (11)</option></select></div></div><div class="alan"><label class="alan-etiket">Sıcaklık kademesi <span class="zorunlu">*</span></label><select class="alan-secim" name="bant_prog[]" data-field="prog" data-zorunlu="1"><option value="" selected="">Kademe seç…</option><option value="çok-düşük">Çok düşük · 110–130°C statik · 90–110°C fanlı</option><option value="düşük">Düşük · 140–150°C statik · 120–130°C fanlı</option><option value="orta-düşük">Orta-düşük · 160–170°C statik · 140–150°C fanlı</option><option value="orta">Orta · 180–190°C statik · 160–170°C fanlı</option><option value="orta-yüksek">Orta-yüksek · 200–220°C statik · 180–200°C fanlı</option><option value="yüksek">Yüksek · 230–250°C statik · 210–230°C fanlı</option></select></div><div class="alan"><label class="alan-etiket">Kademe notu <span class="acilir-kalem">— fırın rehberinde üyeye okunan metin</span></label><textarea class="alan-metin" name="bant_ozet[]" data-field="ozet" placeholder="Bu kademede ne pişiriliyor?"></textarea></div><input type="hidden" data-field="position" value="0"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Bandı sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır" data-eylem="sirala"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Bandı sil" aria-label="Bandı sil" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div><div class="adim-karti"><span class="adim-no">2</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-diagram-project" aria-hidden="true"></i> Fırın kademesi</span><div class="alan kart-izgara c2"><div class="alan"><label class="alan-etiket">Tanım <span class="zorunlu">*</span></label><input class="alan-girdi" type="text" name="bant_olcut[]" data-field="olcut" maxlength="60" placeholder="Örn. Çok düşük" data-zorunlu="1"></div><div class="alan"><label class="alan-etiket">Malzeme grubu <span class="zorunlu">*</span></label><select class="alan-secim" name="bant_lv[]" data-field="lv" data-zorunlu="1"><option value="1">1 · Başlangıç</option><option value="2" selected="">2 · Orta</option><option value="3">3 · İleri</option></select></div></div><div class="alan"><label class="alan-etiket">Sıcaklık kademesi <span class="zorunlu">*</span></label><select class="alan-secim" name="bant_prog[]" data-field="prog" data-zorunlu="1"><option value="" selected="">Kademe seç…</option><option value="çok-düşük">Çok düşük · 110–130°C statik · 90–110°C fanlı</option><option value="düşük">Düşük · 140–150°C statik · 120–130°C fanlı</option><option value="orta-düşük">Orta-düşük · 160–170°C statik · 140–150°C fanlı</option><option value="orta">Orta · 180–190°C statik · 160–170°C fanlı</option><option value="orta-yüksek">Orta-yüksek · 200–220°C statik · 180–200°C fanlı</option><option value="yüksek">Yüksek · 230–250°C statik · 210–230°C fanlı</option></select></div><div class="alan"><label class="alan-etiket">Kademe notu <span class="acilir-kalem">— fırın rehberinde üyeye okunan metin</span></label><textarea class="alan-metin" name="bant_ozet[]" data-field="ozet" placeholder="Bu kademede ne pişiriliyor?"></textarea></div><input type="hidden" data-field="position" value="1"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Bandı sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır" data-eylem="sirala"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Bandı sil" aria-label="Bandı sil" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div><div class="adim-karti"><span class="adim-no">3</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-diagram-project" aria-hidden="true"></i> Fırın kademesi</span><div class="alan kart-izgara c2"><div class="alan"><label class="alan-etiket">Tanım <span class="zorunlu">*</span></label><input class="alan-girdi" type="text" name="bant_olcut[]" data-field="olcut" maxlength="60" placeholder="Örn. Çok düşük" data-zorunlu="1"></div><div class="alan"><label class="alan-etiket">Malzeme grubu <span class="zorunlu">*</span></label><select class="alan-secim" name="bant_lv[]" data-field="lv" data-zorunlu="1"><option value="1">1 · Başlangıç</option><option value="2">2 · Orta</option><option value="3" selected="">3 · İleri</option></select></div></div><div class="alan"><label class="alan-etiket">Sıcaklık kademesi <span class="zorunlu">*</span></label><select class="alan-secim" name="bant_prog[]" data-field="prog" data-zorunlu="1"><option value="" selected="">Kademe seç…</option><option value="çok-düşük">Çok düşük · 110–130°C statik · 90–110°C fanlı</option><option value="düşük">Düşük · 140–150°C statik · 120–130°C fanlı</option><option value="orta-düşük">Orta-düşük · 160–170°C statik · 140–150°C fanlı</option><option value="orta">Orta · 180–190°C statik · 160–170°C fanlı</option><option value="orta-yüksek">Orta-yüksek · 200–220°C statik · 180–200°C fanlı</option><option value="yüksek">Yüksek · 230–250°C statik · 210–230°C fanlı</option></select></div><div class="alan"><label class="alan-etiket">Kademe notu <span class="acilir-kalem">— fırın rehberinde üyeye okunan metin</span></label><textarea class="alan-metin" name="bant_ozet[]" data-field="ozet" placeholder="Bu kademede ne pişiriliyor?"></textarea></div><input type="hidden" data-field="position" value="2"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Bandı sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır" data-eylem="sirala"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Bandı sil" aria-label="Bandı sil" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div></div>
               <button class="satir-ekle" type="button" id="tfBantEkle">
                 <i class="fa-solid fa-plus" aria-hidden="true"></i> Kademe ekle</button>
               <div class="alan-yardim" style="margin-top:10px"><span>Bantlar birlikte tüm sonuç uzayını
@@ -354,7 +384,7 @@
                 </div>
                 <div class="alan">
                   <label for="tfCanon" class="alan-etiket">Canonical adres</label>
-                  <input class="alan-girdi" id="tfCanon" name="canonical" type="url" placeholder="https://dadagastro.com/olcu-birimleri/…">
+                  <input data-girdi="url" class="alan-girdi" id="tfCanon" name="canonical" type="url" placeholder="https://dadagastro.com/olcu-birimleri/…">
                 </div>
                 <div class="alan">
                   <label for="tfOdak" class="alan-etiket">Odak anahtar sözcük</label>
@@ -371,10 +401,10 @@
 
           <div class="form-eylem kart-alt">
             <a class="dugme hayalet" href="admin-olcu-birimleri.html">İptal</a>
-            <button class="dugme hayalet" type="button" id="tfTaslak">Taslak kaydet</button>
+            <button class="dugme hayalet" type="button" id="tfTaslak" data-eylem="taslak">Taslak kaydet</button>
             <button class="dugme birincil" type="button" id="tfKaydet">Dönüşümü kaydet</button>
           </div>
-        <div class="bos-durum kart-ici" hidden=""><span class="bos-ikon"><i class="fa-solid fa-file-circle-question" aria-hidden="true"></i></span><h3>Bu adreste dönüşüm yok</h3><p>Adresteki slug tabloda karşılık bulmuyor. Listeye dön ve bir malzeme seç.</p><a class="dugme birincil" href="admin-olcu-birimleri.html">Ölçü Birimleri’ne dön</a></div><div class="bos-durum kart-ici yetkisiz" data-durum="yetkisiz" hidden=""><span class="bos-ikon"><i class="fa-solid fa-lock" aria-hidden="true"></i></span><h3>Bu kaydı düzenleyemezsin</h3><p>Erişim istemek için yöneticinle görüş.</p></div><div class="bos-durum kart-ici servis-hatasi" data-durum="servis" hidden=""><span class="bos-ikon"><i class="fa-solid fa-plug-circle-xmark" aria-hidden="true"></i></span><h3>Kayıt yüklenemedi</h3><p>Bağlantı kurulamadı. Yeniden dene.</p><button class="dugme birincil" type="button"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i> Yeniden dene</button><div class="hata-izi">Referans kodu <code>GAS-ADM-5211</code></div></div></div>
+        <div class="bos-durum kart-ici" hidden=""><span class="bos-ikon"><i class="fa-solid fa-file-circle-question" aria-hidden="true"></i></span><h3>Bu adreste dönüşüm yok</h3><p>Adresteki slug tabloda karşılık bulmuyor. Listeye dön ve bir malzeme seç.</p><a class="dugme birincil" href="admin-olcu-birimleri.html">Ölçü Birimleri’ne dön</a></div><div class="bos-durum kart-ici yetkisiz" data-durum="yetkisiz" hidden=""><span class="bos-ikon"><i class="fa-solid fa-lock" aria-hidden="true"></i></span><h3>Bu kaydı düzenleyemezsin</h3><p>Erişim istemek için yöneticinle görüş.</p></div><div class="bos-durum kart-ici servis-hatasi" data-durum="servis" hidden=""><span class="bos-ikon"><i class="fa-solid fa-plug-circle-xmark" aria-hidden="true"></i></span><h3>Kayıt yüklenemedi</h3><p>Bağlantı kurulamadı. Yeniden dene.</p><button class="dugme birincil" type="button" data-eylem="calistir" data-ad="Yeniden dene"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i> Yeniden dene</button><div class="hata-izi">Referans kodu <code>GAS-ADM-5211</code></div></div></div>
 
         <!-- ================= SAĞ KOLON ================= -->
         <aside class="form-yan">
@@ -424,7 +454,7 @@
             <div class="kart-bas"><h2 class="kart-baslik">Tehlikeli bölge</h2></div>
             <div class="kart-govde">
               <div class="alan-yardim" style="margin-bottom:12px"><span>Silinen dönüşüm, Ölçü Birimleri sayfasındaki <b id="tfKart">0</b> karttan da düşer.</span></div>
-              <button class="dugme hayalet tehlike tam-en" type="button" id="tfSil" data-yikici="Dönüşüm" data-fiil="sil">
+              <button class="dugme hayalet tehlike tam-en" type="button" id="tfSil" data-yikici="Dönüşüm" data-fiil="sil" data-islem="sil">
                 <i class="fa-solid fa-trash-can" aria-hidden="true"></i> Dönüşümü sil</button>
             </div>
           </div>
@@ -436,4 +466,248 @@
   </div>
 </main>
 <script src="_ortak/panel.js" defer></script>
+<!-- ADMIN-KIT:JS:BAS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/7.3.0/tinymce.min.js" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/l10n/tr.js"></script>
+<script src="../../kanon/admin-editor-tr.js"></script>
+<script src="../../kanon/admin-kit.js" defer></script>
+<script src="../../kanon/admin-editor.js" defer></script>
+<script src="../../kanon/admin-tarih.js" defer></script>
+<!-- ADMIN-KIT:JS:SON -->
+<!-- KAYIT KAYNAĞI — form kendi kayıtlarını BİLDİRİR (admin-ui-kit §5b).
+     Anahtar = admin-olcu-birimleri.html satırlarının `data-slug`ı (7 satır, çakışma yok).
+     ad · slug · kategori(grup) · sure(1 su bardağı) · sure_not · üç dönüşüm satırı:
+     hepsi LİSTE SATIRININ KENDİ HÜCRELERİNDEN. `conv_hacim[]` kabın hacmidir ve
+     public `conv-sec`in "Standart Kaplar" listesinden gelir (200/100/15/5/4 ml).
+     `ozet` ve `amac` listede yok — bildirilmedi, kit boş bırakır. -->
+<script type="application/json" data-kayitlar>
+{
+ "un": {
+  "ad": "Un",
+  "slug": "un",
+  "kategori": "Unlar ve Tozlar",
+  "sure": "120 g",
+  "sure_not": "elenmiş, sıkıştırılmamış",
+  "conv_birim": [
+   "1 su bardağı",
+   "1 yemek kaşığı",
+   "1 çay kaşığı"
+  ],
+  "conv_hacim": [
+   "200",
+   "15",
+   "4"
+  ],
+  "conv_karsilik": [
+   "120 g",
+   "9 g",
+   "3 g"
+  ],
+  "adim_baslik": [
+   "1 su bardağı",
+   "1 yemek kaşığı",
+   "1 çay kaşığı"
+  ],
+  "adim_metin": [
+   "120 g",
+   "9 g",
+   "3 g"
+  ]
+ },
+ "toz-seker": {
+  "ad": "Toz şeker",
+  "slug": "toz-seker",
+  "kategori": "Şeker ve Tatlandırıcılar",
+  "sure": "200 g",
+  "sure_not": "silme ölçü",
+  "conv_birim": [
+   "1 su bardağı",
+   "1 yemek kaşığı",
+   "1 çay kaşığı"
+  ],
+  "conv_hacim": [
+   "200",
+   "15",
+   "4"
+  ],
+  "conv_karsilik": [
+   "200 g",
+   "15 g",
+   "5 g"
+  ],
+  "adim_baslik": [
+   "1 su bardağı",
+   "1 yemek kaşığı",
+   "1 çay kaşığı"
+  ],
+  "adim_metin": [
+   "200 g",
+   "15 g",
+   "5 g"
+  ]
+ },
+ "pirinc": {
+  "ad": "Pirinç",
+  "slug": "pirinc",
+  "kategori": "Tahıllar",
+  "sure": "180 g",
+  "sure_not": "baldo, yıkanmamış",
+  "conv_birim": [
+   "1 su bardağı",
+   "1 yemek kaşığı",
+   "1 çay kaşığı"
+  ],
+  "conv_hacim": [
+   "200",
+   "15",
+   "4"
+  ],
+  "conv_karsilik": [
+   "180 g",
+   "14 g",
+   "5 g"
+  ],
+  "adim_baslik": [
+   "1 su bardağı",
+   "1 yemek kaşığı",
+   "1 çay kaşığı"
+  ],
+  "adim_metin": [
+   "180 g",
+   "14 g",
+   "5 g"
+  ]
+ },
+ "kirmizi-mercimek": {
+  "ad": "Kırmızı mercimek",
+  "slug": "kirmizi-mercimek",
+  "kategori": "Bakliyatlar",
+  "sure": "190 g",
+  "sure_not": "kuru, ayıklanmış",
+  "conv_birim": [
+   "1 su bardağı",
+   "1 yemek kaşığı",
+   "1 çay kaşığı"
+  ],
+  "conv_hacim": [
+   "200",
+   "15",
+   "4"
+  ],
+  "conv_karsilik": [
+   "190 g",
+   "14 g",
+   "5 g"
+  ],
+  "adim_baslik": [
+   "1 su bardağı",
+   "1 yemek kaşığı",
+   "1 çay kaşığı"
+  ],
+  "adim_metin": [
+   "190 g",
+   "14 g",
+   "5 g"
+  ]
+ },
+ "zeytinyagi": {
+  "ad": "Zeytinyağı",
+  "slug": "zeytinyagi",
+  "kategori": "Sıvılar, Yağlar ve Sirkeler",
+  "sure": "180 g",
+  "sure_not": "oda sıcaklığında",
+  "conv_birim": [
+   "1 su bardağı",
+   "1 yemek kaşığı",
+   "1 çay kaşığı"
+  ],
+  "conv_hacim": [
+   "200",
+   "15",
+   "4"
+  ],
+  "conv_karsilik": [
+   "180 g",
+   "14 g",
+   "5 g"
+  ],
+  "adim_baslik": [
+   "1 su bardağı",
+   "1 yemek kaşığı",
+   "1 çay kaşığı"
+  ],
+  "adim_metin": [
+   "180 g",
+   "14 g",
+   "5 g"
+  ]
+ },
+ "sut": {
+  "ad": "Süt",
+  "slug": "sut",
+  "kategori": "Süt ve Süt Ürünleri",
+  "sure": "200 ml",
+  "sure_not": "tam yağlı",
+  "conv_birim": [
+   "1 su bardağı",
+   "1 yemek kaşığı",
+   "1 çay kaşığı"
+  ],
+  "conv_hacim": [
+   "200",
+   "15",
+   "4"
+  ],
+  "conv_karsilik": [
+   "200 ml",
+   "15 ml",
+   "5 ml"
+  ],
+  "adim_baslik": [
+   "1 su bardağı",
+   "1 yemek kaşığı",
+   "1 çay kaşığı"
+  ],
+  "adim_metin": [
+   "200 ml",
+   "15 ml",
+   "5 ml"
+  ]
+ },
+ "tuz": {
+  "ad": "Tuz",
+  "slug": "tuz",
+  "kategori": "Baharatlar",
+  "sure": "260 g",
+  "sure_not": "ince, kaya tuzu",
+  "conv_birim": [
+   "1 su bardağı",
+   "1 yemek kaşığı",
+   "1 çay kaşığı"
+  ],
+  "conv_hacim": [
+   "200",
+   "15",
+   "4"
+  ],
+  "conv_karsilik": [
+   "260 g",
+   "20 g",
+   "6 g"
+  ],
+  "adim_baslik": [
+   "1 su bardağı",
+   "1 yemek kaşığı",
+   "1 çay kaşığı"
+  ],
+  "adim_metin": [
+   "260 g",
+   "20 g",
+   "6 g"
+  ]
+ }
+}
+</script>
+
 </body></html>
