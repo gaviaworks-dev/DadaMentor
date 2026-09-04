@@ -1,0 +1,848 @@
+/* =====================================================================
+   KANON — MARKA KATMANI · DadaGourmet
+   ---------------------------------------------------------------------
+   Marka adı KANONDA YALNIZ BU DOSYADA geçer. tokenlar.css ve
+   bilesenler.css marka-nötrdür; ikisi de buradaki `--marka-*` yuvalarını
+   okur. Başka bir markaya geçmek = bu dosyayı değiştirmek.
+
+   Yükleme sırası:  tokenlar.css  →  markalar/gourmet.css  →  bilesenler.css
+
+   v1 · 2026-09-04 — `gastro.css` (v1) BİRİNCİL EMSAL, `fit.css` (v3)
+   yuva sözleşmesinin kaynağı.
+   ---------------------------------------------------------------------
+   DadaGourmet **PANTONE 259 C** (`#742982`).
+
+   ── YUVA SÖZLEŞMESİ ───────────────────────────────────────────────────
+   Bu dosya `fit.css` ve `gastro.css`in doldurduğu yuvaların TAMAMINI
+   doldurur. Üç dosyanın ad kümesi BİREBİR aynıdır (99 ad; ikisi
+   `.bs-*` kurallarındaki `--bs-bg` / `--bs-bd`). Bir yuva burada eksik
+   kalırsa bileşen kanonu SESSİZCE kırılır: `fit.css:271`de yazılı kusur
+   bunun örneğidir — `--marka-cizgi-5` diet.css'te vardı, fit.css'te
+   yoktu, fallback'i de yoktu; `.hap-acik` kenarlığı çiziliyor sanılıp
+   çizilmiyordu. Ölçüme görünmedi çünkü ölçüm ÇİFT karşılaştırır ve
+   olmayan bir kenarın çifti de yoktur.
+
+   ── DEĞERLER NEREDEN GELDİ ────────────────────────────────────────────
+   Hiçbiri uydurulmadı. Dört yol; her satırda hangisi olduğu yazılı:
+
+   1 · ÖLÇÜLDÜ · LOGO — `Revenge - Docs/DadaMentor-Logos.ai` PDF-1.6
+       olarak açıldı. Taban DÖRT BAĞIMSIZ YOLLA doğrulandı, sapma yok:
+       60dpi piksel sayımı (151.595 px) · SVG `fill` niteliği · PDF
+       içerik akışının `scn` operatörü · sayfaya basılı PANTONE etiketi.
+       TON RAMPASI `.ai`de FİZİKSEL olarak var (maske `fill-opacity`
+       adımları), yani "adım n = taban + n×%10 beyaz" kuralı KAYNAKTA
+       yazılı — türetme değil. 30 kanalın 24'ü render'la birebir.
+       `docs/olcum-gourmet-renk.md` §1–2
+
+   2 · ÖLÇÜLDÜ · CANLI SİTE — https://dadagourmet.com 12 yol istendi,
+       10 ayrı sayfa açıldı (3 yönlendirme: `/kesfet`→`/`,
+       `/hesabim/ayarlar`→`/giris`, `/mekan-bul`→`/mekan-bul/adim/1`),
+       `getComputedStyle` ile her GÖRÜNÜR elemanın zemin · metin · kenar ·
+       fill · stroke rengi toplandı.
+       Betik: `scripts/olcum/gcss-renk.mjs` → `rapor/gourmet-renk-canli.json`
+
+       🔴 CANLI SİTENİN TABANI KANONUN TABANI DEĞİL. Ölçüldü: sitenin
+          `:root`u hâlâ v2'nin morunu taşıyor —
+             --tomato:#b14fc5 · --b-gourmet:#b14fc5   (12 / 11 sayfa)
+          ve `#b14fc5` 1089 elemanda basılıyor. Bu yüzden türevler ÖNCE
+          KENDİ TABANINA çözüldü (oran ölçüldü), SONRA o oran kanonun
+          ölçülmüş tabanına uygulandı. Doğrudan `#742982`ye çözmek her
+          rengi "karışım değil" gösterir — ilk koşumda tam olarak bu
+          oldu ve TEMİZ KARIŞIM SAYISI SIFIR çıktı.
+       🔴 Karışım ÜÇ KANALDA birlikte (en küçük kareler) çözüldü ve
+          ARTIK her satırda yazılı. Tek kanaldan çözmek yanıltır.
+       ⚠ Ölçümden önce `*{transition:none!important;animation:none!important}`
+          enjekte edildi (geçiş ortasında ölçüm tuzağı).
+       ⚠ Saydam zemin ataya tırmanılarak harmanlandı; yapılmasaydı
+          Gourmet'in mor koyu yüzeyleri (146+32+55 eleman) HİÇ
+          görünmezdi — `getComputedStyle` orada `rgba(0,0,0,0)` döner.
+       ⚠ Alfa taraması `color(srgb r g b / α)` biçimini DE okur. İlk
+          koşumda yalnız `rgba()` arandı ve alfa envanteri BOŞ çıktı:
+          `.bs-gourmet`in kenarı sitede `color(srgb …/0.22)` olarak
+          çözülüyor. Kayıtlı tuzak, burada kapandı.
+
+   3 · TAŞINDI · ORAN — Gourmet'te ölçülmemiş bir yuva için, kanonun
+       AYNI YUVADAKİ rol oranı Gourmet'in ölçülmüş çıpasına uygulandı.
+       Oran değil ROL taşınır; sayı her satırda yazılı.
+
+   4 · TON ÇEVRİLDİ — yalnız perde/gradyan değerleri. OKLCh'de L
+       (açıklık) ve C (renklilik) KORUNDU, ton Gourmet'in tonuna
+       (**320.98°**) çekildi.
+       🔴 YÖNTEM İKİ KEZ DOĞRULANDI, BU TURDA, BAĞIMSIZ OLARAK: aynı
+          dönüşüm aynı v2 yeşil kaynağına (`#0f2f1e`)
+            · fit'in tonuyla (236.82°)  → `#0B2B3D`  = fit.css'in yazdığı
+            · gastro'nun tonuyla (33.91°) → `#3D1E17` = gastro.css'in yazdığı
+          BİREBİR üretiyor. Yani çeviri iki bilinen doğruyu da yakalıyor.
+
+   ══ 🔴 GOURMET'İN AYIRT EDİCİ RİSKİ · GASTRO'NUN TAM TERSİ ═══════════
+   Gastro tabanı beyazda 4.45 (AA ALTI) idi; **Gourmet tabanı beyazda
+   8.82 — AAA.** Akan metinde bağlantı rengi olarak koyulaştırmaya bile
+   gerek yok. Buna karşılık:
+
+       #742982  siyahta 2.38  ·  #211E16 üstünde **1.89**
+       (Gastro'nunki siyahta 4.79 idi.)
+
+   Yani "aksan yalnız vurguda, düğme zemini koyu adımda" sözleşmesi
+   Gourmet'te AÇIK YÜZEYDE rahatlar, KOYU YÜZEYDE TERSİNE DÖNER:
+   koyu zeminde taban rengi KULLANILAMAZ (1.89, UI eşiğinin de altı) ve
+   rampanın ÜST adımları gerekir. Ölçülü sonuç, `#211E16` üstünde:
+
+       adım 4 (%40 beyaz) #AC7FB4 →  5.09     ← gastro'nun seçtiği basamak
+       adım 5 (%50 beyaz) #BA94C0 →  6.40     ← GOURMET BURAYA ÇIKAR
+       adım 6 (%60 beyaz) #C7A9CD →  7.94
+       adım 7 (%70 beyaz) #D5BFDA →  9.73
+
+   Bu yüzden `--marka-parlak` ailesi BİR ADIM YUKARI kaydırıldı
+   (%50/%60/%70 beyaz; fit ve gastro %40/%50/%60 kullanıyor). Gerekçe
+   ölçülü: gastro'nun %40 adımı koyu zeminde 6.69 veriyor, Gourmet'in
+   %40 adımı yalnız 5.09 — aynı basamağı kopyalamak rol şartnamesini
+   (fit 6.91 · gastro 6.69) 1.6 puan altında bırakırdı. Ayrıntı ilgili
+   bloğun şerhinde; iki bağımsız yol aynı basamağı gösteriyor.
+
+   🔴 HER MARKA KENDİ ÖLÇÜLMÜŞ RAMPASINI YAZAR; ROL TANIMI ORTAKTIR,
+     SAYI ORTAK DEĞİLDİR. (gastro.css'in kuralı, burada aynen geçerli.)
+     FIT'in ya da Gastro'nun yüzdeleri Gourmet'e DAYATILMADI: Gourmet'in
+     kendi sitesi ÖLÇÜLDÜ ve başka yüzdeler kullanıyor
+     (%82.2 koyu · %13.7 yıkama · FIT %77.5/%9.3 · Gastro %84.6/%12.8).
+   ===================================================================== */
+
+:root{
+
+/* ── AKSAN RAMPASI ───────────────────────────────────────────────────
+   Kontrast oranları bağımsız hesaplandı (WCAG 2.1 göreli parlaklık).
+
+   🔴 GOURMET'İN CANLI RAMPASI İKİ BASAMAKLI. Ölçüldü (10 sayfa):
+        #b14fc5  ×1089   taban            (--tomato · --b-gourmet)
+        #a94cbc  ×  12   %95.5 · artık 0.54 — mikro adım, rol ayrışmadı
+        #8e3aa8  ×  838   %82.2 · artık 6.97 ⚠ — TEK koyu adım
+      ve sitenin `--tomato-dark` ile `--tomato-deep`i AYNI HEX. Yani
+      Gastro'nun iki koyu adımı Gourmet'te TEK adıma iniyor; Diyet'in
+      üç basamaklı rampasıyla aynı durum. */
+
+  --marka:#742982;          /* Pantone 259 C · beyazda 8.82:1 → AA ✓ · AAA ✓
+                               siyahta 2.38 · #211E16 üstünde 1.89 → KOYU
+                               ZEMİNDE KULLANILMAZ (yukarıdaki şerh).
+                               ÖLÇÜLDÜ · LOGO (dört bağımsız yol, sapma
+                               yok). Canlı sitede karşılığı v2'nin
+                               `#b14fc5`i (1089 eleman); kanon logoyu
+                               esas alır — `#009d4f` tuzağının aynısı. */
+
+  --marka-koyu:color-mix(in srgb, var(--marka) 82.2%, #000);
+                            /* = #5F226B · beyazda 10.89 · AAA — birincil
+                               düğme zemini.
+                               TAŞINDI · ORAN, ÖLÇÜLDÜ · CANLI'dan:
+                               sitenin `--tomato-dark`ı #8e3aa8, kendi
+                               tabanına (#b14fc5) göre %82.2 marka +
+                               %17.8 siyah; 838 elemanda basılıyor —
+                               sitenin EN ÇOK basılan koyu adımı.
+                               ⚠ ARTIK 6.97 · TEMİZ KARIŞIM DEĞİL.
+                                 `#8e3aa8` v2 tabanının saf koyulaştırması
+                                 değil, ayrı tasarlanmış bir ton. Yani bu
+                                 satır dosyanın EN ZAYIF ölçülü kalemidir:
+                                 taşınan şey rengin kendisi değil, sitenin
+                                 kendi koyu adımının ORANI. Uydurma
+                                 değil ama kesin de değil — açık kalem.
+                               FIT %77.5 / 5.44:1 · Gastro %84.6 / 5.85:1;
+                               aynı rol, başka sayı, BAŞKA KONTRAST SINIFI
+                               (Gourmet'te AA değil AAA — taban zaten AAA). */
+
+  --marka-murekkep:var(--marka-koyu);
+                            /* zorunlu alan yıldızı, gradyan koyu ucu,
+                               başlık mürekkebi.
+                               🔴 ÖLÇÜLDÜ · CANLI — GOURMET'TE AYRI BİR
+                               MÜREKKEP ADIMI YOK. Sitenin `--tomato-deep`i
+                               ile `--tomato-dark`ı BİREBİR AYNI hex
+                               (#8e3aa8, 12/12 sayfa) ve %82.2'nin altında
+                               hiçbir mor aksan adımı ölçülmedi (10 sayfa;
+                               %37–40 bandındakiler AKSAN değil KOYU YÜZEY).
+                               Uydurulmadı. DIET EMSALİ uygulandı
+                               (`diet.css` `--marka-koyu-2`): yuva bir üst
+                               basamağa DÜŞÜRÜLDÜ, gradyan tek adıma iner.
+                               ⚠ Bedeli kayıtlı: `--marka-paket-rozet`
+                                 (marka→mürekkep) ve `--marka-nisan-dolu`
+                                 Gourmet'te FIT/Gastro'dakinden bir kademe
+                                 az derinlik taşır. Gradyan yine de gerçek:
+                                 #742982 → #5F226B.
+                               FIT %67.3 / 6.74:1 · Gastro %70.9 / 7.59:1. */
+
+  --marka-koyu-2:color-mix(in srgb, var(--marka) 58.2%, #000);
+                            /* = #44184C · beyazda 14.24 — birincil düğme hover.
+                               🔴 TAŞINDI · ORAN — Gourmet'in sitesinde
+                               KARŞILIĞI YOK (site tek koyu adım kullanıyor).
+                               Gastro'nun yolu (a) uygulandı: FIT'in rol
+                               oranı Gourmet'in ölçülmüş çıpasına vuruldu —
+                                   82.2 × (54.9 / 77.5) = %58.23
+                               ⚠ GASTRO'DAKİ İKİNCİ BAĞIMSIZ YOL BURADA
+                                 YOK. Gastro'nun (b) yolu "kendi geometrik
+                                 adımı" idi: mürekkep × (mürekkep/koyu).
+                                 Gourmet'te mürekkep = koyu olduğu için o
+                                 çarpan 1'e iner ve yol DEJENERE olur —
+                                 doğrulama üretmez. Tek yollu bir kalem.
+                               ⚠ REDDEDİLEN ADAY, gerekçesiyle: sitede
+                                 ölçülen %95.5 (#a94cbc, artık 0.54, 12
+                                 eleman) TEMİZ bir karışım ama hover
+                                 OLDUĞU ölçülmedi ve 12 eleman rol
+                                 ayırmaya yetmiyor; taban ile arasındaki
+                                 fark 9.30 ↔ 8.82, yani hover'da gözle
+                                 ayırt edilmez. Rol şartnamesi (hover
+                                 AYRIMI) onu dışlıyor.
+                               FIT %54.9 / 8.68:1 · Gastro %59.9 / 9.32:1. */
+
+/* ── AÇIK UÇ ─────────────────────────────────────────────────────────
+   Gourmet'in canlı sitesinde ÖLÇÜLEN TEMİZ açık karışımlar (artık ≤ 2):
+
+       #F4E7F7  %13.7 marka + beyaz   artık 0.30   ×81   `--tomato-tint`
+       #E6C9EF  %30.6 marka + beyaz   artık 1.77   ×20   (rol ayrışmadı)
+
+   Kanon dört açık yuva istiyor. Gastro'nun ayrımı burada da geçerli:
+     · `-yikama-2` ve `-yikama-koyu` kanonda `-yikama`ya GÖRE tanımlı
+       (ikiz · 0.5–2.5 puan sapma) → ORAN ile taşındı, çünkü rolün
+       tanımı değerin kendisi değil `-yikama`ya UZAKLIĞI.
+     · `-cizgi` kanonda bağımsız bir kaynağa bağlı: "≈ logo rampasının
+       9. adımı". O kaynak Gourmet'te DE VAR (rampa `.ai`de fiziksel)
+       → oran değil, RAMPA ADIMI kullanıldı.
+
+   ⚠ `#E6C9EF` (%30.6) KANONA GİRMEDİ: temiz bir karışım ve 20 elemanda
+     basılıyor ama kanonun dört açık yuvasının hiçbirinin rol tanımına
+     oturmuyor (yıkamalar %9–14 bandında, çizgi %20'de). Bir yuva
+     uydurmak marka katmanının işi değil. Kanona bildirilecek kalem. */
+
+  --marka-yikama:color-mix(in srgb, var(--marka) 13.7%, #fff);
+                            /* = #ECE2EE · açık band / ikon çipi zemini.
+                               ÖLÇÜLDÜ · CANLI (artık 0.30 · 81 eleman).
+                               Sitenin `--tomato-tint`i #F4E7F7, kendi
+                               tabanına göre %13.7 marka + %86.3 beyaz.
+                               FIT %9.3 · Gastro %12.8. */
+
+  --marka-yikama-2:color-mix(in srgb, var(--marka) 13.0%, #fff);
+                            /* = #EDE3EF · kabuk bileşeni yıkaması.
+                               TAŞINDI · ORAN: 13.7 × (8.8/9.3) = %12.96.
+                               // DOĞRULA: bu ikiz FIT'te de Gastro'da da
+                               `-yikama` ile 1–2 birim farkla duruyor ve
+                               kaynak "ikizi yoktu, birleşmedi" diye kayda
+                               geçirmiş. Gourmet'te fark 1 birim
+                               (#ECE2EE / #EDE3EF). Görsel fark üç markada
+                               da ölçülmedi; birleştirme sorusu açık. */
+
+  --marka-cizgi:color-mix(in srgb, var(--marka) 20%, #fff);
+                            /* = #E3D4E6 · aksan-nötr hairline · %80 beyaz
+                               = LOGO RAMPASININ 9. ADIMI (1'den sayılır;
+                               `docs/olcum-gourmet-renk.md` §2'de adım 8:
+                               #E3D4E6, render'la BİREBİR).
+                               🔴 ORAN TAŞINMADI, bilerek — gastro.css'in
+                               kararının aynısı ve gerekçesi aynı: oran
+                               yolu (13.7 × 17.8/9.3 = %26.2) `fit.css`in
+                               kendi "TAM KARIŞIM DEĞİL · artık 6" diye
+                               işaretlediği en zayıf kaleminden taşınır.
+                               Zayıf bir kalemin oranını taşımak zayıflığı
+                               çoğaltır; Gourmet'te ÖLÇÜLÜ kaynak (rampa)
+                               var ve o yeğlendi.
+                               ⚠ AÇIK KALEM: Gourmet'in canlı sitesinde
+                                 %17–25 bandında hiçbir temiz açık adım
+                                 ölçülmedi (10 sayfa). Yani bu yuvanın
+                                 Gourmet tarafında CANLI kanıtı yok —
+                                 Gastro'da da yoktu. */
+
+  --marka-yikama-koyu:color-mix(in srgb, var(--marka) 10.0%, #fff);
+                            /* = #F1EAF3 · koyu zeminde aksan metni.
+                               TAŞINDI · ORAN: 13.7 × (6.8/9.3) = %10.02.
+                               #211E16 üstünde 14.07. */
+
+/* ── KOYU ZEMİNDE PARLAK ADIMLAR ─────────────────────────────────────
+   🔴 GOURMET BU AİLEDE FIT/GASTRO'DAN BİR ADIM YUKARI ÇIKAR. Karar
+   uydurma değil, iki bağımsız yol aynı basamağı gösteriyor:
+
+   YOL 1 · ROL ŞARTNAMESİ. `--marka-parlak`ın kanondaki tanımı "koyu
+     zeminde OKUNUR aksan metni" ve şartnamesi #211E16 üstünde ~6.7–6.9
+     (fit 6.91 · gastro 6.69). Gourmet rampasının ölçülen değerleri:
+        adım 4 (%40 byz) 5.09  ← gastro/fit'in basamağı, ŞARTNAMENİN ALTI
+        adım 5 (%50 byz) 6.40  ← en yakın
+        adım 6 (%60 byz) 7.94
+        adım 7 (%70 byz) 9.73
+
+   YOL 2 · CANLI ÖLÇÜM. Sitenin koyu ray ikonunun rengi ölçüldü:
+        #C97AD6  ×50  (`.bs-gourmet` `--bs-ic`, ayrıca 25 metin)
+     Siyahta 7.24; rampanın SİYAHTA en yakın adımı 5 (#BA94C0, 8.08).
+     Ayrıca `--b-gourmet-l` #C66BD8 ×10 · siyahta 6.50 → adım 4 (6.45).
+     Yani sitenin koyu-yüzey tonları rampanın 4–5. adımlarında yaşıyor;
+     rol şartnamesi ikisinden ÜSTTEKİNİ seçtiriyor.
+
+   Sonuç: parlak = adım 5 · parlak-2 = adım 6 · parlak-3 = adım 7.
+   (FIT ve Gastro: %40 / %50 / %60. Gourmet: %50 / %60 / %70.)
+
+   🔴 SABİT HEX YAZILMADI. fit.css'te bu üçü sabit hex'ti çünkü orada
+     "üç ton karışım değil, türetilmedi" (artık 22–30). Gourmet'te bu
+     gerekçe YOK: rampa `.ai`de FİZİKSEL bir beyaz karışımıdır, yani
+     `color-mix` rolün kendisidir ve Beyar'ın kuralına uyar
+     ("hepsini --marka'dan türet"). Marka değişirse üçü de döner. */
+
+  --marka-parlak:color-mix(in srgb, var(--marka) 50%, #fff);
+                            /* = #BA94C1 · rampa adımı 5 · #211E16 üstünde
+                               6.40 (FIT rol şartnamesi 6.91 · Gastro 6.69).
+                               ⚠ Rampa tablosu #BA94C0 yazar; tarayıcının
+                               `color-mix` yuvarlaması B kanalında 1 birim
+                               yukarı çıkıyor (192.5 → 193). Ölçüldü, kontrast
+                               etkilenmiyor. Aynı 1 birim `-parlak-3`te de var.
+                               ÖLÇÜLDÜ · LOGO RAMPASI + canlı ray ikonu
+                               (#C97AD6) aynı basamağa düşüyor. */
+  --marka-parlak-2:color-mix(in srgb, var(--marka) 40%, #fff);
+                            /* = #C7A9CD · rampa adımı 6 · 7.94
+                               (FIT 7.59 · Gastro 7.84). Koyu zeminde ikon.
+                               ÖLÇÜLDÜ · LOGO RAMPASI. */
+  --marka-parlak-3:color-mix(in srgb, var(--marka) 30%, #fff);
+                            /* = #D5BFD9 (rampa tablosu #D5BFDA) · rampa adımı 7 · 9.73
+                               (FIT 9.39 · Gastro 9.15). Aday.
+                               ÖLÇÜLDÜ · LOGO RAMPASI. */
+
+/* ── KOYU YÜZEY ──────────────────────────────────────────────────────
+   Banner / hero / footer. Marka yuvası.
+
+   🔴 GOURMET BURADA GASTRO'DAN AYRILIYOR VE AYRILIK ÖLÇÜLDÜ.
+   Gastro'nun sitesinde ikinci koyu uç yoktu ve yuva fit.css'in nötr
+   `#1b1913`üyle dolduruldu. Gourmet'in sitesinde İKİ AYRI KOYU AİLE
+   birden ölçüldü (10 sayfa, saydam zeminler harmanlanarak):
+
+       #211E16  ×311 zemin · ×1850 metin   NÖTR   (`--slate` · `--ink`)
+       #1E1422  ×146 zemin                 MOR    beyazda 17.82
+       #1D1321  ×32  zemin                 MOR    beyazda 17.99
+       #41293D  ×55  · #361D3C ×16 · #412249 ×6 · #2A1E30 ×6 · #46244F ×4
+
+   Yani Process Black C ailesi Gourmet'te DE baskın (fit/gastro şerhi
+   doğrulandı: nötr koyu taban markadan markaya dönmez), AMA Gourmet'in
+   kendi mor koyu yüzeyi de gerçek ve ölçülü. Gradyanın koyu ucu bu kez
+   UYDURULMADI: sitenin kendi mor koyusuna bağlandı. */
+
+  --marka-koyu-zemin:#211E16;    /* Process Black C · gradyanın açık ucu.
+                                    ÖLÇÜLDÜ · CANLI: sitenin `--slate` ve
+                                    `--ink`i, AYNI HEX (311 zemin,
+                                    1850 metin/kenar). fit ve gastro ile
+                                    birebir — kopya değil, üçüncü ölçüm. */
+  --marka-koyu-zemin-2:#1E1422;  /* gradyanın koyu ucu.
+                                    🔴 ÖLÇÜLDÜ · CANLI (146 eleman) ve
+                                    FIT/GASTRO'DAN AYRIŞIYOR: onlar nötr
+                                    `#1b1913` yazıyor, Gourmet'in kendi
+                                    ikinci koyusu MOR. `#211E16`dan da
+                                    koyu (beyazda 17.82 ↔ 16.64), yani rol
+                                    şartını ("gradyanın koyu ucu")
+                                    sağlıyor. Sitenin perde rengiyle de
+                                    aynı: `rgba(30,20,34,.93/.94)`.
+                                    ⚠ Gradyan bu yüzden Gourmet'te
+                                      nötr→mor yönünde ilerler; fit ve
+                                      gastro'da iki uç da nötrdü. Bu
+                                      GÖRÜNÜR bir fark ve ölçüme dayanıyor. */
+  --marka-koyu-metin:#cfc8be;    /* koyu zeminde ikincil metin (10.03:1).
+                                    Nötr; markadan bağımsız, fit/gastro
+                                    ile aynı.
+                                    ⚠ Gourmet sitesi bu rolü TOKENSİZ
+                                      çözüyor: koyu zeminde ikincil metin
+                                      `rgba(255,255,255,.92/.88/.84/.82)`
+                                      merdiveni (275+165+132+44 eleman) ve
+                                      `#E9E2D6` (208 eleman · kanonda
+                                      `--eko-kilitli` ile aynı hex).
+                                      Kanonda beyaz-alfa merdiveninin
+                                      yuvası YOK; bildirilecek kalem. */
+
+  /* 🔴 ADI YANILTICI AMA DEĞİŞTİRİLMEDİ — `-yesil` eki v2'nin kalıntısı,
+     `tokenlar.css:201`deki tek tüketiciyi (`--koyu-zemin-yesil`) ve onun
+     kullanımlarını kırardı. Ad değişimi ayrı bir tur işidir ve marka
+     katmanının işi değil — fit ve gastro'da da aynı gerekçeyle duruyor.
+     DEĞER TON ÇEVRİLDİ: v2 kaynağı #0f2f1e, L ve C korunarak ton
+     320.98°ye çekildi. (Aynı dönüşüm 236.82° ile fit.css'in #0b2b3d'sini,
+     33.91° ile gastro.css'in #3d1e17'sini BİREBİR üretiyor — yöntem bu
+     turda iki kez bağımsız doğrulandı.)
+     §63 koyu özet kartı gradyanının aksan ucu. */
+  --marka-koyu-zemin-yesil:#331F37;
+
+/* ── EKOSİSTEM MARKALARI ─────────────────────────────────────────────
+   Sol marka rayının (`.sa-brand`) aksanları.
+
+   🔴 BU BLOK MARKA-NÖTR VERİDİR ve dört marka dosyasında da AYNIDIR.
+   Her satır bir BAŞKA markanın kimlik rengi; Gourmet dosyasında olması
+   Gourmet'e ait olduğu anlamına gelmez. Değerlerin tamamı logo
+   sayfasından ÖLÇÜLDÜ. `fit.css §6a` · `gastro.css` ile birebir aynı —
+   kasıtlı.
+   ⚠ Gourmet'in canlı sitesi bu rayı hâlâ v2 değerleriyle basıyor
+     (ölçüldü: `--b-gastro:#E14827` · `--b-fit:#009d4f` ·
+     `--b-diet:#3BB77E` · `--b-gourmet:#b14fc5`, 11 sayfa). Kanon logoyu
+     esas alır; bağlamak regresyon değil DÜZELTME yapıyor. */
+
+  --eko-mentor:#FFCD00;      --eko-mentor-rgb:255,205,0;    /* Pantone 116 C */
+  --eko-gastro:#DC3D17;      --eko-gastro-rgb:220,61,23;    /* Pantone 173 C */
+  --eko-gourmet:#742982;     --eko-gourmet-rgb:116,41,130;  /* Pantone 259 C · BU DOSYANIN MARKASI */
+  --eko-fit:#0093D0;         --eko-fit-rgb:0,147,208;       /* Pantone 299 C */
+  --eko-diet:#009A44;        --eko-diet-rgb:0,154,68;       /* Pantone 355 C */
+  --eko-campus:#003C71;      --eko-campus-rgb:0,60,113;     /* Pantone 541 C */
+  --eko-store:#9A6900;       --eko-store-rgb:154,105,0;     /* Pantone'suz */
+
+  --eko-kilitli:#e9e2d6;     --eko-kilitli-rgb:233,226,214;  /* rayda kilitli görünüm · nötr.
+                                    ⚠ Gourmet sitesinde bu hex 208 elemanda
+                                      KOYU ZEMİNDE METİN olarak da basılıyor
+                                      (yukarı bak) — ad tek rolü söylüyor,
+                                      kaynak iki rol kullanıyor. */
+
+  /* Campus rampası — logo sayfasından ÖLÇÜLDÜ (10 adım, beyaz karışımı). */
+  --eko-campus-acik:#4D779C;    /* rampa adımı 4 · beyazla 4.74:1 */
+  --eko-campus-parlak:#7F9DB8;  /* rampa adımı 6 — koyu zeminde */
+  --eko-campus-cizgi:#CCD8E3;   /* rampa adımı 9 — hairline */
+  --eko-campus-yikama:#E5EBF1;  /* rampa adımı 10 — yıkama · 9.28:1 (AA ✓) */
+
+/* ── 🔴 AÇIK KALEM · "AKADEMİ" ADI İKİ ROLÜ BİRDEN TAŞIYOR ───────────
+   fit.css ve gastro.css'teki açık kalemin aynısı; Gourmet'te de açık ve
+   AYNI ŞEKİLDE ÇÖZÜLMEDİ (kanonun tek bir kararı olmalı, marka dosyası
+   onu veremez).
+
+     ROL A · EKOSİSTEM RAYI — DadaAkademi → DadaCampus (#003C71).
+             Yukarıda `--eko-campus`e taşındı.
+     ROL B · DURUM RENGİ — "Açık talep" hapı (`tokenlar.css:275-276`,
+             `bilesenler.css:4364`). Bu bir DURUM semantiğidir.
+
+   ⚠ GOURMET'TE ROL B'NİN CANLI KANITI YOK: petrol #006072 `:root`ta
+     TANIMLI (`--c-petrol` · `--b-akademi`, 11 sayfa) ama 10 sayfalık
+     tarama boyunca HİÇBİR elemanda basılmıyor (0 kullanım). Gastro'da
+     24 elemandı. Yuva yine de v2 değerinde bırakıldı — Gourmet'te ölü
+     olması kanonun kararını değiştirmez.
+   Beyar kararı gelene kadar v2 değerinde. KUSURU BİLDİR-DÜZELTME. */
+  --eko-akademi:#006072;     --eko-akademi-rgb:0,96,114;
+  --eko-akademi-acik:#2E97AB;
+  --eko-akademi-yikama:#e6f1f4;  /* #006072 üstünde 6.26:1 · AA ✓ */
+  --eko-akademi-cizgi:#cadfe5;
+  --eko-akademi-parlak:#5fcbd8;
+
+/* ── v2 KALINTISI · KURUMSAL YARDIMCI RENKLER ────────────────────────
+   fit.css'te "bilgi olarak durur, tüketicisi yok" diye bırakılmışlardı;
+   gastro.css'te ikisinin CANLI tüketicisi çıkmıştı.
+
+   🔴 GOURMET'TE DURUM ÜÇÜNCÜ BİR HÂL ALIYOR VE ÖLÇÜLDÜ (10 sayfa):
+     --kurumsal-mor       #b14fc5 → sitede **1089 eleman** 🔴 CANLI VE BASKIN
+     --kurumsal-nane      #6cca98 → 4 eleman (ray ikonu)
+     --kurumsal-yesil     #009d4f → 0 kullanım
+     --kurumsal-yesil-koyu #2c9963 → 0 kullanım
+     --saglik-yesil       #3BB77E → 0 kullanım
+
+   ⚠ DEĞER EŞLEŞMESİ ANLAM EŞLEŞMESİ DEĞİLDİR — VE BURASI O KURALIN EN
+     KESKİN ÖRNEĞİ. `--kurumsal-mor` bir ARŞİV KAYDIDIR (v2 DadaGourmet)
+     ama Gourmet'in CANLI sitesi hâlâ onu marka rengi olarak basıyor.
+     Yani "kanonda var + sitede çok kullanılıyor" bir otomatik eşleyiciye
+     `--marka:#b14fc5` dedirtebilir. DEDİRTMEMELİ: logo dört bağımsız
+     yolla #742982 diyor. Kayıt olarak DURUYOR, marka olarak DEĞİL. */
+  --kurumsal-yesil:#009d4f;      /* v2 DadaFit · ARTIK MARKA DEĞİL · 0 kullanım */
+  --kurumsal-yesil-koyu:#2c9963; /* 0 kullanım (Gastro'da 168'di) */
+  --kurumsal-mor:#b14fc5;        /* 🔴 v2 DadaGourmet · logo artık #742982 diyor.
+                                    GOURMET'TE CANLI · 1089 kullanım — arşiv
+                                    kaydı olduğu hâlde sitenin yürürlükteki
+                                    marka rengi. Yukarıdaki şerhe bak. */
+  --kurumsal-nane:#6cca98;       /* // DOĞRULA: 4 kullanım (ray ikonu) */
+  --saglik-yesil:#3BB77E;        /* YALNIZ sağlık bloğu — SEMANTİK yeşil,
+                                    marka rengi değil. ⚠ GOURMET'TE ÖLÜ:
+                                    `:root`ta tanımlı (`--green`, 12 sayfa)
+                                    ama 10 sayfada 0 elemanda basılıyor.
+                                    Gastro'da 179'du — köprü kararı bu
+                                    ölçüme dayanıyor, aşağı bak. */
+
+/* ── BANT PERDELERİ (§34) ────────────────────────────────────────────
+   Beş katmanın üçü perde, biri görsel (kanonda boş), biri düz zemin.
+
+   🔴 GOURMET BU BLOĞU İLK KEZ CANLI ÖLÇÜMDEN ALIYOR. fit.css bunları
+     v2'nin render edilmiş DOM'undan almış, gastro.css nötr oldukları
+     için fit'ten aynen taşımıştı. Gourmet'in sitesi ÜÇ KATMANI DA
+     `--tomato`suz, kendi tokenıyla bildiriyor:
+
+       --gl-hero-overlay:
+         radial-gradient(820px 360px at 84% 14%,
+                         rgba(177,79,197,.20), transparent 62%),
+         linear-gradient(90deg, rgba(30,20,34,.93) 0%,
+                                rgba(30,20,34,.80) 46%,
+                                rgba(30,20,34,.56) 100%),
+         linear-gradient(180deg, rgba(24,16,28,0) 0 56%,
+                                 rgba(24,16,28,.9) 100%)
+
+     AKSAN KATMANININ GEOMETRİSİ KANONLA BİREBİR AYNI
+     (820px 360px · 84% 14% · transparent 62% · alfa .20). Bu tesadüf
+     değil: aynı yapının Gourmet'e taşınmış hâli. O yüzden diğer iki
+     katmanın SAYILARI da bu markanın kendi ölçüsü sayıldı.
+
+   ⚠ GÖRÜNÜR FARK, BİLEREK: kanonun ana perdesi sağ uçta .74, Gourmet'in
+     kendi ölçüsü .56; dip perdesi kanonda 58%'de başlayıp .62'ye,
+     Gourmet'te 56%'da başlayıp .90'a gidiyor. Yani Gourmet bandı sağa
+     doğru DAHA ŞEFFAF, dibe doğru DAHA KOYU. Kanonun sayısına
+     yuvarlanmadı (KOPYALAMA-KURALI §2) — ölçülen budur.
+   ⚠ .20 alfası ÜÇ KEZ doğrulandı: sitenin token metni, `getComputedStyle`
+     çözümü (2 eleman) ve kanonun kendi değeri. */
+  --marka-bant-perde-aksan:radial-gradient(820px 360px at 84% 14%,
+      rgba(116,41,130,.20), transparent 62%);
+  --marka-bant-perde-ana:linear-gradient(90deg,
+      rgba(30,20,34,.93) 0%, rgba(30,20,34,.80) 46%, rgba(30,20,34,.56) 100%);
+  --marka-bant-perde-dip:linear-gradient(180deg,
+      rgba(24,16,28,0) 56%, rgba(24,16,28,.90) 100%);
+  --marka-bant-zemin:#1D1321;   /* ÖLÇÜLDÜ · CANLI (32 eleman) — sitenin
+                                   en koyu düz mor yüzeyi. fit/gastro nötr
+                                   `#1b1913` yazıyor; Gourmet'in kendi
+                                   ölçülü karşılığı bu. */
+
+
+  /* ── ALFA AİLESİ · §47/§49/§55/§63d YUVALARI ───────────────────────
+     🔴 BU AİLENİN YÜZDELERİ KANONDAN AYNEN ALINDI VE BU BİR KOPYA
+     DEĞİL, ÜÇÜNCÜ BİR ÖLÇÜM SONUCU. Gourmet'in canlı sitesinde markanın
+     rgb'siyle geçen HER alfa tarandı (10 sayfa · 12 CSS özelliği ·
+     `rgba()` VE `color(srgb …/α)` biçimleri) ve kanonun ailesiyle
+     karşılaştırıldı:
+
+       kanon yuvası            kanon %   gourmet canlıda ölçülen
+       --marka-halka             12      .12 ✓ (boxShadow ×3)
+       --marka-halka-2           16      .16 ✓ (zemin ×8)
+       --marka-cizgi-5           24      .24 ✓ (zemin ×6)
+       --marka-cizgi-3           25      .25 ✓ (kenar ×4)
+       --marka-golge-aksan-2     28      .28 ✓ (zemin ×2)
+       --marka-golge-aksan       32      .32 ✓ (kenar ×4 · boxShadow ×1)
+       --marka-cizgi-4           45      .45 ✓ (boxShadow ×1)
+       (bant aksan perdesi)      20      .20 ✓ (backgroundImage ×2)
+       (.bs-gourmet --bs-bg)     22      .22 ✓ (zemin ×11 · kenar ×24)
+       (.bs-gourmet --bs-bd)     50      .50 ✓ (kenar ×44)
+       --marka-cizgi-2           30      —   (Gourmet'te ölçülmedi)
+       --marka-halka-3           14      —   (ölçülmedi)
+       --marka-golge-aksan-3     16      — (.16 var ama zeminde, gölgede değil)
+       --marka-yikama-5           5      —   (ölçülmedi)
+       --marka-koyu-aksan-zemin  92      —   (ölçülmedi; en yakın .94 ×6)
+
+     ON YUVANIN ONU DA BİREBİR TUTTU, hiçbiri 1 puan bile sapmadı.
+     Gastro turunda dokuz yuvanın yedisi tutmuştu. Üç marka bağımsız
+     olarak aynı alfa merdivenini kullanıyor → **bu aile MARKA VERİSİ
+     DEĞİL, TASARIM SİSTEMİ VERİSİDİR.** gastro.css'in vardığı sonuç
+     üçüncü kez doğrulandı.
+
+     ⚠ KANONDA YUVASI OLMAYAN, GOURMET'TE ÖLÇÜLEN ALFALAR:
+       .42 (boxShadow ×11) · .35 (kenar ×4) · .26 (zemin ×2) ·
+       .94 (zemin ×6). Uydurma yuva açılmadı; bildirilecek kalem. */
+  --marka-cizgi-2:color-mix(in srgb, var(--marka) 30%, transparent);
+  --marka-paket-rozet:linear-gradient(180deg,var(--marka),var(--marka-murekkep));
+
+  --marka-cizgi-3:color-mix(in srgb, var(--marka) 25%, transparent);
+
+  --marka-halka:color-mix(in srgb, var(--marka) 12%, transparent);
+
+  /* §55 kademe kartı — kart kenarı · bayrak gölgesi · tablo vurgulu sütunu. */
+  --marka-cizgi-4:color-mix(in srgb, var(--marka) 45%, transparent);
+  --marka-golge-aksan:color-mix(in srgb, var(--marka) 32%, transparent);
+  --marka-yikama-5:color-mix(in srgb, var(--marka) 5%, transparent);
+
+  /* §45 açık durum hapı kenarı. Değerin ilk kaynağı FIT'in kendi kabuğuydu
+     (`fit-shell.css:4970` `.hs-pill.on`); Gastro canlıda .24 ölçüldü,
+     Gourmet canlıda da .24 ölçüldü (6 eleman) — sayı ÜÇ markada bağımsız
+     doğrulandı. %25'lik `--marka-cizgi-3`e YUVARLANMADI (KOPYALAMA §2);
+     ikisi Gourmet'te AYNI SAYFADA birlikte ölçüldü, yani gerçekten iki
+     ayrı adım. */
+  --marka-cizgi-5:color-mix(in srgb, var(--marka) 24%, transparent);
+
+  /* §59 bildirim akışı — okunmamış satırın iki zemin adımı. */
+  --marka-bildirim-yeni:color-mix(in srgb, var(--marka) 7%, #fff);
+  --marka-bildirim-yeni-2:color-mix(in srgb, var(--marka) 12%, #fff);
+  --marka-halka-2:color-mix(in srgb, var(--marka) 16%, transparent);
+
+  /* §63d · rozet ve kademe durum varyantları. `--marka-nisan-dolu`
+     markanın kendi üç adımına bağlıdır (parlak-2 → marka → mürekkep),
+     sabit yazılmadı — marka değişince kendiliğinden döner.
+     ⚠ Gourmet'te mürekkep = koyu olduğu için madalyonun koyu ucu
+       FIT/Gastro'dakinden bir kademe açık kalır; yukarıdaki
+       `--marka-murekkep` şerhinde kayıtlı. */
+  --marka-halka-3:color-mix(in srgb, var(--marka) 14%, transparent);
+  --marka-golge-aksan-3:color-mix(in srgb, var(--marka) 16%, transparent);
+  --marka-nisan-dolu:radial-gradient(circle at 35% 30%,
+                       var(--marka-parlak-2), var(--marka) 65%, var(--marka-murekkep));
+
+  /* §60 arama hero'su — koyu perdeler TON ÇEVRİLDİ (L·C korundu, ton
+     320.98°). Gourmet'in canlı sitesinde bu ÜÇ DURAKLI 180° perdenin
+     mor karşılığı ölçülMEDİ (10 sayfa), o yüzden çeviri kullanıldı.
+     Kaynak v2 yeşilleri ve Gourmet karşılıkları:
+       rgba(18,30,22) → rgba(32,23,33)
+       rgba(27,42,32) → rgba(44,34,46)
+       rgba(20,26,20) → rgba(27,22,28)
+     Parıltılar zaten `--marka`dan türüyor, dokunulmadı. */
+  --marka-arama-perde:linear-gradient(180deg, rgba(32,23,33,.92) 0%,
+      rgba(44,34,46,.80) 52%, rgba(27,22,28,.88) 100%);
+  --marka-arama-parilti:radial-gradient(1100px 460px at 16% -10%,
+      color-mix(in srgb, var(--marka) 30%, transparent), transparent 60%);
+  --marka-arama-parilti-2:radial-gradient(circle,
+      color-mix(in srgb, var(--marka-parlak-3, var(--marka)) 22%, transparent), transparent 70%);
+
+  /* §61 giriş akışı — hero iki perde + pano kendi perdesi.
+
+     🔴 BU BLOK ÇEVRİLMEDİ, ÖLÇÜLDÜ — ve ölçüm SİTENİN KENDİ
+     YEŞİL→MOR EŞLEMESİNİ verdi. `/kesfet` hero'su v2'nin yeşil
+     perdesini hâlâ basıyor, `/etkinlikler` hero'su AYNI YAPININ mor
+     hâlini basıyor; ikisi de aynı alfalarla:
+
+       yeşil  linear-gradient(90deg, rgba(18,28,22,.94), rgba(20,32,25,.74))
+       mor    linear-gradient(90deg, rgba(30,20,34,.94), rgba(28,22,36,.74))
+       →  rgb(18,28,22) ↦ rgb(30,20,34)   ·   rgb(20,32,25) ↦ rgb(28,22,36)
+
+     Yani sitenin kendi dönüşümü ÖLÇÜLDÜ. `--marka-giris-perde` bu mor
+     çiftin BİREBİR kendisi. `--marka-giris-pano-perde`nin üç durağının
+     ilk ikisi de bu ölçülmüş eşlemeden geliyor; yalnız üçüncü durak
+     (`rgba(16,26,20)`) sitede mor karşılığı olmadığı için TON ÇEVRİLDİ
+     → rgba(27,21,29). Alfalar sitenin kendi ölçüsü: .30 / .55 / .86.
+     ⚠ Kanonun alfaları .32/.58/.88 idi; yuvarlanmadı.
+     ⚠ Sitenin eşlemesi OKLCh çevirisiyle AYNI DEĞİL (sapma 3 ve 6
+       birim). İkisi de ölçülü; burada ÖLÇÜLEN yeğlendi, çeviri yalnız
+       ölçülmeyen durak için kullanıldı. Bu, çevirinin Gourmet'te
+       ~3–6/255 hata payı taşıdığının da kaydıdır.
+     Aksan tarafı markanın kendi renginden türer (kanon ölçümü:
+     parıltı rgba(<marka>,.34) · avantaj dairesi rgba(<marka>,.92)). */
+  --marka-giris-perde:linear-gradient(90deg,
+      rgba(30,20,34,.94), rgba(28,22,36,.74));
+  --marka-giris-parilti:radial-gradient(900px 380px at 88% 0%,
+      color-mix(in srgb, var(--marka) 34%, transparent), transparent 62%);
+  --marka-giris-pano-perde:linear-gradient(180deg, rgba(30,20,34,.30) 0%,
+      rgba(28,22,36,.55) 55%, rgba(27,21,29,.86) 100%);
+  --marka-koyu-aksan:var(--marka-parlak-2, var(--marka-parlak));
+  --marka-koyu-aksan-2:var(--marka-parlak);
+  --marka-koyu-aksan-zemin:color-mix(in srgb, var(--marka) 92%, transparent);
+
+  --marka-golge-aksan-2:color-mix(in srgb, var(--marka) 28%, transparent);
+
+  /* ── §75 ADMIN · İKİ ALFA ADIMI ────────────────────────────────────
+     `fit.css:331`in şerhi bu iki yuvayı adıyla Gourmet'ten de istiyor:
+     *"GASTRO/GOURMET/CAMPUS DE BU İKİSİNİ YAZMALI. Yazmazsa tüketen
+     kural sessizce düşer."* Tüketiciler `tokenlar.css:409-410`
+     (`--aksan-yikama-8` · `--aksan-yikama-10`) ve ikisi de FALLBACK'li
+     okunuyor — yani boş bırakmak görünür bir hata vermezdi, yalnızca
+     toplu işlem çubuğu ile içerik türü rozeti YANLIŞ ADIMLA çizilirdi.
+     `--marka-cizgi-5` kusurunun aynısı.
+
+       rgba(<marka>,.08)   `.adm-bulk`   toplu işlem çubuğunun zemini
+       rgba(<marka>,.10)   `.cb-kind`    içerik türü rozeti
+
+     Sayılar kanondan aynen: yukarıdaki ALFA AİLESİ ölçümü bu merdivenin
+     marka verisi değil tasarım sistemi verisi olduğunu ÜÇÜNCÜ KEZ
+     gösterdi.
+     ⚠ Gourmet canlıda .08 ve .10 tam olarak ölçülMEDİ; en yakın komşular
+       .12 (boxShadow ×3) ve .16 (zemin ×8). YUVARLANMADI. */
+  --marka-yikama-8:color-mix(in srgb, var(--marka) 8%, transparent);
+  --marka-yikama-10:color-mix(in srgb, var(--marka) 10%, transparent);
+
+}
+
+/* =====================================================================
+   ESKİ AD KÖPRÜSÜ — tanımsız/marka-dışı tokenların çözümü
+   ---------------------------------------------------------------------
+   gastro.css'teki köprünün Gourmet karşılığı. Köprü kuralı aynı:
+
+   🔴 Bir ad Gourmet'in CANLI sitesinde ölçülmüş bir rol taşıyorsa köprü
+      O ROLÜ korur; yalnız ölü ya da FIT'e özgü adlar `--aksan` ailesine
+      bağlanır.
+
+   Ama SONUÇ Gastro'nunkinden FARKLI ve fark ÖLÇÜLDÜ. Gastro'da yeşil
+   CANLIYDI (#3BB77E 179 eleman, #2c9963 168 eleman) ve o yüzden gastro.css
+   `--green`i markaya BAĞLAMADI. Gourmet'te aynı tarama (10 sayfa, aynı
+   betik) şunu veriyor:
+
+       #3BB77E  (--green · --green-soft)   → 0 eleman
+       #2c9963  (--green-deep)             → 0 eleman
+       #009d4f  (--c-green)                → 0 eleman
+       #006072  (--c-petrol · --b-akademi) → 0 eleman
+
+   Dördü de `:root`ta TANIMLI ama HİÇBİRİ basılmıyor. Yani Gourmet'te
+   FIT'in önermesi geçerli: bu adlar ölü, `--aksan` ailesine bağlamak
+   regresyon yaratmaz, DÜZELTME yapar.
+   ⚠ ÖLÇÜMÜN SINIRI: 10 ayrı sayfa tarandı (12 yol istendi, 3'ü
+     yönlendirdi). Vejetaryen/diyet işareti Gourmet'te bir mekân detay
+     sayfasında yaşıyor olabilir; o sayfa taramada YOKTU. "0 kullanım"
+     bu kapsamın sonucudur, evrensel bir yokluk iddiası değil.
+   Betik: `node scripts/olcum/gcss-renk.mjs`
+   ===================================================================== */
+:root{
+
+  /* // TÜRETİLDİ: --marka-koyu · birincil düğme hover zemini + yıkama
+     üstünde okunur koyu ton. fit.css'in üç yönlü kanıtı Gourmet'te de
+     geçerli çünkü kanıt `profil-v1.html`in ORTAK markup'ından geliyor,
+     markadan değil.
+     ⚠ GOURMET'TE İNCE BİR AYRIM VAR: fit ve gastro'da gerekçe
+       "`--marka` bu işi YAPAMAZ (3.45 / 4.45), `--marka-koyu` yapar"
+       idi. Gourmet'te `--marka` zaten 8.82 (AAA), yani kontrast
+       gerekçesi DÜŞÜYOR. Yuva yine de `--marka-koyu`ya bağlanıyor
+       çünkü rolün ikinci yarısı HOVER AYRIMI ve o ayrım kontrasttan
+       bağımsız. Bu, kanona bildirilecek bir gözlemdir: Gourmet'te
+       birincil düğmenin `--aksan`ın kendisi olması ERİŞİLEBİLİR olurdu;
+       ama hangi tokenın düğme zemini olacağı KANON kararıdır, marka
+       katmanı onu veremez. KUSURU BİLDİR-DÜZELTME. */
+  --c-green-deep:var(--marka-koyu);
+  --c-green-tint:var(--marka-yikama);
+  --c-green-soft:var(--marka-cizgi);
+  --green-tint:var(--marka-yikama);
+
+  /* ── GOURMET KABUK AKSANI ─────────────────────────────────────────
+     `--tomato*` ailesi GOURMET'İN KENDİ marka adlarıdır (FIT'te bu aile
+     Diyet kabuğundan sızan bir kalıntıydı ve köprü GEÇİCİ diye
+     işaretlenmişti). Gourmet'te köprü geçici DEĞİL, KANONİK: sitenin
+     kendi token adlarını kanonun rampasına bağlar.
+     Eşleme canlı ölçümle doğrulandı — dördü de rolüne düşüyor:
+       --tomato      #b14fc5 (×1089) = --marka          (v2 tabanı)
+       --tomato-dark #8e3aa8 (× 838) = --marka-koyu     (%82.2)
+       --tomato-deep #8e3aa8 (aynı hex) = --marka-murekkep
+       --tomato-tint #F4E7F7 (×  81) = --marka-yikama   (%13.7)
+     ⚠ `--tomato-deep` ADI KORUNARAK `--aksan-murekkep`e bağlandı,
+       gastro.css'teki gibi. Gourmet'te bu yuva `--aksan-koyu`ya İNER
+       (mürekkep = koyu, yukarı bak) — yani köprü kaynağın çakışmasını
+       AYNEN yansıtıyor, gizlemiyor. Ad-rol eşlemesi korunduğu için
+       ileride ayrı bir mürekkep adımı ölçülürse tek satır değişir. */
+  --tomato:var(--aksan);
+  --tomato-dark:var(--aksan-koyu);
+  --tomato-deep:var(--aksan-murekkep);
+  --tomato-tint:var(--aksan-yikama);
+
+  /* 🔴 GASTRO'DAN AYRILAN İKİ SATIR — FIT'in kararına DÖNÜLDÜ, gerekçe
+     ölçülü (yukarıdaki köprü şerhi). gastro.css bu ikisini
+     `--saglik-yesil` / `--kurumsal-yesil-koyu`ya bağlamıştı çünkü
+     Gastro'da yeşil 179+168 elemanda SEMANTİK bir işaretti. Gourmet'in
+     10 sayfasında ikisi de 0 eleman → semantik rol YOK, ad ölü.
+     Ölü adı marka ailesine bağlamak kaynağın hiçbir pikselini
+     değiştirmez ve yuvayı diri kılar. */
+  --green:var(--aksan);
+  --green-deep:var(--aksan-koyu);
+
+  /* `--c-green` Gourmet sitesinde #009d4f (v2 DadaFit ekosistem rengi) ve
+     10 sayfa taramasında 0 kullanım. fit/gastro'nun kararı aynen geçerli:
+     yuva markanın kendisine düşer. Böylece `--c-green` / `--c-green-deep`
+     / `--c-green-tint` üçlüsü TEK ailede kalır —
+     `.chip.active{border-color:var(--c-green);background:var(--c-green-tint)}`
+     gibi bildirimler kırılmaz. (Bu üçlüyü ayırmak mor yıkama üstüne
+     yeşil kenar basardı.) */
+  --c-green:var(--aksan);
+
+  /* Ekosistem rayı: kabuk bunları kendi adlarıyla okuyor, kanon
+     ölçülmüş logo değerlerine bağlar.
+     ⚠ `--c-purple` BU DOSYADA ÖZEL: Gourmet'te markanın KENDİSİ.
+       Sitede #b14fc5 (v2) olarak 1089 elemanda basılıyor; kanon onu
+       `--eko-gourmet`e (#742982) bağlıyor — yani bu tek satır sitenin
+       marka rengini v2'den v3'e taşıyan yerdir. GÖRÜNÜR değişiklik ve
+       KASITLI. */
+  --c-fit:var(--eko-fit);
+  --c-gastro:var(--eko-gastro);
+  --c-purple:var(--eko-gourmet);
+  --c-petrol:var(--eko-akademi);
+
+  /* Petrol yıkaması ve hairline'ı — "işletme" rolündeki profilde markanın
+     yerini petrol alıyor. ⚠ Gourmet'te petrol ÖLÜ: #006072 `:root`ta
+     tanımlı, 10 sayfada 0 eleman (Gastro'da 24'tü). */
+  --c-petrol-tint:var(--eko-akademi-yikama);
+  --c-petrol-soft:var(--eko-akademi-cizgi);
+
+  /* "hover adımı ÜRETİLMEZ" — #006072 beyazla zaten 7.20:1. Gourmet'in
+     `--marka-koyu`su (10.89:1) ondan koyu, ama bu yuvanın işi petrolün
+     hover'ı; AA için koyulaştırmaya ihtiyaç yok ve hover ayrımı
+     `translateY(-2px)`da kalır. fit/gastro ile aynı karar. */
+  --c-petrol-deep:var(--eko-akademi);
+}
+
+/* =====================================================================
+   EKOSİSTEM RAYI HAP RENKLERİ
+   ---------------------------------------------------------------------
+   Kabuğun kendi CSS'i her marka hapının zeminini/kenarını HAM `rgba()`
+   ile yazıyor ve değişkene bağlamıyor → yukarıdaki köprü bunları
+   YAKALAMAZ. Alfalar kaynağın kendi ölçüleri (.18/.20/.22 · .46/.50),
+   RENK ise logodan ÖLÇÜLEN `--eko-*` ailesi.
+
+   🔴 GOURMET'TE BU BLOK CANLI OLARAK DOĞRULANDI. Sitenin `.bs-gourmet`
+     hapı ölçüldü ve kanonun yazdığı iki sayıyı BİREBİR veriyor:
+       zemin  color(srgb 0.694118 0.309804 0.772549 / 0.22)  → %22 ✓
+       kenar  rgba(177, 79, 197, 0.5)                        → %50 ✓
+     (Renk v2'nin moru; kanon aynı alfaları #742982'ye uyguluyor.)
+     ⚠ Zemin `color(srgb …)` olarak çözülüyor — yalnız `rgba()` arayan
+       bir ölçüm bunu GÖREMEZ. Kayıtlı tuzağın canlı örneği.
+
+   ⚠ KATMAN SÖZLEŞMESİ ŞERHİ: marka katmanı normalde YALNIZ `:root`
+     yuvası doldurur, seçici kuralı yazmaz. Buradaki altı kural bir
+     istisnadır ve gerekçesi fit/gastro'daki ile aynı: bunlar bileşen
+     kuralı değil MARKA VERİSİDİR. Kabuğun süs katmanı kanona girdiğinde
+     (§27 "sıradaki dilim") bu blok düşer.
+
+   🔴 AÇIK KALEM · `--bs-ic` (koyu zeminde ray ikonu) — BU TURDA ÇÖZÜLDÜ
+     AMA YAZILMADI, gerekçesi kapsam:
+       fit.css:506 bu yuvayı "kaynağın parlak adımlarının yeni logo
+       rampasında karşılıkları ÖLÇÜLMEDİ, uydurmak yerine bırakıldı"
+       diye açık kalem yapmıştı. GOURMET İÇİN ARTIK ÖLÇÜLDÜ:
+         kaynak `.bs-gourmet{--bs-ic:#c97ad6}` · canlıda 50 eleman
+         siyahta 7.24 → rampa adımı 5 (#BA94C0, 8.08) = `--marka-parlak`
+     Yazılmadı çünkü `.bs-gourmet` kuralı DÖRT marka dosyasında da var;
+     yalnız bu dosyada `--bs-ic` bildirmek Gourmet hapını Gourmet
+     ekranlarında bir renk, Gastro ekranlarında başka bir renk yapardı.
+     Aile TEK TURDA, dört dosyada birlikte kapatılmalı — o bir kanon
+     kararıdır. KUSURU BİLDİR-DÜZELTME.
+   ===================================================================== */
+.bs-gastro { --bs-bg:color-mix(in srgb, var(--eko-gastro)  18%, transparent);
+             --bs-bd:color-mix(in srgb, var(--eko-gastro)  46%, transparent); }
+.bs-diet   { --bs-bg:color-mix(in srgb, var(--eko-diet)    20%, transparent);
+             --bs-bd:color-mix(in srgb, var(--eko-diet)    50%, transparent); }
+.bs-fit    { --bs-bg:color-mix(in srgb, var(--eko-fit)     22%, transparent);
+             --bs-bd:color-mix(in srgb, var(--eko-fit)     50%, transparent); }
+.bs-gourmet{ --bs-bg:color-mix(in srgb, var(--eko-gourmet) 22%, transparent);
+             --bs-bd:color-mix(in srgb, var(--eko-gourmet) 50%, transparent); }
+.bs-campus,
+.bs-akademi{ --bs-bg:color-mix(in srgb, var(--eko-campus)  22%, transparent);
+             --bs-bd:color-mix(in srgb, var(--eko-campus)  50%, transparent); }
+.bs-store  { --bs-bg:color-mix(in srgb, var(--eko-store)   22%, transparent);
+             --bs-bd:color-mix(in srgb, var(--eko-store)   50%, transparent); }
+
+/* =====================================================================
+   A3 · HATA AİLESİ
+   ---------------------------------------------------------------------
+   Kaynağın ölçülmüş değerleri; marka-nötr kırmızı. Hata rengi markaya
+   göre dönmez, uyarı gibi evrensel okunur. Tüketici `tokenlar.css:291-293`
+   (`--hata` · `--hata-yikama` · `--hata-cizgi`), üçü de fallback'li.
+
+   ⚠ KAPSAM: üçü `:root`ta. `fit.css:501-507`te bu bildirimler
+     `.bs-store` KURALININ İÇİNDE duruyordu (kapanış süslü parantezi
+     eksikti) ve yuva ölüydü; gastro.css düzeltmiş, burada da doğrusu
+     yazıldı. Aynı hatayı tekrar etmemek için bu blok `.bs-store`dan
+     AYRI bir `:root` bildirimidir.
+
+   ✅ GASTRO'NUN ZORLANAN ÖNERMESİ GOURMET'TE ZORLANMIYOR. gastro.css
+     "hata rengi marka-nötrdür" önermesinin Gastro'da sınandığını ve
+     çakıştığını bildirmişti (`--marka-hata` #8c1d18 ile Gastro'nun
+     `--marka-koyu-2` #84250E arasında 8/8/10 birim fark — panelde
+     "hata" ile "düğme hover" neredeyse aynı renk).
+     GOURMET'TE ÇAKIŞMA YOK, ölçüldü:
+       --marka-hata   #8c1d18 = rgb(140, 29, 24)   kırmızı
+       --marka-koyu   #5F226B = rgb( 95, 34,107)   mor   → B kanalı 83 fark
+       --marka-koyu-2 #44184C = rgb( 68, 24, 76)   mor   → R kanalı 72 fark
+     Ayrıca Gourmet'in canlı sitesi `--danger` benzeri bir token
+     BİLDİRMİYOR (64 token tarandı) — yani kaynakta da çakışan bir
+     kırmızı yok. Önerme Gourmet'te temiz duruyor.
+   ===================================================================== */
+:root{
+  --marka-hata: #8c1d18;
+  --marka-hata-yikama: #fdecea;
+  --marka-hata-cizgi: #efc2bd;
+}
+
+/* ---------------------------------------------------------------------
+   `--lh-body` marka rengi değil, satır yüksekliği — çözümü marka-nötr
+   olduğu için tokenlar.css §5'te duruyor (--lh-body: var(--satir-govde)).
+
+   `--acc` / `--acc-rgb` tanımsız GÖRÜNÜR ama hata değildir: sol marka
+   rayında kabuk betiği her kaleme satır içi `style` ile basar.
+
+   ── GOURMET'TE ÖLÇÜLEN, KANONDA YUVASI OLMAYAN DEĞERLER ──────────────
+   Canlı ölçüm bunları kanonda karşılıksız buldu; hiçbiri bu dosyaya
+   YAZILMADI çünkü kanonda tüketicileri yok ve yuva uydurmak marka
+   katmanının işi değil. Bildirilecekler:
+
+     #E6C9EF   %30.6 marka + beyaz · artık 1.77 · 20 eleman
+               TEMİZ bir karışım ama kanonun dört açık yuvasının hiçbir
+               rol tanımına oturmuyor (yıkamalar %9–14, çizgi %20).
+     beyaz-alfa merdiveni  .92 / .88 / .84 / .82  (275/165/132/44 eleman)
+               koyu zeminde ikincil metin; kanonda tek nötr hex var
+               (`--marka-koyu-metin`), merdiven yok.
+     alfalar   .42 (gölge ×11) · .35 (kenar ×4) · .26 (zemin ×2) ·
+               .94 (zemin ×6) — kanon merdiveninde karşılıkları yok.
+     #56514A   1024 eleman · sitenin `--slate-2`si, nötr ikincil metin.
+     #E2DDD3   40 eleman · sitenin `--line-2`si, nötr kenar.
+
+   ⚠ GASTRO'DAN FARK — `--cream` ve `--yellow` BURADA ÖLÜ: sitenin
+     `:root`u ikisini de bildiriyor (#EFE5D3 · #FAC045, 12 sayfa) ama
+     10 sayfalık taramada HİÇBİR elemanda basılmıyor. Gastro'da 128 ve
+     168 elemandı. Yani "Gastro'da kanona giremeyen iki renk" sorusu
+     Gourmet'te kendiliğinden düşüyor.
+
+   Ölçüm kaydı: `rapor/gourmet-renk-canli.json`
+   Betik:       `scripts/olcum/gcss-renk.mjs`
+   --------------------------------------------------------------------- */

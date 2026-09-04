@@ -1,0 +1,581 @@
+/* =====================================================================
+   KANON — MARKA KATMANI · DadaFit
+   ---------------------------------------------------------------------
+   Marka adı KANONDA YALNIZ BU DOSYADA geçer. tokenlar.css ve
+   bilesenler.css marka-nötrdür; ikisi de buradaki `--marka-*` yuvalarını
+   okur. Başka bir markaya geçmek = bu dosyayı değiştirmek.
+
+   Yükleme sırası:  tokenlar.css  →  markalar/fit.css  →  bilesenler.css
+
+   🔴🔴 v3 · 2026-09-02 — MARKA RENGİ YEŞİLDEN MAVİYE GEÇTİ.
+   ---------------------------------------------------------------------
+   Beyar onayı, 2026-09-02. Kaynak: `Revenge - Docs/DadaMentor-Logos.ai`
+   (Adobe Illustrator 30.8, tek sayfa, yedi marka satırı).
+
+   DadaFit artık **PANTONE 299 C**tir. Yeşil (`#009d4f`, Pantone 7482 C)
+   v2'nin rengiydi; logo sayfasında yeşil artık DadaDiet'in (Pantone 355 C).
+
+   ── DEĞERLER NEREDEN GELDİ ────────────────────────────────────────────
+   Hiçbiri uydurulmadı. Üç ayrı kaynak, üçü de yazılı:
+
+   1 · ÖLÇÜLDÜ (logo sayfası render edilip pikselden okundu)
+       `.ai` PDF-1.6 olarak açıldı, 60dpi render edildi, nokta merkezleri
+       örneklendi. Her satırda KELİME MARKASI ile TON RAMPASININ ilk
+       noktası BİREBİR aynı çıktı — değer ikili doğrulandı.
+       Rampa saf beyaz karışımı: adım n = taban + (n-1)×%10 beyaz.
+       Doğrulandı: #0093D0 → #1A9ED5 tam %10 (0×.9+255×.1 = 25.5 = 0x1A).
+
+   2 · TAŞINDI (yeşilin ölçülmüş oranı maviye uygulandı)
+       Açık uç: yeşil türevin BEYAZ KARIŞIM YÜZDESİ ölçüldü, aynı yüzde
+       mavi tabana uygulandı. Bu türetme değil — markanın kendi ton
+       merdivenini (logo rampası) kullanmak.
+       Koyu uç: yeşil türevin KONTRAST ORANI kanonun kendi şerhinde zaten
+       yazılıydı (5.45 · 8.76 · 6.75 — rolün ölçülmüş şartnamesi). Mavi
+       taban siyaha doğru ölçeklendi; R:G:B oranı (0:147:208) sabit
+       tutuldu, yani TON birebir korundu. Beyar onayı, 2026-09-02.
+
+   3 · TON ÇEVRİLDİ (yalnız perde/gradyan değerleri)
+       Kaynağın koyu perdeleri elle seçilmiş, formülü olmayan değerlerdi.
+       OKLCh'de L (açıklık) ve C (renklilik) KORUNDU, yalnız ton mavinin
+       tonuna (236.8°) çekildi.
+       🔴 KURAL KENDİ KENDİNİ DOĞRULADI: aynı dönüşüm yeşil TABANA
+       uygulandığında #008ED6 veriyor; bağımsız olarak logodan ölçülen
+       taban #0093D0. Yani dönüşüm bilinen bir doğruyu yakalıyor.
+       (Taban yine de ÇEVRİLMEDİ, ÖLÇÜLDÜ — çeviri yalnız perdelere.)
+
+   ⚠ RAMPA MİMARİSİ AYNEN DURUYOR. `#0093D0` beyazla 3.45:1, eski
+     `#009d4f` 3.54:1'di. İkisi de AA ALTI, ikisi de aynı rolde. Yani
+     "aksan yalnız vurguda, düğme zemini koyu adımda" sözleşmesi
+     değişmedi; yalnız değerler değişti. Kanonun asıl sınavı buydu.
+   ===================================================================== */
+
+:root{
+
+/* ── AKSAN RAMPASI ───────────────────────────────────────────────────
+   Kontrast oranları beyaz metinle, WCAG 2.1, bağımsız hesaplandı. */
+
+  --marka:#0093D0;          /* Pantone 299 C · 3.45:1 → AA ALTI.
+                               YALNIZ vurgu/ikon/çip/odak halkasında; küçük
+                               metin ve düğme zemininde KULLANILMAZ.
+                               ÖLÇÜLDÜ — logo sayfası, kelime markası ve
+                               rampa ilk noktası aynı değeri verdi. */
+  --marka-koyu:color-mix(in srgb, var(--marka) 77.5%, #000);   /* türetildi · v2 ölçütü --fit-deep #007a3d (artık 0) · eski sabit #00719F */     /* 5.44:1 · AA — birincil düğme zemini
+                               (v2 yeşil #007a3d, 5.45:1 · aynı rol) */
+  --marka-koyu-2:color-mix(in srgb, var(--marka) 54.9%, #000);   /* türetildi · v2 ölçütü --fit-deeper #00572b (artık 1) · eski sabit #005172 */   /* 8.68:1 — birincil düğme hover
+                               (v2 yeşil #00572b, 8.76:1) */
+  --marka-murekkep:color-mix(in srgb, var(--marka) 67.3%, #000);   /* türetildi · v2 ölçütü --fit-ink #006a35 (artık 0) · eski sabit #00628A */ /* 6.74:1 — zorunlu alan yıldızı, gradyan koyu ucu
+                               (v2 yeşil #006a35, 6.75:1) */
+
+/* ── TÜRETİLMİŞ AKSAN YUVALARI — Beyar kararı, 2026-09-02 ────────────
+   🔴 SABİT HEX YERİNE `--marka`DAN TÜRETME. Bu yedi yuva bir tur önce
+   sabit mavi hex taşıyordu. Beyar durdurdu:
+
+     > "Yeşil token'ları tek tek maviye çevirme. Hepsini --marka'dan
+     >  türet. Yüzdeyi v2'deki yeşil tondan ÖLÇ, çıkarım yapma. Böylece
+     >  gastro/gourmet'te aynı kural tek token değişimiyle çalışır."
+
+   ── ORAN NEREDEN GELİYOR ─────────────────────────────────────────────
+   Kaynağın (`fit-shell.css`) kendi yeşil ailesinin `--fit` (#009d4f)
+   aksanına oranı ölçüldü. Üç kanalda ayrı çözüldü, ARTIK (geri hesabın
+   en büyük kanal sapması) her satırda yazılı:
+
+     --fit-wash   #e8f6ee = marka  9.3% + beyaz    artık 1
+     --fit-tint   #eaf6ef = marka  8.8% + beyaz    artık 2
+     --fit-line   #d8ebe0 = marka 17.8% + beyaz    artık 6  ⚠
+     --fit-deep   #007a3d = marka 77.5% + siyah    artık 0
+     --fit-ink    #006a35 = marka 67.3% + siyah    artık 0
+     --fit-deeper #00572b = marka 54.9% + siyah    artık 1
+
+   🔴 ORANLAR MEVCUT MAVİ SABİTLERİ DOĞRULADI. Aynı oran #0093D0'a
+   uygulandığında eski sabitlerden EN FAZLA 2/255 sapıyor; `--marka-cizgi`
+   ve `--marka-koyu-2` BİREBİR tutuyor. Yani kanonun mavileri zaten bu
+   oranlarda türetilmişti — bu değişiklik değeri değiştirmiyor, KURALI
+   görünür kılıyor.
+
+   🔴 ÜÇ TON KARIŞIM DEĞİL, TÜRETİLMEDİ:
+     --fit-bright #34c47e   artık 22 · yayılım .194
+     .bs-fit ikon #3fd089   artık 30 · yayılım .273
+     --fit-line   #d8ebe0   artık  6 · yayılım .051  (sınırda, türetildi)
+   İlk ikisi ayrı tasarlanmış tonlar; bir yüzde uydurmak yerine
+   `--marka-parlak` ailesi ÖLÇÜLMÜŞ hâliyle bırakıldı. Açık kalem.
+   --------------------------------------------------------------------- */
+  --marka-yikama:color-mix(in srgb, var(--marka) 9.3%, #fff);   /* türetildi · v2 ölçütü --fit-wash #e8f6ee (artık 1) · eski sabit #e8f5fb */   /* açık band / ikon çipi zemini · %91.2 beyaz
+                               (v2 yeşil #eaf6ef, aynı yüzde) */
+  --marka-yikama-2:color-mix(in srgb, var(--marka) 8.8%, #fff);   /* türetildi · v2 ölçütü --fit-tint #eaf6ef (artık 2) · eski sabit #e7f5fb */ /* kabuk bileşeni yıkaması · %90.7 beyaz
+                               // DOĞRULA: v2'de de `--marka-yikama` ile
+                               arasında 1–2 birim fark vardı (#eaf6ef ≠
+                               #e8f6ee) ve ikisi de kullanımdaydı. Kaynak
+                               bunu R7 notunda "ikizi yoktu, birleşmedi"
+                               diye kayda geçirmiş; kanon da birleştirmedi.
+                               MAVİDE FARK DAHA DA KÜÇÜLDÜ (#e8f5fb vs
+                               #e7f5fb = 1 birim). Görsel fark hâlâ
+                               ölçülmedi; v3 turunda birleştirme sorulacak. */
+  --marka-cizgi:color-mix(in srgb, var(--marka) 17.8%, #fff);   /* türetildi · v2 ölçütü --fit-line #d8ebe0 (artık 6 · TAM KARIŞIM DEĞİL) · eski sabit #d2ecf7 */    /* aksan-nötr hairline · %82.2 beyaz
+                               ≈ logo rampasının 9. adımı (#CCE9F6) */
+
+  --marka-parlak:#4ab2de;   /* koyu zeminde okunur aksan metni · %29 beyaz
+                               #211E16 üstünde 6.91:1 (v2 yeşil 7.40:1) */
+  --marka-parlak-2:#5dbae1; /* koyu zeminde ikon · %37 beyaz · 7.59:1
+                               — v2'de de TOKEN DEĞİLDİ, 4 sayfada ham hex */
+  --marka-parlak-3:#87cce9; /* aday · %53 beyaz · 9.39:1
+                               // DOĞRULA: v2'de bu rolde İKİ değer vardı
+                               (#7fd6a8 · 4 sayfa ve #7fe7af · 3 sayfa) ve
+                               hangisinin kanon olduğu ayrışmamıştı. Mavi
+                               karşılık ilkinden taşındı; ayrışma hâlâ
+                               yapılmadı. */
+  --marka-yikama-koyu:color-mix(in srgb, var(--marka) 6.8%, #fff);   /* türetildi · v2 ölçütü .hub-media #f1f7f3 (artık 3) · eski sabit #edf7fc */ /* koyu zeminde aksan metni · %92.9 beyaz
+                                  (v2 yeşil #eafaf1) */
+
+/* ── KOYU YÜZEY ──────────────────────────────────────────────────────
+   Banner / hero / footer. Marka yuvası — diet ölçümü bunların nötr
+   olmadığını gösterdi (tokenlar.css §2 notu).
+
+   ⚠ İLK ÜÇÜ v3'TE DEĞİŞMEDİ: Process Black C ailesi bir MARKA rengi
+     değil, nötr koyu tabandır. Marka yeşilden maviye geçerken tabanın
+     değişmesi için bir sebep ölçülmedi. */
+
+  --marka-koyu-zemin:#211E16;    /* Process Black C · gradyanın açık ucu */
+  --marka-koyu-zemin-2:#1b1913;  /* gradyanın koyu ucu · 21 sayfa ham */
+  --marka-koyu-metin:#cfc8be;    /* koyu zeminde ikincil metin (10.03:1) · 9 sayfa */
+
+  /* 🔴 ADI YANILTICI AMA DEĞİŞTİRİLMEDİ — `-yesil` eki v2'nin kalıntısı.
+     Yeniden adlandırmak `tokenlar.css:159`daki tek tüketiciyi
+     (`--koyu-zemin-yesil`) ve onun 49 kullanımını kırardı; ad değişimi
+     ayrı bir tur işidir ve marka katmanının işi değil.
+     DEĞER v3'te çevrildi: OKLCh L ve C korundu, ton maviye çekildi.
+       v2 #0f2f1e (yeşil)  →  v3 #0b2b3d (mavi)
+     §63 koyu özet kartı gradyanının aksan ucu. */
+  --marka-koyu-zemin-yesil:#0b2b3d;
+
+/* ── EKOSİSTEM MARKALARI ─────────────────────────────────────────────
+   Sol marka rayının (`.sa-brand`) aksanları.
+   Rayda `--acc` / `--acc-rgb` olarak satır içi style ile basılır.
+
+   🔴 v3 · YEDİ MARKA. Değerlerin TAMAMI logo sayfasından ÖLÇÜLDÜ —
+   v2'de bunlar `fit-shell.js` RAIL dizisinden geliyordu ve beşi de
+   logonun verdiğinden farklıydı. Logo sayfası artık tek doğru kaynak. */
+
+  --eko-mentor:#FFCD00;      --eko-mentor-rgb:255,205,0;    /* Pantone 116 C · YENİ marka */
+  --eko-gastro:#DC3D17;      --eko-gastro-rgb:220,61,23;    /* Pantone 173 C · v2 #E14827 idi */
+  --eko-gourmet:#742982;     --eko-gourmet-rgb:116,41,130;  /* Pantone 259 C · v2 #b14fc5 idi */
+  --eko-fit:#0093D0;         --eko-fit-rgb:0,147,208;       /* Pantone 299 C · v2 #009d4f idi */
+  --eko-diet:#009A44;        --eko-diet-rgb:0,154,68;       /* Pantone 355 C · v2 #3BB77E idi */
+  --eko-campus:#003C71;      --eko-campus-rgb:0,60,113;     /* Pantone 541 C · YENİ AD (bkz. aşağı) */
+  --eko-store:#9A6900;       --eko-store-rgb:154,105,0;     /* Pantone'suz · YENİ marka */
+
+  --eko-kilitli:#e9e2d6;     --eko-kilitli-rgb:233,226,214;  /* rayda kilitli görünüm · nötr, değişmedi */
+
+  /* Campus'ün rampası — logo sayfasından ÖLÇÜLDÜ (10 adım, beyaz karışımı).
+     v2'de bunlar "akademi" adıyla ve TÜRETİLMİŞ değerlerle duruyordu;
+     artık markanın kendi merdiveninden geliyorlar. */
+  --eko-campus-acik:#4D779C;    /* rampa adımı 4 · beyazla 4.74:1 */
+  --eko-campus-parlak:#7F9DB8;  /* rampa adımı 6 — koyu zeminde */
+  --eko-campus-cizgi:#CCD8E3;   /* rampa adımı 9 — hairline */
+  --eko-campus-yikama:#E5EBF1;  /* rampa adımı 10 — yıkama.
+                                   #003C71 metni bu zeminde 9.28:1 (AA ✓);
+                                   v2 petrol eşleşmesi 6.26:1 idi. */
+
+/* ── 🔴 AÇIK KALEM · "AKADEMİ" ADI İKİ ROLÜ BİRDEN TAŞIYOR ───────────
+   BEYAR KARARI BEKLİYOR — sessizce çözmedim, çünkü ikisini ayırmak da
+   birleştirmek de görünür sonuç doğuruyor.
+
+   `--eko-akademi` (#006072, petrol) v2'de İKİ ayrı işi birden yapıyordu:
+
+     ROL A · EKOSİSTEM RAYI — DadaAkademi'nin marka rengi.
+             Logo sayfası bu markayı **DadaCampus**a çeviriyor ve rengini
+             **#003C71** yapıyor. Bu rol yukarıda `--eko-campus`e taşındı.
+
+     ROL B · DURUM RENGİ — "Açık talep" hapı. Kanon bunu petrole BAĞLADI:
+               tokenlar.css:275  --durum-acik-metin:var(--eko-akademi)
+               tokenlar.css:276  --durum-acik-zemin:var(--eko-akademi-yikama)
+               bilesenler.css:4364  .hap-yolda{color:var(--eko-akademi)}
+             Bu bir DURUM semantiğidir; markanın yeniden adlandırılması
+             tek başına onu değiştirmek için gerekçe değil.
+
+   ⚠ AYRICA `--eko-akademi` DIET.CSS'TE DE TANIMLI ve Diyet kanonu
+     DONDURULMUŞ durumda. Adı burada silmek marka-nötr iki dosyadaki
+     (tokenlar.css · bilesenler.css) ortak tüketicileri kırar.
+
+   Bu yüzden ROL B'nin değerleri v2'deki hâliyle DURUYOR. Beyar
+   "durum rengi de campus'e geçsin" derse üç satır değişir ve destek
+   modülünün "Açık talep" hapı laciverde döner (kontrast 6.26 → 9.28,
+   yani erişilebilirlik iyileşir, ama GÖRÜNÜM değişir).
+   Kanon kararı gelene kadar KUSURU BİLDİR-DÜZELTME kuralı geçerli. */
+  --eko-akademi:#006072;     --eko-akademi-rgb:0,96,114;
+  --eko-akademi-acik:#2E97AB;
+  --eko-akademi-yikama:#e6f1f4;  /* #006072 üstünde 6.26:1 · AA ✓ */
+  --eko-akademi-cizgi:#cadfe5;
+  --eko-akademi-parlak:#5fcbd8;
+
+/* ── 🔴 v2 KALINTISI · KURUMSAL YARDIMCI RENKLER ─────────────────────
+   `fit-shell.css`te "kurumsal alternatif renkler (kılavuz)" başlığı
+   altında duruyordu. Bileşen kanonunda KULLANILMIYOR; bilgi olarak durur.
+
+   ⚠ v3'te ADLARI ARTIK YANLIŞ: `--kurumsal-yesil` DadaFit'in eski
+     rengiydi, `--kurumsal-mor` DadaGourmet'in eski rengiydi. İkisi de
+     logo sayfasında değişti. Değerleri SİLMEDİM ve GÜNCELLEMEDİM —
+     kaynağın v2'deki hâlini bildiriyorlar ve tüketicileri yok. Yeni
+     doğru değerler yukarıdaki ekosistem rampasında. */
+  --kurumsal-yesil:#009d4f;      /* v2 DadaFit · ARTIK MARKA DEĞİL */
+  --kurumsal-yesil-koyu:#2c9963;
+  --kurumsal-mor:#b14fc5;        /* v2 DadaGourmet · logo artık #742982 diyor */
+  --kurumsal-nane:#6cca98;       /* // DOĞRULA: tanımlı ama 0 kullanım */
+  /* --kurumsal-petrol KALDIRILDI: ad yanlıştı. #006072 bir "kurumsal
+     alternatif renk" değil, bir MARKA rengiydi → yukarı taşındı.
+     Envanter: kanon/petrol-envanter.md */
+  --saglik-yesil:#3BB77E;        /* YALNIZ sağlık bloğu — SEMANTİK yeşil,
+                                    marka rengi değil, v3'te değişmedi. */
+
+/* ── BANT PERDELERİ (§34) — v2'de render edilmiş DOM'dan ölçülmüştü ───
+   Beş katmanın üçü perde, biri görsel (kanonda boş), biri düz zemin.
+   Alfalar markanın kendi koyu tabanının (#211E16 ailesi) tonlarıdır ve
+   NÖTR oldukları için v3'te değişmedi. Değişen tek şey AKSAN perdesi:
+   `rgba(0,157,79,.20)` → `rgba(0,147,208,.20)` — yani doğrudan
+   ölçülmüş mavi tabanın kendisi, çeviri değil. */
+  --marka-bant-perde-aksan:radial-gradient(820px 360px at 84% 14%,
+      rgba(0,147,208,.20), transparent 62%);
+  --marka-bant-perde-ana:linear-gradient(90deg,
+      rgba(33,30,22,.94) 0%, rgba(29,26,20,.82) 46%, rgba(27,25,19,.74) 100%);
+  --marka-bant-perde-dip:linear-gradient(180deg,
+      rgba(33,30,22,0) 58%, rgba(24,22,16,.62) 100%);
+  --marka-bant-zemin:#1b1913;
+
+
+  /* ── §47/§49 YUVALARI ─────────────────────────────────────────────
+     `--marka-cizgi-2`     aksanın alfalı kenarı (kaynak `rgba(<marka>,.30)`)
+     `--marka-paket-rozet` ücretli kademe rozetinin gradyan zemini
+     İkisi de markanın KENDİ renginden türer — sabit hex yazılmadı, yani
+     v3'te DOKUNULMADI: `--marka` değişince ikisi de kendiliğinden döndü.
+     Aşağıdaki bütün `color-mix` yuvaları için aynı şey geçerli. */
+  --marka-cizgi-2:color-mix(in srgb, var(--marka) 30%, transparent);
+  --marka-paket-rozet:linear-gradient(180deg,var(--marka),var(--marka-murekkep));
+
+  --marka-cizgi-3:color-mix(in srgb, var(--marka) 25%, transparent);
+
+  --marka-halka:color-mix(in srgb, var(--marka) 12%, transparent);
+
+  /* §55 kademe kartı — aksanın üç alfa adımı (kart kenarı · bayrak gölgesi ·
+     tablo vurgulu sütunu). Markanın kendi renginden türer. */
+  --marka-cizgi-4:color-mix(in srgb, var(--marka) 45%, transparent);
+  --marka-golge-aksan:color-mix(in srgb, var(--marka) 32%, transparent);
+  --marka-yikama-5:color-mix(in srgb, var(--marka) 5%, transparent);
+
+  /* 🔴 v3'TE KAPANAN KUSUR — 2026-09-02, marka katmanı turunda ölçüldü.
+     `tokenlar.css:318` şunu okuyor:
+         --aksan-cizgi-5:var(--marka-cizgi-5);   (§45 açık durum hapı kenarı)
+     Yuva DIET.CSS'TE TANIMLIYDI (satır 182) ama FIT.CSS'TE HİÇ YOKTU ve
+     fallback'i de yoktu → FIT ekranlarında bildirim SESSİZCE GEÇERSİZDİ
+     ve `.hap-acik` kenarlığı çiziliyor sanılıp çizilmiyordu.
+     Kusur v2'den beri duruyordu; ölçüme görünmemişti çünkü ölçüm ÇİFT
+     karşılaştırır ve olmayan bir kenarın çifti de yoktur (KOPYALAMA-KURALI
+     "yokluk bir fark değildir" maddesinin bir örneği daha).
+     ⚠ DEĞER UYDURULMADI: %24, diet.css'in şerhinde kayıtlı ve kaynağı
+       FIT'İN KENDİ DOSYASI — `fit-shell.css:4970` `.hs-pill.on` kenarı.
+       Yani değer zaten FIT'ten ölçülmüştü, yalnız FIT'e yazılmamıştı.
+       %25'lik `--marka-cizgi-3`e YUVARLANMADI (KOPYALAMA §2). */
+  --marka-cizgi-5:color-mix(in srgb, var(--marka) 24%, transparent);
+
+  /* §59 bildirim akışı — okunmamış satırın iki zemin adımı.
+     v2'de FIT'te #F2FAF5 / #E9F5EE ölçülmüştü; markanın kendi renginden
+     türediği için v3'te kendiliğinden maviye döndü. */
+  --marka-bildirim-yeni:color-mix(in srgb, var(--marka) 7%, #fff);
+  --marka-bildirim-yeni-2:color-mix(in srgb, var(--marka) 12%, #fff);
+  --marka-halka-2:color-mix(in srgb, var(--marka) 16%, transparent);
+
+  /* §63d · ROZET VE KADEME DURUM VARYANTLARI — v2 ölçütleri:
+       --marka-halka-3        rgba(0,157,79,.14)  `.badge-card.yeni` halkası
+       --marka-golge-aksan-3  rgba(0,157,79,.16)  `.rank-step.current` gölgesi
+       --marka-nisan-dolu     radial-gradient(circle at 35% 30%,
+                                #5fd89a, #009d4f 65%, #006a35)
+     İlk ikisi ORANDAN türetildi (sabit yazılmadı). Üçüncüsü v2'nin üç
+     yeşil adımını markanın kendi üç adımına bağlar: parlak → marka →
+     mürekkep. Gastro/gourmet'e geçişte tek satır değişmez. */
+  --marka-halka-3:color-mix(in srgb, var(--marka) 14%, transparent);
+  --marka-golge-aksan-3:color-mix(in srgb, var(--marka) 16%, transparent);
+  --marka-nisan-dolu:radial-gradient(circle at 35% 30%,
+                       var(--marka-parlak-2), var(--marka) 65%, var(--marka-murekkep));
+
+  /* §60 arama hero'su — v2'de render edilmiş DOM'dan ölçüldü (slot-1).
+     Koyu perdelerin üçü de YEŞİLE BOYALIYDI; v3'te OKLCh ton çevirisi
+     uygulandı (L ve C korundu, ton 236.8°).
+       rgba(18,30,22) → rgba(16,28,36)
+       rgba(27,42,32) → rgba(25,40,50)
+       rgba(20,26,20) → rgba(18,25,30)
+     Parıltılar zaten `--marka`dan türüyordu, dokunulmadı. */
+  --marka-arama-perde:linear-gradient(180deg, rgba(16,28,36,.92) 0%,
+      rgba(25,40,50,.80) 52%, rgba(18,25,30,.88) 100%);
+  --marka-arama-parilti:radial-gradient(1100px 460px at 16% -10%,
+      color-mix(in srgb, var(--marka) 30%, transparent), transparent 60%);
+  --marka-arama-parilti-2:radial-gradient(circle,
+      color-mix(in srgb, var(--marka-parlak-3, var(--marka)) 22%, transparent), transparent 70%);
+
+  /* §61 giriş akışı — hero iki perde + pano kendi perdesi.
+     Aksan tarafı markanın kendi renginden türer (v2 slot-1 ölçümü:
+     parıltı rgba(<marka>,.34) · avantaj dairesi rgba(<marka>,.92)).
+     Koyu perdeler yeşile boyalıydı, aynı ton çevirisi uygulandı:
+       rgba(14,44,28) → rgba(10,40,57)
+       rgba(20,34,25) → rgba(18,32,41)
+       rgba(13,22,16) → rgba(12,21,27)
+     rgba(33,30,22) NÖTR, değişmedi. */
+  --marka-giris-perde:linear-gradient(90deg,
+      rgba(10,40,57,.94), rgba(33,30,22,.74));
+  --marka-giris-parilti:radial-gradient(900px 380px at 88% 0%,
+      color-mix(in srgb, var(--marka) 34%, transparent), transparent 62%);
+  --marka-giris-pano-perde:linear-gradient(180deg, rgba(10,40,57,.32) 0%,
+      rgba(18,32,41,.58) 55%, rgba(12,21,27,.88) 100%);
+  --marka-koyu-aksan:var(--marka-parlak-2, var(--marka-parlak));
+  --marka-koyu-aksan-2:var(--marka-parlak);
+  --marka-koyu-aksan-zemin:color-mix(in srgb, var(--marka) 92%, transparent);
+
+  --marka-golge-aksan-2:color-mix(in srgb, var(--marka) 28%, transparent);
+
+  /* ── §75 ADMIN · İKİ ALFA ADIMI — 2026-09-04 ────────────────────────
+     `docs/admin-envanter.md §4.1`in **A2 grubu** ("tabanı mevcut token,
+     alfa adımı kanonda yok") bu iki adımı bekliyordu. Taban `--marka`,
+     ölçülen değerler kaynağın kendi bildirimi:
+
+       rgba(<marka>,.08)   `.adm-bulk`   toplu işlem çubuğunun zemini
+       rgba(<marka>,.10)   `.cb-kind`    içerik türü rozeti
+
+     🔴 YUVARLANMADI. `--marka-yikama` (%9.3, BEYAZLA karışık) ikisinin
+        de arasında duruyor ve beyaz zeminde gözle ayırt edilmez — ama
+        toplu işlem çubuğu `--zemin` (#f9f9f9) ÜSTÜNDE yaşıyor ve orada
+        saydam ile opak karışım aynı şeyi çizmiyor. KOPYALAMA-KURALI §2
+        ("4px merdivenine yuvarlama") aynı hatanın renkteki karşılığıdır.
+
+     ⚠ GASTRO/GOURMET/CAMPUS DE BU İKİSİNİ YAZMALI. Yazmazsa tüketen
+       kural sessizce düşer — `--marka-cizgi-5`in v3'e kadar süren
+       kusuru tam olarak buydu (yukarı bak). Bu yüzden `tokenlar.css`
+       tarafında ikisi de FALLBACK ile okunuyor: yuva boşsa
+       `--aksan-yikama`ya düşer, hiçliğe değil. */
+  --marka-yikama-8:color-mix(in srgb, var(--marka) 8%, transparent);
+  --marka-yikama-10:color-mix(in srgb, var(--marka) 10%, transparent);
+
+}
+
+/* =====================================================================
+   ESKİ AD KÖPRÜSÜ — tanımsız tokenların çözümü
+   ---------------------------------------------------------------------
+   Bu yedi değişken sayfalarda okunuyordu ama HİÇBİR YERDE tanımlı değildi
+   ve fallback'leri de yoktu → o bildirimler sessizce geçersizdi.
+   Beyar kararı (2026-09-01): değer uydurma, ölü de bırakma — kaynaktaki
+   KULLANIM BAĞLAMINA bakıp en yakın tanımlı tokenla eşleştir.
+
+   ⚠ v3'te BU BLOK DEĞİŞMEDİ ve değişmesi de gerekmedi: hepsi YUVAYA
+     bağlı, sabit hex taşımıyor. Marka maviye dönünce hepsi kendiliğinden
+     döndü. Köprünün marka-bağımsız yazılmış olması v3'te ilk kez sınandı
+     ve geçti.
+   ===================================================================== */
+:root{
+
+  /* // TÜRETİLDİ: --marka-koyu
+     profil-v1.html · 24 kullanım. Kanıt üç yönlü:
+       1) `--c-green` KAYNAKTA TANIMLI ve değeri v2'de #009d4f = `--marka`.
+          Yani `--c-green-deep`, `--marka`nın koyu adımıdır.
+       2) Kullanım deseni birebir `--fit-deep`in işi:
+          `.pf-book:hover{background:var(--c-green-deep)}`
+          `.pf-follow:hover{background:var(--c-green-deep)}`
+          `.apt-confirm.btn-primary:hover{background:var(--c-green-deep)}`
+          → birincil düğme hover zemini.
+       3) Açık zeminde metin rolü:
+          `.pf-verify{color:var(--c-green-deep);background:var(--c-green-tint)}`
+          → yıkama üstünde okunur koyu ton. `--marka` (3.45:1) bu işi
+          yapamaz, `--marka-koyu` (5.44:1) yapar.
+     ⚠ ADI v2'nin kalıntısı ("green") ama YUVAYA bağlı olduğu için v3'te
+       maviyi taşıyor. Ad temizliği ayrı tur işi. */
+  --c-green-deep:var(--marka-koyu);
+
+  /* // TÜRETİLDİ: --marka-yikama
+     profil-v1.html · 13 kullanım. Her seferinde `--c-green-deep` METNİN
+     ALTINDAKİ ZEMİN olarak geçiyor — `--marka-yikama`nın tanımlı rolüyle
+     ("ikon çipi, açık band zemini") birebir aynı:
+       `.pfs.green i{background:var(--c-green-tint);color:var(--c-green-deep)}`
+       `.ap-item i{background:var(--c-green-tint);color:var(--c-green-deep)}`
+       `.rev-badge{color:var(--c-green-deep);background:var(--c-green-tint)}`
+       `.chip.active{border-color:var(--c-green);background:var(--c-green-tint)}` */
+  --c-green-tint:var(--marka-yikama);
+
+  /* // TÜRETİLDİ: --marka-cizgi
+     profil-v1.html · 2 kullanım, İKİSİ DE kenarlık:
+       `.pf-atband{border:1px solid var(--c-green-soft)}`
+       `.rev-reply{background:var(--c-green-tint);border-color:var(--c-green-soft)}`
+     `--marka-cizgi`nin tanımlı rolü "aksan-nötr hairline". Aynı iş. */
+  --c-green-soft:var(--marka-cizgi);
+
+  /* // TÜRETİLDİ: --marka-yikama
+     hesabim-v1.html içinde YALNIZ YORUMDA geçiyor; canlı kullanımı yok.
+     Kaynak notu şunu yazıyor: "`.pe-ico` `var(--green-tint)` okuyor ve
+     Fit'te o değişken YOK (ölçüldü); eşlemesi marka kararıdır ve verilmedi."
+     Eşleme artık verilebilir: `.pe-ico` BOŞ DURUM ikon çipidir ve kabuğun
+     kendi boş durumu aynı işi tanımlı tokenla yapıyor —
+       fit-shell.css: `.lib-empty .ico{background:var(--fit-tint);
+                                       color:var(--fit-deep)}`
+     Yani rolün kanonik karşılığı zaten kabukta duruyor. */
+  --green-tint:var(--marka-yikama);
+
+  /* 🔴 v3 · KABUK AKSANI KÖPRÜSÜ — 2026-09-02
+     ---------------------------------------------------------------
+     `deneme/fit-*.html` kabuğunu KANONDAN alıyor ama o kabuk kendi
+     stil bloğunu da gömülü taşıyor ve blok DİYET'İN kabuk CSS'i.
+     İçinde markanın aksanı `--tomato` ailesiyle adlandırılmış:
+         --tomato:#3BB77E   "DadaDiet kabuk aksanı"
+     Ölçüldü (ilk FIT ekranı, 1440): header avatarı `rgb(59,183,126)`
+     yani #3BB77E çıktı — marka mavi olmasına rağmen kabuk yeşildi.
+
+     Katman sırası köprüyü mümkün kılıyor:
+         kabuk CSS (676683) → MARKA KATMANI (836670) → bileşen (858588)
+     Marka katmanı sonra geldiği için bu bildirimler kabuğunkini yener.
+
+     ⚠ DEĞER ÜRETİLMEDİ: hepsi kanonun kendi aksan rampasına bağlandı.
+       Diyet ekranlarında bu köprü YOK ve olmamalı — orada `--tomato`
+       zaten DadaDiet'in kendi rengi.
+     ⚠ Bu bir GEÇİCİ köprüdür. Kalıcı çözüm kabuğun süs katmanının
+       kanona girmesi (§27'nin "sıradaki dilim" şerhi · §67). O dilim
+       yazıldığında bu blok düşer. */
+  --tomato:var(--aksan);
+  --tomato-dark:var(--aksan-koyu);
+  --tomato-deep:var(--aksan-koyu-2);
+  --tomato-tint:var(--aksan-yikama);
+  --green:var(--aksan);
+  --green-deep:var(--aksan-koyu);
+  /* `--c-green` KAYNAKTA FIT'in kendi yeşiliydi (#009d4f). v3'te marka
+     mavi; ad "green" kalıyor ama değer markanın kendisi (ad temizliği
+     ayrı tur işi — 24 tüketicisi var, bkz. `--c-green-deep` şerhi). */
+  --c-green:var(--aksan);
+  /* Ekosistem rayı: kabuk bunları kendi adlarıyla okuyor, kanon
+     ölçülmüş logo değerlerine bağlar (§6a). */
+  --c-fit:var(--eko-fit);
+  --c-gastro:var(--eko-gastro);
+  --c-purple:var(--eko-gourmet);
+  --c-petrol:var(--eko-akademi);
+
+  /* ✅ ÇÖZÜLDÜ — §5.1 · A1 (Beyar kararı, 2026-09-01)
+     profil-v1.html · 4 kullanım. Rol NET: `--c-petrol`in (#006072) açık
+     yıkaması. "İşletme" rolündeki profilde markanın yerini petrol alıyor:
+       `body[data-roles~="isletme"] .pf-verify{
+          color:var(--c-petrol);background:var(--c-petrol-tint)}`
+       `.pf-panel{color:var(--c-petrol);background:var(--c-petrol-tint);
+                  border-color:var(--c-petrol)}`
+     Envanter (kanon/petrol-envanter.md) değeri kaynakta ÖLÇÜLÜ buldu:
+     #e6f1f4, kontrastı kaynağın kendi yorumunda yazılı.
+     ⚠ v3 · bu üçlü YUKARIDAKİ "AKADEMİ ADI İKİ ROL" açık kalemine
+       bağlıdır: `--eko-akademi` campus'e taşınırsa işletme profili de
+       laciverde döner. Karar gelene kadar v2 değerinde. */
+  --c-petrol-tint:var(--eko-akademi-yikama);
+  --c-petrol-soft:var(--eko-akademi-cizgi);
+
+  /* ✅ ÇÖZÜLDÜ — §5.1 · A1 · "hover adımı ÜRETİLMEZ"
+     profil-v1.html · 4 kullanım. Rol: petrolün hover adımı.
+       `.pf-follow:hover{background:var(--c-petrol-deep)}`
+       `.pf-venue:hover{background:var(--c-petrol-deep)}`
+       `#islMsgSend.btn-primary:hover{background:var(--c-petrol-deep)}`
+     A1'in kararı: koyu adım UYDURULMAZ, yuva petrolün kendisine düşer.
+     Gerekçe envanterde ölçülü: #006072 beyazla zaten 7.20:1 — mavinin
+     `--marka-koyu`sundan (5.44:1) koyu, yani AA için koyulaştırmaya
+     ihtiyaç yok. `-deep`in tek işi hover AYRIMI yaratmaktı; onun yerine
+     hover'da yalnız `translateY(-2px)` kalkışı kalır.
+     ⚠ ÖNCESİ: bu bildirimler TANIMSIZDI ve fallback'siz, yani işletme
+       profilinde hover'da düğmenin zemini KAYBOLUYORDU (envanter →
+       "Bugün ne oluyor" tablosu, 6 bildirim). Kusur bu satırla kapandı. */
+  --c-petrol-deep:var(--eko-akademi);
+}
+
+/* =====================================================================
+   v3 · EKOSİSTEM RAYI HAP RENKLERİ — 2026-09-02
+   ---------------------------------------------------------------------
+   Kabuğun kendi CSS'i her marka hapının zeminini/kenarını HAM `rgba()`
+   ile yazıyor ve değişkene bağlamıyor:
+       .bs-fit{--bs-bg:rgba(0,157,79,.22); --bs-bd:rgba(0,157,79,.5)}
+   Yani "eski ad köprüsü" (`--c-green` → `--aksan`) bu ikisini YAKALAMAZ.
+   Ölçüldü: marka maviye geçtikten sonra bile rayın aktif hapı
+   `rgba(0,157,79,.22)` — yeşil kaldı.
+
+   🔴 DEĞER UYDURULMADI: alfalar kaynağın kendi ölçüleri (.18/.20/.22 ve
+   .46/.5), RENK ise §6a'da logodan ÖLÇÜLEN `--eko-*` ailesi.
+   `color-mix` kullanıldı çünkü kanon zaten alfalı türevleri böyle
+   üretiyor (§47/§49 yuvaları) ve ham rgba yazmak marka değişince yine
+   kırılırdı.
+
+   ⚠ KATMAN SÖZLEŞMESİ ŞERHİ: marka katmanı normalde YALNIZ `:root`
+     yuvası doldurur, seçici kuralı yazmaz. Buradaki altı kural bir
+     istisnadır ve gerekçesi şudur: bunlar bileşen kuralı değil MARKA
+     VERİSİDİR — her biri bir markanın kimlik rengi. Kalıcı yeri kabuğun
+     süs katmanı kanona girdiğinde orasıdır (§27'nin "sıradaki dilim"
+     şerhi). O zaman bu blok düşer.
+
+   ⚠ `--bs-ic` (koyu zeminde ikon) BİLEREK ÇEVRİLMEDİ: kaynağın parlak
+     adımları (#ff7d5e · #4ecb91 · #3fd089 · #c97ad6) v2'den geliyor ve
+     yeni logo rampasında karşılıkları ÖLÇÜLMEDİ. Uydurmak yerine
+     bırakıldı — açık kalem.
+   ===================================================================== */
+.bs-gastro { --bs-bg:color-mix(in srgb, var(--eko-gastro)  18%, transparent);
+             --bs-bd:color-mix(in srgb, var(--eko-gastro)  46%, transparent); }
+.bs-diet   { --bs-bg:color-mix(in srgb, var(--eko-diet)    20%, transparent);
+             --bs-bd:color-mix(in srgb, var(--eko-diet)    50%, transparent); }
+.bs-fit    { --bs-bg:color-mix(in srgb, var(--eko-fit)     22%, transparent);
+             --bs-bd:color-mix(in srgb, var(--eko-fit)     50%, transparent); }
+.bs-gourmet{ --bs-bg:color-mix(in srgb, var(--eko-gourmet) 22%, transparent);
+             --bs-bd:color-mix(in srgb, var(--eko-gourmet) 50%, transparent); }
+.bs-campus,
+.bs-akademi{ --bs-bg:color-mix(in srgb, var(--eko-campus)  22%, transparent);
+             --bs-bd:color-mix(in srgb, var(--eko-campus)  50%, transparent); }
+.bs-store  { --bs-bg:color-mix(in srgb, var(--eko-store)   22%, transparent);
+             --bs-bd:color-mix(in srgb, var(--eko-store)   50%, transparent); }
+
+/* 🔴🔴 KAPSAM KUSURU — KAPANDI 2026-09-04. HATA AİLESİ `.bs-store`UN
+   İÇİNDE HAPİSTİ.
+   ---------------------------------------------------------------------
+   Yukarıdaki `.bs-store` kuralının kapanış süslü parantezi EKSİKTİ; üç
+   hata yuvası `:root`a değil, o seçicinin içine yazılıyordu. Yani
+   `--marka-hata` YALNIZ `.bs-store` sınıfı taşıyan bir elemanın
+   altındayken çözülüyordu — sayfanın geri kalanında BOŞ.
+
+   ── NASIL BULUNDU ────────────────────────────────────────────────────
+   revenge-56 (Gastro kanon turu) gastro.css'i fit.css'ten türetirken
+   ölçtü ve bildirdi; burada BAĞIMSIZ OLARAK doğrulandı — alt-ajan raporu
+   kanıt değildir, kendi ölçümüm koştu:
+       node scripts/olcum/lead-yuva-kapsam.mjs fit
+       token                 :root    dışarıda   içeride(.bs-store)
+       --marka-hata          (BOŞ)    (BOŞ)      #8c1d18   🔴
+       --marka-hata-yikama   (BOŞ)    (BOŞ)      #fdecea   🔴
+       --marka-hata-cizgi    (BOŞ)    (BOŞ)      #efc2bd   🔴
+
+   ── NEDEN BUGÜNE KADAR GÖRÜNMEDİ ─────────────────────────────────────
+   `tokenlar.css:936-938` üçünü de FALLBACK'le okuyor
+   (`--hata: var(--marka-hata, #8c1d18)`) ve fallback değerleri
+   yuvalarınkiyle BİREBİR aynı. Yani ekran doğru çiziliyordu ve hiçbir
+   ölçüm kırmızı vermiyordu — ama yuva ÖLÜYDÜ: bir marka hata rengini
+   değiştirmek istese yazardı, hiçbir şey olmazdı.
+   Bu, `--marka-cizgi-5`in v3'e kadar süren kusurunun kardeşi
+   (yukarı bak) ve aynı dersin üçüncü örneği: **yokluk bir fark değildir,
+   ölçüm çiftleri karşılaştırır ve olmayanın çifti de yoktur.** Burada
+   fallback "çift" rolünü oynayıp kusuru bir kat daha sakladı.
+
+   ⚠ FALLBACK KALDIRILMADI. Doğru kapsam artık yazılı, ama fallback
+     gastro/gourmet/campus yuvayı doldurmayı unutursa hâlâ ağ görevi
+     görür. İki savunma birbirini iptal etmez.
+
+   A3 · hata ailesi — kaynağın ölçülmüş değerleri. Hata rengi MARKA-NÖTR:
+   markaya göre dönmez, uyarı gibi evrensel okunur.
+   ⚠ AÇIK KALEM · BEYAR'A: DadaGastro'da bu önerme SINANDI ve zorlanıyor.
+     revenge-56'nın ölçümü: `--marka-hata` #8c1d18 = rgb(140,29,24) ile
+     Gastro'nun `--marka-koyu-2` #84250E = rgb(132,37,14) arasında kanal
+     farkı 8/8/10 — yani Gastro panelinde "hata" ile "birincil düğme
+     hover"ı neredeyse aynı renk. Çakışma kanonun getirdiği bir şey
+     DEĞİL, Gastro sitesinde zaten var (sitenin kendi `--danger`ı
+     `--tomato-dark` ile birebir aynı hex). Kayıt:
+     `docs/admin-kanon-kararlari.md` K-R2. Düzeltilmedi — karar Beyar'ın. */
+:root{
+  --marka-hata: #8c1d18;
+  --marka-hata-yikama: #fdecea;
+  --marka-hata-cizgi: #efc2bd;
+}
+
+/* ---------------------------------------------------------------------
+   `--lh-body` yedinci kalemdi ve marka rengi değil, satır yüksekliği —
+   çözümü marka-nötr olduğu için tokenlar.css §5'te duruyor
+   (--lh-body: var(--satir-govde)).
+
+   `--acc` / `--acc-rgb` tanımsız GÖRÜNÜR ama hata değildir: sol marka
+   rayında fit-shell.js her kaleme satır içi `style` ile basar.
+   --------------------------------------------------------------------- */
