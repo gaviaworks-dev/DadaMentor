@@ -10812,8 +10812,22 @@ body:has(#antAlt-pane-ant-mesaj:not([hidden])) .msj-ortu{ display:none; }
    (üç adın çoğunluğu), kalanlar kip olarak yazılır. */
 .satir-eylem{ display:flex; align-items:center; justify-content:flex-end; gap:2px; }
 
+/* 🔴 K-İ3 · ÖZGÜLLÜK YARIŞI KAZANILMAZ, BİTİRİLİR — Beyar, 2026-09-04.
+   Ölçülen kusur: `.ikon-dugme{display:inline-grid}` (0,1,0) ile kabuğun
+   `.hamburger{display:none}` (0,1,0) EŞİT özgüllükte; kanon sonra
+   yüklendiği için kanon kazanıyordu ve kabukta sınıfla gizlenen HER ikon
+   düğmesi geri geliyordu. Ölçüldü (CDP `CSS.getMatchedStylesForNode`,
+   1440px, Gastro): hamburger 6/6 hata ekranında sızıyor, zil çıkışlı
+   ekranda sızıyor — toplam 7; FIT'te ikisi de gizli, çünkü FIT'in gömülü
+   kanon anlık görüntüsü bu kuraldan ÖNCEsine ait. Masaüstünde görünen
+   hamburger tıklanıyor ama çekmece açılmıyor: hiçbir şey yapmayan düğme.
+   `:where()` özgüllüğü SIFIRA indirir; kabuğun gizleme kuralı yeniden
+   kazanır, kuralın kendisi (varsayılan görünürlük) yerinde kalır.
+   Yalnız `display` ayrıldı — kalan bildirimler kip/biçim, çakışmıyor. */
+:where(.ikon-dugme){ display:inline-grid; }
+
 .ikon-dugme{
-  display:inline-grid; place-items:center;
+  place-items:center;
   width:44px; height:44px; flex:none; padding:0;
   border:0; border-radius:var(--yuvarlak-sm); background:none;
   color:var(--metin-ikincil); font-size:var(--yazi-13);
@@ -11518,3 +11532,20 @@ a.kisi-hucre:hover .kisi-ad{ color:var(--aksan-koyu); }
   .duzenleyici-yuzey{ min-height:280px; }
   .acilir-yuzey{ max-height:60vh; }
 }
+
+/* 🔴 K-G3 · SAYDAM HEADER → BEYAZ KELİME MARKASI — Beyar izni, 2026-09-04.
+   §27b sözleşmeyi PROZADA yazıyor ama CSS karşılığı YOKTU; `at-top`
+   durumunu hedefleyen tek bir kural bile bulunmuyordu. Sonuç ölçüldü:
+   dört markanın da saydam header'ında logo MARKA RENGİNDE basılıyor,
+   oysa sözleşme beyaz diyor.
+     SAYDAM header (koyu hero üstünde) → kelime markası BEYAZ
+     SOLID header (kaydırınca)         → MARKA RENGİ  (taban kural)
+     İSTİSNA — kimlik ekranı (giriş/kayıt): saydamda BİLE marka rengi
+   ⚠ İstisnanın kancası GÖVDEDE DEĞİL sayfanın statik niteliğinde:
+     §27b'nin şerhi gövdeye nitelik koymanın işe yaramadığını ölçmüş
+     (sayfa betiği `<body>` niteliklerini baştan yazıyor). Burada
+     kullanılan `data-*-page` niteliği statik markup'ta duruyor. */
+.header.at-top .fit-word-mark,
+.kabuk-basi.tepede .fit-word-mark{ color:var(--kagit); }
+body[data-gastro-page="giris"] .header.at-top .fit-word-mark,
+body[data-fit-page="giris"]    .header.at-top .fit-word-mark{ color:var(--marka); }
