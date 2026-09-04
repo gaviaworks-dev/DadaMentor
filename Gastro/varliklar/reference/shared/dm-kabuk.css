@@ -725,6 +725,22 @@ body[data-roles~="sef"] .acct-menu>a[data-rol="sef"]{ display:flex; }
   .fb-rail,.kenar-serit{ display:none; }
 }
 
+/* 6a) ÇEKMECE KELİME LOGOSU — kanon yüzeyinde YÜKSEKLİĞİ 0'DI
+   ÖLÇÜLDÜ (@390, çekmece açık):
+     maket  .drawer-brand .gastro-word-mark  113x23 · rgb(220,61,23)  ✅
+     kanon  aynı eleman                        0x0  · rgb(33,30,22)   🔴
+     FIT    .drawer-brand .fit-word-mark      94x24 · marka rengi     ✅
+   D10 çekmeceye Gastro kelime logosunu İKİ KULVARA da basıyor, ama onu
+   ÖLÇEKLEYEN kural yalnız maketin paketinde: ".drawer-brand
+   .gastro-word-mark{height:22.9px}". Kanon sayfaları o paketi
+   yüklemiyor → SVG doğal yüksekliği 0'a düşüyor ve logo GÖRÜNMÜYOR.
+   Beyar canlıda gördü (kanon sayfasının çekmecesi başlıksız açılıyordu).
+   Değer maketin KENDİ kuralından birebir (kaynağın şerhi: "çekmece:
+   kaynak kelimeyi küçültüyordu, aynı oran 19/0,829"); renk de maketin
+   ölçülen hâli (marka). Yeni ölçü uydurulmadı. */
+.drawer-brand{ color:var(--marka); }
+.drawer-brand .gastro-word-mark{ height:22.9px; }
+
 /* 6b) ÇEKMECE AVATARI — baş harf diski
    ÖLÇÜLDÜ (@390, çekmece açık): kullanıcı bloğundaki "S" ZEMİNSİZ ve
    biçimsiz ham metin olarak duruyordu. Kabuğun ".da-ava" kuralı FIT'in
@@ -740,89 +756,12 @@ body[data-roles~="sef"] .acct-menu>a[data-rol="sef"]{ display:flex; }
   font-size:var(--yazi-16,16px); font-weight:800; line-height:1;
 }
 
-/* 7) MOBİL ALT ÇUBUK — TEK KALIP, İKİ KULVAR
-   Beyar 2026-09-04: "Mobil alt çubuk iki yolda farklı … Tek kalıp: FIT
-   donörün alt çubuğu (kanon .alt-cubuk), aynı 5 kalem/etiket/ikon/aktif
-   durum, iki yolda bayt-özdeş."
-
-   MARKUP zaten bayt-özdeş (D11). AYRIŞAN ŞEY CSS'ti: maket sayfaları
-   kanonu yüklemiyor, kanon sayfaları maketin paketini yüklemiyor —
-   aynı düğüm iki ayrı sözlükle boyanıyordu. ÖLÇÜLDÜ @390:
-
-     kalem            maket (portal)        kanon (bilesenler §67)
-     kap              358x60 · sol/sağ 16   390x64 · sol/sağ 0
-     zemin            #ffffff8c + blur      rgba(255,255,255,.55)+blur
-     etiket           9.5px / 700 GÖRÜNÜR   1x1 · clip:rect(0 0 0 0) GİZLİ
-     aktif            --tomato + %15 zemin  var(--fit) + %15 zemin
-
-   🔴 ETİKET GİZLEME DONÖRÜN KENDİ KARARIYDI ve Beyar onu KUSUR SAYDI.
-      FIT'in kabuğu ".bn-item>span:last-child{position:absolute;width:1px;
-      height:1px;clip:rect(0 0 0 0)}" yazıyor — ekran okuyucuya açık,
-      göze kapalı bir çubuk. Aynı kural FIT'in kendi sayfalarında da
-      ölçüldü (/Fit/fit-rozetlerim @390: etiket kutusu 1x1). Beyar
-      "etiketsiz" hâli açıkça kusur olarak saydı ve "aynı 5 kalem/ETİKET/
-      ikon" dedi; kanon §67.3 de etiketi bir SÖZLEŞME olarak yazıyor
-      ("rol aynıysa etiket de aynı olmalı") — gizli bir etiket sözleşme
-      olamaz. Etiket açılıyor; DONÖR KUSURU olarak raporda duruyor.
-
-   Değerlerin kaynağı — hiçbiri uydurulmadı:
-     kap geometrisi   kanon .alt-cubuk (§67) + FIT donörünün ölçülen hâli
-     etiket biçimi    maketin KENDİ kuralı (portal-*.css .bn-item>span)
-                      — bu markanın tek GÖRÜNÜR etiket bildirimi
-     aktif durum      iki kulvar zaten AYNI şeyi söylüyordu
-                      (marka rengi + %15 alfalı marka zemini)
-     FAB              maketin .bn-fab'ı (52x52) — kanon §67 de orta
-                      kalemde FAB şart koşuyor (--alt-cubuk-fab-poz:3) */
-/* 🔴 MEDYA KAPISI ŞART — kanon §67'nin kendi kuralı ve kendi ölçülmüş
-   kusuru: "Bu üç kural bir tur önce KAPSAMSIZ yazılmıştı ve 1440'ta da
-   display:flex veriyordu … çubuk masaüstünde SAYFANIN TEPESİNE çizildi."
-   Aynı hata bu turda TEKRARLANDI (Beyar 1440'ta gördü): tek kalıp
-   kapsamsız yazılınca çubuk masaüstünde de basıldı.
-   Ölçüt kaynağın kendi bildirimi (fit-shell.css):
-       .bottom-nav{display:none}                  <- taban
-       @media (max-width:640px){.bottom-nav{display:flex}}
-   Yani çubuk YALNIZ <=640'ta vardır. */
-.bottom-nav.alt-cubuk{ display:none; }
-@media (max-width:640px){
-  .bottom-nav.alt-cubuk{
-    position:fixed; left:0; right:0;
-    bottom:calc(var(--alt-cubuk-dip,14px) + env(safe-area-inset-bottom,0px));
-    height:var(--alt-cubuk-h,64px); z-index:var(--kat-alt-bar,90);
-    display:flex; align-items:stretch; justify-content:space-around;
-    gap:4px; padding:6px 8px;
-    border:0; border-radius:var(--yuvarlak-lg,16px);
-    background:rgba(255,255,255,.55);
-    -webkit-backdrop-filter:blur(30px) saturate(1.9);
-    backdrop-filter:blur(30px) saturate(1.9);
-    box-shadow:0 10px 30px rgba(33,30,22,.16), 0 2px 8px rgba(33,30,22,.07),
-               inset 0 1px 0 rgba(255,255,255,.6);
-  }
-  .bottom-nav.alt-cubuk .bn-item{
-    flex:1 1 0; width:auto; height:auto; min-height:var(--alt-cubuk-h,64px);
-    display:flex; flex-direction:column; align-items:center; justify-content:center;
-    gap:3px; border-radius:var(--yuvarlak-md,12px);
-    font-family:inherit; text-decoration:none;
-    color:var(--slate-2,#56514a);
-  }
-  .bottom-nav.alt-cubuk .bn-item > i{ font-size:19px; }
-  /* Etiket GÖRÜNÜR — donörün gizleme kuralı burada geri alınıyor. */
-  .bottom-nav.alt-cubuk .bn-item > span:last-child{
-    position:static; clip:auto; clip-path:none;
-    width:auto; height:auto; max-width:100%; padding:0; border:0;
-    font-size:9.5px; font-weight:700; line-height:1.15; letter-spacing:.01em;
-    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
-  }
-  .bottom-nav.alt-cubuk .bn-item.active{
-    color:var(--marka);
-    background:color-mix(in srgb, var(--marka) 15%, transparent);
-  }
-  .bottom-nav.alt-cubuk .bn-item.bn-center .bn-fab{
-    display:inline-flex; align-items:center; justify-content:center;
-    width:52px; height:52px; border-radius:var(--yuvarlak-lg,16px);
-    background:var(--marka); color:#fff;
-    box-shadow:var(--golge-yuzen,0 8px 20px rgba(33,30,22,.16));
-  }
-  .bottom-nav.alt-cubuk .bn-item.bn-center .bn-fab i{ font-size:20px; color:#fff; }
-  .bottom-nav.alt-cubuk .bn-item.bn-center.active{ background:transparent; }
-  .bottom-nav.alt-cubuk .bn-item:active{ transform:scale(.94); }
-}
+/* 7) MOBİL ALT ÇUBUK — ARTIK KABUKTA DEĞİL, KANON BİLEŞENİNDE
+   🔴 KARAR, Beyar 2026-09-04: alt çubuk TEK KAYNAK olacak; T3
+   "kanon/alt-cubuk.css" + "kanon/alt-cubuk.html" yazdı (49dd2e2).
+   Bu turda burada duran GEÇİCİ kalıp (kap geometrisi · etiket · aktif
+   durum · FAB) KALDIRILDI; hepsi artık o dosyada ve ":where()" ile
+   kapsandığı için özgüllüğü kabuğunkiyle EŞİT — sırayı yükleme
+   belirliyor, bu yüzden sayfaya EN SON bağlanıyor (D11).
+   Burada yalnız kabuk yuvalarının ".bottom-nav"/".alt-cubuk" köklerine
+   yazılması kaldı (yukarıdaki yuva bloğu) — "var(--marka)" çözülsün diye. */

@@ -1,0 +1,129 @@
+/* =====================================================================
+   KANON — ALT ÇUBUK BİLEŞENİ  ·  TEK KAYNAK
+   ---------------------------------------------------------------------
+   BEYAR KARARI, 2026-09-04: *"Alt çubuk TEK KAYNAK olacak … ayrı dosya
+   kanon/alt-cubuk.css (+ tek şablon), kapsamlı seçiciler (:where), tek
+   başına yüklenebilir."*
+
+   ── NEDEN AYRI DOSYA ─────────────────────────────────────────────────
+   Bileşen `bilesenler.css` içindeydi ve ORAYA HAPSOLMUŞTU. Ölçüldü
+   (2026-09-04): FIT'in 42 yüzey sayfası `kanon/bilesenler.css`i **hiç
+   yüklemiyor** — yalnız `tokenlar.css` ve `markalar/fit.css` bağlı:
+       <link href="../kanon/tokenlar.css">
+       <link href="../kanon/markalar/fit.css">
+       <link href="assets/css/fit-shell.css">     ← kabuk, kanondan SONRA
+   Yani kanonun çubuk kuralları o sayfalara inmiyordu; çubuk kabuğun
+   "icon-only" kipinde, etiketsiz kalıyordu (Beyar canlı ekranda gördü).
+   Aynı durum Gastro maket sayfaları için de geçerli.
+   Bu dosya tek başına yüklenebilir: `bilesenler.css`e bağımlı değil.
+
+   ── YÜKLEME SIRASI ÖNEMLİ · `:where()` BUNUN İÇİN ────────────────────
+   Seçiciler `:where(.alt-cubuk)` ile kapsanır, yani kap SIFIR özgüllük
+   taşır. Kalan özgüllük kabuğunkiyle EŞİT olur:
+       kabuk   `.bn-item`                       (0,1,0)
+       kanon   `:where(.alt-cubuk) .ac-kalem`   (0,1,0)
+       kabuk   `.bn-item>span:last-child`       (0,2,1)
+       kanon   `:where(.alt-cubuk) .ac-kalem>span:last-child`  (0,2,1)
+   Eşitlikte SONRA yüklenen kazanır. Bu yüzden bu dosya sayfada **en son**
+   bağlanır. Özgüllüğü yükseltmek yerine sıraya güvenmek bilinçli: kabuğun
+   kendi kuralını "yazılı olmayan bir savaşla" değil, bildirilen bir
+   sırayla devralıyoruz — ve marka kabukları kendi kuralını yine
+   yazabilir, yeter ki bu dosyadan sonra gelsin.
+   ⚠ Depo dersi: kabuk ile kanon aynı özgüllükte çarpıştığında kaybeden
+     taraf sessizce ölür ve ölçüme görünmez (bkz. `.basa-don` mobil
+     istifi, 2026-09-04). Bu dosya o çarpışmayı bir KARARA bağlıyor.
+
+   ── YAPI SÖZLEŞMESİ (§67) ────────────────────────────────────────────
+       kalem sayısı   5          FAB pozisyonu  3 (orta, yükseltilmiş)
+       yükseklik      64px       dip payı       14px
+       kalem kipi     <a> · ikon + ETİKET, dikey
+       boş yuva       YOK — kalem gizlenmez, rol her markada doludur
+   Markup TEK ŞABLONDAN gelir: `kanon/alt-cubuk.html`.
+   **Kalem seti marka verisidir, yapı kanondur.**
+
+   ── TOKENLAR ─────────────────────────────────────────────────────────
+   Her `var()` bir yedek taşır: dosya `tokenlar.css` olmadan da çizer.
+   Yedekler kanonun kendi ölçülmüş değerleridir, yeni değer DEĞİLDİR.
+   ===================================================================== */
+
+:root{
+  --alt-cubuk-h:64px;          /* ölçüldü · FIT 59 sayfa */
+  --alt-cubuk-dip:14px;        /* ölçüldü */
+  --alt-cubuk-kalem:5;         /* SÖZLEŞME · dört markada aynı */
+  --alt-cubuk-fab-poz:3;       /* SÖZLEŞME · orta kalem */
+}
+
+/* Taban: çubuk YALNIZ ≤640'ta vardır. Ölçüt kaynağın kendi bildirimi
+   (`fit-shell.css`: `.bottom-nav{display:none}` + `@media(max-width:640px)
+   {.bottom-nav{display:flex}}`). Masaüstünde çubuk YOKTUR. */
+:where(.alt-cubuk){ display:none; }
+
+@media (max-width:640px){
+
+:where(.alt-cubuk){
+  position:fixed; left:0; right:0;
+  bottom:var(--alt-cubuk-dip, 14px);
+  height:var(--alt-cubuk-h, 64px);
+  z-index:var(--kat-alt-bar, 90);
+  display:flex; align-items:stretch;
+}
+
+:where(.alt-cubuk) .ac-kalem{
+  flex:1; display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  gap:var(--bosluk-3, 3px);
+  font-family:inherit; text-decoration:none;
+  /* 🔴 DOKUNMA HEDEFİ — kalem yüksekliği çubuğun tamamı, 64px.
+     WCAG 2.5.5'in 44px tabanını kalemin KENDİSİ karşılar; ikon
+     ölçüsü değil kalem kutusu hedefi tanımlar. */
+  min-height:var(--alt-cubuk-h, 64px);
+}
+
+/* 🔴 ETİKET GÖRÜNÜR — §67.1'in "ikon + etiket, dikey" şartı.
+   ÖLÇÜLDÜ 2026-09-04: kabuk etiketi ekran-okuyucuya gizliyordu
+   (`fit-shell.css` · `.bn-item>span:last-child{position:absolute;
+   width:1px;height:1px;clip:rect(0 0 0 0)}`, şerhi "icon-only, IG tarzı").
+   ⚠ ÖLÇÜ UYDURULMADI — Gastro'nun canlı çubuğundan HTTP üstünden okundu
+     (deploy ağacı @390): etiket 9.5px / 700 / rgb(86,81,74) ·
+     satır 10.925px (≈1.15) · position:static · kalem 72×64 · gap 3px.
+     9.5px kanonda zaten kullanılan bir ölçü; 700 `--agirlik-kalin`,
+     renk `--murekkep-yumusak`. */
+:where(.alt-cubuk) .ac-kalem>span:last-child{
+  position:static; width:auto; height:auto; padding:0;
+  overflow:visible; clip:auto; clip-path:none; border:0;
+  white-space:nowrap;
+  font-size:9.5px; line-height:1.15;
+  font-weight:var(--agirlik-kalin, 700);
+  color:var(--murekkep-yumusak, #56514a);
+}
+
+/* Aktif kalem TEK stil: ikon ve etiket birlikte aksana geçer.
+   İki ad da tanınır — kabuk `active`, kanon `aktif` yazıyor. */
+:where(.alt-cubuk) .ac-kalem:is(.active,.aktif),
+:where(.alt-cubuk) .ac-kalem:is(.active,.aktif)>span:last-child{
+  color:var(--aksan-koyu, #0077a8);
+}
+
+/* Ortadaki FAB — pozisyon 3. Kabuk basar, sayfa basmaz. */
+:where(.alt-cubuk) .ac-kalem.ac-orta .ac-fab{
+  display:inline-flex; align-items:center; justify-content:center;
+  width:52px; height:52px;
+  border-radius:var(--yuvarlak-lg, 16px);
+  background:var(--aksan-koyu, #0077a8); color:var(--kagit, #fff);
+  box-shadow:var(--golge-yuzen, 0 8px 20px rgba(33,30,22,.16));
+}
+/* FAB kaleminde ikon karosu zaten aksan zeminli — etiket rengi tabanda
+   kalır, yoksa aktifken karo ile etiket aynı renge düşüp okunmaz olur. */
+:where(.alt-cubuk) .ac-kalem.ac-orta>span:last-child{
+  color:var(--murekkep-yumusak, #56514a);
+}
+
+/* 🔴 GÖVDE ALT DOLGUSU — alt çubuk sabit, içeriğin altına biner.
+   Gövde kendi dibine çubuğun yüksekliği + dip payı kadar nefes bırakır;
+   yoksa son eleman çubuğun ALTINDA kalır ve okunamaz.
+   Gövdenin kanonik adı `main.page-main` — kaynak adı korundu. */
+:where(main.page-main){
+  padding-bottom:calc(var(--alt-cubuk-h, 64px) + var(--alt-cubuk-dip, 14px) + var(--bosluk-16, 16px));
+}
+
+}   /* ← @media (max-width:640px) · alt çubuk mobil kapsamı biter */
