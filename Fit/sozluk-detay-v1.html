@@ -232,13 +232,20 @@
     document.getElementById('szSub').textContent   =
       slug ? '“' + slug + '” adresine karşılık gelen bir terim bulunamadı.'
            : 'Adreste bir terim belirtilmemiş.';
+    /* 🔴 ÜÇÜNCÜ KALEM — BEYAR KARARI 2026-09-05. Bu dal İKİ kalem basıyordu;
+       sözleşme "her zaman 3 kalem" diyor (§67 · kanon/hero.css). Üçüncü değer
+       UYDURULMADI: bu dalın kendi öneri listesinin uzunluğu. Tek yerden
+       okunsun diye sabit `ONERI_ADET`e alındı — `slice` de onu kullanıyor,
+       yani sayı ile liste bir daha ayrışamaz. */
+    var ONERI_ADET = 6;
     document.getElementById('szStats').innerHTML =
       '<div class="lib-stat"><b>' + S.TERIMLER.length + '</b><span>terim sözlükte</span></div>' +
-      '<div class="lib-stat"><b>' + S.KATEGORILER.length + '</b><span>kategori</span></div>';
+      '<div class="lib-stat"><b>' + S.KATEGORILER.length + '</b><span>kategori</span></div>' +
+      '<div class="lib-stat"><b>' + ONERI_ADET + '</b><span>örnek terim</span></div>';
     document.title = 'Terim bulunamadı — Spor Sözlüğü | DadaFit';
 
     /* rastgele değil: alfabenin başından birkaç terim, hep aynı öneri */
-    var oneri = S.TERIMLER.slice(0, 6).map(function(t){
+    var oneri = S.TERIMLER.slice(0, ONERI_ADET).map(function(t){
       return '<a href="' + S.terimAdres(t.slug) + '"><span class="g">' + t.harf + '</span>' +
              '<span><b>' + esc(t.terim) + '</b><small>' + esc(t.ingilizce) + '</small></span></a>';
     }).join('');

@@ -147,6 +147,18 @@
     <span class="eyebrow"><i class="fa-solid fa-scale-balanced"></i> Yasal Metinler</span>
     <h1 id="lgTitle">Kullanım Koşulları</h1>
     <p class="lib-sub" id="lgLead">Üyelik, gizlilik, veri izinleri ve sağlık sınırları — DadaFit'i kullanırken geçerli olan metinlerin tamamı burada.</p>
+    <!-- 🔴 MAKET İSTATİSTİK — BEYAR KARARI 2026-09-05. Değerler UYDURULMADI,
+         SAYFANIN KENDİ İÇERİĞİNDEN SAYILDI. Kaynak seçici: #lgMenu a 11 · bu metnin h3[id] sayısı · bu metnin a.inline sayısı
+         Tam liste ve yöntem: docs/fit-public-revize-2026-09-04.md · MADDE E5. -->
+    <div class="lib-stats">
+      <div class="lib-stat"><b>11</b><span>yasal metin</span></div>
+      <!-- ⚠ id `b`nin KENDİSİNDE. İlk yazımda değeri `<b><span id=…>` içine
+           koymuştum; kanonun `.lib-stat span{font-size:12.5px}` kuralı o iç
+           span'i de yakaladı ve sayı 29px yerine 12.5px basıldı (ekran
+           görüntüsüyle yakalandı). Sayı kabı `b`dir, içine kap konmaz. -->
+      <div class="lib-stat"><b id="lgStatMadde">7</b><span>madde</span></div>
+      <div class="lib-stat"><b id="lgStatBag">2</b><span>çapraz bağ</span></div>
+    </div>
     <span class="lg-update"><i class="fa-solid fa-rotate"></i> Son güncelleme: <b>&nbsp;12 Mayıs 2026</b></span>
   </div>
 </section>
@@ -500,6 +512,17 @@
     a.href='#'+h.id;a.textContent=h.textContent.replace(/^\d+\.\s*/,'');
     li.appendChild(a);toc.appendChild(li);
   });
+ /* 🔴 MAKET İSTATİSTİK — SAYFANIN KENDİ VERİSİ, HER METİNDE YENİDEN SAYILIR.
+    Banner'daki üç kalemin ikisi metne bağlı: madde sayısı ve metnin içindeki
+    çapraz bağ sayısı `?metin=` ile değişir. Sabit yazsaydım 11 metnin
+    10'unda YANLIŞ olurdu — bu yüzden ToC'yi kuran aynı geçişte doldurulur.
+    Üçüncü kalem (11 yasal metin) metne bağlı değil: `#lgMenu` kaleminin
+    sayısı, markup'ta sabit. */
+  var stMadde=document.getElementById('lgStatMadde');
+  if(stMadde) stMadde.textContent=body.querySelectorAll('h3[id]').length;
+  var stBag=document.getElementById('lgStatBag');
+  if(stBag) stBag.textContent=body.querySelectorAll('a.inline').length;
+
  // aktif menü
   document.querySelectorAll('#lgMenu a').forEach(function(a){
     if(a.getAttribute('data-slug')===slug){a.classList.add('active');a.setAttribute('aria-current','page');}

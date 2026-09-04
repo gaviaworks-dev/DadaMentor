@@ -658,11 +658,15 @@ function navHtml(){
   }).join('\n        ');
 }
 
-/* Mobil drawer — masaüstü menüsünün birebir karşılığı + Planım rayı.
- Planım masaüstünde header düğmesi olduğu için burada kendi katlanır bölümünü alır;
- aksi hâlde mobilde plan alt sayfalarına hiçbir kapı kalmazdı. */
+/* Mobil drawer — masaüstü menüsünün birebir karşılığı.
+ ⚠ ESKİ ŞERH GEÇERSİZ (2026-09-05): "Planım burada kendi katlanır bölümünü
+ alır; aksi hâlde mobilde plan alt sayfalarına hiçbir kapı kalmazdı."
+ O gerekçe hesap bloğu (`.d-acct-block`) çekmeceye girdiğinde ortadan
+ kalkmıştı; blok ise kalıp ÇİFT KAPI üretiyordu (ölçüm aşağıda). */
 function drawerNavHtml(){
-  var planActive = PLAN_ACTIVE;
+  /* `planActive` KALDIRILDI: tek tüketicisi çekmecedeki `.d-plan`
+     bloğuydu, o da 2026-09-05'te kalktı. `PLAN_ACTIVE` duruyor —
+     header düğmesi ve Planım kabuğu onu okumaya devam ediyor. */
   var out = NAV.map(function(it){
     var act = isActive(it) ? ' active' : '';
     if(!it.dd) return '<div class="d-item"><a class="d-link'+act+'" href="'+it.href+'"><i class="'+it.icon+'"></i> '+it.label+'</a></div>';
@@ -693,11 +697,31 @@ function drawerNavHtml(){
      header'dan indi, hiçbir kapı kalmadı". §U6 gereği yetenek düşmez.
      "Bugün" listeye girmez: üstteki "Planım" satırı zaten ona giden gerçek
      bağlantıdır ve aynı hedefe iki kapı açılmaz. */
-  var planAlt = PLAN_EXTRA.filter(function(p){ return p.key==='programim' || p.key==='ilerleme'; });
-  var planSubs = PLAN_TABS.concat(planAlt).map(function(p){
-    return '<a href="'+p.href+'"><i class="'+p.icon+'"></i> '+p.label+'</a>';
-  }).join('\n        ');
-  out.push('<div class="d-item d-plan d-has-sub'+(planActive?' open':'')+'">\n      <div class="d-row">\n        <a class="d-link'+(planActive?' active':'')+'" href="fit-programlarim.html"><i class="fa-solid fa-list-check"></i> Planım</a>\n        <button class="d-toggle" type="button" aria-expanded="'+(planActive?'true':'false')+'" aria-label="Planım alt menüsü"><i class="fa-solid fa-chevron-down"></i></button>\n      </div>\n      <div class="d-sub">\n        '+planSubs+'\n      </div>\n    </div>');
+  /* 🔴 "PLANIM" BÖLÜMÜ ÇEKMECEDEN KALKTI — BEYAR KARARI, 2026-09-05.
+     Beyar: *"çekmecede çift Egzersizlerim/Programlarım kaldır."*
+
+     ÖLÇÜLDÜ (@390, çekmece açık, oturum açık):
+       çekmecedeki bağ                                40
+       aynı hedefe giden ikinci/üçüncü/dördüncü kapı   9 hedef
+         fit-programlarim  4 kez · fit-egzersizlerim 3 · fit-challengelarim 3
+         fit-rozetlerim    3 · fit-paketlerim 2 · fit-odemelerim 2
+         fit-hesabim       2 · fit-cozum-merkezi 2 · egzersiz-kutuphane-v1 2
+     Kök: bu blok (`.d-plan`, 4 alt kalem) hesap bloğunun
+     (`.d-acct-block` · Modüllerim 7 + Gelişimim 1 + Hesabım 4) ALT KÜMESİ.
+     Dördü de orada zaten var; başlık satırı ("Planım") da hesap
+     bloğundaki "Programlarım" ile AYNI hedefe gidiyordu.
+
+     ERİŞİM KAYBI YOK — ölçüldü:
+       · iki blok da OTURUMA BAĞLI (`.d-item.d-plan{display:none}` +
+         `body.is-auth`; `.d-acct-block` için aynısı) → misafirde ikisi de
+         zaten görünmüyordu, yani "misafire kapı kalmaz" riski yok.
+       · oturum açıkken hesap bloğu 12 kalemin 12'sini taşıyor.
+       · alt çubuğun 4. kalemi ("Programlarım") ayrı bir kapı.
+     Bloğun varlık sebebi şerhte yazılıydı: *"aksi hâlde mobilde plan alt
+     sayfalarına hiçbir kapı kalmazdı"* — o gerekçe hesap bloğu çekmeceye
+     girdiğinde ortadan kalkmış, blok ise kalmıştı.
+     `PLAN_TABS` / `PLAN_EXTRA` SİLİNMEDİ: Planım kabuğunun sekme rayını
+     hâlâ onlar üretiyor. */
 
   /* R9 · K66 — AÇILIR MENÜNÜN MOBİL KARŞILIĞI.
      ÖLÇÜLEN KUSUR: §2 rayın içeriğini açılır menüye taşıdı, ama açılır menü
