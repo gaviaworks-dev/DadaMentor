@@ -22,7 +22,7 @@
     var b = document.body;
     if (!b) return;
     b.classList.add('is-auth');
-    if (!b.getAttribute('data-roles')) b.setAttribute('data-roles', 'kullanici');
+    if (!b.getAttribute('data-roles')) b.setAttribute('data-roles', 'kullanici sef');
 
     /* Avatar — canlının misafir render'ında BOŞ geliyor (fotoğraf yok).
        Sitenin kendi geleneği uygulanır: fotoğrafsız avatar baş harf
