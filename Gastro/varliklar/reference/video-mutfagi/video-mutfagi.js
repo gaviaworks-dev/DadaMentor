@@ -268,3 +268,48 @@ function trackWatch(videoId) {
     }, { passive: true });
   })();
 })();
+
+/* ═══ AJAN-D-P2-BAS ═══ */
+/* =====================================================================
+   AJAN D · PARTİ 2 — ÜRETİLİR (scripts/gastro-p2-ajan-d.mjs). Damgalar
+   arası her koşumda yenilenir; elle düzenleme kaybolur.
+   ===================================================================== */
+
+/* D1 · Seri bandının buğu katmanlarına kapak görselini ver.
+   Donörün yöntemi (FIT: '.cp-banner'dan okuyup '--cp-bg'ye yazar).
+   🔴 'getComputedStyle().backgroundImage' MUTLAK URL döndürür — özel
+   özellikteki göreli 'url()'in stil dosyasına göre çözülmesi tuzağı
+   burada oluşmaz (bu depoda ölçülmüş kusur sınıfı). */
+(function () {
+  var band = document.querySelector('[data-sd-band]');
+  if (!band || band.getAttribute('data-sd-bg') === '1') return;
+  var kapak = band.querySelector('.sd-cover');
+  if (!kapak) return;
+  var g = getComputedStyle(kapak).backgroundImage;
+  if (!g || g === 'none') return;
+  band.style.setProperty('--sd-bg', g);
+  band.setAttribute('data-sd-bg', '1');
+})();
+
+/* D2 · Reels: tekerlekle sonraki/önceki.
+   Dokunmatik kaydırma sayfanın kendi kodunda ZATEN var (touchstart/
+   touchend, 60px eşik); masaüstünde karşılığı yoktu. Kendi durumunu
+   TUTMUYOR — sayfanın kendi #dkPrev/#dkNext düğmelerini tıklıyor, yani
+   sınır/kilit mantığı tek yerde kalıyor. */
+(function () {
+  var d = document.getElementById('dakis');
+  if (!d || d.getAttribute('data-d-teker') === '1') return;
+  d.setAttribute('data-d-teker', '1');
+  var son = 0;
+  d.addEventListener('wheel', function (e) {
+    if (!d.classList.contains('open')) return;
+    e.preventDefault();
+    if (Math.abs(e.deltaY) < 12) return;
+    var t = Date.now();
+    if (t - son < 420) return;                 /* bir jestte tek geçiş */
+    son = t;
+    var b = document.getElementById(e.deltaY > 0 ? 'dkNext' : 'dkPrev');
+    if (b && !b.disabled) b.click();
+  }, { passive: false });
+})();
+/* ═══ AJAN-D-P2-SON ═══ */

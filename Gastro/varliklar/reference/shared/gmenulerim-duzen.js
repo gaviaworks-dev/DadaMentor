@@ -77,6 +77,20 @@
         cover: med ? (med.getAttribute('style') || '').replace(/^.*url\(['"]?/, '').replace(/['"]?\).*$/, '') : '',
         factsHtml: (k.querySelector('.mc-facts') || {}).innerHTML || '',
         kapEtiket: kapAd ? kapAd.childNodes[1] && kapAd.childNodes[1].textContent.trim() : '',
+        /* P2A-HAVUZ-SUZGEC · süzgeç alanları — kartın KENDİ verisi */
+        kategori: kapAd ? ((kapAd.childNodes[1] || {}).textContent || '').trim() : '',
+        dk: (function () {
+          var f = k.querySelector('.mc-facts .fa-clock');
+          var sp = f && f.parentNode.querySelector('.rf-txt');
+          var mm = sp && sp.textContent.match(/(\d+)/);
+          return mm ? Number(mm[1]) : null;
+        })(),
+        zorluk: (function () {
+          var f = k.querySelector('.mc-facts .fa-gauge-simple');
+          var sp = f && f.parentNode.querySelector('.rf-txt');
+          return sp ? sp.textContent.trim() : '';
+        })(),
+        beslenme: (k.getAttribute('data-beslenme') || '').split(/\s+/).filter(Boolean),
         ikon: kapAd && kapAd.querySelector('i') ? kapAd.querySelector('i').className : 'fa-solid fa-utensils',
       };
       sira.push(ix[slug]);
@@ -113,6 +127,7 @@
     var liste = h.hepsi.filter(function (t) {
       if (icerde[t.slug]) return false;                    /* menüde olan tekrar önerilmez */
       if (q && t.title.toLocaleLowerCase('tr').indexOf(q) < 0) return false;
+      if (!cipGecer(t)) return false;                       /* P2A-HAVUZ-SUZGEC */
       return true;
     });
     if (!liste.length) {
@@ -130,6 +145,7 @@
     durum.menu = menuEl; durum.kip = kip; durum.kart = kart || null;
     durum.kapEtiket = kapEtiket || ''; durum.kapIkon = kapIkon || 'fa-solid fa-utensils';
     durum.q = '';
+    durum.sec = { kategori: '', sure: '', zorluk: '', beslenme: '' };   /* P2A-HAVUZ-SUZGEC */
     if (rpSearch) rpSearch.value = '';
     var ad = menuEl.querySelector('.md-title-text');
     if (rpTitle) rpTitle.textContent = 'Tarif Havuzu';
@@ -140,6 +156,7 @@
     rpOverlay.classList.add('show');
     rpModal.classList.add('show');
     document.body.style.overflow = 'hidden';
+    cipleriCiz();                                           /* P2A-HAVUZ-SUZGEC */
     havuzCiz();
   }
   function havuzKapat() {
@@ -278,7 +295,7 @@
     d.setAttribute('data-panel', ad);
     d.innerHTML = '<div class="kart-bas"><h3><i class="fa-solid ' + ikon + '" aria-hidden="true"></i> ' +
       esc(baslik) + '</h3><button class="mnl-kapat" type="button" aria-label="Paneli kapat">' +
-      '<i class="fa-solid fa-xmark" aria-hidden="true"></i></button></div><div class="mnl-govde">' + govde + '</div>';
+      '<i class="fa-solid fa-xmark" aria-hidden="true"></i></button></div><div class="kart-govde mnl-govde">' + govde + '</div>';
     var set = menuEl.querySelector('.menu-set');
     menuEl.insertBefore(d, set);
     d.querySelector('.mnl-kapat').addEventListener('click', function () { d.remove(); });
@@ -409,6 +426,113 @@
         else if (eylem === 'sirala') siralamaAc(menuEl, b);
         else if (eylem === 'tarif-ekle') havuzAc(menuEl, 'ekle', null, '', '');
       });
+    });
+  }
+
+
+  /* ═══ P2A-HAVUZ-SUZGEC ════════════════════════════════════════════
+     Aramanın altındaki tercih süzgeci. Değerler HAVUZUN KENDİ
+     kartlarından çıkar; grup boşsa BASILMAZ. Sayaçlar o anki havuzdan
+     hesaplanır (kendi grubunun seçimi hariç tutulur — süzgeç mantığı).
+     ═══════════════════════════════════════════════════════════════ */
+  /* Kademeler UYDURULMADI — `tarifler.html` süzgecinden hasat edildi
+     (name="sure[]" / name="zorluk[]" / name="beslenme[]"). */
+  var SURE_KADEME = [{"ad":"15 dakikadan az","alt":0,"ust":15},{"ad":"15–30 dakika","alt":15,"ust":30},{"ad":"30–45 dakika","alt":30,"ust":45},{"ad":"45–60 dakika","alt":45,"ust":60},{"ad":"1–2 saat","alt":60,"ust":120},{"ad":"2 saatten uzun","alt":120,"ust":1000000000}];
+  var ZORLUK_SIRA = ["Çok Kolay","Kolay","Orta","Zor","Ustalık Gerektirir"];
+  var BESLENME_AD = {"vegan":"Vegan","vejetaryen":"Vejetaryen","glutensiz":"Glutensiz","protein-agirlikli":"Protein Ağırlıklı","az-yagli":"Az Yağlı","glutenli":"Glutenli","laktozsuz":"Laktozsuz","sut-icermez":"Süt İçermez","yumurta-icermez":"Yumurta İçermez","seker-ilavesiz":"Şeker İlavesiz","yuksek-lifli":"Yüksek Lifli","tam-tahilli":"Tam Tahıllı","acili":"Acılı","baharatli":"Baharatlı","diyabete-uygun":"Diyabete Uygun","kalp-dostu":"Kalp Dostu","dusuk-kalorili":"Düşük Kalorili","pesketaryen":"Pesketaryen","kuruyemis-icermez":"Kuruyemiş İçermez","dusuk-karbonhidratli":"Düşük Karbonhidratlı","ketojenik":"Ketojenik"};
+
+  function sureKademesi(dk) {
+    if (dk == null) return '';
+    for (var i = 0; i < SURE_KADEME.length; i++)
+      if (dk > SURE_KADEME[i].alt && dk <= SURE_KADEME[i].ust) return SURE_KADEME[i].ad;
+    return '';
+  }
+
+  /* Bir tarif, `haric` grubu dışındaki seçili çiplerden geçiyor mu */
+  function cipGecer(t, haric) {
+    var s = durum.sec || {};
+    if (s.kategori && haric !== 'kategori' && t.kategori !== s.kategori) return false;
+    if (s.sure && haric !== 'sure' && sureKademesi(t.dk) !== s.sure) return false;
+    if (s.zorluk && haric !== 'zorluk' && t.zorluk !== s.zorluk) return false;
+    if (s.beslenme && haric !== 'beslenme' && (t.beslenme || []).indexOf(s.beslenme) < 0) return false;
+    return true;
+  }
+
+  /* Popup'ta o an aday olan tarifler (menüde olan tekrar önerilmez) */
+  function adaylar() {
+    var h = tarifHavuzu();
+    var icerde = {};
+    if (durum.menu) durum.menu.querySelectorAll('article.menu-card[data-recipe-slug]').forEach(function (k) {
+      icerde[k.getAttribute('data-recipe-slug')] = 1;
+    });
+    return h.hepsi.filter(function (t) { return !icerde[t.slug]; });
+  }
+
+  function grupCiz(anahtar, baslik, degerler, sayac) {
+    if (!degerler.length) return '';                         /* veri yoksa grup BASILMAZ */
+    var s = durum.sec || {};
+    return '<div class="rp-cgrup" data-grup="' + anahtar + '">' +
+      '<span class="rp-cbas">' + esc(baslik) + '</span>' +
+      degerler.map(function (d) {
+        var n = sayac[d.deger] || 0;
+        var secili = s[anahtar] === d.deger;
+        return '<button type="button" class="rp-cip' + (n || secili ? '' : ' rp-cbos') + '" ' +
+          'data-grup="' + anahtar + '" data-deger="' + esc(d.deger) + '" ' +
+          'aria-pressed="' + (secili ? 'true' : 'false') + '">' +
+          esc(d.etiket) + '<span class="rp-csay">' + n + '</span></button>';
+      }).join('') + '</div>';
+  }
+
+  function cipleriCiz() {
+    var kap = document.getElementById('rpCips');
+    if (!kap) return;
+    var hepsi = adaylar();
+
+    function sayacUret(haric, cikar) {
+      var m = {};
+      hepsi.forEach(function (t) {
+        if (!cipGecer(t, haric)) return;
+        var d = cikar(t);
+        (Array.isArray(d) ? d : [d]).forEach(function (v) { if (v) m[v] = (m[v] || 0) + 1; });
+      });
+      return m;
+    }
+    function degerListesi(sayac, sira, etiketle) {
+      var anahtarlar = Object.keys(sayac);
+      if (sira) anahtarlar.sort(function (a, b) { return sira.indexOf(a) - sira.indexOf(b); });
+      else anahtarlar.sort(function (a, b) { return sayac[b] - sayac[a] || a.localeCompare(b, 'tr'); });
+      return anahtarlar.map(function (a) { return { deger: a, etiket: etiketle ? etiketle(a) : a }; });
+    }
+
+    var sKat = sayacUret('kategori', function (t) { return t.kategori; });
+    var sSur = sayacUret('sure',     function (t) { return sureKademesi(t.dk); });
+    var sZor = sayacUret('zorluk',   function (t) { return t.zorluk; });
+    var sBes = sayacUret('beslenme', function (t) { return t.beslenme || []; });
+
+    var sureSira = SURE_KADEME.map(function (k) { return k.ad; });
+    var html =
+      grupCiz('kategori', 'Kategori', degerListesi(sKat), sKat) +
+      grupCiz('sure',     'Süre',     degerListesi(sSur, sureSira), sSur) +
+      grupCiz('zorluk',   'Zorluk',   degerListesi(sZor, ZORLUK_SIRA), sZor) +
+      grupCiz('beslenme', 'Beslenme', degerListesi(sBes, null, function (a) { return BESLENME_AD[a] || a; }), sBes);
+
+    var s = durum.sec || {};
+    var acik = ['kategori', 'sure', 'zorluk', 'beslenme'].filter(function (g) { return s[g]; }).length;
+    if (html && acik) html += '<div class="rp-cgrup"><button type="button" class="rp-cip rp-ctemiz" id="rpCTemiz">' +
+      '<i class="fa-solid fa-xmark" aria-hidden="true"></i> Süzgeci temizle</button></div>';
+
+    kap.innerHTML = html;
+    kap.querySelectorAll('.rp-cip[data-grup]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var g = b.getAttribute('data-grup'), d = b.getAttribute('data-deger');
+        durum.sec[g] = (durum.sec[g] === d) ? '' : d;         /* ikinci tık kaldırır */
+        cipleriCiz(); havuzCiz();
+      });
+    });
+    var t = document.getElementById('rpCTemiz');
+    if (t) t.addEventListener('click', function () {
+      durum.sec = { kategori: '', sure: '', zorluk: '', beslenme: '' };
+      cipleriCiz(); havuzCiz();
     });
   }
 

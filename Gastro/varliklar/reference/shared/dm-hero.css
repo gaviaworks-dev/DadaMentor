@@ -139,3 +139,111 @@ body[data-fit-hero-kind="detay"]  [data-hero-band]{ min-height:616px; }
 @media (max-width: 640px){[data-hero-detay] .lst-stats{ gap: 10px; }}
 @media (max-width: 640px){[data-hero-detay] .lst-stats .st{ flex: 1 1 0%; }}
 @media (max-width: 640px){[data-hero-detay] .lst-stats .st b{ font-size: 20px; }}
+
+/* ==== AJAN-B · B1c · TARİF MEDYA HERO PERDESİ — BAŞ ==== */
+[data-revize="b1-medya"] .rd-stage-info::before{
+  content:""; position:absolute; z-index:-1; pointer-events:none;
+  /* üstte 44px'lik geçiş bölgesi; yatay ve alt taşma `.rd-stage`in
+     kendi `overflow:hidden`ı ile kırpılır */
+  top:-44px; left:-100vw; right:-100vw; bottom:-100vh;
+  background:linear-gradient(180deg,
+    rgba(15,13,9,0) 0,
+    rgba(15,13,9,.62) 44px,
+    rgba(15,13,9,.78) 120px);
+}
+/* ==== AJAN-B · B1c · TARİF MEDYA HERO PERDESİ — SON ==== */
+
+/* ==== AJAN-B · B2 · PÜF DETAY — BAŞ ==== */
+/* ① DETAY yüksekliği B1 sonrası yeniden türetildi: 616 → 504
+   (90 sayfanın 90'ı ölçüldü; en uzun içerik 504.0, taşma 0) */
+body[data-fit-hero-kind="detay"] [data-hero-band]{ min-height:504px; }
+
+/* ② + ③ panelin KENDİ dolgusu — `dm-kabuk.css`in `.wrap` kuralı
+   aynı özgüllükte ve sonra yüklendiği için siliniyordu.
+   Değerler markanın kendi satırları (puf-noktasi-detay.css:118 / :479). */
+.art-wrap .art-body{ padding-top:50px; padding-bottom:30px; }
+@media (max-width:640px){
+  .art-wrap .art-body{ padding-top:34px; padding-bottom:20px; }
+}
+
+/* ④ kart ızgara satırını doldursun — satır içi fark 16px → 0 */
+.pufl-grid > .puf-card{ height:100%; }
+
+/* ⑤ blog-liste örnek varyantı (B2b) — bileşen TEK KOLONA döner.
+   Tek kolon markanın KENDİ ≤1024 davranışı (puf-noktasi-detay.css:493),
+   burada masaüstünde de uygulanıyor: satırlar makale bölümleri.
+   Bloklar bağlantı DEĞİL (bölümün kendisi) — bileşenin bağlantı
+   duygusu (imleç + hover kalkışı) kapatılır, başka hiçbir değer
+   değişmez. */
+.art-intro > .pufl-grid.art-blog{ grid-template-columns:1fr; }
+.art-blog > .puf-card{ cursor:default; }
+.art-blog > .puf-card:hover{ transform:none; box-shadow:var(--sh-sm); }
+/* ==== AJAN-B · B2 · PÜF DETAY — SON ==== */
+
+/* ==== AJAN-B · B3 · LİSTE + YASAL BANNER — BAŞ ==== */
+/* ② bant sütun-flex; içerik grubu alta yaslanır */
+body[data-fit-hero-kind="liste"] .below-header,body[data-fit-hero-kind="yasal"] .below-header{ display:flex; flex-direction:column; }
+body[data-fit-hero-kind="liste"] .below-header > .wrap,body[data-fit-hero-kind="yasal"] .below-header > .wrap{
+  /* 🔴 `width:100%` ZORUNLU — B3'ün ② kolunun AÇTIĞI KUSUR, lead ölçtü.
+     Bandı sütun-flex yapmak `.wrap`ı flex ÇOCUĞU haline getiriyor;
+     `.wrap`ın kendi `margin-inline:auto`su ÇAPRAZ EKSENDE olduğu için
+     `align-items:stretch` DEVRE DIŞI kalıyor ve kutu `fit-content`e —
+     yani kırıntının min-content'ine — düşüyor. Taşınca auto marjlar da
+     0'a çözülüyor, o yüzden hesaplanmış değerde `margin` 0 görünüyor ve
+     kök gizleniyor.
+       ÖLÇÜLDÜ  olcu-birimleri.html @390
+         önce   .wrap 534px (viewport 390) → 144px taşma
+         sonra  .wrap 390px → taşma 0
+     Kusur EKRANDA GÖRÜNMÜYORDU: `html`/`body` `overflow-x:clip`
+     taşıyor, kayan çubuk çıkmıyor, içerik sessizce kesiliyor — ve
+     `scrollWidth` ile ölçen her kapı yapısal olarak kör.
+     `max-width:1240px` ve `margin-inline:auto` yerinde kalıyor:
+     geniş ekranda ortalama ve üst sınır aynen sürüyor. */
+  flex:1 1 auto; display:flex; flex-direction:column; min-width:0; width:100%;
+}
+/* kırıntıdan SONRAKİ ilk eleman boşluğu yutar → o ve ardındakiler alta */
+body[data-fit-hero-kind="liste"] .below-header > .wrap > [class*="crumb"]:first-child + *,
+body[data-fit-hero-kind="yasal"] .below-header > .wrap > [class*="crumb"]:first-child + *{ margin-top:auto; }
+/* kırıntısı olmayan bantlarda ilk eleman yutar (tb-top · vhub-hero) */
+body[data-fit-hero-kind="liste"] .below-header > .wrap > *:first-child:not([class*="crumb"]),
+body[data-fit-hero-kind="yasal"] .below-header > .wrap > *:first-child:not([class*="crumb"]){ margin-top:auto; }
+
+/* ① kırıntı: dikey dolgu 0 (ofset bandın padding-top'undan) + tek boyut */
+body[data-fit-hero-kind="liste"] .below-header > .wrap > [class*="crumb"],
+body[data-fit-hero-kind="yasal"] .below-header > .wrap > [class*="crumb"]{
+  padding-top:0; padding-bottom:0; font-size:13px;
+}
+
+/* ③ DETAY AİLESİ — 2. oturumda ÖLÇÜLDÜ, kural eksik kapsıyordu.
+   913 sayfa tarandı: kırıntı SATIRI hâlâ dört ayrı değerdeydi ve
+   sapmanın tamamı LİSTE/YASAL'ın DIŞINDA kalıyordu —
+     128px  79 sayfa  liste + yasal   (① zaten çözmüş)
+     130px 521 sayfa  tarif detay     (bant pt 112 + kırıntının 18px'i)
+     146px  74 sayfa  mutfaga-giris · ansiklopedi · sözlük
+                                      (bant pt 128 + kırıntının 18px'i)
+     136px  16 sayfa  püf detay       (bant pt 112 + `.wrap`ın 24px'i)
+   Yani ① doğru ilkeyi yazıyordu ama yalnız kendi kancasına iniyordu;
+   "sapma 0" yalnız SORULAN nüfusta doğruydu.
+   İLKE TEK: ofset YALNIZ bandın `padding-top`undan gelir; kırıntının
+   ve aradaki kapların kendi dikey dolgusu 0.
+   DEĞER 128px UYDURULMADI: `[data-hero-detay]`ın kendi satırı zaten
+   128px ("kanonun kendi referansı ve 84 sayfanın ortak ölçüsü",
+   dm-hero.css:55), donör FIT `egzersiz-kutuphane-v1` kırıntı satırı
+   128, ve liste/yasal 79 sayfa zaten orada. */
+body[data-fit-hero-kind="detay"] .rd-top,
+body[data-fit-hero-kind="detay"] .art-hero{ padding-top:128px; }
+body[data-fit-hero-kind="detay"] .art-hero > .wrap{ padding-top:0; }
+body[data-fit-hero-kind="detay"] .rd-top > .wrap > [class*="crumb"],
+body[data-fit-hero-kind="detay"] .art-hero > .wrap > [class*="crumb"],
+body[data-fit-hero-kind="detay"] .art-hero > .wrap > * > [class*="crumb"]{
+  padding-top:0; padding-bottom:0; font-size:13px;
+}
+/* ==== AJAN-B · B3 · LİSTE + YASAL BANNER — SON ==== */
+
+/* ==== AJAN-B · B1d · BEYAZ BANTTA HEADER OKUNURLUĞU — BAŞ ==== */
+body.pg-tarif-detay .header.at-top .gastro-word-mark,
+body.pg-tarif-detay .kabuk-basi.tepede .gastro-word-mark{ color:var(--tomato); }
+body.pg-tarif-detay .header.at-top .nav > .nav-item > a,
+body.pg-tarif-detay .header.at-top .nav a,
+body.pg-tarif-detay .kabuk-basi.tepede .ana-menu > * > a{ color:var(--murekkep); }
+/* ==== AJAN-B · B1d · BEYAZ BANTTA HEADER OKUNURLUĞU — SON ==== */

@@ -1,0 +1,626 @@
+/* =====================================================================
+   DADAGASTRO · İÇERİK EKLEME YÜZEYLERİ — AJAN C (parti 2)
+   ---------------------------------------------------------------------
+   Kapsam: puf-noktasi-ekle · tarif-ekle · g-video-serilerim
+   Yükleme sırası: kanon/tokenlar.css → markalar/gastro.css →
+                   kanon/bilesenler.css → dm-kabuk.css → BU DOSYA
+   🔴 BU DOSYADA HAM RENK YOK. Her değer kanon tokenından gelir; ölçek
+      `--bosluk-*`, yuvarlaklık `--yuvarlak-*`, punto `--yazi-*`.
+      (Kural: "kanon boşluk ölçeği" · brief md.8)
+   🔴 BURADA YENİ BİLEŞEN YAZILMADAN ÖNCE KANONA BAKILDI. Kanonda
+      KARŞILIĞI OLAN her şey kanondan kullanılıyor, burada YOK:
+        panel .......... .kart.panel          alan ........... .alan / .alan-girdi
+        yükleme ........ .birak-alani         adım şeridi .... .adim-serit
+        rozet .......... .durum-hapi          düğme .......... .dugme
+        çip ............ .cip                 not ............ .alt-not
+      Burada YALNIZ kanonda karşılığı OLMAYAN dört yüzey var:
+        1) iki kolonlu tezgâh + yapışkan ray   (.ek-izgara/.ek-ray)
+        2) içerik bloğu listesi                (.ek-bloklar)
+        3) yayın kartı — sayfanın imzası       (.ek-yayin)
+        4) görsel ızgarası                     (.ek-gorseller)
+   ===================================================================== */
+
+/* ── 1 · SAYFA TEPESİ ────────────────────────────────────────────────
+   🔴 SEÇİCİ ÖZGÜLLÜĞÜ ÖLÇÜLDÜ, TAHMİN EDİLMEDİ. Kanonda
+   `.zebra>.bolum{padding:var(--bolum-nefes-sik) 0}` (0,2,0) ve KISAYOL
+   yazıyor; `padding-block` KISAYOLU EZEMEZ. `.ek-tepe{padding-block:…}`
+   (0,1,0) sessizce kaybetti — ölçüldü: 32px/32px çıktı. Bu depoda
+   kayıtlı sınıf: "kaynağın kuralı zaten bildirilmiş". Çözüm ÖZGÜLLÜĞÜ
+   EŞİTLEMEK, `!important` değil. */
+.zebra>.ek-tepe{ padding:var(--bosluk-32) 0 var(--bolum-nefes-sik); }
+.zebra>.ek-govde{ padding:0 0 var(--bolum-nefes); }
+
+/* 🔴 KIRINTI KOYU ZEMİN BİLEŞENİDİR — kanon şerhi açıkça yazıyor
+   ("KOYU ZEMİN BİLEŞENİ — banner içinde yaşar", bilesenler.css §17) ve
+   rengi `--koyu-metin`. Ekleme sayfalarının tepesinde banner YOK; kural
+   ezilmezse kırıntı beyaz zeminde neredeyse görünmez kalıyordu (gözle
+   görüldü, 1440 ekran görüntüsü). Aydınlık zemin kipi: */
+.ek-tepe .kirinti{ color:var(--murekkep-yumusak); margin-bottom:var(--bosluk-18); }
+.ek-tepe .kirinti a{ color:var(--murekkep-yumusak); }
+.ek-tepe .kirinti a:hover{ color:var(--aksan-koyu); }
+.ek-tepe .kirinti>i{ color:var(--metin-pasif-5); }
+.ek-tepe .kirinti .crumb-home i{ color:var(--aksan); }
+.ek-tepe .kirinti .cur{ color:var(--murekkep); font-weight:var(--agirlik-kalin); }
+
+/* 🔴 `.sec-head` IZGARASI `h2` YERLEŞTİRİYOR, `h1` YERLEŞTİRMİYOR.
+   Ölçüldü: `.sec-head h2{grid-row:2;grid-column:1}` var, `h1` yok →
+   başlığım otomatik yerleşimle SAĞ KOLONA düştü (x=1061, ölçüldü).
+   Sayfanın tek `h1`i olmalı (belge anahatı), o yüzden başlığın adı
+   değil ızgaradaki yeri düzeltiliyor. */
+.ek-tepe .sec-head .ust-etiket{ grid-row:1; grid-column:1/-1; justify-self:start; margin-bottom:var(--bosluk-14); }
+.ek-tepe .sec-head h1{
+  grid-row:2; grid-column:1;
+  font-size:var(--yazi-34); font-weight:var(--agirlik-ekstra);
+  letter-spacing:var(--aralik-baslik); line-height:var(--satir-baslik);
+  color:var(--murekkep); margin:0;
+}
+.ek-tepe .sec-head .lead{ max-width:66ch; }
+
+/* ── 2 · TEZGÂH + RAY ────────────────────────────────────────────────
+   Sol: çalışma yüzeyi. Sağ: yapışkan ray — yayın kartı ve editör notu
+   sayfa boyunca görüş alanında kalır. Ray 320px; kanonun `--kap-genislik`
+   1240 içinde 1fr + 320 + 24 boşluk. */
+/* 🔴 `align-items:start` ÖLÇÜLDÜ VE KALDIRILDI (2026-09-05, 2. oturum):
+   ray kutusu içeriği kadar yüksek kalıyordu (≈1179px) ve içindeki
+   yapışkan kartın koşu yolu o kutuyla sınırlıydı — 1200px kaydırınca
+   kart yine görüş alanından çıkıyordu (tepe 129 → −876). Ray satır
+   yüksekliğine uzayınca yol tezgâhın tamamı olur. */
+.ek-izgara{
+  display:grid; grid-template-columns:minmax(0,1fr) 320px;
+  gap:var(--bosluk-24); align-items:stretch;
+}
+.ek-tezgah{ min-width:0; display:flex; flex-direction:column; gap:var(--bosluk-20); }
+/* 🔴 ÖLÇÜLDÜ 2026-09-05 (ikinci oturum): rayın KENDİSİ `sticky`ken kart
+   görüş alanında KALMIYORDU. Ray yayın kartı + ipucu + telif notuyla
+   1179px; görüş alanı 1000px. Sticky bir kutu kendinden UZUN olduğunda
+   `top` çapası tutmaz, kutu yukarı kayıp gider — 900px kaydırınca rayın
+   tepesi +352'den −179'a düştü. Çapa artık RAYIN İÇİNDEKİ yayın kartı:
+   ray akışta durur, kart ray kutusu içinde yapışır. */
+.ek-ray{
+  position:static;
+  display:flex; flex-direction:column; gap:var(--bosluk-16);
+}
+.ek-ray > .ek-yayin{
+  position:sticky; top:calc(var(--kabuk-h) + var(--bosluk-16));
+  z-index:1;
+}
+@media (max-width:1080px){
+  .ek-izgara{ grid-template-columns:minmax(0,1fr); }
+  .ek-ray > .ek-yayin{ position:static; }
+}
+
+/* ── 3 · YAYIN KARTI — SAYFANIN İMZASI ───────────────────────────────
+   Formun durumunu YANSITAN tek yüzey: görünürlük seçimi, blok sayısı,
+   gönderime hazırlık satırı. Sol kenar şeridi seçilen görünürlüğün
+   rengini alır; kullanıcı formun üst ucunda yazarken bile seçimini
+   çevresel görüşle görür. `--ek-durum` yuvası JS ile DEĞİL, sınıfla
+   değişir (`.ek-yayin.abone`) — satır içi style yasak. */
+.ek-yayin{
+  --ek-durum:var(--aksan);
+  --ek-durum-yikama:var(--aksan-yikama);
+  --ek-durum-metin:var(--aksan-koyu);
+  position:relative; overflow:hidden;
+  background:var(--kagit);
+  border:var(--cizgi-1) solid var(--cizgi);
+  border-radius:var(--yuvarlak-lg);
+  box-shadow:var(--golge-sm);
+}
+.ek-yayin::before{
+  content:""; position:absolute; inset-block:0; inset-inline-start:0;
+  width:var(--cizgi-3); background:var(--ek-durum);
+  transition:background var(--sure-yavas) var(--yumusama);
+}
+.ek-yayin.abone{
+  --ek-durum:var(--altin-cizgi);
+  --ek-durum-yikama:var(--altin-zemin);
+  --ek-durum-metin:var(--altin-metin);
+}
+.ek-yayin-bas{
+  display:flex; align-items:center; gap:var(--bosluk-10);
+  padding:var(--bosluk-16) var(--bosluk-18);
+  border-bottom:var(--cizgi-1) solid var(--cizgi);
+}
+.ek-yayin-bas h2{
+  font-size:var(--yazi-15); font-weight:var(--agirlik-ekstra);
+  letter-spacing:var(--aralik-sik); color:var(--murekkep); margin:0;
+}
+.ek-yayin-bas i{ color:var(--ek-durum-metin); font-size:var(--yazi-14); }
+.ek-yayin-govde{ padding:var(--bosluk-18); }
+
+/* görünürlük — kanon radyosu (`accent-color:var(--aksan)`) iki bölmeli
+   segment içinde. Radyo GİZLENMEZ: klavye ve ekran okuyucu ona bakar. */
+.ek-gorunurluk{ display:grid; gap:var(--bosluk-8); margin:0 0 var(--bosluk-16); border:0; padding:0; }
+.ek-gorunurluk legend{
+  font-size:var(--yazi-12); font-weight:var(--agirlik-kalin);
+  letter-spacing:var(--aralik-etiket-3); text-transform:uppercase;
+  color:var(--metin-ikincil); margin-bottom:var(--bosluk-4); padding:0;
+}
+.ek-secenek{
+  display:flex; align-items:flex-start; gap:var(--bosluk-11);
+  padding:var(--bosluk-12) var(--bosluk-13); cursor:pointer;
+  border:var(--cizgi-1) solid var(--cizgi);
+  border-radius:var(--yuvarlak-md); background:var(--zemin);
+  transition:border-color var(--sure) var(--yumusama),
+             background var(--sure) var(--yumusama);
+}
+.ek-secenek:hover{ border-color:var(--cizgi-vurgu-koyu); }
+.ek-secenek input{ width:18px; height:18px; margin-top:2px; flex:none; accent-color:var(--aksan); }
+.ek-secenek-metin{ min-width:0; }
+.ek-secenek-metin b{
+  display:block; font-size:var(--yazi-13-5); font-weight:var(--agirlik-kalin);
+  color:var(--murekkep); line-height:var(--satir-sik-2);
+}
+.ek-secenek-metin>span{
+  display:block; font-size:var(--yazi-12); color:var(--metin-ikincil);
+  line-height:var(--satir-orta); margin-top:var(--bosluk-3);
+}
+.ek-secenek:has(input:checked){ background:var(--ek-durum-yikama); border-color:var(--ek-durum); }
+.ek-secenek:has(input:checked) .ek-secenek-metin b{ color:var(--ek-durum-metin); }
+.ek-secenek:has(input:focus-visible){
+  outline:var(--odak-kalinlik) solid var(--odak-renk); outline-offset:var(--odak-ofset);
+}
+/* Abone seçeneğinin altın kimliği yalnız SEÇİLİYKEN gelir; seçili
+   değilken nötr durur ki iki seçenek eşit ağırlıkta okunsun. */
+.ek-yayin.abone .ek-secenek:has(input:checked) input{ accent-color:var(--altin-metin); }
+
+/* durum satırı — seçim değişince GÖRÜNÜR biçimde değişen işaret */
+.ek-yayin-durum{
+  display:flex; align-items:flex-start; gap:var(--bosluk-8);
+  padding:var(--bosluk-11) var(--bosluk-12);
+  border-radius:var(--yuvarlak-md);
+  background:var(--ek-durum-yikama);
+  color:var(--ek-durum-metin);
+  font-size:var(--yazi-12-5); font-weight:var(--agirlik-orta);
+  line-height:var(--satir-orta); margin-bottom:var(--bosluk-16);
+}
+.ek-yayin-durum i{ margin-top:2px; flex:none; font-size:var(--yazi-12); }
+
+.ek-yayin-sayac{
+  display:flex; flex-wrap:wrap; gap:var(--bosluk-6);
+  margin-bottom:var(--bosluk-16);
+}
+.ek-yayin-sayac span{
+  display:inline-flex; align-items:center; gap:var(--bosluk-6);
+  padding:var(--bosluk-5) var(--bosluk-10);
+  border-radius:var(--yuvarlak-hap);
+  background:var(--zemin-2); color:var(--murekkep-yumusak);
+  font-size:var(--yazi-11-5); font-weight:var(--agirlik-orta);
+}
+.ek-yayin-sayac span b{ color:var(--murekkep); font-weight:var(--agirlik-ekstra); }
+.ek-yayin-sayac span i{ font-size:var(--yazi-10-5); color:var(--metin-ikincil); }
+.ek-yayin-eylem{ display:grid; gap:var(--bosluk-8); }
+.ek-yayin-eylem .dugme{ width:100%; }
+.ek-yayin-not{
+  font-size:var(--yazi-11-5); color:var(--metin-ikincil);
+  line-height:var(--satir-orta); margin:var(--bosluk-12) 0 0;
+}
+
+/* ── 4 · EDİTÖR NOTU (ray kartı) ─────────────────────────────────── */
+.ek-ipucu{
+  background:var(--kagit); border:var(--cizgi-1) solid var(--cizgi);
+  border-radius:var(--yuvarlak-lg); padding:var(--bosluk-18);
+}
+.ek-ipucu h3{
+  display:flex; align-items:center; gap:var(--bosluk-8);
+  font-size:var(--yazi-14); font-weight:var(--agirlik-ekstra);
+  color:var(--murekkep); margin:0 0 var(--bosluk-4);
+}
+.ek-ipucu h3 i{ color:var(--aksan); }
+.ek-ipucu>small{ display:block; font-size:var(--yazi-11-5); color:var(--metin-ikincil); margin-bottom:var(--bosluk-14); }
+.ek-ipucu ul{ list-style:none; margin:0; padding:0; display:grid; gap:var(--bosluk-11); }
+.ek-ipucu li{
+  display:flex; align-items:flex-start; gap:var(--bosluk-9);
+  font-size:var(--yazi-12-5); color:var(--murekkep-yumusak);
+  line-height:var(--satir-orta);
+}
+.ek-ipucu li i{ color:var(--aksan-koyu); font-size:var(--yazi-11); margin-top:3px; flex:none; }
+.ek-ipucu li b{ color:var(--murekkep); font-weight:var(--agirlik-kalin); }
+
+/* ── 5 · GÖRSEL IZGARASI ───────────────────────────────────────────
+   🔴 SINIF ADI `kapak` DEĞİL `ek-kapakli`. ÖLÇÜLDÜ 2026-09-05:
+   ilk yazımda kapak işareti `.ek-gorsel.kapak` idi ve kanonun
+   `.kapak{height:280px}` + `.kapak::after{inset:0;background:perde}`
+   kuralları KENDİLİĞİNDEN uygulandı — küçük görsel kutusu 280px'e
+   şişti ve perde bütün kutuyu kaplayıp SİL/KAPAK düğmelerinin
+   tıklanmasını engelledi (Playwright: "<div class=ek-gorsel kapak>
+   intercepts pointer events"). Bu depoda kayıtlı sınıf: "kanon adı
+   davranış çağırır". Ad kendi ad alanıma alındı. */
+.ek-gorseller{
+  display:grid; grid-template-columns:repeat(auto-fill,minmax(132px,1fr));
+  gap:var(--bosluk-10); margin-top:var(--bosluk-12);
+}
+.ek-gorseller:empty{ display:none; }
+.ek-gorsel{
+  position:relative; aspect-ratio:4/3; border-radius:var(--yuvarlak-md);
+  overflow:hidden; border:var(--cizgi-1) solid var(--cizgi); background:var(--zemin-2);
+}
+.ek-gorsel img{ width:100%; height:100%; object-fit:cover; display:block; }
+.ek-gorsel-arac{
+  position:absolute; inset-block-start:var(--bosluk-6); inset-inline-end:var(--bosluk-6);
+  display:flex; gap:var(--bosluk-4);
+}
+.ek-gorsel-arac button{
+  width:30px; height:30px; border-radius:var(--yuvarlak-sm); cursor:pointer;
+  border:var(--cizgi-1) solid var(--cizgi-vurgu);
+  background:var(--cam-zemin); color:var(--murekkep-yumusak);
+  font-size:var(--yazi-11); display:grid; place-items:center;
+  transition:background var(--sure) var(--yumusama), color var(--sure) var(--yumusama);
+}
+.ek-gorsel-arac button:hover{ background:var(--aksan); color:var(--kagit); border-color:var(--aksan); }
+.ek-gorsel-arac button:focus-visible{ outline:var(--odak-kalinlik) solid var(--odak-renk); outline-offset:var(--odak-ofset); }
+.ek-gorsel.ek-kapakli{ border-color:var(--aksan); box-shadow:var(--golge-halka); }
+.ek-kapak-muhur{
+  position:absolute; inset-block-end:var(--bosluk-6); inset-inline-start:var(--bosluk-6);
+  display:none; align-items:center; gap:var(--bosluk-5);
+  padding:var(--bosluk-4) var(--bosluk-9); border-radius:var(--yuvarlak-hap);
+  background:var(--aksan); color:var(--kagit);
+  font-size:var(--yazi-10); font-weight:var(--agirlik-ekstra);
+  letter-spacing:var(--aralik-etiket-3); text-transform:uppercase;
+}
+.ek-gorsel.ek-kapakli .ek-kapak-muhur{ display:inline-flex; }
+
+/* ── 6 · İÇERİK BLOKLARI ─────────────────────────────────────────────
+   Numara BURADA anlamlıdır: bloklar yayınlanan sayfada bu sırayla
+   çizilir, yani sıra okuyucunun ihtiyacı olan bilgidir. Sıra değişince
+   numara da değişir (JS `numaralandir()`), yoksa numara yalan söyler. */
+.ek-bloklar{ display:grid; gap:var(--bosluk-12); }
+.ek-blok{
+  display:grid; grid-template-columns:auto minmax(0,1fr) auto;
+  gap:var(--bosluk-14); align-items:start;
+  padding:var(--bosluk-16);
+  border:var(--cizgi-1) solid var(--cizgi);
+  border-radius:var(--yuvarlak-md); background:var(--zemin);
+}
+.ek-blok-no{
+  width:26px; height:26px; border-radius:var(--yuvarlak-daire);
+  display:grid; place-items:center; flex:none;
+  background:var(--aksan-yikama); color:var(--aksan-koyu);
+  font-size:var(--yazi-12); font-weight:var(--agirlik-ekstra);
+}
+.ek-blok-govde{ min-width:0; display:grid; gap:var(--bosluk-9); }
+.ek-blok-tur{
+  display:inline-flex; align-items:center; gap:var(--bosluk-6);
+  font-size:var(--yazi-11); font-weight:var(--agirlik-kalin);
+  letter-spacing:var(--aralik-etiket-3); text-transform:uppercase;
+  color:var(--metin-ikincil);
+}
+.ek-blok-tur i{ color:var(--aksan-koyu); }
+.ek-blok-yan{ display:flex; flex-direction:column; gap:var(--bosluk-4); }
+.ek-blok-yan button{
+  width:30px; height:30px; border-radius:var(--yuvarlak-sm); cursor:pointer;
+  border:var(--cizgi-1) solid var(--cizgi); background:var(--kagit);
+  color:var(--metin-ikincil); font-size:var(--yazi-11);
+  display:grid; place-items:center;
+  transition:color var(--sure) var(--yumusama), border-color var(--sure) var(--yumusama);
+}
+.ek-blok-yan button:hover:not(:disabled){ color:var(--aksan); border-color:var(--aksan-cizgi); }
+.ek-blok-yan button:disabled{ opacity:.35; cursor:not-allowed; }
+.ek-blok-yan button:focus-visible{ outline:var(--odak-kalinlik) solid var(--odak-renk); outline-offset:var(--odak-ofset); }
+.ek-blok-yan .ek-sil:hover{ color:var(--tehlike); border-color:var(--tehlike-cizgi); }
+.ek-bos{
+  padding:var(--bosluk-24); text-align:center;
+  border:1.5px dashed var(--cizgi-vurgu); border-radius:var(--yuvarlak-md);
+  color:var(--metin-ikincil); font-size:var(--yazi-13); line-height:var(--satir-orta);
+}
+.ek-bos b{ display:block; color:var(--murekkep); font-weight:var(--agirlik-kalin); margin-bottom:var(--bosluk-4); }
+.ek-ekle-satiri{
+  display:flex; flex-wrap:wrap; gap:var(--bosluk-8);
+  margin-top:var(--bosluk-14); padding-top:var(--bosluk-14);
+  border-top:var(--cizgi-1) solid var(--cizgi);
+}
+
+/* ── 7 · VİDEO GİRDİSİ — iki kip ─────────────────────────────────── */
+.ek-kip{ display:flex; gap:var(--bosluk-6); margin-bottom:var(--bosluk-12); }
+.ek-kip .cip[aria-pressed="true"]{
+  background:var(--aksan-yikama); border-color:var(--aksan-cizgi); color:var(--aksan-koyu);
+  font-weight:var(--agirlik-kalin);
+}
+.ek-kip-pano[hidden]{ display:none; }
+.ek-video-onizleme{
+  display:none; align-items:center; gap:var(--bosluk-10);
+  margin-top:var(--bosluk-10); padding:var(--bosluk-11) var(--bosluk-12);
+  border-radius:var(--yuvarlak-md); background:var(--aksan-yikama);
+  color:var(--aksan-koyu); font-size:var(--yazi-12-5); font-weight:var(--agirlik-orta);
+}
+.ek-video-onizleme.goster{ display:flex; }
+.ek-video-onizleme i{ flex:none; }
+
+/* ── 8 · MALZEME SATIRLARI (tarif-ekle) ──────────────────────────── */
+.ek-malzemeler{ display:grid; gap:var(--bosluk-8); }
+.ek-mgrup{
+  display:flex; align-items:center; gap:var(--bosluk-10);
+  padding:var(--bosluk-10) var(--bosluk-12); margin-top:var(--bosluk-6);
+  border-radius:var(--yuvarlak-md); background:var(--aksan-yikama);
+}
+.ek-mgrup .alan-girdi{ background-color:var(--kagit); font-weight:var(--agirlik-kalin); }
+.ek-msatir{
+  display:grid;
+  grid-template-columns:96px 150px minmax(0,1fr) minmax(0,1fr) auto;
+  gap:var(--bosluk-8); align-items:center;
+  padding:var(--bosluk-9) var(--bosluk-10);
+  border:var(--cizgi-1) solid var(--cizgi);
+  border-radius:var(--yuvarlak-md); background:var(--zemin);
+}
+/* 🔴 `background` KISAYOLU DEĞİL `background-color`. ÖLÇÜLDÜ 2026-09-05,
+   ekran görüntüsünde görüldü: kısayol `.alan-secim`in ok glifini
+   (`background-image:var(--secim-ok)`) SİLDİ ve birim seçicisi düz bir
+   kutuya döndü — seçilebilir olduğu görsel olarak kayboldu. Kanonun
+   kendi şerhi aynı aileyi `.bolum`/`.kap` için yazıyor: "kısayol,
+   kardeş sınıfı eziyordu". */
+.ek-msatir .alan-girdi,.ek-msatir .alan-secim{ min-height:40px; padding:var(--bosluk-9) var(--bosluk-12); background-color:var(--kagit); }
+.ek-msatir .alan-secim{ padding-right:var(--bosluk-34); }
+/* "Alternatifi" — tarif detayındaki `.ing-pop` bunun karşılığıdır.
+   Yer tutucu bunu AÇIKÇA söyler, çünkü alan boş kalırsa detay
+   sayfasında ikame düğmesi HİÇ BASILMAZ (veri uydurulmaz kuralı). */
+.ek-msatir .ek-alt{ border-style:dashed; }
+.ek-msatir-arac{ display:flex; gap:var(--bosluk-4); }
+.ek-msatir-arac button{
+  width:32px; height:32px; border-radius:var(--yuvarlak-sm); cursor:pointer;
+  border:var(--cizgi-1) solid var(--cizgi); background:var(--kagit);
+  color:var(--metin-ikincil); font-size:var(--yazi-11); display:grid; place-items:center;
+}
+.ek-msatir-arac button:hover:not(:disabled){ color:var(--aksan); border-color:var(--aksan-cizgi); }
+.ek-msatir-arac button:disabled{ opacity:.35; cursor:not-allowed; }
+.ek-msatir-arac .ek-sil:hover{ color:var(--tehlike); border-color:var(--tehlike-cizgi); }
+@media (max-width:860px){
+  .ek-msatir{ grid-template-columns:1fr 1fr; }
+  .ek-msatir .ek-ad,.ek-msatir .ek-alt{ grid-column:1 / -1; }
+  .ek-msatir-arac{ grid-column:1 / -1; justify-content:flex-end; }
+}
+
+/* ── 9 · ADIM ŞERİDİ (tarif-ekle) — kanon `.adim-serit` KİPİ ──────────
+   Taban kanonda; burada YALNIZ tıklanabilir kipin ek durumları var.
+   Kanon `li>span` numarayı çiziyor, `.acik`/`.bitti` durumları hazır. */
+.adim-serit.ek-adimlar{ flex-wrap:wrap; gap:var(--bosluk-10); margin-bottom:var(--bosluk-24); }
+.adim-serit.ek-adimlar li{
+  display:flex; align-items:center; gap:var(--bosluk-9);
+  padding:var(--bosluk-9) var(--bosluk-14);
+  border:var(--cizgi-1) solid var(--cizgi);
+  border-radius:var(--yuvarlak-hap); background:var(--kagit);
+  font-size:var(--yazi-13); font-weight:var(--agirlik-orta);
+  color:var(--murekkep-yumusak); cursor:pointer;
+  transition:border-color var(--sure) var(--yumusama), color var(--sure) var(--yumusama);
+}
+.adim-serit.ek-adimlar li:hover{ border-color:var(--cizgi-vurgu-koyu); }
+.adim-serit.ek-adimlar li.acik{ border-color:var(--aksan); color:var(--aksan-koyu); font-weight:var(--agirlik-kalin); }
+.adim-serit.ek-adimlar li:focus-visible{ outline:var(--odak-kalinlik) solid var(--odak-renk); outline-offset:var(--odak-ofset); }
+.ek-adim[hidden]{ display:none; }
+.ek-adim-ayak{
+  display:flex; align-items:center; gap:var(--bosluk-10); flex-wrap:wrap;
+  margin-top:var(--bosluk-18);
+}
+.ek-adim-ayak .ek-ileri{ margin-inline-start:auto; }
+
+/* ── 9b · `hidden` YETKİSİ ────────────────────────────────────────────
+   🔴 ÖLÇÜLDÜ 2026-09-05 (etkileşim kapısı kırmızı verdi): gönderim
+   özeti `hidden` niteliği kaldırılınca da GÖRÜNMEDİ. Sebep kanonun
+   kendi şerhinde yazılı olan aile: `[hidden]`in UA kuralı (0,0,1) sınıf
+   kuralını (0,1,0) YENEMEZ — `.alan-hata{display:none}` açıkken
+   `hidden` kaldırmak hiçbir şey değiştirmiyor, `.alan-yardim
+   {display:flex}` açıkken `hidden` vermek de gizlemiyor.
+   Kendi kaplarımda `hidden` yetkili olsun diye ÖZGÜLLÜK EŞİTLENİYOR
+   (0,2,0) — `!important` değil. */
+[data-ek-ozet][hidden],[data-ek-sonuc][hidden],[data-ek-taslak-not][hidden]{ display:none; }
+[data-ek-ozet]:not([hidden]){ display:flex; }
+[data-ek-sonuc]:not([hidden]){ display:flex; }
+
+/* ── 10 · GÖNDERİLDİ PANOSU ──────────────────────────────────────── */
+.ek-gonderildi[hidden]{ display:none; }
+.ek-gonderildi{
+  display:grid; gap:var(--bosluk-12); justify-items:start;
+  padding:var(--bosluk-24);
+  border:var(--cizgi-1) solid var(--aksan-cizgi);
+  border-radius:var(--yuvarlak-lg); background:var(--aksan-yikama);
+  margin-bottom:var(--bosluk-20);
+}
+.ek-gonderildi h2{
+  font-size:var(--yazi-20); font-weight:var(--agirlik-ekstra);
+  color:var(--murekkep); margin:0;
+}
+.ek-gonderildi p{ margin:0; font-size:var(--yazi-13-5); color:var(--murekkep-yumusak); line-height:var(--satir-govde); }
+.ek-gonderildi .ek-eylemler{ display:flex; gap:var(--bosluk-10); flex-wrap:wrap; }
+
+/* ── 11 · VİDEO SERİLERİM ────────────────────────────────────────── */
+.ek-seriler{ display:grid; gap:var(--bosluk-14); }
+.ek-seri{
+  border:var(--cizgi-1) solid var(--cizgi); border-radius:var(--yuvarlak-lg);
+  background:var(--kagit); overflow:hidden;
+}
+.ek-seri-bas{
+  display:flex; align-items:center; gap:var(--bosluk-14);
+  padding:var(--bosluk-16) var(--bosluk-18);
+  border-bottom:var(--cizgi-1) solid var(--cizgi);
+}
+.ek-seri-no{
+  width:30px; height:30px; flex:none; border-radius:var(--yuvarlak-daire);
+  display:grid; place-items:center;
+  background:var(--aksan-yikama); color:var(--aksan-koyu);
+  font-size:var(--yazi-12-5); font-weight:var(--agirlik-ekstra);
+}
+.ek-seri-kimlik{ min-width:0; flex:1; }
+.ek-seri-kimlik b{
+  display:block; font-size:var(--yazi-15); font-weight:var(--agirlik-ekstra);
+  color:var(--murekkep); line-height:var(--satir-sik-2);
+}
+.ek-seri-kimlik span{
+  display:block; font-size:var(--yazi-12); color:var(--metin-ikincil);
+  margin-top:var(--bosluk-3);
+}
+.ek-seri-arac{ display:flex; gap:var(--bosluk-6); flex:none; }
+.ek-seri-arac button{
+  width:34px; height:34px; border-radius:var(--yuvarlak-sm); cursor:pointer;
+  border:var(--cizgi-1) solid var(--cizgi); background:var(--kagit);
+  color:var(--metin-ikincil); font-size:var(--yazi-12); display:grid; place-items:center;
+}
+.ek-seri-arac button:hover:not(:disabled){ color:var(--aksan); border-color:var(--aksan-cizgi); }
+.ek-seri-arac button:disabled{ opacity:.35; cursor:not-allowed; }
+.ek-bolumler{ list-style:none; margin:0; padding:0; }
+.ek-bolum{
+  display:flex; align-items:center; gap:var(--bosluk-12);
+  padding:var(--bosluk-12) var(--bosluk-18);
+}
+.ek-bolum+.ek-bolum{ border-top:var(--cizgi-1) solid var(--cizgi); }
+.ek-bolum-no{
+  font-size:var(--yazi-11-5); font-weight:var(--agirlik-ekstra);
+  color:var(--metin-ikincil); flex:none; min-width:24px;
+}
+.ek-bolum-kimlik{ min-width:0; flex:1; }
+.ek-bolum-kimlik b{ display:block; font-size:var(--yazi-13-5); font-weight:var(--agirlik-kalin); color:var(--murekkep); }
+.ek-bolum-kimlik span{ display:block; font-size:var(--yazi-11-5); color:var(--metin-ikincil); margin-top:2px; }
+.ek-bolum-arac{ display:flex; gap:var(--bosluk-4); flex:none; }
+.ek-bolum-arac button{
+  width:30px; height:30px; border-radius:var(--yuvarlak-sm); cursor:pointer;
+  border:var(--cizgi-1) solid var(--cizgi); background:var(--kagit);
+  color:var(--metin-ikincil); font-size:var(--yazi-11); display:grid; place-items:center;
+}
+.ek-bolum-arac button:hover:not(:disabled){ color:var(--aksan); border-color:var(--aksan-cizgi); }
+.ek-bolum-arac button:disabled{ opacity:.35; cursor:not-allowed; }
+.ek-seri-ayak{
+  display:flex; align-items:center; gap:var(--bosluk-10); flex-wrap:wrap;
+  padding:var(--bosluk-12) var(--bosluk-18);
+  border-top:var(--cizgi-1) solid var(--cizgi); background:var(--zemin);
+}
+
+@media (max-width:640px){
+  .ek-tepe h1{ font-size:var(--yazi-29); }
+  .ek-blok{ grid-template-columns:auto minmax(0,1fr); }
+  .ek-blok-yan{ grid-column:1 / -1; flex-direction:row; justify-content:flex-end; }
+  .ek-seri-bas{ flex-wrap:wrap; }
+  .ek-gorseller{ grid-template-columns:repeat(auto-fill,minmax(112px,1fr)); }
+}
+@media (prefers-reduced-motion:reduce){
+  .ek-yayin::before,.ek-secenek,.ek-blok-yan button,.ek-gorsel-arac button{ transition:none; }
+}
+
+/* ── 12 · VİDEO SERİLERİM · KİMLİK BANDI GÖRSELLERİ ──────────────────
+   🔴 Satır içi `style=` YASAK (brief md.5). Kardeş profil sayfaları
+   kapak ve avatarı `style="--px-img:…"` / `style="background-image:…"`
+   ile yazıyor; aynı GÖRSEL burada sınıfa alındı, böylece markup temiz
+   kalır. URL'ler uydurulmadı — g-mutfak-defterim.html'in kendi
+   kapak/avatar kaynaklarıdır. */
+.ek-kapak-serilerim{
+  background-image:url("https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=1600&q=80&auto=format&fit=crop&sat=-12");
+  background-size:cover; background-position:center;
+}
+.ek-avatar{
+  background-image:url("https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=200&q=80&auto=format&fit=crop");
+  background-size:cover; background-position:center;
+}
+
+/* ── 13 · SEÇİCİ OKU · KAYNAK KUSURUNUN YEREL TELAFİSİ ────────────────
+   🔴 KÖK KUSUR KANONDA, BENİM KULVARIMDA DEĞİL — düzeltilmedi, ölçüldü
+   ve lead'e bildirildi (`rapor/p2/c-kaynak-kusuru-secim-oku.json`):
+
+     kanon/bilesenler.css
+       .alan-secim{ background-image:var(--secim-ok); padding-right:40px }   (0,1,0)
+       .kart.panel .alan-girdi,.kart.panel .alan-secim,…
+                    { padding:0 var(--bosluk-14); background:var(--kagit) } (0,3,0)
+
+   İkinci kural `background` KISAYOLU kullanıyor; kısayol `background-
+   image`ı SIFIRLAR. Daha özgül olduğu için de kazanır. Sonuç: bir
+   panel kartının İÇİNDEKİ her `<select>` ok glifini kaybediyor ve
+   ok için ayrılan sağ dolgusu da siliniyor.
+   ÖLÇÜLDÜ 2026-09-05, yedi sayfa:
+     g-hesabim        17 seçici · ok glifi olan 0   ← panel kartı içinde
+     g-cozum-merkezi   4 seçici · ok glifi olan 4   ← panel kartı DIŞINDA
+     g-sef-panelim     9 seçici · ok glifi olan 9   ← panel kartı DIŞINDA
+   Yani kusur "ağaç çapında" değil, `.kart.panel` KAPSAMINA bağlı — bu
+   yüzden bugüne dek yalnız `g-hesabim`de görünüyordu.
+
+   Aşağısı KANONU DEĞİŞTİRMEZ: `ekle.css` yalnız benim üç sayfamdan
+   bağlanıyor ve seçici benim form kapsamıma bağlı. Kanon düzeltilirse
+   bu blok gereksizleşir, zarar vermez. */
+[data-ek-form] .kart.panel .alan-secim,
+.kart.panel[data-ek-form] .alan-secim,
+.ek-msatir .alan-secim{
+  background-image:var(--secim-ok);
+  background-repeat:no-repeat;
+  background-position:right var(--bosluk-15) center;
+  padding-right:var(--bosluk-40);
+}
+
+
+/* ── 12 · PAYLAŞIMA HAZIR ────────────────────────────────────────────
+   Donörde `.send-panel` yalnız iki düğme taşıyan bir şeritti; burada
+   ÖNİZLEMEYE dönüştü. Sol: püf noktasının listede çizilecek kartı
+   (kaynağı form, uydurma veri yok). Sağ: eksik listesi; her satır
+   eksik alana odak veren gerçek bir düğme. */
+.ek-hazir-izgara{
+  display:grid; grid-template-columns:minmax(0,260px) minmax(0,1fr);
+  gap:var(--bosluk-20); align-items:start;
+}
+@media (max-width:720px){
+  .ek-hazir-izgara{ grid-template-columns:minmax(0,1fr); }
+}
+
+.ek-onizleme{
+  margin:0; border:var(--cizgi-1) solid var(--cizgi);
+  border-radius:var(--yuvarlak-lg); overflow:hidden;
+  background:var(--kagit); box-shadow:var(--golge-sm);
+}
+.ek-onizleme-gorsel{
+  position:relative; aspect-ratio:4/3; background:var(--zemin-2);
+  display:flex; align-items:center; justify-content:center;
+}
+.ek-onizleme-gorsel img{
+  position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
+}
+.ek-onizleme-bos{
+  display:inline-flex; align-items:center; gap:var(--bosluk-6);
+  font-size:var(--yazi-12); color:var(--metin-ikincil);
+}
+.ek-onizleme-govde{
+  display:flex; flex-direction:column; gap:var(--bosluk-6);
+  padding:var(--bosluk-14);
+}
+.ek-onizleme-kategori{
+  font-size:var(--yazi-10-5); font-weight:var(--agirlik-kalin);
+  letter-spacing:var(--aralik-etiket-3); text-transform:uppercase;
+  color:var(--aksan-koyu);
+}
+.ek-onizleme-kategori.bos,
+.ek-onizleme-baslik.bos{ color:var(--metin-pasif-5); font-style:italic; }
+.ek-onizleme-baslik{
+  font-size:var(--yazi-15); line-height:var(--satir-orta);
+  font-weight:var(--agirlik-kalin); color:var(--murekkep);
+}
+.ek-onizleme-meta{
+  display:flex; align-items:center; gap:var(--bosluk-8); flex-wrap:wrap;
+  font-size:var(--yazi-11-5); color:var(--metin-ikincil);
+}
+
+.ek-hazir-liste{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:var(--bosluk-8); }
+.ek-hazir-satir > button{
+  width:100%; display:grid; grid-template-columns:auto minmax(0,1fr);
+  grid-template-rows:auto auto; column-gap:var(--bosluk-10); row-gap:var(--bosluk-3);
+  align-items:center; text-align:start;
+  padding:var(--bosluk-11) var(--bosluk-13);
+  border:var(--cizgi-1) solid var(--cizgi);
+  border-radius:var(--yuvarlak-md);
+  background:var(--zemin); color:var(--murekkep);
+  cursor:pointer; transition:border-color var(--sure) var(--yumusama), background var(--sure) var(--yumusama);
+}
+.ek-hazir-satir > button:hover{ border-color:var(--cizgi-vurgu); background:var(--kagit); }
+.ek-hazir-satir > button:focus-visible{ outline:var(--odak-kalinlik) solid var(--odak-renk); outline-offset:var(--odak-ofset); }
+.ek-hazir-im{ grid-row:1 / span 2; font-size:var(--yazi-14); color:var(--metin-pasif-5); }
+.ek-hazir-ad{ font-size:var(--yazi-13); font-weight:var(--agirlik-orta); }
+.ek-hazir-not{ font-size:var(--yazi-11-5); color:var(--metin-ikincil); line-height:var(--satir-sik-2); }
+/* TAMAMLANAN satır SUSAR, eksik olan konuşur — dikkat kalan işte kalsın.
+   İlk yazımda tam satırlar `--aksan-yikama` ile boyanıyordu: markanın
+   aksanı kırmızı-turuncu olduğu için üç tamam satır HATA gibi okunuyordu.
+   Kanonda "başarı" için yeşil yok (`.durum-hapi.cozulen` de aksan);
+   bu yüzden yeşil UYDURULMADI, tamam satırı sessizleştirildi. */
+.ek-hazir-satir.tamam > button{ background:var(--zemin-2); border-color:var(--cizgi); }
+.ek-hazir-satir.tamam .ek-hazir-im{ color:var(--aksan); }
+.ek-hazir-satir.tamam .ek-hazir-ad{ color:var(--metin-ikincil); font-weight:var(--agirlik-orta); }
+.ek-hazir-satir.tamam .ek-hazir-not{ color:var(--metin-pasif-5); }
+/* eksik satır: ince aksan şeridi — göz önce buraya düşer */
+.ek-hazir-satir:not(.tamam) > button{ border-inline-start:var(--cizgi-3) solid var(--aksan-cizgi); }
+.ek-hazir-satir:not(.tamam) .ek-hazir-ad{ color:var(--murekkep); font-weight:var(--agirlik-kalin); }
+
+/* eksik satırından gelen odak işareti — 1.4 sn sonra kendiliğinden söner */
+.ek-isaret{
+  border-radius:var(--yuvarlak-md);
+  box-shadow:var(--golge-halka);
+  transition:box-shadow var(--sure-yavas) var(--yumusama);
+}

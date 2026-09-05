@@ -541,3 +541,200 @@
 .dropdown-health a.active i{color:var(--green)}
 .dropdown-health a.active::after{display:none}
 
+/* ═══ AJAN-D-P2-BAS ═══ */
+/* =====================================================================
+   AJAN D · PARTİ 2 — VİDEO MUTFAĞI
+   Bu blok 'scripts/gastro-p2-ajan-d.mjs' tarafından ÜRETİLİR; damgalar
+   arası her koşumda yenilenir. Elle düzenleme kaybolur.
+   ===================================================================== */
+
+/* ─────────────────────────────────────────────────────────────────────
+   D1 · SERİ BANDI — tam genişlik, kademeli buğu, üstünde kapak kartı
+   Donör: FIT '.cp-top'/'.cp-bgblur' (ölçülmüş: 40/22/11/3px + sat 1.05,
+   inset -60px, maske gradyanları örtüşüyor). Renkler markanın kendisi.
+   Üst boşluğu '.below-header' verir ('padding-top:var(--header-offset)')
+   — bant y=0'dan başlar ki saydam header ONUN üstünde dursun.
+   ─────────────────────────────────────────────────────────────────── */
+.sd-band{position:relative;isolation:isolate;overflow:hidden;padding-bottom:48px;
+  display:flex;flex-direction:column;
+  background:linear-gradient(180deg,#1B1913 0%,#191710 100%)}
+.sd-bgblur{position:absolute;inset:-60px;z-index:0;pointer-events:none}
+.sd-bgblur i{position:absolute;inset:0;display:block;
+  background-image:var(--sd-bg,none);background-size:cover;background-position:center 46%}
+.sd-bgblur i:nth-child(1){filter:blur(40px) saturate(1.05);
+  -webkit-mask-image:linear-gradient(180deg,#000 0%,#000 26%,transparent 46%);
+          mask-image:linear-gradient(180deg,#000 0%,#000 26%,transparent 46%)}
+.sd-bgblur i:nth-child(2){filter:blur(22px) saturate(1.05);
+  -webkit-mask-image:linear-gradient(180deg,transparent 24%,#000 40%,#000 54%,transparent 70%);
+          mask-image:linear-gradient(180deg,transparent 24%,#000 40%,#000 54%,transparent 70%)}
+.sd-bgblur i:nth-child(3){filter:blur(11px) saturate(1.05);
+  -webkit-mask-image:linear-gradient(180deg,transparent 50%,#000 66%,#000 78%,transparent 90%);
+          mask-image:linear-gradient(180deg,transparent 50%,#000 66%,#000 78%,transparent 90%)}
+.sd-bgblur i:nth-child(4){filter:blur(3px) saturate(1.05);
+  -webkit-mask-image:linear-gradient(180deg,transparent 74%,#000 88%,#000 100%);
+          mask-image:linear-gradient(180deg,transparent 74%,#000 88%,#000 100%)}
+/* Perde — donörün '.cp-top::after' dili, marka tokeni Gastro'nun.
+   Buğulu fotoğrafın üstünde metnin okunurluğunu tutan katman. */
+.sd-band::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:
+    radial-gradient(900px 420px at 86% 6%,color-mix(in srgb,var(--tomato) 18%,transparent),transparent 62%),
+    linear-gradient(180deg,rgba(23,21,15,.52) 0%,rgba(21,19,13,.70) 100%)}
+/* 🔴 'width:100%' ZORUNLU — İKİ KEZ ÖLÇÜLDÜ.
+   '.wrap' yatay 'margin:0 auto' taşıyor. Esnek kapta OTOMATİK KENAR
+   BOŞLUĞU artan yeri yutar ve germeyi ('stretch') İPTAL EDER: kap
+   içeriğe göre daralır. Hub bandında 1240 → 795.6'ya düştü, başlık
+   sayfanın ortasına kaydı; 'align-self:stretch' yazmak DÜZELTMEDİ
+   (kural gereği auto kenar boşluğu varken germe uygulanmaz), açık
+   genişlik düzeltti. */
+.sd-band>.wrap{position:relative;z-index:2;width:100%;flex:1;
+  display:flex;flex-direction:column;justify-content:center}
+.sd-band .sd-back{color:rgba(255,255,255,.74)}
+.sd-band .sd-back:hover{color:#fff}
+.sd-band .sd-back:hover i{color:#ea8b74}
+/* KAPAK KARTI — bandın içinde, buğunun üstünde duran tek sert kenar.
+   '.sd-hero'nun kendi radius/overflow'u korunur; kart kimliği gölge +
+   saç teli kenardan gelir (donör '.cp-head' dili). */
+/* 🔴 Önce '.sd-card' yazmıştım; markup'ta öyle bir sınıf YOK (kart
+   '.sd-hero' olarak kalıyor — eleman taşınmadı, yeniden adlandırılmadı).
+   Kural hiçbir şey tutmuyordu; ölçümde '.sd-card' NULL döndü. */
+.sd-band .sd-hero{box-shadow:0 34px 90px rgba(10,9,6,.55);border:1px solid rgba(255,255,255,.10)}
+.sd-band .sd-cover{min-height:360px}
+/* 🔴 Kaynağın kendi dar-ekran kuralı (.sd-cover{min-height:250px},
+   max-width:1024) BU kuralın altında kalıyordu — mobilde kapak 250 →
+   360'a şişmişti (ekran görüntüsüyle görüldü). Kapsam tamamlandı. */
+@media(max-width:1024px){.sd-band .sd-cover{min-height:250px}}
+
+/* ─────────────────────────────────────────────────────────────────────
+   D1b · BÖLÜM TILE'LARI
+   ŞART: tile'ın İÇİNDE ikinci radiuslu kutu YOK. Medya kabı tile'ın
+   kendi radius'unu 'overflow:hidden' üzerinden paylaşır; süre rozeti
+   meta satırına taşındı; durum çemberi çıplak ikona indi.
+   Bölüm NUMARASI ayrı bir tipografik kalem: içerik gerçekten bir SIRA
+   (1..N), numara bilgi taşıyor — süs değil.
+   ─────────────────────────────────────────────────────────────────── */
+.ep-tiles{background:none;border:none;border-radius:0;overflow:visible;margin-top:34px}
+.sd-rest>.wrap>.ep-tiles:first-child{margin-top:0}
+.ep-tiles .ep-panel-head{padding:0 2px 14px;border-bottom:1px solid var(--line)}
+.ep-tile{
+  position:relative;align-items:stretch;gap:0;padding:0;min-height:124px;
+  background:var(--paper);border:1px solid var(--line);border-bottom:1px solid var(--line);
+  border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--sh-sm);
+  margin-top:12px;transition:transform .2s var(--ease),box-shadow .2s var(--ease),border-color .2s var(--ease);
+}
+/* 🔴 ':first-of-type' BURADA YANLIŞ OLURDU (olumsuz sınamada yakalandı):
+   tile'ların kardeşi '.ep-panel-head' de bir 'div', yani ilk div O. Kural
+   hiçbir şey tutmuyordu. Komşu seçici doğru özneyi verir. */
+.ep-panel-head+.ep-tile{margin-top:16px}
+.ep-tile:last-child{border-bottom:1px solid var(--line)}
+.ep-tile:hover{background:var(--paper);border-color:rgba(220,61,23,.42);
+  box-shadow:var(--sh-md);transform:translateY(-2px)}
+/* MEDYA — tile'ın sol kenarına DAYALI; kendi radius'u yok, tile'ınkini paylaşır */
+.ep-tile .ep-th{order:-1;flex:none;width:220px;align-self:stretch;aspect-ratio:auto;
+  border-radius:0;height:auto}
+.ep-tile:hover .ep-th{opacity:1}
+.ep-tile .ep-hoverplay{font-size:20px}
+/* SIRA NUMARASI — sessiz, geniş aralıklı; medya ile metin arasındaki oluk */
+.ep-tile .ep-num{display:flex;align-items:center;justify-content:center;
+  flex:none;width:66px;align-self:stretch;font-size:22px;font-weight:700;
+  letter-spacing:-.01em;color:var(--line-koyu,#c9c4bb);font-variant-numeric:tabular-nums;
+  transition:color .2s var(--ease)}
+.ep-tile:hover .ep-num{color:var(--tomato)}
+.ep-tile .ep-body{padding:18px 8px 18px 0}
+.ep-tile .ep-body h4{font-size:16px;-webkit-line-clamp:2}
+.ep-tile .ep-body p:empty{display:none}
+.ep-tile .ep-meta{margin-top:9px;gap:16px;flex-wrap:wrap}
+/* Süre — rozet değil, meta satırının bir kalemi (radiussuz) */
+.ep-tile .ep-meta .mt{display:inline-flex;align-items:center;gap:5px;padding:0;
+  background:none;border:none;border-radius:0;box-shadow:none;
+  font-size:12px;font-weight:600;color:var(--slate-2)}
+.ep-tile .ep-meta .mt i{font-size:10px;color:var(--tomato)}
+/* Durum — çember yok, çıplak ikon */
+.ep-tile .ep-state{padding:0 22px 0 10px}
+.ep-tile .ep-state .idle{width:auto;height:auto;border:none;background:none;
+  border-radius:0;color:var(--muted);font-size:16px}
+.ep-tile:hover .ep-state .idle{background:none;border:none;color:var(--tomato)}
+.ep-tile .ep-state .done{border-radius:0}
+.ep-tile .ep-state .cont{background:none;box-shadow:none;border-radius:0;padding:0;
+  color:var(--tomato);font-size:12.5px}
+.ep-tile.current{box-shadow:inset 3px 0 0 var(--tomato),var(--sh-sm)}
+@media(max-width:640px){
+  .ep-tile{flex-wrap:wrap;min-height:0}
+  .ep-tile .ep-th{width:100%;aspect-ratio:16/9;align-self:auto}
+  .ep-tile .ep-num{width:auto;align-self:auto;padding:14px 0 0 16px;justify-content:flex-start}
+  .ep-tile .ep-body{width:100%;padding:8px 16px 16px}
+  .ep-tile .ep-state{padding:0 16px 16px}
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   D2a · DADA AKIŞ — kartlar büyür, satır TAM dolar (boş kolon 0)
+   Kolon sayısı '--sc-n'; kart genişliği rayın İÇ genişliğinden türetilir,
+   sabit px değil. Ray kaydırılabilir kalıyor ('.row-nav' okları canlı).
+   ÖLÇÜLDÜ (önce): 1440'ta 6×160 + 5×18 = 1050, iç genişlik 1172 →
+   122px boş kolon. Sonra: 5×220 + 4×18 = 1172 → 0.
+   ─────────────────────────────────────────────────────────────────── */
+.dakis-sec .short-track{--sc-n:5;--sc-gap:18px;gap:var(--sc-gap)}
+/* 🔴 'width' YETMEZ, ÖLÇÜLDÜ: paylaşılan paket 'tokens-*.css'
+   '.row-track > .short-card{flex:0 0 160px}' diyor ve esnek kalemde ana
+   ekseni 'flex-basis' belirler — 'width' bildirimi sessizce yutuluyordu
+   (ilk koşumda kart 160px'te kaldı, ölçüm kırmızı verdi). Genişlik
+   'flex-basis' üzerinden yazılıyor. */
+.dakis-sec .short-track>.short-card{
+  flex:0 0 calc((100% - (var(--sc-n) - 1) * var(--sc-gap)) / var(--sc-n));
+  width:calc((100% - (var(--sc-n) - 1) * var(--sc-gap)) / var(--sc-n))}
+@media(max-width:1199px){.dakis-sec .short-track{--sc-n:4}}
+@media(max-width:899px){.dakis-sec .short-track{--sc-n:3}}
+@media(max-width:619px){.dakis-sec .short-track{--sc-n:2}}
+/* kart büyüdü → içindeki tipografi de bir kademe büyür */
+.dakis-sec .short-card .sc-body b{font-size:15px}
+.dakis-sec .short-card .sc-play{width:54px;height:54px;font-size:17px}
+
+/* ─────────────────────────────────────────────────────────────────────
+   D2b · REELS — TAM SAYFA dikey oynatıcı
+   🔴 ÖLÇÜLMÜŞ KUSUR VE KÖKÜ: örtü 1440×900 değil 1440×788 çiziliyordu.
+   Kök '.dakis' ADININ ÇAKIŞMASI: paylaşılan paket 'tokens-*.css' kendi
+   '.dakis' kuralını taşıyor —
+     .dakis{height:calc(100dvh - var(--header-offset));overflow-y:auto;
+            scroll-snap-type:y mandatory}
+   Bu sayfanın örtüsü 'position:fixed;inset:0' olduğu için yükseklik
+   'height' bildirimine düşüyordu: 900-112=788 (390'da 844-62=782).
+   Örtünün ALT 112px'i açık kalıyordu — "kırpık" görünümün kaynağı.
+   Paylaşılan paket BU KULVARIN DEĞİL; kural burada, kendi dosyamızda
+   ve daha SONRA yüklenerek kapatılıyor (kayıtlı ders: kaynağın kuralı
+   zaten bildirilmiş — iş kural yazmak değil KAPSAMI tamamlamak).
+   ─────────────────────────────────────────────────────────────────── */
+.dakis{height:100dvh;max-height:100dvh;overflow:hidden;scroll-snap-type:none}
+.dk-wrap{height:100dvh;align-items:center}
+.dk-stage{height:100dvh;max-height:100dvh;border-radius:0;box-shadow:none;align-self:center}
+/* Sayaç sahnenin İÇİNE düştü (sahne artık tam boy; eskiden sahnenin
+   ALTINDAKİ boşlukta duruyordu) ve künye satırının üstüne biniyordu.
+   Masaüstünde örtünün boş sağ alt köşesine, dar ekranda üste alındı. */
+.dk-count{bottom:22px;left:auto;right:34px;transform:none}
+@media(max-width:1024px){.dk-stage{height:100dvh}}
+@media(max-width:640px){
+  .dakis{height:100dvh}.dk-wrap{height:100dvh}
+  .dk-stage{width:100%;height:100dvh}
+  /* Dar ekranda sayaç doğrudan görselin üstünde kalıyor; kaynağın
+     rgba(255,255,255,.55) rengi açık karelerde okunmuyordu (ölçüldü:
+     soğan karesi). Kendi zeminini taşıyor. */
+  .dk-count{left:50%;right:auto;transform:translateX(-50%);top:34px;bottom:auto;
+    padding:4px 11px;border-radius:999px;background:rgba(20,18,12,.5);color:rgba(255,255,255,.86)}
+  /* Sahne dar ekranda kenardan kenara; marka künyesi bölüm şeridinin ve
+     kategori rozetinin ÜSTÜNE biniyordu (kaynakta da böyleydi, sahne
+     orada da tam genişlikti). Üç kalem üst üste değil alt alta. */
+  .dk-brand{top:28px;left:14px}
+  .dk-cat{top:78px;left:14px}
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   D2c · HUB BANDI 552 + banttan çıkan CTA bloğunun bölümü
+   Bant artık yalnız başlık kolonunu taşıyor; kanon LİSTE yüksekliğinde
+   (552) içerik dikey ORTALANIR — kısa içerik bandın tepesine yapışmaz.
+   ─────────────────────────────────────────────────────────────────── */
+.vhub-hero{display:flex;flex-direction:column}
+.vhub-hero>.wrap{width:100%;flex:1;display:flex;flex-direction:column;justify-content:center}
+.vhub-hero .vh-head{margin-bottom:0;padding-top:0}
+.vfeat-sec{background:linear-gradient(180deg,#1F1C14 0%,#211E16 100%);
+  border-bottom:1px solid rgba(255,255,255,.08)}
+.vfeat-sec .vh-grid{margin-top:0}
+@media(max-width:1024px){.vfeat-sec .vh-grid{grid-template-columns:1fr}}
+/* ═══ AJAN-D-P2-SON ═══ */

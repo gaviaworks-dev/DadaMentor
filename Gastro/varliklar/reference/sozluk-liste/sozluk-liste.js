@@ -78,7 +78,7 @@
     a.innerHTML=icon;
     return a;
   }
-  function renderPagi(cur,last){
+  function renderPagi(cur,last,n){
     pagi.innerHTML='';
     if(last<=1)return; // tek sayfa → sayfalama gizli
     var nav=document.createElement('nav');
@@ -96,7 +96,7 @@
     });
     nav.appendChild(pgArrow('right',cur<last?cur+1:null));
     var note=document.createElement('span');
-    note.className='pagi-note';note.textContent='Sayfa '+cur+' / '+last;
+    note.className='pagi-note';/* L1 · site ortak not kipi: "<toplam> terimden a–b arası gösteriliyor" */note.textContent=(function(){var a=(cur-1)*PAGE_SIZE+1,b=Math.min(cur*PAGE_SIZE,n);return n+' terimden '+a+'–'+b+' arası gösteriliyor';})();
     nav.appendChild(note);
     pagi.appendChild(nav);
   }
@@ -120,7 +120,7 @@
       : '<b>'+n+'</b> terim <span class="muted">· toplam '+total+' terim</span>');
     empty.style.display=n===0?'block':'none';
     list.style.display=n===0?'none':'';
-    renderPagi(state.page,last);
+    renderPagi(state.page,last,n);
     syncUrl();
   }
 

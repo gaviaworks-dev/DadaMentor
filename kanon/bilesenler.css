@@ -11534,9 +11534,31 @@ a.kisi-hucre:hover .kisi-ad{ color:var(--aksan-koyu); }
      `height` ile geliyor, `min-height` ile değil; içerik büyüyünce
      donörünki taşar, kanonunki uzar. Kanon WCAG hedefini yazan tarafta
      kalır (envanter §2.2'nin kaydı). */
+/* 🔴 `background` KISAYOLU → `background-color` · ÖLÇÜLDÜ 2026-09-05.
+   Kısayol, kısaltmadığı her alt özelliği BAŞLANGIÇ DEĞERİNE döndürür.
+   `.alan-secim`in taban kuralı açılır OKU `background-image` ile çiziyor
+   (+ `background-repeat/position/size`); bu satır kısayolla yazıldığı
+   için okun görselini SİLİYORDU. `padding:0 14px` de okun yeri için
+   ayrılmış `padding-right:var(--bosluk-40)`ı eziyordu. Sonuç: seçim
+   kutusu bir metin girdisinden ayırt edilemiyordu.
+     ÖLÇÜM (1440 · ?auth=1 · hesaplanmış değer)
+       Gastro g-hesabim   panel/form kapsamında 17 select · OKU YOK 17 🔴
+       FIT    fit-hesabim AYNI 17 select        · OKU YOK  0  ✅
+     FIT'te kusur YOK çünkü o sayfa kanon yaprağını yüklemiyor; kural
+     yalnız kanonu yükleyen kulvarda ısırıyor. Yani bu bir DONÖR farkı
+     değil, KANON KUSURU — ve kanon düzeltilir, sayfaya ezme kuralı
+     yazılmaz (KOPYALAMA-KURALI, "KANONA DOKUNMA KURALI").
+   ⚠ Kuralın KENDİ AMACI korundu: kart içindeki girdi KÂĞIT zeminli ve
+     yatay dolgusu 14px. Değişen tek şey, amacın yanında istemeden
+     silinen iki alt özelliğin ayakta kalması. */
 .kart.panel .alan-girdi,.kart.panel .alan-secim,
 .form-duzen .alan-girdi,.form-duzen .alan-secim{
-  padding:0 var(--bosluk-14); background:var(--kagit);
+  padding:0 var(--bosluk-14); background-color:var(--kagit);
+}
+/* Seçim kutusunda okun YERİ de korunur — yatay dolgu kuralı sağ tarafı
+   14px'e indiriyor ve ok metnin üstüne biniyordu. */
+.kart.panel .alan-secim,.form-duzen .alan-secim{
+  padding-right:var(--bosluk-40);
 }
 .kart.panel .alan-metin,.form-duzen .alan-metin{
   padding:var(--bosluk-12) var(--bosluk-14); background:var(--kagit);
