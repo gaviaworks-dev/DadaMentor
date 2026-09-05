@@ -96,6 +96,9 @@
 .wg-opts[data-kol="4"]{grid-template-columns:repeat(4,minmax(0,1fr))}
 
 .wg-opt{font-family:inherit;text-align:left;background:#fff;border:1.5px solid var(--line);border-radius:var(--radius-lg);padding:14px 16px;cursor:pointer;display:flex;align-items:flex-start;gap:12px;transition:.18s var(--ease)}
+/* 🔴 Koşullu seçenek gizlenince gerçekten gizlensin — `.wg-opt`ın kendi
+   `display:flex`i `[hidden]`ın tarayıcı varsayılanını yener (2026-09-05). */
+.wg-opt[hidden]{display:none !important}
 .wg-opt .ico{flex:none;width:34px;height:34px;border-radius:var(--radius-md);background:var(--fit-tint);color:var(--fit-deep);display:grid;place-items:center;font-size:14px;transition:.18s var(--ease)}
 .wg-opt .txt{min-width:0}
 .wg-opt b{display:block;font-size:14.5px;font-weight:700;color:var(--slate);line-height:1.35}
@@ -615,7 +618,25 @@ var KURALLAR = {
 
   /* ---- H · RİSK DALI ----
      Bu yanıtlardan biri işaretliyse kişiye özel plan ÜRETİLMEZ. */
-  riskli: ['agri','saglik','gebelik','hareketsiz']
+  riskli: ['agri','saglik','gebelik','hareketsiz'],
+
+  /* ---- I · KOŞULLU SEÇENEK — BEYAR BULGUSU, 2026-09-05 ----
+     Beyar: *"cinsiyet Erkek seçiliyken 5. adımda 'gebelik' seçeneği
+     çıkıyor — seçenek cinsiyete bağlı (kadın'da görünür), erkek'te yok."*
+
+     ÖLÇÜLDÜ (sihirbaz uçtan uca sürülerek):
+       erkek → 5. adımda görünür seçenek 5/5, "gebelik" DÂHİL   ✗
+       kadın → 5. adımda görünür seçenek 5/5, "gebelik" dâhil   ✓
+       geri dönüş: kadın seç → gebelik işaretle → 1. adıma dön →
+                   erkek seç → ileri  ⇒ gebelik HÂLÂ GÖRÜNÜR ve
+                   HÂLÂ SEÇİLİ (imkânsız yanıt ayakta kalıyordu)  ✗
+
+     KOŞUL BURAYA YAZILIYOR, SUNUMA DEĞİL. Dosyanın kendi ilkesi:
+     "menüde ne varsa tabloda o var; elle yazılmış ikinci bir liste yok"
+     (K44 · kural VERİ'dir, sunum kuralı tekrar etmez). Yeni bir koşullu
+     seçenek eklemek = bu tabloya bir satır.
+     Biçim: seçenek değeri → { bağlı olduğu soru : izin verilen yanıtlar }. */
+  durumKosul: { gebelik: {cinsiyet:['kadin']} }
 };
   /* ==KURALLAR-BITIS== */
 
@@ -767,7 +788,9 @@ var KURALLAR = {
        ikinci bir liste tutulmuyor (K44: kural VERI, sunum kurali tekrar etmez). */
     return ['yok'].concat(KURALLAR.riskli).map(function(v){
       return {v:v, t:META.durum[v].t, d:META.durum[v].d, i:META.durum[v].i,
-              risk: KURALLAR.riskli.indexOf(v) > -1};
+              risk: KURALLAR.riskli.indexOf(v) > -1,
+              /* koşul da kuraldan okunuyor; sunum ikinci bir liste tutmuyor */
+              kosul: KURALLAR.durumKosul[v] || null};
     });
   }
   function opsCinsiyet(){
@@ -1090,9 +1113,24 @@ var KURALLAR = {
       secili('durum').join('_') || 'yok'
     ].join('-');
   }
-  function gecerliMi(k, v){
+  function gecerliMi(k, v, y){
     var s = soru(k);
-    return !!s && s.o.some(function(o){ return o.v === v; });
+    if(!s) return false;
+    var o = s.o.filter(function(x){ return x.v === v; })[0];
+    if(!o) return false;
+    /* 🔴 KOŞUL BURADA DA SORULUR. Yoksa paylaşılan bir adres
+       (`?p=erkek-…-gebelik`) ekranda görünmeyen bir yanıtı geri
+       yükler ve risk dalını sürerdi. `y` çözülmekte olan yanıt
+       kümesidir; yoksa yürürlükteki yanıtlara bakılır. */
+    if(o.kosul){
+      var kaynak = y || cevap;
+      return Object.keys(o.kosul).every(function(soruK){
+        var deger = kaynak[soruK];
+        var liste = Array.isArray(deger) ? deger : (deger == null ? [] : [deger]);
+        return liste.some(function(x){ return o.kosul[soruK].indexOf(x) > -1; });
+      });
+    }
+    return true;
   }
   /* Bozuk / bilinmeyen değerde 404 YOK: false döner, sihirbaz adım 1'de
      kalır, sayfa 200 olarak açılmayı sürdürür. */
@@ -1110,7 +1148,11 @@ var KURALLAR = {
     y.odak = (p[5] === '0') ? [] : p[5].split('_');
     if(!y.odak.every(function(v){ return gecerliMi('odak', v); })) return false;
     var dr = p[6].split('_');
-    if(!dr.length || !dr.every(function(v){ return gecerliMi('durum', v); })) return false; y.durum = dr;
+    /* 🔴 `y` GEÇİLİYOR: koşul, çözülmekte olan yanıt kümesine sorulur.
+       Yürürlükteki `cevap`a sorulsaydı paylaşılan adres, ekrandaki eski
+       cinsiyete göre değerlendirilir ve `erkek-…-gebelik` kodu kabul
+       edilebilirdi. */
+    if(!dr.length || !dr.every(function(v){ return gecerliMi('durum', v, y); })) return false; y.durum = dr;
     return y;
   }
   function urlYaz(){
@@ -1145,6 +1187,7 @@ var KURALLAR = {
       : '<span class="ico"><i class="' + esc(o.i) + '" aria-hidden="true"></i></span>';
     return '<button class="' + sinif + '" type="button" aria-pressed="false" ' +
            (o.risk ? 'data-risk="1" ' : '') +
+           (o.kosul ? 'data-kosul="' + esc(JSON.stringify(o.kosul)) + '" ' : '') +
            'data-k="' + esc(s.k) + '" data-v="' + esc(o.v) + '">' + gorsel +
            '<span class="txt"><b>' + esc(o.t) +
            /* R8/23 IKINCI ISARET — renk tek basina tasimasin (renk korlugu):
@@ -1467,7 +1510,40 @@ var KURALLAR = {
       '</div>' + secimlerinHtml() + nasilHtml(false) + altAksiyonHtml();
   }
 
+  /* ---- KOŞULLU SEÇENEK · görünürlük + imkânsız yanıtın düşürülmesi ----
+     `KURALLAR.durumKosul` tablosundaki her seçenek, bağlı olduğu sorunun
+     yanıtı izin vermiyorsa DOM'dan gizlenir. Gizlenen seçenek İŞARETLİYSE
+     yanıt da düşürülür — yoksa geri dönüp cinsiyeti değiştiren kullanıcıda
+     görünmeyen bir yanıt risk dalını sürmeye devam ederdi (ölçüldü:
+     kadın→gebelik→geri→erkek akışında yanıt ayakta kalıyordu).
+     ⚠ `hidden` yetmiyor: `.wg-opt{display:flex}` onu yener; sayfa stilinde
+       `.wg-opt[hidden]{display:none}` bildirimi var. */
+  function kosulUygula(){
+    var degisti = false;
+    body.querySelectorAll('.wg-opt[data-kosul]').forEach(function(b){
+      var kosul;
+      try { kosul = JSON.parse(b.getAttribute('data-kosul')); } catch(e){ return; }
+      var uygun = Object.keys(kosul).every(function(soruK){
+        var izin = kosul[soruK];
+        return secili(soruK).some(function(y){ return izin.indexOf(y) > -1; });
+      });
+      b.hidden = !uygun;
+      b.setAttribute('aria-hidden', uygun ? 'false' : 'true');
+      if(!uygun){
+        var k = b.getAttribute('data-k'), v = b.getAttribute('data-v');
+        var mevcut = secili(k);
+        if(mevcut.indexOf(v) > -1){
+          var kalan = mevcut.filter(function(x){ return x !== v; });
+          cevap[k] = Array.isArray(cevap[k]) ? kalan : (kalan[0] || null);
+          degisti = true;
+        }
+      }
+    });
+    return degisti;
+  }
+
   function isaretle(){
+    kosulUygula();
     body.querySelectorAll('.wg-opt').forEach(function(b){
       var k = b.getAttribute('data-k');
       b.setAttribute('aria-pressed', secili(k).indexOf(b.getAttribute('data-v')) > -1 ? 'true' : 'false');
