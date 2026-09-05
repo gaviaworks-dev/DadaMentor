@@ -1,0 +1,311 @@
+/* =====================================================================
+   DADAGASTRO · PARTİ 3 · AJAN B — İÇERİK EKLEME YÜZEYLERİ
+   ---------------------------------------------------------------------
+   ÜRETİLİR, ELLE DÜZENLENMEZ: scripts/gastro-p3-ajan-b.mjs
+   Kapsam: puf-noktasi-ekle.html · tarif-ekle.html (YALNIZ bu ikisi).
+   Yükleme sırası: tokenlar → gastro → bilesenler → dm-kabuk → alt-cubuk
+                   → hero → dm-hero → dm-pagi → dm-profil-ritim
+                   → ekle.css → **BU DOSYA (en son)**
+
+   🔴 HAM RENK / HAM ÖLÇÜ UYDURULMADI. Buradaki her sayı ya kanon
+      tokenıdır ya da AĞACIN KENDİ ölçülmüş değeridir (`dm-hero.css`
+      `[data-hero-detay]` bloğu · `kanon/admin.css` `.yetkili .tox`
+      bloğu · donör `tarif-ekle-v1.html`). Kaynağı her blokta yazılı.
+   🔴 SATIR İÇİ `style=` YOK — banner fotoğrafı bile burada, sayfanın
+      `data-gastro-page` niteliğine bağlanarak veriliyor.
+   ===================================================================== */
+
+
+/* ═════════════════════════════════════════════════════════════════════
+   B1 · GÖRSELLİ BANNER — prototipin kalıbı, AĞACIN kendi bileşeniyle
+   ---------------------------------------------------------------------
+   Donör: `v7-6cu356/tarif-ekle-v1.html` §`.fp-top`
+          (ölçüldü @1440: padding-top 128 · perde
+           linear-gradient(90deg,rgba(28,25,18,.93),rgba(33,30,22,.72))
+           · h1 beyaz · lead rgb(231,237,241) · see-all beyaz saydam).
+   Prototipin `.fp-top`u ile ağacın `[data-hero-detay]`si AYNI banttır:
+   perdesi ve üst dolgusu birebir aynı ölçü. Bu yüzden YENİ BANT
+   YAZILMADI — markup'a `data-hero-detay` niteliği eklendi, bandın
+   bütün çizimi `dm-hero.css`ten geldi. Burada yalnız ① kaskad
+   çarpışmaları ② `ekle.css`in AYDINLIK ZEMİN kipini geri alan
+   kurallar var.
+
+   🔴 KASKAD ÖLÇÜLDÜ, TAHMİN EDİLMEDİ (rapor/p3/b-sonra.json):
+     `.zebra>.bolum:nth-of-type(odd):not(.kendi-zemini)` (0,4,0) banda
+     BEYAZ zemin yazıyor; `[data-hero-detay]{background:#1C1912}`
+     (0,1,0) onu yenemez. Markup'a `kendi-zemini` eklendi — kanonun
+     KENDİ kaçış kapısı; ezme kuralı yazılmadı.
+     `.zebra>.ek-tepe{padding:32px 0 …}` (0,2,0) ise 128px'i yiyordu;
+     özgüllük EŞİTLENMEDİ, nitelikle bir basamak ARTIRILDI. `!important`
+     yok. (Deponun dersi: "kabuk ↔ kanon eşit özgüllük çarpışması".)
+   ═════════════════════════════════════════════════════════════════════ */
+
+/* Bandın fotoğrafı — SAYFA VERİSİ, satır içi style değil.
+   `[data-hero-detay]::before` görseli `--dg-hero-foto`dan okuyor
+   (`dm-hero.css`); değeri sayfa kimliğinden bağlanıyor.
+   Yollar BU DOSYAYA göre göreli (`varliklar/reference/shared/` → `../../`).
+   Görseller ağacın kendi varlıkları: `puf-noktalari.html` ve
+   `tarifler.html` bantlarının fotoğrafları — aynı aile, YENİ VARLIK
+   getirilmedi, dışarıdan görsel indirilmedi. */
+body[data-gastro-page="puf-noktasi-ekle-v1"] .ek-tepe{
+  --dg-hero-foto:url('../../storage/pagedef/puf/hero/UVncxAuEL9MTFPEUWLQ47MfCtLeqyWq3IieZvykB.webp');
+}
+body[data-gastro-page="tarif-ekle-v1"] .ek-tepe{
+  --dg-hero-foto:url('../../storage/pagedef/tarifler/hero/lHsbux1DtK4qGj3Uk2I2ccvNZXjepXHfQvr1ieQO.webp');
+}
+
+/* Üst dolgu — donörün ve ağacın ORTAK değeri: 128 (kırıntı ofseti).
+   Alt nefes bandın kendi `.sec-head`inden gelir (aşağıda). */
+.zebra > .ek-tepe[data-hero-detay]{ padding:128px 0 0; }
+
+/* 🔴 EKLEME TİPİNİN BANT YÜKSEKLİĞİ — B2'nin şartı.
+   Kanon sözleşmesi: "hero yüksekliği SAYFA TİPİNE göre sabit; o tipteki
+   EN UZUN içeriğe göre belirlenir". Bu iki sayfanın `data-fit-hero-kind`i
+   `profil` ama sayfalar profil ailesinin üyesi değil (form yüzeyi);
+   `dm-hero.css`in 704px'lik profil kuralı bu yüzden UYGULANMIYOR —
+   markup'ta `data-hero-band` YOK. Bu, kanonun kendi "medya hero'su"
+   istisnasının yöntemi: muafiyet CSS'te değil, KANCANIN YOKLUĞUNDA.
+   EKLEME tipinin değeri iki sayfa ÖLÇÜLEREK bulundu (@1440,
+   rapor/p3/b-sonra.json): ikisinde de içerik+dolgu **391.3px** —
+   sapma 0. 4px merdiveni, yukarı yuvarlama → 392.
+   `min-height` — `height` DEĞİL: içerik uzarsa taşmaz, bant büyür. */
+.ek-tepe[data-hero-detay]{ min-height:392px; }
+@media (max-width:640px){ .ek-tepe[data-hero-detay]{ min-height:0; } }
+
+/* `.sec-head`in bant nefesi — `dm-hero.css`in
+   `[data-hero-detay] .lst-hero{padding:10px 0 42px}` değeri.
+   Yeni ölçü doğmadı. */
+.ek-tepe[data-hero-detay] .sec-head{ padding:10px 0 42px; }
+
+/* ── BANDIN AYDINLIK KİPİ GERİ ALINIYOR ─────────────────────────────
+   `ekle.css` kırıntıyı ve başlığı AYDINLIK zemine göre boyamış ve
+   gerekçesini de yazmıştı: *"ekleme sayfalarının tepesinde banner
+   YOK"*. Banner geldi; gerekçe düştü. Renkler ağacın koyu bant
+   değerleri — `dm-hero.css` `[data-hero-detay] .rd-crumb` ve
+   `.lst-hero` bloklarından BİREBİR, yeni renk yok.
+   Özgüllük: `ekle.css` (0,2,0) ↔ burası (0,3,0). */
+.ek-tepe[data-hero-detay] .kirinti,
+.ek-tepe[data-hero-detay] .kirinti a{ color:rgba(255,255,255,.85); }
+.ek-tepe[data-hero-detay] .kirinti > i{ color:rgba(255,255,255,.4); }
+.ek-tepe[data-hero-detay] .kirinti .crumb-home i{ color:rgba(255,255,255,.85); }
+.ek-tepe[data-hero-detay] .kirinti a:hover{ color:var(--kagit); }
+.ek-tepe[data-hero-detay] .kirinti .cur{ color:var(--kagit); font-weight:var(--agirlik-kalin); }
+
+/* Üst etiket — kanonun KOYU ZEMİN varyantı (§18 · `.bant .ust-etiket`);
+   ağaçta `[data-hero-detay] .lst-hero .eyebrow` ile aynı rol ve aynı
+   ölçülmüş renk. */
+.ek-tepe[data-hero-detay] .ust-etiket{ color:rgb(241,177,162); }
+.ek-tepe[data-hero-detay] .ust-etiket::before{ background:var(--aksan); }
+
+/* Başlık — bandın ölçüsü 44px (`dm-hero.css` `[data-hero-detay]
+   .lst-hero h1`). Kanon şerhi: "başlık ölçüsü tip içinde TEK olmalı".
+   `ekle.css` 34px yazmıştı; o aydınlık `.sec-head` başlığının ölçüsü. */
+.ek-tepe[data-hero-detay] .sec-head h1{
+  color:var(--kagit); font-size:44px;
+  text-shadow:0 2px 24px rgba(0,0,0,.25);
+}
+@media (max-width:640px){ .ek-tepe[data-hero-detay] .sec-head h1{ font-size:29px; } }
+
+.ek-tepe[data-hero-detay] .sec-head .lead{
+  color:rgb(231,237,241); font-weight:500; font-size:15.5px;
+  text-shadow:0 1px 14px rgba(0,0,0,.3);
+}
+
+/* Sağ kolondaki "…listem" bağı — donörün kendi koyu bant kuralı
+   (`tarif-ekle-v1.html:1228`, ölçüldü). */
+.ek-tepe[data-hero-detay] .see-all{
+  background:rgba(255,255,255,.12);
+  border-color:rgba(255,255,255,.22);
+  color:var(--kagit);
+}
+.ek-tepe[data-hero-detay] .see-all:hover{
+  background:rgba(255,255,255,.2); color:var(--kagit);
+}
+.ek-tepe[data-hero-detay] .see-all:focus-visible{
+  outline:var(--odak-kalinlik) solid var(--kagit); outline-offset:var(--odak-ofset);
+}
+
+
+/* ═════════════════════════════════════════════════════════════════════
+   B3 · TEK YAPIŞKAN KAP — iç içe kart YOK
+   ---------------------------------------------------------------------
+   ÖLÇÜLEN KUSUR (rapor/p3/b-once.json · iki sayfada da birebir):
+       scroll 600 → yayın kartı y=129 alt=698.7 · ipucu kartı y=337.6
+                    DİKEY ÖRTÜŞME = 361.1px
+   `ekle.css` çapayı rayın İÇİNDEKİ yayın kartına vermişti; kart yapışıp
+   yerinde kalırken ipucu kartı akışla yukarı kayıyor ve kartın ALTINA
+   giriyordu. Kart görüş alanında kalıyordu ama kardeşini YUTUYORDU —
+   ekran görüntüsüyle de görüldü (`b-once-*-kaydirma600.png`: ipucu
+   kartı hiç görünmüyor).
+
+   İSTENEN: tek sticky kap · iç içe kart yok · kanon ölçüsü.
+
+   🔴 DEPONUN KAYITLI DERSİ — "yapışkan kutu kabından taşamaz":
+   rayın KENDİSİ sticky yapılır ve ray görüş alanından uzunsa
+   (ölçüldü: ray 1179px · görüş alanı 900px) çapa tutmaz, kutu yukarı
+   kayıp gider. Parti 2'de tam olarak bu olmuştu (tepe 352 → −179).
+   Bu yüzden ray sticky yapılırken kendi boyu görüş alanına KİLİTLENİYOR:
+   `max-height` + kendi içinde kaydırma. Kutu kabından taşamaz, çünkü
+   artık taşacak boyu yok.
+
+   🔴 `align-items:stretch` GERİ ALINDI. `ekle.css` onu "kartın koşu
+   yolu tezgâhın tamamı olsun" diye yazmıştı ve çapa rayın İÇİNDEKİ
+   karttayken DOĞRUYDU. Çapa rayın kendisine geçince stretch rayın
+   kutusunu ızgara alanının boyuna gerer ve **sticky ölür** (eleman
+   kabıyla aynı boydaysa kayacak yer kalmaz). `start` ile ray kendi
+   boyunda kalır, kayma yolu ızgara alanının tamamı olur. */
+.ek-izgara{ align-items:start; }
+
+.ek-ray{
+  position:sticky;
+  /* Çapa `ekle.css`in ölçtüğü değerin aynısı: kabuk yüksekliği + bir
+     boşluk kademesi. Yeni ölçü doğmadı. */
+  top:calc(var(--kabuk-h) + var(--bosluk-16));
+  /* Görüş alanına kilit. Alt pay üst payla aynı kademede. */
+  max-height:calc(100vh - var(--kabuk-h) - var(--bosluk-16) - var(--bosluk-16));
+  overflow-y:auto; overscroll-behavior:contain;
+  scrollbar-width:thin;
+  /* Kaydırma çubuğu kartların kenarına yapışmasın — kabın dolgusu;
+     kartların kendi ölçüsü değişmez (negatif payla geri alınır). */
+  padding-right:var(--bosluk-4); margin-right:calc(var(--bosluk-4) * -1);
+}
+/* İç içe çapa KALKTI: ray tek kap, kartlar akışta — üst üste binemezler. */
+.ek-ray > .ek-yayin{ position:static; }
+/* 🔴 ESNEK ÇOCUK KISILDI — ÖLÇÜLDÜ, TAHMİN EDİLMEDİ.
+   `ekle.css` rayı `display:flex;flex-direction:column` yapıyor. Raya
+   `max-height` verilince esnek çocukların varsayılan `flex-shrink:1`i
+   devreye girdi ve kartlar TAŞMAK YERİNE KISILDI: yayın kartı
+   569.7 → 377.4px oldu, "Onaya gönder" düğmesi kartın dışında kaldı
+   (ekran görüntüsüyle görüldü, `b-sonra-…-1440.png` ilk koşum).
+   Kutu boyu kartın kendi ölçüsüdür; kap onu geremez de kısamaz da. */
+.ek-ray > *{ flex:0 0 auto; }
+
+/* 🔴 KAYDIRMA GÖSTERGESİ — kap içeriğinden KISA olduğunda.
+   Ray 1179px, görüş alanı payı 755px (ölçüldü): kartların alt ucu
+   KESİLİYOR ve macOS'ta örtü kaydırma çubuğu görünmediği için kesik
+   "bozuk" okunuyordu (ekran görüntüsüyle görüldü). Gösterge YENİ RENK
+   İSTEMEZ: `mask` içeriği saydamlaştırır, zemin neyse o kalır.
+   Sınıfı `dm-p3-b.js` yalnız GERÇEKTEN taşarken ekler ve dibe
+   inilince kaldırır — sabit bir süs değil, durum göstergesi. */
+.ek-ray.ek-ray-tasar{
+  mask-image:linear-gradient(to bottom, #000 calc(100% - var(--bosluk-24)), transparent 100%);
+}
+
+@media (max-width:1080px){
+  .ek-ray{ position:static; max-height:none; overflow:visible;
+           padding-right:0; margin-right:0; }
+  .ek-ray.ek-ray-tasar{ mask-image:none; }
+}
+
+
+/* ═════════════════════════════════════════════════════════════════════
+   B1 · "METİN" BÖLÜMÜ — TAM EDİTÖR  (yalnız `puf-noktasi-ekle`)
+   ---------------------------------------------------------------------
+   Editörün KENDİSİ yazılmadı: ağacın tek zengin metin editörü
+   `kanon/admin-editor.js` (TinyMCE 7.3.0 · cdnjs self-hosted derleme ·
+   `license_key:'gpl'` · Türkçe dil paketi `kanon/admin-editor-tr.js`).
+   Kanca sözleşmesi o dosyanın kendi şerhinde yazılı:
+       <textarea data-editor="icerik">  → 480px · DOLU araç çubuğu
+   Sayfa başına config YOK; burada da yazılmadı.
+
+   🔴 AĞ YOKSA: `admin-editor.js` `window.tinymce` bulamazsa
+      textarea'ları `visibility:visible` yapıp çıkar — alan ÇIPLAK ama
+      ÇALIŞIR kalır. İki kip de ölçüldü (`rapor/p3/b-editor.json`).
+
+   🔴 KABUK STİLİ KANONDAN KOPYALANDI, YENİDEN YAZILMADI.
+      `kanon/admin.css:1433-1466` TinyMCE kabuğunu kitin form kutusuna
+      benzetiyor ama kuralları `.yetkili` altında; public sayfada
+      `.yetkili` yok ve `admin.css` hiç yüklenmiyor. Değerler BİREBİR
+      taşındı, yalnız kapsam `.ek-metin` oldu. Kanon DEĞİŞTİRİLMEDİ.
+   ═════════════════════════════════════════════════════════════════════ */
+.ek-metin .tox.tox-tinymce{
+  border:var(--cizgi-1) solid var(--cizgi);
+  border-radius:var(--yuvarlak-md);
+  max-width:100%;
+}
+.ek-metin .alan:focus-within .tox.tox-tinymce{ border-color:var(--aksan); }
+.ek-metin .tox .tox-editor-header{
+  background:var(--zemin);
+  border-bottom:var(--cizgi-1) solid var(--cizgi);
+  box-shadow:none;
+}
+.ek-metin .tox .tox-toolbar,
+.ek-metin .tox .tox-toolbar__primary,
+.ek-metin .tox .tox-toolbar-overlord{ background:transparent; }
+.ek-metin .tox .tox-tbtn{
+  color:var(--murekkep-yumusak);
+  border-radius:var(--yuvarlak-sm);
+}
+.ek-metin .tox .tox-tbtn:hover{ background:var(--kagit); color:var(--murekkep); }
+.ek-metin .tox .tox-tbtn--enabled,
+.ek-metin .tox .tox-tbtn--enabled:hover{ background:var(--aksan-yikama); color:var(--aksan-koyu); }
+.ek-metin .tox .tox-tbtn svg{ fill:currentColor; }
+.ek-metin .tox .tox-tbtn__select-label{ font-size:var(--yazi-13); font-weight:var(--agirlik-orta); }
+.ek-metin .tox .tox-sidebar-wrap{ background:var(--kagit); }
+.ek-metin .tox .tox-statusbar{ display:none; }
+.ek-metin .tox:not(.tox-tinymce-inline) .tox-editor-header{
+  border-radius:var(--yuvarlak-md) var(--yuvarlak-md) 0 0;
+}
+
+/* TinyMCE yüklenmediğinde görünen ÇIPLAK alan — kanonun kendi
+   `.alan-metin` kutusu, yalnız boyu editörün kip boyuna yaklaştırılıyor.
+   Editör kurulunca TinyMCE textarea'yı gizler; bu kural etkisiz kalır. */
+.ek-metin textarea[data-editor]{ min-height:280px; }
+
+
+/* ═════════════════════════════════════════════════════════════════════
+   B1 · ARANABİLİR ÇOKLU ÇİP SEÇİCİ  (yalnız `tarif-ekle`)
+   ---------------------------------------------------------------------
+   Kanonun K5 deseni. YENİ BİLEŞEN AÇILMADI: kutu `.coklu-secim` +
+   `.coklu-kutu` + `.coklu-cip`, açılır `.acilir-yuzey` + `.acilir-bas`
+   + `.acilir-arama` + `.acilir-kalem` — hepsi `bilesenler.css`te
+   ölçülmüş hâlleriyle duruyor (§75b · ÇOKLU SEÇİM · AÇILIR).
+   Burada yalnız kanonda karşılığı OLMAYAN üç şey var:
+     ① arama satırının ayracı ② öneri rozeti ③ açılırın boş satırı
+   ═════════════════════════════════════════════════════════════════════ */
+.ek-etiket-secici{ position:relative; }
+/* Açılır yüzey `.acilir-yuzey`in kendisi; kapsanmış tek şey yüksekliği.
+   Liste bir TARAMA yüzeyidir — kanonun 420px'i bu alanda formun yarısını
+   örtüyordu (ölçüldü). Yöntem kanonun kendi `@media` kuralıyla aynı. */
+.ek-etiket-secici .acilir-yuzey{ max-height:320px; display:flex; flex-direction:column; }
+.ek-etiket-secici .acilir-liste{ overflow-y:auto; min-height:0; }
+/* Arama satırı kabın dolgusunda yaşıyor (kanon şerhi); listeden bir
+   çizgiyle ayrılır. */
+.ek-etiket-secici .acilir-ara-satir{
+  display:flex; align-items:center; gap:var(--bosluk-8);
+  padding:0 var(--bosluk-8) var(--bosluk-6);
+  border-bottom:var(--cizgi-1) solid var(--cizgi);
+  margin-bottom:var(--bosluk-6);
+}
+.ek-etiket-secici .acilir-ara-satir > i{ color:var(--metin-ikincil); font-size:var(--yazi-12); flex:none; }
+.ek-etiket-secici .acilir-arama{ flex:1 1 auto; min-width:0; }
+/* Onay glifi için yer — kanonun `.acilir-kalem.aktif` kipi zaten var. */
+.ek-etiket-secici .acilir-kalem > i:first-child{ width:1em; flex:none; text-align:center; color:var(--metin-ikincil); }
+.ek-etiket-secici .acilir-kalem.aktif > i:first-child{ color:var(--aksan-koyu); }
+/* ÖNERİ ROZETİ — malzemelerden gelen kalem. Renk ikilisi kanonun kendi
+   `.acilir-kalem.aktif` ikilisi; yeni renk yok. */
+.ek-etiket-secici .etiket-oneri{
+  margin-left:auto; flex:none;
+  padding:var(--bosluk-2) var(--bosluk-8);
+  border-radius:var(--yuvarlak-hap);
+  background:var(--aksan-yikama); color:var(--aksan-koyu);
+  font-size:var(--yazi-10-5); font-weight:var(--agirlik-kalin);
+  letter-spacing:var(--aralik-etiket);
+}
+.ek-etiket-secici .acilir-bos{
+  margin:0; padding:var(--bosluk-10) var(--bosluk-11);
+  font-size:var(--yazi-12-5); color:var(--metin-ikincil);
+}
+/* Kutunun sağ oku — `.coklu-kutu` kanonda ok taşımıyor; rol
+   `.alan-secim`in okuyla aynı. */
+.ek-etiket-secici .coklu-kutu > .coklu-ok{
+  margin-left:auto; flex:none; color:var(--metin-ikincil); font-size:var(--yazi-12);
+  transition:transform var(--sure) var(--yumusama);
+}
+.ek-etiket-secici .coklu-kutu[aria-expanded="true"] > .coklu-ok{ transform:rotate(180deg); }
+/* Çipin sil düğmesi 44px hedefe kanonun kendi yöntemiyle tamamlanır
+   (negatif pay — `.acilir-bas button`un aynısı). */
+.ek-etiket-secici .coklu-cip button{
+  padding:var(--bosluk-11) var(--bosluk-6);
+  margin:calc(var(--bosluk-11) * -1) calc(var(--bosluk-6) * -1);
+}

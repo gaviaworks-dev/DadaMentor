@@ -1,0 +1,233 @@
+/* =====================================================================
+   dm-p3-a.css — AJAN A · g-mutfak-defterim · PARTİ 3
+   Bağı lead attı (gastro-p3-lead.mjs --adim l0); içeriğini yalnız
+   ajan A yazar. YÜKLEME SIRASI: varliklar/p2-ajan-a/g-mutfak-defterim.css
+   dosyasından SONRA — p2'nin `.modul-govde .x` (0,2,0) kurallarını eşit
+   özgüllükle ezebilmek için seçiciler aynı biçimde yazıldı.
+   ===================================================================== */
+
+/* A1-BAS ── `#puf` araç çubuğu ↔ ilk kart boşluğu ────────────────────
+   ÖLÇÜLDÜ (rapor/p3/a-taban-once.json):
+     tariflerim · incelemede · denediklerim · kaydettiklerim → 24px
+     puf                                                     →  0px
+   Kök: p2 CSS'i `.lst-grid`e `margin-top:24px` veriyor, kardeş
+   `.pufl-grid`e vermiyor. Kanon merdiveninde 24 = --bosluk-24. */
+.modul-govde .pufl-grid{ margin-top:var(--bosluk-24); }
+/* A1-SON */
+
+/* A2-BAS ── KART AYAĞI · üç kare ikon düğme, kartın MERKEZİNDE ──────
+   Bileşen kanonun kendi `.ikon-dugme`si (44×44 · --yuvarlak-sm).
+   Kip: kart ayağı --bg zeminde olduğu için düğmeye kağıt zemin ve
+   hairline kenar verildi; kanonun çerçevesiz tabanı bu zeminde
+   görünmüyordu (ölçüldü: ayak zemini #f9f9f9, düğme zemini none). */
+.modul-govde .dk-ikonray{
+  display:flex; flex-wrap:nowrap; align-items:center;
+  justify-content:center; gap:var(--bosluk-8);
+}
+.modul-govde .dk-ikonray .ikon-dugme{
+  border:var(--cizgi-1) solid var(--cizgi);
+  background:var(--paper);
+  color:var(--muted);
+}
+.modul-govde .dk-ikonray .ikon-dugme:hover{
+  background:var(--aksan-yikama); color:var(--aksan-koyu);
+  border-color:var(--aksan-cizgi);
+}
+.modul-govde .dk-ikonray .ikon-dugme[aria-expanded="true"]{
+  background:var(--aksan-koyu); color:var(--paper); border-color:var(--aksan-koyu);
+}
+/* Püf kartında ayak, kartın DIŞINDA duruyor (p2: border-top:0;
+   background:transparent) — merkezleme oraya da uygulanır. */
+.modul-govde .dk-puf .dk-ikonray{ justify-content:center; }
+
+/* ── AÇILAN PANEL · kartın İÇİNDE ────────────────────────────────────
+   🔴 `position:absolute` AÇILIR KULLANILMADI: `.r-card` ölçüldü,
+   `overflow:hidden` — mutlak konumlu `.acilir-yuzey` kartın kenarında
+   KIRPILIRDI ("yapışkan kutu kabından taşamaz" dersinin aynı sınıfı).
+   Panel kartı aşağı doğru büyütür; ızgara satırı buna göre uzar. */
+.modul-govde .dk-pop{
+  border-top:var(--cizgi-1) solid var(--cizgi);
+  background:var(--paper);
+  padding:var(--bosluk-14) var(--bosluk-18) var(--bosluk-16);
+}
+.modul-govde .dk-pop[hidden]{ display:none; }
+.modul-govde .dk-pop-bas{
+  font-size:var(--yazi-11); font-weight:var(--agirlik-kalin);
+  letter-spacing:var(--aralik-versal); text-transform:uppercase;
+  color:var(--muted); margin-bottom:var(--bosluk-10);
+}
+.modul-govde .dk-pop-bos{ font-size:var(--yazi-12-5); color:var(--muted); font-weight:var(--agirlik-govde); }
+.modul-govde .dk-pop .alan + .alan{ margin-top:var(--bosluk-12); }
+.modul-govde .dk-pop-ayak{
+  display:flex; align-items:center; justify-content:flex-end;
+  gap:var(--bosluk-8); margin-top:var(--bosluk-14); flex-wrap:wrap;
+}
+.modul-govde .dk-pop-durum{
+  margin-right:auto; font-size:var(--yazi-12-5); font-weight:var(--agirlik-govde);
+  color:var(--aksan-koyu);
+}
+
+/* künye/istatistik satırı — silinen `.r-facts`/`.puf-reads` buraya taşındı */
+.modul-govde .dk-olgu{
+  display:flex; align-items:flex-start; gap:var(--bosluk-10);
+  padding:var(--bosluk-8) 0;
+  font-size:var(--yazi-12-5); font-weight:var(--agirlik-govde);
+  color:var(--murekkep-yumusak); line-height:1.5;
+}
+.modul-govde .dk-olgu + .dk-olgu{ border-top:var(--cizgi-1) solid var(--cizgi); }
+.modul-govde .dk-olgu i{ flex:none; width:16px; text-align:center; margin-top:2px; font-size:var(--yazi-12); color:var(--tomato); }
+.modul-govde .dk-olgu b{ color:var(--slate); font-weight:var(--agirlik-kalin); }
+
+/* ayarlar menüsü — kanonun `.acilir-kalem` satırı */
+.modul-govde .dk-pop-ayarlar .acilir-kalem i{ flex:none; width:16px; text-align:center; font-size:var(--yazi-12); }
+/* 🔴 Yıkıcı kalem DİNLENMEDE nötr — kanon §75c'nin kendi kuralı
+   ("yıkıcı eylem BAĞIRMAZ"); yalnız hover'da kırmızıya döner. */
+.modul-govde .dk-pop-ayarlar .acilir-kalem.yikici:hover{ background:var(--tehlike-yikama); color:var(--tehlike); }
+.modul-govde .dk-onay{
+  display:flex; align-items:center; flex-wrap:wrap; gap:var(--bosluk-8);
+  margin-top:var(--bosluk-8); padding:var(--bosluk-10) var(--bosluk-11);
+  background:var(--tehlike-yikama); border-radius:var(--yuvarlak-sm);
+  font-size:var(--yazi-12-5); font-weight:var(--agirlik-govde); color:var(--slate);
+}
+.modul-govde .dk-onay span{ margin-right:auto; }
+
+/* silinmiş kart — kart YERİNDE kalır, sayfalama sayısı bozulmaz */
+.modul-govde .r-card[data-p3a-silindi] > *:not(.dk-silindi),
+.modul-govde .dk-puf[data-p3a-silindi] > *:not(.dk-silindi){ display:none; }
+.modul-govde [data-p3a-silindi]{
+  border-style:dashed !important; box-shadow:none !important; background:var(--bg);
+}
+.modul-govde [data-p3a-silindi]:hover{ transform:none; box-shadow:none; }
+.modul-govde .dk-silindi{
+  display:flex; align-items:center; gap:var(--bosluk-10);
+  padding:var(--bosluk-22) var(--bosluk-18);
+  font-size:var(--yazi-13); font-weight:var(--agirlik-govde); color:var(--muted);
+}
+.modul-govde .dk-silindi i{ color:var(--muted); }
+.modul-govde .dk-silindi > span{ margin-right:auto; }
+/* A2-SON */
+
+/* A3-BAS ── `#denediklerim` · "Notu düzenle" kartın MERKEZİNDE ────── */
+#dk-grid-denediklerim .dk-yonet{ justify-content:center; }
+/* A3-SON */
+
+/* A4-BAS ── `#kaydettiklerim` · donörün KENDİ kalp düğmesi ──────────
+   Kural KAPSANMIŞ KOPYA: donör `varliklar/build/assets/portal-*.css`
+   (`.r-save,.p-fav{position:absolute;top:11px;right:11px;38×38;
+   radius-circle;background:#fffffff0;color:var(--slate)}` ·
+   `.saved{background:var(--tomato);color:#fff}` · `.r-card .r-save{z-index:2}`).
+   Bu sayfa o yaprağı YÜKLEMİYOR (kanon yığınını yüklüyor) — p2'nin
+   `.r-card` gölgesinde ölçülen kusurun aynısı; kural sayfaya taşındı. */
+.modul-govde #dk-grid-kaydettiklerim .r-card{ position:relative; }
+.modul-govde .dk-kayit-form{ margin:0; }
+.modul-govde .r-save{
+  position:absolute; top:11px; right:11px; z-index:3;
+  width:38px; height:38px; border-radius:var(--radius-circle);
+  background:#fffffff0; border:none; color:var(--slate);
+  cursor:pointer; display:grid; place-items:center; font-size:15px;
+  transition:.2s var(--ease);
+}
+.modul-govde .r-save:hover{ background:#fff; color:var(--tomato); }
+.modul-govde .r-save.saved{ background:var(--tomato); color:#fff; }
+.modul-govde .r-save:focus-visible{ outline:var(--odak-kalinlik) solid var(--odak-renk); outline-offset:var(--odak-ofset); }
+/* Durum hapı kalbin soluna kayar — İKİSİ DE korunur (hap silinmedi).
+   11 (kalp sağ payı) + 38 (kalp) + 8 (nefes) = 57 */
+.modul-govde #dk-grid-kaydettiklerim .dk-durum{ right:57px; }
+.modul-govde .dk-kayit-durum{
+  display:flex; align-items:center; gap:var(--bosluk-8);
+  padding:var(--bosluk-12) var(--bosluk-18) var(--bosluk-14);
+  border-top:var(--cizgi-1) solid var(--cizgi);
+  font-size:var(--yazi-11-5); font-weight:var(--agirlik-govde); color:var(--muted);
+}
+.modul-govde .dk-kayit-durum i{ color:var(--tomato); font-size:var(--yazi-12); }
+.modul-govde .dk-kayit-durum > span{ margin-right:auto; }
+.modul-govde .dk-kayit-geri{ flex:none; }
+.modul-govde .r-card.dk-kayit-cikti{ opacity:.62; }
+.modul-govde .r-card.dk-kayit-cikti:hover{ transform:none; }
+.modul-govde .r-card.dk-kayit-cikti .dk-kayit-durum{ color:var(--slate); }
+/* A4-SON */
+
+/* A5-BAS ── `#notlarim` · "Yeni not yaz" + tür seçimi AYNI SATIRDA ── */
+#mutfak-defterim-pane-notlarim .dk-not-arac{
+  display:flex; align-items:center; justify-content:flex-end;
+  flex-wrap:wrap; gap:var(--bosluk-12); margin-bottom:var(--bosluk-16);
+}
+.modul-govde .dk-not-tur{
+  display:flex; align-items:center; gap:var(--bosluk-6);
+  padding:var(--bosluk-3); min-height:44px; box-sizing:border-box;
+  background:var(--paper); border:var(--cizgi-1) solid var(--cizgi);
+  border-radius:var(--yuvarlak-md);
+}
+.modul-govde .dk-not-tur-etiket{
+  padding:0 var(--bosluk-8) 0 var(--bosluk-10);
+  font-size:var(--yazi-11); font-weight:var(--agirlik-kalin);
+  letter-spacing:var(--aralik-versal); text-transform:uppercase; color:var(--muted);
+}
+.modul-govde .dk-tur-cip{
+  display:inline-flex; align-items:center; gap:var(--bosluk-7);
+  min-height:36px; padding:var(--bosluk-7) var(--bosluk-13);
+  border:0; border-radius:var(--yuvarlak-sm); background:transparent;
+  font-family:inherit; font-size:var(--yazi-13); font-weight:var(--agirlik-kalin);
+  color:var(--muted); cursor:pointer; white-space:nowrap;
+  transition:var(--sure) var(--yumusama);
+}
+.modul-govde .dk-tur-cip i{ font-size:var(--yazi-12); opacity:.85; }
+.modul-govde .dk-tur-cip:hover{ color:var(--aksan-koyu); background:var(--aksan-yikama); }
+.modul-govde .dk-tur-cip.aktif{ background:var(--aksan-koyu); color:var(--paper); }
+.modul-govde .dk-tur-cip.aktif i{ opacity:1; }
+.modul-govde .dk-tur-cip:focus-visible{
+  outline:var(--odak-kalinlik) solid var(--odak-renk); outline-offset:var(--odak-ofset);
+}
+/* A5-SON */
+
+/* A6-BAS ── SEKME RAYI · kaydırma göstergesi ────────────────────────
+   🔴 SEKME ÖLÇÜSÜ DEĞİŞTİRİLMEDİ. Kanon `.sekmeler.ortali` şerhi
+   (bilesenler.css §11, Beyar kuralı 2026-09-02): "hiçbir genişlikte iki
+   satıra düşmez, gerekirse SLIDER olur — sığdığında ORTALI, sığmadığında
+   KAYAR". 1440'ta 8 sekme 78px taşıyor; taşmanın kendisi kanonun
+   öngördüğü hâl, EKSİK OLAN kaydırma AFFORDANSIYDI.
+   Ok deseni kaynağın kendi `.cat-nav`inden (anasayfa.html #catPrev/#catNext). */
+.pf-tabbar .wrap.kap{ position:relative; }
+.dk-ray-nav[hidden]{ display:none; }
+.dk-ray-nav{ position:absolute; inset:0; pointer-events:none; }
+.dk-ray-ok{
+  position:absolute; top:50%; transform:translateY(-50%);
+  pointer-events:auto;
+  width:34px; height:34px; display:grid; place-items:center;
+  border:var(--cizgi-1) solid var(--cizgi); border-radius:var(--radius-circle);
+  background:var(--paper); color:var(--slate); font-size:var(--yazi-12);
+  cursor:pointer; box-shadow:var(--golge-md);
+  transition:var(--sure) var(--yumusama);
+}
+.dk-ray-ok.geri{ left:-6px; }
+.dk-ray-ok.ileri{ right:-6px; }
+.dk-ray-ok:hover{ color:var(--tomato); border-color:var(--aksan-cizgi); }
+.dk-ray-ok[disabled]{ opacity:0; pointer-events:none; }
+/* Kenar solması — rayın kırpıldığını gösterir. Yalnız kaydırılabilir
+   yönde çizilir; JS sınıfı takar. */
+.pf-tabbar .sekmeler.dk-ray-solda{
+  -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 34px);
+          mask-image:linear-gradient(90deg,transparent 0,#000 34px);
+}
+.pf-tabbar .sekmeler.dk-ray-sagda{
+  -webkit-mask-image:linear-gradient(270deg,transparent 0,#000 34px);
+          mask-image:linear-gradient(270deg,transparent 0,#000 34px);
+}
+.pf-tabbar .sekmeler.dk-ray-solda.dk-ray-sagda{
+  -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 34px,#000 calc(100% - 34px),transparent 100%);
+          mask-image:linear-gradient(90deg,transparent 0,#000 34px,#000 calc(100% - 34px),transparent 100%);
+}
+/* A6-SON */
+
+/* ── DAR EKRAN ───────────────────────────────────────────────────────
+   p2 CSS'i @640'ta `.dk-yonet`i DİKEY yapıyor ve `.dugme`yi tam
+   genişliğe çekiyor. İkon rayı üç KARE düğmedir — dikey yığılmamalı. */
+@media (max-width:640px){
+  .modul-govde .dk-ikonray{ flex-direction:row; align-items:center; justify-content:center; }
+  .modul-govde .dk-pop{ padding:var(--bosluk-12) var(--bosluk-16) var(--bosluk-14); }
+  .modul-govde .dk-kayit-durum{ padding:var(--bosluk-10) var(--bosluk-16) var(--bosluk-12); }
+  #mutfak-defterim-pane-notlarim .dk-not-arac{ justify-content:stretch; }
+  .modul-govde .dk-not-tur{ flex:1 1 100%; justify-content:center; }
+  .modul-govde .dk-not-arac .dugme.birincil{ flex:1 1 100%; justify-content:center; }
+  .modul-govde .dk-silindi{ padding:var(--bosluk-16); }
+}

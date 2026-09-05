@@ -1,0 +1,189 @@
+/* ajan C · video mutfağı — PARTİ 3
+   Bu dosyanın BAĞI lead tarafından atıldı (gastro-p3-lead.mjs --adim l0);
+   İÇERİĞİNİ yalnız kendi ajanı yazar. Başka kulvar bu dosyaya dokunmaz. */
+
+/* ═══ AJAN-C-P3-BAS ═══ */
+/* ─────────────────────────────────────────────────────────────────────
+   AJAN C · PARTİ 3 · video mutfağı ailesi (5 sayfa)
+   Satır içi style= YOK — bütün kural burada.
+   Ölçüm: rapor/p3/c-*.json · rapor: docs/gastro-p3-ajan-c-rapor.md
+   ───────────────────────────────────────────────────────────────────── */
+
+/* ═══ C1-1 · KIRINTI KANON y=128 ═══════════════════════════════════════
+   ÖLÇÜLDÜ (önce): seri sayfalarında .sd-back y=112 — header'ın dip kenarı
+   y=113. Kırıntı header'ın ALTINA değil, İÇİNE 1px giriyordu.
+   video-mutfagi__seriler.html'de daha kötüsü: y=75.5, yani kırıntı
+   header'ın TAMAMEN ALTINDA, görünmüyor. Sebep bölümün “.below-header”
+   (padding-top:var(--header-offset)=112) ile “.sec” (74px) kurallarının
+   ÇARPIŞMASI; “.sec” kazanıyor.
+   Kanon değeri token olarak zaten var: --banner-crumb-ofset = 128px.
+   Özgüllük: parti 2'nin kendi damgasına (data-sd-band) bağlanarak
+   (0,2,0) yazıldı — dosya sırasına güvenilmiyor. ─────────────────────── */
+/* 🔴 var() GERİ DÜŞÜŞÜ ŞART — yeni ölçülmüş tuzak:
+   video-mutfagi__seriler.html “kanon/hero.css“i BAĞLAMIYOR, dolayısıyla
+   --banner-crumb-ofset orada TANIMSIZ. Tanımsız var() kuralı düşürmez;
+   özelliği BAŞLANGIÇ değerine (padding-top:0) çeker — kırıntı y 75.5'ten
+   1.5'e indi, yani header'ın TAMAMEN altına girdi ve kusur BÜYÜDÜ.
+   Kanonun kendi dosyası da geri düşüşle yazıyor (kanon/hero.css:190). */
+.sd-band[data-sd-band]{padding-top:var(--banner-crumb-ofset,128px)}
+.below-header.sec.vseries-sec{padding-top:var(--banner-crumb-ofset,128px)}
+/* seriler.html'de .sd-back inline-flex; satır kutusu 1.5px önden veriyor
+   (ölçüldü: 75.5 ↔ kanon 74). Seri sayfalarındaki gibi blok seviyesine
+   alınır — kırıntı kabın tam üstünden başlar. */
+.below-header.sec.vseries-sec .sd-back{display:flex;width:max-content}
+/* 390: token 96px der ama KANON SAYFALARIN ÖLÇÜLEN kırıntı y'si 74
+   (tarifler · ara · bugun-ne-pisirsem — üçü de 74, header dibi 63).
+   Tokena bakıp 96 yazmak kanondan 22px SAPMA olurdu; kapı kanonun
+   ölçülen değerine bakıyor, token metnine değil. */
+@media(max-width:640px){
+  .sd-band[data-sd-band],
+  .below-header.sec.vseries-sec{padding-top:74px}
+}
+
+/* ═══ C1-2 · "DİĞER SERİLER" KARTI — yeniden ═════════════════════════════
+   Şart (görev): kapak · bölüm sayısı · süre · erişim rozeti.
+   Şart (parti 2'nin kapattığı kusur sınıfı): TILE İÇİNDE İKİNCİ RADIUSLU
+   KUTU YOK — kartın içinde border-radius>0 taşıyan eleman sayısı 0.
+   Kapak kartın kırpmasını paylaşır (overflow:hidden), kendi yarıçapı 0.
+   Metin görselin ÜSTÜNDEN alındı: ölçüldü, açık fotoğrafta beyaz başlık
+   okunmuyordu (kayıtlı ders: "yarı saydam zemin · kontrast" — zemin opak
+   olmalı; en kesin çözüm metni zeminin dışına almaktır).
+   ───────────────────────────────────────────────────────────────────── */
+.sd-others .sds-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(248px,1fr));gap:22px;align-items:stretch}
+.sd-others .sds-card{display:flex;flex-direction:column;gap:0;padding:0;
+  background:var(--paper);border:1px solid var(--line);border-radius:var(--r);
+  overflow:hidden;box-shadow:var(--sh-sm);text-decoration:none;color:var(--ink);
+  transition:transform .18s var(--ease),box-shadow .18s var(--ease),border-color .18s var(--ease)}
+.sd-others .sds-card:hover{transform:translateY(-2px);box-shadow:var(--sh-md);border-color:#DEDEDE}
+.sd-others .sds-card:focus-visible{outline:2px solid var(--tomato);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){.sd-others .sds-card{transition:none}.sd-others .sds-card:hover{transform:none}}
+
+.sd-others .sds-fig{position:relative;display:block;border-radius:0;overflow:hidden;background:#E9E6E0}
+.sd-others .sds-img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:0}
+/* Pro seride kapak bir tık geri çekilir — kilit metinle değil YÜZEYLE anlatılır */
+.sd-others .sds-card.is-pro .sds-fig::after{content:"";position:absolute;inset:0;border-radius:0;
+  background:linear-gradient(180deg,rgba(20,18,12,.10),rgba(20,18,12,.44))}
+
+.sd-others .sds-tx{display:flex;flex-direction:column;align-items:flex-start;gap:7px;
+  padding:14px 16px 16px;flex:1;text-align:left}
+.sd-others .sds-acc{display:inline-flex;align-items:center;gap:6px;border-radius:0;background:none;padding:0;
+  font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.sd-others .sds-card.is-pro .sds-acc{color:#8A5A12}
+.sd-others .sds-tx>b{font-size:17px;line-height:1.24;letter-spacing:var(--ls-head);color:var(--ink)}
+.sd-others .sds-desc{font-size:13.5px;line-height:1.45;color:var(--muted);
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.sd-others .sds-meta{display:flex;flex-wrap:wrap;gap:3px 14px;width:100%;margin-top:auto;padding-top:10px;
+  border-top:1px solid var(--line);font-size:12.5px;color:var(--muted)}
+.sd-others .sds-meta>span{display:inline-flex;align-items:center;gap:5px;border-radius:0;background:none;padding:0}
+.sd-others .sds-meta i{font-size:11px;opacity:.75}
+@media(max-width:640px){.sd-others .sds-grid{grid-template-columns:1fr}}
+
+/* ═══ C2-1 · SERİ RAYLARI SATIRI DOLDURUR ══════════════════════════════
+   ÖLÇÜLDÜ (önce, kart 276px sabit / gap 26):
+     1440 → satıra 3 kart, sağda 292px boş, 4. kart 10px KIRPIK
+     1024 → satıra 3 kart, sağda  92px boş, 4. kart kırpık
+      390 → satıra 1 kart, sağda 106px boş
+   Bu, parti 2'nin Dada Akış rayında kapattığı kusurun TA KENDİSİ; o turun
+   NÜFUSU seri raylarını içermiyordu (kayıtlı ders: "denetimin öznesi
+   kayar" — ölçüt doğruydu, nüfus eksikti).
+   Kart genişliği sabit px değil, rayın İÇ genişliğinden türer.
+   🔴 flex-basis şart: paylaşılan paket “.row-track>*{flex:0 0 276px}”
+   diyor ve esnek kalemde ana ekseni “width” DEĞİL flex-basis belirler
+   (kayıtlı ders: parti 2'de bu hata bir kez yapıldı). ──────────────── */
+.vseries-sec .row-track{--c3-n:1;--c3-gap:26px}
+@media(min-width:620px){.vseries-sec .row-track{--c3-n:2}}
+@media(min-width:900px){.vseries-sec .row-track{--c3-n:3}}
+@media(min-width:1200px){.vseries-sec .row-track{--c3-n:4}}
+.vseries-sec .row-track>*{flex:0 0 calc((100% - (var(--c3-n) - 1) * var(--c3-gap)) / var(--c3-n));
+  min-width:0;max-width:none}
+
+/* Ray başlığı — kartlar dolunca başlık da ray genişliğine hizalanır */
+.vseries-sec .vray-head{align-items:center}
+
+/* ═══ C2-2 · KUYRUK KALEMİ (.vq-item) — iç radius 0 · zemin OPAK ════════
+   ÖLÇÜLDÜ (önce): .vq-item radius 16px, İÇİNDE .vq-th radius 12px ve
+   .mt radius 8px → radiuslu kutu içinde İKİ radiuslu kutu. Aynı kusur
+   sınıfı parti 2'de .ep-tile'da kapatıldı; nüfus .vq-item'ı görmüyordu.
+   Zemin rgba(255,255,255,.06) idi — yarı saydam. Kayıtlı ders: "yarı
+   saydam zemin kontrastı bileşenin değil YERİNİN özelliği yapar; opak
+   yaz." Bileşen artık kendi opak yüzeyini taşıyor.
+   Süre rozeti markup'ta .vq-th'den .vq-body meta satırına TAŞINDI
+   (silinmedi) — parti 2'nin .ep-tile çözümüyle aynı. ────────────────── */
+.vfeat-sec .vq-item{position:relative;display:flex;align-items:stretch;gap:0;padding:0;
+  background:#2A251C;border:1px solid rgba(255,255,255,.09);border-radius:var(--radius-md);overflow:hidden;
+  transition:background .18s var(--ease),border-color .18s var(--ease)}
+.vfeat-sec .vq-item:hover{background:#332C20;border-color:rgba(255,255,255,.18)}
+@media (prefers-reduced-motion:reduce){.vfeat-sec .vq-item{transition:none}}
+.vfeat-sec .vq-item .vq-num{display:flex;align-items:center;justify-content:center;
+  flex:0 0 46px;align-self:stretch;border-radius:0;background:rgba(0,0,0,.22);
+  font-variant-numeric:tabular-nums;font-size:15px;font-weight:700;color:rgba(255,255,255,.42)}
+.vfeat-sec .vq-item .vq-th{flex:0 0 124px;align-self:stretch;height:auto;min-height:74px;
+  border-radius:0;margin:0}
+.vfeat-sec .vq-item .vq-body{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;
+  gap:5px;padding:12px 14px}
+.vfeat-sec .vq-item .vq-body>b{color:#fff;font-size:14.5px;line-height:1.3;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.vfeat-sec .vq-item .vq-body>span{display:flex;flex-wrap:wrap;gap:3px 12px;
+  font-size:12.5px;color:rgba(255,255,255,.62)}
+/* taşınan süre kalemi — rozet değil satır kalemi: kutu yok, radius yok */
+.vfeat-sec .vq-item .vq-body .mt{border-radius:0;background:none;padding:0;border:0;
+  display:inline-flex;align-items:center;gap:5px;font-size:12.5px;color:rgba(255,255,255,.62);box-shadow:none}
+.vfeat-sec .vq-item .vq-body .mt i{font-size:10px;opacity:.8}
+
+/* ═══ C2-3 · HERO ↔ ÖNE ÇIKAN BÖLÜM DİKİŞİ ═════════════════════════════
+   ÖLÇÜLDÜ (önce): hero'nun dibi #211E16, .vfeat-sec'in tepesi #1F1C14 ve
+   aradaki -22px kabuk dikişi ikisini üst üste bindiriyordu → 1181px'lik
+   TEK koyu kütle, sınır görünmüyordu (gözle de doğrulandı).
+   Kütle ikiye ayrıldı: dikiş sıfırlandı, tepe rengi bir kademe açıldı ve
+   saç teli bir çizgi kondu. ────────────────────────────────────────── */
+.vfeat-sec[data-vfeat]{margin-top:0;border-top:1px solid rgba(255,255,255,.13);
+  background:linear-gradient(180deg,#2C2619 0%,#1B1810 100%)}
+
+/* ═══ C2-4 · ÖNE ÇIKAN KART · SIRADAKİ BAŞLIĞI ════════════════════════ */
+.vfeat-sec .vq-head{align-items:baseline}
+.vfeat-sec .vq-list{display:flex;flex-direction:column;gap:12px}
+
+/* ═══ C2-5 · TÜM VİDEOLAR IZGARASI — kart yükseklikleri EŞİT ════════════
+   ÖLÇÜLDÜ (önce, 1440): 6 satırın 3'ü 334.8px, 3'ü 316.9px — fark tam
+   17.9px, yani h4'ün BİR satırı. Başlığı bir satır olan kart kısa
+   kalıyordu. Başlık iki satıra sabitlendi (clamp + min-height). ─────── */
+.vgrid-sec .vid-grid .vid-card h4,
+.vseries-sec .row-track .vid-card h4{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
+  overflow:hidden;min-height:2.24em}
+/* 🔴 NÜFUS DÜZELTMESİ — ilk sürümüm yalnız ızgarayı kapsıyordu; SERİ
+   RAYLARINDAKİ aynı kart aynı kusuru taşıyordu ve hiçbir sayaca
+   görünmedi, GÖZ yakaladı (Yöresel Lezzetler rayının 4. kartının
+   izlenme satırı komşularından bir satır yukarıda duruyordu).
+   Kayıtlı ders: "denetimin öznesi kayar" — bu turda BANA oldu. */
+
+/* ═══ C2-6 · DADA AKIŞ KARTI — başlık perdesi ══════════════════════════
+   ÖLÇÜLDÜ (önce): perde linear-gradient(...,rgba(15,13,9,0) 52%,
+   rgba(15,13,9,.82) 100%). Başlık bloğu kartın %79.7'sinde başlıyor →
+   o noktada alfa 0.473. Beyaz metnin BEYAZ bir fotoğraf karesi üstündeki
+   en kötü durum kontrastı 3.28:1 (AA 4.5'in altında; "Nar Taneleme" ve
+   "Meal Prep" kareleri gözle de okunmuyordu).
+   Perde başlığın başladığı yerde 0.72'ye çekildi → en kötü durum 9.6:1.
+   ───────────────────────────────────────────────────────────────────── */
+.dakis-sec .short-card::after{background:linear-gradient(180deg,
+  rgba(20,18,12,.20) 0%,rgba(20,18,12,0) 24%,rgba(15,13,9,0) 46%,
+  rgba(15,13,9,.72) 74%,rgba(12,10,7,.94) 100%)}
+
+/* ═══ C2-7 · VERİSİ OLMAYAN YAZAR SATIRI ═══════════════════════════════
+   ÖLÇÜLDÜ: hub'da 45, seriler'de 20 — TOPLAM 65 .r-author bloğunun
+   65'inde de yazar adı BOŞ (<b> </b>) ve avatar "?" basıyor. Dolu olan
+   TEK bir kayıt yok. Ad UYDURULMADI; boş blok JS ile gizleniyor
+   (dm-p3-c.js, veriye bakarak — dolu gelirse kendiliğinden görünür).
+   Bu kural yalnız betiğin işaretlediği bloğu tutar. ───────────────── */
+.r-author[data-c3-bos="1"]{display:none}
+/* Yazar satırı düşünce meta satırında TEK kalem (izlenme) kalıyor ve
+   space-between onu sağa itiyordu — ölçüldü, kartın altında yalnız sağa
+   yaslı bir sayı duruyordu. Kalemler sola toplanır. */
+.vid-card .vmeta{justify-content:flex-start;gap:12px}
+
+/* ═══ C2-8 · ÖLÜ OK DÜĞMESİ ════════════════════════════════════════════
+   Ray satırı tam dolunca (C2-1) taşma biten raylarda ok düğmeleri iş
+   yapmaz hâle gelir. dm-p3-c.js taşmayan rayın oklarını devre dışı
+   bırakır; kural görünümü verir. ──────────────────────────────────── */
+.row-nav button[disabled]{opacity:.34;cursor:default;pointer-events:none}
+
+/* ═══ AJAN-C-P3-SON ═══ */

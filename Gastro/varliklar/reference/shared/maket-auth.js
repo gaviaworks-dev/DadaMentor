@@ -15,8 +15,18 @@
    karşılığı, üretilen sayfalara is-auth'un markup'a donmasıydı.)
    ===================================================================== */
 (function () {
+  /* p3-l2 · markupa donmuş is-auth de bayraktır */
+  /* İKİ KAYNAK, TEK BAYRAK — ölçülmüş kusur (parti 3 · L2):
+     'g-*' ailesinin 18'inde 'is-auth' MARKUPA donmuş ve o sayfalar bu
+     betiği yüklemiyordu; sayfa içi bağlara '?auth=1' eklenmediği için
+     avatar menüsünden gidilen 'g-cozum-merkezi' MİSAFİR açılıyordu.
+     Markupa donmuş 'is-auth' de "oturum var" demektir; o sayfalarda
+     betiğin işi yalnız BAYRAĞI GEZİNTİYE TAŞIMAK. Oturumsuz gelen
+     (ne sorgu ne sınıf) hiçbir şey almaz — misafir kapısı yerinde. */
   var qs = new URLSearchParams(location.search);
-  if (qs.get('auth') !== '1') return;
+  var uye = qs.get('auth') === '1' ||
+            (document.documentElement.getAttribute('data-uye-govde') === '1');
+  if (!uye) return;
 
   function uygula() {
     var b = document.body;
