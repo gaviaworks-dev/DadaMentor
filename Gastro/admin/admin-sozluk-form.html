@@ -12,6 +12,13 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.css">
 <link rel="stylesheet" href="../../kanon/admin.css">
 <!-- ADMIN-KIT:CSS:SON -->
+<!-- GASTRO-EK:CSS:BAS -->
+<link rel="stylesheet" href="_ortak/gastro-ek.css">
+<link rel="stylesheet" href="_ortak/gastro-ek-a.css">
+<link rel="stylesheet" href="_ortak/gastro-ek-b.css">
+<link rel="stylesheet" href="_ortak/gastro-ek-c.css">
+<link rel="stylesheet" href="_ortak/gastro-ek-d.css">
+<!-- GASTRO-EK:CSS:SON -->
 </head>
 <body class="yetkili" data-marka="gastro">
 <!-- ═══ GASTRO ADMIN · KANONİK KABUK — lead üretti, agent DEĞİŞTİRMEZ.
@@ -71,7 +78,7 @@
 
     <div class="panel-menu-bolum">02 Operasyon</div>
     <a class="panel-menu-link" href="admin-uyeler.html"><i class="fa-solid fa-users"></i>Üyeler &amp; Yetkiler</a>
-    <a class="panel-menu-link" href="admin-abonelikler.html"><i class="fa-solid fa-credit-card"></i>Abonelikler</a>
+    <a class="panel-menu-link" href="admin-paket-alimlari.html"><i class="fa-solid fa-credit-card"></i>Paket Alımları</a><a class="panel-menu-link" href="admin-sef-abonelikleri.html"><i class="fa-solid fa-hand-holding-dollar"></i>Şef Abonelikleri</a>
     <a class="panel-menu-link" href="admin-odemeler.html"><i class="fa-solid fa-money-bill-wave"></i>Ödemeler</a>
     <a class="panel-menu-link" href="admin-faturalar.html"><i class="fa-solid fa-file-invoice"></i>Faturalar<span class="sayac">7</span></a>
     <a class="panel-menu-link" href="admin-destek.html"><i class="fa-solid fa-life-ring"></i>Destek Talepleri<span class="sayac">12</span></a>
@@ -204,9 +211,12 @@
                 <div class="alan kart-izgara c2">
                   <div class="alan">
                     <label for="sfKategori" class="alan-etiket">Kategori <span class="zorunlu">*</span></label>
-                    <select class="alan-secim" id="sfKategori" name="kategori" required=""><option value="" selected="">Seç…</option><option>Sos (93)</option><option>Teknik (92)</option><option>Kesim (79)</option><option>Ekipman (69)</option><option>Baharat (57)</option><option>Pastacılık (54)</option><option>Ekmek (52)</option><option>Malzeme (35)</option><option>Et (34)</option><option>Saklama (31)</option><option>Deniz Ürünü (30)</option><option>Hamur (30)</option><option>Fermentasyon (27)</option><option>Tatlı (23)</option><option>Peynir (16)</option><option>Servis (12)</option><option>Süt Ürünü (11)</option><option>Sunum (9)</option><option>Çikolata (9)</option><option>Dünya Mutfağı (2)</option></select>
-                    <div class="alan-yardim"><span>Kategori listesi Mutfak Sözlüğü ekranının ikinci kartından
-                      yönetilir; buraya yeni kategori yazılmaz.</span></div>
+                    <select class="alan-secim" id="sfKategori" name="kategori" required=""><option value="" selected="">Seç…</option><option>Sos</option><option>Teknik</option><option>Kesim</option><option>Ekipman</option><option>Baharat</option><option>Pastacılık</option><option>Ekmek</option><option>Malzeme</option><option>Et</option><option>Saklama</option><option>Deniz Ürünü</option><option>Hamur</option><option>Fermentasyon</option><option>Tatlı</option><option>Peynir</option><option>Servis</option><option>Süt Ürünü</option><option>Sunum</option><option>Çikolata</option><option>Dünya Mutfağı</option></select>
+                    <div class="alan-yardim"><span>Liste public <b>Mutfak Sözlüğü</b> süzgecinden hasat edildi
+                      — <b>20 kategori</b>, 54 detay sayfasının 54'ü tam bir tanesini taşıyor.
+                      🔴 Seçenek metnindeki <b>sayaç kırpıldı</b> ("Sos (93)" → "Sos"): sayı
+                      değerin değil o anki NÜFUSUN parçası, kayda yazılsaydı yarın yalan olurdu
+                      (L4'ün kendi kuralı). Buraya yeni kategori yazılmaz.</span></div>
                   </div>
                   <div class="alan">
                     <label for="sfHarf" class="alan-etiket">Harf</label>
@@ -246,6 +256,13 @@
               <h3 class="form-bolum-bas"><i class="fa-solid fa-align-left" aria-hidden="true"></i> Tanım</h3>
               <div>
                 <div class="alan">
+                  <label for="sfKisaTanim" class="alan-etiket">Kısa tanım <span class="acilir-kalem">— terim adının hemen altında basılır</span><span class="alan-sayac" data-say-for="sfKisaTanim">0 / 160</span></label>
+                  <input class="alan-girdi" id="sfKisaTanim" name="kisa_tanim" type="text" maxlength="160" placeholder="Örn. dişe gelir diri kıvamda haşlama">
+                  <div class="alan-yardim"><span>Public <code>rd-sub</code> satırı — ölçüldü: 54 terim
+                    sayfasının <b>53</b>'ü basıyor, admin'de alan <b>yoktu</b>. Tanımın ilk cümlesi değil,
+                    ondan kısa ve küçük harfle yazılan ayrı bir alandır.</span></div>
+                </div>
+                <div class="alan">
                   <label for="sfTanim" class="alan-etiket">Tanım metni <span class="zorunlu">*</span></label>
                   <textarea class="alan-metin" id="sfTanim" name="tanim" placeholder="Terimi iki-üç cümleyle, mutfak diliyle anlat."></textarea><div class="metin-duzenleyici"><div class="duzenleyici-cubuk" role="toolbar" aria-label="Metin biçimlendirme"><button type="button" class="ikon-dugme" data-k="undo" title="Geri al" aria-label="Geri al" data-eylem="calistir" data-ad="Geri al"><i class="fa-solid fa-rotate-left" aria-hidden="true"></i></button><button type="button" class="ikon-dugme" data-k="redo" title="İleri al" aria-label="İleri al" data-eylem="calistir" data-ad="İleri al"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i></button><span class="duzenleyici-ayrac" aria-hidden="true"></span><select class="alan-secim" aria-label="Blok biçimi"><option value="p" selected="">Paragraf</option><option value="h2">Başlık 2</option><option value="blockquote">Alıntı</option></select><span class="duzenleyici-ayrac" aria-hidden="true"></span><button type="button" class="ikon-dugme" data-k="bold" title="Kalın" aria-label="Kalın"><i class="fa-solid fa-bold" aria-hidden="true"></i></button><button type="button" class="ikon-dugme" data-k="italic" title="İtalik" aria-label="İtalik"><i class="fa-solid fa-italic" aria-hidden="true"></i></button><span class="duzenleyici-ayrac" aria-hidden="true"></span><button type="button" class="ikon-dugme" data-k="insertUnorderedList" title="Madde listesi" aria-label="Madde listesi"><i class="fa-solid fa-list-ul" aria-hidden="true"></i></button><button type="button" class="ikon-dugme" data-k="insertOrderedList" title="Numaralı liste" aria-label="Numaralı liste"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></button><span class="duzenleyici-ayrac" aria-hidden="true"></span><button type="button" class="ikon-dugme" data-k="blockquote" title="Alıntı" aria-label="Alıntı"><i class="fa-solid fa-quote-left" aria-hidden="true"></i></button><button type="button" class="ikon-dugme" data-k="link" title="Bağlantı" aria-label="Bağlantı" data-eylem="calistir" data-ad="Bağlantı"><i class="fa-solid fa-link" aria-hidden="true"></i></button><span class="duzenleyici-ayrac" aria-hidden="true"></span><button type="button" class="ikon-dugme" data-k="removeFormat" title="Biçimi temizle" aria-label="Biçimi temizle"><i class="fa-solid fa-eraser" aria-hidden="true"></i></button><button type="button" class="ikon-dugme" data-k="code" title="Kaynağı gör" aria-label="Kaynağı gör" data-eylem="calistir" data-ad="Kaynağı gör"><i class="fa-solid fa-code" aria-hidden="true"></i></button></div><div class="duzenleyici-yuzey" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Terimi iki-üç cümleyle, mutfak diliyle anlat." data-bos="Terimi iki-üç cümleyle, mutfak diliyle anlat."></div><div class="duzenleyici-ayak"><span><b>0</b> kelime</span><span><b>0</b> karakter</span></div></div>
                   <div class="alan-yardim"><span>Terim detay sayfasının ana metni. İki-üç cümle; ne olduğu,
@@ -271,8 +288,12 @@
               <div>
                 <div class="alan">
                   <label class="alan-etiket">Terim etiketleri</label>
-                  <div id="sfEtiketler" class="coklu-secim" data-ad="etiketler"><div class="coklu-kutu"><input class="acilir-arama" type="text" placeholder="Etiket ara ya da yaz…" aria-label="Etiket ara ya da yaz…" autocomplete="off" role="combobox" aria-expanded="false"></div><div class="acilir-yuzey" role="listbox" hidden=""></div></div>
-                  <div class="alan-yardim"><span>Terim sayfasının sağ sütunundaki <b>“Etiketler”</b> kutusu. Ölçüldü: dört terim sayfasının dördünde de <b>3 etiket</b> basılıyor (<code>servis · büfe · davet</code> gibi) — küçük harf, tek sözcük.</span></div>
+                  <div id="sfEtiketler" class="coklu-secim" data-ad="etiketler" data-oneri="etiketler"><input type="hidden" data-cs name="etiketler" value=""><div class="coklu-kutu"><input class="acilir-arama" type="text" placeholder="Etiket ara ya da yaz…" aria-label="Etiket ara ya da yaz…" autocomplete="off" role="combobox" aria-expanded="false"></div><div class="acilir-yuzey" role="listbox" hidden=""></div></div>
+                  <div class="alan-yardim"><span>Terim sayfasının sağ sütunundaki <b>“Etiketler”</b> kutusu.
+                    🔴 <b>KALDIRILMADI — ölçüm kaldırma gerekçesini çürüttü.</b> Görev bu alanı silmeyi
+                    istiyordu; 54 public terim sayfası tarandı: <b>53'ünde</b> etiket kutusu var ve
+                    toplam <b>150 etiket</b> basılıyor (sayfa başına 2–4, küçük harf). Karşılığı olan
+                    bir alan silinmez.</span></div>
                 </div>
               </div>
             </div>
@@ -284,19 +305,12 @@
               </h3>
               <div class="adim-liste" id="sfKaynaklar">
                 <div class="adim-karti">
-                  <span class="adim-no" data-klon-metin="">1</span>
                   <div class="adim-govde">
                     <div class="alan">
                       <label class="alan-etiket">Kaynak künyesi</label>
                       <input class="alan-girdi" type="text" data-field="kaynak" name="kaynak[]" maxlength="160" placeholder="Örn. Oxford Companion to Food">
                     </div>
                     <input type="hidden" data-field="position" value="0">
-                  </div>
-                  <div class="adim-yan">
-                    <button class="ikon-dugme tutamak" type="button" data-eylem="sirala" aria-label="Kaynağı sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır">
-                      <i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button>
-                    <button class="ikon-dugme yikici" type="button" data-islem="sil" data-ad="Kaynağı sil" aria-label="Kaynağı sil">
-                      <i class="fa-solid fa-trash-can" aria-hidden="true"></i></button>
                   </div>
                 </div>
               </div>
@@ -312,47 +326,70 @@
               <h3 class="form-bolum-bas"><i class="fa-solid fa-dumbbell" aria-hidden="true"></i> Tarif köprüsü</h3>
               <div>
                 <div class="alan">
-                  <label class="alan-etiket">İlişkili tarif <span class="acilir-kalem">— tek kayıt</span></label>
-                  <div id="sfHareket" class="coklu-secim"><div class="coklu-kutu"><input class="acilir-arama" type="text" placeholder="Tarif ara…" aria-label="Tarif ara…" autocomplete="off" role="combobox" aria-expanded="false"></div><div class="acilir-yuzey" role="listbox" hidden=""></div></div>
-                  <div class="alan-yardim" id="sfHareketHint"><span>Tarif kütüphanesindeki gerçek kayıtlardan seçilir; uydurma adres yazılamaz. Veri modelinde bu alan <b>tekildir</b> — terim başına en çok bir tarif.</span></div>
+                  <label class="alan-etiket" for="sfTarifAra">İlişkili tarifler <span class="acilir-kalem">— birden çok</span></label>
+                  <div id="sfHareket" class="coklu-secim" data-ad="tarif_bag" data-kayit="tarifler"><input type="hidden" data-cs name="tarif_bag" value=""><div class="coklu-kutu"><input class="acilir-arama" id="sfTarifAra" type="text" placeholder="Tarif ara…" aria-label="Tarif ara" autocomplete="off" role="combobox" aria-expanded="false"></div><div class="acilir-yuzey" role="listbox" hidden=""></div></div>
+                  <div class="alan-yardim" id="sfHareketHint"><span>Tarif kütüphanesindeki gerçek kayıtlardan seçilir; uydurma adres yazılamaz. 🔴 <b>“Tek kayıt” iddiası ölçülünce çürüdü:</b> 54 public terim sayfasının <b>15</b>’i “İlgili tarifler” bandı basıyor ve band <b>1–6</b> tarif taşıyor (toplam 46 kart; dağılım 1×3 · 2×4 · 3×2 · 4×3 · 5×1 · 6×2). Alan çoklu bırakıldı.</span></div>
                 </div>
               </div>
             </div>
 
-            <div class="form-bolum">
-              <h3 class="form-bolum-bas"><i class="fa-solid fa-person" aria-hidden="true"></i> Malzeme köprüsü</h3>
-              <div>
-                <div class="alan">
-                  <label class="alan-etiket">İlişkili madde <span class="acilir-kalem">— tek kayıt</span></label>
-                  <div id="sfKas" class="coklu-secim"><div class="coklu-kutu"><input class="acilir-arama" type="text" placeholder="Madde ara…" aria-label="Madde ara…" autocomplete="off" role="combobox" aria-expanded="false"></div><div class="acilir-yuzey" role="listbox" hidden=""></div></div>
-                  <div class="alan-yardim" id="sfKasHint"><span>Mutfak Ansiklopedisi’ndeki 1.200 maddeden seçilir; listede yoksa önce Ansiklopedi ekranından eklenmeli.</span></div>
-                </div>
-              </div>
-            </div>
-
-            <div class="form-bolum">
+            <!-- 🔴 KALDIRILDI · "Malzeme köprüsü" (İlişkili madde — ansiklopedi bağı)
+                 gerekçe: 54 public terim sayfasının 0'ında `mutfak-ansiklopedisi` adresine
+                 giden bir bağ yok. Terim ↔ madde köprüsü public'te yaşamıyor. -->
+              <div class="form-bolum">
               <h3 class="form-bolum-bas"><i class="fa-solid fa-diagram-project" aria-hidden="true"></i> Sözlük içi bağlar</h3>
               <div>
                 <div class="alan">
                   <label class="alan-etiket">İlişkili terimler <span class="acilir-kalem">— aynı ailede birlikte okunanlar</span></label>
-                  <div id="sfTerimler" class="coklu-secim"><div class="coklu-kutu"><input class="acilir-arama" type="text" placeholder="Terim ara…" aria-label="Terim ara…" autocomplete="off" role="combobox" aria-expanded="false"></div><div class="acilir-yuzey" role="listbox" hidden=""></div></div>
+                  <div id="sfTerimler" class="coklu-secim" data-ad="ilgili_terim" data-kayit="sozluk"><input type="hidden" data-cs name="ilgili_terim" value=""><div class="coklu-kutu"><input class="acilir-arama" type="text" placeholder="Terim ara…" aria-label="Terim ara…" autocomplete="off" role="combobox" aria-expanded="false"></div><div class="acilir-yuzey" role="listbox" hidden=""></div></div>
                   <div class="alan-yardim"><span>Detay sayfası aynı kategoriden komşuları zaten kendiliğinden
                     listeliyor; burası o listenin dışında elle bağlanan terimler içindir.</span></div>
                 </div>
               </div>
             </div>
 
+            <!-- 🔴 KALDIRILDI · "Sık karıştırılan terimler"
+                 gerekçe: 54 public terim sayfasında geçen 0. Üstelik listesi markup'ta BOŞ
+                 doğuyordu (`<div class="adim-liste" id="sfKaristirilan"></div>`) ve `satir-ekle`
+                 son satırı KLONLAYARAK çalışır — klonlanacak satır olmadığı için düğme
+                 tıklanınca hiçbir şey doğmuyordu (§11 ölü buton). -->
             <div class="form-bolum">
               <h3 class="form-bolum-bas">
-                <i class="fa-solid fa-code-compare" aria-hidden="true"></i> Sık karıştırılan terimler
-                <span class="alan-sayac" id="sfKarSay">0 kayıt</span>
+                <i class="fa-solid fa-list-check" aria-hidden="true"></i> Püf Noktası Aramaları
+                <span class="alan-sayac" id="sfAramaSay">1 arama</span>
               </h3>
-              <div class="adim-liste" id="sfKaristirilan"></div>
-              <button class="satir-ekle" type="button" id="sfKarEkle" data-eylem="satir-ekle">
-                <i class="fa-solid fa-plus" aria-hidden="true"></i> Karıştırılan terim ekle</button>
-              <div class="alan-yardim" style="margin-top:10px"><span>Her satır bir terim ve <b>farkı bir
-                cümleyle</b> anlatan not taşır. Detay sayfasında bu not aynen basılır —
-                “bunlar farklı şeyler” demek yetmiyor, farkın ne olduğu yazılıyor.</span></div>
+              <!-- 🔴 ÖLÇÜM ÖNCEKİ İDDİAYI ÇÜRÜTTÜ. Formun eski hâli "bu liste yazılmaz,
+                   TÜRETİLİR: kategori başına dört soru kalıbı var" diyordu ve tek yönetilebilir
+                   alan bir URL'di. 53 public terim sayfası tarandı:
+                     · kalem sayısı SABİT DEĞİL — 4'lü 43 sayfa · 3'lü 7 · 5'li 3
+                     · terim adı çıkarıldıktan sonra AYNI KATEGORİDE birebir aynı kalıbı
+                       paylaşan terim 53'te yalnız 2
+                   Yani cümleler elle yazılmış içerik (toplam 208 kalem), türetilmiş değil.
+                   Alan tekrarlayan satıra (L10) çevrildi. -->
+              <div class="adim-liste" id="sfAramalar"><div class="adim-karti"><div class="adim-govde"><div class="alan"><label class="alan-etiket">Arama cümlesi</label><input class="alan-girdi" type="text" data-field="arama" name="arama[]" maxlength="120" placeholder="Örn. al dente pişirme süresi"></div><input type="hidden" data-field="position" value="0"></div></div></div>
+              <button class="satir-ekle" type="button" id="sfAramaEkle" data-eylem="satir-ekle">
+                <i class="fa-solid fa-plus" aria-hidden="true"></i> Arama ekle</button>
+              <div class="alan-yardim"><span>Detay sayfasında “Püf Noktası Aramaları” başlığı
+                altında madde madde basılır; her madde püf noktaları listesine bağlanır.</span></div>
+            </div>
+
+            <div class="form-bolum">
+              <h3 class="form-bolum-bas"><i class="fa-solid fa-lightbulb" aria-hidden="true"></i> İlgili püf noktaları</h3>
+              <div>
+                <div class="alan">
+                  <label class="alan-etiket" for="sfPufAra">Bağlanan püf noktaları</label>
+                  <!-- L5 · kaynak `DM_KAYITLAR["puf-noktalari"]`. Public bandı 54 terimin
+                       12'sinde basılıyor; admin'de yalnız bandın "Tümü" bağı yönetiliyordu. -->
+                  <div id="sfPufNokta" class="coklu-secim" data-ad="puf_bag" data-kayit="puf-noktalari">
+                    <input type="hidden" data-cs name="puf_bag" value="">
+                    <div class="coklu-kutu"><input class="acilir-arama" id="sfPufAra" type="text" placeholder="Püf noktası ara…" aria-label="Püf noktası ara" autocomplete="off" role="combobox" aria-expanded="false"></div>
+                    <div class="acilir-yuzey" role="listbox" hidden=""></div>
+                    <div class="cipler"></div>
+                  </div>
+                  <div class="alan-yardim"><span>Boş bırakılırsa band public'te hiç basılmaz
+                    (ölçüldü: 54 terimin 42'sinde band yok).</span></div>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -387,25 +424,14 @@
               </div>
             </div>
 
-            <div class="form-bolum">
-              <h3 class="form-bolum-bas"><i class="fa-solid fa-list-check" aria-hidden="true"></i> Püf Noktası Aramaları</h3>
-              <div class="alan-yardim"><span>Bu liste <b>yazılmaz, türetilir</b>: kategori başına dört soru
-                kalıbı var ve terimin adıyla dolduruluyor (<code>sozluk-veri</code> →
-                <code>ARAMA_KALIP</code>). Detay sayfasında aynen basılır. Kategori ya da terim adı
-                değişince buradaki sorular da değişir.</span></div>
-                <div class="alan">
-                  <label for="sfPufBag" class="alan-etiket">Püf Noktası Aramaları bağı</label>
-                  <input class="alan-girdi" id="sfPufBag" name="puf_bag" type="text" data-girdi="url" placeholder="puf-noktalari.html">
-                  <div class="alan-yardim"><span>Ölçüldü: dört terim sayfasının dördünde de aramaların <b>dördü birden</b> aynı adrese gidiyor — <code>puf-noktalari.html</code>. Bağ formda yönetilmiyordu; hedef değişirse her terim sayfasında elle düzeltme gerekirdi.</span></div>
-                </div>
-              <div class="adim-liste" id="sfAramalar"><span>Terim adı ve kategori seçilince dört arama burada belirir.</span></div>
-            </div>
+            <!-- 🔴 "Püf Noktası Aramaları" SEO sekmesinden İLİŞKİLER sekmesine taşındı ve
+                 tek URL alanı gerçek listeye çevrildi — aşağıya bak. -->
           </div>
 
           <div class="form-eylem kart-alt">
             <a class="dugme hayalet" href="admin-sozluk.html">İptal</a>
             <button class="dugme hayalet" type="button" id="sfTaslak" data-eylem="taslak">Taslak kaydet</button>
-            <button class="dugme birincil" type="button" id="sfKaydet">Terimi kaydet</button>
+            <button class="dugme birincil" type="button" id="sfKaydet" data-eylem="kaydet">Terimi kaydet</button>
           </div>
         <div class="bos-durum kart-ici" hidden=""><span class="bos-ikon"><i class="fa-solid fa-file-circle-question" aria-hidden="true"></i></span><h3>Bu adreste terim yok</h3><p>Adresteki slug sözlükte karşılık bulmuyor. Listeye dön ve bir terim seç.</p><a class="dugme birincil" href="admin-sozluk.html">Sözlüğe dön</a></div><div class="bos-durum kart-ici yetkisiz" data-durum="yetkisiz" hidden=""><span class="bos-ikon"><i class="fa-solid fa-lock" aria-hidden="true"></i></span><h3>Bu kaydı düzenleyemezsin</h3><p>Erişim istemek için yöneticinle görüş.</p></div><div class="bos-durum kart-ici servis-hatasi" data-durum="servis" hidden=""><span class="bos-ikon"><i class="fa-solid fa-plug-circle-xmark" aria-hidden="true"></i></span><h3>Kayıt yüklenemedi</h3><p>Bağlantı kurulamadı. Yeniden dene.</p><button class="dugme birincil" type="button" data-eylem="calistir" data-ad="Yeniden dene"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i> Yeniden dene</button><div class="hata-izi">Referans kodu <code>GAS-ADM-5209</code></div></div></div>
 
@@ -466,10 +492,19 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/l10n/tr.js"></script>
 <script src="../../kanon/admin-editor-tr.js"></script>
+<script src="../../kanon/admin-ikon-kutuphane.js" defer></script>
+<script src="../../kanon/admin-veri.js" defer></script>
 <script src="../../kanon/admin-kit.js" defer></script>
 <script src="../../kanon/admin-editor.js" defer></script>
 <script src="../../kanon/admin-tarih.js" defer></script>
 <!-- ADMIN-KIT:JS:SON -->
+<!-- GASTRO-EK:JS:BAS -->
+<script src="_ortak/gastro-ek.js" defer></script>
+<script src="_ortak/gastro-ek-a.js" defer></script>
+<script src="_ortak/gastro-ek-b.js" defer></script>
+<script src="_ortak/gastro-ek-c.js" defer></script>
+<script src="_ortak/gastro-ek-d.js" defer></script>
+<!-- GASTRO-EK:JS:SON -->
 <!-- KAYIT KAYNAGI — form kendi kayitlarini BILDIRIR (kit §5b).
      ANAHTAR: satirin kendi `data-slug` degeri; 12 satirin 12si benzersiz (olculdu).
      terim · slug · kategori · harf · ingilizce  →  admin-sozluk.html satirlarindan.
@@ -484,23 +519,27 @@
  "julyen": {
   "terim": "Jülyen",
   "slug": "julyen",
-  "kategori": "Teknik (92)",
+  "kategori": "Teknik",
   "harf": "J",
-  "ingilizce": "julienne · kibrit çöpü doğrama",
-  "durum": "yayin"
+  "ingilizce": "julienne",
+  "durum": "yayin",
+  "tanim": "Sebzeleri kibrit çöpü inceliğinde, 4–5 cm uzunluğunda ince şeritler halinde doğrama tekniği. Eşit kalınlık eşit pişme demektir; salatalarda ve wok yemeklerinde standart kesimdir.",
+  "ornek": "&ldquo;Havuçları jülyen doğrayıp salatanın üzerine ekleyin.&rdquo;"
  },
  "benmari": {
   "terim": "Benmari",
   "slug": "benmari",
-  "kategori": "Teknik (92)",
+  "kategori": "Teknik",
   "harf": "B",
-  "ingilizce": "bain-marie · su banyosunda eritme",
-  "durum": "yayin"
+  "ingilizce": "bain-marie",
+  "durum": "yayin",
+  "tanim": "Bir kabın, içinde su kaynayan başka bir kabın üzerine oturtularak doğrudan ateş değmeden ısıtma tekniği. Çikolata eritmede, sos ve krema pişirmede kullanılır; içerik yanmaz, kesilmez, pürüzsüz kalır. Suyun üstteki kaba değmemesi ve kaynamanın hafif olması gerekir.",
+  "ornek": "“Çikolatayı benmari usulü eritip ılıyınca kremaya ekleyin.”"
  },
  "acik-bufe": {
   "terim": "Açık Büfe",
   "slug": "acik-bufe",
-  "kategori": "Servis (12)",
+  "kategori": "Servis",
   "harf": "A",
   "ingilizce": "open buffet",
   "durum": "yayin",
@@ -520,12 +559,18 @@
   ],
   "meta_title": "Açık Büfe Nedir? Açık Büfe Düzeni Nasıl Olur?",
   "meta_desc": "Açık büfe, çok sayıda yemeğin uzun masalarda sergilendiği ve misafirin kendi tabağını doldurduğu bir servis türüdür; sıcak ve soğuk bölümler ayrı düzenlenir.",
-  "puf_bag": "puf-noktalari.html"
+  "kisa_tanim": "self servis açık masa",
+  "arama": [
+   "açık büfe nedir",
+   "açık büfe düzeni",
+   "açık büfe ile self servis",
+   "büfe sunumu"
+  ]
  },
  "adacayi": {
   "terim": "Adaçayı",
   "slug": "adacayi",
-  "kategori": "Baharat (57)",
+  "kategori": "Baharat",
   "harf": "A",
   "ingilizce": "sage",
   "durum": "yayin",
@@ -545,12 +590,21 @@
   ],
   "meta_title": "Adaçayı Nedir? Adaçayı Baharatı Nasıl Kullanılır?",
   "meta_desc": "Adaçayı, adaçayı bitkisinin kurutulmuş yapraklarından elde edilen keskin ve hafif acımsı aromalı bir baharattır; tereyağlı soslarda ve et yemeklerinde",
-  "puf_bag": "puf-noktalari.html"
+  "kisa_tanim": "kuru adaçayı yaprağı",
+  "arama": [
+   "adaçayı nasıl kullanılır",
+   "adaçayı hangi yemeklere gider",
+   "adaçayı çayı ne işe yarar",
+   "taze adaçayı kuru adaçayı farkı"
+  ],
+  "puf_bag": [
+   "Adaçayının Faydaları ve Kullanımı"
+  ]
  },
  "advieh": {
   "terim": "Advieh",
   "slug": "advieh",
-  "kategori": "Baharat (57)",
+  "kategori": "Baharat",
   "harf": "A",
   "ingilizce": "advieh",
   "durum": "yayin",
@@ -570,12 +624,18 @@
   ],
   "meta_title": "Advieh Nedir? İran Baharat Karışımı Kullanımı",
   "meta_desc": "Advieh, gül goncası, tarçın, kakule ve kişniş gibi baharatların bir araya getirildiği aromatik bir İran karışımıdır; pilav, güveç ve et yemeklerinde kullanılır.",
-  "puf_bag": "puf-noktalari.html"
+  "kisa_tanim": "İran baharat karışımı",
+  "arama": [
+   "advieh nedir",
+   "advieh içinde ne var",
+   "advieh nasıl kullanılır",
+   "iran pilav baharatı"
+  ]
  },
  "agar-agar": {
   "terim": "Agar Agar",
   "slug": "agar-agar",
-  "kategori": "Malzeme (35)",
+  "kategori": "Malzeme",
   "harf": "A",
   "ingilizce": "agar",
   "durum": "yayin",
@@ -595,57 +655,199 @@
   ],
   "meta_title": "Agar Agar Nedir? Bitkisel Jöle Maddesi Kullanımı",
   "meta_desc": "Agar agar, deniz yosunundan elde edilen bitkisel bir jöle maddesidir; jelatinden daha güçlü tutar, hayvansal içermediğinden vegan tariflerde tercih edilir.",
-  "puf_bag": "puf-noktalari.html"
+  "kisa_tanim": "bitkisel jöle maddesi",
+  "arama": [
+   "agar agar nedir",
+   "agar agar nasıl kullanılır",
+   "agar agar ile jelatin farkı",
+   "agar agar oranı"
+  ]
  },
  "emince": {
   "terim": "Émincé",
   "slug": "emince",
-  "kategori": "Kesim (79)",
+  "kategori": "Kesim",
   "harf": "É",
   "ingilizce": "Émincé",
-  "durum": "yayin"
+  "durum": "yayin",
+  "okunus": "e-man-se",
+  "koken": "Fransa",
+  "kaynak_dil": "Fransızca",
+  "kisa_tanim": "ince dilim et/sebze kesimi",
+  "tanim": "Émincé, et veya sebzelerin ince, kısa dilimler halinde kesilmesidir ve aynı zamanda bu şekilde kesilmiş malzemeyle hızlıca hazırlanan sote tarzı yemekleri de tanımlar. Kesimin inceliği malzemenin hızlı ve eşit pişmesini sağlar. Fransızcada ince dilimlemek anlamına gelen fiilden türemiştir.",
+  "ornek": "&ldquo;Dana etini émincé doğrayıp yüksek ateşte hızlıca sote edin.&rdquo;",
+  "etiketler": [
+   "bıçak kesimi",
+   "fransız"
+  ],
+  "kaynak": [
+   "Larousse Gastronomique",
+   "Professional Cooking (Wayne Gisslen)"
+  ],
+  "arama": [
+   "émincé nedir",
+   "émincé kesim nasıl yapılır",
+   "émincé ile escalope farkı",
+   "émincé sote nasıl pişirilir"
+  ]
  },
  "ahtapot": {
   "terim": "Ahtapot",
   "slug": "ahtapot",
-  "kategori": "Deniz Ürünü (30)",
+  "kategori": "Deniz Ürünü",
   "harf": "A",
   "ingilizce": "octopus",
-  "durum": "yayin"
+  "durum": "yayin",
+  "okunus": "ah-ta-pot",
+  "koken": "Ege/Akdeniz",
+  "kaynak_dil": "Rumca",
+  "kisa_tanim": "sekiz kollu yumuşakça",
+  "tanim": "Ahtapot, sekiz kollu, kabuksuz bir deniz yumuşakçasıdır. Eti sıkı olduğundan dövülerek veya uzun pişirilerek yumuşatılır. Zeytinyağlı meze ve ızgara olarak tüketilir.",
+  "ornek": "“Ahtapotu uzun süre haşlayıp yumuşadıktan sonra ızgarada mühürleyin.”",
+  "etiketler": [
+   "deniz ürünü",
+   "yumuşakça",
+   "meze"
+  ],
+  "kaynak": [
+   "Oxford Companion to Food",
+   "McGee on Food and Cooking"
+  ],
+  "arama": [
+   "ahtapot nasıl pişirilir",
+   "ahtapot nasıl yumuşatılır",
+   "ahtapot ızgara",
+   "ahtapot haşlama süresi"
+  ],
+  "puf_bag": [
+   "Kalamar ve Ahtapot Bozulduğu Nasıl Anlaşılır?",
+   "Ahtapot Kaç Dakikada Haşlanarak Yumuşar?",
+   "Kalamar ve Ahtapot Alırken Tazelik Nasıl Anlaşılır?"
+  ]
  },
  "aioli": {
   "terim": "Aioli",
   "slug": "aioli",
-  "kategori": "Sos (93)",
+  "kategori": "Sos",
   "harf": "A",
   "ingilizce": "aïoli",
-  "durum": "yayin"
+  "durum": "yayin",
+  "okunus": "ayoli",
+  "koken": "Fransa/İspanya",
+  "kaynak_dil": "Fransızca/Provençal",
+  "kisa_tanim": "sarımsaklı zeytinyağı sosu",
+  "tanim": "Aioli, dövülmüş sarımsağın zeytinyağıyla emülsiye edilmesiyle yapılan yoğun kıvamlı bir sostur. Geleneksel tarifte yumurta yer almaz; modern versiyonlarda stabilite için yumurta sarısı eklenir. Akdeniz mutfağında balık, sebze ve ekmekle servis edilir.",
+  "ornek": "“Aioliyi buharda pişmiş sebzelerin yanına ayrı bir kapta koyun.”",
+  "etiketler": [
+   "sos",
+   "akdeniz",
+   "emülsiyon"
+  ],
+  "kaynak": [
+   "Larousse Gastronomique",
+   "McGee on Food and Cooking"
+  ],
+  "arama": [
+   "aioli nedir",
+   "aioli mayonez farkı",
+   "aioli nasıl yapılır",
+   "aioli neden ayrılır"
+  ]
  },
  "al-dente": {
   "terim": "Al Dente",
   "slug": "al-dente",
-  "kategori": "Teknik (92)",
+  "kategori": "Teknik",
   "harf": "A",
   "ingilizce": "cooking al dente",
-  "durum": "yayin"
+  "durum": "yayin",
+  "okunus": "al den-te",
+  "koken": "İtalya",
+  "kaynak_dil": "İtalyanca",
+  "kisa_tanim": "dişe gelir diri kıvamda haşlama",
+  "tanim": "Al dente, özellikle makarnanın tam yumuşamadan, hafif diri ve dişe gelir kıvamda haşlanması durumunu tanımlar. Bu kıvam malzemenin merkezinde hafif bir sertlik bırakır. İtalyan mutfağında makarna pişirmenin temel ölçütüdür.",
+  "ornek": "“Makarnayı paket üzerindeki süreden bir dakika önce süzüp kontrol edin.”",
+  "etiketler": [
+   "yaş ısı",
+   "italyan"
+  ],
+  "kaynak": [
+   "Larousse Gastronomique",
+   "The Professional Chef - CIA"
+  ],
+  "arama": [
+   "al dente ne demek",
+   "makarna al dente nasıl anlaşılır",
+   "al dente pişirme süresi",
+   "al dente ile fazla pişmiş makarna farkı"
+  ],
+  "puf_bag": [
+   "Makarna Kaç Dakikada Pişer (Al Dente)?",
+   "Tam Buğday Makarna Kaç Dakikada Pişer?",
+   "Fazla Cıvık Pişmiş Makarna Nasıl Düzeltilir?"
+  ]
  },
  "alfredo-sos": {
   "terim": "Alfredo Sos",
   "slug": "alfredo-sos",
-  "kategori": "Sos (93)",
+  "kategori": "Sos",
   "harf": "A",
   "ingilizce": "salsa Alfredo",
-  "durum": "yayin"
+  "durum": "yayin",
+  "okunus": "alfredo",
+  "koken": "İtalya",
+  "kaynak_dil": "İtalyanca",
+  "kisa_tanim": "kremalı parmesanlı sos",
+  "tanim": "Alfredo sos, tereyağı ve rendelenmiş parmesan peynirinin sıcak makarna üzerinde eritilmesiyle oluşan kremsi bir sostur. Adını 20. yüzyıl başında Roma'da bu tarifi popülerleştiren restoran sahibi Alfredo di Lelio'dan alır. Amerika'da yaygınlaşan versiyonlarında ayrıca krema kullanılır.",
+  "ornek": "“Alfredo sosu haşlanmış fettuccine ile sıcakken karıştırın.”",
+  "etiketler": [
+   "sos",
+   "italyan",
+   "kremalı"
+  ],
+  "kaynak": [
+   "Larousse Gastronomique",
+   "CIA Professional Chef"
+  ],
+  "arama": [
+   "alfredo sos nedir",
+   "alfredo sos nasıl yapılır",
+   "alfredo sos içinde krema var mı"
+  ]
  },
  "anason": {
   "terim": "Anason",
   "slug": "anason",
-  "kategori": "Baharat (57)",
+  "kategori": "Baharat",
   "harf": "A",
   "ingilizce": "anise",
-  "durum": "yayin"
+  "durum": "yayin",
+  "okunus": "a-na-son",
+  "koken": "Akdeniz",
+  "kaynak_dil": "Yunanca",
+  "kisa_tanim": "anason tohumu baharatı",
+  "tanim": "Anason, anason bitkisinin tatlımsı ve meyankökünü andıran aromalı tohumlarından elde edilen bir baharattır. Rakı gibi içeceklerin, pide ve çöreklerin tatlandırılmasında kullanılır. Rezene ve yıldız anasona benzese de ayrı bitkilerdir.",
+  "ornek": "“Anason tohumlarını çörek hamuruna katıp aromasını yayın.”",
+  "etiketler": [
+   "baharat",
+   "tohum",
+   "aromatik"
+  ],
+  "kaynak": [
+   "Oxford Companion to Food",
+   "Türk Mutfağı Ansiklopedisi"
+  ],
+  "arama": [
+   "anason nedir",
+   "anason nerede kullanılır",
+   "anason ile rezene farkı",
+   "anason yıldız anason farkı"
+  ],
+  "puf_bag": [
+   "Anason Çayının Faydaları ve Doğru Demlenmesi"
+  ]
  }
 }
-</script>
+  </script>
 
 </body></html>

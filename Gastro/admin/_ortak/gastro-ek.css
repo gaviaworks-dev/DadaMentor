@@ -1,0 +1,55 @@
+/* GASTRO MARKA EKİ · CSS — kit'e taşınacak (bkz. gastro-ek.js şerhi).
+   kanon/admin.css'ten SONRA yüklenir; eşit özgüllükte sonra gelen kazanır. */
+
+/* ═══ L1 · KELİME MARKASI GÖRSEL EŞİTLİK — "dada" BANDI EŞİTLENİR ══════
+   K-ÖNERİ: KÖ-L1 (docs/admin-kit-oneri-gastro-2.md). Kit'e taşınınca SİL.
+
+   Beyar: *"Gastro hâlâ küçük görünüyor — FIT/Diet ile görsel eşitle."*
+
+   🔴 KUTU BOYU GÖRSEL BOY DEĞİLDİR. K32 dört markanın kutusunu 20px'te
+      eşitledi (`--marka-kelime-h`) ve o düzeltme DOĞRUYDU — ama gözün
+      karşılaştırdığı şey kutu değil, **"dada" bloğu**: çıkıntı tepesinden
+      TABAN ÇİZGİSİNE kadarki bant. DadaGastro'nun `g`si taban çizgisinin
+      ALTINA iner ve o iniş viewBox'ın içindedir; kutu sabitken inişi olan
+      marka harflerini o kadar küçük çizer.
+
+   ÖLÇÜLDÜ — uydurulmadı (scripts/olcum/p2/l1-bant.mjs · SVG 40× rasterize,
+   satır satır mürekkep sayımı · rapor/l1-bant.json):
+
+     marka     kutu   çıkıntı→taban   taban altı iniş   bant/kutu
+     fit       20px       19.75px          0.25px        0.9875
+     diet      20px       19.60px          0.23px        0.9800
+     gastro    20px       16.30px          3.70px        0.8150   🔴 −%17,5
+     gourmet   20px       16.30px          3.70px        0.8150   🔴 aynı kusur
+
+   ÇÖZÜM: kutu boyu markanın BANT ORANIYLA telafi edilir; taban çizgisi
+   kardeş markalarla AYNI yerde kalsın diye negatif alt boşluk kutunun
+   AKIŞ AYAK İZİNİ 20px'te tutar. Böylece "dada" bloğunun tepesi de tabanı
+   da FIT ile aynı satıra oturur, `g` inişi başlık şeridinin boşluğuna
+   taşar (şerit boyu --kit-ust-h, yer var).
+
+   telafi = FIT bandı / Gastro bandı = 19.75 / 16.30 = 1.21166
+   ⚠ Bant oranı ÖLÇÜLMÜŞ bir sayıdır; SVG değişirse yeniden ölçülür.
+   ⚠ Gourmet'te de aynı kusur var — kit'e taşınırken dört marka birden. */
+.yetkili[data-marka="gastro"]{ --gastro-kelime-telafi:1.21166; }
+.yetkili[data-marka="gastro"] .panel-marka::before{
+  height:calc(var(--marka-kelime-h) * var(--gastro-kelime-telafi));
+  width:calc(var(--marka-kelime-h) * var(--gastro-kelime-telafi) * var(--marka-kelime-oran));
+  /* akış ayak izi 20px'te kalır → taban çizgisi kardeş markalarla aynı */
+  margin-bottom:calc(var(--marka-kelime-h) * (1 - var(--gastro-kelime-telafi)));
+}
+/* Katlı kip (K30): kırpma da aynı oranda büyür, yoksa "da" yerine "d" kalır. */
+.yetkili.panel-katli[data-marka="gastro"] .panel-marka::before{
+  width:calc(30px * var(--gastro-kelime-telafi));
+  -webkit-mask-size:auto calc(var(--marka-kelime-h) * var(--gastro-kelime-telafi));
+          mask-size:auto calc(var(--marka-kelime-h) * var(--gastro-kelime-telafi));
+}
+
+/* ═══ L3 · SEKME RAYI DOLGUSU — KİTE TAŞINDI, BURADAN SÖKÜLDÜ ═════════
+   Kural artık `kanon/admin.css` §K17 (kit hazır 2 · c169c8b6a555).
+   Gastro bunu KÖ-L3 olarak pilotladı; kit ölçütü GENİŞLETTİ — pilot
+   yalnız `:has(+ .suzgec-cubuk)` kapıyordu, kit `.kart:has(> .suzgec-cubuk)`
+   ve `.kart:has(> .tablo-kap)` ile kabın DOLGUSUNU KİMİN taşıdığına bakıyor.
+   Yani kitin kapsamı pilotunkinden geniş; pilotun kalması hem gereksiz hem
+   de dar ölçütüyle ileride kitin kapsamını maskeleyebilirdi.
+   ═══════════════════════════════════════════════════════════════════ */

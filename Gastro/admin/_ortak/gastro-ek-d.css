@@ -1,0 +1,45 @@
+/* GASTRO MARKA EKİ · CSS · kulvar d — kit'e taşınacak (bkz. gastro-ek-d.js şerhi).
+   kanon/admin.css'ten SONRA yüklenir; eşit özgüllükte sonra gelen kazanır.
+   Yeni bir ölçek DOĞMAZ: bütün boşluklar `--bosluk-*` üstünden (kit §1). */
+
+/* ── SATIR İÇİ `style=` SÖKÜLDÜ · üç kural sınıfa taşındı ──────────
+   D kulvarının üç formunda 15 satır içi bildirim vardı: 12'si KURAL (üç ayrı
+   kural, toplam 12 yerde) ve üçü DEĞER. Kurallar buraya indi; kalan üç
+   bildirim `--oran:N` ve o bir kural DEĞİL, SEO halkasının okuduğu değerdir
+   (kaydın skoru). Değeri CSS'e taşımak her kayda bir sınıf açmak olurdu —
+   bu yüzden kapı da (G6) `--<ad>:<sayı>` biçimindeki bildirimi kural
+   saymıyor ve bunu raporunda YAZIYOR. */
+.yetkili .sozde-dugme { pointer-events: none; }
+.yetkili .alan-yardim.on-nefes { margin-bottom: var(--bosluk-12); }
+.yetkili .bos-durum.duz-kap { box-shadow: none; border: 0; }
+
+/* ── KÖ-D2 · bırakma alanı üstünde sürükleme geri bildirimi ────────── */
+.yetkili .birak-alani.birak-uzerinde {
+  border-color: var(--aksan-koyu);
+  background: var(--yuzey-2, var(--kagit));
+}
+
+/* ── KÖ-D4 · kaynaksız ölçüt sessiz kalmaz ────────────────────────── */
+.yetkili .alan-yardim .olcut-kaynaksiz,
+.yetkili [data-rol="olcut-kaynak"].olcut-kaynaksiz { color: var(--uyari); font-weight: 600; }
+
+/* ── KÖ-D3 · eşleşme notu uzun; kendi satırında nefes alsın ───────── */
+.yetkili [data-eslesme-not] { display: block; margin-top: var(--bosluk-8); }
+
+/* ── KÖ-D5 · L10 DENETİM ŞERİDİ SATIRIN ÜSTÜNDE ────────────────────
+   Kit L10 her tekrarlayan satıra `.tekrar-bas`ı (tutamak · numara · sil)
+   İLK ÇOCUK olarak enjekte ediyor ve `admin.css` ona `margin-bottom`
+   veriyor — yani kabın SÜTUN olduğunu varsayıyor. Oysa `.adim-karti`
+   kanonda `display:flex` SATIR (`bilesenler.css`): şerit alanların
+   soluna düşüyor, `.tekrar-sil`in `margin-left:auto`su o küçük kutunun
+   içinde kayboluyordu.
+   Kanca ADA değil İÇERİĞE bakar (K24'ün dersi): kural yalnız kitin
+   şeridini GERÇEKTEN taşıyan karta iner; taşımayan kart dokunulmaz. */
+.yetkili .adim-karti:has(> .tekrar-bas) { flex-direction: column; align-items: stretch; }
+
+/* ── Adım kartı görseli — kart içi bırakma alanı tam en kaplamasın ──
+   Kit'in `.birak-alani`sı form bölümü genişliğinde tasarlandı; tekrarlayan
+   satırın içinde o yükseklik satırı okunamaz yapıyor. Yalnız `.adim-liste`
+   içindekiler alçalır; dışarıdaki kapak görseli DEĞİŞMEZ. */
+.yetkili .adim-liste .birak-alani { min-height: 96px; padding: var(--bosluk-12); }
+.yetkili .adim-liste .birak-alani small { display: none; }

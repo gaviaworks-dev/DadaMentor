@@ -1,0 +1,80 @@
+/* GASTRO MARKA EKİ · CSS · kulvar c — kit'e taşınacak (bkz. gastro-ek-c.js şerhi).
+   kanon/admin.css'ten SONRA yüklenir; eşit özgüllükte sonra gelen kazanır.
+   Ölçek §1'in dışına çıkılmaz: 4 / 8 / 12 / 16 / 24 / 32 / 48. */
+
+/* ═══ KÖ-C1 · İÇ İÇE TEKRARLAYICI ════════════════════════════════════
+   İç liste bir DÜZEY aşağıdadır ve bunu ÇİZGİ söyler — girinti değil
+   ikinci bir kap değil. Kap açmak `.adim-karti`yı iki kez çizerdi;
+   kenar çizgisi hiyerarşiyi tek bir kalemle anlatır. */
+.yetkili [data-ic-liste]{
+  border-left:2px solid var(--cizgi);
+  padding-left:var(--kit-satir);
+}
+/* İç satır dış satırdan bir kademe SAKİN: aynı kap iki kez çizilmez. */
+.yetkili [data-ic-liste] > .adim-karti{
+  background:transparent;
+  border:0;
+  padding:0;
+}
+.yetkili [data-ic-liste] > .adim-karti + .adim-karti{
+  padding-top:var(--kit-satir);
+  border-top:1px dashed var(--cizgi);
+}
+/* Sayaç iç listenin kendi etiketinin yanında; rozet değil düz sayı (§3'ün
+   `.sekme-sayi` kuralının form karşılığı). */
+.yetkili [data-ic-sayac]{
+  color:var(--metin-ikincil);
+  font-size:var(--yazi-12);
+  font-weight:var(--agirlik-kalin);
+  margin-left:var(--kit-bagli);
+  font-variant-numeric:tabular-nums;
+}
+
+/* ═══ KÖ-C4 · KOŞULLU ALAN ═══════════════════════════════════════════
+   Kapalı alan `hidden`dır; `[hidden]` kanonda zaten gizli. Burada tek
+   iş, açılan alanın nereden geldiğini göstermek — sessizce belirmesin. */
+.yetkili [data-kosul]:not([hidden]){
+  border-left:2px solid var(--aksan-yikama);
+  padding-left:var(--kit-satir);
+}
+
+/* ═══ PUBLIC EŞLEME NOTU ═════════════════════════════════════════════
+   Bir alanın public karşılığını yazan satır. Yardım rayının kardeşi
+   değil, ONUN İÇİNDE bir vurgu — dördüncü bir ray açmaz (K25'in dersi). */
+.yetkili .alan-yardim .public-esleme{
+  display:inline-flex; align-items:center; gap:var(--kit-bagli);
+  color:var(--metin-ikincil);
+}
+.yetkili .alan-yardim .public-esleme > code{ font-size:var(--yazi-12); }
+
+/* Ölçüm künyesi — bir sayının NE ZAMAN ölçüldüğünü yazan satır.
+   ("paralel kulvarda sayım = zaman damgası" dersinin yüzey karşılığı.) */
+.yetkili .olcum-kunye{
+  display:block;
+  margin-top:var(--kit-bagli);
+  color:var(--metin-ikincil);
+  font-size:var(--yazi-12);
+}
+
+/* ═══ KÖ-C6 · SATIR BAŞLIĞI İKİ KEZ ÇİZİLİYORDU ══════════════════════
+   🔴 ÖLÇÜLDÜ (tıklanarak · admin-mutfaga-giris-form, taban):
+      her tekrarlayıcı satırda numara 2 · tutamak 2 · sil 2.
+   Kök: markup L10'dan ÖNCE yazılmış `.adim-no` + `.adim-yan` taşıyor,
+   kitin L10'u ise `.tekrar-bas`ı AYRICA enjekte ediyor. İkisi de
+   "satırı taşı / sil" diyor; kullanıcı hangisinin gerçek olduğunu
+   bilemiyor. Bu kulvarın ekranlarında elle yazılmış başlık KALDIRILDI
+   ve satır L10'a bırakıldı.
+
+   `.adim-karti` kanonda yatay bir kutudur (numara solda, gövde sağda).
+   L10'un `.tekrar-bas`ı ise TAM GENİŞLİK bir başlık şerididir; o satır
+   sola sıkışınca tutamak/sil alt alta düşüyordu.
+   ⚠ Kural YALNIZ L10'a bırakılmış satırı kapsar: elle yazılmış
+     `.adim-yan` taşıyan satır (öteki kulvarların ekranları) dışarıda
+     kalır — kaptan çıkan bir kural komşu kulvarın düzenini bozar. */
+.yetkili .adim-karti:has(> .tekrar-bas):not(:has(> .adim-yan)){
+  flex-direction:column;
+  align-items:stretch;
+}
+.yetkili .adim-karti:has(> .tekrar-bas):not(:has(> .adim-yan)) > .tekrar-bas{
+  width:100%;
+}

@@ -1,0 +1,87 @@
+/* GASTRO MARKA EKİ · CSS · kulvar a — kit'e taşınacak (bkz. gastro-ek-a.js şerhi).
+   kanon/admin.css'ten SONRA yüklenir; eşit özgüllükte sonra gelen kazanır.
+   Ölçek §1'e bağlı: yeni bir boşluk kademesi AÇILMAZ, `--kit-*` kullanılır. */
+
+/* ── Satır içi style= yasağının karşılıkları (§ ajan sözleşmesi) ────── */
+.yetkili .g-tikgecmez{ pointer-events:none; }
+.yetkili .g-ust-10{ margin-top:var(--kit-bagli); }
+.yetkili .g-ust-16{ margin-top:var(--kit-grup); }
+.yetkili .g-alt-12{ margin-bottom:var(--kit-satir); }
+
+/* ═══ KÖ-A1 · ÇOKLU GÖRSEL GALERİSİ ══════════════════════════════════
+   Kart ızgarası §1'in 16'sını kullanır (aynı grup içi). Kart oranı 4:3 —
+   public `rd-stage` de yatay; dikey kart kırpma yanılsaması yaratırdı. */
+.yetkili .g-izgara{
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(150px, 1fr));
+  gap:var(--kit-grup);
+  margin-top:var(--kit-grup);
+}
+.yetkili .g-izgara:empty{ display:none; }
+
+.yetkili .g-kart{
+  position:relative;
+  border:var(--cizgi-1) solid var(--cizgi);
+  border-radius:var(--yuvarlak-md);
+  background:var(--kagit);
+  overflow:hidden;
+  cursor:grab;
+}
+.yetkili .g-kart.surukleniyor{ opacity:.45; cursor:grabbing; }
+.yetkili .g-kart-gorsel{
+  display:block; aspect-ratio:4/3;
+  background:var(--zemin) center/cover no-repeat;
+}
+.yetkili .g-kart-ad{
+  display:block;
+  padding:var(--kit-bagli) var(--kit-satir);
+  font-size:var(--yazi-13); color:var(--metin-ikincil);
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+/* 🔴 Sil düğmesi kartın SAĞ ÜSTÜNDE (görev maddesi 7). Zemin opak:
+   yarı saydam zemin kontrastı bileşenin değil, ARKASINDAKİ görselin
+   özelliği yapardı ve her görselde başka bir orana düşerdi. */
+.yetkili .g-kart-sil{
+  position:absolute; top:var(--kit-bagli); right:var(--kit-bagli);
+  width:28px; height:28px; min-width:0; padding:0;
+  border-radius:var(--yuvarlak-daire);
+  background:var(--murekkep); color:var(--kagit);
+  border:var(--cizgi-1) solid var(--murekkep);
+}
+.yetkili .g-kart-sil:hover{ background:var(--hata); border-color:var(--hata); color:var(--kagit); }
+.yetkili .g-kapak-rozet{
+  position:absolute; top:var(--kit-bagli); left:var(--kit-bagli);
+  padding:2px var(--kit-bagli);
+  border-radius:var(--yuvarlak-sm);
+  background:var(--aksan-koyu); color:var(--kagit);
+  font-size:var(--yazi-13); font-weight:700; line-height:1.6;
+}
+.yetkili .birak-alani.uzerinde{ border-color:var(--aksan-koyu); background:var(--zemin); }
+
+/* ═══ KÖ-A2 · ADIM GÖRSELİ — satırın kendi alanı ═════════════════════ */
+.yetkili .g-adim-metin{ min-height:96px; resize:vertical; }
+.yetkili .g-adim-gorsel{
+  display:flex; align-items:center; gap:var(--kit-satir);
+  flex-wrap:wrap; margin-top:var(--kit-bagli);
+}
+.yetkili .g-adim-onizleme{
+  display:flex; align-items:center; gap:var(--kit-bagli);
+  padding:var(--kit-atom) var(--kit-bagli);
+  border:var(--cizgi-1) solid var(--cizgi);
+  border-radius:var(--yuvarlak-md);
+  background:var(--kagit);
+  font-size:var(--yazi-13); color:var(--metin-ikincil);
+}
+.yetkili .g-adim-kucuk{
+  width:44px; height:33px; flex:0 0 auto;
+  border-radius:var(--yuvarlak-sm);
+  background:var(--zemin) center/cover no-repeat;
+}
+.yetkili .g-adim-sil{ width:28px; height:28px; min-width:0; padding:0; }
+
+/* ═══ KÖ-A3 · Türetilen rozet alanı ══════════════════════════════════
+   Kit `.alan-hesaplanan`ı zaten sönük zemin + kesikli kenarla çiziyor;
+   burada yalnız DEĞERİN okunurluğu artıyor — rozet listesi uzun. */
+.yetkili .alan-hesaplanan input[name="ozellik_turetilen"]{
+  font-weight:600; color:var(--murekkep); text-overflow:ellipsis;
+}

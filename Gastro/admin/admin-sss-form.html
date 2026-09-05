@@ -13,6 +13,13 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.css">
 <link rel="stylesheet" href="../../kanon/admin.css">
 <!-- ADMIN-KIT:CSS:SON -->
+<!-- GASTRO-EK:CSS:BAS -->
+<link rel="stylesheet" href="_ortak/gastro-ek.css">
+<link rel="stylesheet" href="_ortak/gastro-ek-a.css">
+<link rel="stylesheet" href="_ortak/gastro-ek-b.css">
+<link rel="stylesheet" href="_ortak/gastro-ek-c.css">
+<link rel="stylesheet" href="_ortak/gastro-ek-d.css">
+<!-- GASTRO-EK:CSS:SON -->
 </head>
 <body class="yetkili" data-marka="gastro">
 <!-- ═══ GASTRO ADMIN · KANONİK KABUK — lead üretti, agent DEĞİŞTİRMEZ.
@@ -72,7 +79,7 @@
 
     <div class="panel-menu-bolum">02 Operasyon</div>
     <a class="panel-menu-link" href="admin-uyeler.html"><i class="fa-solid fa-users"></i>Üyeler &amp; Yetkiler</a>
-    <a class="panel-menu-link" href="admin-abonelikler.html"><i class="fa-solid fa-credit-card"></i>Abonelikler</a>
+    <a class="panel-menu-link" href="admin-paket-alimlari.html"><i class="fa-solid fa-credit-card"></i>Paket Alımları</a><a class="panel-menu-link" href="admin-sef-abonelikleri.html"><i class="fa-solid fa-hand-holding-dollar"></i>Şef Abonelikleri</a>
     <a class="panel-menu-link" href="admin-odemeler.html"><i class="fa-solid fa-money-bill-wave"></i>Ödemeler</a>
     <a class="panel-menu-link" href="admin-faturalar.html"><i class="fa-solid fa-file-invoice"></i>Faturalar<span class="sayac">7</span></a>
     <a class="panel-menu-link" href="admin-destek.html"><i class="fa-solid fa-life-ring"></i>Destek Talepleri<span class="sayac">12</span></a>
@@ -166,9 +173,9 @@
       </div>
 
       <div class="form-sekmeler" role="tablist" aria-label="Form bölümleri">
-        <button class="form-sekme aktif" type="button" role="tab" aria-selected="true" data-sekme="sf-icerik">Soru ve cevap</button>
-        <button class="form-sekme" type="button" role="tab" aria-selected="false" data-sekme="sf-siniflandirma">Sınıflandırma <span class="hata-sayi">1</span></button>
-        <button class="form-sekme" type="button" role="tab" aria-selected="false" data-sekme="sf-bag">İlişkili bağlantılar</button>
+        <button class="form-sekme aktif" type="button" role="tab" aria-selected="true" data-sekme="sf-icerik" id="admins-s0" aria-controls="admins-b0">Soru ve cevap</button>
+        <button class="form-sekme" type="button" role="tab" aria-selected="false" data-sekme="sf-siniflandirma" id="admins-s1" aria-controls="admins-b1">Sınıflandırma <span class="hata-sayi">1</span></button>
+        <button class="form-sekme" type="button" role="tab" aria-selected="false" data-sekme="sf-bag" id="admins-s2" aria-controls="admins-b2">İlişkili bağlantılar</button>
       </div>
 
       <div class="kart panel" id="sfYukleniyor" aria-busy="true" role="status" hidden>
@@ -207,7 +214,7 @@
       <form novalidate>
         <div class="form-duzen">
           <div class="kart panel">
-            <div class="form-bolum" data-pano="sf-icerik">
+            <div class="form-bolum" id="admins-b0" data-pano="sf-icerik" role="tabpanel" aria-labelledby="admins-s0">
               <div class="form-bolum-bas"><i class="fa-solid fa-circle-question" aria-hidden="true"></i> Soru ve cevap</div>
               <div class="alan-ozet goster" role="alert">
                 <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>
@@ -256,7 +263,7 @@
               </div>
             </div>
 
-            <div class="form-bolum" data-pano="sf-siniflandirma" hidden>
+            <div class="form-bolum" id="admins-b1" data-pano="sf-siniflandirma" hidden role="tabpanel" aria-labelledby="admins-s1">
               <div class="form-bolum-bas"><i class="fa-solid fa-tags" aria-hidden="true"></i> Sınıflandırma</div>
               <div class="alan-izgara c2">
                 <div class="alan">
@@ -307,7 +314,7 @@
               </div>
             </div>
 
-            <div class="form-bolum" data-pano="sf-bag" hidden>
+            <div class="form-bolum" id="admins-b2" data-pano="sf-bag" hidden role="tabpanel" aria-labelledby="admins-s2">
               <div class="form-bolum-bas"><i class="fa-solid fa-link" aria-hidden="true"></i> İlişkili bağlantılar</div>
               <div class="adim-liste">
                 <div class="adim-karti">
@@ -338,8 +345,8 @@
                     <button class="ikon-dugme yikici" type="button" aria-label="2. bağlantıyı sil" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button>
                   </div>
                 </div>
-                <button class="satir-ekle" type="button"><i class="fa-solid fa-plus" aria-hidden="true"></i> Bağlantı ekle</button>
-              </div>
+                
+              </div><div class="eylem-satiri"><button class="satir-ekle" type="button" data-eylem="satir-ekle"><i class="fa-solid fa-plus" aria-hidden="true"></i> Bağlantı ekle</button></div>
             </div>
 
             <div class="kart-alt form-eylem">
@@ -408,9 +415,18 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/l10n/tr.js"></script>
 <script src="../../kanon/admin-editor-tr.js"></script>
+<script src="../../kanon/admin-ikon-kutuphane.js" defer></script>
+<script src="../../kanon/admin-veri.js" defer></script>
 <script src="../../kanon/admin-kit.js" defer></script>
 <script src="../../kanon/admin-editor.js" defer></script>
 <script src="../../kanon/admin-tarih.js" defer></script>
 <!-- ADMIN-KIT:JS:SON -->
+<!-- GASTRO-EK:JS:BAS -->
+<script src="_ortak/gastro-ek.js" defer></script>
+<script src="_ortak/gastro-ek-a.js" defer></script>
+<script src="_ortak/gastro-ek-b.js" defer></script>
+<script src="_ortak/gastro-ek-c.js" defer></script>
+<script src="_ortak/gastro-ek-d.js" defer></script>
+<!-- GASTRO-EK:JS:SON -->
 </body>
 </html>

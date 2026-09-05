@@ -13,6 +13,13 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.css">
 <link rel="stylesheet" href="../../kanon/admin.css">
 <!-- ADMIN-KIT:CSS:SON -->
+<!-- GASTRO-EK:CSS:BAS -->
+<link rel="stylesheet" href="_ortak/gastro-ek.css">
+<link rel="stylesheet" href="_ortak/gastro-ek-a.css">
+<link rel="stylesheet" href="_ortak/gastro-ek-b.css">
+<link rel="stylesheet" href="_ortak/gastro-ek-c.css">
+<link rel="stylesheet" href="_ortak/gastro-ek-d.css">
+<!-- GASTRO-EK:CSS:SON -->
 </head>
 <body class="yetkili" data-marka="gastro">
 <!-- ═══ GASTRO ADMIN · KANONİK KABUK — lead üretti, agent DEĞİŞTİRMEZ.
@@ -72,7 +79,7 @@
 
     <div class="panel-menu-bolum">02 Operasyon</div>
     <a class="panel-menu-link" href="admin-uyeler.html"><i class="fa-solid fa-users"></i>Üyeler &amp; Yetkiler</a>
-    <a class="panel-menu-link" href="admin-abonelikler.html"><i class="fa-solid fa-credit-card"></i>Abonelikler</a>
+    <a class="panel-menu-link" href="admin-paket-alimlari.html"><i class="fa-solid fa-credit-card"></i>Paket Alımları</a><a class="panel-menu-link" href="admin-sef-abonelikleri.html"><i class="fa-solid fa-hand-holding-dollar"></i>Şef Abonelikleri</a>
     <a class="panel-menu-link" href="admin-odemeler.html"><i class="fa-solid fa-money-bill-wave"></i>Ödemeler</a>
     <a class="panel-menu-link" href="admin-faturalar.html"><i class="fa-solid fa-file-invoice"></i>Faturalar<span class="sayac">7</span></a>
     <a class="panel-menu-link" href="admin-destek.html"><i class="fa-solid fa-life-ring"></i>Destek Talepleri<span class="sayac">12</span></a>
@@ -151,19 +158,76 @@
 </header>
 <main class="panel-govde">
     <div class="panel-sayfa">
-      <div class="panel-bas">
-        <div>
-          <h1>Raporlar</h1>
-          <p>Ortak yönetim verisini filtrelenebilir ve dışa aktarılabilir raporlara çevirir. Sayılar gece 03.00 çalışan görevden gelir; anlık değildir.</p>
-        </div>
-        <div class="eylem-satiri">
-          <button class="dugme hayalet" type="button"><i class="fa-solid fa-bookmark" aria-hidden="true"></i>Filtreyi kaydet</button>
-          <button class="dugme hayalet" type="button" data-yetki="disa-aktar"><i class="fa-solid fa-file-csv" aria-hidden="true"></i>CSV</button>
-          <button class="dugme hayalet" type="button" data-yetki="disa-aktar"><i class="fa-solid fa-file-excel" aria-hidden="true"></i>Excel</button>
-          <button class="dugme birincil" type="button" data-yetki="disa-aktar" data-eylem="calistir" data-ad="PDF olarak indir"><i class="fa-solid fa-file-pdf" aria-hidden="true"></i>PDF olarak indir</button>
-        </div>
-      </div>
-      <div class="bilgi-notu"><i class="fa-solid fa-circle-info" aria-hidden="true"></i><p>Veri <b>04.09.2026 03:00</b>'te tazelendi. Yetki bazlı maskeleme açık: kişisel veri taşıyan kolonlar dışa aktarımda kısaltılır. 50.000 satırı aşan çıktı arka planda hazırlanır ve bittiğinde bildirim gelir.</p></div>
+      <div class="panel-bas"><div><h1>Raporlar</h1>
+<p>Sitenin <b>ziyaret ve arama</b> performansı: Google Analytics 4 ve Search Console'dan gelir.
+Hangi sayının hangi kaynaktan geldiği her bölümün başında yazılıdır; bağlantılar
+<a href="admin-entegrasyonlar.html">Entegrasyonlar</a> modülünde yönetilir.
+Panelin kendi ürettiği <b>planlı raporlar</b> son sekmededir.</p></div>
+<div class="eylem-satiri">
+<button class="dugme hayalet" type="button" data-yetki="disa-aktar" data-eylem="calistir" data-ad="CSV olarak indir"><i class="fa-solid fa-file-csv" aria-hidden="true"></i>CSV</button>
+<button class="dugme birincil" type="button" data-yetki="disa-aktar" data-eylem="calistir" data-ad="PDF olarak indir"><i class="fa-solid fa-file-pdf" aria-hidden="true"></i>PDF olarak indir</button>
+</div></div>
+<div class="suzgec-cubuk"><div class="alan dar"><label class="alan-etiket" for="rpTarih">Tarih aralığı</label>
+<input class="alan-girdi" id="rpTarih" type="text" data-tarih="aralik" name="tarih_araligi" placeholder="01.08.2026 – 04.09.2026" aria-label="Rapor tarih aralığı"></div>
+<div class="alan dar"><label class="alan-etiket" for="rpKarsilastir">Karşılaştır</label>
+<select class="alan-secim" id="rpKarsilastir" name="karsilastir"><option>Karşılaştırma yok</option><option>Önceki dönem</option><option>Geçen yıl aynı dönem</option></select></div>
+<div class="alan dar"><label class="alan-etiket" for="rpCihaz">Cihaz</label>
+<select class="alan-secim" id="rpCihaz" name="cihaz"><option>Tümü</option><option>Masaüstü</option><option>Mobil</option><option>Tablet</option></select></div>
+</div>
+<div class="sekmeler" role="tablist" aria-label="Rapor bölümleri">
+<button class="sekme aktif" type="button" role="tab" id="rp-s0" aria-controls="rp-p0" aria-selected="true"><i class="fa-solid fa-chart-simple" aria-hidden="true"></i> Genel bakış</button>
+<button class="sekme" type="button" role="tab" id="rp-s1" aria-controls="rp-p1" aria-selected="false"><i class="fa-solid fa-magnifying-glass-chart" aria-hidden="true"></i> Arama</button>
+<button class="sekme" type="button" role="tab" id="rp-s2" aria-controls="rp-p2" aria-selected="false"><i class="fa-solid fa-file-lines" aria-hidden="true"></i> Sayfalar</button>
+<button class="sekme" type="button" role="tab" id="rp-s3" aria-controls="rp-p3" aria-selected="false"><i class="fa-solid fa-mobile-screen" aria-hidden="true"></i> Cihaz</button>
+<button class="sekme" type="button" role="tab" id="rp-s4" aria-controls="rp-p4" aria-selected="false"><i class="fa-solid fa-calendar-check" aria-hidden="true"></i> Planlı raporlar</button>
+</div>
+<div id="rp-p0" role="tabpanel" aria-labelledby="rp-s0">
+<div class="uyari-kutu bilgi" role="status"><i class="fa-solid fa-plug" aria-hidden="true"></i><div><b>Veri kaynağı: Google Analytics 4</b> · <code>G-••••••••7T</code> · son kontrol 01.09.2026 00:00 · <span class="durum-hapi cozulen">Bağlı</span> — bağlantı <a href="admin-entegrasyonlar.html">Entegrasyonlar</a> modülünde yönetilir.</div></div>
+<div class="kart panel"><div class="kart-bas"><h2 class="kart-baslik"><i class="fa-solid fa-chart-simple" aria-hidden="true"></i>Genel bakış</h2>
+<div class="eylem-satiri"><button class="dugme hayalet" type="button" data-eylem="calistir" data-ad="GA4 verisini çek" data-damga="#rpGaDamga"><i class="fa-solid fa-rotate" aria-hidden="true"></i> Şimdi çek</button></div></div>
+<div class="kart-govde"><div class="kart-izgara c4"><div class="kart kpi"><span class="ikon"><i class="fa-solid fa-chart-line" aria-hidden="true"></i></span><div class="govde"><span class="etiket">Ziyaret (oturum)</span><span class="sayi">—</span><span class="kpi-degisim"><i class="fa-solid fa-minus" aria-hidden="true"></i> GA4 · <code>sessions</code></span></div></div><div class="kart kpi"><span class="ikon"><i class="fa-solid fa-users" aria-hidden="true"></i></span><div class="govde"><span class="etiket">Kullanıcı</span><span class="sayi">—</span><span class="kpi-degisim"><i class="fa-solid fa-minus" aria-hidden="true"></i> GA4 · <code>totalUsers</code></span></div></div><div class="kart kpi"><span class="ikon"><i class="fa-solid fa-user-plus" aria-hidden="true"></i></span><div class="govde"><span class="etiket">Yeni kullanıcı</span><span class="sayi">—</span><span class="kpi-degisim"><i class="fa-solid fa-minus" aria-hidden="true"></i> GA4 · <code>newUsers</code></span></div></div><div class="kart kpi"><span class="ikon"><i class="fa-solid fa-eye" aria-hidden="true"></i></span><div class="govde"><span class="etiket">Sayfa görüntüleme</span><span class="sayi">—</span><span class="kpi-degisim"><i class="fa-solid fa-minus" aria-hidden="true"></i> GA4 · <code>screenPageViews</code></span></div></div></div><div class="kart-izgara c4"><div class="kart kpi"><span class="ikon"><i class="fa-solid fa-clock" aria-hidden="true"></i></span><div class="govde"><span class="etiket">Ortalama oturum süresi</span><span class="sayi">—</span><span class="kpi-degisim"><i class="fa-solid fa-minus" aria-hidden="true"></i> GA4 · <code>averageSessionDuration</code></span></div></div><div class="kart kpi"><span class="ikon"><i class="fa-solid fa-hand-pointer" aria-hidden="true"></i></span><div class="govde"><span class="etiket">Etkileşim oranı</span><span class="sayi">—</span><span class="kpi-degisim"><i class="fa-solid fa-minus" aria-hidden="true"></i> GA4 · <code>engagementRate</code></span></div></div><div class="kart kpi"><span class="ikon"><i class="fa-solid fa-layer-group" aria-hidden="true"></i></span><div class="govde"><span class="etiket">Oturum başına sayfa</span><span class="sayi">—</span><span class="kpi-degisim"><i class="fa-solid fa-minus" aria-hidden="true"></i> GA4 · <code>screenPageViewsPerSession</code></span></div></div><div class="kart kpi"><span class="ikon"><i class="fa-solid fa-bolt" aria-hidden="true"></i></span><div class="govde"><span class="etiket">Etkileşimli oturum</span><span class="sayi">—</span><span class="kpi-degisim"><i class="fa-solid fa-minus" aria-hidden="true"></i> GA4 · <code>engagedSessions</code></span></div></div></div>
+<div class="uyari-kutu" role="status"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i><div>
+<b>Değerler henüz çekilmedi.</b> Entegrasyon <b>bağlı</b>, ama panele veri getiren görev bu ortamda çalışmadı; son çekim: <b id="rpGaDamga">—</b>.
+Sayı <b>uydurulmaz</b> — bir gösterge tablosunun yanlış sayısı, yöneticinin göremeyeceği bir yalandır.
+Alanların GA4 karşılığı her kartın altında <code>kod</code> olarak yazılıdır.</div></div>
+</div></div></div><div id="rp-p1" role="tabpanel" aria-labelledby="rp-s1" hidden>
+<div class="uyari-kutu bilgi" role="status"><i class="fa-solid fa-plug" aria-hidden="true"></i><div><b>Veri kaynağı: Search Console</b> · <code>—</code> · son kontrol 25.08.2026 09:00 · <span class="durum-hapi bekleyen">Yapılandırılmadı</span> — bağlantı <a href="admin-entegrasyonlar.html">Entegrasyonlar</a> modülünde yönetilir.</div></div>
+<div class="kart panel"><div class="kart-bas"><h2 class="kart-baslik"><i class="fa-solid fa-magnifying-glass-chart" aria-hidden="true"></i>Arama performansı</h2></div>
+<div class="kart-govde">
+<!-- 🔴 BAĞLI OLMAYAN KAYNAKTA KPI KARTI BASILMAZ: dört "—" kartı üstüne
+     "bağlı değil" boş durumu koymak aynı şeyi iki kez söyler ve kartlar
+     "veri var ama sıfır" gibi okunur. Kaynak bağlanınca kartlar doğar. -->
+<div class="bos-durum kart-ici" data-durum="yapilandirilmadi">
+<span class="bos-ikon"><i class="fa-solid fa-plug-circle-exclamation" aria-hidden="true"></i></span>
+<h3>Search Console bağlı değil</h3>
+<p>Sorgu, tıklama, gösterim ve sıra verisi Search Console'dan gelir. Entegrasyonlar modülünde servis <b>&ldquo;Yapılandırılmadı&rdquo;</b> durumunda; bağlanana kadar bu bölüm boş kalır.</p>
+<a class="dugme birincil" href="admin-entegrasyonlar.html"><i class="fa-solid fa-plug" aria-hidden="true"></i> Entegrasyonlarda bağla</a>
+</div>
+<div class="tablo-kap gomulu"><table class="tablo" aria-label="En çok tıklanan sorgular"><caption class="yalniz-okuyucu">En çok tıklanan sorgular</caption>
+<thead><tr><th scope="col">Sorgu</th><th scope="col" class="num">Tıklama</th><th scope="col" class="num">Gösterim</th><th scope="col" class="num">TO</th><th scope="col" class="num">Ort. sıra</th></tr></thead>
+<tbody><tr><td colspan="5" class="bos-hucre">Kaynak bağlanınca sorgular buraya iner.</td></tr></tbody></table></div>
+</div></div></div><div id="rp-p2" role="tabpanel" aria-labelledby="rp-s2" hidden>
+<div class="uyari-kutu bilgi" role="status"><i class="fa-solid fa-plug" aria-hidden="true"></i><div><b>Veri kaynağı: Google Analytics 4</b> · <code>G-••••••••7T</code> · son kontrol 01.09.2026 00:00 · <span class="durum-hapi cozulen">Bağlı</span> — bağlantı <a href="admin-entegrasyonlar.html">Entegrasyonlar</a> modülünde yönetilir.</div></div>
+<div class="kart panel"><div class="kart-bas"><h2 class="kart-baslik"><i class="fa-solid fa-file-lines" aria-hidden="true"></i>Sayfalar</h2>
+<div class="eylem-satiri"><span class="rozet"><i class="fa-solid fa-layer-group" aria-hidden="true"></i> 15 üst düzey sayfa</span>
+<button class="dugme hayalet" type="button" data-yetki="disa-aktar" data-eylem="calistir" data-ad="Sayfa raporunu dışa aktar"><i class="fa-solid fa-file-csv" aria-hidden="true"></i> CSV</button></div></div>
+<div class="kart-govde"><div class="uyari-kutu bilgi" role="status"><i class="fa-solid fa-circle-info" aria-hidden="true"></i><div>
+Satırlar sitenin <b>gerçek</b> üst düzey sayfalarıdır (yayın ağacından okundu). Metrikler GA4'ten gelir; ilk çekimden önce <b>&mdash;</b> kalır.</div></div>
+<div class="tablo-kap gomulu"><table class="tablo" aria-label="Sayfa performansı">
+<thead><tr><th scope="col">Sayfa</th><th scope="col">Yol</th><th scope="col" class="num sirali"><button type="button">Görüntüleme</button></th><th scope="col" class="num sirali"><button type="button">Kullanıcı</button></th><th scope="col" class="num">Ort. süre</th><th scope="col" class="num">Çıkış oranı</th></tr></thead>
+<tbody><tr><td><b>Ana sayfa</b></td><td><code>/</code></td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td></tr><tr><td><b>Tarifler</b></td><td><code>/tarifler</code></td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td></tr><tr><td><b>Mutfak Sırları</b></td><td><code>/mutfak-sirlari</code></td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td></tr><tr><td><b>Püf Noktaları</b></td><td><code>/puf-noktalari</code></td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td></tr><tr><td><b>Mutfak Ansiklopedisi</b></td><td><code>/mutfak-ansiklopedisi</code></td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td></tr><tr><td><b>Mutfak Sözlüğü</b></td><td><code>/mutfak-sozlugu</code></td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td></tr><tr><td><b>Mutfağa Giriş</b></td><td><code>/mutfaga-giris</code></td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td></tr><tr><td><b>Video Mutfağı</b></td><td><code>/video-mutfagi</code></td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td></tr><tr><td><b>Sofra Düzeni</b></td><td><code>/sofra-duzeni</code></td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td></tr><tr><td><b>Şefler</b></td><td><code>/sefler</code></td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td></tr><tr><td><b>Bugün Ne Pişirsem</b></td><td><code>/bugun-ne-pisirsem</code></td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td></tr><tr><td><b>Haftalık Menü</b></td><td><code>/haftalik-menu</code></td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td></tr><tr><td><b>Onur Listesi</b></td><td><code>/onur-listesi</code></td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td></tr><tr><td><b>Ölçü Birimleri</b></td><td><code>/olcu-birimleri</code></td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td></tr><tr><td><b>Pro</b></td><td><code>/pro</code></td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td></tr></tbody>
+</table></div></div></div></div><div id="rp-p3" role="tabpanel" aria-labelledby="rp-s3" hidden>
+<div class="uyari-kutu bilgi" role="status"><i class="fa-solid fa-plug" aria-hidden="true"></i><div><b>Veri kaynağı: Google Analytics 4</b> · <code>G-••••••••7T</code> · son kontrol 01.09.2026 00:00 · <span class="durum-hapi cozulen">Bağlı</span> — bağlantı <a href="admin-entegrasyonlar.html">Entegrasyonlar</a> modülünde yönetilir.</div></div>
+<div class="kart panel"><div class="kart-bas"><h2 class="kart-baslik"><i class="fa-solid fa-mobile-screen" aria-hidden="true"></i>Cihaz</h2></div>
+<div class="kart-govde"><div class="tablo-kap gomulu"><table class="tablo" aria-label="Cihaz dağılımı">
+<thead><tr><th scope="col">Cihaz</th><th scope="col" class="num">Oturum</th><th scope="col" class="num">Kullanıcı</th><th scope="col" class="num">Pay</th></tr></thead>
+<tbody><tr><td><b><i class="fa-solid fa-desktop" aria-hidden="true"></i> Masaüstü</b></td><td class="num">—</td><td class="num">—</td><td class="num">—</td></tr><tr><td><b><i class="fa-solid fa-mobile-screen" aria-hidden="true"></i> Mobil</b></td><td class="num">—</td><td class="num">—</td><td class="num">—</td></tr><tr><td><b><i class="fa-solid fa-tablet-screen-button" aria-hidden="true"></i> Tablet</b></td><td class="num">—</td><td class="num">—</td><td class="num">—</td></tr></tbody>
+</table></div>
+<div class="uyari-kutu bilgi" role="status"><i class="fa-solid fa-circle-info" aria-hidden="true"></i><div>
+Cihaz kırılımı GA4'ün <code>deviceCategory</code> boyutundan gelir. Panel <b>ilk çekimden</b> sonra dolar.</div></div>
+</div></div></div>
+<div id="rp-p4" role="tabpanel" aria-labelledby="rp-s4" hidden>
+<div class="bilgi-notu"><i class="fa-solid fa-circle-info" aria-hidden="true"></i><p>Veri <b>04.09.2026 03:00</b>'te tazelendi. Yetki bazlı maskeleme açık: kişisel veri taşıyan kolonlar dışa aktarımda kısaltılır. 50.000 satırı aşan çıktı arka planda hazırlanır ve bittiğinde bildirim gelir.</p></div>
       <div class="kart-izgara c4">
         <div class="kart kpi">
           <span class="ikon"><i class="fa-solid fa-chart-line" aria-hidden="true"></i></span>
@@ -199,17 +263,7 @@
         </div>
       </div>
       <div class="kart panel">
-        <div class="sekmeler" role="tablist" aria-label="Kuyruklar">
-          <button class="sekme aktif" type="button" role="tab" id="rp-s0" aria-controls="rp-b0" aria-selected="true">Kullanıcı<span class="sekme-sayi">2</span></button>
-          <button class="sekme" type="button" role="tab" id="rp-s1" aria-controls="rp-b1" aria-selected="false">Abonelik<span class="sekme-sayi">2</span></button>
-          <button class="sekme" type="button" role="tab" id="rp-s2" aria-controls="rp-b2" aria-selected="false">Ödeme<span class="sekme-sayi">1</span></button>
-          <button class="sekme" type="button" role="tab" id="rp-s3" aria-controls="rp-b3" aria-selected="false">Fatura<span class="sekme-sayi">1</span></button>
-          <button class="sekme" type="button" role="tab" id="rp-s4" aria-controls="rp-b4" aria-selected="false">Destek<span class="sekme-sayi">1</span></button>
-          <button class="sekme" type="button" role="tab" id="rp-s5" aria-controls="rp-b5" aria-selected="false">İçerik / SEO<span class="sekme-sayi">2</span></button>
-          <button class="sekme" type="button" role="tab" id="rp-s6" aria-controls="rp-b6" aria-selected="false">Bildirim<span class="sekme-sayi">1</span></button>
-          <button class="sekme" type="button" role="tab" id="rp-s7" aria-controls="rp-b7" aria-selected="false">Reklam<span class="sekme-sayi">1</span></button>
-          <button class="sekme" type="button" role="tab" id="rp-s8" aria-controls="rp-b8" aria-selected="false">Sistem<span class="sekme-sayi">1</span></button>
-        </div>
+        
         <div class="suzgec-cubuk">
           <div class="panel-arama">
             <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
@@ -498,16 +552,26 @@
       </div>
 
     </div>
-  </main>
+  </div>
+</main>
 <script src="_ortak/panel.js" defer></script>
 <!-- ADMIN-KIT:JS:BAS -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/7.3.0/tinymce.min.js" referrerpolicy="no-referrer"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/l10n/tr.js"></script>
 <script src="../../kanon/admin-editor-tr.js"></script>
+<script src="../../kanon/admin-ikon-kutuphane.js" defer></script>
+<script src="../../kanon/admin-veri.js" defer></script>
 <script src="../../kanon/admin-kit.js" defer></script>
 <script src="../../kanon/admin-editor.js" defer></script>
 <script src="../../kanon/admin-tarih.js" defer></script>
 <!-- ADMIN-KIT:JS:SON -->
+<!-- GASTRO-EK:JS:BAS -->
+<script src="_ortak/gastro-ek.js" defer></script>
+<script src="_ortak/gastro-ek-a.js" defer></script>
+<script src="_ortak/gastro-ek-b.js" defer></script>
+<script src="_ortak/gastro-ek-c.js" defer></script>
+<script src="_ortak/gastro-ek-d.js" defer></script>
+<!-- GASTRO-EK:JS:SON -->
 </body>
 </html>

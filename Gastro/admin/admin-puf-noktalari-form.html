@@ -12,6 +12,13 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.css">
 <link rel="stylesheet" href="../../kanon/admin.css">
 <!-- ADMIN-KIT:CSS:SON -->
+<!-- GASTRO-EK:CSS:BAS -->
+<link rel="stylesheet" href="_ortak/gastro-ek.css">
+<link rel="stylesheet" href="_ortak/gastro-ek-a.css">
+<link rel="stylesheet" href="_ortak/gastro-ek-b.css">
+<link rel="stylesheet" href="_ortak/gastro-ek-c.css">
+<link rel="stylesheet" href="_ortak/gastro-ek-d.css">
+<!-- GASTRO-EK:CSS:SON -->
 </head>
 <body class="yetkili" data-marka="gastro">
 <!-- ═══ GASTRO ADMIN · KANONİK KABUK — lead üretti, agent DEĞİŞTİRMEZ.
@@ -71,7 +78,7 @@
 
     <div class="panel-menu-bolum">02 Operasyon</div>
     <a class="panel-menu-link" href="admin-uyeler.html"><i class="fa-solid fa-users"></i>Üyeler &amp; Yetkiler</a>
-    <a class="panel-menu-link" href="admin-abonelikler.html"><i class="fa-solid fa-credit-card"></i>Abonelikler</a>
+    <a class="panel-menu-link" href="admin-paket-alimlari.html"><i class="fa-solid fa-credit-card"></i>Paket Alımları</a><a class="panel-menu-link" href="admin-sef-abonelikleri.html"><i class="fa-solid fa-hand-holding-dollar"></i>Şef Abonelikleri</a>
     <a class="panel-menu-link" href="admin-odemeler.html"><i class="fa-solid fa-money-bill-wave"></i>Ödemeler</a>
     <a class="panel-menu-link" href="admin-faturalar.html"><i class="fa-solid fa-file-invoice"></i>Faturalar<span class="sayac">7</span></a>
     <a class="panel-menu-link" href="admin-destek.html"><i class="fa-solid fa-life-ring"></i>Destek Talepleri<span class="sayac">12</span></a>
@@ -187,8 +194,10 @@
             <div class="form-bolum">
               <h3 class="form-bolum-bas"><i class="fa-solid fa-image" aria-hidden="true"></i> Kapak görseli</h3>
               <div id="tfKapak"><div class="birak-alani" tabindex="0" role="button" aria-label="Görsel seç ya da sürükle"><span><i class="fa-solid fa-cloud-arrow-up" aria-hidden="true"></i></span><b>Görseli sürükle ya da seçmek için tıkla</b><small>Tek kapak görseli. Kütüphaneden seç ya da sürükle.</small><span class="dugme hayalet" style="pointer-events:none">Kütüphaneden seç</span></div><input type="file" hidden="" accept="image/*"><div class="cipler"></div></div>
-              <div class="alan-yardim" style="margin-top:10px"><span>Püf noktası kartında ve detay sayfasının başında görünür. Bugün <code>puf-noktalari/&lt;slug&gt;</code> içindeki
-                <code>img</code> alanı bir Unsplash kimliği taşıyor — yönetilebilir değil.</span></div>
+              <div class="alan-yardim"><span>Püf noktası <b>kartında</b> basılır — ölçüldü:
+                public liste sayfasındaki 12 kartın <b>12'sinde</b> kapak görseli var
+                (<code>varliklar/media/&lt;id&gt;/thumb.webp</code>). ⚠ Detay sayfasının
+                <b>gövdesinde</b> görsel yok (16/16'da makale içi <code>img</code> 0).</span></div>
             </div>
 
             <div class="form-bolum">
@@ -202,57 +211,75 @@
                 <div class="alan">
                   <label for="tfSlug" class="alan-etiket">Adres <span class="zorunlu">*</span></label>
                   <div class="slug-alani">
-                    <span class="slug-onek">puf-noktalari/&lt;slug&gt;dadagastro.com/puf-noktalari/</span>
+                    <span class="slug-onek">dadagastro.com/puf-noktalari/</span>
                     <!-- 🔴 TİRE KAÇIRILIYOR — gerekçe `admin-testler-v1.html:127`de. -->
                     <input data-girdi="slug" class="alan-girdi" id="tfSlug" name="slug" type="text" required="" maxlength="60" pattern="[a-z0-9\-]+" placeholder="pilav" data-zorunlu="1">
                   </div>
                   <div class="alan-yardim"><span>Yalnız küçük harf, rakam ve tire.</span></div>
                 </div>
-                <div class="alan kart-izgara c2">
-                  <div class="alan">
-                    <label for="tfKategori" class="alan-etiket">Kategori <span class="zorunlu">*</span></label>
-                    <input class="alan-girdi" id="tfKategori" name="kategori" type="text" required="" maxlength="60" placeholder="Nasıl Saklanır?" data-zorunlu="1">
-                    <div class="alan-yardim" id="tfKatNot"><span>Bugün kullanılan 7 kategori: Genel değerlendirme · Hareket açıklığı · Nasıl Saklanır? · Kuvvet · Kalp–solunum dayanıklılığı · Gün içi hareket · Süreklilik. Yeni bir ad yazarsan Püf Noktaları süzgecinde yeni bir çip doğar.</span></div>
+                <div class="alan">
+                  <label class="alan-etiket" for="tfKategoriAra">Kategori <span class="zorunlu">*</span></label>
+                  <!-- L5 · aranabilir TEK seçim. Liste public "Püf Noktaları" süzgecinden
+                       HASAT edildi (11 kategori · kaynak: puf-noktalari.html `.pufc` çipleri);
+                       hiçbiri uydurulmadı. Eski hâli serbest metindi ve yardım metni FIT'in
+                       yedi kategorisini sayıyordu ("Kuvvet · Hareket açıklığı …"). -->
+                  <div id="tfKategori" class="coklu-secim" data-tek data-ad="kategori" data-secenek='["Pişirme Püf Noktaları", "Neden Olur?", "Nasıl Düzeltilir?", "Nasıl Saklanır?", "Bozulduğu Nasıl Anlaşılır?", "Yerine Ne Kullanılır?", "Kaç Dakikada / Kaç Derecede Pişer?", "Nasıl Seçilir ve Hazırlanır?", "Yanına Ne Gider?", "Kaç Kalori?", "Malzeme Rehberi"]'>
+                    <input type="hidden" data-cs name="kategori" value="">
+                    <div class="coklu-kutu"><input class="acilir-arama" id="tfKategoriAra" type="text" placeholder="Kategori ara…" aria-label="Kategori ara" autocomplete="off" role="combobox" aria-expanded="false"></div>
+                    <div class="acilir-yuzey" role="listbox" hidden=""></div>
+                    <div class="cipler"></div>
                   </div>
-                  <div class="alan">
-                    <label for="tfSure" class="alan-etiket">Süre <span class="zorunlu">*</span></label>
-                    <input class="alan-girdi" id="tfSure" name="sure" type="text" required="" maxlength="30" placeholder="5–7 dakika" data-zorunlu="1">
-                    <div class="alan-yardim"><span>Okuma süresi; aralık olarak yazılır.</span></div>
-                  </div>
+                  <div class="alan-yardim" id="tfKatNot"><span>Tek kategori seçilir. Liste public
+                    <b>Püf Noktaları</b> süzgecinden hasat edildi — <b>11 kategori</b>, ölçülen 16 detay
+                    sayfasının 16'sı bu listeden tam bir tanesini taşıyor.</span></div>
                 </div>
                 <div class="alan kart-izgara c2">
                   <div class="alan">
-                    <label for="tfSureKisa" class="alan-etiket">Kısa süre <span class="acilir-kalem">— kartta ve listede</span></label>
-                    <input class="alan-girdi" id="tfSureKisa" name="sure_kisa" type="text" maxlength="20" placeholder="~7 dk">
+                    <label class="alan-etiket" for="tfYazarAra">Yazar <span class="acilir-kalem">— detayın künyesinde basılır</span></label>
+                    <!-- L5 · ilişkili kayıt: kaynak `DM_KAYITLAR.sefler`. Public 16/16 detay
+                         sayfası bir yazar adı ve unvanı basıyor; admin'de alan YOKTU. -->
+                    <div id="tfYazar" class="coklu-secim" data-tek data-ad="yazar" data-kayit="sefler">
+                      <input type="hidden" data-cs name="yazar" value="">
+                      <div class="coklu-kutu"><input class="acilir-arama" id="tfYazarAra" type="text" placeholder="Şef ara…" aria-label="Şef ara" autocomplete="off" role="combobox" aria-expanded="false"></div>
+                      <div class="acilir-yuzey" role="listbox" hidden=""></div>
+                      <div class="cipler"></div>
+                    </div>
                   </div>
                   <div class="alan">
-                    <label for="tfSureNot" class="alan-etiket">Süre notu</label>
-                    <input class="alan-girdi" id="tfSureNot" name="sure_not" type="text" maxlength="120" placeholder="Örn. Pirinç cinsine göre değişir.">
+                    <label for="tfOkuma" class="alan-etiket">Okuma süresi</label>
+                    <!-- L7 · HESAPLANAN. Public "N dk okuma" basıyor (16/16) ve değer
+                         metnin uzunluğundan doğuyor; elle girilen bir süre değil.
+                         `readonly` (disabled DEĞİL: disabled alan gönderimden düşer). -->
+                    <input class="alan-girdi" id="tfOkuma" name="okuma_suresi" type="text" readonly data-hesaplanan="okuma süresi" placeholder="3 dk okuma">
                   </div>
                 </div>
                 <div class="alan">
                   <label for="tfOzet" class="alan-etiket">Kısa özet <span class="zorunlu">*</span>
                     <span class="acilir-kalem">— püf noktası kartında ve arama sonucunda görünür</span><span class="alan-sayac" data-say-for="tfOzet">0 / 220</span></label>
                   <textarea class="alan-metin" id="tfOzet" name="ozet" required="" maxlength="220" placeholder="Bir cümleyle: bu püf noktası neyi çözüyor?" data-zorunlu="1"></textarea>
-                  
-                </div>
-                <div class="alan">
-                  <label for="tfAmac" class="alan-etiket">Giriş metni</label>
-                  <textarea class="alan-metin" id="tfAmac" name="amac" placeholder="Püf noktasının neyi çözdüğü ve neyi çözmediği."></textarea>
-                  <div class="alan-yardim"><span>Detay sayfasının giriş bloğunda paragraf olarak basılır.</span></div>
                 </div>
               </div>
             </div>
 
             <div class="form-bolum">
               <h3 class="form-bolum-bas">
-                <i class="fa-solid fa-list-check" aria-hidden="true"></i> Öne çıkan maddeler
-                <span class="alan-sayac" id="tfAmacSay">1 madde</span>
+                <i class="fa-solid fa-tags" aria-hidden="true"></i> Etiketler
               </h3>
-              <div class="adim-liste" id="tfAmacList"><div class="adim-karti"><span class="adim-no">1</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-list-check" aria-hidden="true"></i> Madde</span><input class="alan-girdi" type="text" name="amac_madde[]" data-field="metin" placeholder="Örn. Pilavın neden lapa olduğunu tek bir ölçüyle görünür kılar."><input type="hidden" data-field="position" value="0"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır" data-eylem="sirala"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Satırı sil" aria-label="Satırı sil" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div></div>
-              <button class="satir-ekle" type="button" id="tfAmacEkle" data-eylem="satir-ekle">
-                <i class="fa-solid fa-plus" aria-hidden="true"></i> Madde ekle</button>
-              <div class="alan-yardim" style="margin-top:10px"><span>Giriş paragrafının altında madde madde basılır. Tutamağı sürükleyerek ya da odaktayken ↑ / ↓ ile taşı.</span></div>
+              <div>
+                <div class="alan">
+                  <label class="alan-etiket" for="tfEtiketAra">Püf noktası etiketleri</label>
+                  <!-- L4 · öneri + serbest giriş. Public 16/16 detay sayfası etiket
+                       çipi basıyor (toplam 60 çip, sayfa başına 3–5) ve admin'de alan YOKTU. -->
+                  <div id="tfEtiketler" class="coklu-secim" data-ad="etiketler" data-oneri="etiketler">
+                    <input type="hidden" data-cs name="etiketler" value="">
+                    <div class="coklu-kutu"><input class="acilir-arama" id="tfEtiketAra" type="text" placeholder="Etiket ara ya da yaz…" aria-label="Etiket ara ya da yaz" autocomplete="off" role="combobox" aria-expanded="false"></div>
+                    <div class="acilir-yuzey" role="listbox" hidden=""></div>
+                    <div class="cipler"></div>
+                  </div>
+                  <div class="alan-yardim"><span>Detayın altındaki etiket şeridinde basılır ve
+                    püf noktası aramasını besler. Öneri kapalı liste değildir — yeni etiket yazılabilir.</span></div>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -260,103 +287,106 @@
           <div data-form-panel="uygulama" hidden="" id="pano-0-1" role="tabpanel" aria-labelledby="sekme-0-1">
             <div class="form-bolum">
               <h3 class="form-bolum-bas">
-                <i class="fa-solid fa-toolbox" aria-hidden="true"></i> Gerekli malzeme
-                <span class="alan-sayac" id="tfEkipmanSay">1 kalem</span>
+                <i class="fa-solid fa-align-left" aria-hidden="true"></i> Giriş metni
               </h3>
-              <div class="adim-liste" id="tfEkipman"><div class="adim-karti"><span class="adim-no">1</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-basket-shopping" aria-hidden="true"></i> Malzeme</span><input class="alan-girdi" type="text" name="ekipman[]" data-field="metin" placeholder="Örn. Ölçü kabı veya mutfak terazisi"><input type="hidden" data-field="position" value="0"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır" data-eylem="sirala"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Satırı sil" aria-label="Satırı sil" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div></div>
-              <button class="satir-ekle" type="button" id="tfEkipmanEkle">
-                <i class="fa-solid fa-plus" aria-hidden="true"></i> Malzeme ekle</button>
-              <div class="alan-yardim" style="margin-top:10px"><span>Liste, cevaplarda gerçekten geçeni saymalı — cevapta geçmeyen malzeme üyeye gereksiz bir engel koyar.</span></div>
+              <div>
+                <div class="alan">
+                  <label for="tfAmac" class="alan-etiket">Giriş paragrafları</label>
+                  <!-- §7 · TAM editör (`icerik` → 480px, dolu araç çubuğu).
+                       Public gövde ilk H2'den ÖNCE 1–2 paragraf basıyor (17/17 sayfa). -->
+                  <textarea class="alan-metin" id="tfAmac" name="amac" data-editor="icerik" placeholder="Püf noktasının neyi çözdüğü ve neyi çözmediği."></textarea>
+                  <div class="alan-yardim"><span>Detay sayfasının giriş bloğunda, ilk başlıktan
+                    önce basılır. Vurgu ve madde işareti editörden verilir — <b>etiket yazılmaz</b>.</span></div>
+                </div>
+              </div>
             </div>
 
             <div class="form-bolum">
               <h3 class="form-bolum-bas">
-                <i class="fa-solid fa-shoe-prints" aria-hidden="true"></i> Soru–cevap dizisi
-                <span class="alan-sayac" id="tfAdimSay">1 adım</span>
+                <i class="fa-solid fa-paragraph" aria-hidden="true"></i> İçerik blokları
+                <span class="alan-sayac" id="tfBlokSay">1 blok</span>
               </h3>
-              <div class="adim-liste" id="tfAdimlar"><div class="adim-karti"><span class="adim-no">1</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-shoe-prints" aria-hidden="true"></i> Adım</span><input class="alan-girdi" type="text" name="adim_baslik[]" data-field="baslik" maxlength="60" placeholder="Soru başlığı — örn. Su oranı" aria-label="Soru başlığı"><textarea class="alan-metin" name="adim_metin[]" data-field="metin" placeholder="Sorunun cevabı — ne yapılacak, neye dikkat edilecek?" aria-label="Soru cevabı"></textarea><input type="hidden" data-field="position" value="0"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Adımı sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır" data-eylem="sirala"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Adımı sil" aria-label="Adımı sil" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div></div>
-              <button class="satir-ekle" type="button" id="tfAdimEkle" data-eylem="satir-ekle">
-                <i class="fa-solid fa-plus" aria-hidden="true"></i> Adım ekle</button>
-              <div class="alan-yardim" style="margin-top:10px"><span>Her sorunun <b>başlığı</b> ve
-                <b>cevabı</b> ayrı alanlardır; detay sayfası ikisini de basar. Sıra public tarafta aynen görünür. Ölçüldü: püf detayı serbest metin değil, dört soru başlığı taşıyor.</span></div>
+              <!-- L10 · tekrarlayan satır: numaralı · sürükle-sırala · sil onaylı ·
+                   son satır silinmez. Ölçüm: 17/17 public püf sayfası 3–7 blok basıyor
+                   (başlık + paragraflar). Bugün admin'de "Soru–cevap dizisi" diyordu ve
+                   başlıkları FIT kalıbından paraphrase edilmişti — dört ölçülebilir kayıtta
+                   da public H2'lerle EŞLEŞMİYORDU; başlıklar public gövdeden yeniden alındı. -->
+              <div class="adim-liste" id="tfBloklar"><div class="adim-karti"><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-paragraph" aria-hidden="true"></i> İçerik bloğu</span><div class="alan"><label class="alan-etiket">Blok başlığı</label><input class="alan-girdi" type="text" name="blok_baslik[]" data-field="baslik" maxlength="120" placeholder="Örn. Papatya Çayı Nasıl Demlenir?" aria-label="Blok başlığı"></div><div class="alan"><label class="alan-etiket">Blok görseli <span class="istege-bagli">isteğe bağlı</span></label><input class="alan-girdi" type="text" name="blok_gorsel[]" data-field="gorsel" data-girdi="url" placeholder="Medya kütüphanesi adresi" aria-label="Blok görseli"></div><div class="alan"><label class="alan-etiket">Blok metni</label><textarea class="alan-metin" name="blok_metin[]" data-field="metin" data-editor="aciklama" aria-label="Blok metni"></textarea></div><input type="hidden" data-field="position" value="0"></div></div></div>
+              <button class="satir-ekle" type="button" id="tfBlokEkle" data-eylem="satir-ekle">
+                <i class="fa-solid fa-plus" aria-hidden="true"></i> Blok ekle</button>
+              <div class="alan-yardim"><span>Blok başlığı public'te <code>h2</code> olarak,
+                metin altındaki paragraflar olarak basılır. <b>Blok görseli isteğe bağlıdır ve
+                bugün karşılığı yoktur:</b> ölçüldü — 16 public detay sayfasının <b>0</b>'ında
+                makale içi görsel var; kapak görseli ayrıdır (liste kartlarının 12/12'sinde var).</span></div>
             </div>
 
             <div class="form-bolum">
               <h3 class="form-bolum-bas">
-                <i class="fa-solid fa-user-check" aria-hidden="true"></i> Kimin işine yarar
-                <span class="alan-sayac" id="tfUygunSay">1 madde</span>
+                <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> Okuyucu uyarısı
               </h3>
-              <div class="adim-liste" id="tfUygun"><div class="adim-karti"><span class="adim-no">1</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-user-check" aria-hidden="true"></i> Uygun</span><input class="alan-girdi" type="text" name="uygun[]" data-field="metin" placeholder="Örn. İlk kez pilav pişirenler"><input type="hidden" data-field="position" value="0"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır" data-eylem="sirala"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Satırı sil" aria-label="Satırı sil" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div></div>
-              <button class="satir-ekle" type="button" id="tfUygunEkle" data-eylem="satir-ekle">
-                <i class="fa-solid fa-plus" aria-hidden="true"></i> Madde ekle</button>
-            </div>
-
-            <div class="form-bolum">
-              <h3 class="form-bolum-bas">
-                <i class="fa-solid fa-user-xmark" aria-hidden="true"></i> Kimin işine yaramaz
-                <span class="alan-sayac" id="tfUygunDegilSay">1 madde</span>
-              </h3>
-              <div class="adim-liste" id="tfUygunDegil"><div class="adim-karti"><span class="adim-no">1</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-user-xmark" aria-hidden="true"></i> Uygun değil</span><input class="alan-girdi" type="text" name="uygun_degil[]" data-field="metin" placeholder="Örn. Glutensiz beslenmen gerekiyorsa"><input type="hidden" data-field="position" value="0"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır" data-eylem="sirala"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Satırı sil" aria-label="Satırı sil" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div></div>
-              <button class="satir-ekle" type="button" id="tfUygunDegilEkle" data-eylem="satir-ekle">
-                <i class="fa-solid fa-plus" aria-hidden="true"></i> Madde ekle</button>
-              <div class="alan-yardim" style="margin-top:10px"><span>🔴 Bu liste püf noktasının alerjen taramasını besler: eşleşen bir madde varsa kayıt <b>başlamaz</b>.</span></div>
-            </div>
-
-            <div class="form-bolum">
-              <h3 class="form-bolum-bas">
-                <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> Ek alerjen notu
-                <span class="alan-sayac" id="tfGuvenlikSay">1 not</span>
-              </h3>
-              <div class="adim-liste" id="tfGuvenlik"><div class="adim-karti"><span class="adim-no">1</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> Uyarı</span><input class="alan-girdi" type="text" name="guvenlik[]" data-field="metin" placeholder="Public sayfadaki alerjen notunu buraya taşı — yeniden yazma."><input type="hidden" data-field="position" value="0"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır" data-eylem="sirala"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Satırı sil" aria-label="Satırı sil" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div></div>
-              <button class="satir-ekle" type="button" id="tfGuvenlikEkle">
-                <i class="fa-solid fa-plus" aria-hidden="true"></i> Not ekle</button>
-              <div class="alan-yardim" style="margin-top:10px"><span>🔴 <b>Sağlık metni — taşınır, yeniden yazılmaz.</b> Bu püf noktasının bugünkü alerjen notları
-                <code>puf-noktalari/&lt;slug&gt;</code> içindeki <code>guvenlikEk</code> dizisinde
-                duruyor; buraya <b>o metinlerin kendisi</b> aktarılır. Genel alerjen uyarısı Ayarlar'da tek yerden yönetilir, buraya kopyalanmaz.</span></div>
+              <div>
+                <div class="alan">
+                  <label for="tfUyari" class="alan-etiket">Uyarı / alerjen notu</label>
+                  <!-- L2 · hazır metin şablonu. Ölçüm: 16 public detayın 8'i "Okuyucunun
+                       Dikkatine" kutusu basıyor ve SEKİZİNDE DE METİN AYNI — L2'nin tam
+                       tanımı. ⚠ `uyari` türü kütükte BOŞ (kanon/admin-veri.js, salt okuma)
+                       ve `guvenlik` türündeki 31 şablonun 31'i FIT'in anatomi formundan;
+                       kit markaya göre süzdüğü için Gastro'da ikisi de 0 döner ve düğme
+                       HİÇ DOĞMAZ (ölü buton yasağı). Kütük elle doldurulmadı — KÖ-B3. -->
+                  <textarea class="alan-metin" id="tfUyari" name="uyari" data-editor="not" data-sablon="uyari" placeholder="Detayın sonundaki uyarı kutusunda basılır."></textarea>
+                  <div class="alan-yardim"><span>🔴 <b>Sağlık metni — taşınır, yeniden yazılmaz.</b>
+                    Public sayfada duran uyarı metninin <b>kendisi</b> buraya aktarılır. Genel alerjen
+                    uyarısı Ayarlar'da tek yerden yönetilir, buraya kopyalanmaz.</span></div>
+                </div>
+              </div>
             </div>
           </div>
 
           <!-- ---- SONUÇ BANTLARI ---- -->
           <div data-form-panel="sonuc" hidden="" id="pano-0-2" role="tabpanel" aria-labelledby="sekme-0-2">
             <div class="form-bolum">
-              <h3 class="form-bolum-bas">
-                <i class="fa-solid fa-circle-question" aria-hidden="true"></i> Sık sorulanlar
-                <span class="alan-sayac" id="tfSoruSay">1 soru</span>
-              </h3>
-              <div class="adim-liste" id="tfSorular"><div class="adim-karti"><span class="adim-no">1</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-circle-question" aria-hidden="true"></i> SSS sorusu</span><textarea class="alan-metin" name="soru[]" data-field="soru" maxlength="200" placeholder="Detayın sonunda üyeye sorulan soru." aria-label="SSS sorusu"></textarea><input type="hidden" data-field="position" value="0"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Soruyu sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır" data-eylem="sirala"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Soruyu sil" aria-label="Soruyu sil" disabled="" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div></div>
-              <button class="satir-ekle" type="button" id="tfSoruEkle" data-eylem="satir-ekle">
-                <i class="fa-solid fa-plus" aria-hidden="true"></i> Soru ekle</button>
-              <div class="alan-yardim" style="margin-top:10px"><span>🔴 <b>YAPI KARARI — lead'e sorulacak.</b>
-                Bugün her püf noktası <b>dört soruludur</b>: veride <code>olcumSoru</code> dört başlık taşıyor ve gövde onların altına yazılıyor. Bu alan çoklu soru setine <b>hazır</b> kuruldu (tekrarlayan
-                satır), ama <b>ölçülen dört soruyla dolduruldu</b> ve public taraf değişmedi. Soru sayısı
-                birden çok olursa <code>puf-noktalari/&lt;slug&gt;</code>in 644 satırlık akışı ve
-                bantların hangi soruya bakacağı yeniden tasarlanmalı — bu bir maket kararı değil,
-                <b>veri yapısı kararıdır</b>.</span></div>
-            </div>
-
-            <div class="form-bolum">
-              <h3 class="form-bolum-bas">
-                <i class="fa-solid fa-diagram-project" aria-hidden="true"></i> Sonuç bantları
-                <span class="alan-sayac" id="tfBantSay">3 bant</span>
-              </h3>
-              <div class="adim-liste" id="tfBantlar"><div class="adim-karti"><span class="adim-no">1</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-diagram-project" aria-hidden="true"></i> Bağ satırı</span><div class="alan kart-izgara c2"><div class="alan"><label class="alan-etiket">Bağ türü <span class="zorunlu">*</span></label><input class="alan-girdi" type="text" name="bant_olcut[]" data-field="olcut" maxlength="60" placeholder="Örn. tarif bağı" data-zorunlu="1"></div><div class="alan"><label class="alan-etiket">Hedef tür <span class="zorunlu">*</span></label><select class="alan-secim" name="bant_lv[]" data-field="lv" data-zorunlu="1"><option value="1" selected="">1 · Tarif</option><option value="2">2 · Ansiklopedi maddesi</option><option value="3">3 · Sözlük terimi</option></select></div></div><div class="alan"><label class="alan-etiket">Bağlanan kayıt <span class="zorunlu">*</span></label><select class="alan-secim" name="bant_prog[]" data-field="prog" data-zorunlu="1"><option value="" selected="">Kayıt seç…</option><option value="etli-kuru-fasulye">Etli Kuru Fasulye (tarif)</option><option value="adana-kebabi">Adana Kebabı (tarif)</option><option value="abaza-peyniri">Abaza Peyniri (madde)</option><option value="julyen">Jülyen (terim)</option></select></div><div class="alan"><label class="alan-etiket">Bağ özeti <span class="acilir-kalem">— sonuç sayfasında üyeye okunan metin</span></label><textarea class="alan-metin" name="bant_ozet[]" data-field="ozet" placeholder="Bu bağın hedefi üyeye ne söylüyor?"></textarea></div><input type="hidden" data-field="position" value="0"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Bandı sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır" data-eylem="sirala"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Bandı sil" aria-label="Bandı sil" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div><div class="adim-karti"><span class="adim-no">2</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-diagram-project" aria-hidden="true"></i> Bağ satırı</span><div class="alan kart-izgara c2"><div class="alan"><label class="alan-etiket">Bağ türü <span class="zorunlu">*</span></label><input class="alan-girdi" type="text" name="bant_olcut[]" data-field="olcut" maxlength="60" placeholder="Örn. tarif bağı" data-zorunlu="1"></div><div class="alan"><label class="alan-etiket">Hedef tür <span class="zorunlu">*</span></label><select class="alan-secim" name="bant_lv[]" data-field="lv" data-zorunlu="1"><option value="1">1 · Tarif</option><option value="2" selected="">2 · Ansiklopedi maddesi</option><option value="3">3 · Sözlük terimi</option></select></div></div><div class="alan"><label class="alan-etiket">Bağlanan kayıt <span class="zorunlu">*</span></label><select class="alan-secim" name="bant_prog[]" data-field="prog" data-zorunlu="1"><option value="" selected="">Kayıt seç…</option><option value="etli-kuru-fasulye">Etli Kuru Fasulye (tarif)</option><option value="adana-kebabi">Adana Kebabı (tarif)</option><option value="abaza-peyniri">Abaza Peyniri (madde)</option><option value="julyen">Jülyen (terim)</option></select></div><div class="alan"><label class="alan-etiket">Bağ özeti <span class="acilir-kalem">— sonuç sayfasında üyeye okunan metin</span></label><textarea class="alan-metin" name="bant_ozet[]" data-field="ozet" placeholder="Bu bağın hedefi üyeye ne söylüyor?"></textarea></div><input type="hidden" data-field="position" value="1"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Bandı sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır" data-eylem="sirala"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Bandı sil" aria-label="Bandı sil" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div><div class="adim-karti"><span class="adim-no">3</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-diagram-project" aria-hidden="true"></i> Bağ satırı</span><div class="alan kart-izgara c2"><div class="alan"><label class="alan-etiket">Bağ türü <span class="zorunlu">*</span></label><input class="alan-girdi" type="text" name="bant_olcut[]" data-field="olcut" maxlength="60" placeholder="Örn. tarif bağı" data-zorunlu="1"></div><div class="alan"><label class="alan-etiket">Hedef tür <span class="zorunlu">*</span></label><select class="alan-secim" name="bant_lv[]" data-field="lv" data-zorunlu="1"><option value="1">1 · Tarif</option><option value="2">2 · Ansiklopedi maddesi</option><option value="3" selected="">3 · Sözlük terimi</option></select></div></div><div class="alan"><label class="alan-etiket">Bağlanan kayıt <span class="zorunlu">*</span></label><select class="alan-secim" name="bant_prog[]" data-field="prog" data-zorunlu="1"><option value="" selected="">Kayıt seç…</option><option value="etli-kuru-fasulye">Etli Kuru Fasulye (tarif)</option><option value="adana-kebabi">Adana Kebabı (tarif)</option><option value="abaza-peyniri">Abaza Peyniri (madde)</option><option value="julyen">Jülyen (terim)</option></select></div><div class="alan"><label class="alan-etiket">Bağ özeti <span class="acilir-kalem">— sonuç sayfasında üyeye okunan metin</span></label><textarea class="alan-metin" name="bant_ozet[]" data-field="ozet" placeholder="Bu bağın hedefi üyeye ne söylüyor?"></textarea></div><input type="hidden" data-field="position" value="2"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Bandı sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır" data-eylem="sirala"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Bandı sil" aria-label="Bandı sil" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div></div>
-              <button class="satir-ekle" type="button" id="tfBantEkle">
-                <i class="fa-solid fa-plus" aria-hidden="true"></i> Bağ ekle</button>
-              <div class="alan-yardim" style="margin-top:10px"><span>Bantlar birlikte tüm sonuç uzayını
-                kaplamalı: boşluk kalırsa bazı yanıtlar hiçbir banda düşmez, çakışma olursa
-                aynı yanıt iki sonuç üretir. Bağlanan kayıt listesi detay sayfasının
-                gerçekten tanıdığı adreslerden gelir.</span></div>
+              <h3 class="form-bolum-bas"><i class="fa-solid fa-utensils" aria-hidden="true"></i> Bu püfün geçtiği tarifler</h3>
+              <div>
+                <div class="alan">
+                  <label class="alan-etiket" for="tfTarifAra">İlişkili tarifler</label>
+                  <!-- L5 · kaynak `DM_KAYITLAR.tarifler`. Public bandın adı birebir
+                       "Bu püfün geçtiği tarifler" ve 16 detayın 5'inde basılıyor. -->
+                  <div id="tfTarifler" class="coklu-secim" data-ad="tarifler" data-kayit="tarifler">
+                    <input type="hidden" data-cs name="tarifler" value="">
+                    <div class="coklu-kutu"><input class="acilir-arama" id="tfTarifAra" type="text" placeholder="Tarif ara…" aria-label="Tarif ara" autocomplete="off" role="combobox" aria-expanded="false"></div>
+                    <div class="acilir-yuzey" role="listbox" hidden=""></div>
+                    <div class="cipler"></div>
+                  </div>
+                  <div class="alan-yardim"><span>Boş bırakılırsa band public'te hiç basılmaz
+                    (ölçüldü: 16 detayın 11'inde band yok).</span></div>
+                </div>
+              </div>
             </div>
 
             <div class="form-bolum">
               <h3 class="form-bolum-bas"><i class="fa-solid fa-lightbulb" aria-hidden="true"></i> Bunlar da işine yarar</h3>
               <div>
+                <!-- L7 · SİSTEM ÖNERİSİ — salt okunur, kaynağı yazılı.
+                     Hesap `_ortak/gastro-ek-b.js` içinde: aynı kategori +2, ortak etiket
+                     başına +1; kaynak bu sayfanın `data-kayitlar` kütüğü. Öneri kaydı
+                     DEĞİŞTİRMEZ; "Ekle" düğmesi seçime taşır. -->
+                <div class="alan" id="tfOneriAlan">
+                  <label class="alan-etiket">Sistemin önerdiği püf noktaları</label>
+                  <div id="tfOneri" class="oneri-listesi" data-oneri-kaynak="kategori+etiket" aria-live="polite"></div>
+                  <div class="alan-yardim" id="tfOneriNot"><span>Sistemden hesaplanır —
+                    elle değiştirilmez. Kural: <b>aynı kategori +2 · her ortak etiket +1</b>;
+                    kaynak bu ekranın kayıt kütüğü.</span></div>
+                </div>
                 <div class="alan">
-                  <label class="alan-etiket">İlişkili püf noktaları <span class="acilir-kalem">— detayın altındaki “Devam Et” bandında basılır</span></label>
-                  <div id="tfIlgili" class="coklu-secim" data-ad="ilgili"><div class="coklu-kutu"><input class="acilir-arama" type="text" placeholder="Püf noktası ara…" aria-label="Püf noktası ara" autocomplete="off" role="combobox" aria-expanded="false"></div><div class="acilir-yuzey" role="listbox" hidden=""></div></div>
-                  <div class="alan-yardim"><span>Sonuç bantlarından AYRIDIR: bant bir ölçüte göre
-                    yanıt üretir, bu bant üç ilişkili <b>püf noktası kaydını</b> gösterir.
-                    Boş bırakılırsa public taraf aynı kategoriden dolduran öneriyi basar.</span></div>
+                  <label class="alan-etiket" for="tfIlgiliAra">Elle seçilen püf noktaları <span class="acilir-kalem">— detayın altındaki bantta basılır</span></label>
+                  <div id="tfIlgili" class="coklu-secim" data-ad="ilgili" data-kayit="puf-noktalari">
+                    <input type="hidden" data-cs name="ilgili" value="">
+                    <div class="coklu-kutu"><input class="acilir-arama" id="tfIlgiliAra" type="text" placeholder="Püf noktası ara…" aria-label="Püf noktası ara" autocomplete="off" role="combobox" aria-expanded="false"></div>
+                    <div class="acilir-yuzey" role="listbox" hidden=""></div>
+                    <div class="cipler"></div>
+                  </div>
+                  <div class="alan-yardim"><span>Boş bırakılırsa public taraf yukarıdaki
+                    öneriyi basar (band 16/16 detayda var).</span></div>
                 </div>
               </div>
             </div>
@@ -411,7 +441,7 @@
           <div class="form-eylem kart-alt">
             <a class="dugme hayalet" href="admin-puf-noktalari.html">İptal</a>
             <button class="dugme hayalet" type="button" id="tfTaslak" data-eylem="taslak">Taslak kaydet</button>
-            <button class="dugme birincil" type="button" id="tfKaydet">Püf noktasını kaydet</button>
+            <button class="dugme birincil" type="button" id="tfKaydet" data-eylem="kaydet">Püf noktasını kaydet</button>
           </div>
         <div class="bos-durum kart-ici" hidden=""><span class="bos-ikon"><i class="fa-solid fa-file-circle-question" aria-hidden="true"></i></span><h3>Bu adreste püf noktası yok</h3><p>Adresteki slug katalogda karşılık bulmuyor. Listeye dön ve bir püf noktası seç.</p><a class="dugme birincil" href="admin-puf-noktalari.html">Püf noktalarına dön</a></div><div class="bos-durum kart-ici yetkisiz" data-durum="yetkisiz" hidden=""><span class="bos-ikon"><i class="fa-solid fa-lock" aria-hidden="true"></i></span><h3>Bu kaydı düzenleyemezsin</h3><p>Erişim istemek için yöneticinle görüş.</p></div><div class="bos-durum kart-ici servis-hatasi" data-durum="servis" hidden=""><span class="bos-ikon"><i class="fa-solid fa-plug-circle-xmark" aria-hidden="true"></i></span><h3>Kayıt yüklenemedi</h3><p>Bağlantı kurulamadı. Yeniden dene.</p><button class="dugme birincil" type="button" data-eylem="calistir" data-ad="Yeniden dene"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i> Yeniden dene</button><div class="hata-izi">Referans kodu <code>GAS-ADM-5207</code></div></div></div>
 
@@ -433,16 +463,13 @@
                   <label for="tfTarih" class="alan-etiket">Yayın tarihi</label>
                   <input class="alan-girdi" id="tfTarih" name="yayin_tarihi" type="date">
                 </div>
-                <div class="alan">
-                  <span>Püf Noktaları sayfasında öne çıkar</span>
-                  <label class="anahtar"><input type="checkbox" name="one_cikar">
-                    <span class="anahtar-ray"></span><span></span></label>
-                </div>
-                <div class="alan">
-                  <span>Alerjen taraması zorunlu</span>
-                  <label class="anahtar"><input type="checkbox" name="tarama" checked="">
-                    <span class="anahtar-ray"></span><span></span></label>
-                </div>
+                <!-- 🔴 KALDIRILDI · iki anahtar, ikisi de FIT kalıntısı, ikisi de ÖLÇÜLDÜ:
+                     · "Püf Noktaları sayfasında öne çıkar" (`one_cikar`) — public liste
+                       sayfasında öne çıkarılmış bir yuva YOK: 12 kart, tek düzen, sıralama
+                       yalnız "En Yeni" / "En Çok Okunan". "öne çık|featured|pinned" geçen 0.
+                     · "Alerjen taraması zorunlu" (`tarama`) — 16 public püf detayının
+                       0'ında "alerjen" sözcüğü bile geçmiyor. Gastro'nun karşılığı bu değil,
+                       İçerik sekmesindeki "Okuyucu uyarısı" (8/16 sayfada, metin aynı). -->
               </div>
             </div>
           </div>
@@ -451,7 +478,7 @@
             <div class="kart-bas"><h2 class="kart-baslik">Bağ sağlığı</h2>
               <div class="eylem-satiri" id="tfSaglikRozet"><span class="rozet bekleme"><i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i> 2 uyarı</span></div>
             </div>
-            <div class="kart-govde" id="tfSaglik"><div class="seo-denetim"><div class="seo-kalem gecti"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>3 bağ tanımlı (bugün her püf noktası 3 bağ taşıyor)</div><div class="seo-kalem gecti"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>Her bağ ayrı bir hedef türe düşüyor</div><div class="seo-kalem kaldi"><i class="fa-solid fa-circle" aria-hidden="true"></i>3 bağın türü boş</div><div class="seo-kalem kaldi"><i class="fa-solid fa-circle" aria-hidden="true"></i>3 bağ kayıt seçmemiş</div><div class="seo-kalem gecti"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>Bağlanan kayıtların hepsi detay sayfasında karşılık buluyor</div></div><div class="alan-yardim" style="margin-top:12px"><span>Bağ listesi püf detayının gerçekten tanıdığı adreslerden geliyor. Ölçüldü: sözlük gövdesinden püf noktasına <b>197 bağ</b> çıkıyor, ansiklopedi maddesinden <b>0 bağ</b> çıkıyor. Aradaki fark Sözlük ve Ansiklopedi ekranlarında görünür.</span></div></div>
+            <div class="kart-govde" id="tfSaglik"><div class="seo-denetim"><div class="seo-kalem gecti"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>“Bunlar da işine yarar” bandı public'te 16/16 detayda basılıyor (63 bağ)</div><div class="seo-kalem gecti"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>Sistem önerisi ölçülebilir bir kuraldan doğuyor (aynı kategori +2 · ortak etiket +1)</div><div class="seo-kalem kaldi"><i class="fa-solid fa-circle" aria-hidden="true"></i>“Bu püfün geçtiği tarifler” bandı 16 detayın yalnız 5'inde var (12 bağ)</div><div class="seo-kalem kaldi"><i class="fa-solid fa-circle" aria-hidden="true"></i>Sözlükten bu modüle 26 bağ geliyor (54 terimin 10'undan); ansiklopediden 0</div></div><div class="alan-yardim"><span>🔴 Bu kart eskiden <b>kaldırılan “sonuç bantları”nı</b> anlatıyordu (“3 bağın türü boş” · “3 bağ kayıt seçmemiş”) ve söylediği 197 sayısı ölçülmemişti. Yeniden ölçüldü: sözlük gövdesinden püf noktasına <b>26 bağ</b> çıkıyor (10/54 terim), ansiklopediden <b>0</b>. Bantların kendisi Bağlar sekmesinde yönetiliyor.</span></div></div>
           </div>
 
           <div class="kart panel" style="margin-top:16px">
@@ -480,10 +507,19 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/l10n/tr.js"></script>
 <script src="../../kanon/admin-editor-tr.js"></script>
+<script src="../../kanon/admin-ikon-kutuphane.js" defer></script>
+<script src="../../kanon/admin-veri.js" defer></script>
 <script src="../../kanon/admin-kit.js" defer></script>
 <script src="../../kanon/admin-editor.js" defer></script>
 <script src="../../kanon/admin-tarih.js" defer></script>
 <!-- ADMIN-KIT:JS:SON -->
+<!-- GASTRO-EK:JS:BAS -->
+<script src="_ortak/gastro-ek.js" defer></script>
+<script src="_ortak/gastro-ek-a.js" defer></script>
+<script src="_ortak/gastro-ek-b.js" defer></script>
+<script src="_ortak/gastro-ek-c.js" defer></script>
+<script src="_ortak/gastro-ek-d.js" defer></script>
+<!-- GASTRO-EK:JS:SON -->
 <!-- KAYIT KAYNAĞI — form kendi kayıtlarını BİLDİRİR (admin-ui-kit §5b).
      Anahtar = admin-puf-noktalari.html satırlarının `data-slug`ı (12 satır, çakışma yok).
      ad · slug · kategori · adim_baslik ("Soru başlıkları" çipleri, 12×3)  → LİSTE SATIRI
@@ -498,75 +534,139 @@
   "ad": "Açılmış Domates Salçası Nasıl Saklanır?",
   "slug": "acilmis-domates-salcasi-nasil-saklanir",
   "kategori": "Nasıl Saklanır?",
-  "adim_baslik": [
-   "Kavanoz mu buzluk mu?",
-   "Üstüne yağ?",
-   "Ne kadar dayanır?"
-  ],
   "ozet": "Açılmış domates salçası buzdolabında, ağzı sıkıca kapatılmış bir kapta yaklaşık 5-7 gün boyunca güvenle saklanabilir. Bu süre; salçanın saklama koşuluna, kabın temizliğine ve ürünün açıldıktan sonra ne kadar hijyenik koşullarda tutulduğuna göre değişebilir.",
   "ilgili": [
    "Ekmek Bayatlamadan Nasıl Saklanır?",
    "Tavuk Buzdolabında Kaç Gün Saklanır?",
    "Kıyma Buzdolabında ve Dondurucuda Kaç Gün Saklanır?",
    "Pişmiş Pilav Buzdolabında Kaç Gün Saklanır?"
+  ],
+  "yazar": "Şahnur Yetkiner",
+  "okuma_suresi": "3 dk okuma",
+  "amac": "<p>Açılmış domates salçası buzdolabında, ağzı sıkıca kapatılmış bir kapta yaklaşık 5-7 gün boyunca güvenle saklanabilir. Bu süre; salçanın saklama koşuluna, kabın temizliğine ve ürünün açıldıktan sonra ne kadar hijyenik koşullarda tutulduğuna göre değişebilir.</p>\n<p>Domates salçası açıldıktan sonra havayla temas ettiği için yüzeyinde küf oluşma riski zamanla artar. Kap cam veya yiyecek sınıfı plastikten olmalı, metal kaplarda uzun süre bekletilmemelidir; çünkü salçanın asidik yapısı bazı metal yüzeylerle reaksiyona girip tat değişikliğine yol açabilir. Salçanın yüzeyinin havayla temasını azaltmak, saklama süresini bir miktar uzatabilir. Sıcaklığın istikrarlı olduğu bir buzdolabı rafı, kapı gözlerine göre daha güvenli bir saklama noktasıdır çünkü kapı bölümü sık açılıp kapanma nedeniyle sıcaklık dalgalanmasına daha açıktır.</p>",
+  "blok_baslik": [
+   "Açılmış Salça Nasıl Saklanmalı?",
+   "Açılmış Salça Saklanırken Yapılan Hatalar Nelerdir?",
+   "Salça Bozulduğunda Nasıl Anlaşılır?"
+  ],
+  "blok_metin": [
+   "<p>Açılmış salçanın uzun süre taze kalması için birkaç basit kurala dikkat edilmelidir.</p>\n<ul><li>Salça, orijinal kutusundan cam veya plastik hava geçirmez bir kaba aktarılmalıdır.</li><li>Salçanın yüzeyi ince bir tabaka <a href=\"/mutfak-ansiklopedisi/zeytinyagi\">zeytinyağı</a> ile kapatılırsa havayla temas azalır ve küflenme riski düşebilir.</li><li>Kap, kullanım sonrası hemen buzdolabına kaldırılmalı, oda sıcaklığında uzun süre bekletilmemelidir.</li><li>Uzun süre saklamak için salça küçük porsiyonlar halinde buz kalıbında dondurulup ihtiyaç kadar kullanılabilir.</li><li>Kaşık daldırılırken temiz ve kuru bir kaşık kullanılmalı, salçaya yemek artığı bulaştırılmamalıdır.</li></ul>",
+   "<p>Salça saklarken yapılan bazı hatalar bozulma riskini belirgin şekilde artırır ve fark edilmediğinde sofraya yansıyabilir.</p>\n<ul><li>Salçanın açıldıktan sonra orijinal metal kutusunda buzdolabında uzun süre bırakılması tat ve renk değişikliğine yol açabilir.</li><li>Salçaya her defasında farklı, yemek artığı taşıyan bir kaşık daldırılması küflenmeyi hızlandırabilir.</li><li>Salçanın oda sıcaklığında saatlerce açıkta bırakılması bozulma riskini artırır.</li><li>Yüzeyde küf görülmesine rağmen yalnızca küflü kısmın kazınıp geri kalanının kullanılması güvenli değildir; küf, görünenden daha geniş bir alana yayılmış olabileceği için ürünün tamamının atılması önerilir.</li></ul>",
+   "<p>Açılmış salçada küflenme, belirgin renk koyulaşması, ekşimsi veya farklı bir koku ile kendini gösterebilir. Bu belirtilerden herhangi biri fark edildiğinde salçanın tamamının tüketilmeden atılması önerilir. Saklama süreleri ürünün markasına, katkı maddesi içeriğine ve saklama sıcaklığına göre değişebilir; bu nedenle şüpheli durumlarda temkinli davranmak en güvenli yaklaşımdır.</p>\n<p>Ev yapımı salçalar, sanayi tipi üretimdeki pastörizasyon ve koruyucu adımlarını içermediği için hazır kutu salçaya göre genellikle daha kısa sürede tüketilmelidir. Bu tür salçaların açıldıktan sonra daha sık kontrol edilmesi ve mümkünse daha küçük kavanozlarda saklanması önerilir.</p>\n<p>Açılmış domates salçası nasıl saklanır sorusunun cevabı; hava geçirmez bir kapta, buzdolabında ve mümkünse yüzeyi yağla kapatılmış şekilde saklamaktır. Bu basit önlemler, salçanın hem tazeliğini hem de güvenli tüketim süresini korumaya yardımcı olur. Şüpheli bir koku veya görüntüyle karşılaşıldığında ise temkinli davranıp ürünü tüketmemek en doğru seçimdir. Küçük kavanozlarda alışveriş yapmak da açıldıktan sonra kısa sürede tüketimi kolaylaştırarak saklama riskini azaltan pratik bir tercihtir.</p>"
+  ],
+  "etiketler": [
+   "salça",
+   "saklama",
+   "gıda güvenliği"
   ]
  },
  "adacayinin-faydalari-ve-kullanimi": {
   "ad": "Adaçayının Faydaları ve Kullanımı",
   "slug": "adacayinin-faydalari-ve-kullanimi",
   "kategori": "Malzeme Rehberi",
-  "adim_baslik": [
-   "Nasıl demlenir?",
-   "Günde kaç fincan?",
-   "Mutfakta kullanımı"
-  ],
   "ozet": "Adaçayı, geçmişten günümüze insan sağlığına birçok katkısı olduğu düşünülen bitkilerden biridir. Yaprakları kaynatılarak çay olarak tüketilebildiği gibi, esansı aromatik yağ olarak da değerlendirilir.",
   "ilgili": [
    "Arı Ekmeği (Perga) Nedir, Nasıl Tüketilir?",
    "Evde Mum Nasıl Yapılır?",
    "Goji Berry Nedir, Nasıl Tüketilir?",
    "Gün Boyu Tok Tutan Besinler Nelerdir?"
-  ]
+  ],
+  "yazar": "Şahnur Yetkiner",
+  "okuma_suresi": "3 dk okuma",
+  "amac": "<p>Adaçayı, geçmişten günümüze insan sağlığına birçok katkısı olduğu düşünülen bitkilerden biridir. Yaprakları kaynatılarak çay olarak tüketilebildiği gibi, esansı aromatik yağ olarak da değerlendirilir.</p>\n<p>Adaçayının etkisini kaybetmemesi için uzun süre demlenmemesi gerektiği belirtilir. Aşağıda adaçayının bilinen özellikleri, doğru demleme yöntemi ve tüketirken dikkat edilmesi gereken noktalar yer alır.</p>",
+  "blok_baslik": [
+   "Bilinen özellikleri",
+   "Doğru demleme yöntemi",
+   "Cilt ve genel bakımda kullanımı",
+   "Kimlerin dikkatli tüketmesi gerekir?",
+   "Mutfakta ve günlük kullanımda adaçayı"
+  ],
+  "blok_metin": [
+   "<p>Adaçayının ruh haline olumlu etkisi olduğu, sinirleri yatıştırıcı bir etki gösterdiği belirtilir. Ayrıca bağışıklık sistemine destek olduğu, solunum yollarını rahatlatan bitki çayları arasında sayıldığı ifade edilir. Gargara şeklinde hazırlanıp tüketildiğinde, boğazdaki hafif tahrişlerin rahatlamasına destek olduğu da geleneksel kullanımlar arasında yer alır.</p>\n<p>Ağız ve diş sağlığına, sindirim sistemine destek olduğu düşünülen adaçayının, bu özellikleri geleneksel kullanımdan gelen gözlemlere dayanır. Bilimsel değerlendirmeler bu konuda halen sürmektedir, bu nedenle kesin bir sonuç olarak görülmemelidir. Yaprakların hem çay hem de gargara suyu olarak değerlendirilebilmesi, adaçayını mutfakta çok yönlü kullanılan bir bitki haline getirir.</p>",
+   "<p>Adaçayının etkisini kaybetmemesi için kaynar suyla değil, kaynamaya yakın sıcaklıktaki suyla demlenmesi önerilir. Yapraklar suya eklendikten sonra 5-7 dakika kadar demlenmesi, hem aromasının hem de içeriğinin dengeli şekilde suya geçmesini sağlar. Demlik kapağının kapalı tutulması, uçucu aromatik bileşenlerin buharla birlikte kaybolmasını önler.</p>\n<p>Uzun süre demlenen ya da tekrar kaynatılan adaçayının hem tadının acılaştığı hem de etkisinin azaldığı belirtilir. Günde birkaç bardaktan fazla tüketilmemesi, genel bir öneri olarak kabul edilir. Taze yapraklarla hazırlanan adaçayı, kurutulmuş olana göre daha hafif ama daha canlı bir tat verir.</p>",
+   "<p>Adaçayının, ruh hali üzerindeki etkisinin yanı sıra cilt bakımında da geleneksel olarak kullanıldığı bilinir. Ciltte meydana gelen lekelere ve akne gibi problemlere karşı da tercih edildiği belirtilir.</p>\n<p>Adaçayı yaprakları tütsü olarak da kullanılabilir; bu kullanım şekli daha çok geleneksel bir uygulama olarak değerlendirilir ve bilimsel bir dayanağı bulunmamaktadır.</p>",
+   "<p>Adaçayının aşırı tüketimi bazı durumlarda fayda yerine zarar da sağlayabilir. Alerjik bünyeye sahip kişilerde alerjik reaksiyonlara, fazla tüketildiğinde ise mide yanmasına yol açabileceği belirtilir. Bu nedenle yeni tüketmeye başlayanların önce az miktarda ve seyreltilmiş şekilde denemesi önerilir.</p>\n<p>Düşük tansiyonu olanların, kronik bir hastalık nedeniyle düzenli ilaç kullananların ve diyabet hastalarının adaçayı tüketirken dikkatli olması, mümkünse doktoruna danışması önerilir. Günlük tüketimde 3 bardağı aşmamak, genel bir sınır olarak kabul edilir. Hamilelik ve emzirme döneminde tüketilmeden önce de mutlaka bir hekime danışılması gerektiği belirtilir.</p>",
+   "<p>Adaçayı, sade olarak tüketilebileceği gibi limon dilimi ya da bir tutam bal ile de tatlandırılabilir. Kurutulmuş yaprakların hava almayan bir kavanozda, ışıktan uzak bir yerde saklanması aromasının uzun süre korunmasını sağlar.</p>\n<p>Taze adaçayı yaprakları da bazı et ve tavuk yemeklerinde aroma vermek amacıyla kullanılabilir; kurutulmuş haline göre daha hafif ama daha taze bir koku bırakır. Yemeğin pişme süresinin sonlarına doğru eklenmesi, aromanın buharlaşıp kaybolmasını önler.</p>"
+  ],
+  "etiketler": [
+   "adaçayı",
+   "bitki çayı",
+   "demleme",
+   "bağışıklık"
+  ],
+  "uyari": "<p>Bu içerik yalnızca bilgilendirme amaçlıdır ve tıbbi tavsiye yerine geçmez. Sağlığınızla ilgili bir karar vermeden önce hekiminize danışın.</p>"
  },
  "ananas-nasil-secilir-ve-hazirlanir": {
   "ad": "Ananas Nasıl Seçilir ve Hazırlanır?",
   "slug": "ananas-nasil-secilir-ve-hazirlanir",
   "kategori": "Nasıl Seçilir ve Hazırlanır?",
-  "adim_baslik": [
-   "Olgunu nasıl anlaşılır?",
-   "Kabuğu nasıl soyulur?",
-   "Göbeği atılır mı?"
-  ],
   "ozet": "Ananas nasıl seçilir ve hazırlanır sorusunun cevabı; ananasın tabanından tatlı bir koku alması, yapraklarının canlı yeşil ve kolayca çekilebilir olması ve kabuğun hafifçe bastırıldığında az miktarda esneklik göstermesidir. Kabuğun tamamen sarı olması şart değildir; bazı ananas çeşitleri yeşilimsi kabukla da olgun olabilir. Bu üç kontrol birlikte değerlendirildiğinde en güvenilir sonucu verir.",
   "ilgili": [
    "Taze Balık Nasıl Anlaşılır ve Seçilir?",
    "Olgun Avokado Nasıl Seçilir ve Olgunlaştırılır?",
    "Taze Karides Nasıl Seçilir ve Hazırlanır?",
    "Kabak Nasıl Seçilir ve Hazırlanır?"
+  ],
+  "yazar": "Kerem Egeli",
+  "okuma_suresi": "3 dk okuma",
+  "amac": "<p>Ananas nasıl seçilir ve hazırlanır sorusunun cevabı; ananasın tabanından tatlı bir koku alması, yapraklarının canlı yeşil ve kolayca çekilebilir olması ve kabuğun hafifçe bastırıldığında az miktarda esneklik göstermesidir. Kabuğun tamamen sarı olması şart değildir; bazı ananas çeşitleri yeşilimsi kabukla da olgun olabilir. Bu üç kontrol birlikte değerlendirildiğinde en güvenilir sonucu verir.</p>\n<p>Ananas, dalından koptuktan sonra tatlılığını artırmaz; bu nedenle satın alma anındaki koku ve doku kontrolü doğru ananası seçmenin en güvenilir yoludur. Ananasın tabanında hafif fermente kokusu hissedilmesi, meyvenin olgunluğunu geçirmeye başladığının bir işareti olabilir ve bu durumda ananas kısa sürede tüketilmelidir. Ananasın gövdesine hafifçe vurulduğunda tok bir ses gelmesi de olgunluğun bir başka göstergesi olarak değerlendirilebilir.</p>",
+  "blok_baslik": [
+   "Ananas Satın Alırken Nelere Dikkat Edilmelidir?",
+   "Ananas Nasıl Soyulur ve Hazırlanır?",
+   "Ananas Çeşidi Seçimi Etkiler mi?",
+   "Ananas Hazırlarken Sık Yapılan Hatalar Nelerdir?"
+  ],
+  "blok_metin": [
+   "<p>Tatlı ve sulu bir ananas seçerken birkaç basit kontrol yeterlidir.</p>\n<ul><li>Tabanından alınan tatlı ve yoğun koku, ananasın olgun olduğunun en güvenilir işaretidir.</li><li>Yapraklar canlı yeşil renkte olmalı ve hafifçe çekildiğinde kolayca ayrılabilmelidir.</li><li>Kabuk hafifçe bastırıldığında az miktarda esneklik göstermeli, çok sert veya çok yumuşak olmamalıdır.</li><li>Kabukta çürük, küflü veya aşırı yumuşamış bölgeler bulunmamalıdır.</li></ul>",
+   "<p>Ananasın doğru hazırlanması hem israfı azaltır hem de sunumu kolaylaştırır.</p>\n<ul><li>Ananasın üst yaprak kısmı ve tabanı keskin bir bıçakla kesilerek çıkarılmalıdır.</li><li>Kabuk, meyveye yakın kesilerek dikey şeritler halinde soyulmalıdır.</li><li>Soyulan ananasın üzerinde kalan sert, koyu noktalar küçük bir bıçakla ayrı ayrı temizlenmelidir.</li><li>Ananasın sert orta kısmı, dilimlendikten sonra istenirse çıkarılabilir; bu kısım daha lifli ve sert bir dokuya sahiptir.</li><li>Soyma işlemi keskin ve uzun bir bıçakla yapıldığında hem daha güvenli hem de daha az israfla sonuçlanır.</li></ul>",
+   "<p>Ananas çeşidi de tatlılık ve boyut açısından farklılık gösterebilir. Bazı çeşitler daha küçük ve yoğun tatlı bir yapıya sahipken, daha büyük çeşitler genellikle daha ekşimsi bir tat taşır. Ananasın gövde rengi de bazı çeşitlerde olgunlukla birlikte hafifçe altın sarısına döner. Ananasın üst kısmındaki taç yaprakları, kesildikten sonra saksıya dikilip yeni bir bitki yetiştirmek için de kullanılabilir. Kesilmiş ananas, hava almayan bir kapta buzdolabında birkaç gün boyunca tazeliğini koruyabilir.</p>",
+   "<p>Ananası yalnızca kabuk rengine bakarak seçmek, en sık yapılan hatalardan biridir; koku ve yaprak kontrolü atlanmamalıdır. Ananasın sert orta kısmının fark edilmeden dilimlere karıştırılması da yeme sırasında rahatsız edici bir doku sorunu yaratabilir. Kesilmiş ananasın uzun süre oda sıcaklığında bekletilmesi de tazeliğini hızla kaybetmesine neden olur. Ananası buzdolabında çok soğuk bir bölmede saklamak da aromasının bir kısmını kaybetmesine neden olabilir.</p>\n<p>Ananas nasıl seçilir ve hazırlanır sorusunun cevabı; taban kokusu, yaprak testi ve kabuk esnekliği kontrolüdür. Doğru seçim ve doğru soyma yöntemiyle ananas hem israfsız hem de en tatlı haliyle tüketilebilir. Dilimlenmiş ananas, tatlı tariflerinde veya doğrudan atıştırmalık olarak tüketilebilir.</p>"
+  ],
+  "etiketler": [
+   "ananas",
+   "meyve seçimi",
+   "ananas soyma"
   ]
  },
  "ancuez-yerine-ne-kullanilir": {
   "ad": "Ançüez Yerine Ne Kullanılır?",
   "slug": "ancuez-yerine-ne-kullanilir",
   "kategori": "Yerine Ne Kullanılır?",
-  "adim_baslik": [
-   "Vejetaryen karşılığı",
-   "Tuz dengesi",
-   "Hangi soslarda?"
-  ],
   "ozet": "Ançüez (tuzlu hamsi filetosu) yoksa en yakın tadı balık sosu ya da kapari ile birlikte az miktarda deniz tuzu verir; ikisi de ançüezin karakteristik tuzlu-umami notasını sosların ve soteler dibine büyük ölçüde taşır.",
   "ilgili": [
    "Kabartma Tozu Yerine Ne Kullanılır?",
    "Keklerde Yumurta Yerine Ne Kullanılır?",
    "Tereyağı Yerine Ne Kullanılır?",
    "Süt Yerine Ne Kullanılır?"
-  ]
+  ],
+  "yazar": "Sevil Toprak",
+  "okuma_suresi": "3 dk okuma",
+  "amac": "<p>Ançüez (tuzlu hamsi filetosu) yoksa en yakın tadı balık sosu ya da kapari ile birlikte az miktarda deniz tuzu verir; ikisi de ançüezin karakteristik tuzlu-umami notasını sosların ve soteler dibine büyük ölçüde taşır.</p>",
+  "blok_baslik": [
+   "Ançüez tariflerde ne işe yarar?",
+   "Hangi alternatif en yakın sonucu verir?",
+   "Nelere dikkat edilmeli?",
+   "Ançüez suyu veya yağı da kullanılabilir mi?"
+  ],
+  "blok_metin": [
+   "<p>Ançüez, özellikle İtalyan soslarında ve bazı salata soslarında (Sezar sosu gibi) belirgin bir balık tadı vermek yerine arka planda tuzlu bir derinlik bırakmak için kullanılır; genellikle eritilene kadar sıcak yağda kavrulur, bu sayede tarifte fileto parçaları görünmez ama tuzlu-umami tabanı hissedilir. Bu incelikli kullanım, ançüezi çoğu kişinin fark etmeden tükettiği bir malzeme haline getirir.</p>\n<p>Bu yüzden yerine seçilecek alternatif de belirgin bir balık tadı bırakmadan benzer bir tuzlu derinlik katmalıdır.</p>",
+   "<p>Balık sosu, ançüeze en yakın tadı veren alternatiftir; az miktarda (birkaç damla) eklendiğinde belirgin bir balık tadı bırakmadan aynı umami derinliğini sağlar. Kapari, ançüezin tuzlu-ekşi yönünü kısmen taklit eder; ince kıyılıp az miktarda deniz tuzuyla birlikte kullanıldığında sosların dibine benzer bir karakter katar.</p>\n<p>Vejetaryen bir tarifte balık sosu da istenmiyorsa, az miktarda soya sosu ile birlikte bir tutam deniz tuzu kullanmak, tam aynı olmasa da benzer bir tuzlu-umami etkisi yaratır.</p>",
+   "<p>Balık sosu veya kapari kullanılırken tarifteki tuz miktarı azaltılmalıdır; her iki alternatif de kendi başına tuzlu olduğundan, ayrıca eklenen tuz sonucu gereğinden fazla tuzlu hale getirebilir. Alerjik mutfaklarda balık sosu da ançüez gibi balık alerjisi riski taşıdığından, balık alerjisi olan biri için güvenli tercih kapari veya soya soslu alternatiftir.</p>\n<p>Hangi alternatif seçilirse seçilsin, az miktarla başlayıp tadılarak ilerlemek en güvenli yoldur; ançüezin tuzlu-umami etkisi güçlü olduğundan, alternatifin de fazla eklenmesi tarifin dengesini kolayca bozabilir.</p>",
+   "<p>Konserve ançüezin içindeki yağ, ançüezin kendisi tükendiğinde bile bir süre daha saklanıp az miktarda kullanılabilir; bu yağ tuzlu-balık aromasını taşıdığından soslara birkaç damla eklendiğinde ançüezsiz bir tarife de hafif bir derinlik katar. Yağ bitince kutuyu atmadan önce bu ayrıntıyı değerlendirmek küçük ama etkili bir tasarruf sağlar.</p>\n<p>Balık sosu kullanılan mutfaklarda genelde küçük şişelerde satıldığından, ançüez gibi çabuk tükenmez; bu yüzden ançüezi nadiren kullanan mutfaklar için daha pratik bir stok malzemesi olabilir.</p>\n<p>Ançüez alternatifleri arasında kişisel tercih de önemlidir; bazı mutfaklar kaparinin ekşimsi notasını balık sosunun tuzlu ağırlığına tercih eder, bu yüzden ikisini de küçük miktarlarda deneyip karar vermek faydalı olur.</p>\n<p>Ançüez alternatiflerinin çoğu oda sıcaklığında değil buzdolabında saklanmalıdır; açıldıktan sonra balık sosu ve kapari de birkaç hafta içinde tüketilmelidir.</p>\n<p>Balık sosu şişesi açıldıktan sonra ışıktan uzak, serin bir yerde saklanmalıdır; doğrudan güneş ışığı tadını zamanla bozabilir.</p>"
+  ],
+  "etiketler": [
+   "ançüez",
+   "hamsi filetosu",
+   "balık sosu",
+   "sezar sosu"
+  ],
+  "uyari": "<p>Bu içerik yalnızca bilgilendirme amaçlıdır ve tıbbi tavsiye yerine geçmez. Sağlığınızla ilgili bir karar vermeden önce hekiminize danışın.</p>"
  },
  "pilav-neden-lapa-olur": {
   "ad": "Pilav Neden Lapa Olur?",
   "slug": "pilav-neden-lapa-olur",
   "kategori": "Neden Olur?",
-  "adim_baslik": [
+  "blok_baslik": [
    "Su oranı",
    "Pirinç yıkanır mı?",
    "Demlenme süresi"
@@ -576,7 +676,7 @@
   "ad": "Tuzu Fazla Kaçan Çorba Nasıl Düzeltilir?",
   "slug": "tuzu-fazla-kacan-corba-nasil-duzeltilir",
   "kategori": "Nasıl Düzeltilir?",
-  "adim_baslik": [
+  "blok_baslik": [
    "Patates çeker mi?",
    "Sulandırmak yeter mi?",
    "Asit dengesi"
@@ -586,7 +686,7 @@
   "ad": "Yumurtanın Bozulduğu Nasıl Anlaşılır?",
   "slug": "yumurtanin-bozuldugu-nasil-anlasilir",
   "kategori": "Bozulduğu Nasıl Anlaşılır?",
-  "adim_baslik": [
+  "blok_baslik": [
    "Su testi",
    "Koku ne söyler?",
    "Sarısı dağılırsa?"
@@ -596,7 +696,7 @@
   "ad": "Kuru Fasulye Kaç Dakikada Pişer?",
   "slug": "kuru-fasulye-kac-dakikada-piser",
   "kategori": "Kaç Dakikada / Kaç Derecede Pişer?",
-  "adim_baslik": [
+  "blok_baslik": [
    "Islatma süreyi kısaltır mı?",
    "Düdüklüde kaç dakika?",
    "Tuz ne zaman?"
@@ -606,17 +706,43 @@
   "ad": "Mercimek Çorbasının Yanına Ne Gider?",
   "slug": "mercimek-corbasinin-yanina-ne-gider",
   "kategori": "Yanına Ne Gider?",
-  "adim_baslik": [
-   "Hangi ekmek uyar?",
-   "Limon şart mı?",
-   "Yanına salata?"
+  "yazar": "Ferid Öztuna",
+  "okuma_suresi": "3 dk okuma",
+  "amac": "<p>Mercimek çorbasının yanına genellikle kızarmış veya taze ekmek, limon dilimi ve bazı bölgelerde pul biberli tereyağı gider. Mercimek çorbasının yanına ne gider sorusunun cevabı, çorbanın kırmızı mercimekle mi yoksa farklı bir mercimek türüyle mi hazırlandığına göre az miktarda değişebilir.</p>\n<p>Mercimek çorbası, kremamsı ve doyurucu bir kıvama sahip olduğu için yanına eklenen ürünlerin bu kıvamı tamamlaması beklenir. Ekmek çorbanın kıvamıyla uyum sağlarken, limon çorbaya ferahlatıcı bir ekşilik katar.</p>",
+  "blok_baslik": [
+   "Mercimek Çorbasının Yanına Hangi Ürünler Gider?",
+   "Mercimek Çorbası Sofrasında Yapılan Hatalar Nelerdir?",
+   "Mercimek Çorbası Ana Öğün mü Ara Öğün mü Sayılır?",
+   "Mercimek Çorbasının Ekmeği Nasıl Saklanmalı?",
+   "Mercimek Çorbası Soğuk Havalarda Nasıl Servis Edilmeli?",
+   "Mercimek Çorbasının Yanına Kruton Nasıl Hazırlanır?",
+   "Mercimek Çorbası Başlangıç Olarak Servis Edildiğinde Ne Gider?"
+  ],
+  "blok_metin": [
+   "<p>Mercimek çorbası servis edilirken birkaç klasik eşlik tercih edilir.</p>\n<ul><li>Kızarmış veya taze ekmek, çorbanın kıvamını tamamlayan en klasik eşliktir.</li><li><a href=\"/mutfak-ansiklopedisi/limon\">Limon</a> dilimi, çorbaya sıkıldığında hafif bir ekşilik ve ferahlık katar.</li><li>Pul biberli tereyağı, çorbanın üzerine gezdirildiğinde ek bir aroma katmanı oluşturur.</li><li>Kruton veya kızarmış ekmek küpleri, çorbaya farklı bir doku kazandırabilir.</li><li>Hafif bir yeşil salata, çorbayla birlikte daha doyurucu bir öğün oluşturabilir.</li></ul>",
+   "<p>Mercimek çorbası servis edilirken bazı tercihler dengeyi bozabilir.</p>\n<ul><li>Limonun çorba çok sıcakken eklenmesi ekşiliğin dengesiz dağılmasına neden olabilir.</li><li>Ekmeğin bayat olması çorbanın yanında istenen çıtırlığı sağlamayabilir.</li><li>Tereyağının fazla yakılması pul biberin acımsı bir tat kazanmasına yol açabilir.</li><li>Çorbanın gereğinden koyu kıvamda bırakılıp yeterince sulandırılmaması yanındaki ekmekle dengesini bozabilir.</li></ul>",
+   "<p>Mercimek çorbası, yanına ekmek ve salata eklendiğinde tek başına doyurucu bir öğün olarak tüketilebilir; daha hafif bir ara öğün olarak düşünüldüğünde ise genellikle küçük bir kâseyle ve sade ekmekle servis edilir. Her iki durumda da çorbanın kıvamı ve baharat yoğunluğu tercih edilen eşliği belirler.</p>",
+   "<p>Çorbanın yanında servis edilecek <a href=\"/puf-noktalari/ekmek-bayatlamadan-nasil-saklanir\">ekmeğin bayatlamadan doğru saklanması</a>, çorba servisinin kalitesini doğrudan etkiler; taze ve çıtır bir ekmek, çorbanın kıvamıyla birlikte daha keyifli bir deneyim sunar.</p>",
+   "<p>Soğuk havalarda mercimek çorbası genellikle daha sıcak ve koyu kıvamda servis edilir; bu durumda yanına eklenen tereyağlı pul biber sosu çorbaya ek bir sıcaklık katmanı ekler. Kalabalık bir sofrada çorbanın büyük bir tencerede sıcak tutulması, misafirlerin kendi porsiyonunu istedikleri sıcaklıkta almasını kolaylaştırır.</p>",
+   "<p>Ev yapımı kruton hazırlamak için bayat ekmek küp küp doğranıp az miktarda zeytinyağıyla fırında kısa süre kızartılabilir; bu şekilde hazırlanan kruton, çorbaya hem çıtırlık hem de ek bir doku katar. Krutonun servis anında eklenmesi, çorbaya battığında yumuşayıp çıtırlığını kaybetmesini önler.</p>",
+   "<p>Mercimek çorbası, çok kurslu bir sofrada başlangıç olarak servis edildiğinde genellikle küçük bir kâsede ve sade ekmekle sunulur; bu durumda ağır garnitürlerden kaçınmak, sonrasında gelecek ana yemeğe yer bırakır. Restoran usulü servislerde çorbanın üzerine ince bir zeytinyağı akışı gezdirilmesi sunuma zarafet katabilir. Bu tür bir sunumda limon dilimi ayrı bir tabakta sunularak, her misafirin kendi damak tadına göre ekşilik ayarlamasına imkân tanınabilir.</p>\n<p>Mercimek çorbasının yanına ne gider sorusunun cevabı; taze ekmek, limon dilimi ve pul biberli tereyağıdır. Doğru eşleştirme, çorbanın kremamsı kıvamını tamamlayarak sofrayı bütünler.</p>"
+  ],
+  "etiketler": [
+   "mercimek çorbası",
+   "ekmek",
+   "sofra eşleşmesi"
+  ],
+  "tarifler": [
+   "Tandır Ekmeği | Taş Fırında Pişen Köy Ekmeği",
+   "Vetkoek | Güney Afrika Usulü Kızartma Ekmeği",
+   "Köy Ekmeği | Ev Yapımı Mayalı Ekmek"
   ]
  },
  "bir-dilim-karpuz-kac-kalori": {
   "ad": "Bir Dilim Karpuz Kaç Kalori?",
   "slug": "bir-dilim-karpuz-kac-kalori",
   "kategori": "Kaç Kalori?",
-  "adim_baslik": [
+  "blok_baslik": [
    "Porsiyon ölçüsü",
    "Şeker oranı",
    "Akşam yenir mi?"
@@ -626,7 +752,7 @@
   "ad": "Et Suyunu Salmadan Nasıl Mühürlenir?",
   "slug": "et-suyunu-salmadan-nasil-muhurlenir",
   "kategori": "Pişirme Püf Noktaları",
-  "adim_baslik": [
+  "blok_baslik": [
    "Tava kaç derece?",
    "Et oda sıcaklığında mı?",
    "Tuz önce mi sonra mı?"
@@ -636,13 +762,13 @@
   "ad": "Taze Maydanoz Nasıl Saklanır?",
   "slug": "taze-maydanoz-nasil-saklanir",
   "kategori": "Nasıl Saklanır?",
-  "adim_baslik": [
+  "blok_baslik": [
    "Suda mı bezde mi?",
    "Yıkanarak mı?",
    "Kaç gün dayanır?"
   ]
  }
 }
-</script>
+  </script>
 
 </body></html>

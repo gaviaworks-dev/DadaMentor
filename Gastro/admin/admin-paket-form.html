@@ -13,6 +13,13 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.css">
 <link rel="stylesheet" href="../../kanon/admin.css">
 <!-- ADMIN-KIT:CSS:SON -->
+<!-- GASTRO-EK:CSS:BAS -->
+<link rel="stylesheet" href="_ortak/gastro-ek.css">
+<link rel="stylesheet" href="_ortak/gastro-ek-a.css">
+<link rel="stylesheet" href="_ortak/gastro-ek-b.css">
+<link rel="stylesheet" href="_ortak/gastro-ek-c.css">
+<link rel="stylesheet" href="_ortak/gastro-ek-d.css">
+<!-- GASTRO-EK:CSS:SON -->
 </head>
 <body class="yetkili" data-marka="gastro">
 <!-- ═══ GASTRO ADMIN · KANONİK KABUK — lead üretti, agent DEĞİŞTİRMEZ.
@@ -72,7 +79,7 @@
 
     <div class="panel-menu-bolum">02 Operasyon</div>
     <a class="panel-menu-link" href="admin-uyeler.html"><i class="fa-solid fa-users"></i>Üyeler &amp; Yetkiler</a>
-    <a class="panel-menu-link" href="admin-abonelikler.html"><i class="fa-solid fa-credit-card"></i>Abonelikler</a>
+    <a class="panel-menu-link" href="admin-paket-alimlari.html"><i class="fa-solid fa-credit-card"></i>Paket Alımları</a><a class="panel-menu-link" href="admin-sef-abonelikleri.html"><i class="fa-solid fa-hand-holding-dollar"></i>Şef Abonelikleri</a>
     <a class="panel-menu-link" href="admin-odemeler.html"><i class="fa-solid fa-money-bill-wave"></i>Ödemeler</a>
     <a class="panel-menu-link" href="admin-faturalar.html"><i class="fa-solid fa-file-invoice"></i>Faturalar<span class="sayac">7</span></a>
     <a class="panel-menu-link" href="admin-destek.html"><i class="fa-solid fa-life-ring"></i>Destek Talepleri<span class="sayac">12</span></a>
@@ -158,7 +165,7 @@
           <p>Ad, fiyat dönemleri ve özellik erişimleri. Tutar bir alandır, ekrana yazılmış bir cümle değil.</p>
         </div>
         <div class="eylem-satiri">
-          <a class="dugme hayalet" href="#" target="_blank" rel="noopener"><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>Üye yüzünü gör</a>
+          <a class="dugme hayalet" href="../pro.html" target="_blank" rel="noopener"><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>Üye yüzünü gör</a>
         </div>
       </div>
       <form class="form-duzen">
@@ -231,26 +238,56 @@
             </div>
           </div>
           </div>
-          <div id="pf-p2" role="tabpanel" aria-labelledby="pf-t2" hidden>
-          <div class="form-bolum">
-            <h3 class="form-bolum-bas"><i class="fa-solid fa-list-check" aria-hidden="true"></i>Özellik erişimi</h3>
-            <div class="tablo-kap gomulu">
-              <table class="tablo panel">
-                <caption class="yalniz-okuyucu">Bu pakette açık olan özellikler</caption>
-                <thead><tr><th>Özellik</th><th>Anahtar kod</th><th>Tür</th><th class="num sag">Limit / değer</th><th>Erişim</th></tr></thead>
-                <tbody>
-                  <tr><td>Pro tarifler</td><td><code>tarif.pro</code></td><td>Erişim</td><td class="num">Sınırsız</td><td><span class="rozet olumlu"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>Açık</span></td></tr>
-                  <tr><td>Haftalık menü planlayıcı</td><td><code>menu.haftalik</code></td><td>Kota</td><td class="num">Sınırsız</td><td><span class="rozet olumlu"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>Açık</span></td></tr>
-                  <tr><td>Besin değeri raporu</td><td><code>besin.rapor</code></td><td>Erişim</td><td class="num">—</td><td><span class="rozet olumlu"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>Açık</span></td></tr>
-                  <tr><td>Video Mutfağı</td><td><code>video.mutfagi</code></td><td>Kota</td><td class="num">Sınırsız</td><td><span class="rozet olumlu"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>Açık</span></td></tr>
-                  <tr><td>Reklamsız deneyim</td><td><code>reklam.kapali</code></td><td>Nitelik</td><td class="num">—</td><td><span class="rozet olumlu"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>Açık</span></td></tr>
-                  <tr><td>Sesli anlatım</td><td><code>ses.anlatim</code></td><td>Erişim</td><td class="num">—</td><td><span class="rozet pasif"><i class="fa-solid fa-circle-minus" aria-hidden="true"></i>Kapalı</span></td></tr>
-                </tbody>
-              </table>
-            </div>
-            <button class="satir-ekle" type="button"><i class="fa-solid fa-plus" aria-hidden="true"></i>Özellik ekle</button>
-          </div>
-          </div>
+          <div id="pf-p2" role="tabpanel" aria-labelledby="pf-t2" hidden><div class="form-bolum">
+<h3 class="form-bolum-bas"><i class="fa-solid fa-list-check" aria-hidden="true"></i>Özellik erişimi</h3>
+<p class="alan-yardim"><i class="fa-solid fa-circle-info" aria-hidden="true"></i><span>
+Her satır bir özelliğin bu paketteki karşılığıdır. <b>Anahtar kod</b> public tarafın
+kademe kontrolünde kullandığı addır; boş bırakılırsa özellik hiçbir yerde okunamaz.</span></p>
+<div class="tablo-kap gomulu">
+<table class="tablo panel adim-liste" data-tekrar="ozellik">
+<caption class="yalniz-okuyucu">Bu pakette açık olan özellikler</caption>
+<thead><tr><th scope="col">Özellik</th><th scope="col">Anahtar kod</th><th scope="col">Tür</th><th scope="col">Limit / değer</th><th scope="col">Erişim</th><th scope="col" class="eylem">İşlem</th></tr></thead>
+<tbody><tr class="kalem-satiri">
+<td><input class="alan-girdi" type="text" name="ozellik_ad[]" value="Pro tarifler" aria-label="Özellik adı"></td>
+<td><input class="alan-girdi" type="text" name="ozellik_kod[]" value="tarif.pro" aria-label="Anahtar kod" placeholder="ör. tarif.pro"></td>
+<td><select class="alan-secim" name="ozellik_tur[]" aria-label="Tür"><option value="erisim" selected>Erişim</option><option value="kota">Kota</option><option value="deger">Değer</option></select></td>
+<td><input class="alan-girdi" type="text" name="ozellik_deger[]" value="Sınırsız" aria-label="Limit veya değer" placeholder="—"></td>
+<td><select class="alan-secim" name="ozellik_erisim[]" aria-label="Erişim"><option value="acik" selected>Açık</option><option value="kapali">Kapalı</option></select></td>
+<td class="eylem"><button class="ikon-dugme yikici" type="button" data-islem="sil" aria-label="Pro tarifler satırını sil" data-ipucu="Satırı sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></td>
+</tr><tr class="kalem-satiri">
+<td><input class="alan-girdi" type="text" name="ozellik_ad[]" value="Haftalık menü planlayıcı" aria-label="Özellik adı"></td>
+<td><input class="alan-girdi" type="text" name="ozellik_kod[]" value="menu.haftalik" aria-label="Anahtar kod" placeholder="ör. tarif.pro"></td>
+<td><select class="alan-secim" name="ozellik_tur[]" aria-label="Tür"><option value="erisim">Erişim</option><option value="kota" selected>Kota</option><option value="deger">Değer</option></select></td>
+<td><input class="alan-girdi" type="text" name="ozellik_deger[]" value="Sınırsız" aria-label="Limit veya değer" placeholder="—"></td>
+<td><select class="alan-secim" name="ozellik_erisim[]" aria-label="Erişim"><option value="acik" selected>Açık</option><option value="kapali">Kapalı</option></select></td>
+<td class="eylem"><button class="ikon-dugme yikici" type="button" data-islem="sil" aria-label="Haftalık menü planlayıcı satırını sil" data-ipucu="Satırı sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></td>
+</tr><tr class="kalem-satiri">
+<td><input class="alan-girdi" type="text" name="ozellik_ad[]" value="Besin değeri raporu" aria-label="Özellik adı"></td>
+<td><input class="alan-girdi" type="text" name="ozellik_kod[]" value="besin.rapor" aria-label="Anahtar kod" placeholder="ör. tarif.pro"></td>
+<td><select class="alan-secim" name="ozellik_tur[]" aria-label="Tür"><option value="erisim" selected>Erişim</option><option value="kota">Kota</option><option value="deger">Değer</option></select></td>
+<td><input class="alan-girdi" type="text" name="ozellik_deger[]" value="" aria-label="Limit veya değer" placeholder="—"></td>
+<td><select class="alan-secim" name="ozellik_erisim[]" aria-label="Erişim"><option value="acik" selected>Açık</option><option value="kapali">Kapalı</option></select></td>
+<td class="eylem"><button class="ikon-dugme yikici" type="button" data-islem="sil" aria-label="Besin değeri raporu satırını sil" data-ipucu="Satırı sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></td>
+</tr></tbody>
+</table></div>
+<div class="eylem-satiri"><button class="dugme hayalet" type="button" data-eylem="satir-ekle" data-hedef="[data-tekrar=ozellik] tbody"><i class="fa-solid fa-plus" aria-hidden="true"></i> Özellik ekle</button></div>
+</div>
+
+<div class="form-bolum">
+<h3 class="form-bolum-bas"><i class="fa-solid fa-table-cells" aria-hidden="true"></i>Kademe matrisi — public'te ne görünüyor</h3>
+<div class="uyari-kutu bilgi" role="status"><i class="fa-solid fa-circle-info" aria-hidden="true"></i><div>
+Bu tablo <b>salt okunurdur</b> ve public <b>Paketlerim</b> sayfasının kendi matrisinden
+okundu (6 grup · 30 özellik · 3 kademe).
+Üstteki liste bu paketin <b>kendi</b> özelliklerini yönetir; burası
+<b>üç kademenin yan yana</b> hâlidir — yönetici neyi değiştirdiğini burada görür.
+⚠ Matristeki özelliklerin <b>anahtar kodları public'te yazmıyor</b>; bu yüzden
+kod sütunu yok ve satırlar buradan düzenlenmez.</div></div>
+<div class="tablo-kap gomulu">
+<table class="tablo panel">
+<thead><tr><th scope="col">Özellik</th><th scope="col">Ücretsiz<small class="satir-kunye">₺0 / her zaman</small></th><th scope="col">Pro<small class="satir-kunye">₺49 / ay</small></th><th scope="col">Pro Max AI<small class="satir-kunye">Fiyatlandırma belirlenmedi</small></th></tr></thead>
+<tbody><tr class="grup-satiri"><td colspan="4"><b>Tarifler ve içerik</b></td></tr><tr><td>Tarif erişimi</td><td>5.099 tarifin tamamı</td><td>5.099 tarif + Pro koleksiyonlar</td><td>5.099 tarif + Pro koleksiyonlar</td></tr><tr><td>Pro içerik ve tarifler</td><td><span class="rozet pasif"><i class="fa-solid fa-circle-minus" aria-hidden="true"></i>yok</span></td><td><span class="rozet olumlu"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>var</span></td><td><span class="rozet olumlu"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>var</span></td></tr><tr><td>Tarif kaydetme ve favoriler</td><td>Sınırsız</td><td>Sınırsız</td><td>Sınırsız</td></tr><tr><td>Yorum, “Ben de Yaptım” ve puanlama</td><td><span class="rozet olumlu"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>var</span></td><td><span class="rozet olumlu"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>var</span></td><td><span class="rozet olumlu"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>var</span></td></tr><tr class="grup-satiri"><td colspan="4"><b>Menü ve planlama</b></td></tr><tr><td>Mutfak defteri ve menüler</td><td><span class="rozet olumlu"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>var</span></td><td><span class="rozet olumlu"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>var</span></td><td><span class="rozet olumlu"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>var</span></td></tr><tr><td>Haftalık menü planlayıcı</td><td><span class="rozet pasif"><i class="fa-solid fa-circle-minus" aria-hidden="true"></i>yok</span></td><td><span class="rozet olumlu"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>var</span></td><td><span class="rozet olumlu"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>var</span></td></tr><tr><td>Alışveriş listesi</td><td><span class="rozet olumlu"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>var</span></td><td><span class="rozet olumlu"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>var</span></td><td><span class="rozet olumlu"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>var</span></td></tr><tr><td>Alışveriş listesi paylaşımı</td><td><span class="rozet olumlu"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>var</span></td><td><span class="rozet olumlu"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>var</span></td><td><span class="rozet olumlu"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>var</span></td></tr><tr><td>Özel gün menüleri</td><td><span class="rozet pasif"><i class="fa-solid fa-circle-minus" aria-hidden="true"></i>yok</span></td><td><span class="rozet olumlu"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>var</span></td><td><span class="rozet olumlu"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>var</span></td></tr><tr class="grup-satiri"><td colspan="4"><b>Video mutfağı ve dersler</b></td></tr><tr><td>Video mutfağı</td><td>Seçili bölümler</td><td>Sınırsız erişim</td><td>Sınırsız erişim</td></tr><tr><td>Premium video serileri</td><td><span class="rozet pasif"><i class="fa-solid fa-circle-minus" aria-hidden="true"></i>yok</span></td><td><span class="rozet olumlu"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>var</span></td><td><span class="rozet olumlu"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>var</span></td></tr><tr><td>Mutfağa Giriş — başlangıç dersleri</td><td><span class="rozet olumlu"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>var</span></td><td><span class="rozet olumlu"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>var</span></td><td><span class="rozet olumlu"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>var</span></td></tr><tr><td>Mutfağa Giriş — orta/ileri seviye dersler</td><td><span class="rozet pasif"><i class="fa-solid fa-circle-minus" aria-hidden="true"></i>yok</span></td><td><span class="rozet olumlu"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>var</span></td><td><span class="rozet olumlu"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>var</span></td></tr><tr><td>Mutfağa Giriş — kişisel öğrenme rotası</td><td><span class="rozet pasif"><i class="fa-solid fa-circle-minus" aria-hidden="true"></i>yok</span></td><td><span class="rozet olumlu"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>var</span></td><td><span class="rozet olumlu"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>var</span></td></tr><tr class="grup-satiri"><td colspan="4"><b>Keşif ve kişiselleştirme</b></td></tr><tr><td>Dolapta Ne Var?</td><td><span class="rozet olumlu"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>var</span></td><td><span class="rozet olumlu"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>var</span></td><td><span class="rozet olumlu"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>var</span></td></tr><tr><td>Bugün Ne Pişirsem?</td><td><span class="rozet olumlu"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>var</span></td><td><span class="rozet olumlu"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>var</span></td><td><span class="rozet olumlu"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>var</span></td></tr><tr><td>Yapay zekâ destekli kişiselleştirme</td><td><span class="rozet pasif"><i class="fa-solid fa-circle-minus" aria-hidden="true"></i>yok</span></td><td><span class="rozet olumlu"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>var</span></td><td><span class="rozet olumlu"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>var</span></td></tr><tr><td>Ansiklopedi, sözlük ve ölçü birimleri</td><td><span class="rozet olumlu"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>var</span></td><td><span class="rozet olumlu"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>var</span></td><td><span class="rozet olumlu"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>var</span></td></tr><tr class="grup-satiri"><td colspan="4"><b>Topluluk ve şefler</b></td></tr><tr><td>Şefleri ücretsiz takip</td><td>Sınırsız</td><td>Sınırsız</td><td>Sınırsız</td></tr><tr><td>İçerik üretici kotası</td><td>0</td><td>1</td><td>Sınırsız</td></tr><tr><td>Şeflere özel içerik erişimi</td><td><span class="rozet pasif"><i class="fa-solid fa-circle-minus" aria-hidden="true"></i>yok</span></td><td><span class="rozet olumlu"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>var</span></td><td><span class="rozet olumlu"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>var</span></td></tr><tr><td>Rozet ve liderlik kapsamı</td><td>Temel</td><td>Gelişmiş</td><td>Gelişmiş</td></tr><tr class="grup-satiri"><td colspan="4"><b>Mutfak defteri ve geçmiş</b></td></tr><tr><td>Denediğim tarifler geçmişi</td><td>Son 30 gün</td><td>Sınırsız</td><td>Sınırsız</td></tr><tr><td>Kişisel notlar</td><td><span class="rozet olumlu"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>var</span></td><td><span class="rozet olumlu"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>var</span></td><td><span class="rozet olumlu"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>var</span></td></tr><tr><td>Menü taslakları</td><td>3 taslak</td><td>Sınırsız</td><td>Sınırsız</td></tr><tr><td>İçerik istatistikleri</td><td>Temel</td><td>Gelişmiş</td><td>Gelişmiş</td></tr><tr class="grup-satiri"><td colspan="4"><b>Deneyim ve destek</b></td></tr><tr><td>Reklam</td><td>Reklam var</td><td>Reklamsız</td><td>Reklamsız</td></tr><tr><td>Destek</td><td>Standart</td><td>Öncelikli</td><td>Öncelikli</td></tr><tr><td>Mobil uygulama</td><td><span class="rozet olumlu"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>var</span></td><td><span class="rozet olumlu"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>var</span></td><td><span class="rozet olumlu"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>var</span></td></tr><tr><td>Erken erişim özellikleri</td><td><span class="rozet pasif"><i class="fa-solid fa-circle-minus" aria-hidden="true"></i>yok</span></td><td><span class="rozet pasif"><i class="fa-solid fa-circle-minus" aria-hidden="true"></i>yok</span></td><td><span class="rozet olumlu"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>var</span></td></tr></tbody>
+</table></div>
+</div></div>
           <div id="pf-p3" role="tabpanel" aria-labelledby="pf-t3" hidden>
             <div class="form-bolum">
               <h3 class="form-bolum-bas"><i class="fa-solid fa-clock-rotate-left" aria-hidden="true"></i>Paket geçmişi</h3>
@@ -307,7 +344,7 @@
             <div class="kart-alt form-eylem">
               <span class="not">Son ödeme <b>02.09.2026</b>.</span>
               <div class="eylem-satiri">
-                <a class="dugme hayalet" href="admin-abonelikler.html">Abonelikleri gör</a>
+                <a class="dugme hayalet" href="admin-paket-alimlari.html">Paket Alımlarıi gör</a>
               </div>
             </div>
           </div>
@@ -319,7 +356,7 @@
             <div class="kart-alt form-eylem">
               <span class="not">Aboneliği olan paket silinemez.</span>
               <div class="eylem-satiri">
-                <button class="dugme hayalet" type="button" data-islem="pasif"><i class="fa-solid fa-box-archive" aria-hidden="true"></i>Paketi arşivle</button>
+                <button class="dugme hayalet" type="button" data-eylem="durum" data-durum="Arşivlendi" data-hap="#pkDurumHap" data-kritik="Paketi arşivle" data-ad="Paketi arşivle"><i class="fa-solid fa-box-archive" aria-hidden="true"></i>Paketi arşivle</button>
               </div>
             </div>
           </div>
@@ -355,9 +392,18 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/l10n/tr.js"></script>
 <script src="../../kanon/admin-editor-tr.js"></script>
+<script src="../../kanon/admin-ikon-kutuphane.js" defer></script>
+<script src="../../kanon/admin-veri.js" defer></script>
 <script src="../../kanon/admin-kit.js" defer></script>
 <script src="../../kanon/admin-editor.js" defer></script>
 <script src="../../kanon/admin-tarih.js" defer></script>
 <!-- ADMIN-KIT:JS:SON -->
+<!-- GASTRO-EK:JS:BAS -->
+<script src="_ortak/gastro-ek.js" defer></script>
+<script src="_ortak/gastro-ek-a.js" defer></script>
+<script src="_ortak/gastro-ek-b.js" defer></script>
+<script src="_ortak/gastro-ek-c.js" defer></script>
+<script src="_ortak/gastro-ek-d.js" defer></script>
+<!-- GASTRO-EK:JS:SON -->
 </body>
 </html>

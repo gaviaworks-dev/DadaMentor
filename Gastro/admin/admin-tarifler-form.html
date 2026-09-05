@@ -12,6 +12,13 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.css">
 <link rel="stylesheet" href="../../kanon/admin.css">
 <!-- ADMIN-KIT:CSS:SON -->
+<!-- GASTRO-EK:CSS:BAS -->
+<link rel="stylesheet" href="_ortak/gastro-ek.css">
+<link rel="stylesheet" href="_ortak/gastro-ek-a.css">
+<link rel="stylesheet" href="_ortak/gastro-ek-b.css">
+<link rel="stylesheet" href="_ortak/gastro-ek-c.css">
+<link rel="stylesheet" href="_ortak/gastro-ek-d.css">
+<!-- GASTRO-EK:CSS:SON -->
 </head>
 <body class="yetkili" data-marka="gastro">
 <!-- ═══ GASTRO ADMIN · KANONİK KABUK — lead üretti, agent DEĞİŞTİRMEZ.
@@ -71,7 +78,7 @@
 
     <div class="panel-menu-bolum">02 Operasyon</div>
     <a class="panel-menu-link" href="admin-uyeler.html"><i class="fa-solid fa-users"></i>Üyeler &amp; Yetkiler</a>
-    <a class="panel-menu-link" href="admin-abonelikler.html"><i class="fa-solid fa-credit-card"></i>Abonelikler</a>
+    <a class="panel-menu-link" href="admin-paket-alimlari.html"><i class="fa-solid fa-credit-card"></i>Paket Alımları</a><a class="panel-menu-link" href="admin-sef-abonelikleri.html"><i class="fa-solid fa-hand-holding-dollar"></i>Şef Abonelikleri</a>
     <a class="panel-menu-link" href="admin-odemeler.html"><i class="fa-solid fa-money-bill-wave"></i>Ödemeler</a>
     <a class="panel-menu-link" href="admin-faturalar.html"><i class="fa-solid fa-file-invoice"></i>Faturalar<span class="sayac">7</span></a>
     <a class="panel-menu-link" href="admin-destek.html"><i class="fa-solid fa-life-ring"></i>Destek Talepleri<span class="sayac">12</span></a>
@@ -185,8 +192,13 @@
           <!-- ---- KÜNYE ---- -->
           <div data-form-panel="kunye" id="pano-0-0" role="tabpanel" aria-labelledby="sekme-0-0">
             <div class="form-bolum">
-              <h3 class="form-bolum-bas"><i class="fa-solid fa-image" aria-hidden="true"></i> Kapak görseli</h3>
-              <div id="hfKapak"><div class="birak-alani" tabindex="0" role="button" aria-label="Görsel seç ya da sürükle"><span><i class="fa-solid fa-cloud-arrow-up" aria-hidden="true"></i></span><b>Görseli sürükle ya da seçmek için tıkla</b><small>Tek kapak görseli. Kütüphaneden seç ya da sürükle.</small><span class="dugme hayalet" style="pointer-events:none">Kütüphaneden seç</span></div><input type="file" hidden="" accept="image/*"><div class="cipler"></div></div>
+              <h3 class="form-bolum-bas"><i class="fa-solid fa-images" aria-hidden="true"></i> Tarif görselleri
+                <span class="alan-sayac" data-rol="galeri-sayac">0 görsel</span></h3>
+              <div id="hfGaleri" class="g-galeri" data-galeri="" data-galeri-sirala=""><div class="birak-alani" tabindex="0" role="button" aria-label="Görselleri seç ya da sürükle"><span><i class="fa-solid fa-cloud-arrow-up" aria-hidden="true"></i></span><b>Görselleri sürükle ya da seçmek için tıkla</b><small>Birden çok görsel seçilebilir. İlk görsel kapak olur; kartları sürükleyerek sırala.</small><span class="dugme hayalet g-tikgecmez">Kütüphaneden seç</span></div><input type="file" hidden="" multiple="" accept="image/*"><div class="g-izgara" data-rol="galeri-izgara"></div><input type="hidden" name="galeri" data-rol="galeri-deger" value=""></div>
+              <div class="alan-yardim"><span>Public tarif sayfası galeriyi <code>rd-gallery</code> ile basar ve
+                <b>ilk görseli kapak</b> olarak kullanır. ÖLÇÜLDÜ: 480 public tarif sayfasının 480'i <b>bir</b>
+                görsel taşıyor — çoklu galeri bugün hiçbir tarifte dolu değil; alan kurulur, değer boş kalır.
+                Her kartın sağ üstündeki <i class="fa-solid fa-xmark" aria-hidden="true"></i> o görseli siler.</span></div>
             </div>
 
             <div class="form-bolum">
@@ -214,22 +226,24 @@
                 </div>
                 <div class="alan kart-izgara c2">
                   <div class="alan">
-                    <label for="hfKategori" class="alan-etiket">Kategori <span class="zorunlu">*</span></label>
-                    <input class="alan-girdi" id="hfKategori" name="kategori" type="text" required="" placeholder="Sebze · Bakliyat">
+                    <label for="hfKategoriAra" class="alan-etiket">Kategori <span class="zorunlu">*</span><span class="acilir-kalem">— public dizinin 33 kategorisi</span></label>
+                    <div id="hfKategori" class="coklu-secim" data-tek="" data-ad="kategori" data-zorunlu="" data-secenek='["Atıştırmalık", "Bakliyat", "Balık ve Deniz Ürünleri", "Bebek Tarifleri", "Çocuk Tarifleri", "Çorba", "Dolma ve Sarma", "Dondurma ve Soğuk Tatlılar", "Ekmek", "Hamur İşi", "İçecek", "Kahvaltılık", "Kek ve Pasta", "Kırmızı Et", "Köfte ve Kebap", "Kurabiye", "Makarna", "Mantı ve Dolgulu Hamurlar", "Meyve Tarifleri", "Meze", "Pilav", "Pizza ve Pide", "Reçel", "Sakatat", "Salata", "Sandviç, Burger ve Dürüm", "Sebze", "Sos", "Tatlı", "Tavuk ve Hindi", "Turşu ve Konserve", "Yumurta Tarifleri", "Zeytinyağlılar"]'><div class="coklu-kutu"><input class="acilir-arama" id="hfKategoriAra" type="text" placeholder="Kategori ara…" aria-label="Kategori ara" autocomplete="off" role="combobox" aria-expanded="false"></div><div class="acilir-yuzey" role="listbox" hidden=""></div></div>
                   </div>
                   <div class="alan">
-                    <label for="hfBolge" class="alan-etiket">Öğün <span class="zorunlu">*</span></label>
-                    <input class="alan-girdi" id="hfBolge" name="bolge" type="text" required="" placeholder="Akşam Yemeği">
+                    <label for="hfOgun" class="alan-etiket">Öğün <span class="zorunlu">*</span></label>
+                    <select class="alan-secim" id="hfOgun" name="ogun" required=""><option value="" selected="">Seç…</option><option value="kahvalti">Kahvaltı</option><option value="brunch">Brunch</option><option value="ogle-yemegi">Öğle Yemeği</option><option value="aksam-yemegi">Akşam Yemeği</option><option value="ara-ogun">Ara Öğün</option><option value="ikindi-ve-cay-saati">İkindi ve Çay Saati</option><option value="gece-atistirmasi">Gece Atıştırması</option><option value="beslenme-cantasi">Beslenme Çantası</option></select>
+                    <div class="alan-yardim"><span>Public dizinin <b>Öğün</b> süzgeci sekiz değer ilan ediyor;
+                      liste birebir odur. Anahtar <code>bolge</code> idi — donör artığı, <code>ogun</code> oldu.</span></div>
                   </div>
                 </div>
                 <div class="alan kart-izgara c3">
                   <div class="alan">
                     <label for="hfSeviye" class="alan-etiket">Zorluk <span class="zorunlu">*</span></label>
-                    <select class="alan-secim" id="hfSeviye" name="zorluk" required=""><option value="" selected="">Seç…</option><option>Çok Kolay</option><option>Kolay</option><option>Orta</option><option>Zor</option><option>Çok Zor</option></select>
+                    <select class="alan-secim" id="hfSeviye" name="zorluk" required=""><option value="" selected="">Seç…</option><option>Çok Kolay</option><option>Kolay</option><option>Orta</option><option>Zor</option><option>Ustalık Gerektirir</option></select>
                   </div>
                   <div class="alan">
-                    <label for="hfEkipman" class="alan-etiket">Mutfak <span class="acilir-kalem">— 15 / 50</span></label>
-                    <select class="alan-secim" id="hfEkipman" name="mutfak"><option value="" selected="">Seç…</option><option>Türk</option><option>İtalyan</option><option>Amerikan</option><option>Fransız</option><option>Meksika</option><option>Uzak Doğu</option><option>Yunan</option><option>Hint</option><option>Japon</option><option>Lübnan</option><option>Çin</option><option>İspanyol</option><option>Kore</option><option>Tayland</option><option>Fas</option></select>
+                    <label for="hfMutfakAra" class="alan-etiket">Mutfak <span class="acilir-kalem">— public süzgecin 50 mutfağı</span></label>
+                    <div id="hfMutfak" class="coklu-secim" data-tek="" data-ad="mutfak" data-secenek='["Türk", "İtalyan", "Fransız", "İspanyol", "Portekiz", "Alman", "Avusturya", "İngiliz", "İrlanda", "Yunan", "Balkan", "Rus", "Ukrayna", "Gürcü", "Azerbaycan", "Ermeni", "Kazak", "Özbek", "İran", "Irak", "Suriye", "Lübnan", "Ürdün", "Suudi Arabistan", "Mısır", "Fas", "Tunus", "Etiyopya", "Güney Afrika", "Hint", "Pakistan", "Çin", "Japon", "Kore", "Tayland", "Vietnam", "Malezya", "Endonezya", "Filipin", "Amerikan", "Kanada", "Meksika", "Brezilya", "Arjantin", "Peru", "Kolombiya", "Küba", "Jamaika", "Avustralya", "Yeni Zelanda"]'><div class="coklu-kutu"><input class="acilir-arama" id="hfMutfakAra" type="text" placeholder="Mutfak ara…" aria-label="Mutfak ara" autocomplete="off" role="combobox" aria-expanded="false"></div><div class="acilir-yuzey" role="listbox" hidden=""></div></div>
                   </div>
                   <div class="alan">
                     <label for="hfSure" class="alan-etiket">Porsiyon — kişi</label>
@@ -246,15 +260,21 @@
                     <input class="alan-girdi" id="hfPisirme" name="pisirme_dk" type="number" min="0" data-girdi="sayi" placeholder="90">
                   </div>
                   <div class="alan">
-                    <label for="hfSef" class="alan-etiket">Yazar / şef</label>
-                    <select class="alan-secim" id="hfSef" name="sef"><option value="" selected="">Seç…</option><option value="ece-asci">Ece Aşçı</option><option value="canan-komi">Canan Komi</option><option value="emel-abadan">Emel Abadan</option><option value="burcu-komi">Burcu Komi</option><option value="nurgul-karaca">Nurgül Karaca</option><option value="ruya-komi">Rüya Komi</option><option value="hatice-uslu">Hatice Uslu</option><option value="sema-aydin">Sema Aydın</option><option value="gulten-dogan">Gülten Doğan</option><option value="fatma-ozturk">Fatma Öztürk</option><option value="kerem-aslan">Kerem Aslan</option><option value="zehra-yilmaz">Zehra Yılmaz</option></select>
-                    <div class="alan-yardim"><span>Kayıtlar <a href="admin-sefler.html">Şefler ve Topluluk</a>
-                      ekranından gelir; public künyede ad, unvan ve avatar birlikte basılır.</span></div>
+                    <label for="hfSefAra" class="alan-etiket">Yazar / şef</label>
+                    <div id="hfSef" class="coklu-secim" data-tek="" data-ad="sef" data-kayit="sefler"><div class="coklu-kutu"><input class="acilir-arama" id="hfSefAra" type="text" placeholder="Şef ara…" aria-label="Şef ara" autocomplete="off" role="combobox" aria-expanded="false"></div><div class="acilir-yuzey" role="listbox" hidden=""></div></div>
+                    <div class="alan-yardim"><span>Kaynak, <a href="admin-sefler.html">Şefler ve Topluluk</a>
+                      ekranının GERÇEK kayıtlarıdır (L5 · <code>DM_KAYITLAR.sefler</code>). Public künyede ad,
+                      unvan ve avatar birlikte basılır. ⚠ Bildirilen 12 kaydın hiçbiri, 480 public tarif
+                      sayfasının yazarlarıyla eşleşmiyor (kesişim 0) — bağ kurulmadı, uydurulmadı.</span></div>
                   </div>
                 </div>
                 <div class="alan">
-                  <label for="hfOzet" class="alan-etiket">Kısa özet <span class="acilir-kalem">— kartta ve arama sonucunda görünür</span><span class="alan-sayac" data-say-for="hfOzet">0 / 180</span></label>
-                  <textarea class="alan-metin" id="hfOzet" name="ozet" maxlength="180" placeholder="Bir cümleyle: bu tarif ne, kime ve ne zaman?"></textarea>
+                  <label for="hfOzet" class="alan-etiket">Açıklama <span class="acilir-kalem">— public detay sayfasının <code>rd-sub</code> paragrafı</span></label>
+                  <textarea class="alan-metin" id="hfOzet" name="ozet" data-editor="ozet" placeholder="Bir cümleyle: bu tarif ne, kime ve ne zaman?"></textarea>
+                  <div class="alan-yardim"><span>🔴 <b>maxlength 180 kaldırıldı ve sayaç düştü.</b> Ölçüldü:
+                    480 public özetin <b>468'i</b> 180 karakteri aşıyor (en uzunu 377, medyan 225) — alan
+                    yayındaki metnin çoğunu <b>sessizce kesiyordu</b>. Sayaç editör altında hiç kımıldamaz;
+                    kımıldamayan sayaç yalan söyler, o yüzden kaldırıldı.</span></div>
                   
                 </div>
                 <div class="alan">
@@ -271,21 +291,30 @@
                   <label class="alan-etiket">Bağlı püf noktaları <span class="acilir-kalem">— detay sayfasının altında önerilir</span></label>
                   <div id="hfAlt2" class="coklu-secim"><div class="coklu-kutu"><input class="acilir-arama" type="text" placeholder="Püf noktası ara…" aria-label="Püf noktası ara…" autocomplete="off" role="combobox" aria-expanded="false"></div><div class="acilir-yuzey" role="listbox" hidden=""></div></div>
                 </div>
-                <div class="alan kart-izgara c2">
-                  <div class="alan">
-                    <label for="hfPop" class="alan-etiket">Popülerlik <span class="acilir-kalem">— sıralama ağırlığı, 0–100</span></label>
-                    <input data-girdi="sayi" class="alan-girdi" id="hfPop" name="pop" type="number" min="0" max="100" value="60">
-                  </div>
-                  <div class="alan">
-                    <label class="alan-etiket">Süre bandı <span class="acilir-kalem">— tarif hangi süre süzgecine girer</span></label>
-                    <div class="cipler" id="hfBant"><label class="cip"><input type="checkbox" name="sureBant[]" value="0"> 0–15 dk</label><label class="cip"><input type="checkbox" name="sureBant[]" value="1"> 15–30 dk</label><label class="cip"><input type="checkbox" name="sureBant[]" value="2"> 30–45 dk</label><label class="cip"><input type="checkbox" name="sureBant[]" value="3"> 45–60 dk</label><label class="cip"><input type="checkbox" name="sureBant[]" value="4"> 1–2 saat</label><label class="cip"><input type="checkbox" name="sureBant[]" value="5"> 2 saat ve üzeri</label></div>
-                  </div>
+                <div class="alan">
+                  <label for="hfBant" class="alan-etiket">Süre bandı <span class="zorunlu">*</span><span class="acilir-kalem">— tarif hangi süre süzgecine girer</span></label>
+                  <select class="alan-secim" id="hfBant" name="sureBant" required=""><option value="" selected="">Seç…</option><option value="15">15 dakikadan az</option><option value="15-30">15–30 dakika</option><option value="30-45">30–45 dakika</option><option value="45-60">45–60 dakika</option><option value="60-120">1–2 saat</option><option value="120">2 saatten uzun</option></select>
+                  <div class="alan-yardim"><span>Bantlar public dizinin <b>Süre</b> süzgecinden birebir alındı
+                    (değer <code>15 · 15-30 · 30-45 · 45-60 · 60-120 · 120</code>). Bir tarif tek banda girer —
+                    ölçüldü: bildirilen 12 kaydın 12'si tek bant taşıyor, onay kutusu kümesi gereksizdi.
+                    ⚠ <b>Popülerlik</b> alanı kaldırıldı: sıralama ağırlığı sistemin HESAPLADIĞI değerdir
+                    (public'te puan · değerlendirme · görüntülenme · "N kişi yaptı" olarak basılıyor),
+                    yöneticinin yazdığı bir sayı değil.</span></div>
                 </div>
                 <div class="alan">
-                  <label class="alan-etiket">Özellik rozetleri <span class="acilir-kalem">— künye şeridinde basılır</span></label>
-                  <div class="cipler" id="hfOzellik"><label class="cip"><input type="checkbox" name="ozellik[]" value="vegan"> Vegan</label><label class="cip"><input type="checkbox" name="ozellik[]" value="vejetaryen"> Vejetaryen</label><label class="cip"><input type="checkbox" name="ozellik[]" value="glutensiz"> Glutensiz</label><label class="cip"><input type="checkbox" name="ozellik[]" value="protein-agirlikli"> Protein Ağırlıklı</label><label class="cip"><input type="checkbox" name="ozellik[]" value="az-yagli"> Az Yağlı</label><label class="cip"><input type="checkbox" name="ozellik[]" value="glutenli"> Glutenli</label><label class="cip"><input type="checkbox" name="ozellik[]" value="laktozsuz"> Laktozsuz</label><label class="cip"><input type="checkbox" name="ozellik[]" value="sut-icermez"> Süt İçermez</label><label class="cip"><input type="checkbox" name="ozellik[]" value="yumurta-icermez"> Yumurta İçermez</label><label class="cip"><input type="checkbox" name="ozellik[]" value="seker-ilavesiz"> Şeker İlavesiz</label><label class="cip"><input type="checkbox" name="ozellik[]" value="yuksek-lifli"> Yüksek Lifli</label><label class="cip"><input type="checkbox" name="ozellik[]" value="tam-tahilli"> Tam Tahıllı</label><label class="cip"><input type="checkbox" name="ozellik[]" value="acili"> Acılı</label><label class="cip"><input type="checkbox" name="ozellik[]" value="baharatli"> Baharatlı</label><label class="cip"><input type="checkbox" name="ozellik[]" value="diyabete-uygun"> Diyabete Uygun</label><label class="cip"><input type="checkbox" name="ozellik[]" value="kalp-dostu"> Kalp Dostu</label><label class="cip"><input type="checkbox" name="ozellik[]" value="dusuk-kalorili"> Düşük Kalorili</label><label class="cip"><input type="checkbox" name="ozellik[]" value="pesketaryen"> Pesketaryen</label><label class="cip"><input type="checkbox" name="ozellik[]" value="kuruyemis-icermez"> Kuruyemiş İçermez</label><label class="cip"><input type="checkbox" name="ozellik[]" value="dusuk-karbonhidratli"> Düşük Karbonhidratlı</label><label class="cip"><input type="checkbox" name="ozellik[]" value="ketojenik"> Ketojenik</label></div>
-                  <div class="alan-yardim"><span>Küme public süzgecin <b>Beslenme / Tip</b> ekseninden gelir
-                    (21 değer); rozet ve süzgeç aynı listeyi kullanır.</span></div>
+                  <label for="hfOzellikT" class="alan-etiket">Özellik rozetleri <span class="acilir-kalem">— malzemelerden türetilir</span></label>
+                  <input class="alan-girdi" id="hfOzellikT" name="ozellik_turetilen" type="text" data-hesaplanan="malzeme listesi × Mutfak Ansiklopedisi'nin madde sınıfı (1.200 madde · 26 kategori)" placeholder="Malzeme girildikçe dolar">
+                </div>
+                <div class="alan">
+                  <label for="hfOzellikAra" class="alan-etiket">Rozet — elle ek <span class="acilir-kalem">— türetilemeyen 14 rozet</span></label>
+                  <div id="hfOzellik" class="coklu-secim" data-ad="ozellik[]" data-oneri="ozellik"><div class="coklu-kutu"><input class="acilir-arama" id="hfOzellikAra" type="text" placeholder="Rozet ara ya da yaz…" aria-label="Rozet ara ya da yaz" autocomplete="off" role="combobox" aria-expanded="false"></div><div class="acilir-yuzey" role="listbox" hidden=""></div></div>
+                  <datalist id="dl-ozellik"><option value="Vegan"></option><option value="Vejetaryen"></option><option value="Glutensiz"></option><option value="Protein Ağırlıklı"></option><option value="Az Yağlı"></option><option value="Glutenli"></option><option value="Laktozsuz"></option><option value="Süt İçermez"></option><option value="Yumurta İçermez"></option><option value="Şeker İlavesiz"></option><option value="Yüksek Lifli"></option><option value="Tam Tahıllı"></option><option value="Acılı"></option><option value="Baharatlı"></option><option value="Diyabete Uygun"></option><option value="Kalp Dostu"></option><option value="Düşük Kalorili"></option><option value="Pesketaryen"></option><option value="Kuruyemiş İçermez"></option><option value="Düşük Karbonhidratlı"></option><option value="Ketojenik"></option></datalist>
+                  <div class="alan-yardim"><span>Küme public dizinin <b>Beslenme / Tip</b> ekseninden gelir (21 değer).
+                    Yedisi malzemeden türetilir ve üstteki <b>salt okunur</b> alanda çıkar; kalanı
+                    (Acılı · Yüksek Lifli · Kalp Dostu · Ketojenik …) malzemeden ÇIKARILAMAZ ve elle seçilir.
+                    ⚠ <b>Glutensiz türetilmiyor</b>: Ansiklopedi'nin <code>tahillar</code> kategorisi gluten
+                    taşıyanı taşımayandan ayırmıyor (mısır unu · badem unu · pirinç aynı kovada; 480 tarifte
+                    5 çelişki ölçüldü) — yanlış türetmektense elle bırakıldı.</span></div>
                 </div>
                 <div class="alan kart-izgara c2">
                   <div class="alan">
@@ -293,10 +322,13 @@
                     <select class="alan-secim" id="hfButce" name="butce"><option value="" selected="">Seç…</option><option value="1">Ekonomik (₺)</option><option value="2">Orta Bütçe (₺₺)</option><option value="3">Premium (₺₺₺)</option></select>
                   </div>
                   <div class="alan">
-                    <label class="alan-etiket">Etiketler <span class="acilir-kalem">— public'te <code>#etiket</code> olarak basılır</span></label>
-                    <div id="hfEtiket" class="coklu-secim" data-ad="etiket"><div class="coklu-kutu"><input class="acilir-arama" type="text" placeholder="Etiket yaz ve Enter'a bas…" aria-label="Etiket yaz ve Enter'a bas" autocomplete="off" role="combobox" aria-expanded="false"></div><div class="acilir-yuzey" role="listbox" hidden=""></div></div>
-                    <div class="alan-yardim"><span>SEO odak anahtar sözcüğünden ayrıdır: etiketler
-                      public sayfada basılır, odak sözcük yalnız SEO denetiminde kullanılır.</span></div>
+                    <label for="hfEtiketAra" class="alan-etiket">Etiketler <span class="acilir-kalem">— public'te <code>#etiket</code> olarak basılır</span></label>
+                    <div id="hfEtiket" class="coklu-secim" data-ad="etiket" data-oneri="etiket"><div class="coklu-kutu"><input class="acilir-arama" id="hfEtiketAra" type="text" placeholder="Etiket ara ya da yaz…" aria-label="Etiket ara ya da yaz" autocomplete="off" role="combobox" aria-expanded="false"></div><div class="acilir-yuzey" role="listbox" hidden=""></div></div>
+                    <datalist id="dl-etiket"><option value="zeytinyağlı"></option><option value="meze"></option><option value="pesketaryen"></option><option value="kahvaltı"></option><option value="sebze yemeği"></option><option value="deniz ürünleri"></option><option value="peynirli"></option><option value="geleneksel"></option><option value="pirinç pilavı"></option><option value="baharatlı"></option><option value="kahvaltılık"></option><option value="pratik"></option><option value="sağlıklı"></option><option value="tavuk"></option><option value="vegan"></option><option value="atıştırmalık"></option><option value="köfte"></option><option value="meyve suyu"></option><option value="misafir yemeği"></option><option value="cevizli tatlı"></option><option value="fırın"></option><option value="Genel"></option><option value="pilav"></option><option value="ev yapımı"></option><option value="ızgara"></option><option value="meyveli tatlı"></option><option value="sağlıklı kahvaltı"></option><option value="sandviç"></option><option value="sebzeli"></option><option value="şerbetli tatlı"></option><option value="tereyağlı"></option><option value="yoğurtlu"></option><option value="yumurtalı"></option><option value="acılı"></option><option value="balık"></option><option value="çıtır"></option><option value="ekonomik"></option><option value="ferah tatlı"></option><option value="karides"></option><option value="kızartma"></option><option value="kremalı tatlı"></option><option value="salata"></option><option value="bakliyat"></option><option value="bulgur pilavı"></option><option value="burger"></option><option value="cevizli"></option><option value="dana köfte"></option><option value="etli yemek"></option><option value="ev köftesi"></option><option value="Gaziantep"></option><option value="güveç"></option><option value="hamburger"></option><option value="hamur işi"></option><option value="kaşarlı"></option><option value="kebap"></option><option value="kıymalı"></option><option value="limonlu"></option><option value="patatesli"></option><option value="sebze"></option><option value="tava yemeği"></option><option value="barbunya"></option><option value="çıtır tavuk"></option><option value="çikolatalı tatlı"></option><option value="çorba"></option><option value="domates sos"></option><option value="fırın köfte"></option><option value="fırında"></option><option value="fırında sebze"></option><option value="fransız tatlısı"></option><option value="günlük pratik"></option><option value="havuçlu"></option><option value="ızgara köfte"></option><option value="kalamar"></option><option value="karadeniz"></option><option value="kaşarlı tost"></option><option value="kremalı"></option><option value="mangal"></option><option value="mantarlı"></option><option value="meyve atıştırmalığı"></option><option value="misafir sofrası"></option><option value="nohut"></option><option value="parti atıştırmalığı"></option><option value="patlıcan mezesi"></option><option value="poğaça"></option><option value="sıcak içecek"></option><option value="soğuk içecek"></option><option value="soğuk tatlı"></option><option value="somon"></option><option value="soslu"></option><option value="sucuklu"></option><option value="tavuklu"></option><option value="tost"></option><option value="vejetaryen"></option><option value="bezelyeli"></option><option value="brownie"></option><option value="buzlu çay"></option><option value="çay saati"></option><option value="çocuk yemeği"></option><option value="dana kıyma"></option><option value="dereotlu"></option><option value="detoks içecek"></option><option value="domatesli"></option><option value="dürüm"></option><option value="Ege"></option><option value="ekonomik yemek"></option><option value="fırın kanat"></option><option value="haşlama yumurta"></option><option value="helva"></option><option value="ıspanaklı"></option><option value="ızgara tavuk"></option><option value="italyan tatlısı"></option><option value="kereviz yemeği"></option><option value="kırmızı mercimek"></option><option value="kızarmış köfte"></option><option value="komposto"></option><option value="kremalı çorba"></option><option value="kuru fasulye"></option><option value="meyve salatası"></option><option value="naneli"></option><option value="özel gün"></option><option value="pazı"></option><option value="pırasa yemeği"></option><option value="pirinçli köfte"></option><option value="portakallı"></option><option value="pratik yemek"></option><option value="sağlıklı atıştırmalık"></option><option value="sarımsaklı"></option><option value="sebzeli tavuk"></option><option value="soğuk servis"></option><option value="sos"></option><option value="sosisli"></option><option value="sütlü tatlı"></option><option value="şekersiz"></option><option value="şinitzel"></option><option value="tahin sos"></option><option value="tavuk sote"></option><option value="taze bakla"></option><option value="tencere yemeği"></option><option value="vegan pilav"></option><option value="wrap"></option><option value="yaz içeceği"></option><option value="yumurtalı krep"></option><option value="zeytinli"></option><option value="zeytinyağlı bakla"></option><option value="acılı burger"></option><option value="açma"></option><option value="adana kebabı"></option><option value="ahtapot salatası"></option><option value="akdeniz salatası"></option><option value="antep tatlısı"></option><option value="ara öğün"></option><option value="aşure"></option><option value="avokado sos"></option><option value="ayva"></option><option value="ayva dolması"></option><option value="ayva tatlısı"></option><option value="babagannuş"></option><option value="bademli kurabiye"></option><option value="Bağdat"></option><option value="baklava"></option><option value="bal hardal sos"></option><option value="bal kabağı"></option><option value="balkabağı latte"></option><option value="ballı"></option><option value="ballı hardal"></option><option value="bamya"></option><option value="barbekü sos"></option><option value="bayram yemeği"></option><option value="beşamel sos"></option><option value="bezelye"></option><option value="böbrek"></option><option value="börek"></option><option value="brüksel lahanası"></option><option value="buğulama"></option><option value="bulgur köftesi"></option><option value="cağ kebabı"></option><option value="cevizli meze"></option><option value="cezve"></option><option value="cheddarlı"></option><option value="cheesecake"></option><option value="çılbır"></option><option value="çıtır ekmek"></option><option value="çıtır nohut"></option><option value="çiğ köfte"></option><option value="çilek sosu"></option><option value="çoban salatası"></option><option value="çocuk atıştırmalığı"></option><option value="çocukların seveceği"></option><option value="dalyan köfte"></option><option value="deniz börülcesi"></option><option value="dolma ve sarma"></option><option value="domates"></option><option value="domates suyu"></option><option value="domatesli pilav"></option><option value="dondurma"></option><option value="donmuş üzüm"></option><option value="ekmek"></option><option value="ekmek arası"></option><option value="ekmek kadayıfı"></option><option value="ekmek pudingi"></option><option value="ekşili"></option><option value="elma kompostosu"></option><option value="Endülüs"></option><option value="etli ekmek"></option><option value="etsiz dolma"></option><option value="fava"></option><option value="ferah kek"></option><option value="fırın armudu"></option><option value="fırın cips"></option><option value="fırın elması"></option><option value="fırın hindi"></option><option value="fırın makarna"></option><option value="fırın somon"></option><option value="fırın tavuk"></option><option value="fırın yemeği"></option><option value="fırında çipura"></option><option value="fıstıklı tatlı"></option><option value="füme somon"></option><option value="Güneydoğu Anadolu"></option><option value="günlük yemek"></option><option value="hafif tatlı"></option><option value="hamsi"></option><option value="hamsi tava"></option><option value="haşlama"></option><option value="horiatiki"></option><option value="humus"></option><option value="ıslak kek"></option><option value="içecek"></option><option value="ikram"></option><option value="irmik helvası"></option><option value="italyan"></option><option value="izmir köfte"></option><option value="kabak"></option><option value="kabak tatlısı"></option><option value="kabak yemeği"></option><option value="kabaklı"></option><option value="kadınbudu köfte"></option><option value="kahvaltı patatesi"></option><option value="kahveli tatlı"></option><option value="kalabalık sofralar"></option><option value="kalamar tava"></option><option value="kalkan"></option><option value="kanepe"></option><option value="kapama"></option><option value="kaplama"></option><option value="karamelize"></option><option value="karanfilli"></option><option value="karışık dolma"></option><option value="karışık tost"></option><option value="kari"></option><option value="karnabahar"></option><option value="Kars"></option><option value="kavrulmuş fındık"></option><option value="kavunlu"></option><option value="kavurma"></option><option value="kaygana"></option><option value="kayısı reçeli"></option><option value="kaymak"></option><option value="kaymaklı tatlı"></option><option value="Kayseri"></option><option value="Kelantan"></option><option value="kemalpaşa tatlısı"></option><option value="kırmızı biber"></option><option value="kış içeceği"></option><option value="kışlık"></option><option value="kıymalı dolma"></option><option value="kızarmış hamur"></option><option value="kızılcık suyu"></option><option value="kinoa"></option><option value="klasik kurabiye"></option><option value="kore mutfağı"></option><option value="köz biber sos"></option><option value="közlenmiş biber"></option><option value="közlenmiş patlıcan salatası"></option><option value="kremalı makarna"></option><option value="kuru incirli tatlı"></option><option value="kuru meyve"></option><option value="kuşkonmaz"></option><option value="kuymak"></option><option value="kuzu"></option><option value="kuzu böbreği"></option><option value="kuzu şiş"></option><option value="labne"></option><option value="lavaş"></option><option value="limonata"></option><option value="lokma"></option><option value="makarna"></option><option value="makaron"></option><option value="Mar del Plata"></option><option value="mayalı hamur"></option><option value="maydanozlu"></option><option value="meksika mutfağı"></option><option value="mercan balığı"></option><option value="mercimek çorbası"></option><option value="mercimek köftesi"></option><option value="meyve sosu"></option><option value="mırmır"></option><option value="mırmır tava"></option><option value="mısır unlu"></option><option value="mısır unu"></option><option value="mısırlı salata"></option><option value="midye"></option><option value="mini köfte"></option><option value="mini pizza"></option><option value="Montreal"></option><option value="mürekkep balığı"></option><option value="nacho"></option><option value="nar ekşili"></option><option value="narenciyeli kek"></option><option value="nohut kavurması"></option><option value="nohut köftesi"></option><option value="nohutlu"></option><option value="omlet"></option><option value="Ordu"></option><option value="osmanlı"></option><option value="ot yemeği"></option><option value="pancar"></option><option value="pankek"></option><option value="panna cotta"></option><option value="patates kavurma"></option><option value="patates köftesi"></option><option value="patates püresi"></option><option value="patlıcan cipsi"></option><option value="peynir ezmesi"></option><option value="peynirli kek"></option><option value="piknik"></option><option value="pirinçli"></option><option value="pirinçli dolma"></option><option value="pisi balığı"></option><option value="pişi"></option><option value="portakal suyu"></option><option value="portakallı kek"></option><option value="poşe balık"></option><option value="poşe yumurta"></option><option value="protein"></option><option value="radika"></option><option value="rafadan yumurta"></option><option value="rosto"></option><option value="rulo köfte"></option><option value="sac"></option><option value="safranlı"></option><option value="salçalı"></option><option value="sandviç ekmeği"></option><option value="sebzeli çorba"></option><option value="sebzeli köfte"></option><option value="sebzeli pizza"></option><option value="semizotu yemeği"></option><option value="siirt"></option><option value="simit"></option><option value="smoothie"></option><option value="smoothie kâsesi"></option><option value="soda ekmeği"></option><option value="soğanlı"></option><option value="sote"></option><option value="Steiermark"></option><option value="sucuklu kaşarlı yumurta"></option><option value="sucuklu yumurta"></option><option value="sufle"></option><option value="sulu köfte"></option><option value="susamlı"></option><option value="Şam"></option><option value="şam tatlısı"></option><option value="şerbet"></option><option value="şiş"></option><option value="tarçınlı"></option><option value="tartar sosu"></option><option value="tatlı sosu"></option><option value="tava"></option><option value="tavuk güveç"></option><option value="tavuk kanat"></option><option value="tavuk rulo"></option><option value="tavuk schnitzel"></option><option value="tavuklu dürüm"></option><option value="taze fasulye"></option><option value="tek kap"></option><option value="tek tencere"></option><option value="tempura"></option><option value="testi kebabı"></option><option value="tiramisu"></option><option value="ton balığı"></option><option value="tost ekmeği"></option><option value="Trabzon"></option><option value="Trakya"></option><option value="trileçe"></option><option value="tuzlu krep"></option><option value="türk kahvesi"></option><option value="un helvası"></option><option value="vatoz"></option><option value="vatoz kavurma"></option><option value="vişne suyu"></option><option value="vişne şerbeti"></option><option value="waffle"></option><option value="yer elması"></option><option value="yerelması"></option><option value="yeşil mercimek"></option><option value="yoğurtlu içecek"></option><option value="yoğurtlu meze"></option><option value="yoğurtlu sos"></option><option value="yöresel tatlı"></option><option value="yumurta"></option><option value="yumurtalı köfte"></option><option value="yumuşak yumurta"></option><option value="zeytin ezmesi"></option><option value="zeytinli poğaça"></option><option value="zeytinyağlı enginar"></option><option value="zeytinyağlı kereviz"></option><option value="zeytinyağlı pırasa"></option><option value="zeytinyağlı semizotu"></option><option value="zırh kıyma"></option></datalist>
+                    <div class="alan-yardim"><span>Serbest metin kutusu değil, <b>L4 öneri alanı</b>: 480 public
+                      tarif sayfasının bastığı <b>409 farklı etiket</b> önerilir (261 sayfada etiket var),
+                      listede olmayan yeni etiket yine yazılabilir. SEO odak anahtar sözcüğünden ayrıdır:
+                      etiketler public sayfada basılır, odak sözcük yalnız SEO denetiminde kullanılır.</span></div>
                   </div>
                 </div>
               </div>
@@ -310,13 +342,16 @@
                 <i class="fa-solid fa-list-ol" aria-hidden="true"></i> Hazırlanış — adımlar
                 <span class="alan-sayac" id="hfAdimSay">4 adım</span>
               </h3>
-              <div class="adim-liste" id="hfAdimlar"><div class="adim-karti"><span class="adim-no">1</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-shoe-prints" aria-hidden="true"></i> Adım</span><input class="alan-girdi" type="text" name="adim_baslik[]" data-field="baslik" maxlength="60" placeholder="Adım başlığı — örn. Tuzunu ayarlayıp dinlendirin" aria-label="Adım başlığı"><input class="alan-girdi" type="number" name="adim_sure[]" data-field="sure" min="0" data-girdi="sayi" placeholder="Adım süresi — dk" aria-label="Adım süresi, dakika"><input class="alan-girdi" type="text" name="adimlar[]" data-field="metin" placeholder="Örn. Fasulyeyi bir gece önceden ıslat."><input type="hidden" data-field="position" value="0"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır" data-eylem="sirala"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Satırı sil" aria-label="Satırı sil" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div><div class="adim-karti"><span class="adim-no">2</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-shoe-prints" aria-hidden="true"></i> Adım</span><input class="alan-girdi" type="text" name="adim_baslik[]" data-field="baslik" maxlength="60" placeholder="Adım başlığı — örn. Tuzunu ayarlayıp dinlendirin" aria-label="Adım başlığı"><input class="alan-girdi" type="number" name="adim_sure[]" data-field="sure" min="0" data-girdi="sayi" placeholder="Adım süresi — dk" aria-label="Adım süresi, dakika"><input class="alan-girdi" type="text" name="adimlar[]" data-field="metin" placeholder="Örn. Fasulyeyi bir gece önceden ıslat."><input type="hidden" data-field="position" value="1"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır" data-eylem="sirala"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Satırı sil" aria-label="Satırı sil" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div><div class="adim-karti"><span class="adim-no">3</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-shoe-prints" aria-hidden="true"></i> Adım</span><input class="alan-girdi" type="text" name="adim_baslik[]" data-field="baslik" maxlength="60" placeholder="Adım başlığı — örn. Tuzunu ayarlayıp dinlendirin" aria-label="Adım başlığı"><input class="alan-girdi" type="number" name="adim_sure[]" data-field="sure" min="0" data-girdi="sayi" placeholder="Adım süresi — dk" aria-label="Adım süresi, dakika"><input class="alan-girdi" type="text" name="adimlar[]" data-field="metin" placeholder="Örn. Fasulyeyi bir gece önceden ıslat."><input type="hidden" data-field="position" value="2"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır" data-eylem="sirala"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Satırı sil" aria-label="Satırı sil" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div><div class="adim-karti"><span class="adim-no">4</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-shoe-prints" aria-hidden="true"></i> Adım</span><input class="alan-girdi" type="text" name="adim_baslik[]" data-field="baslik" maxlength="60" placeholder="Adım başlığı — örn. Tuzunu ayarlayıp dinlendirin" aria-label="Adım başlığı"><input class="alan-girdi" type="number" name="adim_sure[]" data-field="sure" min="0" data-girdi="sayi" placeholder="Adım süresi — dk" aria-label="Adım süresi, dakika"><input class="alan-girdi" type="text" name="adimlar[]" data-field="metin" placeholder="Örn. Fasulyeyi bir gece önceden ıslat."><input type="hidden" data-field="position" value="3"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır" data-eylem="sirala"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Satırı sil" aria-label="Satırı sil" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div></div>
+              <div class="adim-liste" id="hfAdimlar"><div class="adim-karti"><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-shoe-prints" aria-hidden="true"></i> Adım</span><input class="alan-girdi" type="text" name="adim_baslik[]" data-field="baslik" maxlength="60" placeholder="Adım başlığı — örn. Tuzunu ayarlayıp dinlendirin" aria-label="Adım başlığı"><input class="alan-girdi" type="number" name="adim_sure[]" data-field="sure" min="0" data-girdi="sayi" placeholder="Adım süresi — dk" aria-label="Adım süresi, dakika"><textarea class="alan-metin g-adim-metin" name="adimlar[]" data-field="metin" rows="4" aria-label="Adım anlatımı" placeholder="Adımın anlatımı — public detay sayfası bunu adım kartının paragrafı olarak basar. Ölçüldü: 1.962 public adım metninin ortalaması 230 karakter."></textarea><div class="g-adim-gorsel" data-adim-gorsel=""><input type="file" hidden="" accept="image/*"><button class="dugme hayalet g-adim-gorsel-sec" type="button" data-eylem="adim-gorsel"><i class="fa-solid fa-image" aria-hidden="true"></i> Adım görseli</button><input type="hidden" name="adim_gorsel[]" data-field="gorsel" value=""><div class="g-adim-onizleme" data-rol="adim-onizleme" hidden=""></div></div><input type="hidden" data-field="position" value="0"></div></div><div class="adim-karti"><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-shoe-prints" aria-hidden="true"></i> Adım</span><input class="alan-girdi" type="text" name="adim_baslik[]" data-field="baslik" maxlength="60" placeholder="Adım başlığı — örn. Tuzunu ayarlayıp dinlendirin" aria-label="Adım başlığı"><input class="alan-girdi" type="number" name="adim_sure[]" data-field="sure" min="0" data-girdi="sayi" placeholder="Adım süresi — dk" aria-label="Adım süresi, dakika"><textarea class="alan-metin g-adim-metin" name="adimlar[]" data-field="metin" rows="4" aria-label="Adım anlatımı" placeholder="Adımın anlatımı — public detay sayfası bunu adım kartının paragrafı olarak basar. Ölçüldü: 1.962 public adım metninin ortalaması 230 karakter."></textarea><div class="g-adim-gorsel" data-adim-gorsel=""><input type="file" hidden="" accept="image/*"><button class="dugme hayalet g-adim-gorsel-sec" type="button" data-eylem="adim-gorsel"><i class="fa-solid fa-image" aria-hidden="true"></i> Adım görseli</button><input type="hidden" name="adim_gorsel[]" data-field="gorsel" value=""><div class="g-adim-onizleme" data-rol="adim-onizleme" hidden=""></div></div><input type="hidden" data-field="position" value="1"></div></div><div class="adim-karti"><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-shoe-prints" aria-hidden="true"></i> Adım</span><input class="alan-girdi" type="text" name="adim_baslik[]" data-field="baslik" maxlength="60" placeholder="Adım başlığı — örn. Tuzunu ayarlayıp dinlendirin" aria-label="Adım başlığı"><input class="alan-girdi" type="number" name="adim_sure[]" data-field="sure" min="0" data-girdi="sayi" placeholder="Adım süresi — dk" aria-label="Adım süresi, dakika"><textarea class="alan-metin g-adim-metin" name="adimlar[]" data-field="metin" rows="4" aria-label="Adım anlatımı" placeholder="Adımın anlatımı — public detay sayfası bunu adım kartının paragrafı olarak basar. Ölçüldü: 1.962 public adım metninin ortalaması 230 karakter."></textarea><div class="g-adim-gorsel" data-adim-gorsel=""><input type="file" hidden="" accept="image/*"><button class="dugme hayalet g-adim-gorsel-sec" type="button" data-eylem="adim-gorsel"><i class="fa-solid fa-image" aria-hidden="true"></i> Adım görseli</button><input type="hidden" name="adim_gorsel[]" data-field="gorsel" value=""><div class="g-adim-onizleme" data-rol="adim-onizleme" hidden=""></div></div><input type="hidden" data-field="position" value="2"></div></div><div class="adim-karti"><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-shoe-prints" aria-hidden="true"></i> Adım</span><input class="alan-girdi" type="text" name="adim_baslik[]" data-field="baslik" maxlength="60" placeholder="Adım başlığı — örn. Tuzunu ayarlayıp dinlendirin" aria-label="Adım başlığı"><input class="alan-girdi" type="number" name="adim_sure[]" data-field="sure" min="0" data-girdi="sayi" placeholder="Adım süresi — dk" aria-label="Adım süresi, dakika"><textarea class="alan-metin g-adim-metin" name="adimlar[]" data-field="metin" rows="4" aria-label="Adım anlatımı" placeholder="Adımın anlatımı — public detay sayfası bunu adım kartının paragrafı olarak basar. Ölçüldü: 1.962 public adım metninin ortalaması 230 karakter."></textarea><div class="g-adim-gorsel" data-adim-gorsel=""><input type="file" hidden="" accept="image/*"><button class="dugme hayalet g-adim-gorsel-sec" type="button" data-eylem="adim-gorsel"><i class="fa-solid fa-image" aria-hidden="true"></i> Adım görseli</button><input type="hidden" name="adim_gorsel[]" data-field="gorsel" value=""><div class="g-adim-onizleme" data-rol="adim-onizleme" hidden=""></div></div><input type="hidden" data-field="position" value="3"></div></div></div>
               <button class="satir-ekle" type="button" id="hfAdimEkle" data-eylem="satir-ekle">
                 <i class="fa-solid fa-plus" aria-hidden="true"></i> Adım ekle</button>
-              <div class="alan-yardim" style="margin-top:10px"><span>Her adımın <b>başlığı</b>,
+              <div class="alan-yardim g-ust-10"><span>Her adımın <b>başlığı</b>,
                 <b>süresi (dk)</b> ve <b>anlatımı</b> ayrı alanlardır; detay sayfası üçünü de basar
                 (“5 · Tuzunu ayarlayıp dinlendirin · 15 dk”). Sıra public tarafta aynen görünür.
-                Tutamağı sürükleyerek ya da odaktayken ↑ / ↓ ile taşı.</span></div>
+                Tutamağı sürükleyerek ya da odaktayken ↑ / ↓ ile taşı. <b>Adım görseli</b> satırın kendi
+                alanıdır (public <code>sc-figs &gt; step-img</code>); ölçüldü: 480 public tarifin
+                <b>6</b>'sında adım görseli var, kalanı <code>step-card no-img</code> — alan kurulur,
+                değer boş kalır.</span></div>
             </div>
 
             <div class="form-bolum">
@@ -324,8 +359,8 @@
                 <i class="fa-solid fa-carrot" aria-hidden="true"></i> Malzemeler
                 <span class="alan-sayac" id="hfMalzemeSay">4 malzeme</span>
               </h3>
-              <div class="adim-liste" id="hfMalzemeler"><div class="adim-karti"><span class="adim-no">1</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-carrot" aria-hidden="true"></i> Malzeme</span><input class="alan-girdi" type="text" name="malzeme_miktar[]" data-field="miktar" maxlength="10" placeholder="Miktar — örn. 2 · 0,5 · 300" aria-label="Miktar"><select class="alan-secim" name="malzeme_birim[]" data-field="birim" aria-label="Birim"><option value="" selected="">Birim…</option><option value="su-bardagi">su bardağı</option><option value="cay-bardagi">çay bardağı</option><option value="yemek-kasigi">yemek kaşığı</option><option value="tatli-kasigi">tatlı kaşığı</option><option value="cay-kasigi">çay kaşığı</option><option value="kahve-fincani">kahve fincanı</option><option value="gram">g</option><option value="kg">kg</option><option value="ml">ml</option><option value="l">l</option><option value="adet">adet</option><option value="dis">diş</option><option value="tutam">tutam</option></select><input class="alan-girdi" type="text" name="malzeme_ad[]" data-field="ad" maxlength="60" placeholder="Malzeme — örn. Kuru fasulye" aria-label="Malzeme adı"><input class="alan-girdi" type="text" name="malzeme_not[]" data-field="not" maxlength="80" placeholder="Hazırlık notu — örn. bir gece önceden ıslatılmış" aria-label="Hazırlık notu"><input type="hidden" data-field="position" value="0"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır" data-eylem="sirala"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Satırı sil" aria-label="Satırı sil" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div><div class="adim-karti"><span class="adim-no">2</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-carrot" aria-hidden="true"></i> Malzeme</span><input class="alan-girdi" type="text" name="malzeme_miktar[]" data-field="miktar" maxlength="10" placeholder="Miktar — örn. 2 · 0,5 · 300" aria-label="Miktar"><select class="alan-secim" name="malzeme_birim[]" data-field="birim" aria-label="Birim"><option value="" selected="">Birim…</option><option value="su-bardagi">su bardağı</option><option value="cay-bardagi">çay bardağı</option><option value="yemek-kasigi">yemek kaşığı</option><option value="tatli-kasigi">tatlı kaşığı</option><option value="cay-kasigi">çay kaşığı</option><option value="kahve-fincani">kahve fincanı</option><option value="gram">g</option><option value="kg">kg</option><option value="ml">ml</option><option value="l">l</option><option value="adet">adet</option><option value="dis">diş</option><option value="tutam">tutam</option></select><input class="alan-girdi" type="text" name="malzeme_ad[]" data-field="ad" maxlength="60" placeholder="Malzeme — örn. Kuru fasulye" aria-label="Malzeme adı"><input class="alan-girdi" type="text" name="malzeme_not[]" data-field="not" maxlength="80" placeholder="Hazırlık notu — örn. bir gece önceden ıslatılmış" aria-label="Hazırlık notu"><input type="hidden" data-field="position" value="1"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır" data-eylem="sirala"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Satırı sil" aria-label="Satırı sil" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div><div class="adim-karti"><span class="adim-no">3</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-carrot" aria-hidden="true"></i> Malzeme</span><input class="alan-girdi" type="text" name="malzeme_miktar[]" data-field="miktar" maxlength="10" placeholder="Miktar — örn. 2 · 0,5 · 300" aria-label="Miktar"><select class="alan-secim" name="malzeme_birim[]" data-field="birim" aria-label="Birim"><option value="" selected="">Birim…</option><option value="su-bardagi">su bardağı</option><option value="cay-bardagi">çay bardağı</option><option value="yemek-kasigi">yemek kaşığı</option><option value="tatli-kasigi">tatlı kaşığı</option><option value="cay-kasigi">çay kaşığı</option><option value="kahve-fincani">kahve fincanı</option><option value="gram">g</option><option value="kg">kg</option><option value="ml">ml</option><option value="l">l</option><option value="adet">adet</option><option value="dis">diş</option><option value="tutam">tutam</option></select><input class="alan-girdi" type="text" name="malzeme_ad[]" data-field="ad" maxlength="60" placeholder="Malzeme — örn. Kuru fasulye" aria-label="Malzeme adı"><input class="alan-girdi" type="text" name="malzeme_not[]" data-field="not" maxlength="80" placeholder="Hazırlık notu — örn. bir gece önceden ıslatılmış" aria-label="Hazırlık notu"><input type="hidden" data-field="position" value="2"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır" data-eylem="sirala"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Satırı sil" aria-label="Satırı sil" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div><div class="adim-karti"><span class="adim-no">4</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-carrot" aria-hidden="true"></i> Malzeme</span><input class="alan-girdi" type="text" name="malzeme_miktar[]" data-field="miktar" maxlength="10" placeholder="Miktar — örn. 2 · 0,5 · 300" aria-label="Miktar"><select class="alan-secim" name="malzeme_birim[]" data-field="birim" aria-label="Birim"><option value="" selected="">Birim…</option><option value="su-bardagi">su bardağı</option><option value="cay-bardagi">çay bardağı</option><option value="yemek-kasigi">yemek kaşığı</option><option value="tatli-kasigi">tatlı kaşığı</option><option value="cay-kasigi">çay kaşığı</option><option value="kahve-fincani">kahve fincanı</option><option value="gram">g</option><option value="kg">kg</option><option value="ml">ml</option><option value="l">l</option><option value="adet">adet</option><option value="dis">diş</option><option value="tutam">tutam</option></select><input class="alan-girdi" type="text" name="malzeme_ad[]" data-field="ad" maxlength="60" placeholder="Malzeme — örn. Kuru fasulye" aria-label="Malzeme adı"><input class="alan-girdi" type="text" name="malzeme_not[]" data-field="not" maxlength="80" placeholder="Hazırlık notu — örn. bir gece önceden ıslatılmış" aria-label="Hazırlık notu"><input type="hidden" data-field="position" value="3"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır" data-eylem="sirala"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Satırı sil" aria-label="Satırı sil" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div></div>
-              <button class="satir-ekle" type="button" id="hfMalzemeEkle">
+              <div class="adim-liste" id="hfMalzemeler"><div class="adim-karti"><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-carrot" aria-hidden="true"></i> Malzeme</span><input class="alan-girdi" type="text" name="malzeme_miktar[]" data-field="miktar" maxlength="10" placeholder="Miktar — örn. 2 · 0,5 · 300" aria-label="Miktar"><select class="alan-secim" name="malzeme_birim[]" data-field="birim" aria-label="Birim"><option value="" selected="">Birim…</option><option value="su-bardagi">su bardağı</option><option value="cay-bardagi">çay bardağı</option><option value="yemek-kasigi">yemek kaşığı</option><option value="tatli-kasigi">tatlı kaşığı</option><option value="cay-kasigi">çay kaşığı</option><option value="kahve-fincani">kahve fincanı</option><option value="gram">g</option><option value="kg">kg</option><option value="ml">ml</option><option value="l">l</option><option value="adet">adet</option><option value="dis">diş</option><option value="tutam">tutam</option></select><input class="alan-girdi" type="text" name="malzeme_ad[]" data-field="ad" maxlength="60" placeholder="Malzeme — örn. Kuru fasulye" aria-label="Malzeme adı"><input class="alan-girdi" type="text" name="malzeme_not[]" data-field="not" maxlength="80" placeholder="Hazırlık notu — örn. bir gece önceden ıslatılmış" aria-label="Hazırlık notu"><input type="hidden" data-field="position" value="0"></div></div><div class="adim-karti"><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-carrot" aria-hidden="true"></i> Malzeme</span><input class="alan-girdi" type="text" name="malzeme_miktar[]" data-field="miktar" maxlength="10" placeholder="Miktar — örn. 2 · 0,5 · 300" aria-label="Miktar"><select class="alan-secim" name="malzeme_birim[]" data-field="birim" aria-label="Birim"><option value="" selected="">Birim…</option><option value="su-bardagi">su bardağı</option><option value="cay-bardagi">çay bardağı</option><option value="yemek-kasigi">yemek kaşığı</option><option value="tatli-kasigi">tatlı kaşığı</option><option value="cay-kasigi">çay kaşığı</option><option value="kahve-fincani">kahve fincanı</option><option value="gram">g</option><option value="kg">kg</option><option value="ml">ml</option><option value="l">l</option><option value="adet">adet</option><option value="dis">diş</option><option value="tutam">tutam</option></select><input class="alan-girdi" type="text" name="malzeme_ad[]" data-field="ad" maxlength="60" placeholder="Malzeme — örn. Kuru fasulye" aria-label="Malzeme adı"><input class="alan-girdi" type="text" name="malzeme_not[]" data-field="not" maxlength="80" placeholder="Hazırlık notu — örn. bir gece önceden ıslatılmış" aria-label="Hazırlık notu"><input type="hidden" data-field="position" value="1"></div></div><div class="adim-karti"><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-carrot" aria-hidden="true"></i> Malzeme</span><input class="alan-girdi" type="text" name="malzeme_miktar[]" data-field="miktar" maxlength="10" placeholder="Miktar — örn. 2 · 0,5 · 300" aria-label="Miktar"><select class="alan-secim" name="malzeme_birim[]" data-field="birim" aria-label="Birim"><option value="" selected="">Birim…</option><option value="su-bardagi">su bardağı</option><option value="cay-bardagi">çay bardağı</option><option value="yemek-kasigi">yemek kaşığı</option><option value="tatli-kasigi">tatlı kaşığı</option><option value="cay-kasigi">çay kaşığı</option><option value="kahve-fincani">kahve fincanı</option><option value="gram">g</option><option value="kg">kg</option><option value="ml">ml</option><option value="l">l</option><option value="adet">adet</option><option value="dis">diş</option><option value="tutam">tutam</option></select><input class="alan-girdi" type="text" name="malzeme_ad[]" data-field="ad" maxlength="60" placeholder="Malzeme — örn. Kuru fasulye" aria-label="Malzeme adı"><input class="alan-girdi" type="text" name="malzeme_not[]" data-field="not" maxlength="80" placeholder="Hazırlık notu — örn. bir gece önceden ıslatılmış" aria-label="Hazırlık notu"><input type="hidden" data-field="position" value="2"></div></div><div class="adim-karti"><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-carrot" aria-hidden="true"></i> Malzeme</span><input class="alan-girdi" type="text" name="malzeme_miktar[]" data-field="miktar" maxlength="10" placeholder="Miktar — örn. 2 · 0,5 · 300" aria-label="Miktar"><select class="alan-secim" name="malzeme_birim[]" data-field="birim" aria-label="Birim"><option value="" selected="">Birim…</option><option value="su-bardagi">su bardağı</option><option value="cay-bardagi">çay bardağı</option><option value="yemek-kasigi">yemek kaşığı</option><option value="tatli-kasigi">tatlı kaşığı</option><option value="cay-kasigi">çay kaşığı</option><option value="kahve-fincani">kahve fincanı</option><option value="gram">g</option><option value="kg">kg</option><option value="ml">ml</option><option value="l">l</option><option value="adet">adet</option><option value="dis">diş</option><option value="tutam">tutam</option></select><input class="alan-girdi" type="text" name="malzeme_ad[]" data-field="ad" maxlength="60" placeholder="Malzeme — örn. Kuru fasulye" aria-label="Malzeme adı"><input class="alan-girdi" type="text" name="malzeme_not[]" data-field="not" maxlength="80" placeholder="Hazırlık notu — örn. bir gece önceden ıslatılmış" aria-label="Hazırlık notu"><input type="hidden" data-field="position" value="3"></div></div></div>
+              <button class="satir-ekle" type="button" id="hfMalzemeEkle" data-eylem="satir-ekle">
                 <i class="fa-solid fa-plus" aria-hidden="true"></i> Malzeme ekle</button>
               <div class="alan-yardim"><span>Her kalem <b>dört</b> parçadır:
                 miktar · birim · malzeme · hazırlık notu — public listede dördü de ayrı basılır
@@ -342,7 +377,7 @@
               <div>
                 <div class="alan">
                   <label for="hfUyari" class="alan-etiket">Uyarı metni <span class="acilir-kalem">— haftalık menüde ve alışveriş listesinde de basılır</span></label>
-                  <textarea class="alan-metin" id="hfUyari" name="uyari" placeholder="Hangi alerjen var, kim kaçınmalı?"></textarea>
+                  <textarea class="alan-metin" data-editor="not" id="hfUyari" name="uyari" placeholder="Hangi alerjen var, kim kaçınmalı?"></textarea>
                   <div class="alan-yardim"><span>🔴 Sağlıkla ilgili metin. Genel alerjen uyarısı Ayarlar'da tek
                     yerden yönetilir; buraya yalnız <b>bu tarife özgü</b> olan yazılır.</span></div>
                 </div>
@@ -354,7 +389,7 @@
               <div>
                 <div class="alan">
                   <label for="hfHatirlatma" class="alan-etiket">Hatırlatma metni <span class="acilir-kalem">— adımların altında, kendi bloğunda basılır</span></label>
-                  <textarea class="alan-metin" id="hfHatirlatma" name="hatirlatma" placeholder="Tarifin başında ya da sonunda hatırlanması gereken şey."></textarea>
+                  <textarea class="alan-metin" data-editor="not" id="hfHatirlatma" name="hatirlatma" placeholder="Tarifin başında ya da sonunda hatırlanması gereken şey."></textarea>
                   <div class="alan-yardim"><span>Alerjen uyarısından <b>ayrı</b> bir bloktur: bu kutu
                     pişirme tekniğini hatırlatır, alerjen uyarısı sağlık metnidir.</span></div>
                 </div>
@@ -366,7 +401,7 @@
               <div>
                 <div class="alan">
                   <label for="hfEditorNot" class="alan-etiket">Editörün notu</label>
-                  <textarea class="alan-metin" id="hfEditorNot" name="editor_notu" placeholder="Test mutfağında ölçülen ek bilgi."></textarea>
+                  <textarea class="alan-metin" data-editor="not" id="hfEditorNot" name="editor_notu" placeholder="Test mutfağında ölçülen ek bilgi."></textarea>
                 </div>
                 <div class="alan">
                   <label for="hfEditorImza" class="alan-etiket">İmza satırı <span class="acilir-kalem">— notun altında basılır</span></label>
@@ -426,19 +461,18 @@
           <!-- ---- MEDYA ---- -->
           <div data-form-panel="medya" hidden="" id="pano-0-2" role="tabpanel" aria-labelledby="sekme-0-2">
             <div class="form-bolum">
-              <h3 class="form-bolum-bas"><i class="fa-solid fa-photo-film" aria-hidden="true"></i> Adım görselleri</h3>
-              <div id="hfGaleri"><div class="birak-alani" tabindex="0" role="button" aria-label="Görsel seç ya da sürükle"><span><i class="fa-solid fa-cloud-arrow-up" aria-hidden="true"></i></span><b>Görseli sürükle ya da seçmek için tıkla</b><small>En çok 8 adım görseli. İlki kapak olur.</small><span class="dugme hayalet" style="pointer-events:none">Kütüphaneden seç</span></div><input type="file" hidden="" multiple="" accept="image/*"><div class="cipler"></div></div>
-              <div class="alan-yardim" style="margin-top:10px"><span>İlk görsel kapak olarak kullanılır.
-                Sürükleyerek sırala.</span></div>
-            </div>
-            <div class="form-bolum">
               <h3 class="form-bolum-bas"><i class="fa-solid fa-circle-play" aria-hidden="true"></i> Video ve sesli anlatım</h3>
               <div>
                 <div class="alan">
-                  <label for="hfVideo" class="alan-etiket">Video adresi — <code>video_id</code></label>
-                  <input data-girdi="url" class="alan-girdi" id="hfVideo" name="video" type="url" placeholder="https://…">
-                  <div class="alan-yardim"><span>Doğru form videosu. Adres yoksa detay sayfasında video bölümü
-                    hiç basılmaz — boş bir oynatıcı gösterilmez.</span></div>
+                  <label for="hfVideo" class="alan-etiket">Video <span class="acilir-kalem">— bağlantı ya da dosya</span></label>
+                  <input data-girdi="url" data-video="" data-sure-hedef="#hfVideoSure" class="alan-girdi" id="hfVideo" name="video" type="url" placeholder="https://…">
+                  <div class="alan-yardim"><span>L1: tek bileşen, iki sekme — <b>Bağlantı</b> ve <b>Dosya yükle</b>.
+                    Süre yalnız <b>dosya</b> sekmesinde gerçekten okunur (tarayıcının <code>loadedmetadata</code>'sı);
+                    bağlantıda servis API'si gerekir ve kit ağ çağrısı yapmaz, o yüzden elle kalır.
+                    Adres yoksa detay sayfasında video bölümü hiç basılmaz.
+                    ⚠ ÖLÇÜLDÜ: 480 public tarif sayfasının <b>hiçbirinde</b> video yok; liste ekranının KPI'si
+                    bunu kusur olarak bildiriyor ("Video Mutfağı'ndaki 33 video hiçbir tarife bağlanmamış").
+                    Alan bu yüzden duruyor — karşılığı olmayan bir alan değil, <b>kurulmamış bir bağ</b>.</span></div>
                 </div>
                 <div class="alan">
                   <label for="hfVideoSure" class="alan-etiket">Video süresi <span class="acilir-kalem">— sn</span></label>
@@ -473,7 +507,7 @@
                 </div>
                 <div class="alan">
                   <label class="alan-etiket">Paylaşım görseli</label>
-                  <div id="hfOg"><div class="birak-alani" tabindex="0" role="button" aria-label="Görsel seç ya da sürükle"><span><i class="fa-solid fa-cloud-arrow-up" aria-hidden="true"></i></span><b>Görseli sürükle ya da seçmek için tıkla</b><small>Paylaşım görseli — 1200×630 önerilir.</small><span class="dugme hayalet" style="pointer-events:none">Kütüphaneden seç</span></div><input type="file" hidden="" accept="image/*"><div class="cipler"></div></div>
+                  <div id="hfOg"><div class="birak-alani" tabindex="0" role="button" aria-label="Görsel seç ya da sürükle"><span><i class="fa-solid fa-cloud-arrow-up" aria-hidden="true"></i></span><b>Görseli sürükle ya da seçmek için tıkla</b><small>Paylaşım görseli — 1200×630 önerilir.</small><span class="dugme hayalet g-tikgecmez">Kütüphaneden seç</span></div><input type="file" hidden="" accept="image/*"><div class="cipler"></div></div>
                   <input type="hidden" name="og_image" id="hfOgAlan" value="">
                 </div>
               </div>
@@ -483,7 +517,7 @@
           <div class="form-eylem kart-alt">
             <a class="dugme hayalet" href="admin-tarifler.html">İptal</a>
             <button class="dugme hayalet" type="button" id="hfTaslak" data-eylem="taslak">Taslak kaydet</button>
-            <button class="dugme birincil" type="button" id="hfKaydet">Tarifi kaydet</button>
+            <button class="dugme birincil" type="button" id="hfKaydet" data-eylem="kaydet">Tarifi kaydet</button>
           </div>
         <div class="bos-durum kart-ici" hidden=""><span class="bos-ikon"><i class="fa-solid fa-file-circle-question" aria-hidden="true"></i></span><h3>Bu adreste tarif yok</h3><p>Adresteki slug katalogda karşılık bulmuyor. Listeye dön ve bir tarif seç.</p><a class="dugme birincil" href="admin-tarifler.html">Kütüphaneye dön</a></div><div class="bos-durum kart-ici yetkisiz" data-durum="yetkisiz" hidden=""><span class="bos-ikon"><i class="fa-solid fa-lock" aria-hidden="true"></i></span><h3>Bu kaydı düzenleyemezsin</h3><p>Erişim istemek için yöneticinle görüş.</p></div><div class="bos-durum kart-ici servis-hatasi" data-durum="servis" hidden=""><span class="bos-ikon"><i class="fa-solid fa-plug-circle-xmark" aria-hidden="true"></i></span><h3>Kayıt yüklenemedi</h3><p>Bağlantı kurulamadı. Yeniden dene.</p><button class="dugme birincil" type="button" data-eylem="calistir" data-ad="Yeniden dene"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i> Yeniden dene</button><div class="hata-izi">Referans kodu <code>GAS-ADM-5201</code></div></div></div>
 
@@ -524,17 +558,20 @@
             </div>
           </div>
 
-          <div class="kart panel" style="margin-top:16px">
+          <div class="kart panel g-ust-16">
             <div class="kart-bas"><h2 class="kart-baslik">SEO skoru</h2></div>
-            <div class="kart-govde" id="hfSeo"><div class="seo-skor"><div class="skor-halka" style="--oran:0"><b>0</b></div><div><b>0 / 6 ölçüt geçti</b><span>Alanları doldurdukça yükselir</span></div></div><div class="seo-denetim"><div class="seo-kalem kaldi"><i class="fa-solid fa-circle" aria-hidden="true"></i>Meta başlık 30–60 karakter</div><div class="seo-kalem kaldi"><i class="fa-solid fa-circle" aria-hidden="true"></i>Meta açıklama 70–160 karakter</div><div class="seo-kalem kaldi"><i class="fa-solid fa-circle" aria-hidden="true"></i>Slug yazılmış ve kısa</div><div class="seo-kalem kaldi"><i class="fa-solid fa-circle" aria-hidden="true"></i>Canonical adres verilmiş</div><div class="seo-kalem kaldi"><i class="fa-solid fa-circle" aria-hidden="true"></i>Paylaşım görseli seçilmiş</div><div class="seo-kalem kaldi"><i class="fa-solid fa-circle" aria-hidden="true"></i>Odak anahtar başlıkta geçiyor</div></div></div>
+            <div class="kart-govde" id="hfSeo"><div class="seo-skor"><div class="skor-halka"><b>0</b></div><div><b>0 / 6 ölçüt geçti</b><span>Alanları doldurdukça yükselir</span></div></div><div class="seo-denetim"><div class="seo-kalem kaldi"><i class="fa-solid fa-circle" aria-hidden="true"></i>Meta başlık 30–60 karakter</div><div class="seo-kalem kaldi"><i class="fa-solid fa-circle" aria-hidden="true"></i>Meta açıklama 70–160 karakter</div><div class="seo-kalem kaldi"><i class="fa-solid fa-circle" aria-hidden="true"></i>Slug yazılmış ve kısa</div><div class="seo-kalem kaldi"><i class="fa-solid fa-circle" aria-hidden="true"></i>Canonical adres verilmiş</div><div class="seo-kalem kaldi"><i class="fa-solid fa-circle" aria-hidden="true"></i>Paylaşım görseli seçilmiş</div><div class="seo-kalem kaldi"><i class="fa-solid fa-circle" aria-hidden="true"></i>Odak anahtar başlıkta geçiyor</div></div></div>
           </div>
 
-          <div class="kart panel" style="margin-top:16px" hidden="">
+          <!-- TEHLİKELİ BÖLGE — yalnız DÜZENLEME kipinde açılır (KÖ-A9).
+               Silinecek kaydın adı `data-ad`a `gastro-ek-a.js` tarafından
+               AÇILAN KAYITTAN yazılır; markup sabit ad taşımaz. -->
+          <div class="kart panel g-ust-16" data-tehlike-bolgesi="" hidden="">
             <div class="kart-bas"><h2 class="kart-baslik">Tehlikeli bölge</h2></div>
             <div class="kart-govde">
-              <div class="alan-yardim" style="margin-bottom:12px"><span>Silinen tarif, onu kullanan
+              <div class="alan-yardim g-alt-12"><span>Silinen tarif, onu kullanan
                 <b id="hfKullanim">0</b> menü ve koleksiyondan da düşer.</span></div>
-              <button class="dugme hayalet tehlike tam-en" type="button" id="hfSil" data-yikici="Bulgar Split Squat" data-fiil="sil"  data-islem="sil">
+              <button class="dugme hayalet tehlike tam-en" type="button" id="hfSil" data-ad="Bu tarif" data-islem="sil">
                 <i class="fa-solid fa-trash-can" aria-hidden="true"></i> Tarifi sil</button>
             </div>
           </div>
@@ -573,17 +610,15 @@
   "zorluk": "Kolay",
   "alt_baslik": "Geleneksel Ev Yapımı Tarif",
   "mutfak": "Türk",
-  "sureBant": [
-   "4"
-  ],
+  "sureBant": "60-120",
   "durum": "yayin",
   "porsiyon": "4 kişilik",
   "hazirlik_dk": "20",
   "pisirme_dk": "90",
   "ozet": "Kuşbaşı etle uzun uzun pişirilen, tanesi dağılmadan yumuşacık olan geleneksel etli kuru fasulye. Türk mutfağının en sevilen tencere yemeklerinden biridir; yanında pilav ve turşuyla kurulan sofranın baş tacıdır.",
   "ozellik": [
-   "glutensiz",
-   "yuksek-lifli"
+   "Glutensiz",
+   "Yüksek Lifli"
   ],
   "butce": "1",
   "adim_baslik": [
@@ -680,20 +715,18 @@
   "zorluk": "Orta",
   "alt_baslik": "Ev Yapımı Zırh Kıymalı",
   "mutfak": "Türk",
-  "sureBant": [
-   "3"
-  ],
+  "sureBant": "45-60",
   "durum": "yayin",
   "porsiyon": "4 kişilik",
   "hazirlik_dk": "35",
   "pisirme_dk": "15",
   "ozet": "Kuyruk yağıyla harmanlanmış zırh kıymanın şişe yayılıp ateşte pişirildiği, közün acılı aromasını taşıyan ev yapımı Adana kebabı. Lavaş, közlenmiş biber ve soğan salatasıyla servis edilen, Güneydoğu mutfağının bu ateşli klasiğidir.",
   "ozellik": [
-   "glutensiz",
-   "protein-agirlikli",
-   "acili",
-   "baharatli",
-   "dusuk-karbonhidratli"
+   "Glutensiz",
+   "Protein Ağırlıklı",
+   "Acılı",
+   "Baharatlı",
+   "Düşük Karbonhidratlı"
   ],
   "butce": "2",
   "adim_baslik": [
@@ -791,16 +824,14 @@
   "zorluk": "Kolay",
   "alt_baslik": "Fıstıklı Geleneksel Tarif",
   "mutfak": "Türk",
-  "sureBant": [
-   "2"
-  ],
+  "sureBant": "30-45",
   "durum": "yayin",
   "porsiyon": "6 kişilik",
   "hazirlik_dk": "10",
   "pisirme_dk": "30",
   "ozet": "Kavrulmuş irmiğin kokusuyla, taneli ve lokum kıvamındaki bu klasik Türk tatlısı hem günlük sofraların hem de misafir ikramlarının vazgeçilmezidir. Sıcak servis edildiğinde dolmalık fıstığın çıtırlığıyla enfes bir uyum yakalar.",
   "ozellik": [
-   "vejetaryen"
+   "Vejetaryen"
   ],
   "butce": "1",
   "adim_baslik": [
@@ -885,18 +916,16 @@
   "zorluk": "Çok Kolay",
   "alt_baslik": "Tavada Pratik",
   "mutfak": "Türk",
-  "sureBant": [
-   "2"
-  ],
+  "sureBant": "30-45",
   "durum": "yayin",
   "porsiyon": "4 kişilik",
   "hazirlik_dk": "15",
   "pisirme_dk": "20",
   "ozet": "Kuşbaşı tavuğun renkli biber, soğan ve mantarla kısa sürede kavrulduğu pratik tavuk sote. Az malzemeyle hazırlanan, pilav ya da makarna yanında yakışan, hafta içi akşamlarının hızlı ve doyurucu çözümüdür.",
   "ozellik": [
-   "glutensiz",
-   "protein-agirlikli",
-   "az-yagli"
+   "Glutensiz",
+   "Protein Ağırlıklı",
+   "Az Yağlı"
   ],
   "butce": "1",
   "adim_baslik": [
@@ -993,17 +1022,15 @@
   "kategori": "Pilav",
   "zorluk": "Orta",
   "alt_baslik": "Safranlı Kuş Üzümlü Osmanlı Pilavı",
-  "sureBant": [
-   "3"
-  ],
+  "sureBant": "45-60",
   "porsiyon": "4 kişilik",
   "hazirlik_dk": "20",
   "pisirme_dk": "40",
   "ozet": "Osmanlı saray mutfağından günümüze ulaşan, safranla renklenen pirincin kuş üzümü ve tarçınla tatlandığı zarif bir pilav. Hafif tatlımsı notasıyla özel gün sofralarının gözde lezzetlerindendir.",
   "ozellik": [
-   "vejetaryen",
-   "glutensiz",
-   "yumurta-icermez"
+   "Vejetaryen",
+   "Glutensiz",
+   "Yumurta İçermez"
   ],
   "butce": "2",
   "adim_baslik": [
@@ -1085,17 +1112,15 @@
   "zorluk": "Çok Kolay",
   "alt_baslik": "Klasik Horiatiki Tarifi",
   "mutfak": "Yunan",
-  "sureBant": [
-   "0"
-  ],
+  "sureBant": "15",
   "durum": "yayin",
   "porsiyon": "4 kişilik",
   "hazirlik_dk": "15",
   "pisirme_dk": "0",
   "ozet": "Olgun domates, salatalık ve beyaz peynirin sızma zeytinyağı ve kekikle buluştuğu, Yunan mutfağının en bilinen salatası horiatiki. Hiç pişirme gerektirmeyen bu ferah tarif, yaz sofralarının ve ızgara yemeklerinin yanında hafif bir seçenektir.",
   "ozellik": [
-   "vejetaryen",
-   "glutensiz"
+   "Vejetaryen",
+   "Glutensiz"
   ],
   "butce": "2",
   "adim_baslik": [
@@ -1186,9 +1211,7 @@
   "zorluk": "Zor",
   "alt_baslik": "Hardal Tohumlu Fermente Üzüm İçeceği",
   "mutfak": "Türk",
-  "sureBant": [
-   "5"
-  ],
+  "sureBant": "120",
   "durum": "taslak",
   "porsiyon": "6 kişilik",
   "hazirlik_dk": "40",
@@ -1255,15 +1278,13 @@
   "kategori": "Tatlı",
   "zorluk": "Zor",
   "alt_baslik": "Karadeniz Usulü Muhallebili Tatlı Börek",
-  "sureBant": [
-   "4"
-  ],
+  "sureBant": "60-120",
   "porsiyon": "8 dilim",
   "hazirlik_dk": "35",
   "pisirme_dk": "30",
   "ozet": "Karadeniz mutfağının şaşırtıcı tatlısı Laz böreği, mısır unlu muhallebinin ince yufkalar arasında katmanlanıp fırınlanmasıyla hazırlanır. Tuzlu börek görünümündeki bu tatlı, hafif tatlılığı ve krema dokusuyla bilinir.",
   "ozellik": [
-   "vejetaryen"
+   "Vejetaryen"
   ],
   "butce": "2",
   "adim_baslik": [
@@ -1339,17 +1360,15 @@
   "zorluk": "Orta",
   "alt_baslik": "Bahçe Sebzeleriyle Ev Yapımı Turşu",
   "mutfak": "Türk",
-  "sureBant": [
-   "3"
-  ],
+  "sureBant": "45-60",
   "durum": "yayin",
   "porsiyon": "8 kişilik",
   "hazirlik_dk": "50",
   "pisirme_dk": "10",
   "ozet": "Gaziantep mutfağının bereketli sebze çeşitliliğinden ilham alan bu kavanoz karışımı, biber, havuç, salatalık ve lahananın tek kavanozda bekletilmesiyle hazırlanır. Çok sayıda sebzenin doğranması zaman alsa da işlemin kendisi kolaydır ve parti sofralarında meze tabağını tamamlar.",
   "ozellik": [
-   "vegan",
-   "laktozsuz"
+   "Vegan",
+   "Laktozsuz"
   ],
   "butce": "3",
   "adim_baslik": [
@@ -1422,16 +1441,14 @@
   "zorluk": "Kolay",
   "alt_baslik": "Çocuklar İçin Çıtır Tarif",
   "mutfak": "Amerikan",
-  "sureBant": [
-   "2"
-  ],
+  "sureBant": "30-45",
   "durum": "yayin",
   "porsiyon": "4 kişilik",
   "hazirlik_dk": "30",
   "pisirme_dk": "20",
   "ozet": "Beyaz etli balık fileto parçalarının una, çırpılmış yumurtaya ve galeta ununa bulanıp fırında kızartılmasıyla hazırlanan bu tarif, yağda kızartmaya göre daha hafif bir alternatiftir. Özellikle çocukların severek tükettiği pratik bir atıştırmalıktır.",
   "ozellik": [
-   "protein-agirlikli"
+   "Protein Ağırlıklı"
   ],
   "butce": "2",
   "adim_baslik": [
@@ -1501,16 +1518,14 @@
   "zorluk": "Orta",
   "alt_baslik": "Kahvaltılık Türk Usulü İnce Pide",
   "mutfak": "Türk",
-  "sureBant": [
-   "4"
-  ],
+  "sureBant": "60-120",
   "durum": "arsiv",
   "porsiyon": "2 kişilik",
   "hazirlik_dk": "15",
   "pisirme_dk": "15",
   "ozet": "Türk kahvaltı sofralarının doyurucu lezzeti dana sucuklu yumurtalı ince hamur, ince açılan hamurun üzerine dana sucuk dilimleri ve yumurtanın kırılıp fırında birlikte pişirilmesiyle hazırlanır. Premium malzemelerle hazırlanan bu tarif, sade tuzlu kahvaltılara alternatif sunar.",
   "ozellik": [
-   "diyabete-uygun"
+   "Diyabete Uygun"
   ],
   "butce": "3",
   "adim_baslik": [
@@ -1577,16 +1592,14 @@
   "kategori": "Atıştırmalık",
   "zorluk": "Kolay",
   "alt_baslik": "Mayasız Kabuklu İrlanda Ekmeği",
-  "sureBant": [
-   "3"
-  ],
+  "sureBant": "45-60",
   "durum": "yayin",
   "porsiyon": "8 dilim",
   "hazirlik_dk": "15",
   "pisirme_dk": "45",
   "ozet": "Maya yerine karbonat ve ayranla kabartılan, kısa sürede hazırlanıp fırınlanan İrlanda usulü ekmek. Kalın çıtır kabuğu ve yoğun içiyle özellikle kahvaltı sofralarında tereyağıyla severek tüketilir.",
   "ozellik": [
-   "vejetaryen"
+   "Vejetaryen"
   ],
   "butce": "1",
   "adim_baslik": [
@@ -1652,8 +1665,37 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/l10n/tr.js"></script>
 <script src="../../kanon/admin-editor-tr.js"></script>
+<script src="../../kanon/admin-ikon-kutuphane.js" defer></script>
+<script src="../../kanon/admin-veri.js" defer></script>
 <script src="../../kanon/admin-kit.js" defer></script>
 <script src="../../kanon/admin-editor.js" defer></script>
 <script src="../../kanon/admin-tarih.js" defer></script>
 <!-- ADMIN-KIT:JS:SON -->
+<!-- GASTRO-EK:JS:BAS -->
+
+<!-- MALZEME SINIF SÖZLÜĞÜ — L7 rozet türetmesinin kaynağı (AJAN A).
+     🔴 HİÇBİR SINIFLAMA UYDURULMADI: `dump/gastro/mutfak-ansiklopedisi.html`
+        KATMAN 2'de her madde bir `.ans-catsec[data-cat]` bölümünün altında
+        BİLDİRİLMİŞ duruyor — 26 kategori · 1.200 madde. Blok o bildirimin
+        birebir kopyasıdır (`ad|kategori-indeksi`).
+     Rozetin ANLAMI ikinci kaynak: "Yumurta İçermez" = yumurta sınıfından
+     malzeme yok. Kural 480 public tarif sayfasında SINANDI:
+        public'in bastığı 430 rozet · ÇELİŞKİ 0
+        kuralın "hayır" dediği: Vegan 275/480 · Vejetaryen 180 · Pesketaryen 136
+                                Süt İçermez 126 · Kuruyemiş İçermez 70 · Yumurta İçermez 14
+     ⚠ GLUTENSİZ TÜRETİLMİYOR: `tahillar` kategorisi gluten taşıyanı taşımayandan
+       ayırmıyor (mısır unu · badem unu · pirinç aynı kovada) — ölçüldü, 5 çelişki.
+     ⚠ İSTİSNA "hindistan cevizi sütü": ansiklopedide `sut-urunleri` altında ama
+       bitkisel süttür; public onu taşıyan 3 tarife Vegan/Süt İçermez basıyor.
+       İstisna KAYITTAN doğdu; düzeltmesi ansiklopedi işidir → KÖ-A5.
+     Üreten: scripts/olcum/p2/a-turetme-veri.mjs — elle düzenlenmez. -->
+<script type="application/json" data-malzeme-sinif>
+{"kaynak":"dump/gastro/mutfak-ansiklopedisi.html · 26 kategori · 1.200 madde (ölçüm 2026-09-05)","sinif":["baharat","bakliyat","balik","cay","cikolata","deniz-urunleri","domates","etler","fermente","icecek-hammaddeleri","kahve","kuruyemis","mantar","meyve","otlar","peynir","pirinc","pisirme-malzemeleri","sebze","sirke","sut-urunleri","tahillar","tatlandiricilar","tuz","yag","yumurta"],"yasak":{"Vegan":["etler","balik","deniz-urunleri","yumurta","sut-urunleri","peynir"],"Vejetaryen":["etler","balik","deniz-urunleri"],"Pesketaryen":["etler"],"Süt İçermez":["sut-urunleri","peynir"],"Yumurta İçermez":["yumurta"],"Kuruyemiş İçermez":["kuruyemis"]},"istisna":["hindistan cevizi sütü"],"s":["acuka|0","amchur kuru mango tozu|0","amçur|0","anason|0","ancho biberi|0","annatto tohumu|0","asafoetida hing|0","baharat karışımı|0","berbere|0","beyaz biber|0","cajun baharatı|0","cayenne biberi|0","cennet biberi|0","chermoula|0","chipotle biberi|0","curry tozu|0","damla sakızı|0","defne yaprağı|0","dukkah|0","espelette biberi|0","furikake|0","galanga|0","garam masala|0","gochugaru|0","guajillo biberi|0","halep biberi aleppo biberi|0","hardal|0","hardal tohumu|0","harissa|0","havlıcan|0","haşhaş tohumu|0","hint safranı aspir çiçeği|0","isot|0","jerk baharatı|0","kakule|0","kara kakule|0","karabiber|0","karanfil|0","kereviz tohumu|0","kimyon|0","kişniş tohumu|0","kristalize zencefil|0","kuru adaçayı|0","kuru biberiye|0","kuru fesleğen|0","kuru kekik|0","kuru nane|0","kuyruklu biber cubeb|0","köri|0","köri baharatı|0","kırmızı toz biber|0","mahlep|0","maraş biberi|0","meksika kekiği|0","meyan kökü|0","muhammara|0","muskat|0","panch phoron|0","paprika|0","pembe biber kırmızı biberiye tanesi|0","piment n i spanyol tütsülenmiş toz biber|0","portakal kabuğu tozu|0","pul biber|0","ras el hanut|0","rezene tohumu|0","safran|0","sakız|0","sambal oelek|0","sarımsak tozu|0","selim tohumu etiyopya biberi|0","seylan tarçını|0","sichuan biberi|0","skordalya|0","sofrito|0","soğan tozu|0","sumak|0","susam tohumu|0","tandoori masala|0","tarator|0","tarçın|0","tere tohumu|0","togarashi|0","tonka baklası|0","urfa biberi|0","uzun biber|0","vanilya|0","vanilya tozu|0","wasabi|0","yenibahar|0","yıldız anason|0","za atar|0","zahter|0","zencefil|0","zerdeçal|0","çemen|0","çemen otu|0","çin beş baharat|0","çin tarçını|0","çörek otu|0","şeytan tersi|0","aduki fasulyesi|1","bakla|1","barbunya|1","beluga mercimek|1","boncuk fasulye|1","borlotti fasulyesi|1","börülce|1","cannellini fasulyesi|1","chana dal|1","edamame|1","fava kuru bakla|1","flajole fasulyesi|1","guar fasulyesi|1","horoz fasulyesi|1","kabuli nohut|1","kara nohut|1","kinoa|1","kuru bezelye|1","kuru fasulye|1","kırmızı fasulye|1","kırmızı mercimek|1","lima fasulyesi|1","lüpen fasulyesi|1","masoor dal|1","maş fasulyesi|1","moong dal|1","nohut|1","pinto fasulyesi|1","puy mercimeği|1","sarı mercimek|1","siyah fasulye|1","soya fasulyesi|1","termiye|1","toor dal|1","urad dal|1","urid fasulyesi|1","yeşil mercimek|1","çalı fasulyesi|1","akya|2","alabalık|2","aterina|2","bakalyaro|2","barbun|2","barramundi|2","berlam|2","dil balığı|2","dülger balığı|2","eskina|2","fangri|2","fener balığı|2","füme somon|2","füme uskumru|2","gelincik balığı|2","granyöz|2","gümüş balığı|2","hamsi|2","has kefal|2","havyar|2","horozbina|2","kalkan|2","karagöz balığı|2","katsuobushi kurutulmuş ton balığı talaşı|2","kaya balığı|2","kefal|2","kolyoz|2","konserve ton balığı|2","kupes|2","kılıç balığı|2","kırlangıç balığı|2","lagos|2","lahoz|2","lakerda|2","levrek|2","lipsoz|2","lüfer|2","mahi mahi dorado|2","melanurya|2","mercan balığı|2","mezgit|2","minekop|2","morina|2","mırmır|2","orfoz|2","palamut|2","pisi balığı|2","ringa|2","sardalya|2","sargoz|2","sarpa|2","sarıgöz|2","sazan|2","sinarit|2","sivriburun karagöz|2","somon|2","sudak|2","tarama|2","tekir|2","tilapia|2","tirsi|2","ton balığı|2","trakonya|2","trança|2","turna balığı|2","uskumru|2","yayın balığı|2","yılan balığı|2","zargana|2","çaça|2","çinekop|2","çipura|2","çiroz|2","i skorpit|2","i sparoz|2","i stavrit|2","i zmarit|2","ahtapot|5","akivades|5","boru midye|5","deniz böceği|5","deniz hıyarı|5","deniz kazı percebes|5","deniz kestanesi|5","deniz kulağı|5","deniz minaresi|5","deniz salyangozu|5","deniz tarağı|5","deniz üzümü umi budo|5","denizanası yenilebilir|5","dev midye geoduck|5","istakoz|5","kalamar|5","karides|5","kerevit|5","kidonya|5","kral yengeci|5","krill|5","kum midyesi|5","kılıç midye|5","langust kaya istakozu|5","langustin|5","midye|5","pavurya|5","surimi|5","sübye|5","tarak midyesi|5","teke|5","yengeç|5","i stiridye|5","ananas domatesi|6","domates salçası|6","domates tozu|6","kokteyl domates|6","kurutulmuş domates|6","pembe domates|6","roma domatesi erik domates|6","salkım domates|6","san marzano domatesi|6","sarı domates|6","siyah domates|6","yeşil domates|6","çeri domates|6","at eti|7","biftek|7","bizon eti|7","bresaola|7","bıldırcın eti|7","chorizo|7","dalak|7","dana antrikot|7","dana bonfile|7","dana böbrek|7","dana ciğer|7","dana dil|7","dana döş|7","dana eti|7","dana gerdan|7","dana kaburga|7","dana kontrfile|7","dana kuyruk|7","dana nuar|7","dana uykuluk|7","dana yanak|7","dana yürek|7","dana i ncik|7","deve eti|7","füme salam|7","geyik eti|7","guanciale|7","hindi|7","hindi eti|7","hindi sucuğu|7","jambon|7","kavurma|7","kaz eti|7","keklik eti|7","kelle eti|7","keçi ciğeri|7","keçi eti|7","koyun eti|7","kuzu beyni|7","kuzu but|7","kuzu böbrek|7","kuzu ciğer|7","kuzu dil|7","kuzu eti|7","kuzu gerdan|7","kuzu kaburga|7","kuzu kelle|7","kuzu kol|7","kuzu pirzola|7","kuzu yürek|7","kuzu i ncik|7","kıyma|7","mortadella|7","pancetta|7","pastırma|7","paça|7","prosciutto|7","salam|7","sosis|7","sucuk|7","sülün eti|7","tavuk but|7","tavuk ciğer|7","tavuk göğsü|7","tavuk kanat|7","tavuk taşlık|7","tavşan eti|7","yaban domuzu eti|7","ördek eti|7","ördek göğsü|7","i şkembe|7","ajika|8","balık sosu|8","belacan fermente karides ezmesi|8","bira mayası|8","boza|8","dashi|8","doenjang|8","doubanjiang|8","ekşi maya|8","gochujang|8","hardaliye|8","hoisin sosu|8","kefir taneleri|8","kimchi|8","kombucha|8","kvas|8","lahana turşusu|8","limon turşusu korunmuş limon|8","mirin|8","miso|8","natto|8","ponzu|8","sake pişirme|8","salatalık turşusu|8","sauerkraut|8","seitan|8","siyah sarımsak|8","soya sosu|8","sriracha|8","su kefiri|8","tamari|8","tarhana|8","tempeh|8","tempoyak|8","teriyaki sosu|8","turşu|8","umeboshi|8","worcestershire sosu|8","i stiridye sosu|8","şalgam suyu|8","arabika kahvesi|10","arpa kahvesi|10","dibek kahvesi|10","espresso|10","etiyopya kahvesi|10","filtre kahve|10","hazır kahve eriyebilir kahve|10","hindiba kahvesi|10","kafeinsiz kahve|10","kahve özütü kahve ekstresi|10","menengiç kahvesi|10","robusta kahvesi|10","soğuk demleme kahve|10","türk kahvesi|10","yeşil kahve|10","acıbadem|11","antep fıstığı|11","antep fıstığı ezmesi|11","ay çekirdeği|11","badem|11","badem ezmesi|11","brezilya cevizi|11","ceviz|11","chia tohumu|11","fındık|11","fındık ezmesi|11","ginkgo çekirdeği|11","hindistan cevizi|11","hindistan cevizi rendesi|11","hurma|11","kabak çekirdeği|11","kabak çekirdeği i çi|11","kaju|11","kaju ezmesi|11","kavun çekirdeği|11","kayın cevizi|11","kemiri cevizi candlenut|11","kenevir tohumu|11","kestane|11","kestane püresi|11","keten tohumu|11","kola cevizi|11","kuru ananas|11","kuru dut|11","kuru erik|11","kuru kayısı|11","kuru kızılcık|11","kuru mango|11","kuru vişne|11","kuru üzüm|11","kuru i ncir|11","leblebi|11","makadamya|11","pekan|11","pili cevizi|11","tahin helvası|11","taze ceviz yaş ceviz|11","yer bademi tiger nut|11","yer fıstığı|11","çam fıstığı|11","i nka fıstığı sacha inchi|11","ağaç kulağı mantarı|12","beyaz truf|12","chaga mantarı|12","cin mantarı|12","enoki mantarı|12","kanlıca mantarı|12","kara borazan mantarı|12","kara truf|12","kavak mantarı|12","kestane mantarı|12","keçi sakalı mantarı|12","kral i stiridye mantarı|12","kurt mantarı puffball|12","kuzugöbeği mantarı|12","kültür mantarı|12","maitake mantarı|12","matsutake mantarı|12","nameko mantarı|12","porcini mantarı|12","portobello mantarı|12","reishi mantarı|12","sarımsak mantarı|12","sarıçiçek mantarı|12","sedef mantarı|12","shiitake mantarı|12","shimeji mantarı|12","tavuk mantarı|12","trüf mantarı|12","yele mantarı lion s mane|12","çayır mantarı|12","çıntar mantarı|12","i stiridye mantarı|12","acerola|13","ahlat|13","ahududu|13","aki meyvesi ackee|13","altın çilek|13","alıç|13","ambarella haziran eriği|13","amla hint bektaşi üzümü|13","ananas|13","armut|13","aronia siyah kızılcık|13","avokado|13","ayva|13","açai|13","babaco|13","bael meyvesi|13","bal kavunu|13","baobab meyvesi|13","bektaşi üzümü|13","bergamot|13","buddha eli|13","böğürtlen|13","can eriği|13","canistel yumurta meyvesi|13","cempedak|13","cherimoya|13","cupuaçu|13","durian|13","dut|13","ejder meyvesi|13","ekmek ağacı meyvesi|13","elma|13","elma püresi|13","erik|13","feijoa|13","frenk üzümü|13","genipapo|13","gilaburu|13","goji berisi|13","greyfurt|13","guava|13","hünnap|13","jabuticaba|13","jakfrut|13","kadın tuzluğu|13","kaktüs i nciri|13","kalamansi|13","kamu kamu|13","kan portakalı|13","kantalop kavunu|13","karadut|13","karambola|13","karpuz|13","kavun|13","kayısı|13","keçiboynuzu|13","kiraz|13","kivano|13","kivi|13","kudret narı|13","kumkuat|13","kuş üzümü|13","kızılcık|13","langsat|13","limon|13","liçi|13","longan|13","mandalina|13","mango|13","mangosten|13","marang|13","marula|13","mecdul hurma|13","mersin meyvesi|13","meyer limonu|13","misket limonu meksika limonu|13","mombin|13","mucize meyve|13","mum elması java elması|13","muz|13","muşmula|13","mürdüm eriği|13","mürver meyvesi|13","nar|13","naranjilla|13","nashi armudu|13","nektarin|13","noni meyvesi|13","papaya|13","parmak limon|13","pawpaw|13","pepino|13","pomelo|13","portakal|13","rambutan|13","salak meyvesi|13","santol|13","sapodilla|13","sapote|13","soursop|13","sudachi|13","tamarillo|13","trabzon hurması|13","turunç|13","vişne|13","yaban mersini|13","yemeklik muz|13","yenidünya|13","yeşil erik|13","yuzu|13","zerdali|13","çarkıfelek|13","çilek|13","üvez|13","üzüm|13","i ncir|13","i nga meyvesi dondurma fasulyesi|13","i ğde|13","şeftali|13","şeker elması custard apple|13","adaçayı|14","biberiye|14","civanperçemi|14","curry yaprağı|14","dereotu|14","epazote|14","fesleğen|14","frenk maydanozu|14","frenk soğanı|14","hodan|14","kaffir lime|14","kaffir limon yaprağı|14","kekik|14","kereviz yaprağı|14","kervil|14","kuzu otu|14","lavanta|14","lemongrass|14","limon melisa|14","limon otu|14","maydanoz|14","melek otu anjelika|14","mercanköşk|14","misk adaçayı ananas adaçayı|14","mor fesleğen|14","moringa yaprağı|14","mürver çiçeği|14","nane|14","pandan yaprağı|14","roka|14","sasafras yaprağı fil tozu kaynağı|14","sater|14","sedef otu rue|14","shiso|14","tarhun|14","taze defne|14","taze kekik|14","taze kişniş|14","taze rezene|14","taze soğan|14","tere|14","vietnam kişnişi rau r m|14","zufa otu|14","abaza peyniri|15","appenzeller|15","asiago|15","beaufort|15","beyaz peynir|15","brie|15","bufalo mozzarella|15","burrata|15","caciocavallo|15","camembert|15","cantal|15","cheddar|15","civil peyniri|15","comt|15","dil peyniri|15","divle obruğu peyniri|15","edam|15","emmental|15","ezine peyniri|15","feta|15","fontina|15","gorgonzola|15","gouda|15","grana padano|15","graviera|15","gravyer|15","gravyer peyniri|15","gruy re|15","halloumi|15","havarti|15","jarlsberg|15","kars gravyeri|15","kaşar peyniri|15","kaşkaval kaşer kasseri|15","kefalotyri|15","keçi peyniri|15","kolot peyniri|15","kopanisti peyniri|15","künefe peyniri|15","lor peyniri|15","manchego|15","manouri|15","mascarpone|15","mihaliç peyniri|15","mimolette|15","mizithra|15","morbier|15","mozzarella|15","munster|15","munster peyniri|15","ossau iraty|15","otlu peynir|15","paneer|15","parmesan|15","pecorino|15","provola peyniri|15","provolone|15","raclette|15","reblochon|15","ricotta|15","roquefort|15","saint nectaire|15","scamorza|15","sepet peyniri|15","stilton|15","stracciatella peyniri|15","sür peyniri|15","taleggio|15","taze kaşar|15","tomme|15","tulum peyniri|15","van otlu peyniri|15","wensleydale|15","çerkez peyniri|15","çeçil peyniri|15","çökelek|15","poisses|15","arborio pirinci|16","baldo pirinç|16","basmati pirinci|16","bomba pirinci|16","carnaroli pirinci|16","karacadağ pirinci|16","kırmızı pirinç|16","osmancık pirinci|16","parboiled pirinç|16","siyah pirinç|16","sushi pirinci|16","vialone nano pirinci|16","yapışkan pirinç|16","yasemin pirinci|16","agar agar|17","bulyon küpü|17","erişte|17","hurma pekmezi|17","jelatin|17","kabartma tozu|17","kadayıf|17","kuru maya|17","malt ekstraktı|17","puding tozu|17","yaş maya taze maya|17","yufka|17","acur|18","arapsaçı otu|18","arpacık soğanı|18","asma yaprağı|18","baby mısır|18","balkabağı|18","bambu filizi|18","bamya|18","beyaz lahana|18","biber salçası|18","brokoli|18","brokolini|18","brüksel lahanası|18","butternut kabak|18","castelvetrano zeytini|18","chaya yaprağı maya ispanağı|18","chayote|18","chlorella|18","choy sum çin yeşil lahanası|18","daikon japon turpu|18","deniz börülcesi|18","deniz marulu|18","dolmalık biber|18","dulse kırmızı deniz yosunu|18","ebegümeci|18","endivya|18","enginar|18","enginar kalbi|18","fiddlehead eğrelti sürgünü|18","gai lan çin brokolisi|18","gölevez|18","güneş kurusu domates|18","habanero biberi|18","hardal yeşilliği|18","havuç|18","hijiki|18","hindiba|18","huitlacoche mısır mantarı|18","ispanak|18","isırgan otu|18","jalapeno biberi|18","jicama|18","kabak|18","kabak çiçeği|18","kalamata zeytini|18","kapari|18","kapya biber|18","kara lahana|18","kara turp|18","karahindiba|18","karnabahar|18","kenger|18","kereviz kökü|18","kereviz sapı|18","kestane kabağı|18","kolrabi|18","kombu|18","kuzukulağı|18","kuşkonmaz|18","kırmızı biber|18","kırmızı lahana|18","kırmızı pazı|18","kırmızı turp|18","kıvırcık marul|18","labada|18","lotus kökü|18","maca kökü|18","madımak|18","malabar ispanağı|18","malanga|18","mangold pazı|18","manyok|18","manzanilla zeytini|18","marul|18","mizuna|18","mor havuç|18","mor lahana|18","niçoise zeytini|18","nopal|18","nori|18","oka yumrusu|18","pak choy|18","pancar|18","pancar yaprağı|18","patates|18","patlıcan|18","pazı|18","poblano biberi|18","pırasa|18","radicchio|18","radika|18","rezene sebzesi|18","rezene yumrusu|18","romanesco|18","sakız kabağı|18","salatalık|18","salsify teke sakalı|18","sarımsak|18","semizotu|18","serrano biberi|18","sirken|18","sivri biber|18","siyah zeytin|18","soğan|18","spagetti kabağı|18","spirulina|18","su ispanağı kangkong|18","su kabağı|18","su kestanesi|18","su teresi|18","taro|18","tatlı patates|18","tatlı patates yaprağı|18","tatsoi|18","taze bakla|18","taze bezelye|18","taze börülce|18","taze fasulye|18","taze nohut|18","taze sarımsak|18","tinda hint yuvarlak kabağı|18","turp filizi|18","turp otu|18","tuzlu limon|18","wakame|18","yaban turpu|18","yam kökü|18","yer elması|18","yeşil zeytin|18","çarliston biber|18","çin brokolisi|18","çin lahanası|18","i skorçina|18","şalgam|18","bal sirkesi|19","balzamik sirke|19","beyaz balzamik sirke|19","beyaz sirke|19","dut sirkesi|19","elma sirkesi|19","hindistan cevizi sirkesi|19","hurma sirkesi|19","kokulu sirke|19","koruk sirkesi|19","malt sirkesi|19","mısır sirkesi|19","nar sirkesi|19","pirinç sirkesi|19","sirke anası|19","siyah pirinç sirkesi|19","üzüm sirkesi|19","i ncir sirkesi|19","şampanya sirkesi|19","şarap sirkesi|19","şeri sirkesi|19","ayran|20","badem sütü|20","badem yoğurdu|20","bezelye sütü|20","buharlaştırılmış süt|20","cr me fra che|20","deve sütü|20","dondurma|20","dulce de leche|20","ekşi krema|20","ekşimik|20","eşek sütü|20","fındık sütü|20","hindistan cevizi kreması|20","hindistan cevizi yoğurdu|20","kajmak|20","kaju sütü|20","kaymak|20","kaymaklı yoğurt|20","kefir|20","kesmik|20","keçi kaymağı|20","keçi sütü|20","keçi yoğurdu|20","kondanse süt|20","koyun sütü|20","koyun yoğurdu|20","krem fresk|20","krem peynir|20","krem şanti|20","kurut|20","kımız|20","labne|20","manda kaymağı|20","manda sütü|20","manda yoğurdu|20","maraş dondurması|20","peynir altı suyu whey|20","pirinç sütü|20","quark|20","skyr|20","smetana|20","soya sütü|20","susam sütü|20","süt|20","süt kreması|20","süt tozu|20","süzme yoğurt|20","tofu|20","yayık ayranı|20","yoğurt|20","yuba tofu derisi|20","yulaf kreması|20","yulaf sütü|20","amarant tohumu|21","amaranth|21","ararot nişastası|21","arpa|21","arpa ezmesi|21","arpa unu|21","badem unu|21","bulgur|21","buğday kepeği|21","buğday unu|21","cam erişte|21","darı|21","darı unu|21","esmer pirinç|21","firik|21","fonyo|21","freekeh|21","galeta unu|21","gnocchi|21","göce|21","hindistan cevizi unu|21","kamut|21","kamut buğdayı|21","karabuğday|21","karabuğday unu|21","kavut|21","kavılca buğdayı|21","kestane unu|21","kinoa unu|21","kuşkuş|21","kızıl buğday|21","malt|21","masa harina|21","mısır|21","mısır gevreği|21","mısır nişastası|21","mısır unu|21","nohut unu|21","orzo|21","panko|21","patates nişastası|21","pirinç kağıdı|21","pirinç kepeği|21","pirinç unu|21","polenta|21","puflanmış kinoa|21","ramen erişte|21","sagu nişastası|21","shirataki|21","siyez buğdayı|21","soba|21","somen|21","sorgum|21","tam buğday unu|21","tapyoka|21","teff|21","teff unu|21","tritikale|21","udon|21","yaban pirinci|21","yarma|21","yulaf|21","yulaf ezmesi|21","yulaf kepeği|21","yulaf unu|21","çavdar|21","çavdar kepeği|21","çavdar unu|21","i nci arpa|21","i rmik|21","agave şurubu|22","akide şekeri|22","akçaağaç şurubu|22","allüloz|22","aspartam|22","bal|22","dut pekmezi|22","eritritol|22","esmer şeker|22","glikoz şurubu|22","gül reçeli|22","hindistan cevizi şekeri|22","hurma macunu|22","hurma şurubu|22","kahverengi pirinç şurubu|22","kesme şeker|22","kestane balı|22","kestane şekeri|22","keçiboynuzu pekmezi|22","keçiboynuzu tozu|22","ksilitol|22","lokum|22","maltitol|22","manuka balı|22","melas|22","monk fruit buda meyvesi|22","muskovado şekeri|22","mısır şekeri|22","mısır şurubu|22","nabat şekeri|22","nar ekşisi|22","nuga|22","palmiye şekeri|22","pekmez|22","petek bal|22","pudra şekeri|22","sorbitol|22","stevia|22","sukraloz|22","sumak ekşisi|22","toz şeker|22","yacon şurubu|22","çam balı|22","bambu tuzu|23","deniz tuzu|23","duman tuzu|23","fleur de sel|23","füme tuz|23","gri deniz tuzu|23","himalaya tuzu|23","kala namak|23","kara tuz|23","karbonat|23","kaya tuzu|23","kosher tuzu|23","kırmızı tuz|23","limon tuzu|23","maldon tuzu|23","nişadır|23","persian mavi tuz i ran mavi tuzu|23","pul tuz|23","siyah hawaii tuzu|23","sofra tuzu|23","truf tuzu|23","tuz çiçeği|23","tütsülenmiş tuz|23","yosun tuzu|23","çankırı tuzu|23","antep fıstığı yağı|24","argan yağı|24","aspir yağı|24","avokado yağı|24","ayçiçek yağı|24","badem yağı|24","buğday tohumu yağı|24","ceviz yağı|24","fındık yağı|24","ghee arı yağı|24","hardal yağı|24","haşhaş yağı|24","hindistan cevizi yağı|24","kabak çekirdeği yağı|24","kaju yağı|24","kamelya yağı|24","kanola yağı|24","kayısı çekirdeği yağı|24","kaz yağı|24","kenevir yağı|24","kestane yağı|24","keten tohumu yağı|24","kuyruk yağı|24","lavanta yağı|24","margarin|24","mısır yağı|24","nane yağı|24","palmiye yağı|24","perilla yağı|24","pirinç kepeği yağı|24","sadeyağ|24","susam yağı|24","tahin|24","tavuk yağı|24","tereyağı|24","truf yağı|24","yer fıstığı yağı|24","zeytinyağı|24","çörek otu yağı|24","ördek yağı|24","üzüm çekirdeği yağı|24","i ç yağı|24","bıldırcın yumurtası|25","devekuşu yumurtası|25","güvercin yumurtası|25","hindi yumurtası|25","kaz yumurtası|25","keklik yumurtası|25","tavuk yumurtası|25","tuzlu yumurta|25","yumurta akı|25","yumurta sarısı|25","yumurta tozu|25","yüzyıllık yumurta pidan|25","ördek yumurtası|25","chai karışımı masala chai|3","dağ çayı|3","earl grey çayı|3","elma çayı|3","genmaicha|3","gyokuro|3","hibiskus çayı|3","hojicha|3","ihlamur|3","isırgan çayı|3","kekik çayı|3","kelebek bezelye çiçeği|3","lavanta çayı|3","limon çayı|3","mate çayı|3","melisa çayı|3","nane çayı|3","oolong çayı|3","pu erh çayı|3","rooibos çayı|3","sarı çay|3","sencha|3","sencha çayı|3","yeşil çay|3","zencefil çayı|3","zeytin yaprağı çayı|3","beyaz çikolata|4","bitter çikolata|4","gianduja|4","kakao|4","kakao nibs|4","kakao tozu|4","kakao yağı|4","kakao çekirdeği|4","kuvertür çikolata|4","praline|4","ruby çikolata|4","sütlü çikolata|4","çikolata cipsi damla çikolata|4","amazake|9","beyaz çay|9","buğday çimi|9","demirhindi|9","gül suyu|9","gül şurubu|9","hibiskus|9","hindiba kökü|9","hindistan cevizi suyu|9","karadut şurubu|9","kuşburnu çayı|9","lassi|9","maden suyu|9","matcha|9","mate|9","mürver çiçeği şurubu|9","nane suyu|9","papatya çayı|9","portakal çiçeği suyu|9","propolis|9","rezene çayı|9","salep|9","siyah çay|9","vişne şurubu|9","yasemin suyu|9","yuzu suyu|9","zencefil birası şurubu|9"]}
+</script>
+<script src="_ortak/gastro-ek.js" defer></script>
+<script src="_ortak/gastro-ek-a.js" defer></script>
+<script src="_ortak/gastro-ek-b.js" defer></script>
+<script src="_ortak/gastro-ek-c.js" defer></script>
+<script src="_ortak/gastro-ek-d.js" defer></script>
+<!-- GASTRO-EK:JS:SON -->
 </body></html>

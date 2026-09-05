@@ -12,6 +12,13 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.css">
 <link rel="stylesheet" href="../../kanon/admin.css">
 <!-- ADMIN-KIT:CSS:SON -->
+<!-- GASTRO-EK:CSS:BAS -->
+<link rel="stylesheet" href="_ortak/gastro-ek.css">
+<link rel="stylesheet" href="_ortak/gastro-ek-a.css">
+<link rel="stylesheet" href="_ortak/gastro-ek-b.css">
+<link rel="stylesheet" href="_ortak/gastro-ek-c.css">
+<link rel="stylesheet" href="_ortak/gastro-ek-d.css">
+<!-- GASTRO-EK:CSS:SON -->
 </head>
 <body class="yetkili" data-marka="gastro">
 <!-- ═══ GASTRO ADMIN · KANONİK KABUK — lead üretti, agent DEĞİŞTİRMEZ.
@@ -71,7 +78,7 @@
 
     <div class="panel-menu-bolum">02 Operasyon</div>
     <a class="panel-menu-link" href="admin-uyeler.html"><i class="fa-solid fa-users"></i>Üyeler &amp; Yetkiler</a>
-    <a class="panel-menu-link" href="admin-abonelikler.html"><i class="fa-solid fa-credit-card"></i>Abonelikler</a>
+    <a class="panel-menu-link" href="admin-paket-alimlari.html"><i class="fa-solid fa-credit-card"></i>Paket Alımları</a><a class="panel-menu-link" href="admin-sef-abonelikleri.html"><i class="fa-solid fa-hand-holding-dollar"></i>Şef Abonelikleri</a>
     <a class="panel-menu-link" href="admin-odemeler.html"><i class="fa-solid fa-money-bill-wave"></i>Ödemeler</a>
     <a class="panel-menu-link" href="admin-faturalar.html"><i class="fa-solid fa-file-invoice"></i>Faturalar<span class="sayac">7</span></a>
     <a class="panel-menu-link" href="admin-destek.html"><i class="fa-solid fa-life-ring"></i>Destek Talepleri<span class="sayac">12</span></a>
@@ -154,74 +161,747 @@
     <div class="panel-bas">
       <div>
         <h1>Video Mutfağı</h1>
-        <p>Video kataloğu: seri, bölüm sırası, süre, şef ve erişim kademesi. Her
-           video bir seriye ve bir şefe bağlanır; hiçbir tarife bağlanmamış video
-           satırında bunu söyler. · <strong>33</strong> video · <strong>4</strong> seri</p>
+        <p>Üç ayrı kavram tek katalogda: <b>seri</b> (sıralı bölümler, kendi sayfası),
+          <b>koleksiyon</b> (tür süzgeci — Tarif · Teknik, kendi sayfası yok) ve
+          <b>Dada Akış</b> (dikey kısa videolar). · <strong>33</strong> video ·
+          <strong>4</strong> seri · <strong>6</strong> kısa</p>
       </div>
-      <div class="eylem-satiri"><button class="dugme hayalet" type="button" data-yetki="disa-aktar" data-eylem="calistir" data-ad="Dışa aktar"><i class="fa-solid fa-file-export" aria-hidden="true"></i> Dışa aktar</button>
-        <a class="dugme hayalet" href="../video-mutfagi.html" target="_blank" rel="noopener"><i class="fa-solid fa-arrow-up-right-from-square"></i> Video mutfağını gör</a>
-        <a class="dugme birincil" id="vdYeni" href="admin-video-form.html"><i class="fa-solid fa-plus"></i> Yeni video</a>
+      <div class="eylem-satiri">
+        <button class="dugme hayalet" type="button" data-yetki="disa-aktar" data-eylem="disa-aktar">
+          <i class="fa-solid fa-file-export" aria-hidden="true"></i> Dışa aktar</button>
+        <a class="dugme hayalet" href="../video-mutfagi.html" target="_blank" rel="noopener">
+          <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i> Video mutfağını gör</a>
+        <a class="dugme hayalet" href="admin-video-seri-form.html">
+          <i class="fa-solid fa-clapperboard" aria-hidden="true"></i> Yeni seri</a>
+        <a class="dugme birincil" href="admin-video-form.html">
+          <i class="fa-solid fa-plus" aria-hidden="true"></i> Yeni video</a>
       </div>
     </div>
 
-    
-    <div id="vdUyari"><div class="uyari-kutu uyari" role="status"><i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i><p></p><div>33 videonun 33’ü hiçbir tarife bağlı değil. Tarif süzgecindeki <b>Videolu Anlatım</b> ekseni 0 kayıt gösteriyor: yüzey ilan ediliyor, bağ kurulmamış. Tarif formunda <code>video_id</code> alanı açılana kadar bu 33 video yalnız Video Mutfağı’ndan bulunabiliyor — bu yüzden “tarife bağlı değil” burada bir süzgeç değeridir, bir uyarı metni değil.</div><button type="button" class="ikon-dugme" aria-label="Bildirimi kapat" data-eylem="calistir" data-ad="Bildirimi kapat"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button><p></p></div></div>
+    <div class="uyari-kutu uyari" role="status">
+      <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>
+      <div>33 videonun 33'ü hiçbir tarife bağlı değil. Tarif süzgecindeki <b>Videolu Anlatım</b>
+        ekseni 0 kayıt gösteriyor: yüzey ilan ediliyor, bağ kurulmamış. Bağ, video formundaki
+        <b>Bağlı tarif</b> alanından kurulur.</div>
+      <button type="button" class="ikon-dugme" aria-label="Bildirimi kapat" data-eylem="calistir" data-ad="Bildirimi kapat">
+        <i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
+    </div>
 
-    <div class="kart-izgara c4" id="vdKpi"><div class="kart kpi"><span class="ikon"><i class="fa-solid fa-film"></i></span><div class="govde"><span class="etiket">yayındaki video</span><span class="sayi">33</span><span class="kpi-degisim"><i class="fa-solid fa-check" aria-hidden="true"></i> Video Mutfağı sayfasında yayında olan video sayısı.</span></div></div><div class="kart kpi"><span class="ikon"><i class="fa-solid fa-layer-group"></i></span><div class="govde"><span class="etiket">seri</span><span class="sayi">4</span><span class="kpi-degisim"><i class="fa-solid fa-check" aria-hidden="true"></i> Seri başına 8 bölüm — 32 video seride, 1 video seri dışı.</span></div></div><div class="kart kpi"><span class="ikon"><i class="fa-solid fa-link-slash"></i></span><div class="govde"><span class="etiket">tarife bağlanmamış video</span><span class="sayi">33</span><span class="kpi-degisim kotu"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> Tarif süzgecinde “Videolu Anlatım” 0 kayıt; bağ hiç kurulmamış.</span></div></div><div class="kart kpi"><span class="ikon"><i class="fa-solid fa-eye"></i></span><div class="govde"><span class="etiket">toplam izlenme</span><span class="sayi">4,4Mn</span><span class="kpi-degisim"><i class="fa-solid fa-check" aria-hidden="true"></i> Abone sayacı dört seride de 0 — abonelik yüzeyi henüz işlemiyor.</span></div></div></div>
+    <div class="kart-izgara c4" id="vdKpi">
+      <div class="kart kpi"><span class="ikon"><i class="fa-solid fa-film" aria-hidden="true"></i></span>
+        <div class="govde"><span class="etiket">yayındaki video</span><span class="sayi">33</span>
+          <span class="kpi-degisim"><i class="fa-solid fa-check" aria-hidden="true"></i>
+            27 katalog + 6 Dada Akış — merkez sayfanın “33 Video” künyesiyle birebir.</span></div></div>
+      <div class="kart kpi"><span class="ikon"><i class="fa-solid fa-clapperboard" aria-hidden="true"></i></span>
+        <div class="govde"><span class="etiket">seri</span><span class="sayi">4</span>
+          <span class="kpi-degisim"><i class="fa-solid fa-check" aria-hidden="true"></i>
+            Toplam 20 bölüm. Public değeri: 8, 4, 4 ve 4 — eski tablo dördüne de 8 diyordu.</span></div></div>
+      <div class="kart kpi"><span class="ikon"><i class="fa-solid fa-bolt" aria-hidden="true"></i></span>
+        <div class="govde"><span class="etiket">Dada Akış · kısa video</span><span class="sayi">6</span>
+          <span class="kpi-degisim"><i class="fa-solid fa-check" aria-hidden="true"></i>
+            Dikey format, 00:24–00:42; biri Pro kilitli.</span></div></div>
+      <div class="kart kpi"><span class="ikon"><i class="fa-solid fa-crown" aria-hidden="true"></i></span>
+        <div class="govde"><span class="etiket">Pro içerik</span><span class="sayi">5</span>
+          <span class="kpi-degisim"><i class="fa-solid fa-check" aria-hidden="true"></i>
+            Restoran Sırları'nın 4 bölümü + 1 kısa video.</span></div></div>
+    </div>
 
-    <!-- ============ LİSTE (K1) ============ -->
-    <div class="kart panel" id="vdListe">
-      <div class="kart-bas">
-        <h2 class="kart-baslik"><i class="fa-solid fa-film"></i> Video kataloğu</h2>
-      <div class="eylem-satiri"><div class="coklu-secim"><button class="suzgec-dugme" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="kol-0" data-eylem="kolonlar"><i class="fa-solid fa-table-columns" aria-hidden="true"></i> Kolonlar</button><div class="acilir-yuzey saga kolon-secim" id="kol-0" role="group" aria-label="Görünecek kolonlar" hidden=""><div class="acilir-bas">Kolonlar<button type="button" data-eylem="suzgec-temizle">Sıfırla</button></div><label class="acilir-kalem kilitli"><input type="checkbox" checked="" disabled=""> Video</label><label class="acilir-kalem"><input type="checkbox" checked=""> Seri</label><label class="acilir-kalem"><input type="checkbox" checked=""> Süre</label><label class="acilir-kalem"><input type="checkbox" checked=""> Şef</label><label class="acilir-kalem"><input type="checkbox" checked=""> Erişim</label><label class="acilir-kalem"><input type="checkbox" checked=""> İzlenme</label><label class="acilir-kalem"><input type="checkbox" checked=""> İşlem</label></div></div></div></div>
+    <div class="sekmeler" role="tablist" aria-label="Video Mutfağı bölümleri">
+      <button class="sekme aktif" type="button" role="tab" aria-selected="true" id="vdS-video" aria-controls="vdP-video">Videolar<span class="sekme-sayi">27</span></button>
+      <button class="sekme" type="button" role="tab" aria-selected="false" tabindex="-1" id="vdS-seri" aria-controls="vdP-seri">Seriler<span class="sekme-sayi">4</span></button>
+      <button class="sekme" type="button" role="tab" aria-selected="false" tabindex="-1" id="vdS-akis" aria-controls="vdP-akis">Dada Akış<span class="sekme-sayi">6</span></button>
+      <button class="sekme" type="button" role="tab" aria-selected="false" tabindex="-1" id="vdS-kavram" aria-controls="vdP-kavram">Kavramlar</button>
+    </div>
 
-      <!-- Arama filtre şeridine, SOLA (ajan sözleşmesi §2). Süzgeç kendi
-           çip bileşenidir (`.ff`/`.df-fchip`), kabuğun `.fb-sel`i <select>
-           içindir. Bileşen DEĞİŞMEDİ (public yüzeyle aynı, plan §10/M2);
-           yalnız durduğu yer filtre şeridinin içine alındı ve sağa yaslandı —
-           Gastro'da o şerit TEK satırdır: solda arama, sağında süzgeç. -->
-      <div class="suzgec-cubuk">
-        <label class="yalniz-okuyucu" for="vdAra">Video ara</label>
-        <div class="panel-arama"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i><input type="search" id="vdAra" placeholder="Video, seri ya da şef ara" class="panel-arama-girdi" aria-label="Video ara"></div>
-        <div class="coklu-secim"><button class="suzgec-dugme" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="suz-0">Seri<span class="sayi" data-sayi="0"></span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button><div class="acilir-yuzey suzgec" id="suz-0" role="group" aria-label="Seri" hidden=""><div class="acilir-bas">Seri<button type="button" data-eylem="suzgec-temizle">Temizle</button></div><button class="cip suzgec aktif" type="button" role="option" aria-selected="true">Tümü</button><button class="cip suzgec" type="button" role="option" aria-selected="false">10 Dakikada Yemekler</button><button class="cip suzgec" type="button" role="option" aria-selected="false">Şef Teknikleri</button><button class="cip suzgec" type="button" role="option" aria-selected="false">Yöresel Lezzetler</button><button class="cip suzgec" type="button" role="option" aria-selected="false">30 Saniyede Bir Fikir</button><button class="cip suzgec" type="button" role="option" aria-selected="false">Seri dışı</button></div></div><div class="coklu-secim"><button class="suzgec-dugme" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="suz-1">Süre<span class="sayi" data-sayi="0"></span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button><div class="acilir-yuzey suzgec" id="suz-1" role="group" aria-label="Süre" hidden=""><div class="acilir-bas">Süre<button type="button" data-eylem="suzgec-temizle">Temizle</button></div><button class="cip suzgec aktif" type="button" role="option" aria-selected="true">Tümü</button><button class="cip suzgec" type="button" role="option" aria-selected="false">0–10 dk</button><button class="cip suzgec" type="button" role="option" aria-selected="false">10–20 dk</button><button class="cip suzgec" type="button" role="option" aria-selected="false">20 dk ve üzeri</button></div></div><div class="coklu-secim"><button class="suzgec-dugme" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="suz-2">Erişim<span class="sayi" data-sayi="0"></span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button><div class="acilir-yuzey suzgec" id="suz-2" role="group" aria-label="Erişim" hidden=""><div class="acilir-bas">Erişim<button type="button" data-eylem="suzgec-temizle">Temizle</button></div><button class="cip suzgec aktif" type="button" role="option" aria-selected="true">Tümü</button><button class="cip suzgec" type="button" role="option" aria-selected="false">Ücretsiz</button><button class="cip suzgec" type="button" role="option" aria-selected="false">Pro</button></div></div>
-      <div class="sag"><span class="suzgec-sayac"><b>33</b> video</span></div></div>
-
-      <div class="kart-govde bosluksuz">
-        <div class="toplu-islem" hidden=""><b><span>0</span> kayıt seçildi</b><div class="eylem-satiri"><button class="dugme hayalet" type="button" data-eylem="calistir" data-ad="Yayınla">Yayınla</button><button class="dugme hayalet" type="button" data-eylem="calistir" data-ad="Pasif yap">Pasif yap</button><button class="dugme hayalet" type="button">Dışa aktar</button><button class="dugme hayalet" type="button" data-eylem="calistir" data-ad="Arşivle">Arşivle</button></div></div><div class="tablo-kap gomulu">
-          <table class="tablo panel" id="vdTablo" aria-label="Video kataloğu">
-            <thead>
-              <tr><th class="sec" scope="col"><label><input type="checkbox" aria-label="Tüm satırları seç"></label></th>
-                <th class="sirali" aria-sort="ascending"><button type="button">Video</button></th><th>Seri</th><th>Süre</th><th>Şef</th>
-                <th>Erişim</th><th>İzlenme</th><th>İşlem</th>
+    <!-- ═════════ VİDEOLAR ═════════ -->
+    <div id="vdP-video" role="tabpanel" aria-labelledby="vdS-video">
+      <div class="kart panel">
+        <div class="kart-bas">
+          <h2 class="kart-baslik"><i class="fa-solid fa-film" aria-hidden="true"></i> Video kataloğu</h2>
+          <div class="eylem-satiri">
+            <button class="dugme hayalet" type="button" data-eylem="toplu-islem">
+              <i class="fa-solid fa-layer-group" aria-hidden="true"></i> Seriye bağla</button>
+          </div>
+        </div>
+        <div class="suzgec-cubuk">
+          <label class="yalniz-okuyucu" for="vdAra">Video ara</label>
+          <div class="panel-arama"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+            <input type="search" id="vdAra" placeholder="Video ya da seri ara" class="panel-arama-girdi" aria-label="Video ara"></div>
+          <div>
+            <label for="vdTur">Tür</label>
+            <select id="vdTur" class="alan-secim">
+              <option value="" selected>Tümü</option>
+              <option value="tarif">Tarif</option>
+              <option value="teknik">Teknik</option>
+              <option value="seri">Seri bölümü</option>
+            </select>
+          </div>
+          <div>
+            <label for="vdSeri">Seri</label>
+            <select id="vdSeri" class="alan-secim">
+              <option value="" selected>Tümü</option>
+              <option value="10-dakikada-yemekler">10 Dakikada Yemekler</option>
+              <option value="sef-teknikleri">Şef Teknikleri</option>
+              <option value="yoresel-lezzetler">Yöresel Lezzetler</option>
+              <option value="restoran-sirlari">Restoran Sırları</option>
+              <option value="">Seri dışı</option>
+            </select>
+          </div>
+          <div>
+            <label for="vdErisim">Erişim</label>
+            <select id="vdErisim" class="alan-secim">
+              <option value="" selected>Tümü</option>
+              <option value="ucretsiz">Ücretsiz</option>
+              <option value="pro">Pro</option>
+            </select>
+          </div>
+          <div class="sag"><span class="suzgec-sayac"><b>27</b> video</span></div>
+        </div>
+        <div class="kart-govde bosluksuz">
+          <div class="tablo-kap gomulu">
+            <table class="tablo panel" id="vdTablo" aria-label="Video kataloğu">
+              <thead>
+                <tr>
+                  <th class="sec" scope="col"><label><input type="checkbox" aria-label="Tüm satırları seç"></label></th>
+                  <th scope="col">Video</th><th scope="col">Tür</th><th scope="col">Seri</th>
+                  <th class="num" scope="col">Süre</th><th scope="col">Erişim</th>
+                  <th class="num" scope="col">İzlenme</th><th scope="col">İşlem</th>
+                </tr>
+              </thead>
+              <tbody id="vdGovde">
+              <tr data-slug="10-dakikada-yemekler-1" data-tur="seri" data-seri="10-dakikada-yemekler" data-erisim="ucretsiz">
+                <td class="sec"><label><input type="checkbox" aria-label="10 Dakikada Menemen — Tek Tavada satırını seç"></label></td>
+                <td><b>10 Dakikada Menemen — Tek Tavada</b></td>
+                <td><span class="rozet pasif"><i class="fa-solid fa-clapperboard" aria-hidden="true"></i> Seri bölümü</span></td>
+                <td>10 Dakikada Yemekler<small>bölüm 1 · 8 bölüm</small></td>
+                <td class="num">09:58</td>
+                <td><span class="rozet olumlu"><i class="fa-solid fa-lock-open" aria-hidden="true"></i> Ücretsiz</span></td>
+                <td class="num">96B</td>
+                <td class="eylem"><div class="satir-eylem">
+                  <a class="ikon-dugme" href="../video-mutfagi__seri__10-dakikada-yemekler.html" target="_blank" rel="noopener" aria-label="10 Dakikada Menemen — Tek Tavada videosunu sitede gör"><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
+                  <a class="ikon-dugme" href="admin-video-form.html?id=10-dakikada-yemekler-1" aria-label="10 Dakikada Menemen — Tek Tavada künyesini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a>
+                </div></td>
               </tr>
-            </thead>
-            <tbody id="vdGovde"><tr data-slug="sef-teknikleri-3" data-seri="sef-teknikleri" data-pro="1"><td class="sec"><label><input type="checkbox" aria-label="Tam Kıvamında Karnıyarık satırını seç"></label></td><td><b>Tam Kıvamında Karnıyarık</b><small>Patlıcanın kıvamı: kızartma sıcaklığı, süzme ve dinlendirme.</small></td><td>Şef Teknikleri<span aria-hidden="true"><i class="aktif"></i><i class="aktif"></i><i class="aktif"></i><i></i><i></i><i></i><i></i><i></i></span><small>bölüm 3 · 8 bölüm</small><small><span class="rozet durdu"><i class="fa-solid fa-link-slash" aria-hidden="true"></i> Bağsız</span></small></td><td class="num">12:48</td><td><span class="rozet pasif"><i class="fa-solid fa-user" aria-hidden="true"></i> Ece Aşçı</span></td><td><span class="rozet bekleme"><i class="fa-solid fa-crown" aria-hidden="true"></i> Pro</span></td><td class="num"><span class="rozet durdu"><i class="fa-solid fa-volume-xmark" aria-hidden="true"></i> Sesli anlatım yok</span><small>1.200.000 izlenme</small></td><td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" href="../video-mutfagi__seri__sef-teknikleri.html" target="_blank" rel="noopener" aria-label="Tam Kıvamında Karnıyarık videosunu sitede gör"><i class="fa-solid fa-arrow-up-right-from-square"></i></a><a class="ikon-dugme" href="admin-video-kurgu.html?id=sef-teknikleri" aria-label="Tam Kıvamında Karnıyarık seri kurgusunu aç" title="Seri kurgusu"><i class="fa-solid fa-diagram-project"></i></a><a class="ikon-dugme" href="admin-video-form.html?id=sef-teknikleri-3" aria-label="Tam Kıvamında Karnıyarık künyesini düzenle" title="Künye"><i class="fa-solid fa-pen"></i></a></div></td></tr><tr data-slug="yoresel-lezzetler-2" data-seri="yoresel-lezzetler" data-pro="1"><td class="sec"><label><input type="checkbox" aria-label="Gaziantep Baklavası satırını seç"></label></td><td><b>Gaziantep Baklavası</b><small>Yufka açmadan şerbete: 40 kat, tek tek, tam anlatım.</small></td><td>Yöresel Lezzetler<span aria-hidden="true"><i class="aktif"></i><i class="aktif"></i><i></i><i></i><i></i><i></i><i></i><i></i></span><small>bölüm 2 · 8 bölüm</small><small><span class="rozet durdu"><i class="fa-solid fa-link-slash" aria-hidden="true"></i> Bağsız</span></small></td><td class="num">18:08</td><td><span class="rozet pasif"><i class="fa-solid fa-user" aria-hidden="true"></i> Canan Komi</span></td><td><span class="rozet bekleme"><i class="fa-solid fa-crown" aria-hidden="true"></i> Pro</span></td><td class="num"><span class="rozet durdu"><i class="fa-solid fa-volume-xmark" aria-hidden="true"></i> Sesli anlatım yok</span><small>356.000 izlenme</small></td><td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" href="../video-mutfagi__seri__yoresel-lezzetler.html" target="_blank" rel="noopener" aria-label="Gaziantep Baklavası videosunu sitede gör"><i class="fa-solid fa-arrow-up-right-from-square"></i></a><a class="ikon-dugme" href="admin-video-kurgu.html?id=yoresel-lezzetler" aria-label="Gaziantep Baklavası seri kurgusunu aç" title="Seri kurgusu"><i class="fa-solid fa-diagram-project"></i></a><a class="ikon-dugme" href="admin-video-form.html?id=yoresel-lezzetler-2" aria-label="Gaziantep Baklavası künyesini düzenle" title="Künye"><i class="fa-solid fa-pen"></i></a></div></td></tr><tr data-slug="sef-teknikleri-1" data-seri="sef-teknikleri" data-pro="1"><td class="sec"><label><input type="checkbox" aria-label="Bıçak Tutuşu ve Julyen Doğrama satırını seç"></label></td><td><b>Bıçak Tutuşu ve Julyen Doğrama</b><small>Doğru kavrama, doğru açı — mutfakta ilk öğrenilecek teknik.</small></td><td>Şef Teknikleri<span aria-hidden="true"><i class="aktif"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span><small>bölüm 1 · 8 bölüm</small><small><span class="rozet durdu"><i class="fa-solid fa-link-slash" aria-hidden="true"></i> Bağsız</span></small></td><td class="num">11:05</td><td><span class="rozet pasif"><i class="fa-solid fa-user" aria-hidden="true"></i> Ece Aşçı</span></td><td><span class="rozet bekleme"><i class="fa-solid fa-crown" aria-hidden="true"></i> Pro</span></td><td class="num"><span class="rozet durdu"><i class="fa-solid fa-volume-xmark" aria-hidden="true"></i> Sesli anlatım yok</span><small>312.000 izlenme</small></td><td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" href="../video-mutfagi__seri__sef-teknikleri.html" target="_blank" rel="noopener" aria-label="Bıçak Tutuşu ve Julyen Doğrama videosunu sitede gör"><i class="fa-solid fa-arrow-up-right-from-square"></i></a><a class="ikon-dugme" href="admin-video-kurgu.html?id=sef-teknikleri" aria-label="Bıçak Tutuşu ve Julyen Doğrama seri kurgusunu aç" title="Seri kurgusu"><i class="fa-solid fa-diagram-project"></i></a><a class="ikon-dugme" href="admin-video-form.html?id=sef-teknikleri-1" aria-label="Bıçak Tutuşu ve Julyen Doğrama künyesini düzenle" title="Künye"><i class="fa-solid fa-pen"></i></a></div></td></tr><tr data-slug="sef-teknikleri-2" data-seri="sef-teknikleri" data-pro="1"><td class="sec"><label><input type="checkbox" aria-label="Tane Tane Pilav satırını seç"></label></td><td><b>Tane Tane Pilav</b><small>Pirinci yıkamaktan demlemeye; tanesi tanesinden ayrı.</small></td><td>Şef Teknikleri<span aria-hidden="true"><i class="aktif"></i><i class="aktif"></i><i></i><i></i><i></i><i></i><i></i><i></i></span><small>bölüm 2 · 8 bölüm</small><small><span class="rozet durdu"><i class="fa-solid fa-link-slash" aria-hidden="true"></i> Bağsız</span></small></td><td class="num">05:24</td><td><span class="rozet pasif"><i class="fa-solid fa-user" aria-hidden="true"></i> Nurgül Karaca</span></td><td><span class="rozet bekleme"><i class="fa-solid fa-crown" aria-hidden="true"></i> Pro</span></td><td class="num"><span class="rozet durdu"><i class="fa-solid fa-volume-xmark" aria-hidden="true"></i> Sesli anlatım yok</span><small>178.000 izlenme</small></td><td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" href="../video-mutfagi__seri__sef-teknikleri.html" target="_blank" rel="noopener" aria-label="Tane Tane Pilav videosunu sitede gör"><i class="fa-solid fa-arrow-up-right-from-square"></i></a><a class="ikon-dugme" href="admin-video-kurgu.html?id=sef-teknikleri" aria-label="Tane Tane Pilav seri kurgusunu aç" title="Seri kurgusu"><i class="fa-solid fa-diagram-project"></i></a><a class="ikon-dugme" href="admin-video-form.html?id=sef-teknikleri-2" aria-label="Tane Tane Pilav künyesini düzenle" title="Künye"><i class="fa-solid fa-pen"></i></a></div></td></tr><tr data-slug="sef-teknikleri-4" data-seri="sef-teknikleri" data-pro="1"><td class="sec"><label><input type="checkbox" aria-label="Mayalı Hamur ve Ekmek Temeli satırını seç"></label></td><td><b>Mayalı Hamur ve Ekmek Temeli</b><small>Maya, su sıcaklığı ve bekleme süresi — ekmeğin üç değişkeni.</small></td><td>Şef Teknikleri<span aria-hidden="true"><i class="aktif"></i><i class="aktif"></i><i class="aktif"></i><i class="aktif"></i><i></i><i></i><i></i><i></i></span><small>bölüm 4 · 8 bölüm</small><small><span class="rozet durdu"><i class="fa-solid fa-link-slash" aria-hidden="true"></i> Bağsız</span></small></td><td class="num">14:22</td><td><span class="rozet pasif"><i class="fa-solid fa-user" aria-hidden="true"></i> Canan Komi</span></td><td><span class="rozet bekleme"><i class="fa-solid fa-crown" aria-hidden="true"></i> Pro</span></td><td class="num"><span class="rozet durdu"><i class="fa-solid fa-volume-xmark" aria-hidden="true"></i> Sesli anlatım yok</span><small>141.000 izlenme</small></td><td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" href="../video-mutfagi__seri__sef-teknikleri.html" target="_blank" rel="noopener" aria-label="Mayalı Hamur ve Ekmek Temeli videosunu sitede gör"><i class="fa-solid fa-arrow-up-right-from-square"></i></a><a class="ikon-dugme" href="admin-video-kurgu.html?id=sef-teknikleri" aria-label="Mayalı Hamur ve Ekmek Temeli seri kurgusunu aç" title="Seri kurgusu"><i class="fa-solid fa-diagram-project"></i></a><a class="ikon-dugme" href="admin-video-form.html?id=sef-teknikleri-4" aria-label="Mayalı Hamur ve Ekmek Temeli künyesini düzenle" title="Künye"><i class="fa-solid fa-pen"></i></a></div></td></tr><tr data-slug="yoresel-lezzetler-3" data-seri="yoresel-lezzetler" data-pro="1"><td class="sec"><label><input type="checkbox" aria-label="Antep Fıstıklı Sarma satırını seç"></label></td><td><b>Antep Fıstıklı Sarma</b><small>İnce yufka, bol fıstık; sarmanın kalınlığı şerbeti belirler.</small></td><td>Yöresel Lezzetler<span aria-hidden="true"><i class="aktif"></i><i class="aktif"></i><i class="aktif"></i><i></i><i></i><i></i><i></i><i></i></span><small>bölüm 3 · 8 bölüm</small><small><span class="rozet durdu"><i class="fa-solid fa-link-slash" aria-hidden="true"></i> Bağsız</span></small></td><td class="num">16:30</td><td><span class="rozet pasif"><i class="fa-solid fa-user" aria-hidden="true"></i> Emel Abadan</span></td><td><span class="rozet bekleme"><i class="fa-solid fa-crown" aria-hidden="true"></i> Pro</span></td><td class="num"><span class="rozet durdu"><i class="fa-solid fa-volume-xmark" aria-hidden="true"></i> Sesli anlatım yok</span><small>118.000 izlenme</small></td><td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" href="../video-mutfagi__seri__yoresel-lezzetler.html" target="_blank" rel="noopener" aria-label="Antep Fıstıklı Sarma videosunu sitede gör"><i class="fa-solid fa-arrow-up-right-from-square"></i></a><a class="ikon-dugme" href="admin-video-kurgu.html?id=yoresel-lezzetler" aria-label="Antep Fıstıklı Sarma seri kurgusunu aç" title="Seri kurgusu"><i class="fa-solid fa-diagram-project"></i></a><a class="ikon-dugme" href="admin-video-form.html?id=yoresel-lezzetler-3" aria-label="Antep Fıstıklı Sarma künyesini düzenle" title="Künye"><i class="fa-solid fa-pen"></i></a></div></td></tr><tr data-slug="10-dakikada-yemekler-1" data-seri="10-dakikada-yemekler" data-pro="0"><td class="sec"><label><input type="checkbox" aria-label="10 Dakikada Menemen satırını seç"></label></td><td><b>10 Dakikada Menemen</b><small>Sabah telaşında tek tavada kahvaltı.</small></td><td>10 Dakikada Yemekler<span aria-hidden="true"><i class="aktif"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span><small>bölüm 1 · 8 bölüm</small><small><span class="rozet durdu"><i class="fa-solid fa-link-slash" aria-hidden="true"></i> Bağsız</span></small></td><td class="num">09:58</td><td><span class="rozet pasif"><i class="fa-solid fa-user" aria-hidden="true"></i> Burcu Komi</span></td><td><span class="rozet olumlu"><i class="fa-solid fa-lock-open" aria-hidden="true"></i> Ücretsiz</span></td><td class="num"><span class="rozet durdu"><i class="fa-solid fa-volume-xmark" aria-hidden="true"></i> Sesli anlatım yok</span><small>96.000 izlenme</small></td><td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" href="../video-mutfagi__seri__10-dakikada-yemekler.html" target="_blank" rel="noopener" aria-label="10 Dakikada Menemen videosunu sitede gör"><i class="fa-solid fa-arrow-up-right-from-square"></i></a><a class="ikon-dugme" href="admin-video-kurgu.html?id=10-dakikada-yemekler" aria-label="10 Dakikada Menemen seri kurgusunu aç" title="Seri kurgusu"><i class="fa-solid fa-diagram-project"></i></a><a class="ikon-dugme" href="admin-video-form.html?id=10-dakikada-yemekler-1" aria-label="10 Dakikada Menemen künyesini düzenle" title="Künye"><i class="fa-solid fa-pen"></i></a></div></td></tr><tr data-slug="10-dakikada-yemekler-3" data-seri="10-dakikada-yemekler" data-pro="0"><td class="sec"><label><input type="checkbox" aria-label="Pratik Tavuk Sote satırını seç"></label></td><td><b>Pratik Tavuk Sote</b><small>Akşam yemeği için hızlı, tek tencerelik sote.</small></td><td>10 Dakikada Yemekler<span aria-hidden="true"><i class="aktif"></i><i class="aktif"></i><i class="aktif"></i><i></i><i></i><i></i><i></i><i></i></span><small>bölüm 3 · 8 bölüm</small><small><span class="rozet durdu"><i class="fa-solid fa-link-slash" aria-hidden="true"></i> Bağsız</span></small></td><td class="num">08:12</td><td><span class="rozet pasif"><i class="fa-solid fa-user" aria-hidden="true"></i> Emel Abadan</span></td><td><span class="rozet olumlu"><i class="fa-solid fa-lock-open" aria-hidden="true"></i> Ücretsiz</span></td><td class="num"><span class="rozet durdu"><i class="fa-solid fa-volume-xmark" aria-hidden="true"></i> Sesli anlatım yok</span><small>81.000 izlenme</small></td><td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" href="../video-mutfagi__seri__10-dakikada-yemekler.html" target="_blank" rel="noopener" aria-label="Pratik Tavuk Sote videosunu sitede gör"><i class="fa-solid fa-arrow-up-right-from-square"></i></a><a class="ikon-dugme" href="admin-video-kurgu.html?id=10-dakikada-yemekler" aria-label="Pratik Tavuk Sote seri kurgusunu aç" title="Seri kurgusu"><i class="fa-solid fa-diagram-project"></i></a><a class="ikon-dugme" href="admin-video-form.html?id=10-dakikada-yemekler-3" aria-label="Pratik Tavuk Sote künyesini düzenle" title="Künye"><i class="fa-solid fa-pen"></i></a></div></td></tr><tr data-slug="10-dakikada-yemekler-5" data-seri="10-dakikada-yemekler" data-pro="0"><td class="sec"><label><input type="checkbox" aria-label="Bulgur Pilavı Express satırını seç"></label></td><td><b>Bulgur Pilavı Express</b><small>Bulguru salçayla kavurup yedi dakikada sofraya.</small></td><td>10 Dakikada Yemekler<span aria-hidden="true"><i class="aktif"></i><i class="aktif"></i><i class="aktif"></i><i class="aktif"></i><i class="aktif"></i><i></i><i></i><i></i></span><small>bölüm 5 · 8 bölüm</small><small><span class="rozet durdu"><i class="fa-solid fa-link-slash" aria-hidden="true"></i> Bağsız</span></small></td><td class="num">07:45</td><td><span class="rozet pasif"><i class="fa-solid fa-user" aria-hidden="true"></i> Rüya Komi</span></td><td><span class="rozet olumlu"><i class="fa-solid fa-lock-open" aria-hidden="true"></i> Ücretsiz</span></td><td class="num"><span class="rozet durdu"><i class="fa-solid fa-volume-xmark" aria-hidden="true"></i> Sesli anlatım yok</span><small>73.000 izlenme</small></td><td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" href="../video-mutfagi__seri__10-dakikada-yemekler.html" target="_blank" rel="noopener" aria-label="Bulgur Pilavı Express videosunu sitede gör"><i class="fa-solid fa-arrow-up-right-from-square"></i></a><a class="ikon-dugme" href="admin-video-kurgu.html?id=10-dakikada-yemekler" aria-label="Bulgur Pilavı Express seri kurgusunu aç" title="Seri kurgusu"><i class="fa-solid fa-diagram-project"></i></a><a class="ikon-dugme" href="admin-video-form.html?id=10-dakikada-yemekler-5" aria-label="Bulgur Pilavı Express künyesini düzenle" title="Künye"><i class="fa-solid fa-pen"></i></a></div></td></tr></tbody>
-          <tbody hidden="" aria-busy="true" data-durum="yukleniyor"><tr><td class="sec"><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet tam"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td></tr><tr><td class="sec"><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet tam"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td></tr><tr><td class="sec"><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet tam"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td></tr><tr><td class="sec"><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet tam"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td></tr><tr><td class="sec"><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet tam"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td></tr></tbody></table>
-        </div><div class="alan-ozet" role="alert"><i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i><span><b>2 satır kaydedilemedi</b> — zorunlu alanlar eksik.</span></div><div class="bos-durum kart-ici servis-hatasi" data-durum="servis" hidden=""><span class="bos-ikon"><i class="fa-solid fa-plug-circle-xmark" aria-hidden="true"></i></span><h3>Liste yüklenemedi</h3><p>Bağlantı kurulamadı. Yeniden dene.</p><button class="dugme birincil" type="button" data-eylem="calistir" data-ad="Yeniden dene"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i> Yeniden dene</button><div class="hata-izi">Referans kodu <code>GAS-ADM-6041</code></div></div><div class="bos-durum kart-ici yetkisiz" data-durum="yetkisiz" hidden=""><span class="bos-ikon"><i class="fa-solid fa-lock" aria-hidden="true"></i></span><h3>Bu modüle erişimin yok</h3><p>Erişim istemek için yöneticinle görüş.</p></div><div class="bos-durum kart-ici" data-durum="bos" hidden=""><span class="bos-ikon"><i class="fa-solid fa-filter-circle-xmark" aria-hidden="true"></i></span><h3>Bu süzgeçle sonuç yok</h3><p>Süzgeci genişlet ya da aramayı değiştir.</p><button class="dugme hayalet" type="button" data-eylem="suzgec-temizle">Süzgeci temizle</button></div><div class="bos-durum kart-ici" data-durum="bos-ilk" hidden=""><span class="bos-ikon"><i class="fa-solid fa-film" aria-hidden="true"></i></span><h3>Henüz video yok</h3><p>İlk videoyu ekleyerek katalogu başlat.</p><a class="dugme birincil" href="admin-video-form.html">Video ekle</a></div>
-      </div>
-
-      <div class="sayfalama kart-ayagi">
-        <div class="sayfalama-bilgi"><b>33</b> video · 1–9 arası · sayfa 1 / 4</div>
-        <div class="dugmeler"><button class="sayfa-dugme sade" type="button" disabled="" aria-label="Önceki sayfa" data-eylem="sayfala"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i></button><button class="sayfa-dugme aktif" type="button" aria-current="page" data-eylem="sayfala">1</button><button class="sayfa-dugme sade" type="button" aria-label="Sonraki sayfa" data-eylem="sayfala"><i class="fa-solid fa-chevron-right" aria-hidden="true"></i></button></div>
+              <tr data-slug="10-dakikada-yemekler-2" data-tur="seri" data-seri="10-dakikada-yemekler" data-erisim="ucretsiz">
+                <td class="sec"><label><input type="checkbox" aria-label="Pratik Tavuk Sote — Tek Tava, Sıfır Bulaşık satırını seç"></label></td>
+                <td><b>Pratik Tavuk Sote — Tek Tava, Sıfır Bulaşık</b></td>
+                <td><span class="rozet pasif"><i class="fa-solid fa-clapperboard" aria-hidden="true"></i> Seri bölümü</span></td>
+                <td>10 Dakikada Yemekler<small>bölüm 2 · 8 bölüm</small></td>
+                <td class="num">08:12</td>
+                <td><span class="rozet olumlu"><i class="fa-solid fa-lock-open" aria-hidden="true"></i> Ücretsiz</span></td>
+                <td class="num">81B</td>
+                <td class="eylem"><div class="satir-eylem">
+                  <a class="ikon-dugme" href="../video-mutfagi__seri__10-dakikada-yemekler.html" target="_blank" rel="noopener" aria-label="Pratik Tavuk Sote — Tek Tava, Sıfır Bulaşık videosunu sitede gör"><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
+                  <a class="ikon-dugme" href="admin-video-form.html?id=10-dakikada-yemekler-2" aria-label="Pratik Tavuk Sote — Tek Tava, Sıfır Bulaşık künyesini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a>
+                </div></td>
+              </tr>
+              <tr data-slug="10-dakikada-yemekler-3" data-tur="seri" data-seri="10-dakikada-yemekler" data-erisim="ucretsiz">
+                <td class="sec"><label><input type="checkbox" aria-label="Bulgur Pilavı Express satırını seç"></label></td>
+                <td><b>Bulgur Pilavı Express</b></td>
+                <td><span class="rozet pasif"><i class="fa-solid fa-clapperboard" aria-hidden="true"></i> Seri bölümü</span></td>
+                <td>10 Dakikada Yemekler<small>bölüm 3 · 8 bölüm</small></td>
+                <td class="num">07:45</td>
+                <td><span class="rozet olumlu"><i class="fa-solid fa-lock-open" aria-hidden="true"></i> Ücretsiz</span></td>
+                <td class="num">73B</td>
+                <td class="eylem"><div class="satir-eylem">
+                  <a class="ikon-dugme" href="../video-mutfagi__seri__10-dakikada-yemekler.html" target="_blank" rel="noopener" aria-label="Bulgur Pilavı Express videosunu sitede gör"><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
+                  <a class="ikon-dugme" href="admin-video-form.html?id=10-dakikada-yemekler-3" aria-label="Bulgur Pilavı Express künyesini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a>
+                </div></td>
+              </tr>
+              <tr data-slug="10-dakikada-yemekler-4" data-tur="seri" data-seri="10-dakikada-yemekler" data-erisim="ucretsiz">
+                <td class="sec"><label><input type="checkbox" aria-label="5 Malzemeli Makarna satırını seç"></label></td>
+                <td><b>5 Malzemeli Makarna</b></td>
+                <td><span class="rozet pasif"><i class="fa-solid fa-clapperboard" aria-hidden="true"></i> Seri bölümü</span></td>
+                <td>10 Dakikada Yemekler<small>bölüm 4 · 8 bölüm</small></td>
+                <td class="num">09:24</td>
+                <td><span class="rozet olumlu"><i class="fa-solid fa-lock-open" aria-hidden="true"></i> Ücretsiz</span></td>
+                <td class="num">64B</td>
+                <td class="eylem"><div class="satir-eylem">
+                  <a class="ikon-dugme" href="../video-mutfagi__seri__10-dakikada-yemekler.html" target="_blank" rel="noopener" aria-label="5 Malzemeli Makarna videosunu sitede gör"><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
+                  <a class="ikon-dugme" href="admin-video-form.html?id=10-dakikada-yemekler-4" aria-label="5 Malzemeli Makarna künyesini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a>
+                </div></td>
+              </tr>
+              <tr data-slug="10-dakikada-yemekler-5" data-tur="seri" data-seri="10-dakikada-yemekler" data-erisim="ucretsiz">
+                <td class="sec"><label><input type="checkbox" aria-label="Hızlı Kaşarlı Omlet satırını seç"></label></td>
+                <td><b>Hızlı Kaşarlı Omlet</b></td>
+                <td><span class="rozet pasif"><i class="fa-solid fa-clapperboard" aria-hidden="true"></i> Seri bölümü</span></td>
+                <td>10 Dakikada Yemekler<small>bölüm 5 · 8 bölüm</small></td>
+                <td class="num">06:48</td>
+                <td><span class="rozet olumlu"><i class="fa-solid fa-lock-open" aria-hidden="true"></i> Ücretsiz</span></td>
+                <td class="num">58B</td>
+                <td class="eylem"><div class="satir-eylem">
+                  <a class="ikon-dugme" href="../video-mutfagi__seri__10-dakikada-yemekler.html" target="_blank" rel="noopener" aria-label="Hızlı Kaşarlı Omlet videosunu sitede gör"><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
+                  <a class="ikon-dugme" href="admin-video-form.html?id=10-dakikada-yemekler-5" aria-label="Hızlı Kaşarlı Omlet künyesini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a>
+                </div></td>
+              </tr>
+              <tr data-slug="10-dakikada-yemekler-6" data-tur="seri" data-seri="10-dakikada-yemekler" data-erisim="ucretsiz">
+                <td class="sec"><label><input type="checkbox" aria-label="Ton Balıklı Akdeniz Salatası satırını seç"></label></td>
+                <td><b>Ton Balıklı Akdeniz Salatası</b></td>
+                <td><span class="rozet pasif"><i class="fa-solid fa-clapperboard" aria-hidden="true"></i> Seri bölümü</span></td>
+                <td>10 Dakikada Yemekler<small>bölüm 6 · 8 bölüm</small></td>
+                <td class="num">07:02</td>
+                <td><span class="rozet olumlu"><i class="fa-solid fa-lock-open" aria-hidden="true"></i> Ücretsiz</span></td>
+                <td class="num">44B</td>
+                <td class="eylem"><div class="satir-eylem">
+                  <a class="ikon-dugme" href="../video-mutfagi__seri__10-dakikada-yemekler.html" target="_blank" rel="noopener" aria-label="Ton Balıklı Akdeniz Salatası videosunu sitede gör"><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
+                  <a class="ikon-dugme" href="admin-video-form.html?id=10-dakikada-yemekler-6" aria-label="Ton Balıklı Akdeniz Salatası künyesini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a>
+                </div></td>
+              </tr>
+              <tr data-slug="10-dakikada-yemekler-7" data-tur="seri" data-seri="10-dakikada-yemekler" data-erisim="ucretsiz">
+                <td class="sec"><label><input type="checkbox" aria-label="Pratik Köfte — Izgara Tadında satırını seç"></label></td>
+                <td><b>Pratik Köfte — Izgara Tadında</b></td>
+                <td><span class="rozet pasif"><i class="fa-solid fa-clapperboard" aria-hidden="true"></i> Seri bölümü</span></td>
+                <td>10 Dakikada Yemekler<small>bölüm 7 · 8 bölüm</small></td>
+                <td class="num">09:51</td>
+                <td><span class="rozet olumlu"><i class="fa-solid fa-lock-open" aria-hidden="true"></i> Ücretsiz</span></td>
+                <td class="num">38B</td>
+                <td class="eylem"><div class="satir-eylem">
+                  <a class="ikon-dugme" href="../video-mutfagi__seri__10-dakikada-yemekler.html" target="_blank" rel="noopener" aria-label="Pratik Köfte — Izgara Tadında videosunu sitede gör"><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
+                  <a class="ikon-dugme" href="admin-video-form.html?id=10-dakikada-yemekler-7" aria-label="Pratik Köfte — Izgara Tadında künyesini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a>
+                </div></td>
+              </tr>
+              <tr data-slug="10-dakikada-yemekler-8" data-tur="seri" data-seri="10-dakikada-yemekler" data-erisim="ucretsiz">
+                <td class="sec"><label><input type="checkbox" aria-label="Yoğurt Çorbası — 10 Dakikada satırını seç"></label></td>
+                <td><b>Yoğurt Çorbası — 10 Dakikada</b></td>
+                <td><span class="rozet pasif"><i class="fa-solid fa-clapperboard" aria-hidden="true"></i> Seri bölümü</span></td>
+                <td>10 Dakikada Yemekler<small>bölüm 8 · 8 bölüm</small></td>
+                <td class="num">08:36</td>
+                <td><span class="rozet olumlu"><i class="fa-solid fa-lock-open" aria-hidden="true"></i> Ücretsiz</span></td>
+                <td class="num">29B</td>
+                <td class="eylem"><div class="satir-eylem">
+                  <a class="ikon-dugme" href="../video-mutfagi__seri__10-dakikada-yemekler.html" target="_blank" rel="noopener" aria-label="Yoğurt Çorbası — 10 Dakikada videosunu sitede gör"><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
+                  <a class="ikon-dugme" href="admin-video-form.html?id=10-dakikada-yemekler-8" aria-label="Yoğurt Çorbası — 10 Dakikada künyesini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a>
+                </div></td>
+              </tr>
+              <tr data-slug="sef-teknikleri-1" data-tur="seri" data-seri="sef-teknikleri" data-erisim="ucretsiz">
+                <td class="sec"><label><input type="checkbox" aria-label="Bıçak Tutuşu ve Julyen Doğrama satırını seç"></label></td>
+                <td><b>Bıçak Tutuşu ve Julyen Doğrama</b><small><span class="rozet bekleme">Sıradaki kuyruğu · 3</span></small></td>
+                <td><span class="rozet pasif"><i class="fa-solid fa-clapperboard" aria-hidden="true"></i> Seri bölümü</span></td>
+                <td>Şef Teknikleri<small>bölüm 1 · 4 bölüm</small></td>
+                <td class="num">11:05</td>
+                <td><span class="rozet olumlu"><i class="fa-solid fa-lock-open" aria-hidden="true"></i> Ücretsiz</span></td>
+                <td class="num">312B</td>
+                <td class="eylem"><div class="satir-eylem">
+                  <a class="ikon-dugme" href="../video-mutfagi__seri__sef-teknikleri.html" target="_blank" rel="noopener" aria-label="Bıçak Tutuşu ve Julyen Doğrama videosunu sitede gör"><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
+                  <a class="ikon-dugme" href="admin-video-form.html?id=sef-teknikleri-1" aria-label="Bıçak Tutuşu ve Julyen Doğrama künyesini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a>
+                </div></td>
+              </tr>
+              <tr data-slug="sef-teknikleri-2" data-tur="seri" data-seri="sef-teknikleri" data-erisim="ucretsiz">
+                <td class="sec"><label><input type="checkbox" aria-label="Et Mühürlemenin Doğrusu satırını seç"></label></td>
+                <td><b>Et Mühürlemenin Doğrusu</b></td>
+                <td><span class="rozet pasif"><i class="fa-solid fa-clapperboard" aria-hidden="true"></i> Seri bölümü</span></td>
+                <td>Şef Teknikleri<small>bölüm 2 · 4 bölüm</small></td>
+                <td class="num">09:40</td>
+                <td><span class="rozet olumlu"><i class="fa-solid fa-lock-open" aria-hidden="true"></i> Ücretsiz</span></td>
+                <td class="num">287B</td>
+                <td class="eylem"><div class="satir-eylem">
+                  <a class="ikon-dugme" href="../video-mutfagi__seri__sef-teknikleri.html" target="_blank" rel="noopener" aria-label="Et Mühürlemenin Doğrusu videosunu sitede gör"><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
+                  <a class="ikon-dugme" href="admin-video-form.html?id=sef-teknikleri-2" aria-label="Et Mühürlemenin Doğrusu künyesini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a>
+                </div></td>
+              </tr>
+              <tr data-slug="sef-teknikleri-3" data-tur="seri" data-seri="sef-teknikleri" data-erisim="ucretsiz">
+                <td class="sec"><label><input type="checkbox" aria-label="Sos Kıvamı: Roux&#x27;dan Beşamel&#x27;e satırını seç"></label></td>
+                <td><b>Sos Kıvamı: Roux&#x27;dan Beşamel&#x27;e</b></td>
+                <td><span class="rozet pasif"><i class="fa-solid fa-clapperboard" aria-hidden="true"></i> Seri bölümü</span></td>
+                <td>Şef Teknikleri<small>bölüm 3 · 4 bölüm</small></td>
+                <td class="num">13:22</td>
+                <td><span class="rozet olumlu"><i class="fa-solid fa-lock-open" aria-hidden="true"></i> Ücretsiz</span></td>
+                <td class="num">198B</td>
+                <td class="eylem"><div class="satir-eylem">
+                  <a class="ikon-dugme" href="../video-mutfagi__seri__sef-teknikleri.html" target="_blank" rel="noopener" aria-label="Sos Kıvamı: Roux&#x27;dan Beşamel&#x27;e videosunu sitede gör"><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
+                  <a class="ikon-dugme" href="admin-video-form.html?id=sef-teknikleri-3" aria-label="Sos Kıvamı: Roux&#x27;dan Beşamel&#x27;e künyesini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a>
+                </div></td>
+              </tr>
+              <tr data-slug="sef-teknikleri-4" data-tur="seri" data-seri="sef-teknikleri" data-erisim="ucretsiz">
+                <td class="sec"><label><input type="checkbox" aria-label="Hamur Yoğurmanın İncelikleri satırını seç"></label></td>
+                <td><b>Hamur Yoğurmanın İncelikleri</b></td>
+                <td><span class="rozet pasif"><i class="fa-solid fa-clapperboard" aria-hidden="true"></i> Seri bölümü</span></td>
+                <td>Şef Teknikleri<small>bölüm 4 · 4 bölüm</small></td>
+                <td class="num">10:15</td>
+                <td><span class="rozet olumlu"><i class="fa-solid fa-lock-open" aria-hidden="true"></i> Ücretsiz</span></td>
+                <td class="num">176B</td>
+                <td class="eylem"><div class="satir-eylem">
+                  <a class="ikon-dugme" href="../video-mutfagi__seri__sef-teknikleri.html" target="_blank" rel="noopener" aria-label="Hamur Yoğurmanın İncelikleri videosunu sitede gör"><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
+                  <a class="ikon-dugme" href="admin-video-form.html?id=sef-teknikleri-4" aria-label="Hamur Yoğurmanın İncelikleri künyesini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a>
+                </div></td>
+              </tr>
+              <tr data-slug="yoresel-lezzetler-1" data-tur="seri" data-seri="yoresel-lezzetler" data-erisim="ucretsiz">
+                <td class="sec"><label><input type="checkbox" aria-label="Hatay Usulü Kağıt Kebabı satırını seç"></label></td>
+                <td><b>Hatay Usulü Kağıt Kebabı</b></td>
+                <td><span class="rozet pasif"><i class="fa-solid fa-clapperboard" aria-hidden="true"></i> Seri bölümü</span></td>
+                <td>Yöresel Lezzetler<small>bölüm 1 · 4 bölüm</small></td>
+                <td class="num">15:42</td>
+                <td><span class="rozet olumlu"><i class="fa-solid fa-lock-open" aria-hidden="true"></i> Ücretsiz</span></td>
+                <td class="num">224B</td>
+                <td class="eylem"><div class="satir-eylem">
+                  <a class="ikon-dugme" href="../video-mutfagi__seri__yoresel-lezzetler.html" target="_blank" rel="noopener" aria-label="Hatay Usulü Kağıt Kebabı videosunu sitede gör"><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
+                  <a class="ikon-dugme" href="admin-video-form.html?id=yoresel-lezzetler-1" aria-label="Hatay Usulü Kağıt Kebabı künyesini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a>
+                </div></td>
+              </tr>
+              <tr data-slug="yoresel-lezzetler-2" data-tur="seri" data-seri="yoresel-lezzetler" data-erisim="ucretsiz">
+                <td class="sec"><label><input type="checkbox" aria-label="Karadeniz Pidesinin Sırrı satırını seç"></label></td>
+                <td><b>Karadeniz Pidesinin Sırrı</b></td>
+                <td><span class="rozet pasif"><i class="fa-solid fa-clapperboard" aria-hidden="true"></i> Seri bölümü</span></td>
+                <td>Yöresel Lezzetler<small>bölüm 2 · 4 bölüm</small></td>
+                <td class="num">12:30</td>
+                <td><span class="rozet olumlu"><i class="fa-solid fa-lock-open" aria-hidden="true"></i> Ücretsiz</span></td>
+                <td class="num">187B</td>
+                <td class="eylem"><div class="satir-eylem">
+                  <a class="ikon-dugme" href="../video-mutfagi__seri__yoresel-lezzetler.html" target="_blank" rel="noopener" aria-label="Karadeniz Pidesinin Sırrı videosunu sitede gör"><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
+                  <a class="ikon-dugme" href="admin-video-form.html?id=yoresel-lezzetler-2" aria-label="Karadeniz Pidesinin Sırrı künyesini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a>
+                </div></td>
+              </tr>
+              <tr data-slug="yoresel-lezzetler-3" data-tur="seri" data-seri="yoresel-lezzetler" data-erisim="ucretsiz">
+                <td class="sec"><label><input type="checkbox" aria-label="Gaziantep Baklavası — Ustadan İzle satırını seç"></label></td>
+                <td><b>Gaziantep Baklavası — Ustadan İzle</b><small><span class="rozet bekleme">Sıradaki kuyruğu · 2</span></small></td>
+                <td><span class="rozet pasif"><i class="fa-solid fa-clapperboard" aria-hidden="true"></i> Seri bölümü</span></td>
+                <td>Yöresel Lezzetler<small>bölüm 3 · 4 bölüm</small></td>
+                <td class="num">18:08</td>
+                <td><span class="rozet olumlu"><i class="fa-solid fa-lock-open" aria-hidden="true"></i> Ücretsiz</span></td>
+                <td class="num">356B</td>
+                <td class="eylem"><div class="satir-eylem">
+                  <a class="ikon-dugme" href="../video-mutfagi__seri__yoresel-lezzetler.html" target="_blank" rel="noopener" aria-label="Gaziantep Baklavası — Ustadan İzle videosunu sitede gör"><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
+                  <a class="ikon-dugme" href="admin-video-form.html?id=yoresel-lezzetler-3" aria-label="Gaziantep Baklavası — Ustadan İzle künyesini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a>
+                </div></td>
+              </tr>
+              <tr data-slug="yoresel-lezzetler-4" data-tur="seri" data-seri="yoresel-lezzetler" data-erisim="ucretsiz">
+                <td class="sec"><label><input type="checkbox" aria-label="İzmir Boyozu Ev Usulü satırını seç"></label></td>
+                <td><b>İzmir Boyozu Ev Usulü</b></td>
+                <td><span class="rozet pasif"><i class="fa-solid fa-clapperboard" aria-hidden="true"></i> Seri bölümü</span></td>
+                <td>Yöresel Lezzetler<small>bölüm 4 · 4 bölüm</small></td>
+                <td class="num">11:54</td>
+                <td><span class="rozet olumlu"><i class="fa-solid fa-lock-open" aria-hidden="true"></i> Ücretsiz</span></td>
+                <td class="num">142B</td>
+                <td class="eylem"><div class="satir-eylem">
+                  <a class="ikon-dugme" href="../video-mutfagi__seri__yoresel-lezzetler.html" target="_blank" rel="noopener" aria-label="İzmir Boyozu Ev Usulü videosunu sitede gör"><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
+                  <a class="ikon-dugme" href="admin-video-form.html?id=yoresel-lezzetler-4" aria-label="İzmir Boyozu Ev Usulü künyesini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a>
+                </div></td>
+              </tr>
+              <tr data-slug="restoran-sirlari-1" data-tur="seri" data-seri="restoran-sirlari" data-erisim="pro">
+                <td class="sec"><label><input type="checkbox" aria-label="Restoran Sırları: Mise en Place — Servise Hazırlık Disiplini satırını seç"></label></td>
+                <td><b>Restoran Sırları: Mise en Place — Servise Hazırlık Disiplini</b></td>
+                <td><span class="rozet pasif"><i class="fa-solid fa-clapperboard" aria-hidden="true"></i> Seri bölümü</span></td>
+                <td>Restoran Sırları<small>bölüm 1 · 4 bölüm</small></td>
+                <td class="num">16:20</td>
+                <td><span class="rozet bekleme"><i class="fa-solid fa-crown" aria-hidden="true"></i> Pro</span></td>
+                <td class="num">—</td>
+                <td class="eylem"><div class="satir-eylem">
+                  <a class="ikon-dugme" href="../pro.html" target="_blank" rel="noopener" aria-label="Restoran Sırları: Mise en Place — Servise Hazırlık Disiplini videosunu sitede gör"><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
+                  <a class="ikon-dugme" href="admin-video-form.html?id=restoran-sirlari-1" aria-label="Restoran Sırları: Mise en Place — Servise Hazırlık Disiplini künyesini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a>
+                </div></td>
+              </tr>
+              <tr data-slug="restoran-sirlari-2" data-tur="seri" data-seri="restoran-sirlari" data-erisim="pro">
+                <td class="sec"><label><input type="checkbox" aria-label="Restoran Sırları: Sous-Vide ile Mükemmel Et Pişirme satırını seç"></label></td>
+                <td><b>Restoran Sırları: Sous-Vide ile Mükemmel Et Pişirme</b></td>
+                <td><span class="rozet pasif"><i class="fa-solid fa-clapperboard" aria-hidden="true"></i> Seri bölümü</span></td>
+                <td>Restoran Sırları<small>bölüm 2 · 4 bölüm</small></td>
+                <td class="num">19:45</td>
+                <td><span class="rozet bekleme"><i class="fa-solid fa-crown" aria-hidden="true"></i> Pro</span></td>
+                <td class="num">—</td>
+                <td class="eylem"><div class="satir-eylem">
+                  <a class="ikon-dugme" href="../pro.html" target="_blank" rel="noopener" aria-label="Restoran Sırları: Sous-Vide ile Mükemmel Et Pişirme videosunu sitede gör"><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
+                  <a class="ikon-dugme" href="admin-video-form.html?id=restoran-sirlari-2" aria-label="Restoran Sırları: Sous-Vide ile Mükemmel Et Pişirme künyesini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a>
+                </div></td>
+              </tr>
+              <tr data-slug="restoran-sirlari-3" data-tur="seri" data-seri="restoran-sirlari" data-erisim="pro">
+                <td class="sec"><label><input type="checkbox" aria-label="Restoran Sırları: Tabak Sunumu — Restoran Estetiği satırını seç"></label></td>
+                <td><b>Restoran Sırları: Tabak Sunumu — Restoran Estetiği</b></td>
+                <td><span class="rozet pasif"><i class="fa-solid fa-clapperboard" aria-hidden="true"></i> Seri bölümü</span></td>
+                <td>Restoran Sırları<small>bölüm 3 · 4 bölüm</small></td>
+                <td class="num">14:12</td>
+                <td><span class="rozet bekleme"><i class="fa-solid fa-crown" aria-hidden="true"></i> Pro</span></td>
+                <td class="num">—</td>
+                <td class="eylem"><div class="satir-eylem">
+                  <a class="ikon-dugme" href="../pro.html" target="_blank" rel="noopener" aria-label="Restoran Sırları: Tabak Sunumu — Restoran Estetiği videosunu sitede gör"><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
+                  <a class="ikon-dugme" href="admin-video-form.html?id=restoran-sirlari-3" aria-label="Restoran Sırları: Tabak Sunumu — Restoran Estetiği künyesini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a>
+                </div></td>
+              </tr>
+              <tr data-slug="restoran-sirlari-4" data-tur="seri" data-seri="restoran-sirlari" data-erisim="pro">
+                <td class="sec"><label><input type="checkbox" aria-label="Restoran Sırları: Stok &amp; Fond — Profesyonel Lezzet Tabanı satırını seç"></label></td>
+                <td><b>Restoran Sırları: Stok &amp; Fond — Profesyonel Lezzet Tabanı</b></td>
+                <td><span class="rozet pasif"><i class="fa-solid fa-clapperboard" aria-hidden="true"></i> Seri bölümü</span></td>
+                <td>Restoran Sırları<small>bölüm 4 · 4 bölüm</small></td>
+                <td class="num">21:30</td>
+                <td><span class="rozet bekleme"><i class="fa-solid fa-crown" aria-hidden="true"></i> Pro</span></td>
+                <td class="num">—</td>
+                <td class="eylem"><div class="satir-eylem">
+                  <a class="ikon-dugme" href="../pro.html" target="_blank" rel="noopener" aria-label="Restoran Sırları: Stok &amp; Fond — Profesyonel Lezzet Tabanı videosunu sitede gör"><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
+                  <a class="ikon-dugme" href="admin-video-form.html?id=restoran-sirlari-4" aria-label="Restoran Sırları: Stok &amp; Fond — Profesyonel Lezzet Tabanı künyesini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a>
+                </div></td>
+              </tr>
+              <tr data-slug="citir-citir-cig-borek-hamuru" data-tur="tarif" data-seri="" data-erisim="ucretsiz">
+                <td class="sec"><label><input type="checkbox" aria-label="Çıtır Çıtır Çiğ Börek Hamuru satırını seç"></label></td>
+                <td><b>Çıtır Çıtır Çiğ Börek Hamuru</b></td>
+                <td><span class="rozet pasif"><i class="fa-solid fa-utensils" aria-hidden="true"></i> Tarif</span></td>
+                <td><span class="rozet pasif">Seri dışı</span><small>arşiv ızgarası</small></td>
+                <td class="num">08:30</td>
+                <td><span class="rozet olumlu"><i class="fa-solid fa-lock-open" aria-hidden="true"></i> Ücretsiz</span></td>
+                <td class="num">89B</td>
+                <td class="eylem"><div class="satir-eylem">
+                  <a class="ikon-dugme" href="../video-mutfagi.html" target="_blank" rel="noopener" aria-label="Çıtır Çıtır Çiğ Börek Hamuru videosunu sitede gör"><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
+                  <a class="ikon-dugme" href="admin-video-form.html?id=citir-citir-cig-borek-hamuru" aria-label="Çıtır Çıtır Çiğ Börek Hamuru künyesini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a>
+                </div></td>
+              </tr>
+              <tr data-slug="tam-kivaminda-karniyarik-sefin-butun-sirlariyla" data-tur="tarif" data-seri="" data-erisim="ucretsiz">
+                <td class="sec"><label><input type="checkbox" aria-label="Tam Kıvamında Karnıyarık — Şefin Bütün Sırlarıyla satırını seç"></label></td>
+                <td><b>Tam Kıvamında Karnıyarık — Şefin Bütün Sırlarıyla</b><small><span class="rozet bekleme">Sıradaki kuyruğu · 1</span></small></td>
+                <td><span class="rozet pasif"><i class="fa-solid fa-utensils" aria-hidden="true"></i> Tarif</span></td>
+                <td><span class="rozet pasif">Seri dışı</span><small>arşiv ızgarası</small></td>
+                <td class="num">12:48</td>
+                <td><span class="rozet olumlu"><i class="fa-solid fa-lock-open" aria-hidden="true"></i> Ücretsiz</span></td>
+                <td class="num">1,2Mn</td>
+                <td class="eylem"><div class="satir-eylem">
+                  <a class="ikon-dugme" href="../video-mutfagi.html" target="_blank" rel="noopener" aria-label="Tam Kıvamında Karnıyarık — Şefin Bütün Sırlarıyla videosunu sitede gör"><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
+                  <a class="ikon-dugme" href="admin-video-form.html?id=tam-kivaminda-karniyarik-sefin-butun-sirlariyla" aria-label="Tam Kıvamında Karnıyarık — Şefin Bütün Sırlarıyla künyesini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a>
+                </div></td>
+              </tr>
+              <tr data-slug="tavuk-suyu-corbasi-nasil-yapilir" data-tur="tarif" data-seri="" data-erisim="ucretsiz">
+                <td class="sec"><label><input type="checkbox" aria-label="Tavuk Suyu Çorbası Nasıl Yapılır? satırını seç"></label></td>
+                <td><b>Tavuk Suyu Çorbası Nasıl Yapılır?</b></td>
+                <td><span class="rozet pasif"><i class="fa-solid fa-utensils" aria-hidden="true"></i> Tarif</span></td>
+                <td><span class="rozet pasif">Seri dışı</span><small>arşiv ızgarası</small></td>
+                <td class="num">04:12</td>
+                <td><span class="rozet olumlu"><i class="fa-solid fa-lock-open" aria-hidden="true"></i> Ücretsiz</span></td>
+                <td class="num">124B</td>
+                <td class="eylem"><div class="satir-eylem">
+                  <a class="ikon-dugme" href="../video-mutfagi.html" target="_blank" rel="noopener" aria-label="Tavuk Suyu Çorbası Nasıl Yapılır? videosunu sitede gör"><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
+                  <a class="ikon-dugme" href="admin-video-form.html?id=tavuk-suyu-corbasi-nasil-yapilir" aria-label="Tavuk Suyu Çorbası Nasıl Yapılır? künyesini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a>
+                </div></td>
+              </tr>
+              <tr data-slug="besamel-sos-topaksiz-kivam" data-tur="teknik" data-seri="" data-erisim="ucretsiz">
+                <td class="sec"><label><input type="checkbox" aria-label="Beşamel Sos — Topaksız Kıvam satırını seç"></label></td>
+                <td><b>Beşamel Sos — Topaksız Kıvam</b></td>
+                <td><span class="rozet pasif"><i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i> Teknik</span></td>
+                <td><span class="rozet pasif">Seri dışı</span><small>arşiv ızgarası</small></td>
+                <td class="num">07:31</td>
+                <td><span class="rozet olumlu"><i class="fa-solid fa-lock-open" aria-hidden="true"></i> Ücretsiz</span></td>
+                <td class="num">201B</td>
+                <td class="eylem"><div class="satir-eylem">
+                  <a class="ikon-dugme" href="../video-mutfagi.html" target="_blank" rel="noopener" aria-label="Beşamel Sos — Topaksız Kıvam videosunu sitede gör"><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
+                  <a class="ikon-dugme" href="admin-video-form.html?id=besamel-sos-topaksiz-kivam" aria-label="Beşamel Sos — Topaksız Kıvam künyesini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a>
+                </div></td>
+              </tr>
+              <tr data-slug="tane-tane-pilav" data-tur="tarif" data-seri="" data-erisim="ucretsiz">
+                <td class="sec"><label><input type="checkbox" aria-label="Tane Tane Pilav satırını seç"></label></td>
+                <td><b>Tane Tane Pilav</b><small><span class="rozet olumlu"><i class="fa-solid fa-star" aria-hidden="true"></i> Haftanın videosu</span></small></td>
+                <td><span class="rozet pasif"><i class="fa-solid fa-utensils" aria-hidden="true"></i> Tarif</span></td>
+                <td><span class="rozet pasif">Seri dışı</span><small>arşiv ızgarası</small></td>
+                <td class="num">05:24</td>
+                <td><span class="rozet olumlu"><i class="fa-solid fa-lock-open" aria-hidden="true"></i> Ücretsiz</span></td>
+                <td class="num">178B</td>
+                <td class="eylem"><div class="satir-eylem">
+                  <a class="ikon-dugme" href="../video-mutfagi.html" target="_blank" rel="noopener" aria-label="Tane Tane Pilav videosunu sitede gör"><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
+                  <a class="ikon-dugme" href="admin-video-form.html?id=tane-tane-pilav" aria-label="Tane Tane Pilav künyesini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a>
+                </div></td>
+              </tr>
+              <tr data-slug="eksi-mayali-ekmek-yapimi" data-tur="tarif" data-seri="" data-erisim="ucretsiz">
+                <td class="sec"><label><input type="checkbox" aria-label="Ekşi Mayalı Ekmek Yapımı satırını seç"></label></td>
+                <td><b>Ekşi Mayalı Ekmek Yapımı</b></td>
+                <td><span class="rozet pasif"><i class="fa-solid fa-utensils" aria-hidden="true"></i> Tarif</span></td>
+                <td><span class="rozet pasif">Seri dışı</span><small>arşiv ızgarası</small></td>
+                <td class="num">12:08</td>
+                <td><span class="rozet olumlu"><i class="fa-solid fa-lock-open" aria-hidden="true"></i> Ücretsiz</span></td>
+                <td class="num">96B</td>
+                <td class="eylem"><div class="satir-eylem">
+                  <a class="ikon-dugme" href="../video-mutfagi.html" target="_blank" rel="noopener" aria-label="Ekşi Mayalı Ekmek Yapımı videosunu sitede gör"><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
+                  <a class="ikon-dugme" href="admin-video-form.html?id=eksi-mayali-ekmek-yapimi" aria-label="Ekşi Mayalı Ekmek Yapımı künyesini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a>
+                </div></td>
+              </tr>
+              <tr data-slug="bicak-bileme-evdeki-yontemler" data-tur="teknik" data-seri="" data-erisim="ucretsiz">
+                <td class="sec"><label><input type="checkbox" aria-label="Bıçak Bileme — Evdeki Yöntemler satırını seç"></label></td>
+                <td><b>Bıçak Bileme — Evdeki Yöntemler</b></td>
+                <td><span class="rozet pasif"><i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i> Teknik</span></td>
+                <td><span class="rozet pasif">Seri dışı</span><small>arşiv ızgarası</small></td>
+                <td class="num">06:54</td>
+                <td><span class="rozet olumlu"><i class="fa-solid fa-lock-open" aria-hidden="true"></i> Ücretsiz</span></td>
+                <td class="num">154B</td>
+                <td class="eylem"><div class="satir-eylem">
+                  <a class="ikon-dugme" href="../video-mutfagi.html" target="_blank" rel="noopener" aria-label="Bıçak Bileme — Evdeki Yöntemler videosunu sitede gör"><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
+                  <a class="ikon-dugme" href="admin-video-form.html?id=bicak-bileme-evdeki-yontemler" aria-label="Bıçak Bileme — Evdeki Yöntemler künyesini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a>
+                </div></td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="kart-alt">
+          <p class="alan-yardim"><span>27 satırın 27'si <b>public'ten okundu</b>: 20 seri bölümü
+            (seri sayfalarının <code>.ep-row</code>'ları), 5 tarif ve 2 teknik videosu (merkez sayfanın
+            arşiv ızgarası). Süre, izlenme, kapak ve erişim değerleri aynı yerden geldi —
+            <b>tek değer uydurulmadı</b>. Ölçüm anı 2026-09-05.</span></p>
+        </div>
       </div>
     </div>
 
-    <!-- ============ DETAY SAYFALARI ============ -->
-    <div class="kart panel">
-      <div class="kart-bas">
-        <h2 class="kart-baslik"><i class="fa-solid fa-layer-group"></i> Seriler ve yayın ritmi</h2>
-        <div class="eylem-satiri"><span class="rozet pasif" id="vdSeriSay">4 seri</span></div>
-      </div>
-      <div class="kart-govde bosluksuz">
-        <div class="toplu-islem" hidden=""><b><span>0</span> kayıt seçildi</b><div class="eylem-satiri"><button class="dugme hayalet" type="button" data-eylem="calistir" data-ad="Yayınla">Yayınla</button><button class="dugme hayalet" type="button" data-eylem="calistir" data-ad="Pasif yap">Pasif yap</button><button class="dugme hayalet" type="button">Dışa aktar</button><button class="dugme hayalet" type="button" data-eylem="calistir" data-ad="Arşivle">Arşivle</button></div></div><div class="tablo-kap gomulu">
-          <table class="tablo panel" aria-label="Seriler ve yayın ritmi">
-            <thead><tr><th class="sec" scope="col"><label><input type="checkbox" aria-label="Tüm satırları seç"></label></th><th class="sirali"><button type="button">Seri slug</button></th><th>Ad</th><th class="num sirali sag"><button type="button">Bölüm sayısı</button></th><th>Yayın günü</th></tr></thead>
-            <tbody id="vdSeriler"><tr><td class="sec"><label><input type="checkbox" aria-label="10-dakikada-yemekler satırını seç"></label></td><td><b>10-dakikada-yemekler</b></td><td>10 Dakikada Yemekler</td><td class="num">8 <span class="rozet bekleme"><i class="fa-solid fa-bell-slash" aria-hidden="true"></i> 0 abone</span></td><td>Her Salı yeni bölüm</td></tr><tr><td class="sec"><label><input type="checkbox" aria-label="sef-teknikleri satırını seç"></label></td><td><b>sef-teknikleri</b></td><td>Şef Teknikleri</td><td class="num">8 <span class="rozet bekleme"><i class="fa-solid fa-bell-slash" aria-hidden="true"></i> 0 abone</span></td><td>Her Perşembe yeni bölüm</td></tr><tr><td class="sec"><label><input type="checkbox" aria-label="yoresel-lezzetler satırını seç"></label></td><td><b>yoresel-lezzetler</b></td><td>Yöresel Lezzetler</td><td class="num">8 <span class="rozet bekleme"><i class="fa-solid fa-bell-slash" aria-hidden="true"></i> 0 abone</span></td><td>Her Cumartesi yeni bölüm</td></tr><tr><td class="sec"><label><input type="checkbox" aria-label="30-saniyede-bir-fikir satırını seç"></label></td><td><b>30-saniyede-bir-fikir</b></td><td>30 Saniyede Bir Fikir</td><td class="num">8 <span class="rozet bekleme"><i class="fa-solid fa-bell-slash" aria-hidden="true"></i> 0 abone</span></td><td>Her Pazar yeni bölüm</td></tr></tbody>
-          <tbody hidden="" aria-busy="true" data-durum="yukleniyor"><tr><td class="sec"><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet tam"></span></td></tr><tr><td class="sec"><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet tam"></span></td></tr><tr><td class="sec"><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet tam"></span></td></tr><tr><td class="sec"><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet tam"></span></td></tr><tr><td class="sec"><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet kisa"></span></td><td><span class="iskelet orta"></span></td><td><span class="iskelet tam"></span></td></tr></tbody></table>
-        </div><div class="alan-ozet" role="alert"><i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i><span><b>2 satır kaydedilemedi</b> — zorunlu alanlar eksik.</span></div><div class="bos-durum kart-ici servis-hatasi" data-durum="servis" hidden=""><span class="bos-ikon"><i class="fa-solid fa-plug-circle-xmark" aria-hidden="true"></i></span><h3>Liste yüklenemedi</h3><p>Bağlantı kurulamadı. Yeniden dene.</p><button class="dugme birincil" type="button" data-eylem="calistir" data-ad="Yeniden dene"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i> Yeniden dene</button><div class="hata-izi">Referans kodu <code>GAS-ADM-6041</code></div></div><div class="bos-durum kart-ici yetkisiz" data-durum="yetkisiz" hidden=""><span class="bos-ikon"><i class="fa-solid fa-lock" aria-hidden="true"></i></span><h3>Bu modüle erişimin yok</h3><p>Erişim istemek için yöneticinle görüş.</p></div><div class="bos-durum kart-ici" data-durum="bos" hidden=""><span class="bos-ikon"><i class="fa-solid fa-filter-circle-xmark" aria-hidden="true"></i></span><h3>Bu süzgeçle sonuç yok</h3><p>Süzgeci genişlet ya da aramayı değiştir.</p><button class="dugme hayalet" type="button" data-eylem="suzgec-temizle">Süzgeci temizle</button></div><div class="bos-durum kart-ici" data-durum="bos-ilk" hidden=""><span class="bos-ikon"><i class="fa-solid fa-film" aria-hidden="true"></i></span><h3>Henüz video yok</h3><p>İlk videoyu ekleyerek katalogu başlat.</p><a class="dugme birincil" href="admin-video-form.html">Video ekle</a></div>
+    <!-- ═════════ SERİLER ═════════ -->
+    <div id="vdP-seri" role="tabpanel" aria-labelledby="vdS-seri" hidden>
+      <div class="kart panel">
+        <div class="kart-bas">
+          <h2 class="kart-baslik"><i class="fa-solid fa-clapperboard" aria-hidden="true"></i> Seriler</h2>
+          <div class="eylem-satiri">
+            <a class="dugme hayalet" href="admin-video-seri-form.html">
+              <i class="fa-solid fa-plus" aria-hidden="true"></i> Seri ekle</a>
+          </div>
+        </div>
+        <div class="kart-govde bosluksuz">
+          <div class="tablo-kap gomulu">
+            <table class="tablo panel" id="vdSeriTablo" aria-label="Video serileri">
+              <thead>
+                <tr>
+                  <th class="sec" scope="col"><label><input type="checkbox" aria-label="Tüm serileri seç"></label></th>
+                  <th class="num" scope="col">Sıra</th><th scope="col">Seri</th>
+                  <th class="num" scope="col">Bölüm</th><th class="num" scope="col">Süre</th>
+                  <th scope="col">Erişim</th><th scope="col">Ray notu</th>
+                  <th scope="col">Public sayfa</th><th scope="col">İşlem</th>
+                </tr>
+              </thead>
+              <tbody id="vdSeriGovde">
+              <tr data-slug="10-dakikada-yemekler">
+                <td class="sec"><label><input type="checkbox" aria-label="10 Dakikada Yemekler satırını seç"></label></td>
+                <td class="num">1</td>
+                <td><b>10 Dakikada Yemekler</b><small><code>10-dakikada-yemekler</code></small></td>
+                <td class="num">8 bölüm</td>
+                <td class="num">1 sa 07 dk</td>
+                <td><span class="rozet olumlu"><i class="fa-solid fa-lock-open" aria-hidden="true"></i> Ücretsiz</span></td>
+                <td>Her Salı yeni bölüm</td>
+                <td><span class="rozet olumlu"><i class="fa-solid fa-check" aria-hidden="true"></i> var</span></td>
+                <td class="eylem"><div class="satir-eylem">
+                  <a class="ikon-dugme" href="../video-mutfagi__seri__10-dakikada-yemekler.html" target="_blank" rel="noopener" aria-label="10 Dakikada Yemekler serisini sitede gör"><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
+                  <a class="ikon-dugme" href="admin-video-kurgu.html?id=10-dakikada-yemekler" aria-label="10 Dakikada Yemekler seri kurgusunu aç"><i class="fa-solid fa-diagram-project" aria-hidden="true"></i></a>
+                  <a class="ikon-dugme" href="admin-video-seri-form.html?id=10-dakikada-yemekler" aria-label="10 Dakikada Yemekler serisini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a>
+                </div></td>
+              </tr>
+              <tr data-slug="sef-teknikleri">
+                <td class="sec"><label><input type="checkbox" aria-label="Şef Teknikleri satırını seç"></label></td>
+                <td class="num">2</td>
+                <td><b>Şef Teknikleri</b><small><code>sef-teknikleri</code></small></td>
+                <td class="num">4 bölüm</td>
+                <td class="num">44 dk</td>
+                <td><span class="rozet olumlu"><i class="fa-solid fa-lock-open" aria-hidden="true"></i> Ücretsiz</span></td>
+                <td>Temel mutfak teknikleri</td>
+                <td><span class="rozet olumlu"><i class="fa-solid fa-check" aria-hidden="true"></i> var</span></td>
+                <td class="eylem"><div class="satir-eylem">
+                  <a class="ikon-dugme" href="../video-mutfagi__seri__sef-teknikleri.html" target="_blank" rel="noopener" aria-label="Şef Teknikleri serisini sitede gör"><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
+                  <a class="ikon-dugme" href="admin-video-kurgu.html?id=sef-teknikleri" aria-label="Şef Teknikleri seri kurgusunu aç"><i class="fa-solid fa-diagram-project" aria-hidden="true"></i></a>
+                  <a class="ikon-dugme" href="admin-video-seri-form.html?id=sef-teknikleri" aria-label="Şef Teknikleri serisini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a>
+                </div></td>
+              </tr>
+              <tr data-slug="yoresel-lezzetler">
+                <td class="sec"><label><input type="checkbox" aria-label="Yöresel Lezzetler satırını seç"></label></td>
+                <td class="num">3</td>
+                <td><b>Yöresel Lezzetler</b><small><code>yoresel-lezzetler</code></small></td>
+                <td class="num">4 bölüm</td>
+                <td class="num">58 dk</td>
+                <td><span class="rozet olumlu"><i class="fa-solid fa-lock-open" aria-hidden="true"></i> Ücretsiz</span></td>
+                <td>Anadolu mutfağı ustalarından</td>
+                <td><span class="rozet olumlu"><i class="fa-solid fa-check" aria-hidden="true"></i> var</span></td>
+                <td class="eylem"><div class="satir-eylem">
+                  <a class="ikon-dugme" href="../video-mutfagi__seri__yoresel-lezzetler.html" target="_blank" rel="noopener" aria-label="Yöresel Lezzetler serisini sitede gör"><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
+                  <a class="ikon-dugme" href="admin-video-kurgu.html?id=yoresel-lezzetler" aria-label="Yöresel Lezzetler seri kurgusunu aç"><i class="fa-solid fa-diagram-project" aria-hidden="true"></i></a>
+                  <a class="ikon-dugme" href="admin-video-seri-form.html?id=yoresel-lezzetler" aria-label="Yöresel Lezzetler serisini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a>
+                </div></td>
+              </tr>
+              <tr data-slug="restoran-sirlari">
+                <td class="sec"><label><input type="checkbox" aria-label="Restoran Sırları satırını seç"></label></td>
+                <td class="num">4</td>
+                <td><b>Restoran Sırları</b><small><code>restoran-sirlari</code></small></td>
+                <td class="num">4 bölüm</td>
+                <td class="num">1 sa 11 dk</td>
+                <td><span class="rozet bekleme"><i class="fa-solid fa-crown" aria-hidden="true"></i> Pro</span></td>
+                <td>Pro üyelere özel</td>
+                <td><span class="rozet olumlu"><i class="fa-solid fa-check" aria-hidden="true"></i> var</span><small>canlıda 200 · yerel kopyada yok</small></td>
+                <td class="eylem"><div class="satir-eylem">
+                  <a class="ikon-dugme" href="../pro.html" target="_blank" rel="noopener" aria-label="Restoran Sırları serisini sitede gör"><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
+                  <a class="ikon-dugme" href="admin-video-kurgu.html?id=restoran-sirlari" aria-label="Restoran Sırları seri kurgusunu aç"><i class="fa-solid fa-diagram-project" aria-hidden="true"></i></a>
+                  <a class="ikon-dugme" href="admin-video-seri-form.html?id=restoran-sirlari" aria-label="Restoran Sırları serisini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a>
+                </div></td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="kart-alt">
+          <p class="alan-yardim"><span>🔴 <b>Devir §9-5 yeniden ölçüldü.</b> Public
+            <b>8 · 4 · 4 · 4</b> diyor — hem serinin künyesinde (“N bölüm”) hem gerçekten basılan
+            bölüm satırı sayısında. Eski admin tablosu dördüne de <b>8</b> yazıyordu; devir belgesinin
+            <i>“6 · 5 · 5”</i> ölçümünün bugünkü public'te karşılığı yok.
+            <br>🔴 <b>Devir §9-6:</b> “30 Saniyede Bir Fikir” bir seri <b>değil</b> — o metin
+            <b>Dada Akış</b> bölümünün başlığıdır (<i>“30 saniyede bir fikir”</i>).
+            Dördüncü seri <b>Restoran Sırları</b>'dır (Pro) ve admin'de hiç yoktu; kayıt silinmedi,
+            <b>doğrusu eklendi</b> ve yanlış ad kaldırıldı.
+            <br>🔴 <b>Bu kulvarın kendi düzeltmesi:</b> ilk raporda “Restoran Sırları'nın kendi
+            sayfası yok” yazmıştım — <b>yanlıştı</b>. Kanıt olarak <code>dump/gastro</code>'yu
+            kullanmıştım ve o kopyada dosya gerçekten yok; ama <b>dump'ta dosyanın olmaması sayfanın
+            olmadığını kanıtlamaz</b>. Canlı sorulunca <code>/video-mutfagi/seri/restoran-sirlari</code>
+            <b>200</b> döndü: 4 bölüm · 1 sa 11 dk · Pro kapılı. Merkez sayfadaki “Seriyi Aç” bağının
+            <code>pro.html</code>'e gitmesi sayfanın yokluğu değil, <b>Pro kapısının önceliğidir</b>.
+            <br>⚠ Bu satırdaki “sitede gör” bağı yerel önizlemede <code>pro.html</code>'e gidiyor,
+            çünkü serinin sayfası <b>yerel kopyada yok</b>. Kapı:
+            <code>node scripts/olcum/p2/c-08-seri-celiski.mjs --canli</code></span></p>
+        </div>
       </div>
     </div>
 
+    <!-- ═════════ DADA AKIŞ ═════════ -->
+    <div id="vdP-akis" role="tabpanel" aria-labelledby="vdS-akis" hidden>
+      <div class="kart panel">
+        <div class="kart-bas">
+          <h2 class="kart-baslik"><i class="fa-solid fa-bolt" aria-hidden="true"></i> Dada Akış · kısa videolar</h2>
+          <div class="eylem-satiri">
+            <a class="dugme hayalet" href="admin-video-form.html">
+              <i class="fa-solid fa-plus" aria-hidden="true"></i> Kısa video ekle</a>
+          </div>
+        </div>
+        <div class="kart-govde bosluksuz">
+          <div class="tablo-kap gomulu">
+            <table class="tablo panel" id="vdAkisTablo" aria-label="Dada Akış kısa videoları">
+              <thead>
+                <tr>
+                  <th class="sec" scope="col"><label><input type="checkbox" aria-label="Tüm kısa videoları seç"></label></th>
+                  <th scope="col">Video</th><th scope="col">Tür</th><th scope="col">Yeri</th>
+                  <th class="num" scope="col">Süre</th><th scope="col">Erişim</th>
+                  <th class="num" scope="col">İzlenme</th><th scope="col">İşlem</th>
+                </tr>
+              </thead>
+              <tbody id="vdAkisGovde">
+              <tr data-slug="akis-1" data-tur="kisa" data-seri="" data-erisim="ucretsiz">
+                <td class="sec"><label><input type="checkbox" aria-label="Soğan Doğrarken Ağlamamanın Yolu satırını seç"></label></td>
+                <td><b>Soğan Doğrarken Ağlamamanın Yolu</b></td>
+                <td><span class="rozet pasif"><i class="fa-solid fa-bolt" aria-hidden="true"></i> Kısa</span></td>
+                <td><span class="rozet bekleme"><i class="fa-solid fa-bolt" aria-hidden="true"></i> Dada Akış</span><small>akış sırası 1</small></td>
+                <td class="num">00:31</td>
+                <td><span class="rozet olumlu"><i class="fa-solid fa-lock-open" aria-hidden="true"></i> Ücretsiz</span></td>
+                <td class="num">524B</td>
+                <td class="eylem"><div class="satir-eylem">
+                  <a class="ikon-dugme" href="../video-mutfagi.html" target="_blank" rel="noopener" aria-label="Soğan Doğrarken Ağlamamanın Yolu videosunu sitede gör"><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
+                  <a class="ikon-dugme" href="admin-video-form.html?id=akis-1" aria-label="Soğan Doğrarken Ağlamamanın Yolu künyesini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a>
+                </div></td>
+              </tr>
+              <tr data-slug="akis-2" data-tur="kisa" data-seri="" data-erisim="ucretsiz">
+                <td class="sec"><label><input type="checkbox" aria-label="Nar Taneleme — Tek Hamlede satırını seç"></label></td>
+                <td><b>Nar Taneleme — Tek Hamlede</b></td>
+                <td><span class="rozet pasif"><i class="fa-solid fa-bolt" aria-hidden="true"></i> Kısa</span></td>
+                <td><span class="rozet bekleme"><i class="fa-solid fa-bolt" aria-hidden="true"></i> Dada Akış</span><small>akış sırası 2</small></td>
+                <td class="num">00:24</td>
+                <td><span class="rozet olumlu"><i class="fa-solid fa-lock-open" aria-hidden="true"></i> Ücretsiz</span></td>
+                <td class="num">287B</td>
+                <td class="eylem"><div class="satir-eylem">
+                  <a class="ikon-dugme" href="../video-mutfagi.html" target="_blank" rel="noopener" aria-label="Nar Taneleme — Tek Hamlede videosunu sitede gör"><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
+                  <a class="ikon-dugme" href="admin-video-form.html?id=akis-2" aria-label="Nar Taneleme — Tek Hamlede künyesini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a>
+                </div></td>
+              </tr>
+              <tr data-slug="akis-3" data-tur="kisa" data-seri="" data-erisim="pro">
+                <td class="sec"><label><input type="checkbox" aria-label="Restoran Sosları — Tam Seri (Pro) satırını seç"></label></td>
+                <td><b>Restoran Sosları — Tam Seri (Pro)</b></td>
+                <td><span class="rozet pasif"><i class="fa-solid fa-bolt" aria-hidden="true"></i> Kısa</span></td>
+                <td><span class="rozet bekleme"><i class="fa-solid fa-bolt" aria-hidden="true"></i> Dada Akış</span><small>akış sırası 3</small></td>
+                <td class="num">—</td>
+                <td><span class="rozet bekleme"><i class="fa-solid fa-crown" aria-hidden="true"></i> Pro</span></td>
+                <td class="num">156B</td>
+                <td class="eylem"><div class="satir-eylem">
+                  <a class="ikon-dugme" href="../video-mutfagi.html" target="_blank" rel="noopener" aria-label="Restoran Sosları — Tam Seri (Pro) videosunu sitede gör"><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
+                  <a class="ikon-dugme" href="admin-video-form.html?id=akis-3" aria-label="Restoran Sosları — Tam Seri (Pro) künyesini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a>
+                </div></td>
+              </tr>
+              <tr data-slug="akis-4" data-tur="kisa" data-seri="" data-erisim="ucretsiz">
+                <td class="sec"><label><input type="checkbox" aria-label="Meal Prep: 1 Saatte Haftalık Sebze Hazırlığı satırını seç"></label></td>
+                <td><b>Meal Prep: 1 Saatte Haftalık Sebze Hazırlığı</b></td>
+                <td><span class="rozet pasif"><i class="fa-solid fa-bolt" aria-hidden="true"></i> Kısa</span></td>
+                <td><span class="rozet bekleme"><i class="fa-solid fa-bolt" aria-hidden="true"></i> Dada Akış</span><small>akış sırası 4</small></td>
+                <td class="num">00:38</td>
+                <td><span class="rozet olumlu"><i class="fa-solid fa-lock-open" aria-hidden="true"></i> Ücretsiz</span></td>
+                <td class="num">412B</td>
+                <td class="eylem"><div class="satir-eylem">
+                  <a class="ikon-dugme" href="../video-mutfagi.html" target="_blank" rel="noopener" aria-label="Meal Prep: 1 Saatte Haftalık Sebze Hazırlığı videosunu sitede gör"><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
+                  <a class="ikon-dugme" href="admin-video-form.html?id=akis-4" aria-label="Meal Prep: 1 Saatte Haftalık Sebze Hazırlığı künyesini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a>
+                </div></td>
+              </tr>
+              <tr data-slug="akis-5" data-tur="kisa" data-seri="" data-erisim="ucretsiz">
+                <td class="sec"><label><input type="checkbox" aria-label="Sufle Çökmesin: 30 Saniyelik Hile satırını seç"></label></td>
+                <td><b>Sufle Çökmesin: 30 Saniyelik Hile</b></td>
+                <td><span class="rozet pasif"><i class="fa-solid fa-bolt" aria-hidden="true"></i> Kısa</span></td>
+                <td><span class="rozet bekleme"><i class="fa-solid fa-bolt" aria-hidden="true"></i> Dada Akış</span><small>akış sırası 5</small></td>
+                <td class="num">00:30</td>
+                <td><span class="rozet olumlu"><i class="fa-solid fa-lock-open" aria-hidden="true"></i> Ücretsiz</span></td>
+                <td class="num">198B</td>
+                <td class="eylem"><div class="satir-eylem">
+                  <a class="ikon-dugme" href="../video-mutfagi.html" target="_blank" rel="noopener" aria-label="Sufle Çökmesin: 30 Saniyelik Hile videosunu sitede gör"><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
+                  <a class="ikon-dugme" href="admin-video-form.html?id=akis-5" aria-label="Sufle Çökmesin: 30 Saniyelik Hile künyesini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a>
+                </div></td>
+              </tr>
+              <tr data-slug="akis-6" data-tur="kisa" data-seri="" data-erisim="ucretsiz">
+                <td class="sec"><label><input type="checkbox" aria-label="Pratik Kahvaltı Tabağı — 5 Dakika satırını seç"></label></td>
+                <td><b>Pratik Kahvaltı Tabağı — 5 Dakika</b></td>
+                <td><span class="rozet pasif"><i class="fa-solid fa-bolt" aria-hidden="true"></i> Kısa</span></td>
+                <td><span class="rozet bekleme"><i class="fa-solid fa-bolt" aria-hidden="true"></i> Dada Akış</span><small>akış sırası 6</small></td>
+                <td class="num">00:42</td>
+                <td><span class="rozet olumlu"><i class="fa-solid fa-lock-open" aria-hidden="true"></i> Ücretsiz</span></td>
+                <td class="num">341B</td>
+                <td class="eylem"><div class="satir-eylem">
+                  <a class="ikon-dugme" href="../video-mutfagi.html" target="_blank" rel="noopener" aria-label="Pratik Kahvaltı Tabağı — 5 Dakika videosunu sitede gör"><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
+                  <a class="ikon-dugme" href="admin-video-form.html?id=akis-6" aria-label="Pratik Kahvaltı Tabağı — 5 Dakika künyesini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a>
+                </div></td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="kart-alt">
+          <p class="alan-yardim"><span>Public'te merkez sayfanın <b>“Dada Akış”</b> bölümü:
+            başlığı <i>“30 saniyede bir fikir”</i>, alt başlığı <i>“15–30 saniyelik dikey kısa
+            videolar — kaydır, izle, tarife git”</i>. Kartlar <b>dikey</b>, şerit yatay kayar.
+            <span class="olcum-kunye">Ölçüldü: 6 kart · süreler 00:24–00:42 (biri Pro kilitli ve
+            kilitli kartta süre hiç basılmıyor). Alt başlık “15–30 saniye” diyor, ölçülen sürelerin
+            <b>ikisi bu aralığın dışında</b> (00:38 · 00:42) — bildirildi.</span></span></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═════════ KAVRAMLAR ═════════ -->
+    <div id="vdP-kavram" role="tabpanel" aria-labelledby="vdS-kavram" hidden>
+      <div class="kart panel">
+        <div class="kart-bas"><h2 class="kart-baslik"><i class="fa-solid fa-diagram-project" aria-hidden="true"></i> Üç kavram, üç ayrı yüzey</h2></div>
+        <div class="kart-govde bosluksuz">
+          <div class="tablo-kap gomulu">
+            <table class="tablo panel" aria-label="Video kavramları">
+              <thead>
+                <tr><th scope="col">Kavram</th><th scope="col">Public'te ne</th>
+                  <th scope="col">Sıralı mı</th><th scope="col">Kendi sayfası</th>
+                  <th scope="col">Yönetimi</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><b>Seri</b></td>
+                  <td>Merkez sayfada kendi rayı + <code>/video-mutfagi/seri/&lt;slug&gt;</code></td>
+                  <td>Evet — bölüm numarası basılır (“3. Bölüm”)</td>
+                  <td><span class="rozet olumlu">var</span> <small>4'ün 4'ünde (canlı)</small></td>
+                  <td><a href="admin-video-seri-form.html">Seri formu</a> · <a href="admin-video-kurgu.html">kurgu</a></td>
+                </tr>
+                <tr>
+                  <td><b>Koleksiyon</b> <small>Tarif · Teknik</small></td>
+                  <td>Arşiv ızgarasının süzgeç çipi (<code>data-vf</code>)</td>
+                  <td>Hayır — numara basılmaz</td>
+                  <td><span class="rozet durdu">yok</span> <small>yalnız süzgeç</small></td>
+                  <td>Video formundaki <b>Tür</b> alanı</td>
+                </tr>
+                <tr>
+                  <td><b>Dada Akış</b> <small>kısa · reels</small></td>
+                  <td>Merkez sayfada dikey kart şeridi</td>
+                  <td>Evet — şerit sırası</td>
+                  <td><span class="rozet durdu">yok</span> <small>modal oynatıcı</small></td>
+                  <td>Video formunda <b>Tür = Kısa</b> + akış sırası</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="kart-alt">
+          <p class="alan-yardim"><span>Bu tablo bir açıklama değil <b>ölçüm sonucu</b>: üç kavram
+            public'te üç ayrı yüzey ve üç ayrı veri alanı kullanıyor. Eskiden hepsi tek bir “Seri”
+            sütununa sıkışıyordu ve seri dışı videolar da bir seriye bağlı görünüyordu.</span></p>
+        </div>
+      </div>
+    </div>
 
   </div>
 </main>
@@ -231,8 +911,17 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/l10n/tr.js"></script>
 <script src="../../kanon/admin-editor-tr.js"></script>
+<script src="../../kanon/admin-ikon-kutuphane.js" defer></script>
+<script src="../../kanon/admin-veri.js" defer></script>
 <script src="../../kanon/admin-kit.js" defer></script>
 <script src="../../kanon/admin-editor.js" defer></script>
 <script src="../../kanon/admin-tarih.js" defer></script>
 <!-- ADMIN-KIT:JS:SON -->
+<!-- GASTRO-EK:JS:BAS -->
+<script src="_ortak/gastro-ek.js" defer></script>
+<script src="_ortak/gastro-ek-a.js" defer></script>
+<script src="_ortak/gastro-ek-b.js" defer></script>
+<script src="_ortak/gastro-ek-c.js" defer></script>
+<script src="_ortak/gastro-ek-d.js" defer></script>
+<!-- GASTRO-EK:JS:SON -->
 </body></html>

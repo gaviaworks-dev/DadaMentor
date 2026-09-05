@@ -12,6 +12,13 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.css">
 <link rel="stylesheet" href="../../kanon/admin.css">
 <!-- ADMIN-KIT:CSS:SON -->
+<!-- GASTRO-EK:CSS:BAS -->
+<link rel="stylesheet" href="_ortak/gastro-ek.css">
+<link rel="stylesheet" href="_ortak/gastro-ek-a.css">
+<link rel="stylesheet" href="_ortak/gastro-ek-b.css">
+<link rel="stylesheet" href="_ortak/gastro-ek-c.css">
+<link rel="stylesheet" href="_ortak/gastro-ek-d.css">
+<!-- GASTRO-EK:CSS:SON -->
 </head>
 <body class="yetkili" data-marka="gastro">
 <!-- ═══ GASTRO ADMIN · KANONİK KABUK — lead üretti, agent DEĞİŞTİRMEZ.
@@ -71,7 +78,7 @@
 
     <div class="panel-menu-bolum">02 Operasyon</div>
     <a class="panel-menu-link" href="admin-uyeler.html"><i class="fa-solid fa-users"></i>Üyeler &amp; Yetkiler</a>
-    <a class="panel-menu-link" href="admin-abonelikler.html"><i class="fa-solid fa-credit-card"></i>Abonelikler</a>
+    <a class="panel-menu-link" href="admin-paket-alimlari.html"><i class="fa-solid fa-credit-card"></i>Paket Alımları</a><a class="panel-menu-link" href="admin-sef-abonelikleri.html"><i class="fa-solid fa-hand-holding-dollar"></i>Şef Abonelikleri</a>
     <a class="panel-menu-link" href="admin-odemeler.html"><i class="fa-solid fa-money-bill-wave"></i>Ödemeler</a>
     <a class="panel-menu-link" href="admin-faturalar.html"><i class="fa-solid fa-file-invoice"></i>Faturalar<span class="sayac">7</span></a>
     <a class="panel-menu-link" href="admin-destek.html"><i class="fa-solid fa-life-ring"></i>Destek Talepleri<span class="sayac">12</span></a>
@@ -176,13 +183,20 @@
             <div class="form-sekmeler" role="tablist" aria-label="Form bölümleri">
               <button class="form-sekme aktif" type="button" role="tab" aria-selected="true" data-panel="kunye" id="sekme-0-0" aria-controls="pano-0-0">Künye</button>
               <button class="form-sekme" type="button" role="tab" aria-selected="false" data-panel="anlatim" tabindex="-1" id="sekme-0-1" aria-controls="pano-0-1">Anlatım</button>
-              <button class="form-sekme" type="button" role="tab" aria-selected="false" data-panel="baglar" tabindex="-1" id="sekme-0-2" aria-controls="pano-0-2">Bağlar</button>
-              <button class="form-sekme" type="button" role="tab" aria-selected="false" data-panel="seo" tabindex="-1" id="sekme-0-3" aria-controls="pano-0-3">SEO</button>
+                            <button class="form-sekme" type="button" role="tab" aria-selected="false" data-panel="seo" tabindex="-1" id="sekme-0-2" aria-controls="pano-0-2">SEO</button>
             </div>
           </div>
 
           <!-- ---- KÜNYE ---- -->
           <div data-form-panel="kunye" id="pano-0-0" role="tabpanel" aria-labelledby="sekme-0-0">
+            <div class="form-bolum">
+              <h3 class="form-bolum-bas"><i class="fa-solid fa-image" aria-hidden="true"></i> Kapak görseli</h3>
+              <div id="afKapak"><div class="birak-alani" tabindex="0" role="button" aria-label="Görsel seç ya da sürükle"><span><i class="fa-solid fa-cloud-arrow-up" aria-hidden="true"></i></span><b>Görseli sürükle ya da seçmek için tıkla</b><small>Tek kapak görseli. Kütüphaneden seç ya da sürükle.</small><span class="dugme hayalet">Kütüphaneden seç</span></div><input type="file" hidden="" accept="image/*"><div class="cipler"></div></div>
+              <div class="alan-yardim"><span>Madde sayfasının üstündeki tam genişlik sahnesinde
+                (<code>rd-stage</code>) ve liste kartında basılır. Ölçüldü: <b>6/6</b> madde sayfası
+                bir kapak görseli taşıyor; admin'de görsel bölümü <b>hiç yoktu</b>.</span></div>
+            </div>
+
             <div class="form-bolum">
               <h3 class="form-bolum-bas"><i class="fa-solid fa-id-card" aria-hidden="true"></i> Künye</h3>
               <div>
@@ -198,15 +212,77 @@
                 </div>
                 <div class="alan kart-izgara c2">
                   <div class="alan">
-                    <label for="afKategori" class="alan-etiket">Kategori <span class="zorunlu">*</span></label>
-                    <input class="alan-girdi" id="afKategori" name="kategori" type="text" required="" maxlength="120" placeholder="Örn. Peynirler">
-                    <div class="alan-yardim"><span>Süzgeç bu metni gruplar; aynı kategoriyi iki farklı yazımla yazmak listede iki ayrı grup üretir.</span></div>
+                    <label class="alan-etiket" for="afKategoriAra">Kategori <span class="zorunlu">*</span></label>
+                    <!-- L5 · aranabilir seçim. 26 kategori public `mutfak-ansiklopedisi.html`
+                         kategori kartlarından HASAT edildi (toplam 1200 madde) — uydurma yok. -->
+                    <div id="afKategori" class="coklu-secim" data-tek data-ad="kategori" data-oneri="kategori" data-secenek='["Baharatlar", "Bakliyatlar", "Balıklar", "Deniz Ürünleri", "Domatesler", "Etler", "Fermente Ürünler", "Kahveler", "Kuruyemişler", "Mantarlar", "Meyveler", "Otlar", "Peynirler", "Pirinçler", "Pişirme Malzemeleri", "Sebzeler", "Sirkeler", "Süt Ürünleri", "Tahıllar", "Tatlandırıcılar", "Tuzlar", "Yağlar", "Yumurtalar", "Çaylar", "Çikolatalar", "İçecek Hammaddeleri"]'>
+                      <input type="hidden" data-cs name="kategori" value="">
+                      <div class="coklu-kutu"><input class="acilir-arama" id="afKategoriAra" type="text" placeholder="Kategori ara…" aria-label="Kategori ara" autocomplete="off" role="combobox" aria-expanded="false"></div>
+                      <div class="acilir-yuzey" role="listbox" hidden=""></div>
+                      <div class="cipler"></div>
+                    </div>
+                    <div class="alan-yardim"><span>⚠ <b>VERİ ÇELİŞKİSİ — bildirildi, uydurulmadı.</b>
+                      Liste sayfası kategoriyi ÇOĞUL basıyor ("Baharatlar"), madde künyesi TEKİL
+                      ("Baharat"). Liste 26 kategorinin kaynağı olduğu için seçenekler oradan alındı;
+                      kayıttaki tekil değer çip olarak korunur ve serbest giriş açık bırakıldı.</span></div>
                   </div>
                   <div class="alan">
                     <label for="afObek" class="alan-etiket">Öbek <span class="zorunlu">*</span></label>
                     <select class="alan-secim" id="afObek" name="obek" required=""><option value="malzemeler" selected="">Malzemeler</option><option value="hayvansal">Hayvansal</option><option value="bitkisel">Bitkisel</option><option value="hazir">Hazır ve İşlenmiş</option></select>
                     <div class="alan-yardim"><span>Üye kategori sayfasından bu maddeye tıkladığında madde BU öbeğin altında listelenir (<code>mutfak-ansiklopedisi.html</code>). Madde iki öbeğe birden düşse de kayıt tek öbek taşır.</span></div>
                   </div>
+                </div>
+                <div class="alan kart-izgara c2">
+                  <div class="alan">
+                    <label for="afMevsim" class="alan-etiket">Mevsim</label>
+                    <!-- 🔴 YAYIN bölümünden KÜNYE'ye taşındı: public bunu bir yayın durumu değil,
+                         künye kartının (`kc-card`) ikinci satırı olarak basıyor — 6/6 madde. -->
+                    <select class="alan-secim" id="afMevsim" name="mevsim">
+                      <option value="tum-yil" selected="">Yıl boyu</option>
+                      <option value="ilkbahar">İlkbahar</option>
+                      <option value="yaz">Yaz</option>
+                      <option value="sonbahar">Sonbahar</option>
+                      <option value="kis">Kış</option>
+                    </select>
+                    <div class="alan-yardim"><span>Künye kartının “Mevsim” satırı. ⚠ Admin listesi bu
+                      değere “Tüm yıl”, public künye “Yıl boyu” diyordu; görünen metin public'e
+                      eşitlendi, kayıt anahtarı (<code>tum-yil</code>) değişmedi.</span></div>
+                  </div>
+                  <div class="alan">
+                    <label for="afKalori" class="alan-etiket">Kalori</label>
+                    <input class="alan-girdi" id="afKalori" name="kalori" type="text" maxlength="60" placeholder="~310 kcal">
+                    <div class="alan-yardim"><span>Künye kartının “Kalori” satırı — 6 madde sayfasının
+                      <b>5</b>'inde var (çeşni maddesinde “—”). Admin'de alan <b>yoktu</b>.</span></div>
+                  </div>
+                </div>
+                <div class="alan kart-izgara c2">
+                  <div class="alan">
+                    <label for="afKaloriNot" class="alan-etiket">Kalori notu <span class="acilir-kalem">— başlıktaki parantez</span></label>
+                    <input class="alan-girdi" id="afKaloriNot" name="kalori_not" type="text" maxlength="120" placeholder="100 g, yaklaşık">
+                  </div>
+                  <div class="alan">
+                    <label for="afSaklamaKisa" class="alan-etiket">Saklama <span class="acilir-kalem">— künyedeki tek satır</span></label>
+                    <input class="alan-girdi" id="afSaklamaKisa" name="saklama_kisa" type="text" maxlength="120" placeholder="Buzdolabında kapalı kapta birkaç gün">
+                    <div class="alan-yardim"><span>Künye kartının “Saklama” satırı (6/6). Anlatım
+                      sekmesindeki <b>“Nasıl Saklanır?”</b> uzun metninden AYRIDIR.</span></div>
+                  </div>
+                </div>
+                <div class="alan">
+                  <label for="afSaklamaNot" class="alan-etiket">Saklama notu <span class="acilir-kalem">— başlıktaki parantez</span></label>
+                  <input class="alan-girdi" id="afSaklamaNot" name="saklama_not" type="text" maxlength="160" placeholder="yüzeyine ince bir zeytinyağı tabakası eklemek tazeliğini korur">
+                </div>
+                <div class="alan">
+                  <label for="afKisaEtiket" class="alan-etiket">Kapak rozeti <span class="acilir-kalem">— görselin üstündeki tek cümle</span><span class="alan-sayac" data-say-for="afKisaEtiket">0 / 120</span></label>
+                  <input class="alan-girdi" id="afKisaEtiket" name="kisa_etiket" type="text" maxlength="120" placeholder="Örn. Türk mutfağının acılı biber-ceviz ezmesi">
+                  <div class="alan-yardim"><span>Public <code>tbadge t-green</code> rozeti — 6/6 madde
+                    taşıyor, admin'de alan <b>yoktu</b>. Ansiklopedi listesindeki
+                    <code>ans-badge</code> satırı da bu metni basıyor.</span></div>
+                </div>
+                <div class="alan">
+                  <label for="afKisaTanim" class="alan-etiket">Kısa tanım <span class="acilir-kalem">— başlığın altındaki giriş</span><span class="alan-sayac" data-say-for="afKisaTanim">0 / 400</span></label>
+                  <textarea class="alan-metin" id="afKisaTanim" name="kisa_tanim" maxlength="400" placeholder="İki cümleyle: madde nedir, nerede kullanılır?"></textarea>
+                  <div class="alan-yardim"><span>Public <code>rd-sub</code> paragrafı — 6/6 madde taşıyor,
+                    admin'de alan <b>yoktu</b>. Liste kartının açıklaması da buradan gelir.</span></div>
                 </div>
                 <div class="alan">
                   <label for="afAdres" class="alan-etiket">Adres <span class="zorunlu">*</span></label>
@@ -228,17 +304,17 @@
               <div>
                 <div class="alan">
                   <label for="afNedir" class="alan-etiket">Nedir? — madde gövdesi</label>
-                  <textarea class="alan-metin" id="afNedir" name="nedir" placeholder="Maddenin ne olduğu, nasıl seçildiği ve hangi tarifte kullanıldığı."></textarea><div class="metin-duzenleyici"><div class="duzenleyici-cubuk" role="toolbar" aria-label="Metin biçimlendirme"><button type="button" class="ikon-dugme" data-k="undo" title="Geri al" aria-label="Geri al" data-eylem="calistir" data-ad="Geri al"><i class="fa-solid fa-rotate-left" aria-hidden="true"></i></button><button type="button" class="ikon-dugme" data-k="redo" title="İleri al" aria-label="İleri al" data-eylem="calistir" data-ad="İleri al"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i></button><span class="duzenleyici-ayrac" aria-hidden="true"></span><select class="alan-secim" aria-label="Blok biçimi"><option value="p" selected="">Paragraf</option><option value="h2">Başlık 2</option><option value="blockquote">Alıntı</option></select><span class="duzenleyici-ayrac" aria-hidden="true"></span><button type="button" class="ikon-dugme" data-k="bold" title="Kalın" aria-label="Kalın"><i class="fa-solid fa-bold" aria-hidden="true"></i></button><button type="button" class="ikon-dugme" data-k="italic" title="İtalik" aria-label="İtalik"><i class="fa-solid fa-italic" aria-hidden="true"></i></button><span class="duzenleyici-ayrac" aria-hidden="true"></span><button type="button" class="ikon-dugme" data-k="insertUnorderedList" title="Madde listesi" aria-label="Madde listesi"><i class="fa-solid fa-list-ul" aria-hidden="true"></i></button><button type="button" class="ikon-dugme" data-k="insertOrderedList" title="Numaralı liste" aria-label="Numaralı liste"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></button><span class="duzenleyici-ayrac" aria-hidden="true"></span><button type="button" class="ikon-dugme" data-k="blockquote" title="Alıntı" aria-label="Alıntı"><i class="fa-solid fa-quote-left" aria-hidden="true"></i></button><button type="button" class="ikon-dugme" data-k="link" title="Bağlantı" aria-label="Bağlantı" data-eylem="calistir" data-ad="Bağlantı"><i class="fa-solid fa-link" aria-hidden="true"></i></button><span class="duzenleyici-ayrac" aria-hidden="true"></span><button type="button" class="ikon-dugme" data-k="removeFormat" title="Biçimi temizle" aria-label="Biçimi temizle"><i class="fa-solid fa-eraser" aria-hidden="true"></i></button><button type="button" class="ikon-dugme" data-k="code" title="Kaynağı gör" aria-label="Kaynağı gör" data-eylem="calistir" data-ad="Kaynağı gör"><i class="fa-solid fa-code" aria-hidden="true"></i></button></div><div class="duzenleyici-yuzey" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Maddenin ne olduğu, nasıl seçildiği ve hangi tarifte kullanıldığı." data-bos="Maddenin ne olduğu, nasıl seçildiği ve hangi tarifte kullanıldığı."></div><div class="duzenleyici-ayak"><span><b>0</b> kelime</span><span><b>0</b> karakter</span></div></div>
+                  <textarea class="alan-metin" id="afNedir" name="nedir" placeholder="Maddenin ne olduğu, nasıl seçildiği ve hangi tarifte kullanıldığı." data-editor="icerik"></textarea><div class="metin-duzenleyici"><div class="duzenleyici-cubuk" role="toolbar" aria-label="Metin biçimlendirme"><button type="button" class="ikon-dugme" data-k="undo" title="Geri al" aria-label="Geri al" data-eylem="calistir" data-ad="Geri al"><i class="fa-solid fa-rotate-left" aria-hidden="true"></i></button><button type="button" class="ikon-dugme" data-k="redo" title="İleri al" aria-label="İleri al" data-eylem="calistir" data-ad="İleri al"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i></button><span class="duzenleyici-ayrac" aria-hidden="true"></span><select class="alan-secim" aria-label="Blok biçimi"><option value="p" selected="">Paragraf</option><option value="h2">Başlık 2</option><option value="blockquote">Alıntı</option></select><span class="duzenleyici-ayrac" aria-hidden="true"></span><button type="button" class="ikon-dugme" data-k="bold" title="Kalın" aria-label="Kalın"><i class="fa-solid fa-bold" aria-hidden="true"></i></button><button type="button" class="ikon-dugme" data-k="italic" title="İtalik" aria-label="İtalik"><i class="fa-solid fa-italic" aria-hidden="true"></i></button><span class="duzenleyici-ayrac" aria-hidden="true"></span><button type="button" class="ikon-dugme" data-k="insertUnorderedList" title="Madde listesi" aria-label="Madde listesi"><i class="fa-solid fa-list-ul" aria-hidden="true"></i></button><button type="button" class="ikon-dugme" data-k="insertOrderedList" title="Numaralı liste" aria-label="Numaralı liste"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></button><span class="duzenleyici-ayrac" aria-hidden="true"></span><button type="button" class="ikon-dugme" data-k="blockquote" title="Alıntı" aria-label="Alıntı"><i class="fa-solid fa-quote-left" aria-hidden="true"></i></button><button type="button" class="ikon-dugme" data-k="link" title="Bağlantı" aria-label="Bağlantı" data-eylem="calistir" data-ad="Bağlantı"><i class="fa-solid fa-link" aria-hidden="true"></i></button><span class="duzenleyici-ayrac" aria-hidden="true"></span><button type="button" class="ikon-dugme" data-k="removeFormat" title="Biçimi temizle" aria-label="Biçimi temizle"><i class="fa-solid fa-eraser" aria-hidden="true"></i></button><button type="button" class="ikon-dugme" data-k="code" title="Kaynağı gör" aria-label="Kaynağı gör" data-eylem="calistir" data-ad="Kaynağı gör"><i class="fa-solid fa-code" aria-hidden="true"></i></button></div><div class="duzenleyici-yuzey" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Maddenin ne olduğu, nasıl seçildiği ve hangi tarifte kullanıldığı." data-bos="Maddenin ne olduğu, nasıl seçildiği ve hangi tarifte kullanıldığı."></div><div class="duzenleyici-ayak"><span><b>0</b> kelime</span><span><b>0</b> karakter</span></div></div>
                   <div class="alan-yardim"><span>Madde panelinin ana metni — detayın «Nedir?» bölümü.</span></div>
                 </div>
                 <div class="alan kart-izgara c2">
                   <div class="alan">
                     <label for="afBesinMetin" class="alan-etiket">Besin Değerleri</label>
-                    <textarea class="alan-metin" id="afBesinMetin" name="besin_degerleri"></textarea>
+                    <textarea class="alan-metin" id="afBesinMetin" name="besin_degerleri" data-editor="aciklama"></textarea>
                   </div>
                   <div class="alan">
                     <label for="afFayda" class="alan-etiket">Faydaları</label>
-                    <textarea class="alan-metin" id="afFayda" name="faydalari"></textarea>
+                    <textarea class="alan-metin" id="afFayda" name="faydalari" data-editor="aciklama"></textarea>
                   </div>
                 </div>
                 <div class="alan">
@@ -256,22 +332,22 @@
               <div>
                 <div class="alan">
                   <label for="afTuketim" class="alan-etiket">Nasıl Tüketilmeli?</label>
-                  <textarea class="alan-metin" id="afTuketim" name="tuketim" placeholder="Ölçülü tüketim, kimin dikkat etmesi gerektiği ve “besindir, tedavi değildir” notu."></textarea>
+                  <textarea class="alan-metin" id="afTuketim" name="tuketim" placeholder="Ölçülü tüketim, kimin dikkat etmesi gerektiği ve “besindir, tedavi değildir” notu." data-editor="aciklama"></textarea>
                   <div class="alan-yardim"><span>Madde sayfasında <b>“… Nasıl Tüketilmeli?”</b> başlıklı bölüm olarak basılır. Ölçüldü: dört madde sayfasının <b>birinde</b> bu bölüm var (<code>acuka</code>); boş bırakılırsa bölüm hiç basılmaz.</span></div>
                 </div>
                 <div class="alan kart-izgara c2">
                   <div class="alan">
                     <label for="afSecim" class="alan-etiket">Nasıl Seçilir?</label>
-                    <textarea class="alan-metin" id="afSecim" name="secim" placeholder="İyi bir örneğin rengi, kokusu, dokusu ve etiketinde aranacaklar."></textarea>
+                    <textarea class="alan-metin" id="afSecim" name="secim" placeholder="İyi bir örneğin rengi, kokusu, dokusu ve etiketinde aranacaklar." data-editor="aciklama"></textarea>
                   </div>
                   <div class="alan">
                     <label for="afSaklama" class="alan-etiket">Nasıl Saklanır?</label>
-                    <textarea class="alan-metin" id="afSaklama" name="saklama" placeholder="Kap, sıcaklık, süre ve tazeliği uzatan küçük hamle."></textarea>
+                    <textarea class="alan-metin" id="afSaklama" name="saklama" placeholder="Kap, sıcaklık, süre ve tazeliği uzatan küçük hamle." data-editor="aciklama"></textarea>
                   </div>
                 </div>
                 <div class="alan">
                   <label for="afMutfakta" class="alan-etiket">Mutfakta Kullanımı</label>
-                  <textarea class="alan-metin" id="afMutfakta" name="mutfakta" placeholder="Hangi tarifte, hangi aşamada ve neyle birlikte kullanılır."></textarea>
+                  <textarea class="alan-metin" id="afMutfakta" name="mutfakta" placeholder="Hangi tarifte, hangi aşamada ve neyle birlikte kullanılır." data-editor="aciklama"></textarea>
                   <div class="alan-yardim"><span>Dördü de madde gövdesinin kendi bölümleridir; sıraları public tarafta <b>Nedir → Besin Değerleri → Nasıl Tüketilmeli → Nasıl Seçilir → Nasıl Saklanır → Mutfakta Kullanımı</b> olarak sabittir.</span></div>
                 </div>
               </div>
@@ -284,7 +360,6 @@
               </h3>
               <div class="adim-liste" id="afSssListe">
                 <div class="adim-karti">
-                  <span class="adim-no" data-klon-metin="">1</span>
                   <div class="adim-govde">
                     <div class="alan">
                       <label class="alan-etiket">Soru</label>
@@ -295,12 +370,6 @@
                       <textarea class="alan-metin" data-field="cevap" name="sss_cevap[]" placeholder="Tek paragraf — soruya doğrudan cevap ver."></textarea>
                     </div>
                     <input type="hidden" data-field="position" value="0">
-                  </div>
-                  <div class="adim-yan">
-                    <button class="ikon-dugme tutamak" type="button" data-eylem="sirala" aria-label="Soruyu sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır">
-                      <i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button>
-                    <button class="ikon-dugme yikici" type="button" data-islem="sil" data-ad="Soruyu sil" aria-label="Soruyu sil">
-                      <i class="fa-solid fa-trash-can" aria-hidden="true"></i></button>
                   </div>
                 </div>
               </div>
@@ -322,8 +391,7 @@
                 </div>
                 <div class="adim-liste" id="afBesinListe">
                   <div class="adim-karti">
-                    <span class="adim-no" data-klon-metin="">1</span>
-                    <div class="adim-govde">
+                  <div class="adim-govde">
                       <div class="alan kart-izgara c2">
                         <div class="alan">
                           <label class="alan-etiket">Ölçüt</label>
@@ -336,15 +404,9 @@
                       </div>
                       <input type="hidden" data-field="position" value="0">
                     </div>
-                    <div class="adim-yan">
-                      <button class="ikon-dugme tutamak" type="button" data-eylem="sirala" aria-label="Besin satırını sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır">
-                        <i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button>
-                      <button class="ikon-dugme yikici" type="button" data-islem="sil" data-ad="Besin satırını sil" aria-label="Besin satırını sil">
-                        <i class="fa-solid fa-trash-can" aria-hidden="true"></i></button>
-                    </div>
-                  </div>
                 </div>
-                <button class="satir-ekle" type="button" id="afBesinEkle">
+              </div>
+                <button class="satir-ekle" type="button" id="afBesinEkle" data-eylem="satir-ekle">
                   <i class="fa-solid fa-plus" aria-hidden="true"></i> Besin satırı ekle</button>
                 <div class="alan-yardim"><span>🔴 <b>Değer alanı sayı değil metindir</b> ve bu ölçülerek böyle bırakıldı: public kutuda duran değerler <code>~70 kcal</code> · <code>~22 g (ceviz ve zeytinyağından)</code> · <code>yüksek</code> — üçü de <code>data-girdi="sayi"</code> maskesinden geçemez, maske veriyi bozardı. Yukarıdaki <b>Besin Değerleri</b> alanı ise gövdedeki düzyazı bölümüdür; bu kutu onun yerine geçmez.</span></div>
               </div>
@@ -357,7 +419,6 @@
               </h3>
               <div class="adim-liste" id="afKisaListe">
                 <div class="adim-karti">
-                  <span class="adim-no" data-klon-metin="">1</span>
                   <div class="adim-govde">
                     <div class="alan kart-izgara c2">
                       <div class="alan">
@@ -378,15 +439,9 @@
                     </div>
                     <input type="hidden" data-field="position" value="0">
                   </div>
-                  <div class="adim-yan">
-                    <button class="ikon-dugme tutamak" type="button" data-eylem="sirala" aria-label="Kısa bilgi kalemini sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır">
-                      <i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button>
-                    <button class="ikon-dugme yikici" type="button" data-islem="sil" data-ad="Kısa bilgi kalemini sil" aria-label="Kısa bilgi kalemini sil">
-                      <i class="fa-solid fa-trash-can" aria-hidden="true"></i></button>
-                  </div>
                 </div>
               </div>
-              <button class="satir-ekle" type="button" id="afKisaEkle">
+              <button class="satir-ekle" type="button" id="afKisaEkle" data-eylem="satir-ekle">
                 <i class="fa-solid fa-plus" aria-hidden="true"></i> Kalem ekle</button>
               <div class="alan-yardim"><span>Sağ sütundaki <b>“Kısa Bilgi”</b> kutusu. Ölçüldü: dört madde sayfasının dördünde de <b>tam 3 kalem</b> var; ikon havuzu o sayfalarda gerçekten kullanılan <b>10</b> glifden doğdu (uydurma yok).</span></div>
             </div>
@@ -395,37 +450,44 @@
               <h3 class="form-bolum-bas"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> Saklama ve güvenlik notu</h3>
               <div><div class="alan">
                 <label for="afGuvenlik" class="alan-etiket">Bu maddeye özgü uyarı</label>
-                <textarea class="alan-metin" id="afGuvenlik" name="guvenlik"></textarea>
-                <div class="alan-yardim"><span>🔴 Sağlıkla ilgili metin. Genel alerjen uyarısı Ayarlar'da tek yerden yönetilir; buraya yalnız <b>bu maddeye özgü</b> olan yazılır.</span></div>
+                <textarea class="alan-metin" id="afGuvenlik" name="guvenlik" data-editor="not" data-sablon="guvenlik"></textarea>
+                <div class="alan-yardim"><span>🔴 Sağlıkla ilgili metin. Genel alerjen uyarısı Ayarlar'da tek
+                  yerden yönetilir; buraya yalnız <b>bu maddeye özgü</b> olan yazılır.
+                  ⚠ L2 hazır metin şablonu bildirildi (<code>data-sablon="guvenlik"</code>) ama
+                  düğme <b>Gastro'da doğmuyor</b>: kütükteki 31 güvenlik şablonunun 31'i FIT'in
+                  anatomi formundan ve kit şablonu markaya göre süzüyor. Kütük salt okuma — KÖ-B3.</span></div>
               </div></div>
             </div>
-          </div>
-
-          <!-- ---- BAĞLAR ---- -->
-          <div data-form-panel="baglar" hidden="" id="pano-0-2" role="tabpanel" aria-labelledby="sekme-0-2">
             <div class="form-bolum">
-              <h3 class="form-bolum-bas"><i class="fa-solid fa-diagram-project" aria-hidden="true"></i> Bağlar</h3>
+              <h3 class="form-bolum-bas"><i class="fa-solid fa-utensils" aria-hidden="true"></i> Bu maddeyi kullanan tarifler</h3>
               <div>
                 <div class="alan">
-                  <label class="alan-etiket">İlgili maddeler</label>
-                  <div id="afKomsu" class="coklu-secim"><div class="coklu-kutu"><input class="acilir-arama" type="text" placeholder="Madde ara…" aria-label="Madde ara…" autocomplete="off" role="combobox" aria-expanded="false"></div><div class="acilir-yuzey" role="listbox" hidden=""></div></div>
-                  <div class="alan-yardim"><span>Madde panelinde “ilgili maddeler” olarak basılır; yalnız var olan ansiklopedi kayıtlarından seçilir.</span></div>
-                </div>
-                <div class="alan">
-                  <label class="alan-etiket">Bu maddeyi kullanan tarifler</label>
-                  <div id="afHareket" class="coklu-secim"><div class="coklu-kutu"><input class="acilir-arama" type="text" placeholder="Tarif ara…" aria-label="Tarif ara…" autocomplete="off" role="combobox" aria-expanded="false"></div><div class="acilir-yuzey" role="listbox" hidden=""></div></div>
-                  <div class="alan-yardim" id="afHrkNot"><span>Seçim maddenin <b>kendi</b> tarif dizisini kurar. Tarif kataloğunun ayrıca bu maddeyi kaç tarifte ana/yardımcı malzeme saydığı, kayıt bir ada kavuştuktan sonra Bağlam kartında görünür.</span></div>
-                </div>
-                <div class="alan">
-                  <label class="alan-etiket">Püf noktası bağı</label>
-                  <div id="afEkipman" class="coklu-secim"><div class="coklu-kutu"><input class="acilir-arama" type="text" placeholder="Püf noktası ara ya da yaz…" aria-label="Püf noktası ara ya da yaz…" autocomplete="off" role="combobox" aria-expanded="false"></div><div class="acilir-yuzey" role="listbox" hidden=""></div></div>
+                  <label class="alan-etiket" for="afTarifAra">İlişkili tarifler</label>
+                  <!-- 🔴 "Bağlar" SEKMESİ KALDIRILDI — üç alanın üçü de ayrı ayrı ölçüldü:
+                       · "İlgili maddeler"  → 6/6 sayfada var ama SİSTEM türetiyor: aynı
+                         kategorideki iki AYRI madde (acuka · amchur, ikisi de Baharat) birebir
+                         AYNI listeyi basıyor (Zencefil · Sumak · Karabiber). Elle yönetilen bir
+                         alan değil; yönetici doldursa da public onu basmıyor.
+                       · "Püf noktası bağı" → 6/6 sayfanın 0'ında püf bandı yok.
+                       · "Bu maddeyi kullanan tarifler" → 2/6 sayfada gerçek bir tarif bandı var
+                         ("Açaili tarifler" · "Ayranlı tarifler"). TEK GERÇEK ALAN; Anlatım
+                         sekmesine taşındı ve L5 ile gerçek tarif kayıtlarına bağlandı. -->
+                  <div id="afHareket" class="coklu-secim" data-ad="tarifler" data-kayit="tarifler">
+                    <input type="hidden" data-cs name="tarifler" value="">
+                    <div class="coklu-kutu"><input class="acilir-arama" id="afTarifAra" type="text" placeholder="Tarif ara…" aria-label="Tarif ara" autocomplete="off" role="combobox" aria-expanded="false"></div>
+                    <div class="acilir-yuzey" role="listbox" hidden=""></div>
+                    <div class="cipler"></div>
+                  </div>
+                  <div class="alan-yardim" id="afHrkNot"><span>Seçim maddenin <b>kendi</b> tarif bandını
+                    kurar (“<i>madde adı</i>lı tarifler”). Boş bırakılırsa band hiç basılmaz —
+                    ölçüldü: 6 madde sayfasının 4'ünde band yok.</span></div>
                 </div>
               </div>
             </div>
           </div>
 
           <!-- ---- SEO ---- -->
-          <div data-form-panel="seo" hidden="" id="pano-0-3" role="tabpanel" aria-labelledby="sekme-0-3">
+          <div data-form-panel="seo" hidden="" id="pano-0-2" role="tabpanel" aria-labelledby="sekme-0-2">
             <div class="form-bolum">
               <h3 class="form-bolum-bas"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i> Arama motoru</h3>
               <div>
@@ -457,7 +519,7 @@
           <div class="form-eylem kart-alt">
             <a class="dugme hayalet" href="admin-ansiklopedi.html">İptal</a>
             <button class="dugme hayalet" type="button" id="afTaslak" data-eylem="taslak">Taslak kaydet</button>
-            <button class="dugme birincil" type="button" id="afKaydet">Maddeyi kaydet</button>
+            <button class="dugme birincil" type="button" id="afKaydet" data-eylem="kaydet">Maddeyi kaydet</button>
           </div>
         <div class="bos-durum kart-ici" hidden=""><span class="bos-ikon"><i class="fa-solid fa-file-circle-question" aria-hidden="true"></i></span><h3>Bu adreste madde yok</h3><p>Adresteki slug ansiklopedide karşılık bulmuyor. Listeye dön ve bir madde seç.</p><a class="dugme birincil" href="admin-ansiklopedi.html">Ansiklopediye dön</a></div><div class="bos-durum kart-ici yetkisiz" data-durum="yetkisiz" hidden=""><span class="bos-ikon"><i class="fa-solid fa-lock" aria-hidden="true"></i></span><h3>Bu kaydı düzenleyemezsin</h3><p>Erişim istemek için yöneticinle görüş.</p></div><div class="bos-durum kart-ici servis-hatasi" data-durum="servis" hidden=""><span class="bos-ikon"><i class="fa-solid fa-plug-circle-xmark" aria-hidden="true"></i></span><h3>Kayıt yüklenemedi</h3><p>Bağlantı kurulamadı. Yeniden dene.</p><button class="dugme birincil" type="button" data-eylem="calistir" data-ad="Yeniden dene"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i> Yeniden dene</button><div class="hata-izi">Referans kodu <code>GAS-ADM-5208</code></div></div></div>
 
@@ -479,17 +541,8 @@
                   <label for="afTarih" class="alan-etiket">Yayın tarihi</label>
                   <input class="alan-girdi" id="afTarih" name="yayin_tarihi" type="date">
                 </div>
-                <div class="alan">
-                  <label for="afMevsim" class="alan-etiket">Mevsim rozeti</label>
-                  <select class="alan-secim" id="afMevsim" name="mevsim">
-                    <option value="tum-yil" selected="">Tüm yıl</option>
-                    <option value="ilkbahar">İlkbahar</option>
-                    <option value="yaz">Yaz</option>
-                    <option value="sonbahar">Sonbahar</option>
-                    <option value="kis">Kış</option>
-                  </select>
-                  <div class="alan-yardim"><span>Liste ekranının “Mevsim” sütununda basılan rozet. Beş değer, ansiklopedi listesinin kendi satırlarından ölçüldü.</span></div>
-                </div>
+                <!-- 🔴 "Mevsim rozeti" KÜNYE sekmesine taşındı: public onu bir yayın
+                     ayarı değil künye satırı olarak basıyor (6/6). -->
                 <div class="alan">
                   <span>Öbek sayfasında listele</span>
                   <label class="anahtar"><input type="checkbox" name="obekte" checked="">
@@ -530,10 +583,19 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/l10n/tr.js"></script>
 <script src="../../kanon/admin-editor-tr.js"></script>
+<script src="../../kanon/admin-ikon-kutuphane.js" defer></script>
+<script src="../../kanon/admin-veri.js" defer></script>
 <script src="../../kanon/admin-kit.js" defer></script>
 <script src="../../kanon/admin-editor.js" defer></script>
 <script src="../../kanon/admin-tarih.js" defer></script>
 <!-- ADMIN-KIT:JS:SON -->
+<!-- GASTRO-EK:JS:BAS -->
+<script src="_ortak/gastro-ek.js" defer></script>
+<script src="_ortak/gastro-ek-a.js" defer></script>
+<script src="_ortak/gastro-ek-b.js" defer></script>
+<script src="_ortak/gastro-ek-c.js" defer></script>
+<script src="_ortak/gastro-ek-d.js" defer></script>
+<!-- GASTRO-EK:JS:SON -->
 <!-- KAYIT KAYNAGI — form kendi kayitlarini BILDIRIR (kit §5b).
      ANAHTAR: satirin kendi `data-madde` degeri; 12 satirin 12si benzersiz (olculdu).
      KUNYE (ad · latin · kategori · obek · slug · mevsim) 12 kaydin 12sinde
@@ -553,12 +615,12 @@
   "slug": "abaza-peyniri",
   "mevsim": "tum-yil",
   "durum": "yayin",
-  "nedir": "Abaza peyniri, Kafkas kökenli Abaza (Abhaz) topluluğunun mutfağına özgü, örülüp tel tel açılan yapıda bir peynirdir. Türkiye’de özellikle Samsun (Düzköy) ve Abaza nüfusun bulunduğu yörelerde üretilir ve bilinir.\nTaze telli peynir örülerek şekillendirilir; genellikle tuzlu ve dolgun dokuludur. Dil ve çerkez peyniriyle akraba bir örme peynir grubunun parçasıdır, yöresel üretim ayrıntılarıyla kendine özgü bir karakter taşır.",
-  "besin_degerleri": "Abaza peynirine özgü, doğrulanmış bir besin veri seti bulunmadığından ve üretim sütü ile tuz-yağ oranı yöreye göre değiştiğinden sayısal bir tablo verilmemiştir. Diğer peynirler gibi protein ve kalsiyum kaynağı olduğu bilinir.",
-  "faydalari": "Bir peynir olarak abaza peyniri protein ve kalsiyum kaynağıdır ve dengeli beslenmenin bir parçası olarak değerlendirilebilir; tuzlu bir ürün olduğundan ölçülü tüketilmesi önerilir.\nBu bilgiler geneldir; abaza peyniri bir besindir, tıbbi tedavi yerine geçmez.",
-  "secim": "Kaliteli abaza peyniri düzgün örülmüş, beyaz-krem renkli ve hoş kokulu olmalıdır; ekşi koku, aşırı sararma ya da küf lekesi kusur göstergesidir.\n• Peynir düzgün örülü, beyaz-krem renkli olmalı • Tel tel açılan dolgun bir yapıya sahip olmalı • Ekşi koku ve sararma tazeliğin geçtiğini gösterir",
-  "saklama": "Abaza peyniri buzdolabında kendi salamurasında ya da kapalı bir kapta haftalarca saklanır; nem ve kokuları çekmemesi için sıkıca sarılması önerilir. Fazla tuzlu ise suda bekletilerek tuzu azaltılır.",
-  "mutfakta": "Abaza peyniri en çok sade olarak kahvaltıda ve meze tabaklarında tüketilir; tel tel açılarak servis edilir ve peynirli börek-gözleme gibi tariflerde de kullanılır.\nÖrme yapı elle ya da bıçakla tel tel açılıp tabağa alınır; sade, zeytin ve taze yeşilliklerle kahvaltı ve meze olarak sunulur.\nEvet; tel tel yapısı ve tuzlu tadıyla peynirli börek, gözleme ve poğaça iç harçlarında değerlendirilebilir.",
+  "nedir": "<p>Abaza peyniri, Kafkas kökenli Abaza (Abhaz) topluluğunun mutfağına özgü, örülüp tel tel açılan yapıda bir peynirdir. Türkiye’de özellikle Samsun (Düzköy) ve Abaza nüfusun bulunduğu yörelerde üretilir ve bilinir.</p> <p>Taze telli peynir örülerek şekillendirilir; genellikle tuzlu ve dolgun dokuludur. Dil ve çerkez peyniriyle akraba bir örme peynir grubunun parçasıdır, yöresel üretim ayrıntılarıyla kendine özgü bir karakter taşır.</p>",
+  "besin_degerleri": "<p>Abaza peynirine özgü, doğrulanmış bir besin veri seti bulunmadığından ve üretim sütü ile tuz-yağ oranı yöreye göre değiştiğinden sayısal bir tablo verilmemiştir. Diğer peynirler gibi protein ve kalsiyum kaynağı olduğu bilinir.</p>",
+  "faydalari": "<p>Bir peynir olarak abaza peyniri protein ve kalsiyum kaynağıdır ve dengeli beslenmenin bir parçası olarak değerlendirilebilir; tuzlu bir ürün olduğundan ölçülü tüketilmesi önerilir.</p> <p>Bu bilgiler geneldir; abaza peyniri bir besindir, tıbbi tedavi yerine geçmez.</p>",
+  "secim": "<p>Kaliteli abaza peyniri düzgün örülmüş, beyaz-krem renkli ve hoş kokulu olmalıdır; ekşi koku, aşırı sararma ya da küf lekesi kusur göstergesidir.</p> <ul> <li>Peynir düzgün örülü, beyaz-krem renkli olmalı</li> <li>Tel tel açılan dolgun bir yapıya sahip olmalı</li> <li>Ekşi koku ve sararma tazeliğin geçtiğini gösterir</li> </ul>",
+  "saklama": "<p>Abaza peyniri buzdolabında kendi salamurasında ya da kapalı bir kapta haftalarca saklanır; nem ve kokuları çekmemesi için sıkıca sarılması önerilir. Fazla tuzlu ise suda bekletilerek tuzu azaltılır.</p>",
+  "mutfakta": "<p>Abaza peyniri en çok sade olarak kahvaltıda ve meze tabaklarında tüketilir; tel tel açılarak servis edilir ve peynirli börek-gözleme gibi tariflerde de kullanılır.</p>",
   "sss_soru": [
    "Abaza peyniri nereye özgüdür?",
    "Abaza peyniri ile çerkez peyniri farkı nedir?",
@@ -574,9 +636,9 @@
    "Salamurada ve buzdolabında haftalarca saklanabilir; kapalı ve serin tutulduğunda tazeliğini korur."
   ],
   "kisa_ikon": [
-   "fa-solid fa-link",
-   "fa-solid fa-utensils",
-   "fa-solid fa-jar"
+   "fa-link",
+   "fa-utensils",
+   "fa-jar"
   ],
   "kisa_baslik": [
    "Örme-telli yapı",
@@ -590,7 +652,11 @@
   ],
   "meta_title": "Abaza Peyniri Nedir? Özellikleri ve Kullanımı",
   "meta_desc": "Abaza peyniri nedir, nasıl tüketilir? Örme-telli yöresel peynirin özellikleri, kahvaltı kullanımı, seçme ve saklama önerileriyle rehber.",
-  "focus": "abaza peyniri"
+  "focus": "abaza peyniri",
+  "saklama_kisa": "Buzdolabında salamurasında haftalarca",
+  "saklama_not": "kapalı kapta, kokuları çekmemesi için sarılı",
+  "kisa_etiket": "Tel tel yöresel peynir",
+  "kisa_tanim": "Abaza (Abhaz) mutfağına özgü, örme-telli yapıda, genellikle tuzlu ve dolgun bir peynir. Düzeköy-Samsun ve Kafkas kökenli yörelerde bilinir."
  },
  "acai": {
   "ad": "Açai",
@@ -600,12 +666,12 @@
   "slug": "acai",
   "mevsim": "tum-yil",
   "durum": "yayin",
-  "nedir": "Açai (Euterpe oleracea), Amazon havzasındaki açaí palmiyesinin salkımlar hâlinde yetişen küçük, koyu mor meyvesidir. Yenilebilir eti çok ince olup büyük bir çekirdek çevresinde yer alır.\nTaze meyve hasattan sonra çok çabuk bozulduğundan çoğunlukla üretim bölgesinde işlenir; donmuş püre, toz ya da meyve suyu olarak dünyaya ulaşır. Koyu rengi ve hafif toprağımsı-çikolatamsı tadıyla tanınır.",
-  "besin_degerleri": "Açai püresi, çoğu meyveden farklı olarak 100 gramda yaklaşık 70 kcal enerji ile bir miktar yağ içerir; lif ve bitkisel antioksidan bakımından zengindir. Değerler şekersiz püre için yaklaşık verilmiştir; hazır ürünlerde eklenen şekere dikkat edilmelidir.",
-  "faydalari": "Lif ve bitkisel antioksidan içeriğiyle açai, dengeli beslenmenin bir parçası olarak değerlendirilebilir; hazır ürünlerdeki ilave şeker miktarına dikkat edilmesi önerilir.\nBu bilgiler geneldir; açai bir besindir, tıbbi tedavi yerine geçmez.",
-  "secim": "Donmuş açai püresi alırken içindekilerin sade (şekersiz ya da az şekerli) olmasına, tozunda ise katkısız açaí olmasına dikkat edilir. Koyu mor renk kaliteli püreye işaret eder.\n• Donmuş püre koyu mor ve mümkünse şekersiz olmalı • Toz üründe katkısız açaí tercih edilmeli • İçindeki ilave şeker miktarı okunmalı",
-  "saklama": "Donmuş açai püresi dondurucuda saklanır ve çözüldükten sonra tekrar dondurulmamalıdır; açaí tozu ise ağzı kapalı kapta kuru ve serin yerde tutulur. Taze meyve dayanmadığından pratikte bulunmaz.",
-  "mutfakta": "Açai en çok smoothie ve “açaí kâsesi”nde kullanılır; donmuş püre muz gibi meyvelerle blenderdan geçirilip üzerine granola, taze meyve ve tohum eklenir. Toz hâli içecek ve tatlılara renk-aroma katmak için de kullanılır.\nDonmuş açai püresi az sıvı ve muzla kalın kıvamda blenderdan geçirilir; kâseye alınıp üzerine granola, taze meyve ve fındık-tohum eklenerek kaşıkla tüketilir.",
+  "nedir": "<p>Açai (<em>Euterpe oleracea</em>), Amazon havzasındaki açaí palmiyesinin salkımlar hâlinde yetişen küçük, koyu mor meyvesidir. Yenilebilir eti çok ince olup büyük bir çekirdek çevresinde yer alır.</p> <p>Taze meyve hasattan sonra çok çabuk bozulduğundan çoğunlukla üretim bölgesinde işlenir; donmuş püre, toz ya da meyve suyu olarak dünyaya ulaşır. Koyu rengi ve hafif toprağımsı-çikolatamsı tadıyla tanınır.</p>",
+  "besin_degerleri": "<p>Açai püresi, çoğu meyveden farklı olarak 100 gramda yaklaşık 70 kcal enerji ile bir miktar <strong>yağ</strong> içerir; <strong>lif</strong> ve bitkisel antioksidan bakımından zengindir. Değerler şekersiz püre için yaklaşık verilmiştir; hazır ürünlerde eklenen şekere dikkat edilmelidir.</p>",
+  "faydalari": "<p>Lif ve bitkisel antioksidan içeriğiyle açai, dengeli beslenmenin bir parçası olarak değerlendirilebilir; hazır ürünlerdeki ilave şeker miktarına dikkat edilmesi önerilir.</p> <p>Bu bilgiler geneldir; açai bir besindir, tıbbi tedavi yerine geçmez.</p>",
+  "secim": "<p>Donmuş açai püresi alırken içindekilerin sade (şekersiz ya da az şekerli) olmasına, tozunda ise katkısız açaí olmasına dikkat edilir. Koyu mor renk kaliteli püreye işaret eder.</p> <ul> <li>Donmuş püre koyu mor ve mümkünse şekersiz olmalı</li> <li>Toz üründe katkısız açaí tercih edilmeli</li> <li>İçindeki ilave şeker miktarı okunmalı</li> </ul>",
+  "saklama": "<p>Donmuş açai püresi dondurucuda saklanır ve çözüldükten sonra tekrar dondurulmamalıdır; açaí tozu ise ağzı kapalı kapta kuru ve serin yerde tutulur. Taze meyve dayanmadığından pratikte bulunmaz.</p>",
+  "mutfakta": "<p>Açai en çok smoothie ve “açaí kâsesi”nde kullanılır; donmuş püre muz gibi meyvelerle blenderdan geçirilip üzerine granola, taze meyve ve tohum eklenir. Toz hâli içecek ve tatlılara renk-aroma katmak için de kullanılır.</p>",
   "sss_soru": [
    "Açai neden taze bulunmaz?",
    "Açainin tadı nasıldır?",
@@ -616,7 +682,7 @@
    "Çok tatlı değildir; hafif toprağımsı, böğürtlen ve bitter çikolatayı andıran bir tada sahiptir, bu yüzden genellikle meyveyle tatlandırılır.",
    "Bir-iki çay kaşığı toz, smoothie, yoğurt ve tatlılara eklenerek renk ve aroma katmak için kullanılır."
   ],
-  "besin_porsiyon": "100 g püre, ~yaklaşık (şekersiz açaí püresi)",
+  "besin_porsiyon": "100 g püre, ~yaklaşık (şekersiz açaí püresi",
   "besin_ad": [
    "Enerji",
    "Yağ",
@@ -630,9 +696,9 @@
    "yüksek"
   ],
   "kisa_ikon": [
-   "fa-solid fa-bowl-food",
-   "fa-solid fa-snowflake",
-   "fa-solid fa-droplet"
+   "fa-bowl-food",
+   "fa-snowflake",
+   "fa-droplet"
   ],
   "kisa_baslik": [
    "Açaí kâsesi",
@@ -646,7 +712,12 @@
   ],
   "meta_title": "Açai Nedir? Nasıl Kullanılır ve Tüketilir?",
   "meta_desc": "Açai nasıl kullanılır? Amazon palmiyesinin koyu meyvesinin donmuş püre ve toz hâlinde smoothie-kâse kullanımı, besin profili ve saklama önerileriyle rehber.",
-  "focus": "açai"
+  "focus": "açai",
+  "kalori": "70 kcal",
+  "saklama_kisa": "Donmuş püresi dondurucuda; tozu kuru-serin",
+  "saklama_not": "tazesi çok çabuk bozulur",
+  "kisa_etiket": "Amazon palmiyesinin koyu meyvesi",
+  "kisa_tanim": "Amazon palmiyesinin küçük, koyu mor meyvesi. Eti azdır ve çabuk bozulur; çoğunlukla donmuş püre ya da toz hâlinde smoothie ve kâselerde kullanılır."
  },
  "acuka": {
   "ad": "Acuka",
@@ -656,12 +727,12 @@
   "slug": "acuka",
   "mevsim": "tum-yil",
   "durum": "yayin",
-  "nedir": "Acuka, kırmızı biber salçası, dövülmüş ceviz, pul biber, sarımsak ve baharatların bir araya getirilmesiyle yapılan, Türk mutfağının acılı bir mezesidir. Özellikle Güneydoğu Anadolu ve Akdeniz bölgesinde yaygındır.\nRengi koyu kırmızı, dokusu kalın-ezme kıvamındadır; muhammaraya çok benzese de genellikle daha acı ve nar ekşisi ölçüsü tariften tarife değişen bir Türk yorumudur.",
-  "besin_degerleri": "100 gram acuka yaklaşık 310 kcal enerji içerir; cevizden ve zeytinyağından gelen yağ taşır. Değerler tarife göre değişir, yaklaşıktır.",
-  "tuketim": "Acuka, dengeli beslenmenin bir parçası şeklinde, meze/sos olarak ölçülü miktarlarda tüketilir.\nBu bilgiler geneldir; acuka bir besindir, tıbbi tedavi yerine geçmez. Kuruyemiş alerjisi olanların ve acı toleransı düşük kişilerin ölçülü tüketmesi önerilir.",
-  "secim": "İyi bir acuka; rengi koyu kırmızı, kokusu belirgin biber-cevizli ve içindekiler listesinde gerçek biber salçası ve ceviz oranı yüksek olandır.\n• Rengi koyu kırmızı olmalı • Kokusu belirgin biber-cevizli olmalı, bayat-küf kokmamalı • İçindekiler listesinde gerçek biber salçası ve ceviz oranı yüksek olmalı",
-  "saklama": "Acuka, buzdolabında kapalı bir kapta birkaç gün saklanabilir; yüzeyine ince bir zeytinyağı tabakası eklemek havayla temasını azaltıp tazeliğini uzatır.",
-  "mutfakta": "Acuka en çok kahvaltı sofrasında ekmeğe sürülerek, meze tabağının parçası olarak ve bazı yöresel çorbalara tat vermek için kullanılır.",
+  "nedir": "<p>Acuka, kırmızı biber salçası, dövülmüş ceviz, pul biber, sarımsak ve baharatların bir araya getirilmesiyle yapılan, Türk mutfağının acılı bir mezesidir. Özellikle Güneydoğu Anadolu ve Akdeniz bölgesinde yaygındır.</p> <p>Rengi koyu kırmızı, dokusu kalın-ezme kıvamındadır; muhammaraya çok benzese de genellikle daha acı ve nar ekşisi ölçüsü tariften tarife değişen bir Türk yorumudur.</p>",
+  "besin_degerleri": "<p>100 gram acuka yaklaşık 310 kcal enerji içerir; cevizden ve zeytinyağından gelen <strong>yağ</strong> taşır. Değerler tarife göre değişir, yaklaşıktır.</p>",
+  "tuketim": "<p>Acuka, dengeli beslenmenin bir parçası şeklinde, meze/sos olarak ölçülü miktarlarda tüketilir.</p> <p>Bu bilgiler geneldir; acuka bir besindir, tıbbi tedavi yerine geçmez. Kuruyemiş alerjisi olanların ve acı toleransı düşük kişilerin ölçülü tüketmesi önerilir.</p>",
+  "secim": "<p>İyi bir acuka; rengi koyu kırmızı, kokusu belirgin biber-cevizli ve içindekiler listesinde gerçek biber salçası ve ceviz oranı yüksek olandır.</p> <ul> <li>Rengi koyu kırmızı olmalı</li> <li>Kokusu belirgin biber-cevizli olmalı, bayat-küf kokmamalı</li> <li>İçindekiler listesinde gerçek biber salçası ve ceviz oranı yüksek olmalı</li> </ul>",
+  "saklama": "<p>Acuka, buzdolabında kapalı bir kapta birkaç gün saklanabilir; yüzeyine ince bir zeytinyağı tabakası eklemek havayla temasını azaltıp tazeliğini uzatır.</p>",
+  "mutfakta": "<p>Acuka en çok kahvaltı sofrasında ekmeğe sürülerek, meze tabağının parçası olarak ve bazı yöresel çorbalara tat vermek için kullanılır.</p>",
   "sss_soru": [
    "Acuka ile muhammara aynı şey mi?",
    "Acuka evde nasıl yapılır?",
@@ -682,9 +753,9 @@
    "~22 g (ceviz ve zeytinyağından)"
   ],
   "kisa_ikon": [
-   "fa-solid fa-pepper-hot",
-   "fa-solid fa-bread-slice",
-   "fa-solid fa-rotate"
+   "fa-pepper-hot",
+   "fa-bread-slice",
+   "fa-rotate"
   ],
   "kisa_baslik": [
    "Belirgin acılı",
@@ -698,7 +769,13 @@
   ],
   "meta_title": "Acuka Nedir? Muhammaradan Farkı ve Kullanımı",
   "meta_desc": "Acuka nedir, muhammaradan farkı ne? Türk mutfağının acılı biber-ceviz ezmesinin kullanımı, seçme ve saklama önerileri.",
-  "focus": "acuka"
+  "focus": "acuka",
+  "kalori": "~310 kcal",
+  "kalori_not": "100 g, yaklaşık",
+  "saklama_kisa": "Buzdolabında kapalı kapta birkaç gün",
+  "saklama_not": "yüzeyine ince bir zeytinyağı tabakası eklemek tazeliğini korur",
+  "kisa_etiket": "Türk mutfağının acılı biber-ceviz ezmesi",
+  "kisa_tanim": "Kırmızı biber salçası, ceviz, pul biber ve baharatların bir araya getirilmesiyle yapılan, koyu kırmızı ve acılı bir Türk mezesidir. Genellikle sarımsak ve nar ekşisiyle zenginleştirilir, ekmeğe sürülerek tüketilir."
  },
  "acur": {
   "ad": "Acur",
@@ -708,12 +785,12 @@
   "slug": "acur",
   "mevsim": "yaz",
   "durum": "yayin",
-  "nedir": "Acur (Cucumis melo var. flexuosus), görünüş olarak salatalığa çok benzeyen ama botanik olarak kavunla aynı türden olan uzun, hafif kavisli bir sebzedir. Kabuğu tüylü ve pürüzlü, eti ise salatalıktan daha sulu ve hafif tatlımsıdır.\nTürkiye’nin özellikle iç ve güney bölgelerinde yazın sık tüketilen acur, taze hasat edildiğinde en gevrek halindedir. Olgunlaştıkça kabuğu sertleşip sarımsı bir renk alır ve tadı hafifçe kavunumsu bir tona döner.",
-  "besin_degerleri": "Acurun su oranı çok yüksektir ve kalorisi salatalığa yakındır; 100 gramı yaklaşık 15 kcal taşır. Acur için ayrı bir USDA veri kaydı bulunmadığından bu değerler, botanik olarak benzer ve su-lif yapısı yakın olan salatalık verisine dayanarak yaklaşık olarak verilmiştir.",
-  "faydalari": "Yüksek su içeriğiyle acur, sıcak yaz günlerinde sıvı alımını desteklemenin ferahlatıcı bir yolu olarak değerlendirilir. Düşük kalorili yapısı, hafif ve doyurucu bir sebze arayanlar için uygundur.\nBu bilgiler geneldir; acur bir besindir, tıbbi tedavi yerine geçmez.",
-  "secim": "Taze acur orta boyda, kabuğu taze yeşil ve tüylü olmalıdır.\n• Orta boy tercih edilmeli; aşırı büyümüş acurlar sulanıp liflenir. • Kabuk taze yeşil, tüylü ve sert olmalı; sararma aşırı olgunlaşma işaretidir. • Elde tutulduğunda sert ve dirençli hissettirmeli, yumuşak nokta olmamalı.",
-  "saklama": "Acur, buzdolabının sebzeliğinde yıkanmadan 4-5 gün taze kalır. Salatalık gibi nem kaybına duyarlıdır; delikli bir poşette saklamak tazeliğini korumaya yardımcı olur.",
-  "mutfakta": "Acur çoğunlukla çiğ tüketilir; ince veya kalın doğranarak salatalara, tuzlanarak cacığa eklenir. Tüylü kabuğu nedeniyle yıkama sırasında yüzeyinin ovularak temizlenmesi önemlidir.\nAcur bol suyun altında elle veya yumuşak bir fırçayla ovularak yıkanır; tüylü yüzeyindeki toz ve kir bu şekilde giderilir. Kabuk ince olduğundan genellikle soyulmadan tüketilir.\nRendelenmiş acur hafifçe tuzlanıp suyu süzüldükten sonra süzme yoğurt, sarımsak ve nane ile karıştırılır; salatalık cacığına göre biraz daha hafif ve sulu bir kıvam verir.",
+  "nedir": "<p>Acur (<em>Cucumis melo var. flexuosus</em>), görünüş olarak salatalığa çok benzeyen ama botanik olarak kavunla aynı türden olan uzun, hafif kavisli bir sebzedir. Kabuğu tüylü ve pürüzlü, eti ise salatalıktan daha sulu ve hafif tatlımsıdır.</p> <p>Türkiye’nin özellikle iç ve güney bölgelerinde yazın sık tüketilen acur, taze hasat edildiğinde en gevrek halindedir. Olgunlaştıkça kabuğu sertleşip sarımsı bir renk alır ve tadı hafifçe kavunumsu bir tona döner.</p>",
+  "besin_degerleri": "<p>Acurun su oranı çok yüksektir ve kalorisi salatalığa yakındır; 100 gramı yaklaşık 15 kcal taşır. Acur için ayrı bir USDA veri kaydı bulunmadığından bu değerler, botanik olarak benzer ve su-lif yapısı yakın olan salatalık verisine dayanarak <strong>yaklaşık</strong> olarak verilmiştir.</p>",
+  "faydalari": "<p>Yüksek su içeriğiyle acur, sıcak yaz günlerinde sıvı alımını desteklemenin ferahlatıcı bir yolu olarak değerlendirilir. Düşük kalorili yapısı, hafif ve doyurucu bir sebze arayanlar için uygundur.</p> <p>Bu bilgiler geneldir; acur bir besindir, tıbbi tedavi yerine geçmez.</p>",
+  "secim": "<p>Taze acur orta boyda, kabuğu taze yeşil ve tüylü olmalıdır.</p> <ul> <li>Orta boy tercih edilmeli; aşırı büyümüş acurlar sulanıp liflenir.</li> <li>Kabuk taze yeşil, tüylü ve sert olmalı; sararma aşırı olgunlaşma işaretidir.</li> <li>Elde tutulduğunda sert ve dirençli hissettirmeli, yumuşak nokta olmamalı.</li> </ul>",
+  "saklama": "<p>Acur, buzdolabının sebzeliğinde yıkanmadan 4-5 gün taze kalır. Salatalık gibi nem kaybına duyarlıdır; delikli bir poşette saklamak tazeliğini korumaya yardımcı olur.</p>",
+  "mutfakta": "<p>Acur çoğunlukla çiğ tüketilir; ince veya kalın doğranarak salatalara, tuzlanarak cacığa eklenir. Tüylü kabuğu nedeniyle yıkama sırasında yüzeyinin ovularak temizlenmesi önemlidir.</p>",
   "sss_soru": [
    "Acurun kabuğu yenir mi?",
    "Acurun salatalıktan farkı nedir?",
@@ -728,7 +805,7 @@
    "Acur, yaz aylarında taze hasat edildiği dönemde en gevrek ve en lezzetli halindedir; olgunlaştıkça kabuğu sertleşip tadı değişir.",
    "Tuz, hücre zarlarındaki suyu ozmoz yoluyla dışarı çeker; bu yüzden rendelenmiş veya doğranmış acur tuzlandığında belirgin miktarda su bırakır, bu doğal bir süreçtir."
   ],
-  "besin_porsiyon": "100 g çiğ (yaklaşık, salatalığa yakın)",
+  "besin_porsiyon": "100 g çiğ (yaklaşık, salatalığa yakın",
   "besin_ad": [
    "Enerji",
    "Su Oranı",
@@ -742,9 +819,9 @@
    "~3,4 g"
   ],
   "kisa_ikon": [
-   "fa-solid fa-droplet",
-   "fa-solid fa-hand",
-   "fa-solid fa-rotate"
+   "fa-droplet",
+   "fa-hand",
+   "fa-rotate"
   ],
   "kisa_baslik": [
    "Tüylü kabuğunu ovma",
@@ -758,7 +835,12 @@
   ],
   "meta_title": "Acur Nedir? Faydaları, Salatalıktan Farkı ve Saklama",
   "meta_desc": "Acur nedir, salatalıktan farkı nedir? Besin değerleri, temizleme yöntemi ve saklama önerileriyle mutfak rehberi.",
-  "focus": "acur"
+  "focus": "acur",
+  "kalori": "~15 kcal",
+  "saklama_kisa": "Buzdolabında 4–5 gün",
+  "saklama_not": "sebzelikte, yıkanmadan",
+  "kisa_etiket": "Ferahlatıcı kabuk",
+  "kisa_tanim": "Görünüşte salatalığa benzeyen ama aslında kavun türü olan, tüylü kabuklu, uzun ve hafif kavisli bir sebze. Salatalıktan daha sulu ve hafif tatlımsı etiyle yaz sofralarının ferahlatıcısıdır."
  },
  "ancuez": {
   "ad": "Ançüez",
@@ -776,7 +858,64 @@
   "obek": "bitkisel",
   "slug": "ananas",
   "mevsim": "tum-yil",
-  "durum": "yayin"
+  "durum": "yayin",
+  "kalori": "50 kcal",
+  "kalori_not": "100 g, çiğ",
+  "saklama_kisa": "Kesildikten sonra buzdolabında 2–3 gün",
+  "kisa_etiket": "Tropikal ferahlık",
+  "kisa_tanim": "Sert, pullu kabuğu ve tatlı-ekşi, sulu etiyle tropikal mutfağın simgesi olan bir meyve. Çiğ tüketimin yanı sıra ızgara, tatlı ve içeceklerde de kullanılır.",
+  "nedir": "<p>Ananas (<em>Ananas comosus</em>), Bromeliaceae familyasından, tropikal iklimlerde yetişen, sert ve pullu kabuklu bir meyvedir. Aslında tek bir meyve değil, birçok küçük meyvenin bir eksen etrafında kaynaşmasıyla oluşan bileşik bir yapıdır.</p> <p>Tepesinde dikenli, taç benzeri yapraklar bulunur. Eti sarı, sulu ve tatlı-ekşi bir dengeye sahiptir; ortasındaki sert öz kısım genellikle tüketilmez.</p>",
+  "besin_degerleri": "<p>Ananas, 100 gramında yaklaşık 50 kcal enerji içeren bir meyvedir. Öne çıkan besin ögeleri <strong>C vitamini</strong> ve mangandır; ayrıca lif kaynağıdır.</p>",
+  "faydalari": "<p>C vitamini içeriğiyle ananas, dengeli beslenmenin parçası olarak öne çıkan tropikal meyvelerdendir. İçerdiği bromelain enzimi üzerine araştırmalar sürmektedir; bu çalışmalar henüz kesin bir sağlık önerisine dönüşmemiştir.</p> <p>Bu bilgiler geneldir; ananas bir besindir, tıbbi tedavi yerine geçmez.</p>",
+  "secim": "<p>Taze ananas, tepesindeki yapraklar hafifçe çekildiğinde kolay ayrılan ve tatlı bir koku yayan olandır; yeşilimsi kabuk her zaman ham olduğu anlamına gelmez.</p> <ul> <li>Tepe yaprakları hafifçe çekildiğinde kolayca ayrılmalı.</li> <li>Alt kısmından tatlı ve belirgin bir koku yaymalı.</li> <li>Kabukta yumuşak veya küflü bölge olmamalı.</li> </ul>",
+  "saklama": "<p>Bütün ananas oda sıcaklığında birkaç gün, buzdolabında ise yaklaşık bir hafta saklanabilir. Kesildikten sonra hava almayan bir kapta buzdolabında 2–3 gün içinde tüketilmesi önerilir.</p>",
+  "mutfakta": "<p>Ananas en çok çiğ tüketilir; ayrıca ızgara, tatlı ve içecek yapımında değerlendirilir. Etli yemeklerde içerdiği enzim sayesinde hafif bir yumuşatıcı etki de yaratabilir.</p>",
+  "sss_soru": [
+   "Ananas neye iyi gelir?",
+   "Ananas dilde neden yanma hissi yapar?",
+   "Ananas kabuğuyla mı yenir?",
+   "Ananas kaç kalori?",
+   "Ananas dondurulabilir mi?"
+  ],
+  "sss_cevap": [
+   "Ananas; C vitamini, mangan ve lif içeren, dengeli beslenmenin parçası olarak tüketilebilecek bir meyvedir. Bir besindir; herhangi bir hastalığı iyileştirme iddiası taşımaz.",
+   "Ananasın içerdiği bromelain enzimi proteinleri parçalar; bu durum ağız içindeki hassas dokularda geçici bir karıncalanma ya da hafif yanma hissine yol açabilir.",
+   "Hayır, kabuğu sert ve pullu olduğundan yenmez; tüketim öncesi tamamen soyulması gerekir.",
+   "100 gram ananas yaklaşık 50 kcal içerir; bir dilim (yaklaşık 84 g) ananas ise 42 kcal civarındadır.",
+   "Evet, soyulup küp doğrandıktan sonra dondurulabilir; smoothie ve tropikal tatlı tariflerinde doğrudan kullanılabilir."
+  ],
+  "besin_porsiyon": "100 g çiğ",
+  "besin_ad": [
+   "Enerji",
+   "Protein",
+   "Lif",
+   "Karbonhidrat",
+   "C Vitamini",
+   "Mangan"
+  ],
+  "besin_deger": [
+   "50 kcal",
+   "0,5 g",
+   "1,4 g",
+   "13,1 g",
+   "47,8 mg",
+   "0,9 mg"
+  ],
+  "kisa_ikon": [
+   "fa-hand",
+   "fa-snowflake",
+   "fa-rotate"
+  ],
+  "kisa_baslik": [
+   "Yapraklarını çekerek olgunluğu kontrol et",
+   "Kesince buzdolabında sakla",
+   "Alternatifi"
+  ],
+  "kisa_metin": [
+   "Kolay çıkan yaprak olgunluğa işaret eder",
+   "Hava almayan kapta 2–3 gün dayanır",
+   "Mango, papaya"
+  ]
  },
  "kekik": {
   "ad": "Kekik",
@@ -785,7 +924,54 @@
   "obek": "bitkisel",
   "slug": "kekik",
   "mevsim": "yaz",
-  "durum": "yayin"
+  "durum": "yayin",
+  "kalori": "—",
+  "kalori_not": "çeşni; çok az kullanılır",
+  "saklama_kisa": "Kurusu kapalı kavanozda, serin-karanlık",
+  "saklama_not": "tazesi buzdolabında kısa süre",
+  "kisa_etiket": "Anadolu mutfağının temel aromatik otu",
+  "kisa_tanim": "Kekikgiller ailesinden, güçlü ve sıcak aromalı bir mutfak otu. Taze ya da kurutulmuş kullanılır; et, sebze ve çorbalarda Anadolu mutfağının vazgeçilmez baharatlarından biridir.",
+  "nedir": "<p>Kekik, kekikgiller ailesinden, güçlü ve sıcak-baharatlı aroması olan bir mutfak otudur. Türkçede “kekik” adı, botanik olarak birbirine yakın birkaç türü (mercanköşk/Origanum ve Thymus grubu) kapsayacak biçimde geniş kullanılır.</p> <p>Taze ya da kurutulmuş olarak kullanılır; kurutulunca aroması yoğunlaşır. Anadolu mutfağının en temel baharatlarından biridir ve et, sebze, çorba ve zeytinyağlı yemeklere karakter katar.</p>",
+  "besin_degerleri": "<p>Kekik bir aroma-baharat olarak çok az miktarda kullanıldığından öğün besin değerine katkısı ihmal edilir; bu nedenle ayrıntılı bir besin tablosu verilmemiştir. Değeri kalorisinden değil güçlü aromasından gelir.</p>",
+  "secim": "<p>İyi kuru kekik; yeşil-canlı renkli, güçlü kokan ve içine yabancı madde karışmamış olandır. Rengi solmuş, kokusu zayıflamış ya da nemlenmiş ürünler tercih edilmez; tazesi ise diri ve canlı yapraklı olmalıdır.</p> <ul> <li>Kurusu yeşil-canlı ve güçlü kokmalı</li> <li>Nemlenmiş-solmuş olmamalı</li> <li>Tazesi diri ve canlı yapraklı olmalı</li> </ul>",
+  "saklama": "<p>Kuru kekik ağzı kapalı bir kavanozda, serin, kuru ve karanlık yerde saklanır; ışık ve nem aromasını zayıflatır. Taze kekik buzdolabında, nemli bir beze sarılı ya da suyu değiştirilerek kısa süre tutulur; kurutularak uzun süre saklanabilir.</p>",
+  "mutfakta": "<p>Kekik en çok et ve tavuk marinasyonu, ızgara, köfte, sebze yemekleri, çorba, pizza ve zeytinyağlılarda kullanılır. Kuru kekik pişirmenin başında, taze kekik ise sonuna doğru eklenerek aroması korunur.</p>",
+  "sss_soru": [
+   "Kekik ile mercanköşk aynı mı?",
+   "Kekik hangi yemeklere yakışır?",
+   "Kekik ne kadar kullanılmalı?"
+  ],
+  "sss_cevap": [
+   "Yakın akrabadırlar ve Türkçede “kekik” adı bazen mercanköşğü de kapsar; aromaları benzer olsa da tür ve yoğunluk bakımından farklılık gösterirler.",
+   "Et, tavuk, köfte, sebze yemekleri, çorba, pizza ve zeytinyağlılara çok yakışır; güçlü aroması bu yemeklere karakter katar.",
+   "Aroması güçlü olduğundan az miktarda, tada bakılarak eklenir; fazlası yemeği acımsı-baskın bir tada götürebilir."
+  ],
+  "besin_porsiyon": "çeşni; çok az kullanıldığından tabloya işlenmez",
+  "besin_ad": [
+   "Kullanım",
+   "Aroma",
+   "Kalori"
+  ],
+  "besin_deger": [
+   "baharat/çeşni",
+   "güçlü-sıcak",
+   "ihmal edilir"
+  ],
+  "kisa_ikon": [
+   "fa-leaf",
+   "fa-drumstick-bite",
+   "fa-triangle-exclamation"
+  ],
+  "kisa_baslik": [
+   "Aromatik ot",
+   "Et-sebze dostu",
+   "Uçucu yağı yoğun"
+  ],
+  "kisa_metin": [
+   "Güçlü, sıcak kokulu bir mutfak otudur",
+   "Et, sebze ve çorbalara aroma katar",
+   "Mutfakta az kullanılır; konsantre yağı ayrıdır"
+  ]
  },
  "enginar": {
   "ad": "Enginar",
@@ -794,7 +980,65 @@
   "obek": "bitkisel",
   "slug": "enginar",
   "mevsim": "ilkbahar",
-  "durum": "yayin"
+  "durum": "yayin",
+  "kalori": "47 kcal",
+  "kalori_not": "100 g, çiğ",
+  "saklama_kisa": "Buzdolabında 3–4 gün",
+  "saklama_not": "sapları suya batırılmış halde",
+  "kisa_etiket": "Lif kaynağı",
+  "kisa_tanim": "Yeşil-mor renkli, katmanlı yapraklarıyla dikkat çeken ilkbahar sebzesi. Zeytinyağlı yemeklerin klasiği; kalbi ve etli yaprak dipleriyle değerlendirilir.",
+  "nedir": "<p>Enginar (<em>Cynara cardunculus</em>), papatyagiller familyasından, açmamış çiçek tomurcuğu yenen bir sebzedir. Akdeniz kökenlidir; Türkiye'de özellikle Ege bölgesinde ilkbahar aylarında yoğun yetişir.</p> <p>Etli yaprak dipleri ve ortasındaki \"kalp\" kısmı yenir; yaprakların içindeki tüylü samanlık kısım çıkarılmadan tüketilmez. Hafif buruk, yer fıstığına yakın bir tadı vardır.</p>",
+  "besin_degerleri": "<p>Enginar diğer sebzelere göre nispeten yüksek lif içerir; 100 gramı yaklaşık 47 kcal enerji ve 5,4 g lif taşır. <strong>Folat</strong> ve <strong>potasyum</strong> bakımından zengindir, ayrıca magnezyum içerir.</p>",
+  "faydalari": "<p>Yüksek lif içeriğiyle enginar, dengeli beslenmenin parçası olarak öne çıkan sebzelerdendir. İçerdiği bitkisel bileşikler (ör. sinarin) üzerine araştırmalar sürmektedir; bu çalışmalar henüz genel bir sağlık önerisine dönüşmemiştir.</p> <p>Bu bilgiler geneldir; enginar bir besindir, tıbbi tedavi yerine geçmez.</p>",
+  "secim": "<p>Taze enginar sıkı kapanmış yapraklı, ağır ve sapı diri olandır; açılmış yapraklar bayatlamayı gösterir.</p> <ul> <li>Yapraklar sıkıca kapalı olmalı; gevşek, açılmış yapraklar tazeliğini yitirmiştir.</li> <li>Elde sıkıldığında hafif gıcırtı sesi vermesi tazelik işaretidir.</li> <li>Sap ucu kesildiğinde nemli ve yeşil görünmeli, kurumuş olmamalı.</li> </ul>",
+  "saklama": "<p>Enginar, sapı kesilip suya batırıldıktan sonra buzdolabında 3-4 gün tazeliğini korur. Temizlenmiş enginar kalpleri limonlu suda bekletilip dondurularak uzun süre saklanabilir.</p>",
+  "mutfakta": "<p>Enginar haşlanarak, zeytinyağlı olarak yavaş pişirilerek ya da kalpleri ayıklanıp sotelenerek değerlendirilir. Kesim sonrası hızla kararması nedeniyle limonlu suda bekletilmesi önemlidir.</p>",
+  "sss_soru": [
+   "Enginar neye iyi gelir?",
+   "Enginarın hangi kısmı yenir?",
+   "Enginar neden kararır?",
+   "Konserve enginar taze olan kadar besleyici mi?",
+   "Enginar çiğ yenir mi?"
+  ],
+  "sss_cevap": [
+   "Enginar; lif, folat ve potasyum açısından zengindir, dengeli beslenmenin parçası olarak öne çıkan sebzelerdendir. Bir besindir; herhangi bir hastalığı iyileştirme iddiası taşımaz.",
+   "Yaprakların etli dipleri ve ortadaki kalp kısmı yenir; dış sert yapraklar ile tüylü samanlık kısmı atılır.",
+   "Enginarda bulunan bazı bitkisel bileşikler havayla temas edince oksitlenip kararır; kesim sonrası limonlu suda bekletmek bu reaksiyonu yavaşlatır.",
+   "Konserve enginar pratik bir alternatiftir ancak işleme sırasında bir miktar C vitamini kaybı olabilir; buna karşın lif ve mineral içeriğinin büyük bölümünü korur.",
+   "Genç ve küçük enginarlar ince dilimlenip limonla marine edilerek çiğ tüketilebilir; olgun enginarlar ise sertliği nedeniyle pişirilerek tüketilir."
+  ],
+  "besin_porsiyon": "100 g çiğ",
+  "besin_ad": [
+   "Enerji",
+   "Protein",
+   "Lif",
+   "Karbonhidrat",
+   "Potasyum",
+   "Folat"
+  ],
+  "besin_deger": [
+   "47 kcal",
+   "3,3 g",
+   "5,4 g",
+   "10,5 g",
+   "370 mg",
+   "68 µg"
+  ],
+  "kisa_ikon": [
+   "fa-droplet",
+   "fa-fire-burner",
+   "fa-rotate"
+  ],
+  "kisa_baslik": [
+   "Limonlu suda bekletin",
+   "Kalbini çıkarın",
+   "Alternatifi"
+  ],
+  "kisa_metin": [
+   "Kesilen enginar hızla kararır, limonlu su önler",
+   "Tüylü kısım (samanlık) yenmez, kalp öncesi temizlenir",
+   "Kereviz, bakla"
+  ]
  },
  "levrek": {
   "ad": "Levrek",
@@ -803,7 +1047,61 @@
   "obek": "hayvansal",
   "slug": "levrek",
   "mevsim": "sonbahar",
-  "durum": "yayin"
+  "durum": "yayin",
+  "kalori": "97 kcal",
+  "kalori_not": "100 g, çiğ",
+  "saklama_kisa": "Buzdolabında 1–2 gün, dondurucuda 3 ay",
+  "saklama_not": "buzlu kapta",
+  "kisa_etiket": "Beyaz etli balık",
+  "kisa_tanim": "Yağsız, beyaz ve narin etiyle sevilen bir deniz balığı. Fırında, ızgarada ya da buğulama olarak; hem çiftlik hem doğal avlanmış olarak sofralara gelir.",
+  "nedir": "<p>Levrek (<em>Dicentrarchus labrax</em>), levrekgiller familyasından, gümüşi-gri renkli ve narin etli bir deniz balığıdır. Akdeniz ve Karadeniz'de hem doğal ortamda avlanır hem de yaygın olarak çiftliklerde yetiştirilir.</p> <p>Eti beyaz, yağsız ve az kılçıklıdır; hafif tatlımsı bir aroması vardır. Bu özellikleri sayesinde birçok pişirme yöntemine uygundur.</p>",
+  "besin_degerleri": "<p>Levrek yağsız beyaz etli balıklar grubundadır; 100 gramı yaklaşık 97 kcal enerji ve 18,4 g protein taşır, yağ oranı düşüktür (yaklaşık 2 g). Yüksek kaliteli protein kaynağı olarak öne çıkar.</p>",
+  "faydalari": "<p>Düşük yağ ve yüksek protein içeriğiyle levrek, dengeli beslenmenin parçası olarak tercih edilen deniz ürünlerindendir. Beyaz etli balıklar genel olarak sindirimi kolay bir protein kaynağı olarak değerlendirilir.</p> <p>Bu bilgiler geneldir; levrek bir besindir, tıbbi tedavi yerine geçmez.</p>",
+  "secim": "<p>Taze levrek parlak pullu, gözleri berrak ve dışa doğru şişkin, solungaçları canlı kırmızı olandır.</p> <ul> <li>Gözler berrak, parlak ve dışbükey olmalı; çökük gözler bayatlığı gösterir.</li> <li>Solungaçlar canlı kırmızı renkte olmalı, gri-kahverengi tonlar tazeliğin kaybolduğunu gösterir.</li> <li>Ten elle bastırıldığında hızla eski haline dönmeli, iz bırakmamalı.</li> </ul>",
+  "saklama": "<p>Taze levrek buzdolabında buz üzerinde en fazla 1-2 gün saklanabilir. Temizlenip yıkandıktan sonra sıkıca sarılarak dondurucuda 3 aya kadar bekletilebilir.</p>",
+  "mutfakta": "<p>Levrek fırında bütün olarak, ızgarada fileto halinde ya da buğulama şeklinde pişirilir. Eti narin olduğundan fazla pişirmemeye dikkat edilmelidir; aksi halde kuruyup dağılabilir.</p>",
+  "sss_soru": [
+   "Levrek neye iyi gelir?",
+   "Çiftlik levreği ile doğal levrek arasında fark var mı?",
+   "Levrek nasıl anlaşılır, pişti mi?",
+   "Levrek derisiyle mi pişirilir?",
+   "Levrek kılçıklı mıdır?"
+  ],
+  "sss_cevap": [
+   "Levrek; yüksek kaliteli protein ve düşük yağ içeriğiyle dengeli beslenmenin parçası olarak öne çıkan bir balıktır. Bir besindir; herhangi bir hastalığı iyileştirme iddiası taşımaz.",
+   "İkisi de besin değeri açısından benzer olsa da doğal levrek genelde biraz daha yağlı ve yoğun aromalı olabilir; çiftlik levreği ise daha standart boy ve dokuda bulunur.",
+   "Balığın en kalın kısmı çatalla hafifçe bastırıldığında pürüzsüzce dağılıyor ve eti opak beyaz görünüyorsa pişmiştir.",
+   "Evet, deri pişirme sırasında eti koruyup nem kaybını azaltır; ayrıca ızgara ve tavada çıtır bir doku kazandırır. İsteyenler pişirdikten sonra deriyi ayırabilir.",
+   "Levrek nispeten az kılçıklı bir balıktır; fileto haline getirildiğinde kılçıkların büyük bölümü kolayca ayrılır."
+  ],
+  "besin_porsiyon": "100 g çiğ",
+  "besin_ad": [
+   "Enerji",
+   "Protein",
+   "Yağ",
+   "Karbonhidrat"
+  ],
+  "besin_deger": [
+   "97 kcal",
+   "18,4 g",
+   "2,0 g",
+   "0 g"
+  ],
+  "kisa_ikon": [
+   "fa-fish",
+   "fa-fire-burner",
+   "fa-rotate"
+  ],
+  "kisa_baslik": [
+   "Pulunu temizletin",
+   "Fazla pişirmeyin",
+   "Alternatifi"
+  ],
+  "kisa_metin": [
+   "Balıkçıdan pullu-organsız aldırmak işi kolaylaştırır",
+   "Eti çabuk kurur, çatalla kolayca dağılınca hazırdır",
+   "Çipura, mercan"
+  ]
  },
  "yesil-mercimek": {
   "ad": "Yeşil Mercimek",
@@ -812,7 +1110,63 @@
   "obek": "malzemeler",
   "slug": "yesil-mercimek",
   "mevsim": "tum-yil",
-  "durum": "yayin"
+  "durum": "yayin",
+  "kalori": "116 kcal",
+  "kalori_not": "100 g, haşlanmış",
+  "saklama_kisa": "Kuru, kapalı kapta serin yerde 1 yıl",
+  "saklama_not": "haşlanmışı buzdolabında 4–5 gün",
+  "kisa_etiket": "Diri dokulu bakliyat",
+  "kisa_tanim": "Kabuğu soyulmamış, koyu yeşil-kahverengi taneleriyle pişince şeklini koruyan bir mercimek türü. Salata, pilav ve garnitürlerde çıtır dokusuyla tercih edilir.",
+  "nedir": "<p>Yeşil mercimek (<em>Lens culinaris</em>), kabuğu soyulmadan kurutulan mercimek çeşididir. Kırmızı mercimeğin aksine haşlandığında tanesi dağılmaz, hafif diri bir doku korur; bu yüzden salata ve garnitür tariflerinde tercih edilir.</p> <p>Toprakta azot bağlayan bir baklagil olduğu için tarımsal olarak da değerlidir. Türkiye’de özellikle Orta Anadolu’da yetiştirilir ve mercimek çorbasından farklı olarak daha çok tane hâlinde tüketilir.</p>",
+  "besin_degerleri": "<p>Haşlanmış 100 gram yeşil mercimek yaklaşık 116 kcal, 9 g <strong>bitkisel protein</strong> ve 7,9 g <strong>lif</strong> sağlar. Demir, folat ve potasyum açısından da zengin bir bakliyattır.</p>",
+  "faydalari": "<p>Yüksek lif ve bitkisel protein içeriğiyle yeşil mercimek, dengeli beslenmenin parçası olarak öne çıkan bakliyatlardandır. Düşük glisemik indeksli olması, geleneksel olarak kan şekerini yavaş etkileyen bir yemek bileşeni sayılmasına neden olmuştur.</p> <p>Bu bilgiler geneldir; yeşil mercimek bir besindir, tıbbi tedavi yerine geçmez.</p>",
+  "secim": "<p>Kaliteli yeşil mercimekte tane rengi koyu, parlak ve homojen olmalıdır; solgun ya da tozlu taneler bayattır.</p> <ul> <li>Taneler eşit büyüklükte olsun; farklı boyut karışımı eşit pişmemeye yol açar.</li> <li>Paket içinde toz veya kırık tane oranı az olmalı.</li> <li>Küf kokusu ya da nem izi taşımamalı.</li> </ul>",
+  "saklama": "<p>Kuru yeşil mercimek, kapalı bir kapta serin ve karanlık bir dolapta 1 yıla kadar tazeliğini korur. Haşlanmış hâli buzdolabında 4–5 gün saklanabilir; dondurucuda porsiyonlanarak 2–3 ay bekletilebilir.</p>",
+  "mutfakta": "<p>Yeşil mercimek genellikle haşlanıp salata, pilav ve garnitür olarak kullanılır; kabuğu sağlam kaldığından çorbalarda da tane hâlini korur.</p>",
+  "sss_soru": [
+   "Yeşil mercimek ıslatılmalı mı?",
+   "Yeşil mercimek ile kırmızı mercimek farkı nedir?",
+   "Yeşil mercimek neye iyi gelir?",
+   "Yeşil mercimek ne kadar sürede pişer?",
+   "Yeşil mercimek çiğ tüketilebilir mi?"
+  ],
+  "sss_cevap": [
+   "Kabuğu sağlam olduğundan zorunlu değildir ama kısa süreli (1–2 saat) ıslatma pişme süresini biraz kısaltabilir. Islatmadan da doğrudan haşlanabilir.",
+   "Kırmızı mercimek kabuğu soyulmuş ve bölünmüş olduğundan çabuk pişer ve dağılır; yeşil mercimek ise kabuklu kalır ve tane bütünlüğünü korur. Bu yüzden kırmızı mercimek çorbada, yeşil mercimek salata ve garnitürde tercih edilir.",
+   "Lif, bitkisel protein, demir ve folat açısından zengindir; dengeli beslenmenin parçası olarak değerlidir. Bir besindir; herhangi bir hastalığı iyileştirme iddiası taşımaz.",
+   "Ortalama 20–25 dakikada, diri kalacak şekilde haşlanır. Daha yumuşak bir doku isteniyorsa süre birkaç dakika uzatılabilir.",
+   "Hayır; diğer kuru bakliyatlar gibi çiğ hâlde sindirimi zordur ve pişirilmeden tüketilmesi önerilmez. Haşlanmadan önce mutlaka yeterince pişirilmelidir."
+  ],
+  "besin_porsiyon": "100 g haşlanmış",
+  "besin_ad": [
+   "Enerji",
+   "Protein",
+   "Lif",
+   "Karbonhidrat",
+   "Demir"
+  ],
+  "besin_deger": [
+   "116 kcal",
+   "9,0 g",
+   "7,9 g",
+   "20,1 g",
+   "3,3 mg"
+  ],
+  "kisa_ikon": [
+   "fa-droplet",
+   "fa-fire-burner",
+   "fa-rotate"
+  ],
+  "kisa_baslik": [
+   "Işlatmaya gerek yok",
+   "20–25 dk haşla",
+   "Alternatifi"
+  ],
+  "kisa_metin": [
+   "Kabuğu sağlam olduğundan doğrudan haşlanabilir",
+   "Şeklini korur, lapa olmaz",
+   "Kırmızı mercimek, puy mercimeği"
+  ]
  },
  "tarcin": {
   "ad": "Tarçın",
@@ -821,7 +1175,64 @@
   "obek": "malzemeler",
   "slug": "tarcin",
   "mevsim": "tum-yil",
-  "durum": "yayin"
+  "durum": "yayin",
+  "kalori": "247 kcal",
+  "kalori_not": "100 g, toz",
+  "saklama_kisa": "Kapalı kavanozda serin yerde 2–4 yıl (çubuk), 6–12 ay (toz)",
+  "kisa_etiket": "Tatlı-baharatlı ikili",
+  "kisa_tanim": "Tarçın ağacının iç kabuğunun kurutulup rulo haline getirilmesiyle elde edilen, tatlı ve keskin kokulu bir baharat. Tatlılardan sıcak içeceklere kadar mutfağın klasik baharatlarından biri.",
+  "nedir": "<p>Tarçın, tarçın ağacının iç kabuğunun kurutulup rulo haline getirilmesiyle elde edilen tatlı ve keskin kokulu bir baharattır. Piyasada iki ana tür bulunur: daha ince, katmanlı ve tatlı olan Seylan (<em>Cinnamomum verum</em>) tarçını ile daha kalın, sert ve keskin kokulu Çin (<em>Cinnamomum cassia</em>) tarçını.</p> <p>Türkiye’de yaygın satılan tarçın genellikle cassia türüdür; her iki tür de hem çubuk hem toz halde satılır.</p>",
+  "besin_degerleri": "<p>Tarçın 100 gramda yaklaşık 247 kcal enerji, 4 g protein ve dikkat çekici oranda (53 g) lif içerir. Kalsiyum ve demir bakımından da zengindir; ancak tüketim miktarı genellikle bir tutamla sınırlı olduğundan pratik katkısı düşüktür.</p>",
+  "faydalari": "<p>Tarçının kan şekeri metabolizması üzerindeki olası etkileri çeşitli çalışmalarda incelenmiştir; sonuçlar karışık olup kesin bir tıbbi öneri için yeterli kanıt bulunmamaktadır.</p> <p>Bu bilgiler geneldir; tarçın bir baharattır, tıbbi tedavi yerine geçmez. Kan şekeri ilacı kullananların yüksek miktarda tarçın tüketimini uzmanına danışması önerilir.</p>",
+  "secim": "<p>Kaliteli çubuk tarçın ince katmanlı, kolayca kırılabilen ve tatlı-keskin kokulu olandır.</p> <ul> <li>Seylan tarçını ince, gevrek katmanlı ve açık kahverengidir; Çin tarçını daha kalın ve tek katmanlıdır.</li> <li>Toz tarçında canlı kahverengi renk ve belirgin koku tazeliğin işaretidir.</li> <li>Nemli veya küflü görünen çubuklardan kaçının.</li> </ul>",
+  "saklama": "<p>Çubuk tarçın, kapalı bir kavanozda serin ve karanlık bir yerde 2–4 yıl tazeliğini korur. Toz tarçın ise daha hızlı aroma kaybettiğinden 6–12 ay içinde tüketilmesi önerilir.</p>",
+  "mutfakta": "<p>Tarçın; tatlılarda, kahvaltılıklarda, sıcak içeceklerde ve bazı et yemeklerinde (özellikle Orta Doğu mutfağında) kullanılır.</p>",
+  "sss_soru": [
+   "Tarçın neye iyi gelir?",
+   "Seylan tarçını ile Çin tarçını arasındaki fark nedir?",
+   "Toz tarçın mı çubuk tarçın mı daha iyidir?",
+   "Tarçın her gün tüketilebilir mi?",
+   "Tarçın çubuğu tekrar kullanılabilir mi?"
+  ],
+  "sss_cevap": [
+   "Tarçın; kan şekeri metabolizması üzerine araştırmalar süren, geleneksel olarak sindirime destek olduğu düşünülen bir baharattır. Bir besindir, hastalık tedavisi iddiası taşımaz.",
+   "Seylan tarçını daha ince, tatlı ve düşük kumarin içeriklidir; Çin (cassia) tarçını ise daha kalın, keskin kokulu ve kumarin oranı daha yüksektir. Uzun süreli yüksek dozda tüketimde kumarin oranı düşük olan Seylan tarçını tercih edilebilir.",
+   "Çubuk tarçın aromasını çok daha uzun korur ve demlemelerde kullanışlıdır; toz tarçın ise hamur işi ve kekler için pratiktir. İkisi de doğru saklandığında iyi sonuç verir.",
+   "Küçük miktarlarda (bir tutam, bir çay kaşığı) günlük tüketim genellikle sorun oluşturmaz; ancak özellikle cassia türünde yüksek miktarda ve uzun süreli tüketim önerilmez. Dengeli tüketim esastır.",
+   "Evet, çay veya şerbette kullanılan tarçın çubuğu kurutulup 1–2 kez daha demlemede kullanılabilir; ancak her kullanımda aroma gücü azalır."
+  ],
+  "besin_porsiyon": "100 g, toz (yaklaşık; günlük tüketim bir tutamla sınırlıdır",
+  "besin_ad": [
+   "Enerji",
+   "Protein",
+   "Yağ",
+   "Karbonhidrat",
+   "Lif",
+   "Kalsiyum"
+  ],
+  "besin_deger": [
+   "247 kcal",
+   "4,0 g",
+   "1,2 g",
+   "80,6 g",
+   "53,1 g",
+   "1002 mg"
+  ],
+  "kisa_ikon": [
+   "fa-mug-hot",
+   "fa-jar",
+   "fa-mortar-pestle"
+  ],
+  "kisa_baslik": [
+   "Çayda çubuk kullan",
+   "Çubuğu bütün sakla",
+   "Pişirmeden hemen önce öğüt"
+  ],
+  "kisa_metin": [
+   "Toz tarçın çayı bulanıklaştırır",
+   "Aromasını tozdan çok daha uzun korur",
+   "Taze öğütülen tarçın çok daha yoğun kokar"
+  ]
  },
  "kuru-kayisi": {
   "ad": "Kuru Kayısı",
@@ -830,9 +1241,65 @@
   "obek": "malzemeler",
   "slug": "kuru-kayisi",
   "mevsim": "tum-yil",
-  "durum": "yayin"
+  "durum": "yayin",
+  "kalori": "241 kcal",
+  "kalori_not": "100 g, kurutulmuş",
+  "saklama_kisa": "Kapalı kapta serin yerde 6–12 ay",
+  "saklama_not": "nem almasın",
+  "kisa_etiket": "Potasyum deposu",
+  "kisa_tanim": "Malatya’nın simge ürünü kayısının güneşte kurutulmuş hali; turuncu rengi ve ekşimsi-tatlı dengesiyle tanınır. Tek başına atıştırmalık olarak da tatlı ve et yemeklerinde de kullanılır.",
+  "nedir": "<p>Kuru kayısı, taze kayısının (<em>Prunus armeniaca</em>) güneşte ya da kontrollü ortamda kurutulmasıyla elde edilir. Türkiye’de özellikle Malatya, kayısı yetiştiriciliği ve kurutmacılığıyla dünya çapında tanınır.</p> <p>Kurutma sürecinde meyve büzülür, rengi turuncudan koyu kehribar tonuna kayar ve tadı ekşimsi-tatlı bir dengeye oturur. Kükürtle işlenenler daha canlı turuncu, kükürtsüz olanlar ise daha koyu renklidir.</p>",
+  "besin_degerleri": "<p>Kuru kayısı, 100 gramında yaklaşık 241 kcal enerji, 62,6 g karbonhidrat ve 7,3 g lif içeren bir kuru meyvedir. <strong>Potasyum</strong> bakımından kuru meyveler arasında en zengin kaynaklardan biridir.</p>",
+  "faydalari": "<p>Yüksek lif ve potasyum içeriğiyle kuru kayısı, dengeli beslenmenin bir parçası olarak öne çıkan kuru meyvelerdendir. Potasyumun genel beslenmedeki rolünü inceleyen çalışmalar vardır.</p> <p>Bu bilgiler geneldir; kuru kayısı bir besindir, tıbbi tedavi yerine geçmez. Şeker yoğunluğu yüksek olduğundan günlük bir avuç (yaklaşık 30 g, 5-6 adet) ölçüsü önerilir.</p>",
+  "secim": "<p>Kaliteli kuru kayısıda doku yumuşak-esnek, tane büyüklüğü homojen olmalıdır.</p> <ul> <li>Aşırı sertleşmiş ve kurumuş taneler eskimiş olabilir.</li> <li>Kükürtsüz kuru kayısı daha koyu kahverengi olur, bu doğal bir durumdur.</li> <li>Küf lekesi veya yapışkan topaklanma varsa tüketilmemeli.</li> </ul>",
+  "saklama": "<p>Kuru kayısı, hava almayan bir kapta serin ve kuru bir yerde 6–12 ay tazeliğini korur. Nemli ortamlarda yapışkanlaşıp küflenme riski taşıdığından kuru bir dolapta saklanmalıdır.</p>",
+  "mutfakta": "<p>Kuru kayısı; tek başına atıştırmalık olarak, çekirdek yerine ceviz ya da badem doldurularak, tatlı ve komposto tariflerinde, kuzu ve tavuk gibi et yemeklerinde tatlı-tuzlu denge unsuru olarak kullanılır.</p>",
+  "sss_soru": [
+   "Kuru kayısı günde ne kadar yenmeli?",
+   "Kükürtlü kuru kayısı zararlı mı?",
+   "Kuru kayısı ile taze kayısı besin değeri açısından farklı mı?",
+   "Kuru kayısı neden koyu renkli olabiliyor?",
+   "Kuru kayısı sindirime iyi gelir mi?"
+  ],
+  "sss_cevap": [
+   "Şeker yoğunluğu nedeniyle günde bir avuç (yaklaşık 30 g, 5-6 adet) dengeli bir porsiyon sayılır.",
+   "Kükürt dioksit, rengi ve raf ömrünü korumak için gıdalarda kullanılan onaylı bir katkı maddesidir; ancak kükürt hassasiyeti olan kişilerin kükürtsüz alternatifleri tercih etmesi önerilir.",
+   "Kurutma sürecinde su kaybı nedeniyle besin ve şeker yoğunluğu artar; eşit ağırlıkta kuru kayısı, taze kayısıya göre çok daha fazla kalori, lif ve potasyum içerir.",
+   "Kükürtsüz kurutulan kayısılar doğal oksidasyon nedeniyle koyu kahverengiye döner; bu, kalitesizlik değil doğal bir işlem farkıdır.",
+   "Lif içeriği yüksek olduğu için dengeli beslenmenin parçası olarak sindirim düzenine katkıda bulunabileceğine dair gözlemler vardır; ancak bu bir tedavi iddiası değildir."
+  ],
+  "besin_porsiyon": "100 g kurutulmuş",
+  "besin_ad": [
+   "Enerji",
+   "Karbonhidrat",
+   "Protein",
+   "Lif",
+   "Potasyum"
+  ],
+  "besin_deger": [
+   "241 kcal",
+   "62,6 g",
+   "3,4 g",
+   "7,3 g",
+   "1162 mg"
+  ],
+  "kisa_ikon": [
+   "fa-jar",
+   "fa-scale-balanced",
+   "fa-rotate"
+  ],
+  "kisa_baslik": [
+   "Hava almayan kapta sakla",
+   "Ölçülü tüket",
+   "Alternatifi"
+  ],
+  "kisa_metin": [
+   "Nem çekerse yapışkanlaşıp küflenebilir",
+   "Bir avuç (30 g) dengeyi korur",
+   "Kuru erik, hurma"
+  ]
  }
 }
-</script>
+  </script>
 
 </body></html>

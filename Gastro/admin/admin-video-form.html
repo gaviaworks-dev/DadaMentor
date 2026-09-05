@@ -3,7 +3,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<title>Video künyesi · DadaGastro Yönetim</title>
+<title>Video · DadaGastro Yönetim</title>
 <link rel="stylesheet" href="../../kanon/tokenlar.css">
 <link rel="stylesheet" href="../../kanon/markalar/gastro.css">
 <link rel="stylesheet" href="../../kanon/bilesenler.css">
@@ -12,6 +12,13 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.css">
 <link rel="stylesheet" href="../../kanon/admin.css">
 <!-- ADMIN-KIT:CSS:SON -->
+<!-- GASTRO-EK:CSS:BAS -->
+<link rel="stylesheet" href="_ortak/gastro-ek.css">
+<link rel="stylesheet" href="_ortak/gastro-ek-a.css">
+<link rel="stylesheet" href="_ortak/gastro-ek-b.css">
+<link rel="stylesheet" href="_ortak/gastro-ek-c.css">
+<link rel="stylesheet" href="_ortak/gastro-ek-d.css">
+<!-- GASTRO-EK:CSS:SON -->
 </head>
 <body class="yetkili" data-marka="gastro">
 <!-- ═══ GASTRO ADMIN · KANONİK KABUK — lead üretti, agent DEĞİŞTİRMEZ.
@@ -71,7 +78,7 @@
 
     <div class="panel-menu-bolum">02 Operasyon</div>
     <a class="panel-menu-link" href="admin-uyeler.html"><i class="fa-solid fa-users"></i>Üyeler &amp; Yetkiler</a>
-    <a class="panel-menu-link" href="admin-abonelikler.html"><i class="fa-solid fa-credit-card"></i>Abonelikler</a>
+    <a class="panel-menu-link" href="admin-paket-alimlari.html"><i class="fa-solid fa-credit-card"></i>Paket Alımları</a><a class="panel-menu-link" href="admin-sef-abonelikleri.html"><i class="fa-solid fa-hand-holding-dollar"></i>Şef Abonelikleri</a>
     <a class="panel-menu-link" href="admin-odemeler.html"><i class="fa-solid fa-money-bill-wave"></i>Ödemeler</a>
     <a class="panel-menu-link" href="admin-faturalar.html"><i class="fa-solid fa-file-invoice"></i>Faturalar<span class="sayac">7</span></a>
     <a class="panel-menu-link" href="admin-destek.html"><i class="fa-solid fa-life-ring"></i>Destek Talepleri<span class="sayac">12</span></a>
@@ -156,195 +163,309 @@
 
     <div class="panel-bas">
       <div>
-        <h1 id="pfBaslik">Tam Kıvamında Karnıyarık</h1>
-        <p>Bu video “Şef Teknikleri” serisinin 3. bölümü. Seri → bölüm → video kurgusu ayrı ekranda düzenlenir.</p>
+        <h1 id="pfBaslikH">Yeni video</h1>
+        <p>Video künyesi: tür, seri bağı, süre, erişim kademesi ve kaynak dosya.
+          Alanlar <b>video-mutfagi</b> sayfa kümesinden ölçüldü (33 video · 4 seri · 6 kısa);
+          public'te karşılığı olmayan alan bunu kendi yardım satırında yazar.</p>
       </div>
       <div class="eylem-satiri">
-        <a class="dugme hayalet" id="pfOnizle" href="../video-mutfagi.html?video=tam-kivaminda-karniyarik" target="_blank" rel="noopener">
+        <a class="dugme hayalet" id="pfOnizle" href="../video-mutfagi.html" target="_blank" rel="noopener">
           <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i> Üye yüzünü gör</a>
-        <a class="dugme birincil" id="pfKurgu" href="admin-video-kurgu.html">
-          <i class="fa-solid fa-diagram-project" aria-hidden="true"></i> Kurguyu düzenle</a>
+        <a class="dugme hayalet" id="pfKurgu" href="admin-video-kurgu.html">
+          <i class="fa-solid fa-diagram-project" aria-hidden="true"></i> Seri kurgusu</a>
       </div>
     </div>
 
-    
-    <div id="pfUyari"><div class="uyari-kutu uyari" role="status"><i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i><p></p><div>🔴 Ölçüldü: bu videonun hiçbir tarife bağı yok. Tarif süzgecindeki “Videolu Anlatım” ekseni 0 kayıt gösteriyor, oysa katalogda 33 video duruyor. Aşağıdaki “Bağlı tarif” alanı o bağı kuran yüzeydir; alan boş kaldıkça video yalnız Video Mutfağı’ndan bulunabilir.</div><button type="button" class="ikon-dugme" aria-label="Bildirimi kapat" data-eylem="calistir" data-ad="Bildirimi kapat"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button><p></p></div></div>
+    <div class="sekmeler" role="tablist" aria-label="Video bölümleri">
+      <button class="sekme aktif" type="button" role="tab" aria-selected="true" id="pfS-kunye" aria-controls="pfP-kunye">Künye</button>
+      <button class="sekme" type="button" role="tab" aria-selected="false" tabindex="-1" id="pfS-kaynak" aria-controls="pfP-kaynak">Video kaynağı</button>
+      <button class="sekme" type="button" role="tab" aria-selected="false" tabindex="-1" id="pfS-anlatim" aria-controls="pfP-anlatim">Açıklama</button>
+      <button class="sekme" type="button" role="tab" aria-selected="false" tabindex="-1" id="pfS-seo" aria-controls="pfP-seo">SEO</button>
+    </div>
 
-    <form id="pfForm" novalidate="">
+    <form id="pfForm" novalidate>
       <div class="form-duzen">
 
-        <!-- ================= SOL KOLON ================= -->
-        <div class="kart panel"><div class="form-bolum" hidden="" aria-busy="true"><span class="iskelet baslik"></span><span class="iskelet tam"></span><span class="iskelet orta"></span><span class="iskelet tam"></span><span class="iskelet kisa"></span></div><div class="form-bolum"><div class="alan-ozet goster"><i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i><div><b>2 alan düzeltilmeli</b><br>Zorunlu alanları doldur ve yeniden kaydet.</div></div></div>
-          <div class="kart-govde dipsiz">
-            <div class="form-sekmeler" role="tablist" aria-label="Form bölümleri">
-              <button class="form-sekme aktif" type="button" role="tab" aria-selected="true" data-panel="kunye" id="sekme-0-0" aria-controls="pano-0-0">Künye</button>
-              <button class="form-sekme" type="button" role="tab" aria-selected="false" data-panel="anlatim" tabindex="-1" id="sekme-0-1" aria-controls="pano-0-1">Açıklama</button>
-              <button class="form-sekme" type="button" role="tab" aria-selected="false" data-panel="seo" tabindex="-1" id="sekme-0-2" aria-controls="pano-0-2">SEO</button>
-            </div>
-          </div>
+        <div class="kart panel">
+          <div class="form-bolum" hidden aria-busy="true"><span class="iskelet baslik"></span><span class="iskelet tam"></span><span class="iskelet orta"></span><span class="iskelet kisa"></span></div>
 
-          <!-- ---- KÜNYE ---- -->
-          <div data-form-panel="kunye" id="pano-0-0" role="tabpanel" aria-labelledby="sekme-0-0">
+          <!-- ═════════ KÜNYE ═════════ -->
+          <div data-form-panel="kunye" id="pfP-kunye" role="tabpanel" aria-labelledby="pfS-kunye">
+
             <div class="form-bolum">
               <h3 class="form-bolum-bas"><i class="fa-solid fa-image" aria-hidden="true"></i> Kapak görseli</h3>
-              <div id="pfKapak"><div class="birak-alani" tabindex="0" role="button" aria-label="Görsel seç ya da sürükle"><span><i class="fa-solid fa-cloud-arrow-up" aria-hidden="true"></i></span><b>Görseli sürükle ya da seçmek için tıkla</b><small>Tek kapak görseli. Kütüphaneden seç ya da sürükle.</small><span class="dugme hayalet" style="pointer-events:none">Kütüphaneden seç</span></div><input type="file" hidden="" accept="image/*"><div class="cipler"></div></div>
-              <div class="alan-yardim"><span>Katalog kartının ve detay sayfası
-                başlığının arkasındaki görsel. Bugün katalog kartlarının görseli
-                <code>video-mutfagi-v1.html</code> içine gömülü — bu alan onu taşıyacak yüzeydir.</span></div>
+              <div class="form-gorsel" data-oran="16:9" id="pfKapak">
+                <div class="birak-alani" tabindex="0" role="button" aria-label="Kapak görseli seç ya da sürükle">
+                  <span><i class="fa-solid fa-cloud-arrow-up" aria-hidden="true"></i></span>
+                  <b>Görseli sürükle ya da seçmek için tıkla</b>
+                  <small>Katalog kartının ve oynatıcının arkasındaki görsel.</small>
+                  <span class="dugme hayalet" aria-hidden="true">Kütüphaneden seç</span>
+                </div>
+                <input type="file" hidden accept="image/*">
+                <div class="cipler"></div>
+              </div>
+              <input type="hidden" name="kapak" id="pfKapakAlan" value="">
+              <div class="alan-yardim"><span>Ölçüldü: 33 videonun 33'ünde kapak var.
+                <b>Oran türe göre değişir:</b> katalog kartı ve seri bölümü <b>16:9</b>,
+                Dada Akış kısa videosu <b>dikey (9:16)</b> basılıyor — kırpma çerçevesini ona göre seç.</span></div>
             </div>
 
             <div class="form-bolum">
               <h3 class="form-bolum-bas"><i class="fa-solid fa-id-card" aria-hidden="true"></i> Künye</h3>
               <div>
                 <div class="alan">
-                  <label for="pfAd" class="alan-etiket">Video başlığı <span class="zorunlu">*</span><span class="alan-sayac" data-say-for="pfAd">0 / 80</span></label>
-                  <input class="alan-girdi hatali" id="pfAd" name="ad" type="text" required="" maxlength="80" placeholder="Örn. Tam Kıvamında Karnıyarık" data-zorunlu="1" value="Tam Kıvamında Karnıyarık">
-                  
-                <span class="alan-hata goster"><i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i> Video başlığı zorunlu.</span></div>
-                <div class="alan">
-                  <label for="pfSlug" class="alan-etiket">Detay adresi <span class="zorunlu">*</span></label>
-                  <div class="slug-alani">
-                    <span class="slug-onek">video-mutfagi/</span>
-                    <!-- 🔴 TİRE KAÇIRILIYOR: `pattern` Chromium'da `v` bayrağıyla
-                         derleniyor ve orada karakter sınıfının sonundaki çıplak `-`
-                         geçersiz; `reportValidity()` istisna atıyor. Ölçüm ve gerekçe
-                         `admin-programlar-v1.html:126`da. -->
-                    <input data-girdi="slug" class="alan-girdi" id="pfSlug" name="slug" type="text" required="" maxlength="60" pattern="[a-z0-9\-]+" placeholder="tam-kivaminda-karniyarik" data-zorunlu="1" value="tam-kivaminda-karniyarik">
-                  </div>
-                  <div class="alan-yardim" id="pfSlugNot"><span>Detay sayfası bu adresi tanıyor: <b>Tam Kıvamında Karnıyarık</b>. Adresi <b>1 katalog kartı</b> paylaşıyor.</span></div>
+                  <label for="pfAd" class="alan-etiket">Video başlığı <span class="zorunlu">*</span><span class="alan-sayac" data-say-for="pfAd">0 / 120</span></label>
+                  <input class="alan-girdi" id="pfAd" name="ad" type="text" required maxlength="120" placeholder="Örn. Tam Kıvamında Karnıyarık">
+                  <div class="alan-yardim"><span>Katalog kartının <code>&lt;h4&gt;</code>'ü ve oynatıcı künyesi.
+                    Seri bölümlerinde kart başlığı public'te <b>“&lt;seri&gt;: &lt;başlık&gt;”</b> diye
+                    birleştirilerek basılıyor — seri adını başlığa <b>elle yazma</b>.</span></div>
+                  <span class="alan-hata"><i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i> Video başlığı zorunlu.</span>
                 </div>
-                <div class="alan">
-                  <label for="pfOzet" class="alan-etiket">Kart özeti <span class="zorunlu">*</span>
-                    <span class="acilir-kalem">— katalog kartında görünen tek cümle</span><span class="alan-sayac" data-say-for="pfOzet">0 / 180</span></label>
-                  <textarea class="alan-metin" id="pfOzet" name="ozet" required="" maxlength="180" placeholder="Bir cümleyle: bu video ne öğretiyor?" data-zorunlu="1">Patlıcanın kıvamı: kızartma sıcaklığı, süzme ve dinlendirme.</textarea>
-                  
-                </div>
-                <div class="alan">
-                  <label class="alan-etiket">Hedef <span class="zorunlu">*</span></label>
-                  <div id="pfHedef" class="coklu-secim"><div class="coklu-kutu"><span class="coklu-cip"><i class="fa-solid fa-bullseye" aria-hidden="true"></i><span>Şef Teknikleri</span><button type="button" aria-label="Şef Teknikleri kaldır" data-eylem="calistir" data-ad="Şef Teknikleri kaldır"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button></span><input type="hidden" name="hedef[]" value="guc"><input class="acilir-arama" type="text" placeholder="Hedef ara ya da seç…" aria-label="Hedef ara ya da seç…" autocomplete="off" role="combobox" aria-expanded="false"></div><div class="acilir-yuzey" role="listbox" hidden=""></div></div>
-                  <div class="alan-yardim" id="pfHedefNot"><span>Ölçüldü: 4 seri, seri başına 8 bölüm; 32 video seride, 1 video seri dışı. Videonun kartında ve süzgeçte bu ad görünür.</span></div>
-                </div>
+
                 <div class="alan kart-izgara c3">
                   <div class="alan">
-                    <label for="pfSeviye" class="alan-etiket">Seviye <span class="zorunlu">*</span></label>
-                    <select class="alan-secim" id="pfSeviye" name="seviye" required="" data-zorunlu="1"><option value="">Seç…</option><option value="1">Ece Aşçı</option><option value="2" selected="">Canan Komi</option><option value="3">Nurgül Karaca</option></select>
+                    <label for="pfTur" class="alan-etiket">Tür <span class="zorunlu">*</span></label>
+                    <select class="alan-secim" id="pfTur" name="tur" required data-kosul-ad="videoTur">
+                      <option value="tarif" selected>Tarif</option>
+                      <option value="teknik">Teknik</option>
+                      <option value="seri">Seri bölümü</option>
+                      <option value="kisa">Kısa · Dada Akış (dikey)</option>
+                    </select>
+                    <div class="alan-yardim"><span>🔴 <b>Bu alan “Seviye”nin yerini aldı.</b> Ölçüldü:
+                      public video kataloğunda <b>seviye diye bir eksen yok</b>; süzgeç çipleri
+                      <b>Tümü · Tarif · Teknik · Seri · Kısa</b> diyor (<code>data-vf</code>).
+                      Eski “Seviye” seçeneği <b>şef adları</b> taşıyordu — veri katmanının
+                      <code>sefler</code> kütüğünden gelen markasız hasat kusuru (KÖ-C7).
+                      <span class="olcum-kunye">Nüfus: 33 video — tarif 5 · teknik 2 · seri 20 · kısa 6.
+                      Merkez sayfa çip sayacı “tarif 25 · teknik 2 · seri 20” diyor ve
+                      <b>tarif sayısı ızgarada basılanla tutmuyor</b> — bildirildi, uydurulmadı.</span></span></div>
                   </div>
                   <div class="alan">
-                    <label for="pfHafta" class="alan-etiket">Süre <span class="acilir-kalem">— dk:sn</span> <span class="zorunlu">*</span></label>
-                    <input data-girdi="sayi" class="alan-girdi" id="pfHafta" name="hafta" type="number" min="1" max="52" required="" placeholder="8" data-zorunlu="1" value="8">
+                    <label for="pfSure" class="alan-etiket">Süre <span class="acilir-kalem">— dd:ss</span> <span class="zorunlu">*</span></label>
+                    <input class="alan-girdi" id="pfSure" name="sure" data-girdi="sure" data-sure-not="#pfSureNot" required maxlength="6" placeholder="12:48" inputmode="numeric">
+                    <div class="alan-yardim"><span id="pfSureNot">🔴 <b>Alan tipi düzeltildi.</b> Önceki hâli
+                      <code>type="number" min="1" max="52"</code> idi (adı da <code>hafta</code>) ve kaydın
+                      gerçek değeri <code>12:48</code>; yani <b>hiçbir kayıt bu alana sığmıyordu</b>.
+                      Şimdi <code>dd:ss</code> maskeli, saniye 00–59 doğrulanıyor; ham saniye
+                      <code>dataset.ham</code>'da saklanır. Dosya yüklenirse süre
+                      <b>dosyadan gerçekten okunur</b> ve bu alana dd:ss olarak yazılır.</span></div>
                   </div>
                   <div class="alan">
-                    <label for="pfGun" class="alan-etiket">Bölüm no <span class="zorunlu">*</span></label>
-                    <input data-girdi="sayi" class="alan-girdi" id="pfGun" name="gun" type="number" min="1" max="7" required="" placeholder="3" data-zorunlu="1" value="3">
+                    <label for="pfErisim" class="alan-etiket">Erişim kademesi <span class="zorunlu">*</span></label>
+                    <select class="alan-secim" id="pfErisim" name="erisim" required>
+                      <option value="ucretsiz" selected>Ücretsiz</option>
+                      <option value="pro">Pro</option>
+                    </select>
+                    <div class="alan-yardim"><span>Public'te kilit yüzeyi: kartta
+                      <code>.vlock-badge</code> / <code>.sc-pro</code> ve tıklanınca
+                      <b>“Pro'ya yükselt”</b> kapısı (<code>data-pro-gate</code>).
+                      <span class="olcum-kunye">Ölçüldü: 33 videonun <b>5'i Pro</b> — Restoran Sırları
+                      serisinin 4 bölümü ve Dada Akış'ta 1 kısa video.</span></span></div>
                   </div>
                 </div>
-                <div class="alan kart-izgara c2">
+
+                <div class="alan kart-izgara c2" data-kosul="videoTur" data-kosul-deger="seri" hidden>
                   <div class="alan">
-                    <label for="pfToplam" class="alan-etiket">Seri içindeki sıra</label>
-                    <input class="alan-girdi" id="pfToplam" name="toplam" readonly="" aria-readonly="true" placeholder="—" value="3 / 8 bölüm">
-                    <div class="alan-yardim"><span>Seri × bölüm. Elle girilmez — kurgu ekranındaki
-                      gerçek bölüm sayısıyla tutmuyorsa orada görünür.</span></div>
+                    <label class="alan-etiket">Seri</label>
+                    <div class="coklu-secim" data-tek data-ad="seri" data-oneri="seri" id="pfSeri">
+                      <div class="coklu-kutu"><input class="acilir-arama" type="text" placeholder="Seri ara…" aria-label="Seri ara" autocomplete="off" role="combobox" aria-expanded="false"></div>
+                      <div class="acilir-yuzey" role="listbox" hidden></div>
+                    </div>
+                    <datalist id="dl-seri">
+                      <option value="10 Dakikada Yemekler"></option>
+                      <option value="Şef Teknikleri"></option>
+                      <option value="Yöresel Lezzetler"></option>
+                      <option value="Restoran Sırları"></option>
+                    </datalist>
+                    <div class="alan-yardim"><span>Dört seri uydurulmadı —
+                      <code>video-mutfagi__seriler.html</code>'in dört <code>.vray</code>'inden okundu.
+                      Seriyi buradan <b>oluşturamazsın</b>: <a href="admin-video-seri-form.html">seri formu</a>
+                      ayrı bir kayıttır (kapak, fragman, yayın günü, abone sayacı).</span></div>
                   </div>
                   <div class="alan">
-                    <label for="pfEkipman" class="alan-etiket">Ekipman <span class="zorunlu">*</span></label>
-                    <select class="alan-secim" id="pfEkipman" name="ekipman" required="" data-zorunlu="1"><option value="">Seç…</option><option value="ekipmansiz">Ekipmansız</option><option value="tencere" selected="">Tencere</option><option value="tava">Tava</option><option value="firin">Fırın</option><option value="airfryer">Airfryer</option><option value="kablo">Kablo</option><option value="sabitmakine">Sabit makine</option><option value="askibandi">Askı bandı</option><option value="sagliktopu">Sağlık topu</option><option value="pilatestopu">Pilates topu</option><option value="step">Step</option><option value="duduklu">Düdüklü tencere</option><option value="izgara">Izgara</option><option value="blender">Blender</option><option value="foamroller">Foam roller</option><option value="vucut">vucut — sözlükte yok</option><option value="bant">bant — sözlükte yok</option></select>
-                    <div class="alan-yardim" id="pfEkipmanNot"><span>Sözlük 15 ekipman tanımlıyor, katalog 2 kodu daha kullanıyor (<code>vucut</code>, <code>bant</code>) — 6 kartı etkiliyor. Bu kodlar Taksonomi ekranından sözlüğe eklenmeli ya da karttaki değer düzeltilmeli.</span></div>
+                    <input type="hidden" name="seri_slug" id="pfSeriSlug" value="">
+                    <label for="pfBolum" class="alan-etiket">Bölüm no</label>
+                    <input class="alan-girdi" id="pfBolum" name="bolum_no" type="number" data-girdi="sayi" min="1" max="99" placeholder="3">
+                    <div class="alan-yardim"><span>Kart üstündeki <b>“N. Bölüm”</b> etiketi ve seri
+                      sayfasındaki sıra numarası. Seri içindeki toplam bölüm sayısı
+                      <b>serinin kendi kaydından</b> gelir, buraya yazılmaz.</span></div>
                   </div>
                 </div>
-                <div class="alan kart-izgara c2">
-                  <div class="alan">
-                    <label for="pfKademe" class="alan-etiket">Erişim kademesi <span class="zorunlu">*</span></label>
-                    <select class="alan-secim" id="pfKademe" name="kademe" required="" data-zorunlu="1"><option value="ucretsiz" selected="">Ücretsiz</option><option value="pro">Pro</option><option value="promax">Pro — yıllık</option></select>
-                    <div class="alan-yardim"><span>Kademe listesi <code>gastro-paket.js</code>ten okunur.
-                      Fiyat burada yazılmaz — para parametreleri Ayarlar ekranından gelir (K13).</span></div>
+
+                <div class="alan" data-kosul="videoTur" data-kosul-deger="kisa" hidden>
+                  <label for="pfAkisSira" class="alan-etiket">Dada Akış sırası</label>
+                  <input class="alan-girdi" id="pfAkisSira" name="akis_sira" type="number" data-girdi="sayi" min="1" max="99" placeholder="1">
+                  <div class="alan-yardim"><span><b>Kısa video (reels).</b> Public'te ayrı bir bölümde,
+                    <b>dikey kartlar</b> hâlinde ve yatay kaydırmalı bir şeritte basılıyor
+                    (<code>.short-card</code> · “Dada Akış” · <i>“30 saniyede bir fikir”</i>).
+                    <span class="olcum-kunye">Ölçüldü: 6 kısa video · süreler <b>00:24 – 00:42</b> ·
+                    biri Pro kilitli. Sıra şeritteki soldan sağa okunuş sırasıdır.</span></span></div>
+                </div>
+
+                <div class="alan">
+                  <label for="pfOzet" class="alan-etiket">Kart özeti
+                    <span class="acilir-kalem">— seri sayfasında bölümün altında</span><span class="alan-sayac" data-say-for="pfOzet">0 / 180</span></label>
+                  <textarea class="alan-metin" id="pfOzet" name="ozet" maxlength="180" placeholder="Bir cümleyle: bu video ne öğretiyor?"></textarea>
+                  <div class="alan-yardim"><span>Public'te yeri VAR ama <b>bugün 33 videonun 33'ünde BOŞ</b>
+                    (<code>.ep-body &gt; p</code> boş basılıyor). Alan uydurma değil — doldurulan değer
+                    doğrudan o boş paragrafa iner.</span></div>
+                </div>
+
+                <div class="alan">
+                  <label class="alan-etiket">Bağlı tarif</label>
+                  <div class="coklu-secim" data-ad="tarifler[]" data-kayit="tarifler" id="pfTarif">
+                    <div class="coklu-kutu"><input class="acilir-arama" type="text" placeholder="Tarif ara…" aria-label="Tarif ara" autocomplete="off" role="combobox" aria-expanded="false"></div>
+                    <div class="acilir-yuzey" role="listbox" hidden></div>
                   </div>
-                  <div class="alan">
-                    <label for="pfPop" class="alan-etiket">Popülerlik <span class="acilir-kalem">— sıralama ağırlığı, 0–100</span></label>
-                    <input data-girdi="sayi" class="alan-girdi" id="pfPop" name="pop" type="number" min="0" max="100" value="98">
-                  </div>
+                  <div class="alan-yardim"><span>🔴 Ölçüldü: <b>33 videonun 33'ü</b> hiçbir tarife bağlı değil
+                    ve tarif süzgecindeki <b>“Videolu Anlatım”</b> ekseni 0 kayıt gösteriyor — yüzey ilan
+                    ediliyor, bağ kurulmamış. Bu alan o bağı kuran yüzeydir.</span></div>
                 </div>
               </div>
             </div>
           </div>
 
-          <!-- ---- AÇIKLAMA ---- -->
-          <div data-form-panel="anlatim" hidden="" id="pano-0-1" role="tabpanel" aria-labelledby="sekme-0-1">
+          <!-- ═════════ VİDEO KAYNAĞI ═════════ -->
+          <div data-form-panel="kaynak" id="pfP-kaynak" role="tabpanel" aria-labelledby="pfS-kaynak" hidden>
             <div class="form-bolum">
-              <h3 class="form-bolum-bas"><i class="fa-solid fa-align-left" aria-hidden="true"></i> Uzun açıklama</h3>
+              <h3 class="form-bolum-bas"><i class="fa-solid fa-film" aria-hidden="true"></i> Video kaynağı</h3>
               <div>
                 <div class="alan">
-                  <label for="pfUzun" class="alan-etiket">Detay sayfası gövdesi</label>
-                  <textarea class="alan-metin" id="pfUzun" name="govde" placeholder="Video neyi öğretiyor, kime uygun, hangi teknikle ilerliyor?"></textarea><div class="metin-duzenleyici"><div class="duzenleyici-cubuk" role="toolbar" aria-label="Metin biçimlendirme"><button type="button" class="ikon-dugme" data-k="undo" title="Geri al" aria-label="Geri al" data-eylem="calistir" data-ad="Geri al"><i class="fa-solid fa-rotate-left" aria-hidden="true"></i></button><button type="button" class="ikon-dugme" data-k="redo" title="İleri al" aria-label="İleri al" data-eylem="calistir" data-ad="İleri al"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i></button><span class="duzenleyici-ayrac" aria-hidden="true"></span><select class="alan-secim" aria-label="Blok biçimi"><option value="p" selected="">Paragraf</option><option value="h2">Başlık 2</option><option value="h3">Başlık 3</option><option value="h4">Başlık 4</option><option value="blockquote">Alıntı</option></select><span class="duzenleyici-ayrac" aria-hidden="true"></span><button type="button" class="ikon-dugme" data-k="bold" title="Kalın" aria-label="Kalın"><i class="fa-solid fa-bold" aria-hidden="true"></i></button><button type="button" class="ikon-dugme" data-k="italic" title="İtalik" aria-label="İtalik"><i class="fa-solid fa-italic" aria-hidden="true"></i></button><button type="button" class="ikon-dugme" data-k="underline" title="Altı çizili" aria-label="Altı çizili"><i class="fa-solid fa-underline" aria-hidden="true"></i></button><button type="button" class="ikon-dugme" data-k="strikeThrough" title="Üstü çizili" aria-label="Üstü çizili"><i class="fa-solid fa-strikethrough" aria-hidden="true"></i></button><span class="duzenleyici-ayrac" aria-hidden="true"></span><button type="button" class="ikon-dugme" data-k="justifyLeft" title="Sola hizala" aria-label="Sola hizala"><i class="fa-solid fa-align-left" aria-hidden="true"></i></button><button type="button" class="ikon-dugme" data-k="justifyCenter" title="Ortala" aria-label="Ortala"><i class="fa-solid fa-align-center" aria-hidden="true"></i></button><button type="button" class="ikon-dugme" data-k="justifyRight" title="Sağa hizala" aria-label="Sağa hizala"><i class="fa-solid fa-align-right" aria-hidden="true"></i></button><span class="duzenleyici-ayrac" aria-hidden="true"></span><button type="button" class="ikon-dugme" data-k="insertUnorderedList" title="Madde listesi" aria-label="Madde listesi"><i class="fa-solid fa-list-ul" aria-hidden="true"></i></button><button type="button" class="ikon-dugme" data-k="insertOrderedList" title="Numaralı liste" aria-label="Numaralı liste"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></button><button type="button" class="ikon-dugme" data-k="outdent" title="Girintiyi azalt" aria-label="Girintiyi azalt"><i class="fa-solid fa-outdent" aria-hidden="true"></i></button><button type="button" class="ikon-dugme" data-k="indent" title="Girintiyi artır" aria-label="Girintiyi artır"><i class="fa-solid fa-indent" aria-hidden="true"></i></button><span class="duzenleyici-ayrac" aria-hidden="true"></span><button type="button" class="ikon-dugme" data-k="blockquote" title="Alıntı" aria-label="Alıntı"><i class="fa-solid fa-quote-left" aria-hidden="true"></i></button><button type="button" class="ikon-dugme" data-k="link" title="Bağlantı" aria-label="Bağlantı" data-eylem="calistir" data-ad="Bağlantı"><i class="fa-solid fa-link" aria-hidden="true"></i></button><button type="button" class="ikon-dugme" data-k="image" title="Görsel ekle" aria-label="Görsel ekle"><i class="fa-solid fa-image" aria-hidden="true"></i></button><button type="button" class="ikon-dugme" data-k="table" title="Tablo ekle" aria-label="Tablo ekle"><i class="fa-solid fa-table" aria-hidden="true"></i></button><span class="duzenleyici-ayrac" aria-hidden="true"></span><button type="button" class="ikon-dugme" data-k="removeFormat" title="Biçimi temizle" aria-label="Biçimi temizle"><i class="fa-solid fa-eraser" aria-hidden="true"></i></button><button type="button" class="ikon-dugme" data-k="code" title="Kaynağı gör" aria-label="Kaynağı gör" data-eylem="calistir" data-ad="Kaynağı gör"><i class="fa-solid fa-code" aria-hidden="true"></i></button></div><div class="duzenleyici-yuzey" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Video neyi öğretiyor, kime uygun, hangi teknikle ilerliyor?" data-bos="Video neyi öğretiyor, kime uygun, hangi teknikle ilerliyor?"></div><div class="duzenleyici-ayak"><span><b>0</b> kelime</span><span><b>0</b> karakter</span></div></div>
-                  <div class="alan-yardim"><span>Bugün bu metin serinin kendi sayfasına
-                    (<code>video-mutfagi/&lt;seri&gt;</code>) gömülü ve tek tek okunamıyor;
-                    videonun kendi sayfası ise sayfa kümesinde hiç yok. Alan onu
-                    taşıyacak yüzeyi kuruyor.</span></div>
+                  <label for="pfVideo" class="alan-etiket">Video <span class="zorunlu">*</span></label>
+                  <input class="alan-girdi" id="pfVideo" name="video" data-video data-sure-hedef="#pfSure" placeholder="https://… ya da dosya yükle">
+                  <div class="alan-yardim"><span><b>L1 · tek bileşen, iki sekme.</b> Bağlantı sekmesi
+                    YouTube / Vimeo / doğrudan dosya adresini tanır ve önizler; dosya sekmesi
+                    yerel bir dosya alır ve <b>süreyi tarayıcıdan gerçekten okur</b>.
+                    <b>Süre iki sekmede aynı şekilde otomatik olamaz</b> ve yüzey bunu yazar:
+                    bağlantıda süre servis API'si istediği için elle kalır —
+                    panel bir makettir ve <b>ağ çağrısı yapmaz</b>.
+                    <span class="olcum-kunye">Ölçüldü: 33 videonun kaynağı bugün tek bir dosyaya işaret
+                    ediyor (<code>varliklar/video/guide-cooking.mp4</code>) — maket verisi; gerçek
+                    kaynaklar bu alandan gelecek.</span></span></div>
+                </div>
+                <div class="alan">
+                  <label for="pfAltyazi" class="alan-etiket">Altyazı dosyası <span class="istege-bagli">isteğe bağlı</span></label>
+                  <input class="alan-girdi" id="pfAltyazi" name="altyazi" data-girdi="url" placeholder="https://…/altyazi.vtt">
+                  <div class="alan-yardim"><span><b>Bugün public karşılığı YOK</b> ve bu bir bildirimdir:
+                    33 oynatıcının hiçbirinde <code>&lt;track&gt;</code> yok. Alan doldurulursa değer
+                    bugün hiçbir yerde görünmez.</span></div>
+                </div>
+                <div class="alan kart-izgara c2">
+                  <div class="alan">
+                    <label for="pfIzlenme" class="alan-etiket">İzlenme</label>
+                    <input class="alan-girdi" id="pfIzlenme" name="izlenme" type="text" data-hesaplanan="oynatma sayacı">
+                    <div class="alan-yardim"><span>Kart meta satırında basılır (<code>96B</code> · <code>1,2Mn</code>).
+                      Sistemden gelir — elle değiştirilmez.</span></div>
+                  </div>
+                  <div class="alan">
+                    <label for="pfYayin" class="alan-etiket">Yayın tarihi</label>
+                    <input class="alan-girdi" id="pfYayin" name="yayin_tarihi" type="date">
+                    <div class="alan-yardim"><span>Public bunu <b>göreli</b> basıyor (“5 ay önce”);
+                      kayıtta mutlak tarih durur, göreli metin ondan türer.
+                      <span class="olcum-kunye">⚠ Ölçülen değer göreli olduğu için mutlak tarih
+                      <b>uydurulmadı</b> — alan boş doğar, altındaki satır public'in bugün ne bastığını
+                      söyler.</span></span></div>
+                  </div>
+                  <div class="alan">
+                    <label for="pfYayinlandi" class="alan-etiket">Public'te görünen</label>
+                    <input class="alan-girdi" id="pfYayinlandi" name="yayinlandi" type="text" data-hesaplanan="yayın tarihinden türer">
+                  </div>
+                </div>
+                <div class="alan">
+                  <label for="pfOneCikan" class="alan-etiket">Merkez sayfadaki yeri</label>
+                  <select class="alan-secim" id="pfOneCikan" name="one_cikan">
+                    <option value="" selected>— yok —</option>
+                    <option value="haftanin">Haftanın Videosu (büyük kart)</option>
+                    <option value="kuyruk">“Sıradaki” kuyruğunda</option>
+                  </select>
+                  <div class="alan-yardim"><span>Merkez sayfanın üst bloğu iki yüzey basıyor:
+                    <b>tek</b> “Haftanın Videosu” ve onun sağında <b>üç</b> kayıtlık “Sıradaki” kuyruğu.
+                    <span class="olcum-kunye">Ölçüldü: haftanın videosu <b>Tane Tane Pilav</b>;
+                    kuyruk <b>Karnıyarık · Baklava · Bıçak Tutuşu</b>.</span></span></div>
+                </div>
+                <div class="alan">
+                  <label for="pfKuyrukSira" class="alan-etiket">Kuyruk sırası</label>
+                  <input class="alan-girdi" id="pfKuyrukSira" name="kuyruk_sira" type="number" data-girdi="sayi" min="1" max="10" placeholder="1">
                 </div>
               </div>
             </div>
+          </div>
 
+          <!-- ═════════ AÇIKLAMA ═════════ -->
+          <div data-form-panel="anlatim" id="pfP-anlatim" role="tabpanel" aria-labelledby="pfS-anlatim" hidden>
+            <div class="form-bolum">
+              <h3 class="form-bolum-bas"><i class="fa-solid fa-align-left" aria-hidden="true"></i> Uzun açıklama</h3>
+              <div class="alan">
+                <label for="pfUzun" class="alan-etiket">Oynatıcı altındaki gövde</label>
+                <textarea class="alan-metin" id="pfUzun" name="govde" data-editor="icerik" placeholder="Video neyi öğretiyor, kime uygun, hangi teknikle ilerliyor?"></textarea>
+                <div class="alan-yardim"><span><b>Videonun kendi sayfası bugün YOK</b> — ölçüldü: sayfa
+                  kümesinde <code>video-mutfagi/&lt;video&gt;</code> diye bir adres yok, oynatma
+                  merkez sayfada bir <b>modal</b> olarak açılıyor. Bu alan o sayfa açıldığında
+                  kaynağı olsun diye kuruldu; bugün hiçbir yerde basılmıyor.</span></div>
+              </div>
+            </div>
             <div class="form-bolum">
               <h3 class="form-bolum-bas">
                 <i class="fa-solid fa-check" aria-hidden="true"></i> Kazanımlar
                 <span class="alan-sayac" id="pfKazanimSay">1 kazanım</span>
               </h3>
-              <div class="adim-liste" id="pfKazanimlar"><div class="adim-karti"><span class="adim-no">1</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-check" aria-hidden="true"></i> Kazanım</span><input class="alan-girdi" type="text" name="kazanim[]" data-field="metin" placeholder="Örn. Patlıcanı yağ çektirmeden kızartmak."><input type="hidden" data-field="position" value="0"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır" data-eylem="sirala"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Satırı sil" aria-label="Satırı sil" disabled="" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div></div>
-              <button class="satir-ekle" type="button" id="pfKazanimEkle">
+              <div class="adim-liste" id="pfKazanimlar">
+                <div class="adim-karti">
+                  <div class="adim-govde">
+                    <div class="alan">
+                      <label class="alan-etiket">Kazanım maddesi</label>
+                      <input class="alan-girdi" type="text" name="kazanim[]" maxlength="180" placeholder="Örn. Patlıcanı yağ çektirmeden kızartmak.">
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <button class="satir-ekle" type="button" data-eylem="satir-ekle" data-hedef="#pfKazanimlar">
                 <i class="fa-solid fa-plus" aria-hidden="true"></i> Kazanım ekle</button>
-              <div class="alan-yardim"><span>Detay sayfasının "Genel bakış" bloğunda
-                madde madde basılır. Tutamağı sürükleyerek ya da odaktayken ↑ / ↓ ile taşı.</span></div>
+              <div class="alan-yardim"><span><b>Bugün public karşılığı YOK</b> (videonun kendi sayfası
+                olmadığı için). Alan bildirilmiş bir gelecektir; doldurulan değer bugün görünmez.</span></div>
             </div>
-
-            <div class="form-bolum">
-              <h3 class="form-bolum-bas">
-                <i class="fa-solid fa-user-check" aria-hidden="true"></i> Kime uygun
-                <span class="alan-sayac" id="pfUygunSay">1 madde</span>
-              </h3>
-              <div class="adim-liste" id="pfUygun"><div class="adim-karti"><span class="adim-no">1</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-user-check" aria-hidden="true"></i> Madde</span><input class="alan-girdi" type="text" name="uygun[]" data-field="metin" placeholder="Örn. İlk kez karnıyarık yapanlar."><input type="hidden" data-field="position" value="0"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır" data-eylem="sirala"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Satırı sil" aria-label="Satırı sil" disabled="" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div></div>
-              <button class="satir-ekle" type="button" id="pfUygunEkle" data-eylem="satir-ekle">
-                <i class="fa-solid fa-plus" aria-hidden="true"></i> Madde ekle</button>
-            </div>
-
             <div class="form-bolum">
               <h3 class="form-bolum-bas"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> Video uyarısı</h3>
-              <div>
-                <div class="alan">
-                  <label for="pfUyariM" class="alan-etiket">Uyarı metni <span class="acilir-kalem">— detay sayfasında bloğun altında basılır</span></label>
-                  <textarea class="alan-metin" id="pfUyariM" name="uyari" placeholder="Bu tarifte hangi alerjen ya da gıda güvenliği uyarısı var?"></textarea>
-                  <div class="alan-yardim"><span>🔴 Gıda güvenliğiyle ilgili metin. Genel uyarı Ayarlar'da tek
-                    yerden yönetilir; buraya yalnız <b>bu videoya özgü</b> olan yazılır.</span></div>
-                </div>
+              <div class="alan">
+                <label for="pfUyariM" class="alan-etiket">Uyarı metni <span class="istege-bagli">isteğe bağlı</span></label>
+                <textarea class="alan-metin" id="pfUyariM" name="uyari" placeholder="Bu videoya özgü alerjen ya da gıda güvenliği uyarısı."></textarea>
+                <div class="alan-yardim"><span>🔴 <b>Önceki turun notu korunuyor:</b> gıda güvenliğiyle ilgili
+                  metin; genel uyarı Ayarlar'da tek yerden yönetilir, buraya yalnız <b>bu videoya özgü</b>
+                  olan yazılır.
+                  <span class="olcum-kunye">⚠ Bu turda ölçüldü: <b>33 videonun 33'ünde</b> public bir uyarı
+                  yüzeyi basılmıyor. Alan silinmedi çünkü kaynağı bir içerik kararıdır, ölçüm kusuru değil —
+                  ama doldurulan değer bugün hiçbir yerde görünmez.</span></span></div>
               </div>
             </div>
           </div>
 
-          <!-- ---- SEO ---- -->
-          <div data-form-panel="seo" hidden="" id="pano-0-2" role="tabpanel" aria-labelledby="sekme-0-2">
+          <!-- ═════════ SEO ═════════ -->
+          <div data-form-panel="seo" id="pfP-seo" role="tabpanel" aria-labelledby="pfS-seo" hidden>
             <div class="form-bolum">
               <h3 class="form-bolum-bas"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i> Arama motoru</h3>
               <div>
                 <div class="alan">
+                  <label for="pfSlug" class="alan-etiket">Kayıt anahtarı</label>
+                  <div class="slug-alani">
+                    <span class="slug-onek">video-mutfagi/</span>
+                    <!-- 🔴 ÖNCEKİ TURUN NOTU KORUNUYOR — `pattern`da ÇIPLAK TİRE:
+                         Chromium `pattern`ı `v` bayrağıyla derliyor ve karakter sınıfının
+                         sonundaki çıplak `-` orada GEÇERSİZ; `reportValidity()` istisna atıyor.
+                         Ölçüm ve gerekçe `admin-programlar-v1.html:126`da. Bu alan tireyi
+                         sınıf içinde değil GRUP olarak yazıyor: `[a-z0-9]+(-[a-z0-9]+)*`. -->
+                    <input data-girdi="slug" class="alan-girdi" id="pfSlug" name="slug" type="text" maxlength="60" pattern="[a-z0-9]+(-[a-z0-9]+)*" placeholder="tam-kivaminda-karniyarik">
+                  </div>
+                  <div class="alan-yardim"><span>⚠ Bugün <b>public bir adres değil</b>, yalnız yönetimdeki
+                    kayıt anahtarı — videonun kendi sayfası yok. Seri bölümlerinde anahtar
+                    <code>&lt;seri&gt;-&lt;bölüm&gt;</code> deseniyle üretildi ve 33/33 benzersiz (§5b).</span></div>
+                </div>
+                <div class="alan">
                   <label for="pfMetaT" class="alan-etiket">Meta başlık<span class="alan-sayac" data-say-for="pfMetaT">0 / 60 önerilen</span></label>
                   <input class="alan-girdi" id="pfMetaT" name="meta_title" type="text" maxlength="180" placeholder="Boş bırakılırsa video başlığı kullanılır">
-                  
                 </div>
                 <div class="alan">
                   <label for="pfMetaD" class="alan-etiket">Meta açıklama<span class="alan-sayac" data-say-for="pfMetaD">0 / 160 önerilen</span></label>
                   <textarea class="alan-metin" id="pfMetaD" name="meta_desc" maxlength="320" placeholder="Arama sonucunda görünen iki cümle."></textarea>
-                  
-                </div>
-                <div class="alan">
-                  <label for="pfCanon" class="alan-etiket">Canonical adres</label>
-                  <input data-girdi="url" class="alan-girdi" id="pfCanon" name="canonical" type="url" placeholder="https://dadagastro.com/video-mutfagi/…">
-                </div>
-                <div class="alan">
-                  <label for="pfOdak" class="alan-etiket">Odak anahtar sözcük</label>
-                  <input class="alan-girdi" id="pfOdak" name="focus" type="text" placeholder="tam kıvamında karnıyarık">
-                </div>
-                <div class="alan">
-                  <label class="alan-etiket">Paylaşım görseli</label>
-                  <div id="pfOg"><div class="birak-alani" tabindex="0" role="button" aria-label="Görsel seç ya da sürükle"><span><i class="fa-solid fa-cloud-arrow-up" aria-hidden="true"></i></span><b>Görseli sürükle ya da seçmek için tıkla</b><small>Paylaşım görseli — 1200×630 önerilir.</small><span class="dugme hayalet" style="pointer-events:none">Kütüphaneden seç</span></div><input type="file" hidden="" accept="image/*"><div class="cipler"></div></div>
-                  <input type="hidden" name="og_image" id="pfOgAlan" value="">
                 </div>
               </div>
             </div>
@@ -352,12 +473,13 @@
 
           <div class="form-eylem kart-alt">
             <a class="dugme hayalet" href="admin-video.html">İptal</a>
-            <button class="dugme hayalet" type="button" id="pfTaslak" data-eylem="taslak">Taslak kaydet</button>
-            <button class="dugme birincil" type="button" id="pfKaydet">Videoyu kaydet</button>
+            <button class="dugme hayalet" type="button" data-eylem="taslak">Taslak kaydet</button>
+            <button class="dugme birincil" type="button" data-eylem="kaydet">Videoyu kaydet</button>
           </div>
-        <div class="bos-durum kart-ici" hidden=""><span class="bos-ikon"><i class="fa-solid fa-file-circle-question" aria-hidden="true"></i></span><h3>Bu adreste video yok</h3><p>Adresteki slug katalogda karşılık bulmuyor. Listeye dön ve bir video seç.</p><a class="dugme birincil" href="admin-video.html">Kataloğa dön</a></div><div class="bos-durum kart-ici yetkisiz" data-durum="yetkisiz" hidden=""><span class="bos-ikon"><i class="fa-solid fa-lock" aria-hidden="true"></i></span><h3>Bu kaydı düzenleyemezsin</h3><p>Erişim istemek için yöneticinle görüş.</p></div><div class="bos-durum kart-ici servis-hatasi" data-durum="servis" hidden=""><span class="bos-ikon"><i class="fa-solid fa-plug-circle-xmark" aria-hidden="true"></i></span><h3>Kayıt yüklenemedi</h3><p>Bağlantı kurulamadı. Yeniden dene.</p><button class="dugme birincil" type="button" data-eylem="calistir" data-ad="Yeniden dene"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i> Yeniden dene</button><div class="hata-izi">Referans kodu <code>GAS-ADM-6202</code></div></div></div>
 
-        <!-- ================= SAĞ KOLON ================= -->
+          <div class="bos-durum kart-ici" hidden><span class="bos-ikon"><i class="fa-solid fa-file-circle-question" aria-hidden="true"></i></span><h3>Bu anahtarda video yok</h3><p>Katalogda karşılığı olmayan bir anahtar açıldı.</p><a class="dugme birincil" href="admin-video.html">Video kataloğuna dön</a></div>
+        </div>
+
         <aside class="form-yan">
           <div class="kart panel">
             <div class="kart-bas"><h2 class="kart-baslik">Yayın</h2></div>
@@ -367,50 +489,33 @@
                   <label for="pfDurum" class="alan-etiket">Durum</label>
                   <select class="alan-secim" id="pfDurum" name="durum">
                     <option value="taslak">Taslak</option>
-                    <option value="yayin" selected="">Yayında</option>
+                    <option value="yayin" selected>Yayında</option>
                     <option value="arsiv">Arşiv</option>
                   </select>
-                </div>
-                <div class="alan">
-                  <label for="pfTarih" class="alan-etiket">Yayın tarihi</label>
-                  <input class="alan-girdi" id="pfTarih" name="yayin_tarihi" type="date">
-                </div>
-                <div class="alan">
-                  <span>Öne çıkar</span>
-                  <label class="anahtar"><input type="checkbox" name="one_cikar">
-                    <span class="anahtar-ray"></span><span></span></label>
-                </div>
-                <div class="alan">
-                  <span>Ne Pişirsem sonuçlarında öner</span>
-                  <label class="anahtar"><input type="checkbox" name="bul" checked="">
-                    <span class="anahtar-ray"></span><span></span></label>
                 </div>
               </div>
             </div>
           </div>
 
           <div class="kart panel">
-            <div class="kart-bas"><h2 class="kart-baslik">Kurgu</h2>
-              <div class="eylem-satiri" id="pfKurguRozet"><span class="rozet durdu"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> Kurgu kaydı yok</span></div>
-            </div>
+            <div class="kart-bas"><h2 class="kart-baslik">Public karşılığı</h2></div>
             <div class="kart-govde">
-              <div class="alan-yardim" id="pfKurguNot" style="margin-bottom:12px"><span>Bu serinin seri → bölüm → video kurgusu <b>hiçbir yerde kayıtlı değil</b>. Bölüm listesi <b>serinin kendi sayfasında</b> sabit HTML olarak duruyor (<code>video-mutfagi/&lt;seri&gt;</code>) ve <b>her seri kendi listesini</b> gösteriyor — ölçüldü: 10 Dakikada Yemekler 6 bölüm, Şef Teknikleri 5, Yöresel Lezzetler 5. <b>Dördüncü serinin (30 Saniyede Bir Fikir) public sayfası yok.</b> Kurgu ekranı boş açılır; künyedeki seri ve bölüm sayısından iskelet kurabilirsin.</span></div>
-              <a class="dugme hayalet" id="pfKurgu2" href="admin-video-kurgu.html">
-                <i class="fa-solid fa-diagram-project" aria-hidden="true"></i> Kurguyu düzenle</a>
+              <div class="alan-yardim"><span>Videonun <b>kendi sayfası yok</b>; üye yüzünde şu yerlerde
+                görünür: merkez sayfanın arşiv ızgarası, seriye bağlıysa serinin sayfası,
+                kısaysa Dada Akış şeridi.</span></div>
+              <div class="eylem-satiri">
+                <a class="dugme hayalet tam-en" id="pfBagSeri" href="../video-mutfagi.html" target="_blank" rel="noopener">
+                  <i class="fa-solid fa-clapperboard" aria-hidden="true"></i> Göründüğü sayfa</a>
+              </div>
             </div>
-          </div>
-
-          <div class="kart panel">
-            <div class="kart-bas"><h2 class="kart-baslik">SEO skoru</h2></div>
-            <div class="kart-govde" id="pfSeo"><div class="seo-skor"><div class="skor-halka" style="--oran:17"><b>17</b></div><div><b>1 / 6 ölçüt geçti</b><span>Alanları doldurdukça yükselir</span></div></div><div class="seo-denetim"><div class="seo-kalem kaldi"><i class="fa-solid fa-circle" aria-hidden="true"></i>Meta başlık 30–60 karakter</div><div class="seo-kalem kaldi"><i class="fa-solid fa-circle" aria-hidden="true"></i>Meta açıklama 70–160 karakter</div><div class="seo-kalem gecti"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>Slug yazılmış ve kısa</div><div class="seo-kalem kaldi"><i class="fa-solid fa-circle" aria-hidden="true"></i>Canonical adres verilmiş</div><div class="seo-kalem kaldi"><i class="fa-solid fa-circle" aria-hidden="true"></i>Paylaşım görseli seçilmiş</div><div class="seo-kalem kaldi"><i class="fa-solid fa-circle" aria-hidden="true"></i>Odak anahtar başlıkta geçiyor</div></div></div>
           </div>
 
           <div class="kart panel">
             <div class="kart-bas"><h2 class="kart-baslik">Tehlikeli bölge</h2></div>
             <div class="kart-govde">
-              <div class="alan-yardim" style="margin-bottom:12px"><span>Silinen video, onu öneren
-                <b id="pfBant">10</b> seri kurgusundan ve Ne Pişirsem önerilerinden de düşer.</span></div>
-              <button class="dugme hayalet tehlike tam-en" type="button" id="pfSil" data-yikici="Tam Kıvamında Karnıyarık" data-fiil="sil" data-islem="sil">
+              <div class="alan-yardim"><span>Silinen video seriden düşer ve <b>bölüm numaraları
+                kayar</b>; serinin “N bölüm” künyesi de değişir.</span></div>
+              <button class="dugme hayalet tehlike tam-en" type="button" data-kritik data-yikici="Video" data-fiil="sil" data-islem="sil">
                 <i class="fa-solid fa-trash-can" aria-hidden="true"></i> Videoyu sil</button>
             </div>
           </div>
@@ -427,110 +532,580 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/l10n/tr.js"></script>
 <script src="../../kanon/admin-editor-tr.js"></script>
+<script src="../../kanon/admin-ikon-kutuphane.js" defer></script>
+<script src="../../kanon/admin-veri.js" defer></script>
 <script src="../../kanon/admin-kit.js" defer></script>
 <script src="../../kanon/admin-editor.js" defer></script>
 <script src="../../kanon/admin-tarih.js" defer></script>
 <!-- ADMIN-KIT:JS:SON -->
+<!-- GASTRO-EK:JS:BAS -->
+<script src="_ortak/gastro-ek.js" defer></script>
+<script src="_ortak/gastro-ek-a.js" defer></script>
+<script src="_ortak/gastro-ek-b.js" defer></script>
+<script src="_ortak/gastro-ek-c.js" defer></script>
+<script src="_ortak/gastro-ek-d.js" defer></script>
+<!-- GASTRO-EK:JS:SON -->
 
-<!-- KAYIT KAYNAGI — form kendi kayitlarini BILDIRIR (kit §19).
-     Anahtar = admin-video.html satirinin KENDI data-slug degeri.
-     ad · ozet · bolum no · seri bolum sayisi · erisim kademesi (data-pro)
-     ayni satirdan okundu. UYDURULAN DEGER YOK — bu yuzden dort alan
-     BILDIRILMIYOR:
-       · hafta ("Sure"): girdi 1-52 arasi SAYI (donorun hafta sayisi),
-         listedeki deger "12:48" — birbirine cevrilemez, LEAD maddesi.
-       · pop ("Populerlik"): girdi 0-100, listede izlenme sayisi var.
-       · seviye ("Seviye"): secenekleri sef ADLARI ve yalniz UC sef var
-         (Ece Asci · Canan Komi · Nurgul Karaca); listede alti sef geciyor,
-         digerlerinin secenegi YOK — o satirlarda bildirilmedi.
-       · ekipman · yayin_tarihi: listede kolonu yok. -->
+<!-- KAYIT KAYNAGI — form kendi kayitlarini BILDIRIR (kit §5b).
+     ANAHTAR: seri bolumlerinde `<seri>-<bolum>`, seri disinda basligin slug'i,
+     kisa videolarda `akis-<sira>`. 33/33 BENZERSIZ.
+     OLCUM ANI: 2026-09-05 · dump/gastro 895 dosya (mtime 2026-09-03 21:00) + canli
+     dadagastro.com dogrulamasi.
+     KAYNAK, ALAN ALAN:
+       ad · sure · izlenme · kapak · video → video-mutfagi__seri__<seri>.html `.ep-row`
+                                             (20 seri bolumu) ve video-mutfagi.html
+                                             arsiv izgarasi `.vid-card` (7 seri disi)
+                                             + `.short-card` (6 kisa)
+       tur                                 → `data-vf` cipleri: tarif · teknik · seri · kisa
+       erisim                              → `.vlock-badge` / `.sc-pro` / `data-pro-gate`
+       one_cikan · kuyruk_sira             → `.vh-feat` (1) ve `.vq-item` (3)
+     🔴 SERI BOLUM SAYILARI (devir §9-5) YENIDEN OLCULDU:
+        public  →  10 Dakikada Yemekler 8 · Sef Teknikleri 4 · Yoresel Lezzetler 4 ·
+                   Restoran Sirlari 4     (hem seri sayfasinin kunyesinde hem ep-row sayisinda)
+        eski admin tablosu  →  DORDUNE DE 8      🔴
+        devir belgesindeki "6 · 5 · 5"  →  BUGUNKU public'te KARSILIGI YOK.
+     🔴 "30 Saniyede Bir Fikir" (devir §9-6) BIR SERI DEGIL: o metin Dada Akis
+        bolumunun BASLIGI ("30 saniyede bir fikir"). Dorduncu seri
+        RESTORAN SIRLARI'dir (Pro) ve admin'de HIC YOKTU. -->
 <script type="application/json" data-kayitlar>
 {
- "sef-teknikleri-3": {
-  "ad": "Tam Kıvamında Karnıyarık",
-  "slug": "sef-teknikleri-3",
-  "ozet": "Patlıcanın kıvamı: kızartma sıcaklığı, süzme ve dinlendirme.",
-  "kademe": "pro",
+ "10-dakikada-yemekler-1": {
+  "ad": "10 Dakikada Menemen — Tek Tavada",
+  "tur": "seri",
+  "seri": "10 Dakikada Yemekler",
+  "seri_slug": "10-dakikada-yemekler",
+  "bolum_no": 1,
+  "sure": "09:58",
+  "erisim": "ucretsiz",
+  "izlenme": "96B",
+  "kapak": "varliklar/_dis/images.unsplash.com/photo-1482049016688-2d3e1b311543.avif",
+  "video": "varliklar/video/guide-cooking.mp4",
+  "yayinlandi": "5 ay önce",
+  "ozet": "",
   "durum": "yayin",
-  "gun": "3",
-  "toplam": "3 / 8 bölüm",
-  "seviye": "1"
+  "slug": "10-dakikada-yemekler-1"
  },
- "yoresel-lezzetler-2": {
-  "ad": "Gaziantep Baklavası",
-  "slug": "yoresel-lezzetler-2",
-  "ozet": "Yufka açmadan şerbete: 40 kat, tek tek, tam anlatım.",
-  "kademe": "pro",
+ "10-dakikada-yemekler-2": {
+  "ad": "Pratik Tavuk Sote — Tek Tava, Sıfır Bulaşık",
+  "tur": "seri",
+  "seri": "10 Dakikada Yemekler",
+  "seri_slug": "10-dakikada-yemekler",
+  "bolum_no": 2,
+  "sure": "08:12",
+  "erisim": "ucretsiz",
+  "izlenme": "81B",
+  "kapak": "varliklar/_dis/images.unsplash.com/photo-1432139555190-58524dae6a55.avif",
+  "video": "varliklar/video/guide-cooking.mp4",
+  "yayinlandi": "5 ay önce",
+  "ozet": "",
   "durum": "yayin",
-  "gun": "2",
-  "toplam": "2 / 8 bölüm",
-  "seviye": "2"
+  "slug": "10-dakikada-yemekler-2"
+ },
+ "10-dakikada-yemekler-3": {
+  "ad": "Bulgur Pilavı Express",
+  "tur": "seri",
+  "seri": "10 Dakikada Yemekler",
+  "seri_slug": "10-dakikada-yemekler",
+  "bolum_no": 3,
+  "sure": "07:45",
+  "erisim": "ucretsiz",
+  "izlenme": "73B",
+  "kapak": "varliklar/_dis/images.unsplash.com/photo-1512058564366-18510be2db19.avif",
+  "video": "varliklar/video/guide-cooking.mp4",
+  "yayinlandi": "5 ay önce",
+  "ozet": "",
+  "durum": "yayin",
+  "slug": "10-dakikada-yemekler-3"
+ },
+ "10-dakikada-yemekler-4": {
+  "ad": "5 Malzemeli Makarna",
+  "tur": "seri",
+  "seri": "10 Dakikada Yemekler",
+  "seri_slug": "10-dakikada-yemekler",
+  "bolum_no": 4,
+  "sure": "09:24",
+  "erisim": "ucretsiz",
+  "izlenme": "64B",
+  "kapak": "varliklar/_dis/images.unsplash.com/photo-1473093295043-cdd812d0e601.avif",
+  "video": "varliklar/video/guide-cooking.mp4",
+  "yayinlandi": "4 ay önce",
+  "ozet": "",
+  "durum": "yayin",
+  "slug": "10-dakikada-yemekler-4"
+ },
+ "10-dakikada-yemekler-5": {
+  "ad": "Hızlı Kaşarlı Omlet",
+  "tur": "seri",
+  "seri": "10 Dakikada Yemekler",
+  "seri_slug": "10-dakikada-yemekler",
+  "bolum_no": 5,
+  "sure": "06:48",
+  "erisim": "ucretsiz",
+  "izlenme": "58B",
+  "kapak": "varliklar/_dis/images.unsplash.com/photo-1488477181946-6428a0291777.avif",
+  "video": "varliklar/video/guide-cooking.mp4",
+  "yayinlandi": "4 ay önce",
+  "ozet": "",
+  "durum": "yayin",
+  "slug": "10-dakikada-yemekler-5"
+ },
+ "10-dakikada-yemekler-6": {
+  "ad": "Ton Balıklı Akdeniz Salatası",
+  "tur": "seri",
+  "seri": "10 Dakikada Yemekler",
+  "seri_slug": "10-dakikada-yemekler",
+  "bolum_no": 6,
+  "sure": "07:02",
+  "erisim": "ucretsiz",
+  "izlenme": "44B",
+  "kapak": "varliklar/_dis/images.unsplash.com/photo-1512621776951-a57141f2eefd.avif",
+  "video": "varliklar/video/guide-cooking.mp4",
+  "yayinlandi": "4 ay önce",
+  "ozet": "",
+  "durum": "yayin",
+  "slug": "10-dakikada-yemekler-6"
+ },
+ "10-dakikada-yemekler-7": {
+  "ad": "Pratik Köfte — Izgara Tadında",
+  "tur": "seri",
+  "seri": "10 Dakikada Yemekler",
+  "seri_slug": "10-dakikada-yemekler",
+  "bolum_no": 7,
+  "sure": "09:51",
+  "erisim": "ucretsiz",
+  "izlenme": "38B",
+  "kapak": "varliklar/_dis/images.unsplash.com/photo-1544025162-d76694265947.avif",
+  "video": "varliklar/video/guide-cooking.mp4",
+  "yayinlandi": "4 ay önce",
+  "ozet": "",
+  "durum": "yayin",
+  "slug": "10-dakikada-yemekler-7"
+ },
+ "10-dakikada-yemekler-8": {
+  "ad": "Yoğurt Çorbası — 10 Dakikada",
+  "tur": "seri",
+  "seri": "10 Dakikada Yemekler",
+  "seri_slug": "10-dakikada-yemekler",
+  "bolum_no": 8,
+  "sure": "08:36",
+  "erisim": "ucretsiz",
+  "izlenme": "29B",
+  "kapak": "varliklar/_dis/images.unsplash.com/photo-1547592166-23ac45744acd.avif",
+  "video": "varliklar/video/guide-cooking.mp4",
+  "yayinlandi": "3 ay önce",
+  "ozet": "",
+  "durum": "yayin",
+  "slug": "10-dakikada-yemekler-8"
  },
  "sef-teknikleri-1": {
   "ad": "Bıçak Tutuşu ve Julyen Doğrama",
-  "slug": "sef-teknikleri-1",
-  "ozet": "Doğru kavrama, doğru açı — mutfakta ilk öğrenilecek teknik.",
-  "kademe": "pro",
+  "tur": "seri",
+  "seri": "Şef Teknikleri",
+  "seri_slug": "sef-teknikleri",
+  "bolum_no": 1,
+  "sure": "11:05",
+  "erisim": "ucretsiz",
+  "izlenme": "312B",
+  "kapak": "varliklar/_dis/images.unsplash.com/photo-1466978913421-dad2ebd01d17.avif",
+  "video": "varliklar/video/guide-cooking.mp4",
+  "yayinlandi": "5 ay önce",
+  "ozet": "",
   "durum": "yayin",
-  "gun": "1",
-  "toplam": "1 / 8 bölüm",
-  "seviye": "1"
+  "kuyruk_sira": 3,
+  "slug": "sef-teknikleri-1"
  },
  "sef-teknikleri-2": {
-  "ad": "Tane Tane Pilav",
-  "slug": "sef-teknikleri-2",
-  "ozet": "Pirinci yıkamaktan demlemeye; tanesi tanesinden ayrı.",
-  "kademe": "pro",
+  "ad": "Et Mühürlemenin Doğrusu",
+  "tur": "seri",
+  "seri": "Şef Teknikleri",
+  "seri_slug": "sef-teknikleri",
+  "bolum_no": 2,
+  "sure": "09:40",
+  "erisim": "ucretsiz",
+  "izlenme": "287B",
+  "kapak": "varliklar/_dis/images.unsplash.com/photo-1544025162-d76694265947.avif",
+  "video": "varliklar/video/guide-cooking.mp4",
+  "yayinlandi": "5 ay önce",
+  "ozet": "",
   "durum": "yayin",
-  "gun": "2",
-  "toplam": "2 / 8 bölüm",
-  "seviye": "3"
+  "slug": "sef-teknikleri-2"
+ },
+ "sef-teknikleri-3": {
+  "ad": "Sos Kıvamı: Roux'dan Beşamel'e",
+  "tur": "seri",
+  "seri": "Şef Teknikleri",
+  "seri_slug": "sef-teknikleri",
+  "bolum_no": 3,
+  "sure": "13:22",
+  "erisim": "ucretsiz",
+  "izlenme": "198B",
+  "kapak": "varliklar/_dis/images.unsplash.com/photo-1476718406336-bb5a9690ee2a.avif",
+  "video": "varliklar/video/guide-cooking.mp4",
+  "yayinlandi": "5 ay önce",
+  "ozet": "",
+  "durum": "yayin",
+  "slug": "sef-teknikleri-3"
  },
  "sef-teknikleri-4": {
-  "ad": "Mayalı Hamur ve Ekmek Temeli",
-  "slug": "sef-teknikleri-4",
-  "ozet": "Maya, su sıcaklığı ve bekleme süresi — ekmeğin üç değişkeni.",
-  "kademe": "pro",
+  "ad": "Hamur Yoğurmanın İncelikleri",
+  "tur": "seri",
+  "seri": "Şef Teknikleri",
+  "seri_slug": "sef-teknikleri",
+  "bolum_no": 4,
+  "sure": "10:15",
+  "erisim": "ucretsiz",
+  "izlenme": "176B",
+  "kapak": "varliklar/_dis/images.unsplash.com/photo-1509440159596-0249088772ff.avif",
+  "video": "varliklar/video/guide-cooking.mp4",
+  "yayinlandi": "4 ay önce",
+  "ozet": "",
   "durum": "yayin",
-  "gun": "4",
-  "toplam": "4 / 8 bölüm",
-  "seviye": "2"
+  "slug": "sef-teknikleri-4"
+ },
+ "yoresel-lezzetler-1": {
+  "ad": "Hatay Usulü Kağıt Kebabı",
+  "tur": "seri",
+  "seri": "Yöresel Lezzetler",
+  "seri_slug": "yoresel-lezzetler",
+  "bolum_no": 1,
+  "sure": "15:42",
+  "erisim": "ucretsiz",
+  "izlenme": "224B",
+  "kapak": "varliklar/_dis/images.unsplash.com/photo-1604908176997-125f25cc6f3d.avif",
+  "video": "varliklar/video/guide-cooking.mp4",
+  "yayinlandi": "5 ay önce",
+  "ozet": "",
+  "durum": "yayin",
+  "slug": "yoresel-lezzetler-1"
+ },
+ "yoresel-lezzetler-2": {
+  "ad": "Karadeniz Pidesinin Sırrı",
+  "tur": "seri",
+  "seri": "Yöresel Lezzetler",
+  "seri_slug": "yoresel-lezzetler",
+  "bolum_no": 2,
+  "sure": "12:30",
+  "erisim": "ucretsiz",
+  "izlenme": "187B",
+  "kapak": "varliklar/_dis/images.unsplash.com/photo-1509358271058-acd22cc93898.avif",
+  "video": "varliklar/video/guide-cooking.mp4",
+  "yayinlandi": "5 ay önce",
+  "ozet": "",
+  "durum": "yayin",
+  "slug": "yoresel-lezzetler-2"
  },
  "yoresel-lezzetler-3": {
-  "ad": "Antep Fıstıklı Sarma",
-  "slug": "yoresel-lezzetler-3",
-  "ozet": "İnce yufka, bol fıstık; sarmanın kalınlığı şerbeti belirler.",
-  "kademe": "pro",
+  "ad": "Gaziantep Baklavası — Ustadan İzle",
+  "tur": "seri",
+  "seri": "Yöresel Lezzetler",
+  "seri_slug": "yoresel-lezzetler",
+  "bolum_no": 3,
+  "sure": "18:08",
+  "erisim": "ucretsiz",
+  "izlenme": "356B",
+  "kapak": "varliklar/_dis/images.unsplash.com/photo-1519996529931-28324d5a630e.avif",
+  "video": "varliklar/video/guide-cooking.mp4",
+  "yayinlandi": "5 ay önce",
+  "ozet": "",
   "durum": "yayin",
-  "gun": "3",
-  "toplam": "3 / 8 bölüm"
+  "kuyruk_sira": 2,
+  "slug": "yoresel-lezzetler-3"
  },
- "10-dakikada-yemekler-1": {
-  "ad": "10 Dakikada Menemen",
-  "slug": "10-dakikada-yemekler-1",
-  "ozet": "Sabah telaşında tek tavada kahvaltı.",
-  "kademe": "ucretsiz",
+ "yoresel-lezzetler-4": {
+  "ad": "İzmir Boyozu Ev Usulü",
+  "tur": "seri",
+  "seri": "Yöresel Lezzetler",
+  "seri_slug": "yoresel-lezzetler",
+  "bolum_no": 4,
+  "sure": "11:54",
+  "erisim": "ucretsiz",
+  "izlenme": "142B",
+  "kapak": "varliklar/_dis/images.unsplash.com/photo-1555939594-58d7cb561ad1.avif",
+  "video": "varliklar/video/guide-cooking.mp4",
+  "yayinlandi": "4 ay önce",
+  "ozet": "",
   "durum": "yayin",
-  "gun": "1",
-  "toplam": "1 / 8 bölüm"
+  "slug": "yoresel-lezzetler-4"
  },
- "10-dakikada-yemekler-3": {
-  "ad": "Pratik Tavuk Sote",
-  "slug": "10-dakikada-yemekler-3",
-  "ozet": "Akşam yemeği için hızlı, tek tencerelik sote.",
-  "kademe": "ucretsiz",
+ "restoran-sirlari-1": {
+  "ad": "Restoran Sırları: Mise en Place — Servise Hazırlık Disiplini",
+  "tur": "seri",
+  "seri": "Restoran Sırları",
+  "seri_slug": "restoran-sirlari",
+  "bolum_no": 1,
+  "sure": "16:20",
+  "erisim": "pro",
+  "izlenme": "",
+  "kapak": "varliklar/_dis/images.unsplash.com/photo-1517248135467-4c7edcad34c4.avif",
+  "video": "",
+  "yayinlandi": "",
+  "ozet": "",
   "durum": "yayin",
-  "gun": "3",
-  "toplam": "3 / 8 bölüm"
+  "slug": "restoran-sirlari-1"
  },
- "10-dakikada-yemekler-5": {
-  "ad": "Bulgur Pilavı Express",
-  "slug": "10-dakikada-yemekler-5",
-  "ozet": "Bulguru salçayla kavurup yedi dakikada sofraya.",
-  "kademe": "ucretsiz",
+ "restoran-sirlari-2": {
+  "ad": "Restoran Sırları: Sous-Vide ile Mükemmel Et Pişirme",
+  "tur": "seri",
+  "seri": "Restoran Sırları",
+  "seri_slug": "restoran-sirlari",
+  "bolum_no": 2,
+  "sure": "19:45",
+  "erisim": "pro",
+  "izlenme": "",
+  "kapak": "varliklar/_dis/images.unsplash.com/photo-1556910103-1c02745aae4d.avif",
+  "video": "",
+  "yayinlandi": "",
+  "ozet": "",
   "durum": "yayin",
-  "gun": "5",
-  "toplam": "5 / 8 bölüm"
+  "slug": "restoran-sirlari-2"
+ },
+ "restoran-sirlari-3": {
+  "ad": "Restoran Sırları: Tabak Sunumu — Restoran Estetiği",
+  "tur": "seri",
+  "seri": "Restoran Sırları",
+  "seri_slug": "restoran-sirlari",
+  "bolum_no": 3,
+  "sure": "14:12",
+  "erisim": "pro",
+  "izlenme": "",
+  "kapak": "varliklar/_dis/images.unsplash.com/photo-1476718406336-bb5a9690ee2a.avif",
+  "video": "",
+  "yayinlandi": "",
+  "ozet": "",
+  "durum": "yayin",
+  "slug": "restoran-sirlari-3"
+ },
+ "restoran-sirlari-4": {
+  "ad": "Restoran Sırları: Stok & Fond — Profesyonel Lezzet Tabanı",
+  "tur": "seri",
+  "seri": "Restoran Sırları",
+  "seri_slug": "restoran-sirlari",
+  "bolum_no": 4,
+  "sure": "21:30",
+  "erisim": "pro",
+  "izlenme": "",
+  "kapak": "varliklar/_dis/images.unsplash.com/photo-1466978913421-dad2ebd01d17.avif",
+  "video": "",
+  "yayinlandi": "",
+  "ozet": "",
+  "durum": "yayin",
+  "slug": "restoran-sirlari-4"
+ },
+ "citir-citir-cig-borek-hamuru": {
+  "ad": "Çıtır Çıtır Çiğ Börek Hamuru",
+  "tur": "tarif",
+  "seri": "",
+  "seri_slug": "",
+  "bolum_no": "",
+  "sure": "08:30",
+  "erisim": "ucretsiz",
+  "izlenme": "89B",
+  "kapak": "varliklar/_dis/images.unsplash.com/photo-1551183053-bf91a1d81141.avif",
+  "video": "varliklar/video/guide-cooking.mp4",
+  "yayinlandi": "",
+  "ozet": "",
+  "durum": "yayin",
+  "slug": "citir-citir-cig-borek-hamuru"
+ },
+ "tam-kivaminda-karniyarik-sefin-butun-sirlariyla": {
+  "ad": "Tam Kıvamında Karnıyarık — Şefin Bütün Sırlarıyla",
+  "tur": "tarif",
+  "seri": "",
+  "seri_slug": "",
+  "bolum_no": "",
+  "sure": "12:48",
+  "erisim": "ucretsiz",
+  "izlenme": "1,2Mn",
+  "kapak": "varliklar/_dis/images.unsplash.com/photo-1556910103-1c02745aae4d.avif",
+  "video": "varliklar/video/guide-cooking.mp4",
+  "yayinlandi": "",
+  "ozet": "",
+  "durum": "yayin",
+  "kuyruk_sira": 1,
+  "slug": "tam-kivaminda-karniyarik-sefin-butun-sirlariyla"
+ },
+ "tavuk-suyu-corbasi-nasil-yapilir": {
+  "ad": "Tavuk Suyu Çorbası Nasıl Yapılır?",
+  "tur": "tarif",
+  "seri": "",
+  "seri_slug": "",
+  "bolum_no": "",
+  "sure": "04:12",
+  "erisim": "ucretsiz",
+  "izlenme": "124B",
+  "kapak": "varliklar/_dis/images.unsplash.com/photo-1547592166-23ac45744acd.avif",
+  "video": "varliklar/video/guide-cooking.mp4",
+  "yayinlandi": "",
+  "ozet": "",
+  "durum": "yayin",
+  "slug": "tavuk-suyu-corbasi-nasil-yapilir"
+ },
+ "besamel-sos-topaksiz-kivam": {
+  "ad": "Beşamel Sos — Topaksız Kıvam",
+  "tur": "teknik",
+  "seri": "",
+  "seri_slug": "",
+  "bolum_no": "",
+  "sure": "07:31",
+  "erisim": "ucretsiz",
+  "izlenme": "201B",
+  "kapak": "varliklar/_dis/images.unsplash.com/photo-1476718406336-bb5a9690ee2a.avif",
+  "video": "varliklar/video/guide-cooking.mp4",
+  "yayinlandi": "",
+  "ozet": "",
+  "durum": "yayin",
+  "slug": "besamel-sos-topaksiz-kivam"
+ },
+ "tane-tane-pilav": {
+  "ad": "Tane Tane Pilav",
+  "tur": "tarif",
+  "seri": "",
+  "seri_slug": "",
+  "bolum_no": "",
+  "sure": "05:24",
+  "erisim": "ucretsiz",
+  "izlenme": "178B",
+  "kapak": "varliklar/_dis/images.unsplash.com/photo-1516684732162-798a0062be99.avif",
+  "video": "varliklar/video/guide-cooking.mp4",
+  "yayinlandi": "",
+  "ozet": "",
+  "durum": "yayin",
+  "one_cikan": "haftanin",
+  "slug": "tane-tane-pilav"
+ },
+ "eksi-mayali-ekmek-yapimi": {
+  "ad": "Ekşi Mayalı Ekmek Yapımı",
+  "tur": "tarif",
+  "seri": "",
+  "seri_slug": "",
+  "bolum_no": "",
+  "sure": "12:08",
+  "erisim": "ucretsiz",
+  "izlenme": "96B",
+  "kapak": "varliklar/_dis/images.unsplash.com/photo-1549931319-a545dcf3bc73.avif",
+  "video": "varliklar/video/guide-cooking.mp4",
+  "yayinlandi": "",
+  "ozet": "",
+  "durum": "yayin",
+  "slug": "eksi-mayali-ekmek-yapimi"
+ },
+ "bicak-bileme-evdeki-yontemler": {
+  "ad": "Bıçak Bileme — Evdeki Yöntemler",
+  "tur": "teknik",
+  "seri": "",
+  "seri_slug": "",
+  "bolum_no": "",
+  "sure": "06:54",
+  "erisim": "ucretsiz",
+  "izlenme": "154B",
+  "kapak": "varliklar/_dis/images.unsplash.com/photo-1593618998160-e34014e67546.avif",
+  "video": "varliklar/video/guide-cooking.mp4",
+  "yayinlandi": "",
+  "ozet": "",
+  "durum": "yayin",
+  "slug": "bicak-bileme-evdeki-yontemler"
+ },
+ "akis-1": {
+  "ad": "Soğan Doğrarken Ağlamamanın Yolu",
+  "tur": "kisa",
+  "seri": "",
+  "seri_slug": "",
+  "bolum_no": "",
+  "sure": "00:31",
+  "erisim": "ucretsiz",
+  "izlenme": "524B",
+  "kapak": "varliklar/_dis/images.unsplash.com/photo-1518977956812-cd3dbadaaf31.avif",
+  "video": "",
+  "yayinlandi": "",
+  "ozet": "",
+  "akis_sira": 1,
+  "durum": "yayin",
+  "slug": "akis-1"
+ },
+ "akis-2": {
+  "ad": "Nar Taneleme — Tek Hamlede",
+  "tur": "kisa",
+  "seri": "",
+  "seri_slug": "",
+  "bolum_no": "",
+  "sure": "00:24",
+  "erisim": "ucretsiz",
+  "izlenme": "287B",
+  "kapak": "varliklar/_dis/images.unsplash.com/photo-1490645935967-10de6ba17061.avif",
+  "video": "",
+  "yayinlandi": "",
+  "ozet": "",
+  "akis_sira": 2,
+  "durum": "yayin",
+  "slug": "akis-2"
+ },
+ "akis-3": {
+  "ad": "Restoran Sosları — Tam Seri (Pro)",
+  "tur": "kisa",
+  "seri": "",
+  "seri_slug": "",
+  "bolum_no": "",
+  "sure": "",
+  "erisim": "pro",
+  "izlenme": "156B",
+  "kapak": "varliklar/_dis/images.unsplash.com/photo-1473093295043-cdd812d0e601.avif",
+  "video": "",
+  "yayinlandi": "",
+  "ozet": "",
+  "akis_sira": 3,
+  "durum": "yayin",
+  "slug": "akis-3"
+ },
+ "akis-4": {
+  "ad": "Meal Prep: 1 Saatte Haftalık Sebze Hazırlığı",
+  "tur": "kisa",
+  "seri": "",
+  "seri_slug": "",
+  "bolum_no": "",
+  "sure": "00:38",
+  "erisim": "ucretsiz",
+  "izlenme": "412B",
+  "kapak": "varliklar/_dis/images.unsplash.com/photo-1466978913421-dad2ebd01d17.avif",
+  "video": "",
+  "yayinlandi": "",
+  "ozet": "",
+  "akis_sira": 4,
+  "durum": "yayin",
+  "slug": "akis-4"
+ },
+ "akis-5": {
+  "ad": "Sufle Çökmesin: 30 Saniyelik Hile",
+  "tur": "kisa",
+  "seri": "",
+  "seri_slug": "",
+  "bolum_no": "",
+  "sure": "00:30",
+  "erisim": "ucretsiz",
+  "izlenme": "198B",
+  "kapak": "varliklar/_dis/images.unsplash.com/photo-1495521821757-a1efb6729352.avif",
+  "video": "",
+  "yayinlandi": "",
+  "ozet": "",
+  "akis_sira": 5,
+  "durum": "yayin",
+  "slug": "akis-5"
+ },
+ "akis-6": {
+  "ad": "Pratik Kahvaltı Tabağı — 5 Dakika",
+  "tur": "kisa",
+  "seri": "",
+  "seri_slug": "",
+  "bolum_no": "",
+  "sure": "00:42",
+  "erisim": "ucretsiz",
+  "izlenme": "341B",
+  "kapak": "varliklar/_dis/images.unsplash.com/photo-1525351484163-7529414344d8.avif",
+  "video": "",
+  "yayinlandi": "",
+  "ozet": "",
+  "akis_sira": 6,
+  "durum": "yayin",
+  "slug": "akis-6"
  }
 }
 </script>

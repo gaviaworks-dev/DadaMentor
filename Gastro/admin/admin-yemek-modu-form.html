@@ -12,6 +12,13 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.css">
 <link rel="stylesheet" href="../../kanon/admin.css">
 <!-- ADMIN-KIT:CSS:SON -->
+<!-- GASTRO-EK:CSS:BAS -->
+<link rel="stylesheet" href="_ortak/gastro-ek.css">
+<link rel="stylesheet" href="_ortak/gastro-ek-a.css">
+<link rel="stylesheet" href="_ortak/gastro-ek-b.css">
+<link rel="stylesheet" href="_ortak/gastro-ek-c.css">
+<link rel="stylesheet" href="_ortak/gastro-ek-d.css">
+<!-- GASTRO-EK:CSS:SON -->
 </head>
 <body class="yetkili" data-marka="gastro">
 <!-- ═══ GASTRO ADMIN · KANONİK KABUK — lead üretti, agent DEĞİŞTİRMEZ.
@@ -71,7 +78,7 @@
 
     <div class="panel-menu-bolum">02 Operasyon</div>
     <a class="panel-menu-link" href="admin-uyeler.html"><i class="fa-solid fa-users"></i>Üyeler &amp; Yetkiler</a>
-    <a class="panel-menu-link" href="admin-abonelikler.html"><i class="fa-solid fa-credit-card"></i>Abonelikler</a>
+    <a class="panel-menu-link" href="admin-paket-alimlari.html"><i class="fa-solid fa-credit-card"></i>Paket Alımları</a><a class="panel-menu-link" href="admin-sef-abonelikleri.html"><i class="fa-solid fa-hand-holding-dollar"></i>Şef Abonelikleri</a>
     <a class="panel-menu-link" href="admin-odemeler.html"><i class="fa-solid fa-money-bill-wave"></i>Ödemeler</a>
     <a class="panel-menu-link" href="admin-faturalar.html"><i class="fa-solid fa-file-invoice"></i>Faturalar<span class="sayac">7</span></a>
     <a class="panel-menu-link" href="admin-destek.html"><i class="fa-solid fa-life-ring"></i>Destek Talepleri<span class="sayac">12</span></a>
@@ -156,8 +163,10 @@
 
     <div class="panel-bas">
       <div>
-        <h1 id="pfBaslik">Misafir Sofrası</h1>
-        <p>Bu mod bir taksonomi değil, bir kural: “Ne Pişirsem” sihirbazının Öğün / Kap adımında süzüyor ve bugün 839 tarif getiriyor. Eşleşen tariflerin listesi ayrı ekranda açılır.</p>
+        <h1 id="pfBaslik">Yeni yemek modu</h1>
+        <p>Bir mod, “Ne Pişirsem”in <strong>Yemek Modu</strong> sekmesindeki havuzu tanımlar:
+          hangi kap kategorileri, hangi eşleşme kuralları. Eşleşen tarif sayısı seçimden
+          <strong>hesaplanır</strong>, elle yazılmaz.</p>
       </div>
       <div class="eylem-satiri">
         <a class="dugme hayalet" id="pfOnizle" href="../bugun-ne-pisirsem.html" target="_blank" rel="noopener">
@@ -187,7 +196,7 @@
           <div data-form-panel="kunye" id="pano-0-0" role="tabpanel" aria-labelledby="sekme-0-0">
             <div class="form-bolum">
               <h3 class="form-bolum-bas"><i class="fa-solid fa-image" aria-hidden="true"></i> Mod görseli</h3>
-              <div id="pfKapak"><div class="birak-alani" tabindex="0" role="button" aria-label="Görsel seç ya da sürükle"><span><i class="fa-solid fa-cloud-arrow-up" aria-hidden="true"></i></span><b>Görseli sürükle ya da seçmek için tıkla</b><small>Tek mod görseli. Kütüphaneden seç ya da sürükle.</small><span class="dugme hayalet" style="pointer-events:none">Kütüphaneden seç</span></div><input type="file" hidden="" accept="image/*"><div class="cipler"></div></div>
+              <div id="pfKapak"><div class="birak-alani" tabindex="0" role="button" aria-label="Görsel seç ya da sürükle"><span><i class="fa-solid fa-cloud-arrow-up" aria-hidden="true"></i></span><b>Görseli sürükle ya da seçmek için tıkla</b><small>Tek mod görseli. Kütüphaneden seç ya da sürükle.</small><span class="dugme hayalet sozde-dugme">Kütüphaneden seç</span></div><input type="file" hidden="" accept="image/*"><div class="cipler"></div></div>
               <div class="alan-yardim"><span>Sihirbaz kartının ve “Ne Pişirsem” sonuç başlığının arkasındaki görsel. Bugün mod kartlarının görseli <code>bugun-ne-pisirsem.html</code> içine gömülü — bu alan onu taşıyacak yüzeydir.</span></div>
             </div>
 
@@ -209,57 +218,93 @@
                          `admin-programlar-v1.html:126`da. -->
                     <input data-girdi="slug" class="alan-girdi" id="pfSlug" name="slug" type="text" required="" maxlength="60" pattern="[a-z0-9\-]+" placeholder="misafir-sofrasi" data-zorunlu="1" value="misafir-sofrasi">
                   </div>
-                  <div class="alan-yardim" id="pfSlugNot"><span>Sihirbaz bu adresi tanıyor: <b>Misafir Sofrası</b>. Adres <b>839 tarifi</b> getiriyor.</span></div>
+                  <div class="alan-yardim" id="pfSlugNot"><span>“Ne Pişirsem” → <b>Yemek Modu</b>
+                    sekmesindeki mod çipinin adresi (<code>data-mode</code>).</span></div>
                 </div>
                 <div class="alan">
-                  <label for="pfOzet" class="alan-etiket">Mod özeti <span class="zorunlu">*</span>
-                    <span class="acilir-kalem">— sihirbaz kartında görünen tek cümle</span><span class="alan-sayac" data-say-for="pfOzet">0 / 180</span></label>
-                  <textarea class="alan-metin" id="pfOzet" name="ozet" required="" maxlength="180" placeholder="Bir cümleyle: bu mod hangi sofrayı kuruyor?" data-zorunlu="1">Kalabalık davet sofrası — meze, ana yemek ve tatlıyı birlikte planlar.</textarea>
-                  
-                </div>
-                <div class="alan">
-                  <label class="alan-etiket">Sihirbaz adımı <span class="zorunlu">*</span></label>
-                  <div id="pfAdim" class="coklu-secim"><div class="coklu-kutu"><span class="coklu-cip"><i class="fa-solid fa-list-check" aria-hidden="true"></i><span>Öğün / Kap</span><button type="button" aria-label="Öğün / Kap kaldır" data-eylem="calistir" data-ad="Öğün / Kap kaldır"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button></span><input type="hidden" name="adim[]" value="ogun-kap"><input class="acilir-arama" type="text" placeholder="Sihirbaz adımı ara ya da seç…" aria-label="Sihirbaz adımı ara ya da seç…" autocomplete="off" role="combobox" aria-expanded="false"></div><div class="acilir-yuzey" role="listbox" hidden=""></div></div>
-                  <div class="alan-yardim" id="pfAdimNot"><span>Sihirbaz dört adımda süzüyor (Öğün/Kap · Süre · Zorluk · Damak); liste ekranı yedi eksen sayıyor, üçü sihirbazın dışında çalışıyor (Dolapta Ne Var · Boş sonuç kuralı · Mod → tarif bağı). Modun kartında ve süzgeçte bu ad görünür.</span></div>
-                </div>
-                <div class="alan kart-izgara c3">
-                  <div class="alan">
-                    <label for="pfZorluk" class="alan-etiket">Zorluk eşiği <span class="zorunlu">*</span></label>
-                    <select class="alan-secim" id="pfZorluk" name="zorluk" required="" data-zorunlu="1"><option value="">Seç…</option><option value="cok-kolay">Çok Kolay</option><option value="kolay">Kolay</option><option value="orta" selected="">Orta</option><option value="zor">Zor</option><option value="cok-zor">Çok Zor</option></select>
-                  </div>
-                  <div class="alan">
-                    <label for="pfSure" class="alan-etiket">Süre <span class="acilir-kalem">— dakika</span> <span class="zorunlu">*</span></label>
-                    <input data-girdi="sayi" class="alan-girdi" id="pfSure" name="sure" type="number" min="5" max="480" required="" placeholder="120" data-zorunlu="1" value="120">
-                  </div>
-                  <div class="alan">
-                    <label for="pfPorsiyon" class="alan-etiket">En az porsiyon <span class="zorunlu">*</span></label>
-                    <input data-girdi="sayi" class="alan-girdi" id="pfPorsiyon" name="porsiyon" type="number" min="1" max="24" required="" placeholder="6" data-zorunlu="1" value="6">
-                  </div>
+                  <label for="pfOzet" class="alan-etiket">Mod açıklaması <span class="zorunlu">*</span>
+                    <span class="acilir-kalem">— mod seçilince başlığın altında görünen tek cümle</span><span class="alan-sayac" data-say-for="pfOzet">0 / 180</span></label>
+                  <textarea class="alan-metin" id="pfOzet" name="ozet" required="" maxlength="180" placeholder="Bir cümleyle: bu mod hangi tarifleri getiriyor?" data-zorunlu="1"></textarea>
+                  <div class="alan-yardim"><span>Donörde <code>[data-mode-desc]</code> kutusu — 20/20 modda
+                    <b>düz metin tek cümle</b> (ölçüldü), bu yüzden editör bağlanmadı.</span></div>
                 </div>
                 <div class="alan kart-izgara c2">
                   <div class="alan">
-                    <label for="pfEslesen" class="alan-etiket">Eşleşen tarif</label>
-                    <input class="alan-girdi" id="pfEslesen" name="toplam" readonly="" aria-readonly="true" placeholder="—" value="839 tarif">
-                    <div class="alan-yardim"><span>Koşulların kesişimi. Elle girilmez — liste ekranındaki sayıyla tutmuyorsa kural orada görünür.</span></div>
+                    <label for="pfIkon" class="alan-etiket">Mod ikonu</label>
+                    <select class="alan-secim" data-ikon id="pfIkon" name="ikon"><option value="">Seç…</option><option value="fa-calendar-day">fa-calendar-day</option><option value="fa-bolt">fa-bolt</option><option value="fa-door-open">fa-door-open</option><option value="fa-people-group">fa-people-group</option><option value="fa-bowl-food">fa-bowl-food</option><option value="fa-fire-burner">fa-fire-burner</option><option value="fa-utensils">fa-utensils</option><option value="fa-wind">fa-wind</option><option value="fa-gauge-high">fa-gauge-high</option><option value="fa-fire">fa-fire</option><option value="fa-snowflake">fa-snowflake</option><option value="fa-piggy-bank">fa-piggy-bank</option><option value="fa-list-check">fa-list-check</option><option value="fa-clock-rotate-left">fa-clock-rotate-left</option><option value="fa-icicles">fa-icicles</option><option value="fa-recycle">fa-recycle</option><option value="fa-tree">fa-tree</option><option value="fa-champagne-glasses">fa-champagne-glasses</option><option value="fa-child-reaching">fa-child-reaching</option><option value="fa-cake-candles">fa-cake-candles</option></select>
+                    <div class="alan-yardim"><span>20 mod çipinin <b>gerçekten kullandığı</b> ikonlar.</span></div>
                   </div>
-                  <div class="alan">
-                    <label for="pfKategori" class="alan-etiket">Kategori <span class="zorunlu">*</span></label>
-                    <select class="alan-secim" id="pfKategori" name="kategori" required="" data-zorunlu="1"><option value="">Seç…</option><option value="sebze">Sebze</option><option value="kirmizi-et">Kırmızı Et</option><option value="meze" selected="">Meze</option><option value="tatli">Tatlı</option><option value="tavuk-ve-hindi">Tavuk ve Hindi</option><option value="corba">Çorba</option><option value="kofte-ve-kebap">Köfte ve Kebap</option><option value="pilav">Pilav</option><option value="kahvaltilik">Kahvaltılık</option><option value="balik-ve-deniz-urunleri">Balık ve Deniz Ürünleri</option></select>
-                    <div class="alan-yardim" id="pfKategoriNot"><span>Tarif ekseni 33 kategori ilan ediyor, sitede 10’u basılıyor (Sebze 269 · Kırmızı Et 229 · Meze 212 …). Kalan 23 kategori bu listeye Taksonomi ekranından eklenir; eklenmeyen bir kategoriye yazılan koşul hiçbir tarifi eşleştirmez.</span></div>
-                  </div>
-                </div>
-                <div class="alan kart-izgara c2">
                   <div class="alan">
                     <label for="pfKademe" class="alan-etiket">Erişim kademesi <span class="zorunlu">*</span></label>
                     <select class="alan-secim" id="pfKademe" name="kademe" required="" data-zorunlu="1"><option value="ucretsiz" selected="">Ücretsiz</option><option value="pro">Pro</option><option value="promax">Pro Max AI</option></select>
                     <div class="alan-yardim"><span>Kademe listesi <code>gastro-paket.js</code>ten okunur.
                       Fiyat burada yazılmaz — para parametreleri Ayarlar ekranından gelir (K13).</span></div>
                   </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ═══ KAP KATEGORİLERİ · SIFIRDAN KUR HAVUZU ═══════════════
+                 🔴 DONÖRDEN ÇIKARILDI, uydurulmadı. Kaynak:
+                 `dump/gastro/bugun-ne-pisirsem.html` +
+                 `varliklar/reference/bugun-ne-pisirsem/bugun-ne-pisirsem.js`.
+                   GET /bugun-ne-pisirsem/havuz?mod=&kategori=&q=
+                       → { html, countLabel, categories }
+                   · üç süzgeç VE ile birleşir
+                   · kategori rayı MODA GÖRE kuruluyor (`renderCategoryRail`)
+                   · mod değişince kategori seçimi SIFIRLANIYOR (`scratch.cat=''`)
+                   · donörde seçim TEKLİ; "Tümü" dışlayıcı
+                 KARAR — admin'de ÇOKLU: donör üye yüzü, orada tek kategori bir
+                 gezinme adımıdır. Admin MODU tanımlar ve bir mod ("Fırın
+                 Yemekleri") birden çok kap kategorisini kapsar; tekli seçim
+                 yöneticiyi modu tanımlayamaz hâle getirirdi. -->
+            <div class="form-bolum">
+              <h3 class="form-bolum-bas">
+                <i class="fa-solid fa-layer-group" aria-hidden="true"></i> Kap kategorileri
+                <span class="alan-sayac">“Sıfırdan Kur” rayından</span>
+              </h3>
+              <div>
+                <div class="alan">
+                  <label class="alan-etiket">Bu moda giren kap kategorileri</label>
+                  <div class="coklu-secim" id="pfKapKategori" data-kap-kategori data-mod-toplam="0" data-secenek="[&quot;Sebze&quot;,&quot;Çorba&quot;,&quot;Kahvaltılık&quot;,&quot;Bakliyat&quot;,&quot;Zeytinyağlılar&quot;,&quot;Kırmızı Et&quot;,&quot;Pilav&quot;,&quot;Makarna&quot;,&quot;Ekmek&quot;,&quot;Salata&quot;,&quot;Meze&quot;,&quot;Yumurta Tarifleri&quot;,&quot;Balık ve Deniz Ürünleri&quot;,&quot;Sos&quot;,&quot;İçecek&quot;,&quot;Kek ve Pasta&quot;,&quot;Tavuk ve Hindi&quot;,&quot;Meyve Tarifleri&quot;,&quot;Bebek Tarifleri&quot;,&quot;Sandviç, Burger ve Dürüm&quot;,&quot;Köfte ve Kebap&quot;,&quot;Hamur İşi&quot;,&quot;Tatlı&quot;,&quot;Atıştırmalık&quot;,&quot;Sakatat&quot;,&quot;Dolma ve Sarma&quot;,&quot;Mantı ve Dolgulu Hamurlar&quot;,&quot;Çocuk Tarifleri&quot;,&quot;Pizza ve Pide&quot;,&quot;Dondurma ve Soğuk Tatlılar&quot;]"
+                       data-ad="kap_kategori[]" data-oneri="kap_kategori">
+                    <div class="coklu-kutu">
+                      <div class="cipler"></div>
+                      <input class="acilir-arama" type="text" data-cs
+                             placeholder="Kap kategorisi ara ya da seç…"
+                             aria-label="Kap kategorisi ara ya da seç…" autocomplete="off"
+                             role="combobox" aria-expanded="false">
+                    </div>
+                    <div class="acilir-yuzey" role="listbox" hidden=""></div>
+                  </div>
+                  <div class="alan-yardim"><span>Hiç kategori seçilmezse mod kendi tam havuzunu
+                    getirir (donördeki davranış: <code>kategori=</code> boş → “Tümü”).
+                    ⚠ Donörde üye <b>tek</b> kategori seçer; admin çoklu seçer.</span></div>
+                </div>
+                <div class="alan kart-izgara c3">
+                  <div class="alan">
+                    <label for="pfHavuz" class="alan-etiket">Modun kendi havuzu
+                      <span class="acilir-kalem">— kategori seçilmeden</span></label>
+                    <input data-girdi="sayi" class="alan-girdi" id="pfHavuz" name="mod_toplam" type="number" min="0">
+                    <div class="alan-yardim"><span>Donörün <code>#scCount</code> etiketi.
+                      <b>20 modun 1'inde</b> yayımlanıyor; kalanı boş ve uydurulmadı.</span></div>
+                  </div>
+                  <div class="alan">
+                    <label for="pfEslesen" class="alan-etiket">Eşleşen tarif</label>
+                    <input class="alan-girdi" id="pfEslesen" name="eslesen" type="text"
+                           data-eslesme-hedef
+                           data-hesaplanan="seçilen kap kategorilerinin ölçülen tarif sayıları">
+                    <div class="alan-yardim"><span data-eslesme-not>—</span></div>
+                  </div>
                   <div class="alan">
                     <label for="pfPop" class="alan-etiket">Sıralama ağırlığı <span class="acilir-kalem">— sonuç sırası, 0–100</span></label>
-                    <input data-girdi="sayi" class="alan-girdi" id="pfPop" name="siralama" type="number" min="0" max="100" value="92">
+                    <input data-girdi="sayi" class="alan-girdi" id="pfPop" name="siralama" type="number" min="0" max="100">
+                    <div class="alan-yardim"><span>Sihirbaz sonuçları <b>eşleşme oranına göre</b>
+                      sıralıyor (“Seçimlerine göre tarifleri puanlayıp sıralarız”); bu ağırlık
+                      eşit oranlı tarifler arasında modun payını belirler.</span></div>
                   </div>
                 </div>
+                <div class="uyari-kutu bilgi-notu"><i class="fa-solid fa-circle-info" aria-hidden="true"></i><div>🔴 <b>Sayı ölçülene dayanır, uydurulmaz.</b> 30 kap kategorisinin <b>14'ünde</b> public tarif sayısı yayımlanıyor (<code>dadagastro.com/tarifler</code> kategori kartları · toplam 2.817). Kalan 16 kategori <b>0 katkı</b> verir ve yüzey bunu yazar. Toplam bir <b>üst sınırdır</b>: bir tarifin birden çok kategoride olup olmadığı ölçülemedi.<br>⚠ Eski hâlde bu alan <code>value="839 tarif"</code> yazıyordu ve 839'un kaynağı yoktu — liste ekranındaki on sayının onu da öyle. Tek ölçülen sayı donörün kendi <code>#scCount</code> etiketiydi: aktif mod <code>gunluk-pratik</code> için <b>“720 tarif”</b>.</div></div>
               </div>
             </div>
           </div>
@@ -271,31 +316,106 @@
               <div>
                 <div class="alan">
                   <label for="pfUzun" class="alan-etiket">Yöneticiye görünen açıklama</label>
-                  <textarea class="alan-metin" id="pfUzun" name="govde" placeholder="Bu mod hangi tarifleri getiriyor ve neden?"></textarea><div class="metin-duzenleyici"><div class="duzenleyici-cubuk" role="toolbar" aria-label="Metin biçimlendirme"><button type="button" class="ikon-dugme" data-k="undo" title="Geri al" aria-label="Geri al" data-eylem="calistir" data-ad="Geri al"><i class="fa-solid fa-rotate-left" aria-hidden="true"></i></button><button type="button" class="ikon-dugme" data-k="redo" title="İleri al" aria-label="İleri al" data-eylem="calistir" data-ad="İleri al"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i></button><span class="duzenleyici-ayrac" aria-hidden="true"></span><select class="alan-secim" aria-label="Blok biçimi"><option value="p" selected="">Paragraf</option><option value="h2">Başlık 2</option><option value="h3">Başlık 3</option><option value="h4">Başlık 4</option><option value="blockquote">Alıntı</option></select><span class="duzenleyici-ayrac" aria-hidden="true"></span><button type="button" class="ikon-dugme" data-k="bold" title="Kalın" aria-label="Kalın"><i class="fa-solid fa-bold" aria-hidden="true"></i></button><button type="button" class="ikon-dugme" data-k="italic" title="İtalik" aria-label="İtalik"><i class="fa-solid fa-italic" aria-hidden="true"></i></button><button type="button" class="ikon-dugme" data-k="underline" title="Altı çizili" aria-label="Altı çizili"><i class="fa-solid fa-underline" aria-hidden="true"></i></button><button type="button" class="ikon-dugme" data-k="strikeThrough" title="Üstü çizili" aria-label="Üstü çizili"><i class="fa-solid fa-strikethrough" aria-hidden="true"></i></button><span class="duzenleyici-ayrac" aria-hidden="true"></span><button type="button" class="ikon-dugme" data-k="justifyLeft" title="Sola hizala" aria-label="Sola hizala"><i class="fa-solid fa-align-left" aria-hidden="true"></i></button><button type="button" class="ikon-dugme" data-k="justifyCenter" title="Ortala" aria-label="Ortala"><i class="fa-solid fa-align-center" aria-hidden="true"></i></button><button type="button" class="ikon-dugme" data-k="justifyRight" title="Sağa hizala" aria-label="Sağa hizala"><i class="fa-solid fa-align-right" aria-hidden="true"></i></button><span class="duzenleyici-ayrac" aria-hidden="true"></span><button type="button" class="ikon-dugme" data-k="insertUnorderedList" title="Madde listesi" aria-label="Madde listesi"><i class="fa-solid fa-list-ul" aria-hidden="true"></i></button><button type="button" class="ikon-dugme" data-k="insertOrderedList" title="Numaralı liste" aria-label="Numaralı liste"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></button><button type="button" class="ikon-dugme" data-k="outdent" title="Girintiyi azalt" aria-label="Girintiyi azalt"><i class="fa-solid fa-outdent" aria-hidden="true"></i></button><button type="button" class="ikon-dugme" data-k="indent" title="Girintiyi artır" aria-label="Girintiyi artır"><i class="fa-solid fa-indent" aria-hidden="true"></i></button><span class="duzenleyici-ayrac" aria-hidden="true"></span><button type="button" class="ikon-dugme" data-k="blockquote" title="Alıntı" aria-label="Alıntı"><i class="fa-solid fa-quote-left" aria-hidden="true"></i></button><button type="button" class="ikon-dugme" data-k="link" title="Bağlantı" aria-label="Bağlantı" data-eylem="calistir" data-ad="Bağlantı"><i class="fa-solid fa-link" aria-hidden="true"></i></button><button type="button" class="ikon-dugme" data-k="image" title="Görsel ekle" aria-label="Görsel ekle"><i class="fa-solid fa-image" aria-hidden="true"></i></button><button type="button" class="ikon-dugme" data-k="table" title="Tablo ekle" aria-label="Tablo ekle"><i class="fa-solid fa-table" aria-hidden="true"></i></button><span class="duzenleyici-ayrac" aria-hidden="true"></span><button type="button" class="ikon-dugme" data-k="removeFormat" title="Biçimi temizle" aria-label="Biçimi temizle"><i class="fa-solid fa-eraser" aria-hidden="true"></i></button><button type="button" class="ikon-dugme" data-k="code" title="Kaynağı gör" aria-label="Kaynağı gör" data-eylem="calistir" data-ad="Kaynağı gör"><i class="fa-solid fa-code" aria-hidden="true"></i></button></div><div class="duzenleyici-yuzey" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Bu mod hangi tarifleri getiriyor ve neden?" data-bos="Bu mod hangi tarifleri getiriyor ve neden?"></div><div class="duzenleyici-ayak"><span><b>0</b> kelime</span><span><b>0</b> karakter</span></div></div>
+                  <textarea class="alan-metin" data-editor="icerik" id="pfUzun" name="govde" placeholder="Bu mod hangi tarifleri getiriyor ve neden?"></textarea>
                   <div class="alan-yardim"><span>Bugün bu metin hiçbir yerde tutulmuyor; kural değiştiğinde neden değiştiğini yazacak tek yüzey burasıdır.</span></div>
                 </div>
               </div>
             </div>
 
+            <!-- ═══ EŞLEŞME KURALI · OMURGA DEĞİŞTİ ══════════════════════
+                 🔴 ESKİ HÂLİ YÖNETİLEMEZDİ. Koşullar tek bir serbest metin
+                    kutusuydu ve içinde matematik sembolleri yazılıydı:
+                      "Öğün = Akşam Yemeği" · "Kategori ∈ {Meze, Ana Yemek}"
+                      "Porsiyon ≥ 6" · "Süre ≤ 45 dk" · "Zorluk ≠ Zor"
+                    Bu bir KOD ALANIDIR — bu kulvarın açık yasağı. Motor onu
+                    ayrıştıramaz; yönetici "≥" mi ">=" mi yazacağını bilemez;
+                    "Akşam Yemeği" sihirbazın hiçbir seçeneği DEĞİL (ölçüldü:
+                    adım 1'in altı seçeneği baslangic · ana · yan · kahvalti ·
+                    tatli · icecek). Yani ekranda duran kural, motorun
+                    çalıştığı kelimeleri bile kullanmıyordu.
+                 KARAR: kural bir SATIRDIR — alan · işleç · değer · ağırlık
+                    (L10 tekrarlayan satır kalıbı). Alan ve işleç AÇILIR;
+                    serbest metin yalnız "değer"de kalır ve her alanın
+                    kaynağı seçeneğin kendisinde yazılıdır (`data-kaynak`).
+                 ALAN LİSTESİ UYDURULMADI — dokuzunun dokuzu da ölçüldü:
+                    ogun · sure · zorluk · damak  → sihirbazın kendi dört
+                      adımı (`data-q`), donörün POST gövdesi de bu dördü
+                      taşıyor: {ogun, sure, zorluk, damak[]}
+                    kategori                      → "Sıfırdan Kur" rayı
+                    porsiyon · malzeme · adim · maliyet → tarif kartının
+                      yayımladığı alanlar (kişilik · malzeme · adım · ₺)
+                 ⚠ AĞIRLIK NEDEN VAR: donör sonuçları SERT SÜZMÜYOR,
+                    PUANLIYOR — "Seçimlerine göre tarifleri puanlayıp
+                    sıralarız" / "Eşleşme oranına göre sıralandı". Ağırlığı
+                    olmayan bir kural listesi o davranışı anlatamazdı. -->
             <div class="form-bolum">
               <h3 class="form-bolum-bas">
-                <i class="fa-solid fa-filter" aria-hidden="true"></i> Eşleşme koşulları
-                <span class="alan-sayac" id="pfKosulSay">3 koşul</span>
+                <i class="fa-solid fa-filter" aria-hidden="true"></i> Eşleşme kuralları
+                <span class="alan-sayac" id="pfKosulSay">0 kural</span>
               </h3>
-              <div class="adim-liste" id="pfKosullar"><div class="adim-karti"><span class="adim-no">1</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-filter" aria-hidden="true"></i> Koşul</span><input class="alan-girdi" type="text" name="kosul[]" data-field="metin" value="Öğün = Akşam Yemeği"><input type="hidden" data-field="position" value="0"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır" data-eylem="sirala"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Satırı sil" aria-label="Satırı sil" disabled="" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div><div class="adim-karti"><span class="adim-no">2</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-filter" aria-hidden="true"></i> Koşul</span><input class="alan-girdi" type="text" name="kosul[]" data-field="metin" value="Kategori ∈ {Meze, Ana Yemek}"><input type="hidden" data-field="position" value="1"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır" data-eylem="sirala"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Satırı sil" aria-label="Satırı sil" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div><div class="adim-karti"><span class="adim-no">3</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-filter" aria-hidden="true"></i> Koşul</span><input class="alan-girdi" type="text" name="kosul[]" data-field="metin" value="Porsiyon ≥ 6"><input type="hidden" data-field="position" value="2"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır" data-eylem="sirala"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Satırı sil" aria-label="Satırı sil" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div></div>
-              <button class="satir-ekle" type="button" id="pfKosulEkle">
-                <i class="fa-solid fa-plus" aria-hidden="true"></i> Koşul ekle</button>
-              <div class="alan-yardim"><span>Koşullar VE ile birleşir; sıra sonucu değiştirmez ama liste ekranında bu sırayla basılır. Tutamağı sürükleyerek ya da odaktayken ↑ / ↓ ile taşı.</span></div>
+              <div class="adim-liste" id="pfKosullar">
+                <div class="adim-karti">
+                  <div class="adim-govde">
+                    <div class="alan kart-izgara c4">
+                      <div class="alan">
+                        <label class="alan-etiket">Alan</label>
+                        <select class="alan-secim" data-field="kural_alan" name="kural_alan[]"><option value="">Seç…</option><option value="ogun" data-kaynak="Sihirbaz adım 1 · 6 seçenek: Çorba/Başlangıç · Ana Yemek · Yan Lezzet · Kahvaltılık · Tatlı · İçecek">Öğün / Kap</option><option value="sure" data-kaynak="Sihirbaz adım 2 · 4 bant: 15 · 30 · 60 · fark etmez">Toplam süre (dk)</option><option value="zorluk" data-kaynak="Sihirbaz adım 3 · 4 kademe: çok kolay · kolay · orta · fark etmez">Zorluk</option><option value="damak" data-kaynak="Sihirbaz adım 4 · ÇOKLU · 6 seçenek: hafif · doyurucu · pratik · etsiz · tatlı kaçamak · geleneksel">Damak tercihi</option><option value="kategori" data-kaynak="“Sıfırdan Kur” rayı · 30 kategori">Kap kategorisi</option><option value="porsiyon" data-kaynak="Tarif kartı “N kişilik”">Porsiyon</option><option value="malzeme" data-kaynak="Tarif malzeme listesi uzunluğu">Malzeme sayısı</option><option value="adim" data-kaynak="Tarif hazırlık adımları">Adım sayısı</option><option value="maliyet" data-kaynak="Tarif kartı ₺ göstergesi · 3 kademe">Maliyet</option></select>
+                      </div>
+                      <div class="alan">
+                        <label class="alan-etiket">İşleç</label>
+                        <select class="alan-secim" data-field="kural_islec" name="kural_islec[]"><option value="esit" selected="">=</option><option value="esit-degil">≠</option><option value="kucuk-esit">≤</option><option value="buyuk-esit">≥</option><option value="icinde">∈ (kümede)</option><option value="disinda">∉ (kümede değil)</option></select>
+                      </div>
+                      <div class="alan">
+                        <label class="alan-etiket">Değer</label>
+                        <input class="alan-girdi" type="text" data-field="kural_deger" name="kural_deger[]" maxlength="120" value="">
+                      </div>
+                      <div class="alan">
+                        <label class="alan-etiket">Ağırlık <span class="acilir-kalem">— 0–100</span></label>
+                        <input class="alan-girdi" data-girdi="sayi" type="number" data-field="kural_agirlik" name="kural_agirlik[]" min="0" max="100" value="">
+                      </div>
+                    </div>
+                    <input type="hidden" data-field="position" value="0">
+                  </div>
+                </div>
+              </div>
+              <button data-eylem="satir-ekle" class="satir-ekle" type="button" id="pfKosulEkle">
+                <i class="fa-solid fa-plus" aria-hidden="true"></i> Kural ekle</button>
+              <div class="alan-yardim"><span>Kurallar <b>VE</b> ile birleşir; ağırlık sıralamayı
+                etkiler, eşleşmeyi değil. Sıra sonucu değiştirmez ama liste ekranında bu sırayla
+                basılır — tutamağı sürükleyerek ya da odaktayken ↑ / ↓ ile taşı.</span></div>
+              <div class="alan">
+                <label for="pfKuralSay" class="alan-etiket">Kural sayısı</label>
+                <input class="alan-girdi" id="pfKuralSay" name="kural_sayisi" type="text"
+                       data-hesaplanan="Eşleşme kuralları listesindeki dolu satır sayısı"
+                       data-hesaplanan-kaynak="#pfKosullar"
+                       data-hesaplanan-birim="kural">
+              </div>
             </div>
 
+            <!-- "Dolapta Ne Var" AYRI bir kural kümesidir (liste ekranının
+                 kendi ölçümü) — mod formunda malzeme GRUBU olarak kalır. -->
             <div class="form-bolum">
               <h3 class="form-bolum-bas">
                 <i class="fa-solid fa-basket-shopping" aria-hidden="true"></i> Dolapta Ne Var eşleşmesi
-                <span class="alan-sayac" id="pfDolapSay">3 grup</span>
+                <span class="alan-sayac">0 grup</span>
               </h3>
-              <div class="adim-liste" id="pfDolap"><div class="adim-karti"><span class="adim-no">1</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-basket-shopping" aria-hidden="true"></i> Malzeme grubu</span><input class="alan-girdi" type="text" name="dolap[]" data-field="metin" value="Süt ve Süt Ürünleri"><input type="hidden" data-field="position" value="0"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır" data-eylem="sirala"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Satırı sil" aria-label="Satırı sil" disabled="" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div><div class="adim-karti"><span class="adim-no">2</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-basket-shopping" aria-hidden="true"></i> Malzeme grubu</span><input class="alan-girdi" type="text" name="dolap[]" data-field="metin" value="Bakliyatlar"><input type="hidden" data-field="position" value="1"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır" data-eylem="sirala"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Satırı sil" aria-label="Satırı sil" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div><div class="adim-karti"><span class="adim-no">3</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-basket-shopping" aria-hidden="true"></i> Malzeme grubu</span><input class="alan-girdi" type="text" name="dolap[]" data-field="metin" value="Baharatlar"><input type="hidden" data-field="position" value="2"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır" data-eylem="sirala"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Satırı sil" aria-label="Satırı sil" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div></div>
-              <button class="satir-ekle" type="button" id="pfDolapEkle">
+              <div class="adim-liste" id="pfDolap">
+                <div class="adim-karti">
+                  <div class="adim-govde">
+                    <div class="alan">
+                      <label class="alan-etiket">Malzeme grubu</label>
+                      <input class="alan-girdi" type="text" data-field="dolap" name="dolap[]" maxlength="80">
+                    </div>
+                    <input type="hidden" data-field="position" value="0">
+                  </div>
+                </div>
+              </div>
+              <button data-eylem="satir-ekle" class="satir-ekle" type="button" id="pfDolapEkle">
                 <i class="fa-solid fa-plus" aria-hidden="true"></i> Grup ekle</button>
+              <div class="alan-yardim"><span>🔴 <b>Değer boş bırakıldı.</b> Eski hâlde üç grup
+                yazılıydı (Süt ve Süt Ürünleri · Bakliyatlar · Baharatlar) ama bu modla bağı
+                ölçülemedi: “Dolapta Ne Var” ayrı bir sayfa ve mod başına malzeme grubu
+                yayımlamıyor. Alan kuruldu, <b>değer uydurulmadı</b>.</span></div>
             </div>
 
             <div class="form-bolum">
@@ -303,8 +423,14 @@
               <div>
                 <div class="alan">
                   <label for="pfBosSonuc" class="alan-etiket">Boş sonuç metni <span class="acilir-kalem">— sihirbaz sonuç bulamadığında basılır</span></label>
-                  <textarea class="alan-metin" id="pfBosSonuc" name="bos_sonuc" placeholder="Sonuç çıkmadığında üye ne yapsın?">Bu seçimlere uygun tarif bulamadık. Süreyi bir kademe genişlet ya da başka bir mod dene.</textarea>
-                  <div class="alan-yardim"><span>🔴 Ölçülmüş metin. Sihirbaz bugün “Bu seçimlere uygun tarif bulamadık” basıyor ve yirmi modun yirmisi de aynı cümleyi gösteriyor. Genel boş sonuç metni Ayarlar’da tek yerden yönetilir; buraya yalnız <b>bu moda özgü</b> olan yazılır.</span></div>
+                  <textarea class="alan-metin" id="pfBosSonuc" name="bos_sonuc" maxlength="240" placeholder="Sonuç çıkmadığında üye ne yapsın?"></textarea>
+                  <div class="alan-yardim"><span>🔴 <b>Boş bırakıldı ve bu bir bildirimdir.</b>
+                    Donörde ölçülen metin sayfaya ait, moda DEĞİL: başlık
+                    “Bu seçimlere uygun tarif bulamadık”, gövde “Filtreni biraz gevşet — süreyi
+                    uzat ya da zorluğu &quot;Fark etmez&quot; yap.” ve <b>20 modun 20'sinde de aynı</b>
+                    (sayfanın sabit HTML'inde duruyor, <code>#wzEmpty</code>). Genel metin
+                    Ayarlar'dan tek yerden yönetilir; buraya yalnız <b>bu moda özgü</b> bir
+                    metin varsa yazılır — bugün yok.</span></div>
                 </div>
               </div>
             </div>
@@ -335,7 +461,7 @@
                 </div>
                 <div class="alan">
                   <label class="alan-etiket">Paylaşım görseli</label>
-                  <div id="pfOg"><div class="birak-alani" tabindex="0" role="button" aria-label="Görsel seç ya da sürükle"><span><i class="fa-solid fa-cloud-arrow-up" aria-hidden="true"></i></span><b>Görseli sürükle ya da seçmek için tıkla</b><small>Paylaşım görseli — 1200×630 önerilir.</small><span class="dugme hayalet" style="pointer-events:none">Kütüphaneden seç</span></div><input type="file" hidden="" accept="image/*"><div class="cipler"></div></div>
+                  <div id="pfOg"><div class="birak-alani" tabindex="0" role="button" aria-label="Görsel seç ya da sürükle"><span><i class="fa-solid fa-cloud-arrow-up" aria-hidden="true"></i></span><b>Görseli sürükle ya da seçmek için tıkla</b><small>Paylaşım görseli — 1200×630 önerilir.</small><span class="dugme hayalet sozde-dugme">Kütüphaneden seç</span></div><input type="file" hidden="" accept="image/*"><div class="cipler"></div></div>
                   <input type="hidden" name="og_image" id="pfOgAlan" value="">
                 </div>
               </div>
@@ -345,7 +471,7 @@
           <div class="form-eylem kart-alt">
             <a class="dugme hayalet" href="admin-yemek-modu.html">İptal</a>
             <button class="dugme hayalet" type="button" id="pfTaslak" data-eylem="taslak">Taslak kaydet</button>
-            <button class="dugme birincil" type="button" id="pfKaydet">Modu kaydet</button>
+            <button class="dugme birincil" type="button" id="pfKaydet" data-eylem="kaydet">Modu kaydet</button>
           </div>
         <div class="bos-durum kart-ici" hidden=""><span class="bos-ikon"><i class="fa-solid fa-file-circle-question" aria-hidden="true"></i></span><h3>Bu adreste mod yok</h3><p>Adresteki slug mod listesinde karşılık bulmuyor. Listeye dön ve bir mod seç.</p><a class="dugme birincil" href="admin-yemek-modu.html">Mod listesine dön</a></div><div class="bos-durum kart-ici yetkisiz" data-durum="yetkisiz" hidden=""><span class="bos-ikon"><i class="fa-solid fa-lock" aria-hidden="true"></i></span><h3>Bu kaydı düzenleyemezsin</h3><p>Erişim istemek için yöneticinle görüş.</p></div><div class="bos-durum kart-ici servis-hatasi" data-durum="servis" hidden=""><span class="bos-ikon"><i class="fa-solid fa-plug-circle-xmark" aria-hidden="true"></i></span><h3>Kayıt yüklenemedi</h3><p>Bağlantı kurulamadı. Yeniden dene.</p><button class="dugme birincil" type="button" data-eylem="calistir" data-ad="Yeniden dene"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i> Yeniden dene</button><div class="hata-izi">Referans kodu <code>GAS-ADM-6092</code></div></div></div>
 
@@ -365,7 +491,7 @@
                 </div>
                 <div class="alan">
                   <label for="pfTarih" class="alan-etiket">Yayın tarihi</label>
-                  <input class="alan-girdi" id="pfTarih" name="yayin_tarihi" type="date">
+                  <input class="alan-girdi" id="pfTarih" name="yayin_tarihi" data-tarih="tarih" type="text">
                 </div>
                 <div class="alan">
                   <span>Öne çıkar</span>
@@ -386,7 +512,7 @@
               <div class="eylem-satiri" id="pfKurguRozet"><span class="rozet durdu"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> Kural yazılı değil</span></div>
             </div>
             <div class="kart-govde">
-              <div class="alan-yardim" id="pfKurguNot" style="margin-bottom:12px"><span>Bu modun boş sonuç kuralı <b>hiçbir yerde kayıtlı değil</b>. Sihirbaz “Bu seçimlere uygun tarif bulamadık” metnini <code>bugun-ne-pisirsem.html</code> içinde sabit HTML olarak basıyor ve <b>yirmi modun yirmisi de aynı metni</b> gösteriyor — yani metin moda ait değil, sayfaya ait. “Eşleşme kuralı” sekmesindeki alan onu taşıyacak yüzeyi kuruyor.</span></div>
+              <div class="alan-yardim on-nefes" id="pfKurguNot"><span>Bu modun boş sonuç kuralı <b>hiçbir yerde kayıtlı değil</b>. Sihirbaz “Bu seçimlere uygun tarif bulamadık” metnini <code>bugun-ne-pisirsem.html</code> içinde sabit HTML olarak basıyor ve <b>yirmi modun yirmisi de aynı metni</b> gösteriyor — yani metin moda ait değil, sayfaya ait. “Eşleşme kuralı” sekmesindeki alan onu taşıyacak yüzeyi kuruyor.</span></div>
               <a class="dugme hayalet" id="pfKurgu2" href="admin-tarifler.html">
                 <i class="fa-solid fa-utensils" aria-hidden="true"></i> Eşleşen tarifleri gör</a>
             </div>
@@ -400,7 +526,7 @@
           <div class="kart panel">
             <div class="kart-bas"><h2 class="kart-baslik">Tehlikeli bölge</h2></div>
             <div class="kart-govde">
-              <div class="alan-yardim" style="margin-bottom:12px"><span>Silinen mod, onu süzgeçte kullanan <b id="pfBant">839</b> tarifin ekseninden de düşer. Tarifler silinmez, yalnız bu moda bağı kopar.</span></div>
+              <div class="alan-yardim on-nefes"><span>Silinen mod, onu süzgeçte kullanan <b id="pfBant">839</b> tarifin ekseninden de düşer. Tarifler silinmez, yalnız bu moda bağı kopar.</span></div>
               <button class="dugme hayalet tehlike tam-en" type="button" id="pfSil" data-yikici="Misafir Sofrası" data-fiil="sil" data-islem="sil">
                 <i class="fa-solid fa-trash-can" aria-hidden="true"></i> Modu sil</button>
             </div>
@@ -419,8 +545,388 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/l10n/tr.js"></script>
 <script src="../../kanon/admin-editor-tr.js"></script>
+<script src="../../kanon/admin-ikon-kutuphane.js" defer></script>
+<script src="../../kanon/admin-veri.js" defer></script>
 <script src="../../kanon/admin-kit.js" defer></script>
 <script src="../../kanon/admin-editor.js" defer></script>
 <script src="../../kanon/admin-tarih.js" defer></script>
 <!-- ADMIN-KIT:JS:SON -->
+<!-- GASTRO-EK:JS:BAS -->
+<script src="_ortak/gastro-ek.js" defer></script>
+<script src="_ortak/gastro-ek-a.js" defer></script>
+<script src="_ortak/gastro-ek-b.js" defer></script>
+<script src="_ortak/gastro-ek-c.js" defer></script>
+<script src="_ortak/gastro-ek-d.js" defer></script>
+<!-- GASTRO-EK:JS:SON -->
+<!-- KAYIT KAYNAGI — form kendi kayitlarini BILDIRIR (kit §5b/§19).
+     🔴 BU BLOK ELLE YAZILMADI: scripts/olcum/p2/d-03-mod-yaz.mjs uretiyor.
+     🔴 ONCEKI DURUM: bu formda `data-kayitlar` HIC YOKTU. Olculdu —
+        ?id=misafir-sofrasi · ?id=hizli-ve-kolay · ?id=yok-boyle-bir-mod
+        UCU DE ayni bos formu aciyordu; ustelik liste ekranindaki 10
+        duzenle bagi `?id=` bile tasimiyordu (hepsi ciplak
+        admin-yemek-modu-form.html). §5b'nin ucuncu sorusu ("form KAYIT
+        VERISIYLE DOLU mu") 10/10 satirda KIRMIZIYDI ve iki soru yesil
+        oldugu icin kapi bunu gormemisti.
+
+     NEREDEN OLCULDU (dump/gastro/bugun-ne-pisirsem.html · 2026-09-05):
+       ad · slug · ikon   .mode-chip  (data-mode · mc-lbl ikonu ve metni)
+       ozet               [data-mode-desc] kutusunun <p>si
+       mod_toplam         #scCount — donor YALNIZ aktif modda yayimliyor
+                          (`activeMode: "gunluk-pratik"` → "720 tarif").
+                          🔴 Kalan 19 modun havuz sayisi OLCULEMEDI ve
+                          uydurulmadi. Liste ekranindaki 839/472/419… gibi
+                          sayilarin kaynagi yok; §5b kaydi onlari TASIMAZ.
+
+     ⚠ BILEREK BOS: kap_kategori[] · kural_* · dolap[] · bos_sonuc.
+       Mod basina kap kategorisi, kural satiri ve malzeme grubu public'te
+       yayimlanmiyor (mod cipi yalniz ad + ikon + tek cumle tasiyor).
+       Alanlar formda duruyor ve her biri neden bos oldugunu YAZIYOR. -->
+<script type="application/json" data-kayitlar>
+{
+ "gunluk-pratik": {
+  "ad": "Günlük Pratik",
+  "slug": "gunluk-pratik",
+  "ikon": "fa-calendar-day",
+  "ozet": "Hafta içi telaşına yetişen, az malzemeyle kısa sürede hazırlanan günlük tarifler.",
+  "durum": "yayin",
+  "mod_toplam": 720,
+  "siralama": null,
+  "kap_kategori[]": [],
+  "kural_alan[]": [],
+  "kural_islec[]": [],
+  "kural_deger[]": [],
+  "kural_agirlik[]": [],
+  "dolap[]": [],
+  "bos_sonuc": ""
+ },
+ "hizli-ve-kolay": {
+  "ad": "Hızlı ve Kolay",
+  "slug": "hizli-ve-kolay",
+  "ikon": "fa-bolt",
+  "ozet": "Kısa sürede sofraya gelen, uğraştırmayan pratik ve garantili tarifler.",
+  "durum": "yayin",
+  "mod_toplam": null,
+  "siralama": null,
+  "kap_kategori[]": [],
+  "kural_alan[]": [],
+  "kural_islec[]": [],
+  "kural_deger[]": [],
+  "kural_agirlik[]": [],
+  "dolap[]": [],
+  "bos_sonuc": ""
+ },
+ "misafir-sofrasi": {
+  "ad": "Misafir Sofrası",
+  "slug": "misafir-sofrasi",
+  "ikon": "fa-door-open",
+  "ozet": "Sunumu şık, hazırlaması kolay; misafirini ağırlarken gönlünü rahat tutan tarifler.",
+  "durum": "yayin",
+  "mod_toplam": null,
+  "siralama": null,
+  "kap_kategori[]": [],
+  "kural_alan[]": [],
+  "kural_islec[]": [],
+  "kural_deger[]": [],
+  "kural_agirlik[]": [],
+  "dolap[]": [],
+  "bos_sonuc": ""
+ },
+ "kalabalik-sofralar": {
+  "ad": "Kalabalık Sofralar",
+  "slug": "kalabalik-sofralar",
+  "ikon": "fa-users",
+  "ozet": "Bol kişilik, paylaşmalık; kalabalık sofraları doyuran cömert tarifler.",
+  "durum": "yayin",
+  "mod_toplam": null,
+  "siralama": null,
+  "kap_kategori[]": [],
+  "kural_alan[]": [],
+  "kural_islec[]": [],
+  "kural_deger[]": [],
+  "kural_agirlik[]": [],
+  "dolap[]": [],
+  "bos_sonuc": ""
+ },
+ "tek-tencere": {
+  "ad": "Tek Tencere",
+  "slug": "tek-tencere",
+  "ikon": "fa-bowl-rice",
+  "ozet": "Tek tencerede pişen, bulaşığı az, lezzeti bol pratik yemekler.",
+  "durum": "yayin",
+  "mod_toplam": null,
+  "siralama": null,
+  "kap_kategori[]": [],
+  "kural_alan[]": [],
+  "kural_islec[]": [],
+  "kural_deger[]": [],
+  "kural_agirlik[]": [],
+  "dolap[]": [],
+  "bos_sonuc": ""
+ },
+ "firin-yemekleri": {
+  "ad": "Fırın Yemekleri",
+  "slug": "firin-yemekleri",
+  "ikon": "fa-fire-burner",
+  "ozet": "Fırında kendi kendine pişen, üzeri kızarmış nefis fırın tarifleri.",
+  "durum": "yayin",
+  "mod_toplam": null,
+  "siralama": null,
+  "kap_kategori[]": [],
+  "kural_alan[]": [],
+  "kural_islec[]": [],
+  "kural_deger[]": [],
+  "kural_agirlik[]": [],
+  "dolap[]": [],
+  "bos_sonuc": ""
+ },
+ "tava-yemekleri": {
+  "ad": "Tava Yemekleri",
+  "slug": "tava-yemekleri",
+  "ikon": "fa-fire",
+  "ozet": "Tavada kısa sürede hazırlanan, pratik ve doyurucu tarifler.",
+  "durum": "yayin",
+  "mod_toplam": null,
+  "siralama": null,
+  "kap_kategori[]": [],
+  "kural_alan[]": [],
+  "kural_islec[]": [],
+  "kural_deger[]": [],
+  "kural_agirlik[]": [],
+  "dolap[]": [],
+  "bos_sonuc": ""
+ },
+ "airfryer-tarifleri": {
+  "ad": "Airfryer Tarifleri",
+  "slug": "airfryer-tarifleri",
+  "ikon": "fa-fan",
+  "ozet": "Az yağla, airfryer'da çıtır çıtır pişen hafif ve pratik tarifler.",
+  "durum": "yayin",
+  "mod_toplam": null,
+  "siralama": null,
+  "kap_kategori[]": [],
+  "kural_alan[]": [],
+  "kural_islec[]": [],
+  "kural_deger[]": [],
+  "kural_agirlik[]": [],
+  "dolap[]": [],
+  "bos_sonuc": ""
+ },
+ "duduklu-tencere": {
+  "ad": "Düdüklü Tencere",
+  "slug": "duduklu-tencere",
+  "ikon": "fa-gauge-high",
+  "ozet": "Düdüklü tencerede kısa sürede yumuşayan, zamandan kazandıran tarifler.",
+  "durum": "yayin",
+  "mod_toplam": null,
+  "siralama": null,
+  "kap_kategori[]": [],
+  "kural_alan[]": [],
+  "kural_islec[]": [],
+  "kural_deger[]": [],
+  "kural_agirlik[]": [],
+  "dolap[]": [],
+  "bos_sonuc": ""
+ },
+ "izgara-ve-barbeku": {
+  "ad": "Izgara ve Barbekü",
+  "slug": "izgara-ve-barbeku",
+  "ikon": "fa-fire-flame-curved",
+  "ozet": "Mangalın ve ızgaranın dumanlı lezzetiyle hazırlanan tarifler.",
+  "durum": "yayin",
+  "mod_toplam": null,
+  "siralama": null,
+  "kap_kategori[]": [],
+  "kural_alan[]": [],
+  "kural_islec[]": [],
+  "kural_deger[]": [],
+  "kural_agirlik[]": [],
+  "dolap[]": [],
+  "bos_sonuc": ""
+ },
+ "pismeyen-tarifler": {
+  "ad": "Pişmeyen Tarifler",
+  "slug": "pismeyen-tarifler",
+  "ikon": "fa-leaf",
+  "ozet": "Ocak yakmadan, pişirmeden hazırlanan pratik ve serinletici tarifler.",
+  "durum": "yayin",
+  "mod_toplam": null,
+  "siralama": null,
+  "kap_kategori[]": [],
+  "kural_alan[]": [],
+  "kural_islec[]": [],
+  "kural_deger[]": [],
+  "kural_agirlik[]": [],
+  "dolap[]": [],
+  "bos_sonuc": ""
+ },
+ "ekonomik-tarifler": {
+  "ad": "Ekonomik Tarifler",
+  "slug": "ekonomik-tarifler",
+  "ikon": "fa-piggy-bank",
+  "ozet": "Bütçeni yormadan, uygun malzemelerle doyuran hesaplı tarifler.",
+  "durum": "yayin",
+  "mod_toplam": null,
+  "siralama": null,
+  "kap_kategori[]": [],
+  "kural_alan[]": [],
+  "kural_islec[]": [],
+  "kural_deger[]": [],
+  "kural_agirlik[]": [],
+  "dolap[]": [],
+  "bos_sonuc": ""
+ },
+ "az-malzemeli-tarifler": {
+  "ad": "Az Malzemeli Tarifler",
+  "slug": "az-malzemeli-tarifler",
+  "ikon": "fa-basket-shopping",
+  "ozet": "Birkaç malzemeyle, sade ama lezzetli; mutfağı yormayan tarifler.",
+  "durum": "yayin",
+  "mod_toplam": null,
+  "siralama": null,
+  "kap_kategori[]": [],
+  "kural_alan[]": [],
+  "kural_islec[]": [],
+  "kural_deger[]": [],
+  "kural_agirlik[]": [],
+  "dolap[]": [],
+  "bos_sonuc": ""
+ },
+ "onceden-hazirlananlar": {
+  "ad": "Önceden Hazırlananlar",
+  "slug": "onceden-hazirlananlar",
+  "ikon": "fa-box",
+  "ozet": "Önceden hazırlayıp saklayabileceğin, vakti geldiğinde hazır tarifler.",
+  "durum": "yayin",
+  "mod_toplam": null,
+  "siralama": null,
+  "kap_kategori[]": [],
+  "kural_alan[]": [],
+  "kural_islec[]": [],
+  "kural_deger[]": [],
+  "kural_agirlik[]": [],
+  "dolap[]": [],
+  "bos_sonuc": ""
+ },
+ "dondurucuya-uygun": {
+  "ad": "Dondurucuya Uygun",
+  "slug": "dondurucuya-uygun",
+  "ikon": "fa-snowflake",
+  "ozet": "Dondurup saklamaya uygun, ihtiyaç anında imdadına yetişen tarifler.",
+  "durum": "yayin",
+  "mod_toplam": null,
+  "siralama": null,
+  "kap_kategori[]": [],
+  "kural_alan[]": [],
+  "kural_islec[]": [],
+  "kural_deger[]": [],
+  "kural_agirlik[]": [],
+  "dolap[]": [],
+  "bos_sonuc": ""
+ },
+ "artan-yemekleri-degerlendirme": {
+  "ad": "Artan Yemekleri Değerlendirme",
+  "slug": "artan-yemekleri-degerlendirme",
+  "ikon": "fa-recycle",
+  "ozet": "Artan malzemeleri israf etmeden yeniden lezzete dönüştüren tarifler.",
+  "durum": "yayin",
+  "mod_toplam": null,
+  "siralama": null,
+  "kap_kategori[]": [],
+  "kural_alan[]": [],
+  "kural_islec[]": [],
+  "kural_deger[]": [],
+  "kural_agirlik[]": [],
+  "dolap[]": [],
+  "bos_sonuc": ""
+ },
+ "piknik-ve-acik-hava": {
+  "ad": "Piknik ve Açık Hava",
+  "slug": "piknik-ve-acik-hava",
+  "ikon": "fa-tree",
+  "ozet": "Taşıması kolay, açık havada paylaşması keyifli piknik tarifleri.",
+  "durum": "yayin",
+  "mod_toplam": null,
+  "siralama": null,
+  "kap_kategori[]": [],
+  "kural_alan[]": [],
+  "kural_islec[]": [],
+  "kural_deger[]": [],
+  "kural_agirlik[]": [],
+  "dolap[]": [],
+  "bos_sonuc": ""
+ },
+ "parti-ve-kutlama": {
+  "ad": "Parti ve Kutlama",
+  "slug": "parti-ve-kutlama",
+  "ikon": "fa-champagne-glasses",
+  "ozet": "Kutlamalara yakışan, göz dolduran paylaşmalık parti tarifleri.",
+  "durum": "yayin",
+  "mod_toplam": null,
+  "siralama": null,
+  "kap_kategori[]": [],
+  "kural_alan[]": [],
+  "kural_islec[]": [],
+  "kural_deger[]": [],
+  "kural_agirlik[]": [],
+  "dolap[]": [],
+  "bos_sonuc": ""
+ },
+ "cocuklarin-sevecegi-tarifler": {
+  "ad": "Çocukların Seveceği Tarifler",
+  "slug": "cocuklarin-sevecegi-tarifler",
+  "ikon": "fa-child-reaching",
+  "ozet": "Çocukların severek yiyeceği, eğlenceli ve besleyici tarifler.",
+  "durum": "yayin",
+  "mod_toplam": null,
+  "siralama": null,
+  "kap_kategori[]": [],
+  "kural_alan[]": [],
+  "kural_islec[]": [],
+  "kural_deger[]": [],
+  "kural_agirlik[]": [],
+  "dolap[]": [],
+  "bos_sonuc": ""
+ },
+ "ozel-gun-tarifleri": {
+  "ad": "Özel Gün Tarifleri",
+  "slug": "ozel-gun-tarifleri",
+  "ikon": "fa-cake-candles",
+  "ozet": "Özel günlere anlam katan, sofrayı şölene çeviren tarifler.",
+  "durum": "yayin",
+  "mod_toplam": null,
+  "siralama": null,
+  "kap_kategori[]": [],
+  "kural_alan[]": [],
+  "kural_islec[]": [],
+  "kural_deger[]": [],
+  "kural_agirlik[]": [],
+  "dolap[]": [],
+  "bos_sonuc": ""
+ }
+}
+</script>
+<!-- KAP KATEGORISI → OLCULEN TARIF SAYISI. Kaynak:
+     dump/gastro/tarifler.html kategori kartlari ("Sebze 269 tarif" …).
+     30 kap kategorisinin 14'unde sayi yayimlaniyor; toplam 2817
+     (sitenin ilan ettigi 5.099'un altinda — kesisim olculemedi, bu yuzden
+     motorun verdigi toplam UST SINIRDIR). -->
+<script type="application/json" data-kap-kategori-sayi>
+{
+ "Sebze": 269,
+ "Çorba": 192,
+ "Kahvaltılık": 201,
+ "Kırmızı Et": 229,
+ "Pilav": 190,
+ "Meze": 212,
+ "Balık ve Deniz Ürünleri": 197,
+ "İçecek": 184,
+ "Tavuk ve Hindi": 192,
+ "Meyve Tarifleri": 185,
+ "Sandviç, Burger ve Dürüm": 187,
+ "Köfte ve Kebap": 183,
+ "Tatlı": 190,
+ "Atıştırmalık": 206
+}
+</script>
+
 </body></html>
