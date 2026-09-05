@@ -1974,6 +1974,9 @@ html:has(> body.panel-acik){ overflow:hidden; }
    yüzünden (0,4,0); kap adı tek başına (0,3,0) kalıp kaybediyordu ve
    `gap` ile pay toplanıp 32 veriyordu (41 kez ölçüldü). */
 .yetkili .panel-sayfa .adim-govde > :is(.alan, .alan-izgara, .kart-izgara){ margin-block:0; }
+/* Satır içi çip grubu kendi dikey dolgusunu eklemez: kabın `gap`i (16)
+   zaten alanlar arası ölçüdür, dolgu onu 32'ye çıkarıyordu. */
+.yetkili .adim-govde > .cipler{ padding-block:0; }
 
 /* ── Kart yığını: SAHİP TEK, ölçü 24 ─────────────────────────────────
    Ölçüldü: `.kart` her yerde `margin-top:16` taşıyor ve kapların çoğu
@@ -1982,20 +1985,43 @@ html:has(> body.panel-acik){ overflow:hidden; }
    "kart ↔ kart 24". Pay sıfırlanır; blok kapta komşuluk payı, esnek/
    ızgara kapta `gap` sahiptir — ikisi asla toplanmaz. */
 .yetkili .panel-sayfa .kart{ margin-top:0; }
+/* ⚠ `+` YETMİYOR: iki panelin arasında (gizli ya da sınıfsız) başka bir
+   kardeş varsa komşuluk seçicisi tutmuyor ve panel bir öncekine
+   YAPIŞIYOR (ölçüldü: `admin-rozetler`, 0px). Kural sayfa düzeyindeki
+   HER karta yazılır; ilk çocuk kendi payını eklemez (§1). */
+.yetkili .panel-sayfa > .kart{ margin-top:var(--kit-bolum); }
+.yetkili .panel-sayfa > .kart:first-child{ margin-top:0; }
 .yetkili .panel-sayfa .kart + .kart{ margin-top:var(--kit-bolum); }
 /* ⚠ ÖZGÜLLÜK: üstteki komşuluk kuralı `.yetkili .panel-sayfa .kart + .kart`
    (0,4,0); bu kural onu ancak EŞİT ya da daha yüksek özgüllükle
    susturabilir. `:is()` en özgül argümanını alır — kap adı tek başına
    yetmiyordu ve pay ile `gap` toplanıp 48 veriyordu (79 kez ölçüldü). */
-.yetkili .panel-sayfa :is(.form-yan, .form-ana, .adim-liste, .kart-izgara, .alan-izgara) > .kart + .kart,
-.yetkili .panel-sayfa :is(.form-yan, .form-ana, .adim-liste, .kart-izgara, .alan-izgara) > .kart{ margin-top:0; }
+/* ⚠ `.panel-sayfa` ŞARTI KALDIRILDI: Gastro'nun kabuk yapısında
+   `.form-yan` o kabın dışında kalıyor ve kural 8 kartta tutmuyordu
+   (pay + `gap` = 40). Özgüllük `:is(.kart)` ile korunuyor. */
+.yetkili :is(.form-yan, .form-ana, .adim-liste, .kart-izgara, .alan-izgara) > .kart:is(.kart) + .kart,
+.yetkili :is(.form-yan, .form-ana, .adim-liste, .kart-izgara, .alan-izgara) > .kart:is(.kart){ margin-top:0; }
 .yetkili :is(.form-yan, .form-ana){ gap:var(--kit-bolum); }
 /* Tekrarlayan satır listesi: satırlar birbirinin EŞİTİ, ölçü alan (16). */
 .yetkili .adim-liste{ gap:var(--kit-grup); }
-.yetkili .adim-liste > :is(.adim-karti, .tekrar-satiri, .kart){ margin-block:0; }
+.yetkili .adim-liste > :is(.adim-karti, .tekrar-satiri, .kart, .satir-ekle){ margin-block:0; }
+/* Süzgeç şeridi ile toplu işlem şeridi iki ayrı gruptur: seçim yapılınca
+   ikincisi doğuyor ve şeride YAPIŞIK duruyordu (ölçüldü: 0px). */
+.yetkili .suzgec-cubuk + .toplu-islem{ margin-top:var(--kit-bolum); }
+/* Sayfa rayı ile süzgeç şeridi arası da grup ölçüsüdür. */
+.yetkili .panel-sayfa .sekmeler + .suzgec-cubuk{ margin-top:var(--kit-bolum); }
+/* Dil rayı alan düzeyinde bir raydır; üstündeki bölümden alan ölçüsü
+   kadar ayrılır (0px yapışıktı). */
+.yetkili .form-bolum + .dil-sekmeler,
+.yetkili .panel-sayfa .dil-sekmeler{ margin-top:var(--kit-grup); }
 /* KPI/süzgeç ızgarasından sonra gelen panel nefes alır: ızgara bir
    GRUPTUR, ondan sonrası yeni bir gruptur (ölçüldü: 13 ekranda 0px). */
-.yetkili .panel-sayfa > :is(.kart-izgara, .alan-izgara) + .kart{ margin-top:var(--kit-bolum); }
+.yetkili .panel-sayfa > :is(.kart-izgara, .alan-izgara) + .kart,
+.yetkili .panel-sayfa > :is(.kart-izgara, .alan-izgara) + .kart-izgara,
+.yetkili .panel-govde > :is(.kart-izgara, .alan-izgara) + :is(.kart, .kart-izgara){ margin-top:var(--kit-bolum); }
+/* Kart gövdesinin içindeki iki ızgara da iki gruptur (gastro
+   `admin-raporlar`: iki KPI ızgarası 0px yapışıktı). */
+.yetkili .kart-govde > :is(.kart-izgara, .alan-izgara) + :is(.kart, .kart-izgara){ margin-top:var(--kit-bolum); }
 .yetkili .alan-izgara:first-child,
 .yetkili .panel-sayfa .alan:first-child{ margin-top:0; }
 
@@ -3318,6 +3344,36 @@ html:has(> body.panel-acik){ overflow:hidden; }
 .yetkili .acilir-kalem.cs-ikonlu > span,
 .yetkili .cip.cs-ikonlu > span{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 
+/* ═══ P6-1 · İPUCU BALONU TEK — EYLEM KALIN, NESNE NORMAL ════════════
+   Beyar kuralı: *"Çöp kutusuna at · kvkk-aydinlatma-v3.pdf" — eylem
+   kalın, nesne normal, ayraç "·".*
+
+   🔴 SÖZDE ELEMAN İKİ BİÇİM TAŞIYAMAZ. `::after` tek bir metin
+      kutusudur; içindeki bir parçayı kalınlaştırmanın yolu yoktur.
+      Balon bu yüzden gövdeye TEK KEZ eklenen gerçek bir elemana taşındı
+      (`kanon/admin-kit.js` · `.kit-ipucu`).
+   ⚠ ESKİ YÜZEY SİLİNMEDİ, SUSTURULDU: kural yalnız `html.kit-ipucu-js`
+     altında geçerli ve o sınıfı JS ekliyor. JS koşmazsa `::after`
+     balonları geri gelir; ikisi ASLA birlikte çizilmez.
+   ⚠ Ölçüler §24'ün balonuyla aynı — yeni bir balon ölçüsü açılmadı. */
+.kit-ipucu-js .yetkili [data-ipucu]::after{ content:none; }
+.kit-ipucu{
+  position:fixed; left:0; top:0; z-index:var(--kat-ipucu);
+  max-width:280px; width:max-content;
+  padding:var(--kit-atom) var(--kit-bagli);
+  border-radius:var(--yuvarlak-sm);
+  background:var(--murekkep); color:var(--kagit);
+  font-size:var(--yazi-12); line-height:1.35;
+  box-shadow:var(--golge-md);
+  opacity:0; visibility:hidden; pointer-events:none;
+  transition:opacity .12s ease, visibility .12s;
+  white-space:normal; overflow-wrap:anywhere;
+}
+.kit-ipucu.acik{ opacity:1; visibility:visible; }
+/* Eylem KALIN, nesne normal — ikisi tek satırda, ayraç "·". */
+.kit-ipucu > b{ font-weight:var(--agirlik-kalin); }
+.kit-ipucu > span{ font-weight:var(--agirlik-normal, 400); opacity:.85; }
+
 /* ═══ P6-13 · K4 · ÇİP KABI EN FAZLA İKİ SATIR ═══════════════════════
    Beyar: *"Komşu kaslar çip girdisi sınırsız büyüyor."*
 
@@ -3343,6 +3399,109 @@ html:has(> body.panel-acik){ overflow:hidden; }
   display:inline-block; margin-top:var(--kit-atom);
   font-size:var(--yazi-11); font-weight:var(--agirlik-orta);
   color:var(--metin-ikincil);
+}
+
+/* ═══ P6-22 · ÖNİZLEME PANELİ KİT YAN PANEL KALIBINA ═════════════════
+   Beyar: *"admin-log satır 'göz' önizlemesi: panel içindeki yazılar
+   kaymış — kit yan panel kalıbına (başlık · künye satırı · içerik
+   bloğu · eylem çubuğu), hiza/dolgu kit ölçeği."*
+
+   Ajan L ölçtü (panel ÜÇ ayrı satırda gerçekten tıklanarak açıldı):
+   altı künye satırının altı FARKLI değer başlangıcı var
+   (565 · 572 · 556 · 554 · 558 · 582) — etiket↔değer sütunu diye bir
+   şey yok, değer etiketin bittiği yerden başlıyor.
+
+   🔴 KÖK: `panelAc` gövdeyi `.satir-kunye` kancasıyla basıyor ve o
+      kanca K31'in TABLO İÇİ kancası (`display:block`). Panelde
+      span/b/small üçü de inline kalıp birbirine yapışıyor:
+      "Zaman30 Ağu 202609:12".
+      *(Ders: "Kanon adı davranış çağırır" — `.satir-kunye` adını almak,
+      K31'in `display:block` düzenini de almaktı.)*
+   ⚠ TABLO İÇİ KURAL BOZULMADI: yeni kural dört sınıflık özgüllükle
+     yalnız panelde geçerli. Ölçüler kit ölçeğinden (4/8/12/24).
+   ⚠ Eksik dördüncü blok — KÜNYE SATIRI — `panelAc`a eklendi ve satırdan
+     TÜRETİLİYOR, uydurulmuyor: satırın ilk iki hücresinin değeri.      */
+.yetkili .kit-onizleme .kit-onizleme-govde{ display:grid; gap:0; margin:0 0 var(--kit-bolum); border-top:1px solid var(--cizgi); }
+.yetkili .kit-onizleme .kit-onizleme-govde > .satir-kunye{ display:grid; grid-template-columns:120px minmax(0,1fr); column-gap:var(--kit-satir); align-items:baseline; margin:0; padding:var(--kit-bagli) 0; border-bottom:1px solid var(--cizgi); font-size:var(--yazi-13-5); line-height:var(--satir-orta); }
+.yetkili .kit-onizleme .kit-onizleme-govde > .satir-kunye > span{ color:var(--metin-ikincil); font-size:var(--yazi-12-5); }
+.yetkili .kit-onizleme .kit-onizleme-govde > .satir-kunye > b{ color:var(--murekkep); font-weight:var(--agirlik-orta); overflow-wrap:anywhere; }
+.yetkili .kit-onizleme .kit-onizleme-govde > .satir-kunye > small{ grid-column:2; display:block; margin-top:var(--kit-atom); color:var(--metin-ikincil); font-size:var(--yazi-12-5); }
+.yetkili .kit-onizleme .onay-kapi > p.alan-yardim{ margin:0 0 var(--kit-bolum); }
+.yetkili .kit-onizleme .onz-kunye{ margin:calc(-1 * var(--kit-atom)) 0 var(--kit-satir); font-size:var(--yazi-12-5); color:var(--metin-ikincil); }
+
+/* ═══ K21 · KIRPMA PENCERESİ ═════════════════════════════════════════
+   Donörün modalı kite taşındı (`docs/admin-kirpma-donor.md §2`).
+   Ölçüler kit ölçeğinden; yeni bir pencere geometrisi açılmadı —
+   `.onay-kapi` ile aynı perde ve yarıçap. */
+.yetkili .kirpma-perde,
+.kirpma-perde{
+  position:fixed; inset:0; z-index:var(--kat-modal, 900);
+  display:flex; align-items:center; justify-content:center;
+  padding:var(--kit-bolum, 24px);
+  background:color-mix(in srgb, #000 55%, transparent);
+}
+.kirpma-pencere{
+  display:flex; flex-direction:column; gap:var(--kit-grup, 16px);
+  width:min(880px, 100%); max-height:min(720px, 100%);
+  padding:var(--kit-bolum, 24px);
+  border-radius:var(--yuvarlak-lg, 12px);
+  background:var(--kagit, #fff); color:var(--murekkep, #111);
+  box-shadow:var(--golge-lg);
+}
+.kirpma-bas{ display:flex; align-items:center; justify-content:space-between; gap:var(--kit-satir, 12px); }
+.kirpma-bas h3{ margin:0; font-size:var(--yazi-17, 17px); font-weight:var(--agirlik-kalin, 700);
+  display:flex; align-items:center; gap:var(--kit-bagli, 8px); }
+/* Kırpma sahnesi büyür; ayak ve başlık sabit — pencere taşmaz. */
+.kirpma-govde{ flex:1 1 auto; min-height:0; overflow:hidden; background:var(--zemin, #f4f4f5);
+  border-radius:var(--yuvarlak-md, 8px); }
+.kirpma-govde > img{ display:block; max-width:100%; }
+.kirpma-ayak{ display:flex; align-items:center; gap:var(--kit-satir, 12px); flex-wrap:wrap; }
+/* Uyarı metni düğmeleri sağa iter; kendisi soldadır — okuma yönü. */
+.kirpma-not{ flex:1 1 auto; font-size:var(--yazi-12, 12px); color:var(--metin-ikincil); }
+.kirpma-not.hata{ color:var(--hata, #b3261e); font-weight:var(--agirlik-orta, 500); }
+
+/* 🔴 SÜRÜKLENEN SAHTE ÇERÇEVE ARTIK ÇİZİLMİYOR. Eski `.kirpma-cerceve`
+   hiçbir şey kırpmıyordu (yalnız toast basıyordu); markup'ta duruyor
+   ama bir SÖZ VERMEMELİ — gerçek kırpma penceresinde yapılıyor. */
+.yetkili .form-gorsel .kirpma-cerceve{ display:none; }
+
+/* ═══ P6-24 · İKON İLE METNİ ARASINDA KİT ARALIĞI ════════════════════
+   Beyar: *"'Herkese açık' ikonu ile yazısı bitişik."*
+
+   ÖLÇÜLDÜ (84 ekran · 5.905 ikon+metin çifti): 65'i **0px** — ikon
+   yazıya yapışık. Kök `.cip.hap`ta görüldü: kap `display:block`
+   olduğu için üstündeki `gap:8px` HİÇBİR ŞEY yapmıyordu (gap yalnız
+   esnek/ızgara kapta çalışır) ve `<i>`den sonra boşluk kalmıyordu.
+
+   İki mekanizma birbirine karışmasın diye ayrıldı:
+     · rozet/çip kapları ESNEK olur, aralığı `gap` verir (8)
+     · sıradan satır içi kaplarda (b · span · label · td · li) aralığı
+       ikonun sağ payı verir (4)
+   ⚠ Yalnız-ikon DÜĞME zaten dışarıda: seçici `button`/`a` içermiyor.
+     🔴 İlk yazım `:not(:only-child)` diyordu ve kural HİÇ TUTMADI:
+        `:only-child` yalnız ELEMAN kardeşlere bakar, metin düğümüne
+        değil — `<b><i/> metin</b>`da `<i>` tek eleman çocuktur ve
+        muafiyet her seferinde devreye giriyordu.                      */
+.yetkili :is(.cip, .tur-rozeti, .rozet, .durum-rozeti, .hap){
+  display:inline-flex; align-items:center; gap:var(--kit-bagli);
+}
+.yetkili :is(b, span, small, strong, em, label, p, td, li):not(.cip, .tur-rozeti, .rozet, .durum-rozeti, .hap)
+  > i[class*="fa-"]:first-child{ margin-right:var(--kit-atom); }
+
+/* ═══ P6-27 · K5 GİRDİSİ TEK SATIR, 44px ═════════════════════════════
+   Beyar: *"girdi iki satıra düşüyor — tek satır sabit yükseklik (44),
+   seçili değer çip/metin taşarsa kes."*
+
+   ÖLÇÜLDÜ (84 ekran · 58 K5 girdisi): 53'ü **28px**, 5'i 44px. Kanonun
+   `.acilir-arama`sı 6px dolgulu bir "satır içi" kutu; paneldeki öteki
+   girdiler 44. Aynı formda iki ayrı girdi yüksekliği, §4'ün "panelde
+   tek kutu geometrisi" kararının ihlali — ve alan, çipler eklendikçe
+   ikinci bir satıra düşüyor gibi görünüyordu.
+   ⚠ Metin taşarsa KESİLİR: kutu büyümez, uzayan değer üç noktaya iner.
+   ⚠ Public `.acilir-arama` DEĞİŞMEDİ; kural yalnız `.yetkili` altında. */
+.yetkili .coklu-secim .acilir-arama{
+  min-height:44px; padding:0 var(--kit-bagli);
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
 }
 
 /* ═══ K5b · ÇOKLU AÇILIR — 4+ SEÇENEKLİ ONAY GRUBUNUN YÜZEYİ ═════════
@@ -3446,6 +3605,25 @@ html:has(> body.panel-acik){ overflow:hidden; }
   font-size:var(--yazi-12); font-weight:var(--agirlik-kalin);
   font-variant-numeric:tabular-nums;
 }
+/* ═══ P6-21 · SATIR BAŞI TEK YATAY HİZADIR ═══════════════════════════
+   Beyar: *"tutamak ikonu, satır numarası, içerik ve sil düğmesi tek
+   yatay hizada (dikey orta), tutamak sütunu sabit genişlik."*
+
+   ÖLÇÜLDÜ: `admin-form-tasarim` · `admin-ayarlar` gibi ekranlarda satır
+   eylemleri `.adim-yan` içinde ve kanon onu DİKEY diziyor
+   (`bilesenler.css:11402` `flex-direction:column`): tutamak üstte, sil
+   44px ALTINDA. Numara ile tutamak aynı hizada, sil değil — 137 satırda
+   ölçüldü. Yön yatayya çevrildi; tutamak genişliği zaten TEK değer
+   (36px, 134 satırın 134'ü).
+   ⚠ Public `.adim-yan` DEĞİŞMEDİ; kural yalnız `.yetkili` altında. */
+.yetkili .adim-yan{
+  flex-direction:row; align-items:center; gap:var(--kit-bagli);
+  align-self:flex-start;          /* baş rayı, gövde uzasa da yukarıda */
+}
+/* Numara, satır başının SOL atomudur ve öteki atomlarla aynı hizada
+   durur — kartın gövdesi uzasa da baş rayı kaymaz. */
+.yetkili .adim-karti > .adim-no{ align-self:flex-start; }
+
 .yetkili .tekrar-tutamak{ cursor:grab; }
 .yetkili .tekrar-tutamak:active{ cursor:grabbing; }
 /* Sil satırın SAĞ ucunda — yıkıcı eylem, okuma yönünün sonunda. */

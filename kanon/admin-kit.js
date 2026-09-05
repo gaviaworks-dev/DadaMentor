@@ -850,97 +850,354 @@
       'Sil', function (evet) { if (evet) toast('Silindi.'); });
   });
 
-  /* ───────────────────────────────────────────────────────────────────
-     6 · GÖRSEL GİRDİSİ — önizleme + kırpma çerçevesi
+  /* ═══════════════════════════════════════════════════════════════════
+     K20 · GÖRSEL ALANI ASLA URL/METİN GİRDİSİ DEĞİLDİR
+     K21 · GERÇEK KIRPMA — Cropper.js 1.6.2, donörün sözleşmesiyle
      ───────────────────────────────────────────────────────────────────
-     Gerçek yükleme YOK; dosya `URL.createObjectURL` ile yerel okunur.
-     Oran seçimi 1:1 · 16:9 · serbest. Çerçeve sürüklenebilir.
-     ─────────────────────────────────────────────────────────────────── */
-  function kirpmaKur(kutu, url) {
-    var sahne = kutu.querySelector('.kirpma-sahne');
-    var cerceve = kutu.querySelector('.kirpma-cerceve');
-    var img = sahne && sahne.querySelector('img');
-    if (!sahne || !cerceve || !img) return;
-    img.src = url;
-    img.onload = function () { oranUygula(kutu, kutu.getAttribute('data-oran') || '16:9'); };
+     Beyar kuralı (K20): *"Görsel alanı asla URL/metin girdisi değil —
+     kit görsel yükleme bileşeni (tekil) / galeri (çoklu)."*
+     Beyar kuralı (K21): *"Her görsel yükleme bileşeninde dosya
+     seçilince kırpma penceresi; oran önayarları alan tipine göre;
+     yakınlaştır/döndür, önizleme, 'Kırp ve kullan'; sonuç önizlemede
+     güncellenir."*
+
+     🔴 ÖNCEKİ KIRPMA BİR MAKETTİ ve kendi başlığı bunu söylüyordu:
+        *"Gerçek yükleme YOK"*. "Kırpmayı uygula" YALNIZ TOAST basıyordu
+        (`admin-kit.js:912-919`) — hiçbir canvas, hiçbir blob, hiçbir
+        gizli alan. Sürüklenen çerçeve hiçbir şey kırpmıyordu: ölü
+        yüzeyin en sinsi türü, çünkü tarayıcı yeşil veriyor.
+
+     DONÖR (ajan K keşfi · `docs/admin-kirpma-donor.md`):
+       kütüphane  Cropper.js **1.6.2** (cdnjs'te var, ölçüldü: 200)
+       ⚠ cdnjs "latest" 2.x ve 1.x ile API-UYUMSUZ — sürüm PİNLENDİ.
+       opsiyonlar { aspectRatio, viewMode:1, autoCropArea:1,
+                    dragMode:'move', responsive:true, background:false,
+                    checkOrientation:true }
+       çıktı      getCroppedCanvas({maxWidth:2000,maxHeight:2000})
+                  → toBlob(mime, PNG'de kalitesiz, ötekinde 0.92)
+       metinler   "Görseli Kırp" · "Kırp ve Kullan" · "Kırpmadan Kullan"
+                  · "Vazgeç"
+       sınır      MAX_OUT_DIM 2000 · MAX_SIZE `<meta name="media-max-size">`
+                  (bildirilmemişse 15 MB) — hardcode YOK
+     ⚠ Kütüphane SAYFALARA EKLENMEDİ: kit ilk kırpmada kendisi yüklüyor.
+       Böylece kural üç markaya tazelemeyle iniyor, 248 sayfanın
+       markup'ına dokunulmadan.
+     ═══════════════════════════════════════════════════════════════ */
+
+  /* Bu IIFE'nin kendi eleman yardımcısı. 🔴 İLK YAZIM alt taraftaki
+     IIFE'de tanımlı `ek()`i çağırıyordu; o BURADA TANIMLI DEĞİL ve
+     `ReferenceError` `.catch(...)` dalına düşüp "kütüphane yüklenemedi"
+     diye YUTULUYORDU. Kütüphane 200 dönüyordu, kusur bendeydi —
+     hatayı yutan bir dal, hatayı gizleyen bir daldır. */
+  function gEk(etiket, sinif, metin) {
+    var e = document.createElement(etiket);
+    if (sinif) e.className = sinif;
+    if (metin != null) e.textContent = metin;
+    return e;
   }
-  function oranUygula(kutu, oran) {
-    var sahne = kutu.querySelector('.kirpma-sahne');
-    var cerceve = kutu.querySelector('.kirpma-cerceve');
-    if (!sahne || !cerceve) return;
-    kutu.setAttribute('data-oran', oran);
-    kutu.querySelectorAll('.oran-grubu [data-oran]').forEach(function (b) {
-      b.classList.toggle('aktif', b.getAttribute('data-oran') === oran);
-      b.setAttribute('aria-pressed', String(b.getAttribute('data-oran') === oran));
+
+  var CROPPER_SURUM = '1.6.2';
+  var CROPPER_KOK = 'https://cdnjs.cloudflare.com/ajax/libs/cropperjs/' + CROPPER_SURUM + '/';
+  var cropperSozu = null;
+
+  function cropperYukle() {
+    if (window.Cropper) return Promise.resolve(window.Cropper);
+    if (cropperSozu) return cropperSozu;
+    cropperSozu = new Promise(function (coz, yad) {
+      var l = document.createElement('link');
+      l.rel = 'stylesheet'; l.href = CROPPER_KOK + 'cropper.min.css';
+      document.head.appendChild(l);
+      var sc = document.createElement('script');
+      sc.src = CROPPER_KOK + 'cropper.min.js';
+      sc.onload = function () { coz(window.Cropper); };
+      sc.onerror = function () { yad(new Error('Cropper yüklenemedi')); };
+      document.head.appendChild(sc);
     });
-    var w = sahne.clientWidth, h = sahne.clientHeight;
-    if (!w || !h) return;
-    if (oran === 'serbest') {
-      cerceve.style.width = Math.round(w * 0.9) + 'px';
-      cerceve.style.height = Math.round(h * 0.9) + 'px';
-    } else {
-      var p = oran.split(':'), r = (+p[0]) / (+p[1]);
-      var cw = w * 0.9, ch = cw / r;
-      if (ch > h * 0.9) { ch = h * 0.9; cw = ch * r; }
-      cerceve.style.width = Math.round(cw) + 'px';
-      cerceve.style.height = Math.round(ch) + 'px';
+    return cropperSozu;
+  }
+
+  function azamiBoyut() {
+    var m = document.querySelector('meta[name="media-max-size"]');
+    var mb = m && parseFloat(m.getAttribute('content'));
+    return (mb && mb > 0 ? mb : 15) * 1024 * 1024;
+  }
+
+  function oranSayi(oran) {
+    if (!oran || oran === 'serbest') return NaN;
+    var p = String(oran).split(':');
+    var r = (+p[0]) / (+p[1]);
+    return isFinite(r) && r > 0 ? r : NaN;
+  }
+
+  /* ── Kırpma penceresi ─────────────────────────────────────────────── */
+  function kirpmaPenceresi(dosya, oran, tamam, vazgec) {
+    cropperYukle().then(function (Cropper) {
+      var perde = gEk('div', 'kirpma-perde');
+      var pencere = gEk('div', 'kirpma-pencere');
+      pencere.setAttribute('role', 'dialog');
+      pencere.setAttribute('aria-modal', 'true');
+      pencere.setAttribute('aria-label', 'Görseli Kırp');
+      var bas = gEk('div', 'kirpma-bas');
+      bas.innerHTML = '<h3><i class="fa-solid fa-crop-simple" aria-hidden="true"></i> Görseli Kırp</h3>';
+      var kapat = gEk('button', 'ikon-dugme kirpma-kapat');
+      kapat.type = 'button';
+      kapat.setAttribute('aria-label', 'Vazgeç');
+      kapat.innerHTML = '<i class="fa-solid fa-xmark" aria-hidden="true"></i>';
+      bas.appendChild(kapat);
+      var govde = gEk('div', 'kirpma-govde');
+      var img = document.createElement('img');
+      img.alt = '';
+      govde.appendChild(img);
+      var ayak = gEk('div', 'kirpma-ayak');
+      var not = gEk('span', 'kirpma-not');
+      var vaz = gEk('button', 'dugme hayalet'); vaz.type = 'button'; vaz.textContent = 'Vazgeç';
+      var ham = gEk('button', 'dugme hayalet'); ham.type = 'button'; ham.textContent = 'Kırpmadan Kullan';
+      var onay = gEk('button', 'dugme birincil'); onay.type = 'button';
+      onay.innerHTML = '<i class="fa-solid fa-check" aria-hidden="true"></i> Kırp ve Kullan';
+      ayak.appendChild(not); ayak.appendChild(vaz); ayak.appendChild(ham); ayak.appendChild(onay);
+      pencere.appendChild(bas); pencere.appendChild(govde); pencere.appendChild(ayak);
+      perde.appendChild(pencere);
+      document.body.appendChild(perde);
+
+      var url = URL.createObjectURL(dosya), cr = null;
+      img.src = url;
+      function kapa() {
+        if (cr) cr.destroy();
+        URL.revokeObjectURL(url);
+        perde.remove();
+        document.removeEventListener('keydown', esc);
+      }
+      function esc(e) { if (e.key === 'Escape') { kapa(); vazgec && vazgec(); } }
+      document.addEventListener('keydown', esc);
+      img.onload = function () {
+        cr = new Cropper(img, {
+          aspectRatio: oranSayi(oran),
+          viewMode: 1, autoCropArea: 1, dragMode: 'move',
+          responsive: true, background: false, checkOrientation: true
+        });
+        onay.focus();
+      };
+      kapat.addEventListener('click', function () { kapa(); vazgec && vazgec(); });
+      vaz.addEventListener('click', function () { kapa(); vazgec && vazgec(); });
+      perde.addEventListener('click', function (e) { if (e.target === perde) { kapa(); vazgec && vazgec(); } });
+      ham.addEventListener('click', function () { kapa(); tamam(dosya, false); });
+      onay.addEventListener('click', function () {
+        if (!cr) return;
+        var tuval = cr.getCroppedCanvas({ maxWidth: 2000, maxHeight: 2000 });
+        if (!tuval) { kapa(); tamam(dosya, false); return; }
+        var mime = dosya.type || 'image/jpeg';
+        var kalite = mime === 'image/png' ? undefined : 0.92;
+        tuval.toBlob(function (blob) {
+          if (!blob) { kapa(); tamam(dosya, false); return; }
+          /* 🔴 İKİNCİ BOYUT KAPISI — donörün kararı: kırpma ÇIKTISININ
+             gerçek boyutu ölçülür ve pencere AÇIKKEN uyarılır; aşarsa
+             ağa hiç çıkılmaz. "Girişte ölçtüm" yetmez, kırpma büyütebilir. */
+          var azami = azamiBoyut();
+          if (blob.size > azami) {
+            not.textContent = 'Görsel işlendikten sonra ' + (blob.size / 1048576).toFixed(1) +
+              ' MB oldu, en fazla ' + Math.round(azami / 1048576) +
+              ' MB olabilir. Kırpma alanını daraltıp tekrar deneyin.';
+            not.classList.add('hata');
+            return;
+          }
+          kapa();
+          tamam(new File([blob], dosya.name, { type: mime }), true);
+        }, mime, kalite);
+      });
+    }).catch(function (h) {
+      /* Kütüphane gelmezse dosya HAM kullanılır ve bu SÖYLENİR —
+         sessizce kırpmamak, kırptığını sanmaktan iyidir.
+         ⚠ HATA YUTULMAZ: konsola da yazılır. Bu dal bir kez bir KOD
+           hatasını (kapsam dışı yardımcı) "ağ sorunu" gibi göstermişti. */
+      if (window.console) console.error('[kit] kırpma açılamadı:', h);
+      toast('Kırpma aracı yüklenemedi — görsel kırpılmadan kullanıldı.', 'uyari');
+      tamam(dosya, false);
+    });
+  }
+
+  /* Dosya girdisine kırpılmış dosyayı GERİ YAZ: form gönderimi yine
+     girdinin kendisinden okur, ikinci bir taşıyıcı doğmaz. */
+  function dosyayiYaz(girdi, dosya) {
+    try {
+      var dt = new DataTransfer();
+      dt.items.add(dosya);
+      girdi.files = dt.files;
+      return true;
+    } catch (h) { return false; }   /* eski tarayıcı — önizleme yine doğru */
+  }
+
+  function gorselOnizle(kutu, dosya, kirpildi) {
+    var url = URL.createObjectURL(dosya);
+    kutu.classList.add('dolu');
+    var img = kutu.querySelector('.kirpma-sahne img, .gorsel-onizleme img, .onizleme img');
+    if (!img) {
+      /* Önizleme yüzeyi bildirilmemişse kit onu AÇAR: kırpılan görselin
+         sonucu görünmeden "sonuç önizlemede güncellenir" kuralı boş bir
+         söz olurdu. */
+      var oz = gEk('div', 'gorsel-onizleme');
+      img = document.createElement('img'); img.alt = '';
+      oz.appendChild(img);
+      (kutu.querySelector('.birak-alani') || kutu).insertAdjacentElement('afterend', oz);
     }
-    cerceve.style.left = ''; cerceve.style.top = '';
-    cerceve.style.inset = '0'; cerceve.style.margin = 'auto';
+    img.src = url;
+    kutu.setAttribute('data-kirpildi', kirpildi ? '1' : '0');
+    var bilgi = kutu.querySelector('[data-rol="gorsel-bilgi"]');
+    if (!bilgi) {
+      bilgi = gEk('p', 'alan-yardim');
+      bilgi.setAttribute('data-rol', 'gorsel-bilgi');
+      (kutu.querySelector('.kirpma-arac') || kutu).appendChild(bilgi);
+    }
+    var im = new Image();
+    im.onload = function () {
+      bilgi.textContent = (kirpildi ? 'Kırpıldı · ' : 'Kırpılmadı · ') +
+        im.naturalWidth + '×' + im.naturalHeight + ' px · ' +
+        (dosya.size / 1024).toFixed(0) + ' KB';
+    };
+    im.src = url;
+  }
+
+  function gorselSecildi(girdi) {
+    /* 🔴 KAPSAM `.form-gorsel` DEĞİL, GÖRSEL ALANININ KENDİSİ. Ölçüldü:
+       FIT'in 20 kutusu `.form-gorsel` taşıyor ama Diet'in 19, Gastro'nun
+       26 yükleme alanı yalnız `.birak-alani` + dosya girdisi. Kırpmayı
+       `.form-gorsel`e bağlamak, kuralın nüfusunu markaya göre
+       daraltırdı — "kararın nüfusu kayar" dersinin görsel karşılığı.
+       Kap: bildirilmiş kutu, yoksa alanın kendisi. */
+    var kutu = girdi.closest('.form-gorsel') || girdi.closest('.alan') ||
+               (girdi.closest('.birak-alani') && girdi.closest('.birak-alani').parentElement);
+    if (!kutu || !girdi.files || !girdi.files[0]) return;
+    var dosya = girdi.files[0];
+    if (!/^image\//.test(dosya.type)) { toast('Yalnız görsel dosyası seçilebilir.', 'uyari'); girdi.value = ''; return; }
+    if (dosya.size > azamiBoyut()) {
+      toast('Dosya ' + (dosya.size / 1048576).toFixed(1) + ' MB — en fazla ' +
+            Math.round(azamiBoyut() / 1048576) + ' MB olabilir.', 'uyari');
+      girdi.value = ''; return;
+    }
+    /* `data-kirpma="kapali"` bildirilen alan (logo · favicon) kırpılmaz —
+       donörün `crop=false` kararının karşılığı. */
+    if (kutu.getAttribute('data-kirpma') === 'kapali') { gorselOnizle(kutu, dosya, false); return; }
+    kirpmaPenceresi(dosya, kutu.getAttribute('data-oran') || '16:9',
+      function (yeni, kirpildi) {
+        dosyayiYaz(girdi, yeni);
+        gorselOnizle(kutu, yeni, kirpildi);
+      },
+      function () { girdi.value = ''; });
   }
 
   document.addEventListener('change', function (e) {
     var g = e.target.closest('input[type="file"][accept*="image"]');
-    if (!g) return;
-    var kutu = g.closest('.form-gorsel');
-    if (!kutu || !g.files || !g.files[0]) return;
-    kutu.classList.add('dolu');
-    kirpmaKur(kutu, URL.createObjectURL(g.files[0]));
-    toast('Görsel seçildi — kırpma çerçevesini sürükleyerek ayarla.');
+    if (g) gorselSecildi(g);
   });
 
   document.addEventListener('click', function (e) {
+    /* Oran çipi: seçim bir sonraki kırpmanın oranıdır ve şimdi de
+       yeniden kırpma penceresini açar — çip artık bir SÖZ tutuyor. */
     var o = e.target.closest('.oran-grubu [data-oran]');
-    if (o) { e.preventDefault(); oranUygula(o.closest('.form-gorsel'), o.getAttribute('data-oran')); return; }
+    if (o) {
+      e.preventDefault();
+      var ko = o.closest('.form-gorsel');
+      if (!ko) return;
+      ko.setAttribute('data-oran', o.getAttribute('data-oran'));
+      ko.querySelectorAll('.oran-grubu [data-oran]').forEach(function (b) {
+        var s = b.getAttribute('data-oran') === o.getAttribute('data-oran');
+        b.classList.toggle('aktif', s);
+        if (b.hasAttribute('aria-pressed')) b.setAttribute('aria-pressed', String(s));
+      });
+      return;
+    }
     var v = e.target.closest('[data-gorsel="vazgec"]');
     if (v) {
       e.preventDefault();
       var k = v.closest('.form-gorsel');
-      if (k) { k.classList.remove('dolu'); var f = k.querySelector('input[type=file]'); if (f) f.value = ''; }
+      if (k) {
+        k.classList.remove('dolu');
+        k.removeAttribute('data-kirpildi');
+        var f = k.querySelector('input[type=file]'); if (f) f.value = '';
+        var b = k.querySelector('[data-rol="gorsel-bilgi"]'); if (b) b.remove();
+      }
       return;
     }
     var u = e.target.closest('[data-gorsel="uygula"]');
     if (u) {
       e.preventDefault();
       var kk = u.closest('.form-gorsel');
-      var c = kk && kk.querySelector('.kirpma-cerceve');
-      if (c) toast('Kırpma uygulandı — ' + Math.round(c.offsetWidth) + '×' + Math.round(c.offsetHeight) + ' px.');
+      var ff = kk && kk.querySelector('input[type=file]');
+      if (ff && ff.files && ff.files[0]) gorselSecildi(ff);
+      else toast('Önce bir görsel seç.', 'uyari');
       return;
     }
   });
 
-  /* Çerçeve sürükleme — sahnenin dışına çıkmaz. */
-  (function () {
-    var suruk = null, bx = 0, by = 0, sl = 0, st = 0;
-    document.addEventListener('pointerdown', function (e) {
-      var c = e.target.closest('.kirpma-cerceve');
-      if (!c) return;
-      suruk = c; bx = e.clientX; by = e.clientY;
-      var s = c.parentElement.getBoundingClientRect(), r = c.getBoundingClientRect();
-      sl = r.left - s.left; st = r.top - s.top;
-      c.style.inset = 'auto'; c.style.margin = '0';
-      c.style.left = sl + 'px'; c.style.top = st + 'px';
-      c.setPointerCapture(e.pointerId);
+  /* ── K20 · ÇIPLAK GÖRSEL ALANI YÜKLEME BİLEŞENİNE ÇEVRİLİR ────────
+     ÖLÇÜLDÜ (ajan K · `docs/admin-kirpma-donor.md §4`): FIT 2 · Gastro 4
+     · Diet 2 alan bir görsel İSTİYOR ama dosya girdisi YOK — değeri
+     elle yazılan bir metin kutusu.
+     🔴 ÖLÇÜT SEZGİ DEĞİL KANIT: alanın DEĞERİ bir görsel dosya adı
+        (`.png` · `.jpg` · `.webp` · `.svg` · `.ico` …) ya da alan
+        `data-gorsel-alan` bildiriyor. "Etiketinde görsel geçiyor"
+        gibi bir tahmin kullanılmadı.
+     ⚠ ESKİ GİRDİ SİLİNMEZ: `hidden` olarak durur ve DEĞERİ O TAŞIR —
+       "eleman durdu, öznitelik düştü" dersinin tersi. */
+  var GORSEL_UZANTI = /\.(png|jpe?g|webp|svg|gif|avif|ico)$/i;
+
+  function ciplakGorselKur(kok) {
+    var n = 0;
+    (kok || document).querySelectorAll('.alan input.alan-girdi[type="text"], .alan input[type="url"]').forEach(function (g) {
+      if (g.getAttribute('data-gorsel-kuruldu') === '1') return;
+      if (g.closest('.ikon-secici, .coklu-secim')) return;
+      var bildirim = g.hasAttribute('data-gorsel-alan');
+      if (!bildirim && !GORSEL_UZANTI.test((g.value || '').trim())) return;
+      var alan = g.closest('.alan'); if (!alan) return;
+      /* 🔴 ÖZNE ALANIN KENDİSİDİR, İÇİNDE DURDUĞU KUTU DEĞİL. İlk yazım
+         "bir `.form-gorsel` içindeyse zaten yükleme bileşenidir" diyordu;
+         `admin-ayarlar`ın üç görsel alanı bölüm düzeyinde bir
+         `.form-gorsel` kutusunun İÇİNDE ama kendi dosya girdileri YOK.
+         Kapının öznesi kaymıştı: kural 0 alan buluyordu. Ölçüt: ALANIN
+         kendi dosya girdisi var mı. */
+      if (alan.querySelector('input[type="file"]')) return;
+      g.setAttribute('data-gorsel-kuruldu', '1');
+
+      var kutu = gEk('div', 'form-gorsel');
+      kutu.setAttribute('data-oran', g.getAttribute('data-oran') || 'serbest');
+      if (g.hasAttribute('data-kirpma')) kutu.setAttribute('data-kirpma', g.getAttribute('data-kirpma'));
+      var birak = gEk('div', 'birak-alani');
+      var fid = (g.id || 'gorsel') + '-dosya';
+      birak.innerHTML =
+        '<i class="fa-solid fa-cloud-arrow-up" aria-hidden="true"></i>' +
+        '<b>Görseli sürükle ya da seçmek için tıkla</b>' +
+        '<span class="alan-yardim">JPG · PNG · WEBP · en fazla ' +
+        Math.round(azamiBoyut() / 1048576) + ' MB</span>';
+      var dosya = document.createElement('input');
+      dosya.type = 'file'; dosya.accept = 'image/*'; dosya.id = fid;
+      dosya.className = 'gorsel-dosya';
+      var etiketDosya = document.createElement('label');
+      etiketDosya.className = 'dugme hayalet'; etiketDosya.setAttribute('for', fid);
+      etiketDosya.textContent = 'Dosya seç';
+      birak.appendChild(dosya); birak.appendChild(etiketDosya);
+      var onizleme = gEk('div', 'gorsel-onizleme');
+      var img = document.createElement('img');
+      img.alt = ''; img.src = (g.value || '').trim();
+      onizleme.appendChild(img);
+      kutu.appendChild(birak); kutu.appendChild(onizleme);
+      if ((g.value || '').trim()) kutu.classList.add('dolu');
+
+      /* Değer eski girdide kalır; yüzey değişir. */
+      g.parentNode.insertBefore(kutu, g);
+      g.hidden = true;
+      g.setAttribute('aria-hidden', 'true');
+      g.tabIndex = -1;
+      n++;
     });
-    document.addEventListener('pointermove', function (e) {
-      if (!suruk) return;
-      var s = suruk.parentElement.getBoundingClientRect();
-      var nl = Math.max(0, Math.min(s.width - suruk.offsetWidth, sl + e.clientX - bx));
-      var nt = Math.max(0, Math.min(s.height - suruk.offsetHeight, st + e.clientY - by));
-      suruk.style.left = nl + 'px'; suruk.style.top = nt + 'px';
-    });
-    document.addEventListener('pointerup', function () { suruk = null; });
-  })();
+    return n;
+  }
+  window.DM_GORSEL_ALAN_KUR = ciplakGorselKur;
+  window.DM_KIRPMA_PENCERESI = kirpmaPenceresi;
+
+  if (document.readyState === 'loading')
+    document.addEventListener('DOMContentLoaded', function () { ciplakGorselKur(); });
+  else ciplakGorselKur();
+
+
 
 })();
 
@@ -1508,19 +1765,28 @@
         var yuzey = yid && document.getElementById(yid);
         if (!yuzey) return;
         if (!yuzey.querySelector('.kolon-secim')) {
-          var t = document.querySelector('.tablo, table');
+          var t = d.closest('.kart') ? d.closest('.kart').querySelector('.tablo table, table')
+                                     : document.querySelector('.tablo table, table');
           if (!t) return;
+          kolonIndeksle(t);
           var kap = document.createElement('div');
           kap.className = 'kolon-secim';
-          [].forEach.call(t.querySelectorAll('thead th'), function (th, i) {
+          /* 🔴 TEK TABLONUN BAŞLIK SATIRI. Bir kartta birden çok tablo
+             olabiliyor (sekme panelleri); `querySelectorAll` hepsini
+             topluyor ve menü, listelediği kolonun durumunu BAŞKA
+             tablodan okuyup yanlış işaretliyordu. */
+          var basSatir = t.querySelector('thead tr:last-of-type');
+          [].forEach.call(basSatir ? basSatir.children : [], function (th, i) {
             var ad = (th.textContent || '').trim();
             if (!ad || th.classList.contains('sec')) return;
-            if (!th.hasAttribute('data-kolon')) th.setAttribute('data-kolon', String(i));
-            [].forEach.call(t.querySelectorAll('tbody tr'), function (tr) {
-              if (tr.cells[i]) tr.cells[i].setAttribute('data-kolon', String(i));
-            });
             var l = document.createElement('label');
-            l.innerHTML = '<input type="checkbox" checked data-kolon-anahtar="' + i + '"><span>' + ad + '</span>';
+            /* 🔴 KUTU HER ZAMAN İŞARETLİ DOĞUYORDU: menü, kolonun O ANKİ
+               durumunu değil sabit bir "açık" varsayımını gösteriyordu.
+               P6-20 ile bazı kolonlar varsayılan KAPALI doğuyor; menü
+               yalan söylerdi. */
+            var acik = !th.classList.contains('gizli');
+            l.innerHTML = '<input type="checkbox"' + (acik ? ' checked' : '') +
+                          ' data-kolon-anahtar="' + th.getAttribute('data-kolon') + '"><span>' + ad + '</span>';
             kap.appendChild(l);
           });
           yuzey.appendChild(kap);
@@ -1551,8 +1817,10 @@
         if (adres) { window.open(adres, '_blank', 'noopener'); toast('Üye yüzü yeni sekmede açıldı.'); return; }
         if (!trO) { toast('Önizlenecek kayıt bulunamadı.', 'uyari'); return; }
         var adO = (trO.querySelector('td b') || trO.cells[1] || {}).textContent || 'Kayıt';
-        panelAc(adO.replace(/\s+/g, ' ').trim() + ' — önizleme', 'fa-eye', satirVerisi(trO),
-          'Bu bir ÖNİZLEMEDİR: kaydın listede görünen alanları. Üye yüzü sayfası bu kayıt için bildirilmemiş.');
+        var verO = satirVerisi(trO);
+        panelAc(adO.replace(/\s+/g, ' ').trim() + ' — önizleme', 'fa-eye', verO,
+          'Bu bir ÖNİZLEMEDİR: kaydın listede görünen alanları. Üye yüzü sayfası bu kayıt için bildirilmemiş.',
+          satirKunyesi(verO));
         return;
       }
 
@@ -1569,7 +1837,8 @@
         var adI = (trI.querySelector('td b') || trI.cells[1] || {}).textContent || 'Kayıt';
         panelAc(adI.replace(/\s+/g, ' ').trim() + ' — istatistik', 'fa-chart-simple',
           sayilar.concat(hedef).length ? sayilar.concat(hedef) : hepsi,
-          'Sayılar listedeki sütunlardan okunur — maket verisi, canlı ölçüm değil.');
+          'Sayılar listedeki sütunlardan okunur — maket verisi, canlı ölçüm değil.',
+          satirKunyesi(hepsi));
         return;
       }
 
@@ -2027,8 +2296,10 @@
           var trS = d.closest('tr, .liste-satir');
           if (trS && typeof panelAc === 'function') {
             var adS = (trS.querySelector('td b') || trS.cells[1] || {}).textContent || 'Kayıt';
-            panelAc(adS.replace(/\s+/g, ' ').trim() + ' — kayıt', 'fa-circle-info', satirVerisi(trS),
-              'Bu kaydın kaynağı panelde ayrı bir modül olarak tutulmuyor; kaydın kendisi gösteriliyor.');
+            var verS = satirVerisi(trS);
+            panelAc(adS.replace(/\s+/g, ' ').trim() + ' — kayıt', 'fa-circle-info', verS,
+              'Bu kaydın kaynağı panelde ayrı bir modül olarak tutulmuyor; kaydın kendisi gösteriliyor.',
+              satirKunyesi(verS));
             return;
           }
           toast('Bu eylem için bir hedef bildirilmemiş.', 'hata'); return;
@@ -2048,12 +2319,167 @@
     }
   });
 
+  /* ═══════════════════════════════════════════════════════════════════
+     P6-20 · LİSTE TABLOSU SÜTUN DİSİPLİNİ — VARSAYILAN EN FAZLA 4
+     ───────────────────────────────────────────────────────────────────
+     Beyar kuralı: *"en fazla 4 veri sütunu + seçim + işlem —
+     ad/başlık · güncellenme · durum · işlemler (modüle göre 4. sütun
+     değişebilir). Fazlası 'Kolonlar' menüsünden isteğe bağlı
+     (varsayılan kapalı)."*
+
+     ÖLÇÜLDÜ (fit · 49 liste ekranı): veri sütunu dağılımı
+       3 sütun ×1 · 4 ×5 · 5 ×15 · 6 ×14 · 7 ×11 · 8 ×2
+     Yani 42 ekran sınırın üstünde; en geniş tablo 8 veri sütunu
+     taşıyor ve yatayda sıkışıyor.
+
+     🔴 HANGİ DÖRDÜ UYDURULMADI. Sıra: (1) ilk sütun her zaman kalır —
+        kaydın ADIDIR; (2) markup `data-kolon-tut` ile bir sütunu
+        ZORUNLU bildirebilir; (3) başlığı ÖNCELİK listesinde geçenler
+        (durum · güncellenme · tarih) — bu adlar 49 ekranın gerçek
+        başlıklarından hasat edildi ("durum" 33 ekranda geçiyor;
+        Beyar'ın saydığı üçlünün ikisi); (4) kalan yer DOM sırasından
+        dolar.
+     ⚠ SÜTUN SİLİNMEZ, GİZLENİR: veri DOM'da durur, "Kolonlar"
+       menüsünden bir tıkla geri gelir ve menü artık kolonun GERÇEK
+       durumunu gösterir.
+     ⚠ Markup `data-kolon-varsayilan="acik"` diyerek kuralı bir sütunda
+       kapatabilir; bildirim sezgiden önce gelir.
+     ═══════════════════════════════════════════════════════════════ */
+
+  var KOLON_ONCELIK = ['durum', 'güncellenme', 'güncelleme', 'son güncelleme', 'tarih'];
+
+  function kolonIndeksle(t) {
+    var basliklar = [].slice.call(t.querySelectorAll('thead tr:last-of-type > th'));
+    basliklar.forEach(function (th, i) {
+      if (!th.hasAttribute('data-kolon')) th.setAttribute('data-kolon', String(i));
+      var k = th.getAttribute('data-kolon');
+      [].forEach.call(t.querySelectorAll('tbody tr'), function (tr) {
+        if (tr.cells[i]) tr.cells[i].setAttribute('data-kolon', k);
+      });
+    });
+    return basliklar;
+  }
+
+  function kolonDisiplini(kok) {
+    var n = 0;
+    (kok || document).querySelectorAll('.tablo table, table.tablo').forEach(function (t) {
+      if (t.getAttribute('data-kolon-disiplin') === '1') return;
+      var basliklar = kolonIndeksle(t);
+      var veri = basliklar.filter(function (th) {
+        if (th.classList.contains('sec') || th.classList.contains('eylem')) return false;
+        var ad = (th.textContent || '').replace(/\s+/g, ' ').trim().toLocaleLowerCase('tr');
+        return ad && ad !== 'işlem' && ad !== 'işlemler';
+      });
+      if (veri.length <= 4) return;
+      t.setAttribute('data-kolon-disiplin', '1');
+
+      /* 🔴 EKRANIN KENDİ BİLDİRİMİ ÖNCE GELİR. "Kolonlar" menüsü çoğu
+         ekranda markup'ta hazır ve kutuların işaretli/işaretsiz olması
+         o ekranın VARSAYILAN kararıdır. Kit onu ezmez, okur:
+         işaretsiz kutu = varsayılan kapalı, kilitli kutu = zorunlu. */
+      var mkart = t.closest('.kart') || document;
+      if (mkart.querySelector('.tablo table, table') === t)
+      mkart.querySelectorAll('[data-kolon-anahtar]').forEach(function (k) {
+        var th = t.querySelector('th[data-kolon="' + k.getAttribute('data-kolon-anahtar') + '"]');
+        if (!th) return;
+        if (k.disabled && k.checked) th.setAttribute('data-kolon-tut', '');
+        else if (!k.checked) th.setAttribute('data-kolon-varsayilan', 'kapali');
+      });
+
+      var tut = [];
+      function kat(th) { if (th && tut.indexOf(th) === -1 && tut.length < 4) tut.push(th); }
+      kat(veri[0]);                                              /* kaydın adı */
+      veri.forEach(function (th) { if (th.hasAttribute('data-kolon-tut')) kat(th); });
+      veri.forEach(function (th) { if (th.getAttribute('data-kolon-varsayilan') === 'acik') kat(th); });
+      KOLON_ONCELIK.forEach(function (ad) {
+        veri.forEach(function (th) {
+          if ((th.textContent || '').replace(/\s+/g, ' ').trim().toLocaleLowerCase('tr') === ad) kat(th);
+        });
+      });
+      veri.forEach(function (th) {
+        if (th.getAttribute('data-kolon-varsayilan') === 'kapali') return;
+        kat(th);                                                 /* kalan yer DOM sırasından */
+      });
+
+      veri.forEach(function (th) {
+        if (th.getAttribute('data-kolon-varsayilan') === 'kapali') {
+          var kk = th.getAttribute('data-kolon');
+          t.querySelectorAll('[data-kolon="' + kk + '"]').forEach(function (h) { h.classList.add('gizli'); });
+          n++; return;
+        }
+        if (tut.indexOf(th) !== -1) return;
+        if (th.getAttribute('data-kolon-varsayilan') === 'acik') return;
+        var k = th.getAttribute('data-kolon');
+        t.querySelectorAll('[data-kolon="' + k + '"]').forEach(function (h) { h.classList.add('gizli'); });
+        n++;
+      });
+
+      /* 🔴 MENÜ MARKUP'TA HAZIR GELİYOR VE "checked" YAZILI. Ekranların
+         çoğunda "Kolonlar" yüzeyi markup'ta duruyor (`data-kolon-anahtar`
+         ile) ve kutular sabit işaretli. Kolon gizlenince menü YALAN
+         söylüyordu: 83 kutu "açık" diyordu, kolon kapalıydı. Kutular
+         kolonun GERÇEK durumuna eşitlenir — bildirim tek kaynaktan. */
+      var kart = t.closest('.kart') || document;
+      /* ⚠ BİR KARTTA DÖRT TABLO OLABİLİYOR (sekme panelleri) ve menü
+         TEK. Menü kartın İLK tablosunu yönetir; ötekilerini eşitlemek
+         menüyü son işlenen tabloya göre yalancı yapıyordu. */
+      if (kart.querySelector('.tablo table, table') !== t) return;
+      kart.querySelectorAll('[data-kolon-anahtar]').forEach(function (k) {
+        var th = t.querySelector('th[data-kolon="' + k.getAttribute('data-kolon-anahtar') + '"]');
+        if (!th) return;
+        var acik = !th.classList.contains('gizli');
+        if (k.checked !== acik) k.checked = acik;
+        /* Kilitli kutu (ilk sütun) her zaman açıktır ve öyle kalır. */
+        if (k.disabled && !acik) {
+          t.querySelectorAll('[data-kolon="' + th.getAttribute('data-kolon') + '"]')
+            .forEach(function (h) { h.classList.remove('gizli'); });
+          k.checked = true;
+        }
+      });
+    });
+    return n;
+  }
+  /* ═══ P6-6 EKİ · SATIR İÇİ PAY, KABIN `gap`İYLE TOPLANMAZ ══════════
+     ÖLÇÜLDÜ (gastro · 7 ekran · 23 kart): markup'ta `style="margin-top:16px"`
+     yazılı kartlar var ve kapları `gap:24` veriyor → aradaki boşluk 40.
+     Satır içi biçim, CSS'teki her kuralı yener; kit kuralı orada
+     susuyordu ve "kural yazdım" demek yetmiyordu.
+     🔴 Boşluğun sahibi TEK: `gap` yazan bir kapta çocuk kendi payını
+        eklemez (§1). Kit, kabın `gap`i varsa çocuğun SATIR İÇİ dikey
+        payını kaldırır — başka hiçbir satır içi biçime dokunmaz. */
+  function satirIciPayTemizle(kok) {
+    var n = 0;
+    (kok || document).querySelectorAll('.kart[style*="margin"]').forEach(function (k) {
+      var kap = k.parentElement; if (!kap) return;
+      var cs = getComputedStyle(kap);
+      if (cs.display !== 'flex' && cs.display !== 'grid') return;
+      if (parseFloat(cs.rowGap || 0) <= 0) return;
+      if (k.style.marginTop) { k.style.marginTop = ''; n++; }
+      if (k.style.marginBottom) { k.style.marginBottom = ''; n++; }
+    });
+    return n;
+  }
+  window.DM_SATIRICI_PAY = satirIciPayTemizle;
+  if (document.readyState === 'loading')
+    document.addEventListener('DOMContentLoaded', function () { satirIciPayTemizle(); });
+  else satirIciPayTemizle();
+
+  window.DM_KOLON_DISIPLIN = kolonDisiplini;
+
+  if (document.readyState === 'loading')
+    document.addEventListener('DOMContentLoaded', function () { kolonDisiplini(); });
+  else kolonDisiplini();
+
   /* Kolon gizle/göster */
   document.addEventListener('change', function (e) {
     var k = e.target.closest('[data-kolon-anahtar]');
     if (!k) return;
     var i = k.getAttribute('data-kolon-anahtar');
-    document.querySelectorAll('[data-kolon="' + i + '"]').forEach(function (h) {
+    /* Anahtar tablo İÇİNDE benzersiz; kapsam da tablo olmalı. Belge
+       düzeyinde aramak, aynı numaralı kolonu ÖTEKİ tablolarda da
+       gizliyordu. */
+    var kart = k.closest('.kart') || document;
+    kart.querySelectorAll('[data-kolon="' + i + '"]').forEach(function (h) {
       h.classList.toggle('gizli', !k.checked);
     });
   });
@@ -3716,20 +4142,362 @@
   });
 
   /* ── İpucu: yalnız-ikon her düğmede ─────────────────────────────── */
+  /* ═══════════════════════════════════════════════════════════════════
+     P6-1 · İPUCU SÖZ DİZİMİ — ÖNCE EYLEM, SONRA NESNE
+     ───────────────────────────────────────────────────────────────────
+     Beyar kuralı: *"Çöp kutusuna at · kvkk-aydinlatma-v3.pdf" — eylem
+     KALIN, nesne normal, ayraç "·". "X dosyasını çöp kutusuna at"
+     kalıbı YASAK.*
+
+     ÖLÇÜLDÜ (üç markanın 9.496 yalnız-ikon düğmesi · 2.653 benzersiz
+     etiket): Türkçe etiket eylemi SONA koyuyor — "msg_7f3a19
+     gönderiminin detayını görüntüle", "Birebir Seans paketini düzenle".
+     Yönetici satırda göz gezdirirken önce NE OLACAĞINI görmeli; kaydın
+     adı ikinci bilgidir.
+
+     🔴 SÖZLÜK UYDURULMADI: eylem öbekleri o 2.653 etiketin SON sözcük
+        öbeğinden hasat edildi. Uzun öbek önce denenir (
+        "detayını görüntüle" · "işini üzerine al" · "görüldü işaretle").
+     🔴 İKİNCİ METİN KAYNAĞI DOĞMADI: metin yine `aria-label`dan
+        TÜRETİLİR (§24'ün kendi kuralı); yalnız sırası değişir.
+     ⚠ Eylem bulunamazsa etiket OLDUĞU GİBİ kalır — uydurulmuş bir fiil
+       eklenmez. Kapı bunları ayrı sayar.
+     ═══════════════════════════════════════════════════════════════ */
+
+  var IPUCU_EYLEM = [
+    ['gösterim ve tıklama sonucunu görüntüle', 'Gösterim ve tıklama sonucunu görüntüle'],
+    ['hedefinin hesabını askıya al', 'Hesabı askıya al'],
+    ['hedefinin hesabını sınırla', 'Hesabı sınırla'],
+    ['bildirimini incelemeye al', 'İncelemeye al'],
+    ['önceki sürümle karşılaştır', 'Önceki sürümle karşılaştır'],
+    ['değişkenleri doğrula', 'Değişkenleri doğrula'],
+    ['yeniden etkinleştir', 'Yeniden etkinleştir'],
+    ['başka kişiye ata', 'Başka kişiye ata'],
+    ['görüldü işaretle', 'Görüldü işaretle'],
+    ['detayını görüntüle', 'Detayı görüntüle'],
+    ['hemen sonlandır', 'Hemen sonlandır'],
+    ['işini üzerine al', 'Üzerine al'],
+    ['anahtarı göster', 'Anahtarı göster'],
+    ['için işlem yapma', 'İşlem yapma'],
+    ['içeriğini önizle', 'Önizle'],
+    ['detayını gör', 'Detayı gör'],
+    ['için yorum ekle', 'Yorum ekle'],
+    ['çöp kutusuna at', 'Çöp kutusuna at'],
+    ['hemen çalıştır', 'Hemen çalıştır'],
+    ['yeniden gönder', 'Yeniden gönder'],
+    ['yeniden adlandır', 'Yeniden adlandır'],
+    ['incelemeye al', 'İncelemeye al'],
+    ['etkinleştir', 'Etkinleştir'],
+    ['sitede gör', 'Sitede gör'],
+    ['askıya al', 'Askıya al'],
+    ['dışa aktar', 'Dışa aktar'],
+    ['sonlandır', 'Sonlandır'],
+    ['işaretle', 'İşaretle'],
+    ['yeniden kontrol et', 'Yeniden kontrol et'],
+    ['karara bağla', 'Karara bağla'],
+    ['karşılaştır', 'Karşılaştır'],
+    ['görüntüle', 'Görüntüle'],
+    ['geri al', 'Geri al'],
+    ['ileri al', 'İleri al'],
+    ['test et', 'Test et'],
+    ['aktif et', 'Aktif et'],
+    ['pasif et', 'Pasif et'],
+    ['iptal et', 'İptal et'],
+    ['adlandır', 'Adlandır'],
+    ['kopyala', 'Kopyala'],
+    ['düzenle', 'Düzenle'],
+    ['önizle', 'Önizle'],
+    ['arşivle', 'Arşivle'],
+    ['engelle', 'Engelle'],
+    ['değiştir', 'Değiştir'],
+    ['temizle', 'Temizle'],
+    ['sorgula', 'Sorgula'],
+    ['doğrula', 'Doğrula'],
+    ['çalıştır', 'Çalıştır'],
+    ['başlat', 'Başlat'],
+    ['onayla', 'Onayla'],
+    ['reddet', 'Reddet'],
+    ['kaldır', 'Kaldır'],
+    ['sırala', 'Sırala'],
+    ['gönder', 'Gönder'],
+    ['daralt', 'Daralt'],
+    ['genişlet', 'Genişlet'],
+    ['göster', 'Göster'],
+    ['gizle', 'Gizle'],
+    ['durdur', 'Durdur'],
+    ['yenile', 'Yenile'],
+    ['yayımla', 'Yayımla'],
+    ['kilitle', 'Kilitle'],
+    ['sınırla', 'Sınırla'],
+    ['incele', 'İncele'],
+    ['indir', 'İndir'],
+    ['çıkar', 'Çıkar'],
+    ['ekle', 'Ekle'],
+    ['kapat', 'Kapat'],
+    ['yükle', 'Yükle'],
+    ['taşı', 'Taşı'],
+    ['iste', 'İste'],
+    ['ata', 'Ata'],
+    ['seç', 'Seç'],
+    ['sil', 'Sil'],
+    ['gör', 'Gör'],
+    ['git', 'Git'],
+    ['aç', 'Aç'],
+    ['at', 'At']
+  ];
+
+  /* Biçim düğmeleri bir NESNE almaz; eylemi `data-k` BİLDİRİR. */
+  var IPUCU_BICIM = {
+    bold: 'Kalın yap', italic: 'İtalik yap', underline: 'Altı çizili yap',
+    strikeThrough: 'Üstü çizili yap', insertUnorderedList: 'Madde listesi yap',
+    insertOrderedList: 'Numaralı liste yap', blockquote: 'Alıntı yap',
+    link: 'Bağlantı ekle', removeFormat: 'Biçimi temizle', code: 'Kaynağı göster',
+    undo: 'Geri al', redo: 'İleri al', justifyLeft: 'Sola hizala',
+    justifyCenter: 'Ortala', justifyRight: 'Sağa hizala', justifyFull: 'İki yana yasla',
+    indent: 'Girintiyi artır', outdent: 'Girintiyi azalt'
+  };
+
+  /* Zengin metin editörü kendi düğmelerini `data-k` BİLDİRMEDEN doğuruyor
+     (`admin-editor.js`); etiketleri bir BİÇİM ADI, bir eylem değil.
+     Ad → eylem eşlemesi editörün kendi etiketlerinden alındı, uydurulmadı. */
+  var IPUCU_BICIM_AD = {
+    'kalın': 'Kalın yap', 'italik': 'İtalik yap', 'i̇talik': 'İtalik yap',
+    'altı çizili': 'Altı çizili yap', 'üstü çizgili': 'Üstü çizili yap',
+    'üstü çizili': 'Üstü çizili yap', 'alt simge': 'Alt simge yap',
+    'üst simge': 'Üst simge yap', 'alıntı': 'Alıntı yap',
+    'sırasız liste': 'Madde listesi yap', 'madde listesi': 'Madde listesi yap',
+    'sıralı liste': 'Numaralı liste yap', 'numaralı liste': 'Numaralı liste yap',
+    'kaynak kodu': 'Kaynağı göster', 'kaynağı gör': 'Kaynağı göster',
+    'tam ekran': 'Tam ekrana geç', 'yinele': 'İleri al',
+    'bağlantı ekle/düzenle': 'Bağlantı ekle', 'bağlantı': 'Bağlantı ekle',
+    'biçimi temizle': 'Biçimi temizle'
+  };
+  /* Sayfalama okları: etiket bir YÖN adı; eylem "git"tir. */
+  var IPUCU_YON = { 'önceki sayfa': 'önceki sayfa', 'sonraki sayfa': 'sonraki sayfa' };
+
+  /* Nesnenin son sözcüğünden belirtme/tamlama ekini düşür. YALNIZ sade
+     ad öbeğinde: dosya adı, kayıt anahtarı, özel ad DOKUNULMAZ. */
+  var IPUCU_YUMUSAMA = { 'ğ': 'k', 'b': 'p', 'c': 'ç', 'd': 't' };
+  function ipucuEkDusur(nesne) {
+    var p = nesne.split(' ');
+    var son = p[p.length - 1];
+    if (/[0-9._\/\\-]/.test(son)) return nesne;                 /* dosya adı · anahtar */
+    if (p.length > 1 && /^[A-ZÇĞİÖŞÜ]/.test(son)) return nesne;  /* özel ad */
+    var m = son.match(/^(.*?)(?:n[ıiuü]n|[ıiuü]n|n[ıiuü]|y[ıiuü]|[ıiuü])$/);
+    if (!m || m[1].length < 3) return nesne;
+    var k = m[1], sonHarf = k.charAt(k.length - 1);
+    if (IPUCU_YUMUSAMA[sonHarf]) k = k.slice(0, -1) + IPUCU_YUMUSAMA[sonHarf];
+    p[p.length - 1] = k;
+    return p.join(' ');
+  }
+
+  function ipucuDene(metin) {
+    var alt = metin.toLocaleLowerCase('tr');
+    for (var i = 0; i < IPUCU_EYLEM.length; i++) {
+      var ek = IPUCU_EYLEM[i][0], ad = IPUCU_EYLEM[i][1];
+      if (alt === ek) return { eylem: ad, nesne: '' };
+      if (alt.length > ek.length && alt.slice(-(ek.length + 1)) === ' ' + ek)
+        return { eylem: ad, nesne: ipucuEkDusur(metin.slice(0, metin.length - ek.length - 1).trim()) };
+    }
+    return null;
+  }
+
+  function ipucuAyir(etiket, el) {
+    var s = (etiket || '').replace(/\s+/g, ' ').trim();
+    if (!s) return null;
+
+    /* 1 · Etiketin SONUNDAKİ eylem — önce tüm etiket, sonra "—"/"·"/","
+       kuyruğu bir AÇIKLAMA sayılarak baş. (Kuyruk nesne ADININ içinde
+       de geçiyor: "Bakım penceresi — 7 Eylül 03:00 duyurusunu düzenle";
+       bu yüzden önce TÜMÜ denenir.) */
+    var r = ipucuDene(s);
+    if (r) return r;
+    var ay = s.match(/^(.*?)\s*[—·]\s*(.+)$/) || s.match(/^(.*?),\s*(.+)$/);
+    if (ay) {
+      r = ipucuDene(ay[1].trim());
+      if (r) return { eylem: r.eylem, nesne: r.nesne ? r.nesne + ' · ' + ay[2].trim() : ay[2].trim() };
+    }
+
+    /* 🔴 İKON ADI BİR EYLEM DEĞİLDİR. `admin-rozet-form`da 50 seçilebilir
+       çip `data-ipucu="fa-solid fa-bed"` taşıyor: kaydın adı değil,
+       ikonun kendi adı. Seçilebilir bir yüzeyde o adın eylemi
+       "seçmek"tir; ölçüt elemanın BİLDİRDİĞİ rolden gelir. */
+    if (/^fa-(solid|regular|brands)?\s*fa-[a-z0-9-]+$/i.test(s) && el &&
+        (el.getAttribute('role') === 'option' || el.hasAttribute('data-cs-deger') ||
+         el.hasAttribute('data-ikon-deger') || el.classList.contains('cip')))
+      return { eylem: 'Seç', nesne: s };
+
+    /* 2 · Etiketin kendisi bir BİÇİM ADI ya da YÖN adıysa */
+    var altTam = s.toLocaleLowerCase('tr');
+    if (IPUCU_BICIM_AD[altTam]) return { eylem: IPUCU_BICIM_AD[altTam], nesne: '' };
+    if (IPUCU_YON[altTam]) return { eylem: 'Git', nesne: IPUCU_YON[altTam] };
+
+    /* 3 · Eylem BİLDİRİLMİŞSE oradan — sezgi değil bildirim. */
+    if (el) {
+      var k = el.getAttribute('data-k');
+      if (k && IPUCU_BICIM[k]) return { eylem: IPUCU_BICIM[k], nesne: '' };
+      if (el.getAttribute('data-eko')) return { eylem: 'Panele geç', nesne: s };
+      var ey = el.getAttribute('data-eylem');
+      if (ey === 'sayfala') return { eylem: 'Git', nesne: s };
+      if (ey === 'kolonlar') return { eylem: 'Kolonları seç', nesne: '' };
+      if (ey === 'suzgec-temizle') return { eylem: 'Süzgeci temizle', nesne: '' };
+      /* 3 · Elemanın KENDİ doğası: bağ gider, açılır tetiği açar. */
+      var href = el.getAttribute('href');
+      if (href && href !== '#')
+        return { eylem: el.getAttribute('target') === '_blank' ? 'Yeni sekmede aç' : 'Git', nesne: s };
+      if (el.getAttribute('aria-haspopup') || el.getAttribute('aria-expanded') !== null || href === '#')
+        return { eylem: 'Aç', nesne: s };
+    }
+    return null;                       /* eylem uydurulmaz */
+  }
+  window.DM_IPUCU_AYIR = ipucuAyir;
+  /* Kapı, eylemin SÖZLÜKTEN geldiğini doğrulayabilsin diye izinli
+     eylem adları dışa açılır: "eylemle başlıyor" ölçütü yoksa, ham
+     etiketi eylem sanan bir kapı SAHTE YEŞİL basar. */
+  window.DM_IPUCU_EYLEMLER = (function () {
+    var k = {};
+    IPUCU_EYLEM.forEach(function (x) { k[x[1]] = 1; });
+    Object.keys(IPUCU_BICIM).forEach(function (x) { k[IPUCU_BICIM[x]] = 1; });
+    Object.keys(IPUCU_BICIM_AD).forEach(function (x) { k[IPUCU_BICIM_AD[x]] = 1; });
+    ['Panele geç', 'Git', 'Aç', 'Yeni sekmede aç', 'Kolonları seç', 'Süzgeci temizle']
+      .forEach(function (x) { k[x] = 1; });
+    return Object.keys(k);
+  })();
+
+  /* İpucu metnini kur: `data-ipucu` TAM DİZEYİ taşır (tek kaynak, CSS
+     geri düşüşü de onu okur), `-eylem` ve `-nesne` çizim içindir. */
+  function ipucuYaz(el, ham) {
+    var r = ipucuAyir(ham, el);
+    if (r) {
+      el.setAttribute('data-ipucu-eylem', r.eylem);
+      if (r.nesne) el.setAttribute('data-ipucu-nesne', r.nesne);
+      else el.removeAttribute('data-ipucu-nesne');
+      el.setAttribute('data-ipucu', r.eylem + (r.nesne ? ' · ' + r.nesne : ''));
+    } else {
+      el.setAttribute('data-ipucu', ham);
+      el.setAttribute('data-ipucu-eylem', ham);
+      el.removeAttribute('data-ipucu-nesne');
+    }
+  }
+  window.DM_IPUCU_YAZ = ipucuYaz;
+
   function ipucuKur(kok) {
     (kok || document).querySelectorAll('button, a').forEach(function (b) {
-      if (b.getAttribute('data-ipucu')) return;
-      if ((b.textContent || '').replace(/\s+/g, '')) return;      /* metni var */
-      if (!b.querySelector('i[class*="fa-"], svg')) return;       /* ikonu yok */
-      var ad = b.getAttribute('aria-label') || b.getAttribute('title') || '';
+      var varOlan = b.getAttribute('data-ipucu');
+      if (varOlan && b.getAttribute('data-ipucu-eylem')) return;   /* zaten kurulu */
+      if (!varOlan) {
+        if ((b.textContent || '').replace(/\s+/g, '')) return;     /* metni var */
+        if (!b.querySelector('i[class*="fa-"], svg')) return;      /* ikonu yok */
+      }
+      var ad = varOlan || b.getAttribute('aria-label') || b.getAttribute('title') || '';
       if (!ad) return;
-      b.setAttribute('data-ipucu', ad);
+      ipucuYaz(b, ad);
       /* `title` de duruyorsa tarayıcının kendi balonu ikinci bir yüzey
          olur ve ikisi üst üste çıkar — kit balonu tek kalır. */
       if (b.getAttribute('title')) b.removeAttribute('title');
     });
+    /* Kitin kendi yazdığı ipuçları (ray ikonu, katla, sıralama başlığı,
+       tutamak…) da aynı süzgeçten geçer — kural TEK YERDE sürülür. */
+    (kok || document).querySelectorAll('[data-ipucu]:not([data-ipucu-eylem])').forEach(function (b) {
+      ipucuYaz(b, b.getAttribute('data-ipucu'));
+    });
   }
   window.DM_IPUCU_KUR = ipucuKur;
+
+  /* ═══ TEK BALON · eylem KALIN, nesne normal ══════════════════════════
+     🔴 SÖZDE ELEMAN İKİ BİÇİM TAŞIYAMAZ. `::after` tek bir metin
+        kutusudur; "eylem kalın, nesne normal" oradan çıkmaz. Balon
+        gövdeye TEK KEZ eklenen gerçek bir elemana taşındı; CSS'teki
+        `::after` balonları `html.kit-ipucu-js` altında susturuluyor —
+        böylece JS koşmazsa eski yüzey geri geliyor, iki yüzey ASLA
+        birlikte çizilmiyor.
+     ⚠ 300ms gecikme korunuyor (imleç satırdan geçerken balon yağmuru
+       olmasın); ODAKTA gecikme YOK — klavye kullanıcısı beklemez. */
+  var IPUCU_BALON = null, IPUCU_ZAMAN = null, IPUCU_SAHIP = null;
+  var IPUCU_KABUK = '.panel-ray-ikon, .panel-ray-imza, .panel-katla, .panel-menu-link';
+
+  function balon() {
+    if (IPUCU_BALON) return IPUCU_BALON;
+    IPUCU_BALON = document.createElement('div');
+    IPUCU_BALON.className = 'kit-ipucu';
+    IPUCU_BALON.setAttribute('role', 'tooltip');
+    IPUCU_BALON.setAttribute('aria-hidden', 'true');
+    IPUCU_BALON.innerHTML = '<b></b><span></span>';
+    document.body.appendChild(IPUCU_BALON);
+    return IPUCU_BALON;
+  }
+
+  function ipucuGizle() {
+    clearTimeout(IPUCU_ZAMAN);
+    IPUCU_SAHIP = null;
+    if (IPUCU_BALON) IPUCU_BALON.classList.remove('acik');
+  }
+
+  function ipucuGoster(el) {
+    var b = balon();
+    /* 🔴 SONRADAN DOĞAN İPUCU DA KURALDAN GEÇER. `data-ipucu`yu K13,
+       ikon ızgarası ve tutamak sürücüsü İLKLENDİRMEDEN SONRA yazıyor;
+       `ipucuKur` o anda çoktan koşmuştu ve 310 ipucu ham etiketle
+       kalıyordu. Söz dizimi çizim anında da uygulanır — kural tek
+       yerde, kapsam eksiksiz. */
+    if (!el.getAttribute('data-ipucu-eylem')) ipucuYaz(el, el.getAttribute('data-ipucu') || '');
+    var eylem = el.getAttribute('data-ipucu-eylem') || el.getAttribute('data-ipucu') || '';
+    var nesne = el.getAttribute('data-ipucu-nesne') || '';
+    if (!eylem) return;
+    b.firstChild.textContent = eylem;
+    b.lastChild.textContent = nesne ? ' · ' + nesne : '';
+    b.classList.add('acik');
+    /* Ölçüyü ÇİZDİKTEN sonra al: gizliyken genişlik 0'dır. */
+    var r = el.getBoundingClientRect(), rb = b.getBoundingClientRect();
+    var kabukMu = el.closest && el.closest(IPUCU_KABUK);
+    var x, y;
+    if (kabukMu) {                       /* ray ve menü SAĞA açar (K12/K31) */
+      x = r.right + 8;
+      y = r.top + (r.height - rb.height) / 2;
+    } else {
+      x = r.left + (r.width - rb.width) / 2;
+      y = r.bottom + 4;
+      if (y + rb.height > window.innerHeight - 4) y = r.top - rb.height - 4;
+    }
+    x = Math.max(8, Math.min(x, window.innerWidth - rb.width - 8));
+    y = Math.max(8, Math.min(y, window.innerHeight - rb.height - 8));
+    b.style.left = Math.round(x) + 'px';
+    b.style.top = Math.round(y) + 'px';
+  }
+
+  function ipucuIste(el, gecikme) {
+    if (IPUCU_SAHIP === el) return;
+    clearTimeout(IPUCU_ZAMAN);
+    IPUCU_SAHIP = el;
+    if (!gecikme) { ipucuGoster(el); return; }
+    IPUCU_ZAMAN = setTimeout(function () { if (IPUCU_SAHIP === el) ipucuGoster(el); }, gecikme);
+  }
+
+  document.addEventListener('pointerover', function (e) {
+    var el = e.target.closest ? e.target.closest('[data-ipucu]') : null;
+    if (!el) { if (IPUCU_SAHIP) ipucuGizle(); return; }
+    ipucuIste(el, 300);
+  });
+  document.addEventListener('pointerout', function (e) {
+    var el = e.target.closest ? e.target.closest('[data-ipucu]') : null;
+    if (el && el === IPUCU_SAHIP && !el.contains(e.relatedTarget)) ipucuGizle();
+  });
+  document.addEventListener('focusin', function (e) {
+    var el = e.target.closest ? e.target.closest('[data-ipucu]') : null;
+    if (el) ipucuIste(el, 0); else ipucuGizle();
+  });
+  document.addEventListener('focusout', ipucuGizle);
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') ipucuGizle(); });
+  window.addEventListener('scroll', ipucuGizle, true);
+  document.documentElement.classList.add('kit-ipucu-js');
+
+  /* Künye: satırın eylem/seçim olmayan İLK İKİ hücresinin değeri.
+     Panelin başlığı kaydın adı, künye onun bağlamı — ikisi de satırın
+     kendi hücrelerinden gelir, hiçbiri uydurulmaz. */
+  function satirKunyesi(satirlar) {
+    return satirlar.filter(function (s) { return s.deger; })
+      .slice(0, 2).map(function (s) { return s.deger; }).join(' · ');
+  }
 
   /* ── Satırın BİLDİRDİĞİ veriyi oku: thead etiketi + hücre ───────── */
   function satirVerisi(tr) {
@@ -3753,7 +4521,7 @@
     return out;
   }
 
-  function panelAc(baslik, ikon, satirlar, altNot) {
+  function panelAc(baslik, ikon, satirlar, altNot, kunye) {
     var eski = document.querySelector('.kit-onizleme');
     if (eski) eski.remove();
     var k = document.createElement('div');
@@ -3765,6 +4533,9 @@
     k.innerHTML =
       '<div class="onay-kapi" role="dialog" aria-modal="true" aria-labelledby="kitOnzBas">' +
         '<h2 id="kitOnzBas"><i class="fa-solid ' + ikon + '" aria-hidden="true"></i> ' + baslik + '</h2>' +
+        /* Künye satırı — kit yan panel kalıbının dördüncü bloğu.
+           Değeri SATIRDAN türetilir, uydurulmaz. */
+        (kunye ? '<p class="onz-kunye">' + kunye + '</p>' : '') +
         '<div class="kit-onizleme-govde">' + govde + '</div>' +
         (altNot ? '<p class="alan-yardim"><span>' + altNot + '</span></p>' : '') +
         '<div class="eylem-satiri"><button type="button" class="dugme hayalet" data-onz-kapat>Kapat</button></div>' +
@@ -4299,7 +5070,11 @@
         d.setAttribute('data-ikon-deger', x.i);
         d.setAttribute('aria-selected', String(ikonNormal(girdi.value) === x.i));
         d.title = '';
-        d.setAttribute('data-ipucu', x.i);
+        /* İpucu söz dizimi burada da geçerli (P6-1): ikon ADI bir eylem
+           değildir. Kalemin yaptığı iş "seçmek"tir. */
+        d.setAttribute('data-ipucu-eylem', 'Seç');
+        d.setAttribute('data-ipucu-nesne', x.i);
+        d.setAttribute('data-ipucu', 'Seç · ' + x.i);
         d.innerHTML = '<i class="fa-solid ' + x.i + '" aria-hidden="true"></i><span>' + x.i.replace(/^fa-/, '') + '</span>';
         izgara.appendChild(d);
       });
@@ -4830,7 +5605,7 @@
           varTut.classList.add('tekrar-tutamak');
           varTut.draggable = true;
           if (!varTut.getAttribute('data-ipucu'))
-            varTut.setAttribute('data-ipucu', 'Tıkla: bir aşağı · sürükle ya da ok tuşları: serbest');
+            varTut.setAttribute('data-ipucu', 'Sırala · tıkla bir aşağı, sürükle ya da ok tuşlarıyla serbest');
         }
         s.classList.add('tekrar-satiri');
         return;
@@ -4843,7 +5618,7 @@
         var tut = document.createElement('button');
         tut.type = 'button'; tut.className = 'ikon-dugme tekrar-tutamak';
         tut.setAttribute('aria-label', 'Satırı bir aşağı taşı — sürüklenebilir, ok tuşlarıyla da sıralanır');
-        tut.setAttribute('data-ipucu', 'Tıkla: bir aşağı · sürükle ya da ok tuşları: serbest');
+        tut.setAttribute('data-ipucu', 'Sırala · tıkla bir aşağı, sürükle ya da ok tuşlarıyla serbest');
         tut.innerHTML = '<i class="fa-solid fa-grip-vertical" aria-hidden="true"></i>';
         tut.draggable = true;
 

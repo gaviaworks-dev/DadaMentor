@@ -1742,6 +1742,38 @@ a.ayar-satir:hover .as-ikon{ background:var(--aksan-yikama); color:var(--aksan-k
   border-top:var(--cizgi-1) solid var(--cizgi);
 }
 
+/* ── 🔴 İSTİSNA · SEKME RAYININ ARDINDAKİ PANODA DİKİŞ ÇİZGİSİ YOK ────
+   Beyar kararı, 2026-09-06 (Gastro parti 3 · L3):
+   "g-hesabim#bagli ve tüm g-* sekme altları: divider YOK — sekme rayı
+    altındaki çizgi dahil. Zebra çözülmüş, çizgiyi de kaldır."
+
+   🔴 İSTİSNA KANONA YAZILDI, sayfaya EZME KURALI YAZILMADI. İlk deneme
+      Gastro'nun kendi katmanına (`dm-p3.css`) `.sekme-ray ~ * .dikis`
+      koymuştu ve ÜÇ DİKİŞİN İKİSİNİ kapatıp ÜÇÜNCÜSÜNÜ kapatamadı:
+      görünen çizgi `.dikis`in kendi (0,2,0) kuralından değil, YUKARIDAKİ
+      KARDEŞ DİKİŞİ kuralından geliyordu — `:has()` + dört `:not()` ile
+      (0,9,2). Deponun kayıtlı dersi birebir çıktı: ":has()/:is()
+      özgüllüğü sessizce yükseltir; sonra yüklenmek yetmez." Kusur CDP
+      `CSS.getMatchedStylesForNode` ile bulundu; CSSOM taraması onu
+      görüyordu ama hangisinin KAZANDIĞINI söylemiyordu.
+
+   🔴 KAPSAM MARKAYA BAĞLI, kanona değil: karar `g-*` (Gastro) için
+      verildi. `body[data-govde="gastro"]` guard'ı FIT kulvarını
+      DEĞİŞTİRMEZ (FIT kapısı koşuldu, kutu imzası fark 0).
+
+   Özgüllük yazılı: kapattığı iki kuralın ikisinden de yüksek
+   ((0,12,1) ve (0,11,3) ↔ (0,10,0) ve (0,9,2)) — sessiz bir yenme
+   değil, yazılı bir dışlama. */
+body[data-govde="gastro"] .zebra > .sekme-ray
+  ~ .bolum:has(.kart, .fp-card, .ozet-karti):not(.kendi-zemini):not(.kimlik-bant)
+  + .bolum:has(.kart, .fp-card, .ozet-karti):not(.kendi-zemini):not(.kimlik-bant):not(.bant-ustunde),
+body[data-govde="gastro"] .sekme-ray ~ .modul-govde .fit-pane
+  > section:has(.kart, .fp-card, .ozet-karti):not(.kendi-zemini):not(.kimlik-bant)
+  + section:has(.kart, .fp-card, .ozet-karti):not(.kendi-zemini):not(.kimlik-bant):not(.bant-ustunde),
+body[data-govde="gastro"] .sekme-ray ~ * .dikis:not(.bant-ustunde){
+  border-top:0;
+}
+
 /* ── 🔴 BANT KENDİ ZEMİNİNİ BOYAMAZ · ÖLÇÜLDÜ 2026-09-04 ──────────────
    Beyar: "sekme rayının altında tam genişlik beyaz panel var, üst kenarı
    gri zeminden ince çizgiyle ayrılıyor; egzersizlerim/programlarim'da
