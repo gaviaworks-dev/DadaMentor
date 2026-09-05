@@ -23,12 +23,12 @@
     if (!b) return;
     b.classList.add('is-auth');
 
-    /* [gourmet-revize d4] rol desteği */
+    /* [gourmet-revize d4] rol desteği v2 (role|rol) */
     /* FIT'in sözcük dağarcığı (fit-shell.js): ?business=1 · ?role=<rol>.
        Kök kuralı da FIT'in: auth ⟹ roller "kullanici" ile BAŞLAR. */
     var roller = ['kullanici'];
     if (qs.get('business') === '1') roller.push('isletme');
-    var rp = qs.get('role');
+    var rp = qs.get('role') || qs.get('rol');
     if (rp && ['isletme', 'antrenor', 'diyetisyen'].indexOf(rp) > -1 && roller.indexOf(rp) < 0)
       roller.push(rp);
     b.setAttribute('data-roles', roller.join(' '));
