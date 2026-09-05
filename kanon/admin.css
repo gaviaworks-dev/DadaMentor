@@ -1480,9 +1480,24 @@ html:has(> body.panel-acik){ overflow:hidden; }
 .yetkili .flatpickr-calendar::before,
 .yetkili .flatpickr-calendar::after{ display:none; }   /* ok ucu — kanonda yok */
 .yetkili .flatpickr-months{ padding:var(--kit-satir) var(--kit-satir) 0; }
-.yetkili .flatpickr-months .flatpickr-month{ color:var(--murekkep); height:auto; }
+/* ═══ P6-10 · AY/YIL SATIRI ÇİZİLİYOR AMA GÖRÜNMÜYORDU ══════════════
+   Beyar canlıda gördü: tarih seçicide ay/yıl açılırı ve klavye girişi
+   yok. Ajan T üç olasılığı ayrı ayrı ölçtü, ikisini ELEDİ:
+     deploy tazeliği  ✅ `admin-tarih.js` canlı SHA = kaynak SHA
+     ilklendirme      ✅ betik 200 · konsol hatası 0 · `_flatpickr` bağlı
+     yerelde de yok   🔴 yerel ve canlı birebir aynı → deploy sorunu DEĞİL
+
+   KÖK KİTİN KENDİ CSS'İNDE: `height:auto`, flatpickr'ın mutlak konumlu
+   çocukları yüzünden **0px** hesaplanıyor; `overflow:hidden` satırı
+   kırpıyor ve `.flatpickr-weekdays` 10px üstüne biniyor.
+   `elementFromPoint`, ay açılırının TAM MERKEZİNDE
+   `DIV.flatpickr-weekdays` döndürdü — yani ay/yıl DOM'da var, görünmez
+   VE tıklanamaz. Örtüşme +10px → −16px; "Eylül ▾ 2026" boyandı.       */
+.yetkili .flatpickr-months .flatpickr-month{ color:var(--murekkep); height:34px; }
 .yetkili .flatpickr-current-month{
   font-size:var(--yazi-14); font-weight:var(--agirlik-kalin); padding:0;
+  height:34px; display:flex; align-items:center; justify-content:center;
+  gap:var(--kit-bagli);
 }
 .yetkili .flatpickr-months .flatpickr-prev-month,
 .yetkili .flatpickr-months .flatpickr-next-month{
@@ -1916,7 +1931,9 @@ html:has(> body.panel-acik){ overflow:hidden; }
    uzunluğunun belirlemesine izin vermez (ölçüldü: 46/44/46). */
 .yetkili .onay-kapisi{ align-items:stretch; }
 .yetkili .kalem-satiri{ padding:var(--kit-satir) 0; }
-.yetkili .satir-ekle{ padding:var(--kit-satir) var(--kit-grup); margin-top:var(--kit-satir); }
+/* Satır ekleyici, listenin BİTTİĞİNİ söyleyen bir grup sınırıdır —
+   listeyle arası grup ölçüsü (24), listenin kendi satır aralığı değil. */
+.yetkili .satir-ekle{ padding:var(--kit-satir) var(--kit-grup); margin-top:var(--kit-bolum); }
 .yetkili .alan-ozet.goster{ padding:var(--kit-satir) var(--kit-grup); }
 
 /* Kart başlığının kendi dikey payı — 13/13 idi, başlık ile gövdesi
@@ -1928,11 +1945,57 @@ html:has(> body.panel-acik){ overflow:hidden; }
 .yetkili .onay-satirlari,
 .yetkili .onay-kapisi{ margin-top:var(--kit-grup); }
 
-/* 22 → bölüm (24) · ızgaraların üst payı bölüm ayrımıdır */
+/* ═══ P6-6 + P6-14 · DİKEY BOŞLUĞUN TEK SAHİBİ VAR ═══════════════════
+   Beyar: *"alan grupları, satır blokları, yardım metni ile sonraki alan
+   arası, önizleme ile girdi arası — 2–3 ölçek fazla."* ÖLÇÜLDÜ ve
+   sebebi tek: alan hem ALT hem ÜST pay taşıyordu.
+
+       .alan            margin-bottom 16
+       .panel-sayfa .alan margin-top   24     ← bu kural
+   Blok kapta paylar ÇAKIŞIYOR (max) → 24. Esnek kapta ÇAKIŞMAZ →
+   16 + 24 + kabın 8'lik `gap`i = **48**. Ölçüm 84 ekranda 260 kez 24 ve
+   175 kez 48 buldu; beklenen 16.
+
+   Kural (§1'in "boşluğun sahibi komşuluktur" maddesinin uygulaması):
+   dikey boşluğun sahibi ALT paydır, üst pay 0'dır. Esnek/ızgara kapta
+   sahip `gap`tir ve orada pay hiç yazılmaz — iki sahip iki kez sayılır.
+   ⚠ ÖLÇEK DEĞİŞMEDİ, SAHİP TEKLEŞTİ. 16 zaten kitin `--kit-grup`u.  */
 .yetkili .alan-izgara,
 .yetkili .alan-izgara.c2,
 .yetkili .alan-izgara.c3,
-.yetkili .panel-sayfa .alan{ margin-top:var(--kit-bolum); }
+.yetkili .panel-sayfa .alan{ margin-top:0; }
+.yetkili .panel-sayfa .alan,
+.yetkili .panel-sayfa .alan-izgara,
+.yetkili .panel-sayfa .kart-izgara:has(> .alan){ margin-bottom:var(--kit-grup); }
+/* Esnek kapta pay değil GAP sahiptir. `.adim-govde` 8'lik gap taşıyordu
+   ve payla toplanıyordu; gap ölçeğe çekildi, çocukların payı sıfırlandı. */
+.yetkili .adim-govde{ gap:var(--kit-grup); }
+/* ⚠ ÖZGÜLLÜK: yukarıdaki `.kart-izgara:has(> .alan)` kuralı `:has()`
+   yüzünden (0,4,0); kap adı tek başına (0,3,0) kalıp kaybediyordu ve
+   `gap` ile pay toplanıp 32 veriyordu (41 kez ölçüldü). */
+.yetkili .panel-sayfa .adim-govde > :is(.alan, .alan-izgara, .kart-izgara){ margin-block:0; }
+
+/* ── Kart yığını: SAHİP TEK, ölçü 24 ─────────────────────────────────
+   Ölçüldü: `.kart` her yerde `margin-top:16` taşıyor ve kapların çoğu
+   ayrıca `gap:24` veriyor → kart ↔ kart **40px** (60 kez), bazı blok
+   kaplarda yalnız pay kalıyor → **16px** (34 kez). §1'in kendi ölçüsü
+   "kart ↔ kart 24". Pay sıfırlanır; blok kapta komşuluk payı, esnek/
+   ızgara kapta `gap` sahiptir — ikisi asla toplanmaz. */
+.yetkili .panel-sayfa .kart{ margin-top:0; }
+.yetkili .panel-sayfa .kart + .kart{ margin-top:var(--kit-bolum); }
+/* ⚠ ÖZGÜLLÜK: üstteki komşuluk kuralı `.yetkili .panel-sayfa .kart + .kart`
+   (0,4,0); bu kural onu ancak EŞİT ya da daha yüksek özgüllükle
+   susturabilir. `:is()` en özgül argümanını alır — kap adı tek başına
+   yetmiyordu ve pay ile `gap` toplanıp 48 veriyordu (79 kez ölçüldü). */
+.yetkili .panel-sayfa :is(.form-yan, .form-ana, .adim-liste, .kart-izgara, .alan-izgara) > .kart + .kart,
+.yetkili .panel-sayfa :is(.form-yan, .form-ana, .adim-liste, .kart-izgara, .alan-izgara) > .kart{ margin-top:0; }
+.yetkili :is(.form-yan, .form-ana){ gap:var(--kit-bolum); }
+/* Tekrarlayan satır listesi: satırlar birbirinin EŞİTİ, ölçü alan (16). */
+.yetkili .adim-liste{ gap:var(--kit-grup); }
+.yetkili .adim-liste > :is(.adim-karti, .tekrar-satiri, .kart){ margin-block:0; }
+/* KPI/süzgeç ızgarasından sonra gelen panel nefes alır: ızgara bir
+   GRUPTUR, ondan sonrası yeni bir gruptur (ölçüldü: 13 ekranda 0px). */
+.yetkili .panel-sayfa > :is(.kart-izgara, .alan-izgara) + .kart{ margin-top:var(--kit-bolum); }
 .yetkili .alan-izgara:first-child,
 .yetkili .panel-sayfa .alan:first-child{ margin-top:0; }
 
@@ -1999,10 +2062,23 @@ html:has(> body.panel-acik){ overflow:hidden; }
 .yetkili .form-sekmeler{ gap:var(--kit-agir); }
 /* 🔴 RAY ORTALANMAZ — Beyar: "sekme rayı sola yaslı, ortalanmaz".
    Public kanonun `.sekmeler.ortali` kipi admin'de geçersiz; ray bir
-   gezinme şeridi, bir bant altı süsü değil. */
+   gezinme şeridi, bir bant altı süsü değil.
+
+   ═══ P6-8 · `justify-content` RAYIN İÇİNİ HİZALAR, KUTUSUNU DEĞİL ═══
+   Ajan T ölçtü: video rayı TAM ORTALI — `margin-inline: 255,5px`. Kap
+   389'da, ray 644,5'te; merkezler ikisi de 718. Kök public
+   `bilesenler.css:1178` `.sekmeler{margin-inline:auto}`; burada hiç
+   geçersiz kılınmamış. Yukarıdaki kural yalnız `justify-content`
+   yazıyordu ve o rayın İÇİNİ hizalar. Öteki 8 ray `.kart` çocuğu
+   olduğu için `.kart > .sekmeler` kısayolundan kurtuluyordu; video
+   rayı `.video-girdi` içinde gömülü ve o kural ona erişmiyor.
+   🔴 K17 TUZAĞI DOĞRULANDI: rayın İÇİNİ ölçen iki ölçüt de 0 verip
+      kusuru göremedi. Yakalayan ölçüt rayın KUTUSU ↔ kabının içerik
+      kenarı. (Parti 5'in dersi, üçüncü kez.)
+   Ölçüldü: düzelen 1 (255,5 → 0) · bozulan 0 · dokunulmayan 8 ray.    */
 .yetkili .sekmeler,
 .yetkili .sekmeler.ortali,
-.yetkili .form-sekmeler{ justify-content:flex-start; }
+.yetkili .form-sekmeler{ justify-content:flex-start; margin-inline:0; }
 
 .yetkili .sekmeler .sekme,
 .yetkili .form-sekmeler .form-sekme{
@@ -3231,6 +3307,104 @@ html:has(> body.panel-acik){ overflow:hidden; }
 .yetkili .ikon-kalem[aria-selected="true"]{ border-color:var(--aksan); background:var(--aksan-yikama); }
 .yetkili .ikon-kalem[aria-selected="true"] > i{ color:var(--aksan-koyu); }
 
+/* ═══ V-12b · İKON DEĞERİ TAŞIYAN ÇOKLU SEÇİM KALEMİ ═════════════════
+   Değer bir ikon adıysa kit ikonun KENDİSİNİ de çiziyor; kalem ikon +
+   ad olarak dizilir. Ölçüler K3 ikon seçicisiyle aynı — ikinci bir
+   ikon-kalem geometrisi doğmaz. */
+.yetkili .acilir-kalem.cs-ikonlu,
+.yetkili .cip.cs-ikonlu{ display:inline-flex; align-items:center; gap:var(--kit-bagli); }
+.yetkili .acilir-kalem.cs-ikonlu > i,
+.yetkili .cip.cs-ikonlu > i{ font-size:var(--yazi-17); color:var(--aksan-koyu); width:1.25em; text-align:center; }
+.yetkili .acilir-kalem.cs-ikonlu > span,
+.yetkili .cip.cs-ikonlu > span{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+
+/* ═══ P6-13 · K4 · ÇİP KABI EN FAZLA İKİ SATIR ═══════════════════════
+   Beyar: *"Komşu kaslar çip girdisi sınırsız büyüyor."*
+
+   Çip kabı bir GİRDİDİR, bir liste değil: yüksekliği içeriğiyle
+   büyüyemez, yoksa altındaki her alan aşağı kayar ve form "zıplar".
+   İki satır, sonrası kabın KENDİ içinde kaydırılır; kaç çipin
+   görünmediğini `.cipler-sayac` söyler (kit yazar, 0'sa basılmaz).
+
+   Yükseklik ölçekten türetilir, çıplak yazılmaz:
+     çip yüksekliği  --kit-cip-h    (28)
+     iki satır + ara --kit-cip-iki  = 2×28 + 8 = 64
+   ⚠ Kapsam `.coklu-secim` İÇİ (doğrudan çocuk DEĞİL): markup'ın bir
+     kısmı çip kabını `.coklu-kutu` ile sarıyor ve `>` seçicisi onların
+     dördünü ıskalıyordu. Süzgeç şeridinin ve seçenek gruplarının
+     çipleri `.coklu-secim` dışında kalır; onlarda sınır yok.          */
+.yetkili{ --kit-cip-h:28px; --kit-cip-iki:calc(var(--kit-cip-h) * 2 + var(--kit-bagli)); }
+.yetkili .coklu-secim .cipler{
+  max-height:var(--kit-cip-iki);
+  overflow-y:auto; overscroll-behavior:contain;
+  align-content:flex-start;
+}
+.yetkili .cipler-sayac{
+  display:inline-block; margin-top:var(--kit-atom);
+  font-size:var(--yazi-11); font-weight:var(--agirlik-orta);
+  color:var(--metin-ikincil);
+}
+
+/* ═══ K5b · ÇOKLU AÇILIR — 4+ SEÇENEKLİ ONAY GRUBUNUN YÜZEYİ ═════════
+   Tetik `.alan-girdi` kutusunu AYNEN alır (§4: panelde tek kutu
+   geometrisi) — K3 ikon seçicisiyle aynı karar, ikinci bir kutu ölçüsü
+   doğmaz. Açılır gölgesi ve yarıçapı da tarih/ikon seçiciyle aynı. */
+.yetkili .coklu-acilir{ position:relative; }
+.yetkili .coklu-tetik{
+  display:flex; align-items:center; gap:var(--kit-bagli);
+  width:100%; min-height:44px; padding:0 var(--kit-grup);
+  text-align:left; cursor:pointer;
+}
+.yetkili .coklu-ozet{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.yetkili .coklu-ozet.coklu-bos{ color:var(--metin-ikincil); }
+.yetkili .coklu-yuzey{
+  position:absolute; z-index:var(--kat-acilir, 600);
+  left:0; right:0; top:calc(100% + var(--kit-bagli));
+  display:flex; flex-direction:column; gap:var(--kit-bagli);
+  padding:var(--kit-satir);
+  max-height:320px;
+  border:var(--cizgi-1) solid var(--cizgi);
+  border-radius:var(--yuvarlak-md);
+  background:var(--kagit);
+  box-shadow:var(--golge-lg);
+}
+.yetkili .coklu-ara{ flex:0 0 auto; }
+.yetkili .coklu-liste{ display:flex; flex-direction:column; overflow-y:auto; min-height:0; }
+.yetkili .coklu-kalem{
+  display:flex; align-items:center; gap:var(--kit-satir);
+  width:100%; min-height:36px; padding:var(--kit-atom) var(--kit-bagli);
+  border:0; border-radius:var(--yuvarlak-sm);
+  background:transparent; color:var(--murekkep);
+  text-align:left; cursor:pointer;
+}
+.yetkili .coklu-kalem > i{ color:var(--metin-ikincil); width:1em; text-align:center; }
+.yetkili .coklu-kalem[aria-selected="true"] > i{ color:var(--aksan-koyu); }
+.yetkili .coklu-kalem:hover{ background:var(--aksan-yikama); }
+/* Seçenek metni sarmaz: liste bir tarama yüzeyidir, okuma yüzeyi değil. */
+.yetkili .coklu-kalem > span{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+
+/* ═══ P6-4 · SEÇİCİNİN ALT SATIRI TEK SATIRDIR ═══════════════════════
+   Beyar: *"İkon seçici açılır listesinin alt satırı dikeyde çok kalın."*
+
+   ÖLÇÜLDÜ (1440×950 · açılır GERÇEKTEN açılarak):
+       yüzey yüksekliği        340px
+       alt satır yüksekliği   64,3px = ÜÇ SATIR   🔴
+       yazı 13px · dolgu 12/16px
+   Alt satır, ızgaranın gösterdiği alanın beşte birini yiyordu.
+
+   Kural: alt satır bir DİPNOTTUR — tek satır, küçük yazı, ince dolgu,
+   ızgaradan bir çizgiyle ayrılır. Ölçüler kit ölçeğinden (4 / 8).
+   ⚠ Kapsam `.ikon-yuzey`: öteki açılırların boş satırı bir CÜMLEDİR
+     ("… bulunamadı") ve sarması gerekir; oraya `nowrap` yazmak metni
+     kırpardı. Kural genişletilecekse ölçülerek genişletilir.           */
+.yetkili .ikon-yuzey > .acilir-bos{
+  flex:0 0 auto;
+  margin:0; padding:var(--kit-atom) var(--kit-bagli) 0;
+  border-top:var(--cizgi-1) solid var(--cizgi);
+  font-size:var(--yazi-11); line-height:1.4;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+
 /* ═══ L4 · ÖNERİ — "…ekle" kalemi öteki seçeneklerden AYRILIR ════════
    Yeni bir etiket doğurmak, var olanı seçmekle aynı şey değil; yüzey
    bunu görsel olarak da söyler. */
@@ -3290,11 +3464,75 @@ html:has(> body.panel-acik){ overflow:hidden; }
    SAYI sütununda sağa — başlık gövdeyle aynı yönde okunur. Kit hücre
    UYDURMAZ; `<th>`/`<td>` sayısı uyuşmuyorsa konsola yazar (§L11). */
 .yetkili .tablo thead th{
-  text-align:left; vertical-align:bottom;
+  text-align:left; vertical-align:middle;
   font-size:var(--yazi-12); font-weight:var(--agirlik-kalin);
   color:var(--metin-ikincil);
   white-space:nowrap;
+  /* 🔴 BAŞLIK SÜTUNUNUN ÜSTÜNDE DURUR: gövde hücresi 12/16 dolgu
+     taşıyor, başlık 12/0 taşıyordu — yani her başlık kendi sütununun
+     verisinden 16px SOLDA başlıyordu. Ölçüldü (`admin-medya`): "TÜR"
+     başlığı, altındaki "GÖRSEL" çipinden 16px solda. Dolgu gövdeyle
+     eşitlendi; iki kenar tek kaynaktan gelir. */
+  padding:var(--kit-satir) var(--kit-grup);
 }
+/* Seçim kolonu gövdede de yatay dolgusuz; eylem kolonunun sağ payı
+   kanonun kendi ölçüsü (22px) — ikisi de gövdeyle AYNI kalır. */
+.yetkili .tablo thead th.sec{ padding-inline:0; }
+.yetkili .tablo thead th.eylem{ padding-right:22px; }
+
+/* ═══ P6-19 · BAŞLIK SATIRI TEK YÜKSEKLİKTİR ═════════════════════════
+   Beyar canlıda gördü (`admin-medya`): "DOSYA" başlığı ötekilerden
+   yukarıda ve içeride duruyor — başlık satırı hizasız.
+
+   ÖLÇÜLDÜ: K13 sıralanabilir başlığı bir DÜĞMEYE çevirdi ve düğme
+   kanonda kendi dolgusunu taşıyor. Sonuç ÇİFT DOLGU:
+       sıralanamayan `<th>`   padding 12px 0
+       sıralanabilir `<th>`   padding 12px 16px  + düğme 12px 16px
+   Hücre yüksekliği aynı kalıyor (satır geriyor) ama METİN kayıyor:
+   84 ekranın 74 tablosunda başlık metninin taban çizgisi **12,7px**
+   farklı. Kapı "yükseklik farkı 0" diyordu ve haklıydı — YANLIŞ ŞEYİ
+   ölçüyordu; ölçüt hücreye değil METNE bakmalı.
+   ⚠ `vertical-align:bottom` de kaldırıldı: düğmenin içi zaten dikey
+     ortalı; hücreyi tabana yaslamak aynı satırda iki hizalama ekseni
+     yaratıyordu.
+   ⚠ Ok metnin YANINA alındı: `margin-left:auto` onu kolonun öbür
+     ucuna atıyordu ve "hangi başlığa ait" görünmüyordu.               */
+.yetkili .tablo thead th.sirali{ padding:0; }
+.yetkili .tablo thead th.sirali > button{
+  min-height:0; padding:var(--kit-satir) var(--kit-grup); width:100%;
+  align-items:center; gap:var(--kit-atom);
+}
+
+/* ═══ 🔴 SIRALAMA OKU KAYBOLMUŞTU — İKİ KURAL AYNI `::after`I PAYLAŞTI ══
+   Beyar: *"ok ikonları da bozuk."* Doğru: ok hiç ÇİZİLMİYORDU.
+
+   ÖLÇÜLDÜ: `.tablo th.sirali > button::after` kanonda sıralama glifini
+   taşıyor (`\f0dc` · `\f0de` · `\f0dd`). K13, üç durumu BİLDİRMEK için
+   aynı düğmeye `data-ipucu` yazdı — ve §24'ün ipucu kuralı da
+   `[data-ipucu]::after`ı kullanıyor. Bir elemanın TEK `::after`ı olur:
+   ipucu kuralı sonra geldiği ve daha özgül olduğu için kazandı, ok
+   `position:absolute · visibility:hidden · color:beyaz` oldu.
+   Ölçüm bunu doğruladı: `content` DOĞRU (`\f0dd`), `visibility` HIDDEN.
+   🔴 Kapının ilk yazımı bu yüzden "OKSUZ 0 · YANLIŞ OK 0" diyordu:
+      `content`e bakıyordu ve içerik doğruydu — ÇİZİLMİYOR olması
+      görünürlükteydi. Ölçüt genişletildi.
+   ÇÖZÜM: ok `::before`a taşındı; `::after` ipucu balonunun kalır. Flex
+   sırasıyla (`order:1`) yine metnin SAĞINDA durur — görünüm değişmez,
+   yalnız hangi sözde-elemanın kimin olduğu netleşir.                   */
+.yetkili .tablo thead th.sirali > button::before{
+  content:"\f0dc"; font-family:"Font Awesome 6 Free"; font-weight:900;
+  font-size:var(--yazi-10); opacity:.45;
+  order:1; margin-left:var(--kit-atom);
+}
+.yetkili .tablo thead th[aria-sort] > button::before{ opacity:1; }
+.yetkili .tablo thead th[aria-sort="ascending"]  > button::before{ content:"\f0de"; }
+.yetkili .tablo thead th[aria-sort="descending"] > button::before{ content:"\f0dd"; }
+.yetkili .tablo thead th.sirali > button:hover::before{ opacity:.75; }
+/* Sağa yaslı kolonun (sayı · tutar) başlığı da sağa yaslıdır: kanon
+   yalnız `.sag`ı biliyor, bu ağaçta sınıf `.num` — ikisi de aynı işi
+   bildiriyor ve kural ikisini de kapsar. */
+.yetkili .tablo thead th.sirali.sag > button,
+.yetkili .tablo thead th.sirali.num > button{ justify-content:flex-end; }
 .yetkili .tablo thead th.num,
 .yetkili .tablo thead th:has(+ td.num),
 .yetkili .tablo tbody td.num{ text-align:right; font-variant-numeric:tabular-nums; }

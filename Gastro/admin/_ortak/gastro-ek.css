@@ -53,3 +53,98 @@
    Yani kitin kapsamı pilotunkinden geniş; pilotun kalması hem gereksiz hem
    de dar ölçütüyle ileride kitin kapsamını maskeleyebilirdi.
    ═══════════════════════════════════════════════════════════════════ */
+/* ═══ P3-1 · GÖRSEL ALANI BİLEŞENİ — ÖNİZLEME · MAKET · KÜTÜPHANE ══════
+   K-ÖNERİ: KÖ-P1 (dört marka). Kit'e taşınınca SİL.
+   Davranış `_ortak/gastro-ek.js` · aynı başlık altında.
+
+   🔴 `pointer-events:none` SÖKÜLÜYOR. `.g-tikgecmez` (KÖ-A1) ve
+      `.sozde-dugme` (KÖ-D2) "Kütüphaneden seç"i bilerek tıklanamaz
+      yapıyordu ki tık altındaki bırakma alanına düşsün. Sonuç: düğme
+      adının vaat ettiği kütüphaneyi değil, YEREL DOSYA SEÇİCİYİ açıyordu.
+      Artık düğme gerçek; tıkı geçirmesi kusurun kendisi olurdu.
+      ⚠ İki sınıf da BAŞKA yerlerde kullanılabilir; kural yalnız görsel
+        bileşeninin İÇİNDEKİ kütüphane düğmesini hedefler.
+   ═══════════════════════════════════════════════════════════════════ */
+.yetkili .form-gorsel [data-gorsel="kutuphane"]{ pointer-events:auto; }
+
+/* ── önizleme · kitin K11 iskelesi dolduğunda görünür ──────────────── */
+.yetkili .form-gorsel .kirpma-sahne{ min-height:120px; }
+.yetkili .form-gorsel .kirpma-sahne img[hidden]{ display:none; }
+
+/* Maket kutusu — dosyası olmayan kütüphane kaydı. Oran GERÇEK ölçüden
+   gelir (`aspect-ratio`, JS yazar); burada yalnız görünüşü var. */
+.yetkili .gorsel-maket{
+  position:absolute; inset:0;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:var(--kit-atom,4px);
+  padding:var(--kit-satir,8px);
+  text-align:center;
+  background:
+    repeating-linear-gradient(45deg,
+      var(--zemin) 0 10px, var(--kagit) 10px 20px);
+  color:var(--metin-ikincil);
+}
+.yetkili .gorsel-maket b{ font-size:var(--yazi-13-5); color:var(--murekkep); word-break:break-all; }
+.yetkili .gorsel-maket small{ font-size:var(--yazi-12); }
+.yetkili .gorsel-maket em{ font-size:var(--yazi-12); font-style:normal; opacity:.75; }
+
+.yetkili .kirpma-arac .gorsel-secili{
+  flex:1 1 auto; min-width:0;
+  font-size:var(--yazi-13); color:var(--metin-ikincil);
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+}
+
+/* ── kütüphane kipi ────────────────────────────────────────────────── */
+.yetkili .medya-kapi{ width:min(720px,100%); }
+.yetkili .medya-izgara{
+  display:grid; gap:var(--kit-satir,8px);
+  grid-template-columns:repeat(auto-fill,minmax(170px,1fr));
+  max-height:52vh; overflow:auto;
+  margin-bottom:var(--kit-bolum,16px);
+}
+.yetkili .medya-kart{
+  display:flex; flex-direction:column; gap:2px;
+  padding:var(--kit-satir,8px);
+  border:var(--cizgi-1) solid var(--cizgi);
+  border-radius:var(--yuvarlak-md);
+  background:var(--kagit); text-align:left; cursor:pointer;
+  font:inherit; color:inherit;
+}
+.yetkili .medya-kart:hover,
+.yetkili .medya-kart:focus-visible{ border-color:var(--aksan); }
+.yetkili .medya-onizleme{
+  display:grid; place-items:center;
+  aspect-ratio:16/9; margin-bottom:var(--kit-atom,4px);
+  border-radius:var(--yuvarlak-sm,6px);
+  background:var(--zemin); color:var(--metin-ikincil); font-size:var(--yazi-18);
+}
+.yetkili .medya-kart b{ font-size:var(--yazi-13); color:var(--murekkep); word-break:break-all; }
+.yetkili .medya-kart small{ font-size:var(--yazi-12); color:var(--metin-ikincil); }
+.yetkili .medya-kart em{ font-size:var(--yazi-12); font-style:normal; color:var(--metin-ikincil); opacity:.8; }
+
+/* ── 🔴 DOLU BİLEŞEN, BOŞ BİR SATIR BIRAKIYORDU ──────────────────────
+   Kit `.alan`ı `grid-template-rows:subgrid` yapıyor: bir `.alan-izgara`
+   içindeki bütün alanlar aynı satır hizasını paylaşıyor. Görsel alanı
+   dolunca `.birak-alani` gizleniyor (K11) ama satırı KOMŞU alanın hâlâ
+   görünen bırakma alanı tarafından açık tutuluyor — ölçüldü: izgara
+   satırları `20.14 / 168.5 / 333.86 / 53.5`, dolu alanda 168.5px'lik
+   satır bomboş kalıyor ve önizleme aşağı düşüyordu.
+   Görsel bileşeni bu hizadan çıkar: kendi satırlarını kendi kurar.
+   ⚠ Etiket hizası BOZULMAZ — `.alan-izgara` `align-items:start`, yani
+     bütün alanlar zaten aynı üst kenardan başlıyor.
+
+   🔴 İLK YAZIMIM ÖZGÜLLÜKTE KAYBETTİ. `.yetkili .alan.form-gorsel`
+      (0,3,0) yazdım; kitin kuralı
+      `.yetkili :is(.alan-izgara,.kart-izgara):has(> .alan) > .alan`
+      (0,4,0) — sonra yüklenmek yetmedi, kural sessizce ölü kaldı ve
+      ölçüm hâlâ `subgrid` okudu. Kuralın ŞEKLİ kitinkiyle aynı yazılır.
+   ⚠ `grid-row:span 4` de geri alınmalı; yoksa alan kabın dört rayını
+     kaplamaya devam eder ve boşluk kapanmaz. */
+@supports (grid-template-rows: subgrid){
+  .yetkili :is(.alan-izgara, .kart-izgara):has(> .alan) > .alan.form-gorsel,
+  .yetkili .alan-izgara > .alan.form-gorsel,
+  .yetkili .alan.kart-izgara > .alan.form-gorsel{
+    grid-template-rows:none;
+    grid-row:auto;
+  }
+}

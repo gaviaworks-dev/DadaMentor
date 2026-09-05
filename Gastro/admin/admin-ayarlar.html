@@ -267,22 +267,63 @@
         <div class="kart panel">
           <div class="kart-bas"><h2 class="kart-baslik"><i class="fa-solid fa-image" aria-hidden="true"></i>Logo ve favicon</h2></div>
           <div class="kart-govde">
-            <div class="birak-alani">
-              <i class="fa-solid fa-cloud-arrow-up" aria-hidden="true"></i>
-              <b>Logoyu buraya bırak</b>
-              <span>SVG önerilir · PNG en az 512×512 · en çok 500 KB</span>
-              <button class="dugme hayalet kucuk dosya-sec" type="button">Dosya seç</button>
+            <!-- 🔴 ÜÇ GÖRSEL ALANI, ÜÇ AYRI KUSUR (P3-1'de ölçüldü):
+                 · site logosu   → bırakma alanı vardı ama BAĞLI DOSYA GİRDİSİ YOKTU;
+                                    tık "markup eksik" diyordu, yani ölü yüzey.
+                 · e-posta logosu → `disabled` METİN girdisi ("logo-mail.png"): görseli
+                                    metinle istemenin ta kendisi, üstelik değiştirilemez.
+                 · paylaşım görseli → aynısı ("og-dadagastro.png").
+                 Üçü de kit görsel bileşeni oldu; değerler KORUNDU (hidden `value`).
+                 ⚠ Kartın adı "Logo ve favicon" idi ve favicon alanı HİÇ YOKTU —
+                   yüzeyin verdiği söz karşılıksızdı; alan eklendi. -->
+            <div class="alan form-gorsel" id="ayLogo">
+              <label class="alan-etiket">Site logosu</label>
+              <div class="birak-alani" tabindex="0" role="button" aria-label="Site logosu seç ya da sürükle">
+                <span><i class="fa-solid fa-cloud-arrow-up" aria-hidden="true"></i></span>
+                <b>Görseli sürükle ya da seçmek için tıkla</b>
+                <small>SVG önerilir · PNG en az 512×512 · en çok 500 KB.</small>
+                <span class="dugme hayalet">Kütüphaneden seç</span>
+              </div>
+              <input type="file" hidden accept="image/*"><div class="cipler"></div>
+              <input type="hidden" name="logo" value="">
+              <p class="alan-yardim"><i class="fa-solid fa-circle-info" aria-hidden="true"></i><span>Panelin ve public başlığın kelime markası.</span></p>
             </div>
-            <div class="alan-izgara c2">
-            <div class="alan">
-              <label class="alan-etiket" for="ayMailLogo">E-posta logosu</label>
-              <input class="alan-girdi" id="ayMailLogo" type="text" value="logo-mail.png" placeholder="" disabled>
+            <div class="alan-izgara c3">
+            <div class="alan form-gorsel" id="ayMailLogo">
+              <label class="alan-etiket">E-posta logosu</label>
+              <div class="birak-alani" tabindex="0" role="button" aria-label="E-posta logosu seç ya da sürükle">
+                <span><i class="fa-solid fa-cloud-arrow-up" aria-hidden="true"></i></span>
+                <b>Görseli sürükle ya da seçmek için tıkla</b>
+                <small>Koyu zemin için açık renkli sürüm önerilir.</small>
+                <span class="dugme hayalet">Kütüphaneden seç</span>
+              </div>
+              <input type="file" hidden accept="image/*"><div class="cipler"></div>
+              <input type="hidden" name="mail_logo" value="logo-mail.png">
               <p class="alan-yardim"><i class="fa-solid fa-circle-info" aria-hidden="true"></i><span>Koyu zeminli e-postalarda kullanılır.</span></p>
             </div>
-            <div class="alan">
-              <label class="alan-etiket" for="ayOg">Varsayılan paylaşım görseli</label>
-              <input class="alan-girdi" id="ayOg" type="text" value="og-dadagastro.png" placeholder="" disabled>
+            <div class="alan form-gorsel" id="ayOg">
+              <label class="alan-etiket">Varsayılan paylaşım görseli</label>
+              <div class="birak-alani" tabindex="0" role="button" aria-label="Paylaşım görseli seç ya da sürükle">
+                <span><i class="fa-solid fa-cloud-arrow-up" aria-hidden="true"></i></span>
+                <b>Görseli sürükle ya da seçmek için tıkla</b>
+                <small>Paylaşım görseli — 1200×630 önerilir.</small>
+                <span class="dugme hayalet">Kütüphaneden seç</span>
+              </div>
+              <input type="file" hidden accept="image/*"><div class="cipler"></div>
+              <input type="hidden" name="og_gorsel" value="og-dadagastro.png">
               <p class="alan-yardim"><i class="fa-solid fa-circle-info" aria-hidden="true"></i><span>1200×630 · sosyal medya kartı.</span></p>
+            </div>
+            <div class="alan form-gorsel" id="ayFavicon">
+              <label class="alan-etiket">Favicon</label>
+              <div class="birak-alani" tabindex="0" role="button" aria-label="Favicon seç ya da sürükle">
+                <span><i class="fa-solid fa-cloud-arrow-up" aria-hidden="true"></i></span>
+                <b>Görseli sürükle ya da seçmek için tıkla</b>
+                <small>Kare · SVG ya da en az 512×512 PNG.</small>
+                <span class="dugme hayalet">Kütüphaneden seç</span>
+              </div>
+              <input type="file" hidden accept="image/*"><div class="cipler"></div>
+              <input type="hidden" name="favicon" value="">
+              <p class="alan-yardim"><i class="fa-solid fa-circle-info" aria-hidden="true"></i><span>Sekme simgesi. Kartın başlığı bu alanı vaat ediyordu, alan yoktu.</span></p>
             </div>
             </div>
           </div>

@@ -2233,7 +2233,54 @@
     });
   }
 
-  function csYaz(kap) { csGizliAlan(kap).value = csDegerler(kap).join(','); }
+  /* ═══ P6-13 · K4 · ÇİP KABI EN FAZLA İKİ SATIR ═══════════════════════
+     Beyar canlıda gördü (`admin-anatomi-form` · "Komşu kaslar"): çip
+     girdisi seçim eklendikçe SINIRSIZ büyüyor ve formu aşağı itiyor.
+
+     Kural: çip kabı en çok İKİ SATIR yüksekliğinde; taşan kısım kabın
+     KENDİ İÇİNDE kaydırılır ve kaçının görünmediği SAYIYLA bildirilir
+     ("+3"). Sayı bir SÜS DEĞİL: kaydırma çubuğu ince ve geç fark
+     edilir — "burada daha var" cümlesini sayı söyler.
+
+     ⚠ Yükseklik CSS'te (`--kit-cip-iki-satir`), sayım burada: kaç çipin
+       görünür alanın DIŞINDA kaldığı ancak yerleşim sonrası bilinir.
+     ⚠ Sayı 0 ise rozet BASILMAZ ("0 gizli" ≠ "sayaç yok"). */
+  function cipSayacTazele(kap) {
+    var c = kap.querySelector('.cipler');
+    if (!c) return;
+    var rozet = kap.querySelector('.cipler-sayac');
+    var cipler = [].slice.call(c.querySelectorAll('[data-deger]'));
+    if (!cipler.length) { if (rozet) rozet.hidden = true; return; }
+    var kr = c.getBoundingClientRect();
+    if (!kr.height) { if (rozet) rozet.hidden = true; return; }
+    var gizli = 0;
+    cipler.forEach(function (x) {
+      var r = x.getBoundingClientRect();
+      /* Kabın GÖRÜNÜR alt kenarının altında kalan çip gizlidir. */
+      if (r.top >= kr.bottom - 2 || r.bottom > kr.bottom + 2) gizli++;
+    });
+    if (!rozet) {
+      rozet = document.createElement('span');
+      rozet.className = 'cipler-sayac';
+      rozet.setAttribute('aria-hidden', 'true');   /* sayı çiplerin kendisinde zaten var */
+      c.parentNode.insertBefore(rozet, c.nextSibling);
+    }
+    rozet.hidden = gizli === 0;
+    rozet.textContent = '+' + gizli;
+    c.setAttribute('data-cip-gizli', String(gizli));
+    /* Kaydırınca sayı BAYATLAR: "+10" yazarken kullanıcı aşağı inmiş ve
+       geriye 2 kalmış olabilir. Dinleyici bir kez bağlanır. */
+    if (c.getAttribute('data-cip-sayac-bagli') !== '1') {
+      c.setAttribute('data-cip-sayac-bagli', '1');
+      c.addEventListener('scroll', function () { cipSayacTazele(kap); });
+    }
+  }
+  window.DM_CIP_SAYAC = cipSayacTazele;
+
+  function csYaz(kap) {
+    csGizliAlan(kap).value = csDegerler(kap).join(',');
+    cipSayacTazele(kap);
+  }
 
   function csEkle(kap, deger) {
     deger = (deger || '').trim();
@@ -2258,7 +2305,7 @@
        turda üçüncü kez yakalanan desen. */
     cip.className = 'cip aktif';
     cip.setAttribute('data-deger', deger);
-    cip.textContent = deger;
+    csMetinCiz(cip, deger);
     var x = document.createElement('button');
     x.type = 'button'; x.className = 'cip-sil';
     x.setAttribute('aria-label', deger + ' seçimini kaldır');
@@ -2267,6 +2314,40 @@
     csCipKap(kap).appendChild(cip);
     csYaz(kap);
     return true;
+  }
+
+  /* ═══ V-12b · DEĞER BİR İKON ADIYSA İKONUN KENDİSİ ÇİZİLİR ══════════
+     Ajan V ölçtü (`admin-rozet-form`): `.coklu-secim` yüzeyinde 46 kalem
+     var ve 46'sında da ikon YOK — kalemler `"fa-solid fa-bed"` gibi düz
+     METİN. Aynı ölçümde `[data-ikon]` seçicisi 120 kalemin 120'sini
+     görselli çiziyor. Yönetici, ikon seçerken ikonu göremiyordu.
+
+     🔴 İKİNCİ SÜRÜCÜ AÇILMADI (kitin çift-sürücü yasağı yerinde): alan
+        `.coklu-secim`e bağlı kalır. Eksik olan şey sürücü değil, bu
+        sürücünün bir ikon değerini ÇİZEBİLMESİYDİ.
+     ⚠ ÖLÇÜT UYDURULMADI: değer ancak `DM_IKONLAR` kütüphanesinde
+       GERÇEKTEN varsa ikon sayılır. "fa-" ile başlayan her metni ikon
+       saymak, kütüphanede olmayan bir ad için boş kare çizerdi. */
+  function csIkonAdi(deger) {
+    if (!window.DM_IKONLAR || !window.DM_IKONLAR.length) return null;
+    var n = (window.DM_IKON_NORMAL ? window.DM_IKON_NORMAL(deger) : '');
+    if (!n) return null;
+    for (var i = 0; i < window.DM_IKONLAR.length; i++)
+      if (window.DM_IKONLAR[i].i === n) return n;
+    return null;
+  }
+
+  function csMetinCiz(el, deger) {
+    var ikon = csIkonAdi(deger);
+    if (!ikon) { el.textContent = deger; return; }
+    var i = document.createElement('i');
+    i.className = 'fa-solid ' + ikon;
+    i.setAttribute('aria-hidden', 'true');
+    var s = document.createElement('span');
+    s.textContent = deger;
+    el.textContent = '';
+    el.appendChild(i); el.appendChild(s);
+    el.classList.add('cs-ikonlu');
   }
 
   function csYuzey(kap) {
@@ -2307,7 +2388,7 @@
           var k = document.createElement('button');
           k.type = 'button'; k.className = 'acilir-kalem';
           k.setAttribute('role', 'option'); k.setAttribute('data-cs-deger', o);
-          k.textContent = o;
+          csMetinCiz(k, o);
           y.appendChild(k);
         });
       }
@@ -2333,9 +2414,21 @@
       ek.textContent = '“' + q + '” ekle';
       y.appendChild(ek);
     } else {
-      y.hidden = true;
-      if (girdi) girdi.setAttribute('aria-expanded', 'false');
-      return;
+      /* 🔴 SESSİZ AÇILIR SESSİZ KUSURDUR. Kaynağı olmayan (serbest
+         etiket) alanda kutuya tıklamak bugüne kadar HİÇBİR ŞEY
+         göstermiyordu: kullanıcı tıklar, yüzey açılmaz, alanın ne kabul
+         ettiğini de öğrenemez. Ajan V'nin ölçümünde bu on alan "tık
+         açmıyor" diye kırmızı düştü ve haklıydı — liste yoktu ama
+         SÖYLENECEK ŞEY vardı.
+         ⚠ Metin UYDURULMUYOR: `data-kayit` bildirilmiş ve o modülün bu
+           markada kaydı yoksa bunu açıkça söyler; bildirilmemişse
+           alanın gerçekten serbest olduğunu söyler. */
+      var ip = document.createElement('p');
+      ip.className = 'acilir-bos acilir-ipucu';
+      ip.textContent = kap.getAttribute('data-kayit')
+        ? 'Bu markada kayıtlı seçenek yok — yaz ve Enter’a bas.'
+        : 'Yaz ve Enter’a bas — bu alan serbest etiket kabul ediyor.';
+      y.appendChild(ip);
     }
     y.hidden = false;
     if (girdi) {
@@ -2392,7 +2485,31 @@
       if (k !== icinde) csKapat(k);
     });
   });
+  /* ═══ 🔴 V-2/4/12 · TIKLAMAK LİSTEYİ AÇIP HEMEN KAPATIYORDU ═════════
+     Ajan V canlıda ölçtü: `tıklayınca açıldı = FALSE`, `yazınca = TRUE`.
+     Olay sırası: `focusin` → açıldı → `click` → KAPANDI. Kullanıcı
+     tıklar, hiçbir şey görmez; ancak körlemesine harf yazınca liste
+     gelir. Nüfus 58 alan / 7 ekran.
+
+     KÖK: `csAc` arama kutusuna `aria-expanded` VE `aria-controls`
+     yazıyor; kutu böylece `_ortak/panel.js:86-91`in "her açılır
+     tetikleyicisi" desenine uyuyor ve panel.js gelen tıklamayı
+     "açıkken tıklandı → kapat" diye çeviriyor. İki sürücü aynı
+     tıklamayı çeviriyor, net etki sıfır.
+
+     🔴 SÜRÜCÜ SÖKÜLMEDİ, ÜSTÜNE BİNİLDİ — K13'ün aynı kararı. panel.js
+        kittir ve SALT OKUMA (§13); dört markada bayt-özdeşliği kendi
+        sözleşmesi. Kit son yüklendiği için onun dinleyicisi SONRA
+        koşar: panel.js kapatır, kit yeniden açar.
+     ⚠ `aria-controls` SİLİNMEDİ: ekran okuyucu için bir bildirimdir;
+       davranışı düzeltmek için erişilebilirlik bildirimini atmak,
+       görünmeyen kullanıcıyı görünen kusurla ödemektir.
+     ⚠ Arama kutusuna tıklamak yüzeyi KAPATMAZ: bir metin kutusuna
+       tıklamak bir açma/kapama eylemi değildir. Kapanış dışarı
+       tıklama, Escape ve odak çıkışıyla olur — üçü de yerinde. */
   document.addEventListener('click', function (e) {
+    var ara = e.target.closest('.coklu-secim .acilir-arama');
+    if (ara) { csAc(csKap(ara), (ara.value || '').trim()); return; }
     var k = e.target.closest('.coklu-secim [data-cs-deger]');
     if (k) {
       e.preventDefault();
@@ -4088,6 +4205,41 @@
     var kap = ek('div', 'ikon-secici');
     girdi.parentNode.insertBefore(kap, girdi);
     kap.appendChild(girdi);
+
+    /* ── 🔴 P6-3 · ÖNİZLEME GİRDİNİN İÇİNDEDİR, ÜSTÜNDE İKİNCİSİ OLMAZ ──
+       Beyar canlıda gördü (`admin-rehber-form` · "Sayfa ikonu"): girdinin
+       ÜSTÜNDE eski önizleme ikonu (kitap) duruyor ve alan, aynı satırdaki
+       "Üst etiket" girdisinden 24,8px AŞAĞIDA başlıyordu. Kusur iki değil
+       TEK: süs ikonu akışta yer kaplıyor ve satırın hizasını o bozuyor.
+
+       Kit kendi önizlemesini tetiğin İÇİNE çiziyor; ekranın markup'ında
+       kalmış ikinci önizleme İKİNCİ BİR YÜZEYDİR (§5b'nin "alan başına
+       tek yüzey" kuralının ikon karşılığı).
+       ⚠ SİLİNMEZ, gizlenir (EKSİ BİRİNCİ MADDE): eleman `id`siyle
+         duruyor, sayfanın kendi betiği onu bulmaya devam ediyor.
+       ⚠ Ölçüt KOMŞULUK: yalnız seçicinin KARDEŞİ olan süs ikonu. Etiket,
+         yardım metni ve satırın kendi eylem ikonları dışarıda kalır —
+         kap büyütülürse kapının öznesi kayar. */
+    (function susIkonlariGizle() {
+      var kaplar = [kap.parentNode];
+      var alanKap = girdi.closest && girdi.closest('.alan');
+      if (alanKap && kaplar.indexOf(alanKap) === -1) kaplar.push(alanKap);
+      kaplar.forEach(function (kp) {
+        if (!kp) return;
+        [].slice.call(kp.children).forEach(function (c) {
+          if (c === kap || (c.classList && c.classList.contains('ikon-secici'))) return;
+          if (c.matches && c.matches('label, .alan-etiket, .alan-yardim, .alan-hata')) return;
+          var ik = (c.matches && c.matches('i[class*="fa-"], svg')) ? c
+                 : (c.children && c.children.length === 1
+                    ? c.querySelector(':scope > i[class*="fa-"], :scope > svg') : null);
+          if (!ik) return;
+          var hedef = (ik === c) ? c : c;
+          hedef.hidden = true;
+          hedef.setAttribute('data-kit-sus-ikon', '1');
+          hedef.setAttribute('aria-hidden', 'true');
+        });
+      });
+    })();
     if (secimMi) { girdi.hidden = true; girdi.setAttribute('aria-hidden', 'true'); girdi.tabIndex = -1; }
     else { girdi.type = 'hidden'; }      /* değer DURUYOR, yüzeyi değişti */
 
@@ -4154,8 +4306,12 @@
       bos.hidden = uyan.length !== 0;
       if (!uyan.length) bos.textContent = '“' + ara.value + '” ' + kut.length + ' ikonda bulunamadı';
       else if (uyan.length > 120) {
+        /* 🔴 P6-4 · ALT SATIR TEK SATIRDIR. Eski metin 321px'lik yüzeyde
+           ÜÇ satıra sarıyor ve 64px yer kaplıyordu — açılırın gövdesi
+           kadar. Bilgi korunuyor ("hepsi gösterilmiyor"), öğüt atılıyor:
+           aramayı daraltmak zaten arama kutusunun kendi işi. */
         bos.hidden = false;
-        bos.textContent = uyan.length + ' ikon uyuyor · ilk 120 gösteriliyor, aramayı daraltın';
+        bos.textContent = uyan.length + ' ikon · ilk 120 gösteriliyor';
       }
     }
 
@@ -4282,6 +4438,161 @@
       if (sarma) { sarma.parentNode.insertBefore(sec, sarma); sarma.remove(); }
       else { alan.appendChild(sec); }
       alan.appendChild(saklama);
+      donusen++;
+    });
+    return donusen;
+  }
+
+  /* ═══════════════════════════════════════════════════════════════════
+     K5b · DÖRT VE ÜSTÜ SEÇENEKLİ ONAY GRUBU → ÇOKLU AÇILIR
+     ───────────────────────────────────────────────────────────────────
+     Beyar canlıda gördü (P6-9): `admin-hareket-form` · "Süre bandı" hâlâ
+     düz bir seçenek dizisi. K5 kapısı bunu KAÇIRDI ve kaçırma ölçütünde
+     değil NÜFUSTAYDI: kapı yalnız `input[type="radio"]` sayıyordu, o alan
+     ise beş `checkbox` taşıyor. FIT'te 4+ seçenekli radyo grubu **0**;
+     4+ seçenekli onay grubu **4**. (Ders: "denetimin öznesi kayar".)
+
+     🔴 TEK SEÇİMLİK AÇILIRA ÇEVRİLMEZ. `sureBant[]` ÇOK DEĞERLİDİR — bir
+        hareket birden çok süre bandına girer. `<select>`e çevirmek beş
+        değeri bire indirirdi: ekranda düzgün, sunucuda KAYIP (parti 5'in
+        "dizi eki siliniyordu" dersinin aynısı). Bu yüzden yüzey ÇOKLU
+        açılır: arama + işaretlenebilir liste + seçim özeti.
+
+     🔴 DEĞERİ HÂLÂ ONAY KUTULARI TAŞIR. Kutular silinmez, `hidden` bir
+        kapta yaşar; yüzey onların `checked`ini çevirir ve `change`
+        yayar. Form gönderimi, `formDoldur` ve doğrulama hiç değişmez —
+        `.coklu-secim`in `data-ad`lı gizli girdisine çevirmek adı
+        `sureBant[]` dizisinden tek bir dizeye indirirdi.
+
+     ⚠ NÜFUS DAR TUTULDU: yalnız bir `.alan` İÇİNDEKİ grup. Süzgeç
+       şeridinin, tablo satırlarının ve `.coklu-secim`in kendi kutuları
+       dışarıda — onlar bir form alanı değil.
+     ⚠ ÜÇ VE ALTI DOKUNULMAZ (K5'in kendi kararı): az seçenekli grup
+       hepsini aynı anda gösterir ve bu bir üstünlüktür.
+     ═══════════════════════════════════════════════════════════════ */
+
+  function onayGruplari(kok) {
+    var harita = {};
+    (kok || document).querySelectorAll('.alan input[type="checkbox"][name]').forEach(function (c) {
+      if (c.closest('.coklu-secim, .secim-karti, .oran-grubu, table, .tablo, .suzgec-cubuk, [data-onay-birak]')) return;
+      (harita[c.name] = harita[c.name] || []).push(c);
+    });
+    return harita;
+  }
+
+  function onayAcilira(kok) {
+    var harita = onayGruplari(kok), donusen = 0;
+    Object.keys(harita).forEach(function (ad) {
+      var cs = harita[ad];
+      if (cs.length < 4) return;
+      var alan = cs[0].closest('.alan');
+      if (!alan || alan.getAttribute('data-onay-donustu') === '1') return;
+
+      /* Grubun KABI: kutuların ortak atası. Bildirilmiş bir kap varsa o
+         (`.cipler` · `.onay-grubu` · `.secenek-grubu`), yoksa ilk
+         kutunun etiketinin ebeveyni. Kap bulunamazsa DOKUNULMAZ —
+         nereye yazacağını bilmeyen kural yazmaz. */
+      var kap = cs[0].closest('.cipler, .onay-grubu, .secenek-grubu, .onay-listesi');
+      if (!kap || !kap.parentNode || !alan.contains(kap)) return;
+      /* Kapta bu gruptan BAŞKA bir ad da varsa karışma: kap paylaşılıyor. */
+      var yabanci = false;
+      kap.querySelectorAll('input[type="checkbox"][name], input[type="radio"][name]').forEach(function (x) {
+        if (x.name !== ad) yabanci = true;
+      });
+      if (yabanci) return;
+
+      alan.setAttribute('data-onay-donustu', '1');
+
+      var secenekler = cs.map(function (c) {
+        var lb = c.closest('label') || (c.id && document.querySelector('label[for="' + c.id + '"]'));
+        var metin = (lb ? lb.textContent : c.value).replace(/\s+/g, ' ').trim() || c.value;
+        return { g: c, metin: metin };
+      });
+
+      var sarma = ek('div', 'coklu-acilir');
+      var tetik = ek('button', 'alan-girdi coklu-tetik');
+      tetik.type = 'button';
+      tetik.setAttribute('aria-haspopup', 'listbox');
+      tetik.setAttribute('aria-expanded', 'false');
+      var ozet = ek('span', 'coklu-ozet');
+      tetik.appendChild(ozet);
+      var etiket = alan.querySelector('.alan-etiket');
+      if (etiket) {
+        if (!etiket.id) etiket.id = 'lbl-' + ad.replace(/[^\w-]/g, '');
+        tetik.setAttribute('aria-labelledby', etiket.id);
+      } else tetik.setAttribute('aria-label', ad);
+
+      var yuzey = ek('div', 'acilir-yuzey coklu-yuzey');
+      yuzey.hidden = true;
+      yuzey.setAttribute('role', 'listbox');
+      yuzey.setAttribute('aria-multiselectable', 'true');
+      var ara = document.createElement('input');
+      ara.type = 'search'; ara.className = 'alan-girdi coklu-ara';
+      ara.placeholder = 'Ara…'; ara.setAttribute('aria-label', 'Seçeneklerde ara');
+      var liste = ek('div', 'coklu-liste');
+      var bos = ek('p', 'acilir-bos'); bos.hidden = true;
+      /* Arama kutusu yalnız uzun listede anlamlı: yedi ve altısında
+         hepsi zaten tek bakışta görünüyor, ikinci bir denetim gürültü. */
+      if (secenekler.length > 7) yuzey.appendChild(ara);
+      yuzey.appendChild(liste); yuzey.appendChild(bos);
+      sarma.appendChild(tetik); sarma.appendChild(yuzey);
+
+      function ozetCiz() {
+        var secili = secenekler.filter(function (x) { return x.g.checked; });
+        ozet.textContent = secili.length
+          ? (secili.length <= 3 ? secili.map(function (x) { return x.metin; }).join(' · ')
+                                : secili.length + ' seçili')
+          : 'Seçiniz…';
+        ozet.classList.toggle('coklu-bos', !secili.length);
+        tetik.setAttribute('aria-label',
+          (etiket ? etiket.textContent.replace(/\s+/g, ' ').trim() + ' — ' : '') +
+          (secili.length ? secili.length + ' seçili' : 'seçim yok'));
+      }
+
+      function listeCiz() {
+        var q = (ara.value || '').toLocaleLowerCase('tr').trim();
+        liste.innerHTML = '';
+        var uyan = secenekler.filter(function (x) {
+          return !q || x.metin.toLocaleLowerCase('tr').indexOf(q) !== -1;
+        });
+        uyan.forEach(function (x) {
+          var d = ek('button', 'coklu-kalem');
+          d.type = 'button';
+          d.setAttribute('role', 'option');
+          d.setAttribute('aria-selected', String(!!x.g.checked));
+          d.innerHTML = '<i class="fa-solid ' + (x.g.checked ? 'fa-square-check' : 'fa-square') +
+                        '" aria-hidden="true"></i><span></span>';
+          d.querySelector('span').textContent = x.metin;
+          d.addEventListener('click', function () {
+            x.g.checked = !x.g.checked;
+            x.g.dispatchEvent(new Event('change', { bubbles: true }));
+            ozetCiz(); listeCiz();
+          });
+          liste.appendChild(d);
+        });
+        bos.hidden = uyan.length !== 0;
+        if (!uyan.length) bos.textContent = '“' + ara.value + '” bu listede yok';
+      }
+
+      tetik.addEventListener('click', function () {
+        if (yuzey.hidden) {
+          yuzey.hidden = false; tetik.setAttribute('aria-expanded', 'true');
+          listeCiz(); if (yuzey.contains(ara)) ara.focus();
+        } else { yuzey.hidden = true; tetik.setAttribute('aria-expanded', 'false'); }
+      });
+      ara.addEventListener('input', listeCiz);
+      yuzey.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') { yuzey.hidden = true; tetik.setAttribute('aria-expanded', 'false'); tetik.focus(); }
+      });
+      document.addEventListener('click', function (e) {
+        if (!sarma.contains(e.target)) { yuzey.hidden = true; tetik.setAttribute('aria-expanded', 'false'); }
+      });
+
+      /* Kutular YAŞAMAYA DEVAM EDER; değeri onlar taşır. */
+      kap.parentNode.insertBefore(sarma, kap);
+      kap.hidden = true;
+      kap.setAttribute('data-kit-onay-saklama', '1');
+      ozetCiz();
       donusen++;
     });
     return donusen;
@@ -4662,6 +4973,7 @@
     kok.querySelectorAll('[data-ikon]').forEach(ikonSeciciKur);
     kok.querySelectorAll('[data-hesaplanan]').forEach(hesaplananKur);
     radyoAcilira(kok);
+    onayAcilira(kok);
     if (kok === document) { tabloBasligiKur(); tumTekrarlariKur(); }
   }
 
@@ -4675,6 +4987,7 @@
   };
   window.DM_TEKRAR_TUMU = tumTekrarlariKur;
   window.DM_RADYO_ACILIRA = radyoAcilira;
+  window.DM_ONAY_ACILIRA = onayAcilira;
   window.DM_TABLO_BASLIK = tabloBasligiKur;
   window.DM_IKON_NORMAL = ikonNormal;
   window.DM_VIDEO_COZUMLE = videoCozumle;
@@ -5049,6 +5362,19 @@
     });
   }
 
+  /* Kolonun TABAN sıralaması — kapı da bunu okur (`data-taban-sira`).
+     Önce yakalama evresinde saklanan taban, yoksa kurulumda yazılan
+     bildirim. İkisi de yoksa "tabanı azalan değil" denir: sessiz
+     varsayım değil, ölçülebilir bir bildirim eksikliğidir. */
+  function tabaniAzalan(th, tablo) {
+    var t = TABAN.get(tablo);
+    if (t) {
+      for (var i = 0; i < t.sira.length; i++)
+        if (t.sira[i].th === th) return t.sira[i].deger === 'descending';
+    }
+    return th.getAttribute('data-taban-sira') === 'descending';
+  }
+
   function tabanaDon(tablo) {
     var t = TABAN.get(tablo);
     if (!t) return false;
@@ -5081,6 +5407,16 @@
     /* Üçüncü tık: ÖNCESİ azalandı. panel.js onu yine artana çevirdi;
        biz varsayılana döndürüyoruz. */
     if (ONCEKI.get(th) !== 'descending') return;
+    /* 🔴 KÖ-L13 · TABANI AZALAN OLAN KOLON İKİ DURUMLUDUR.
+       "önceki azalandıysa bu üçüncü tıktır" çıkarımı yalnız tabanı
+       azalan OLMAYAN kolonda doğrudur. Tabanı zaten `descending` olan
+       kolonda BİRİNCİ tık da o koşulu sağlıyordu: panel.js artana
+       çeviriyor, biz hemen tabana (azalana) döndürüyorduk — kolon
+       hiçbir zaman artana geçemiyordu (fit: `admin-faturalar` ·
+       `admin-medya`; gastro: dört kolon; donörde de var).
+       Orada "varsayılan" ile "azalan" AYNI durumdur; üçüncü durum
+       yoktur ve uydurulmaz. */
+    if (tabaniAzalan(th, tablo)) return;
     if (tabanaDon(tablo)) {
       ONCEKI.set(th, null);
       if (window.DM_SECIM_TAZELE) window.DM_SECIM_TAZELE(tablo);
@@ -5095,8 +5431,18 @@
       var th = b.parentElement;
       if (th.getAttribute('data-siralanabilir') === '1') return;
       th.setAttribute('data-siralanabilir', '1');
+      /* Taban BİLDİRİLİR: ilk tıktan önce okunur, sonra hiç değişmez. */
+      th.setAttribute('data-taban-sira', th.getAttribute('aria-sort') || '');
+      /* İpucu kolonun GERÇEK durum sayısını söyler. Üç durum ancak
+         TABANI SIRASIZ kolonda vardır; tabanı zaten sıralı olan kolonda
+         "varsayılan" o sıralamanın KENDİSİDİR ve üçüncü durum yoktur —
+         orada "→ varsayılan" sözü yalan olurdu (§11 ölü yüzey). */
+      var tb = th.getAttribute('data-taban-sira');
       if (!b.getAttribute('data-ipucu'))
-        b.setAttribute('data-ipucu', 'Sırala: artan → azalan → varsayılan');
+        b.setAttribute('data-ipucu',
+          tb === 'descending' ? 'Sırala · artan ile azalan (varsayılan) arasında'
+        : tb === 'ascending'  ? 'Sırala · azalan ile artan (varsayılan) arasında'
+        :                       'Sırala · artan, azalan, varsayılan');
       n++;
     });
     return n;

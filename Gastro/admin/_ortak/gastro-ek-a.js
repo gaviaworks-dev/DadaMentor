@@ -438,6 +438,17 @@
   }
   window.DM_GASTRO_TEHLIKE = tehlikeBolgesi;
 
+  /* 🔴 GALERİ KARTININ TEK ÜRETİCİSİ BURASIDIR. P3-1 "Kütüphaneden seç"i
+     galeride de gerçek yapıyor ve kart eklemesi gerekiyor; ikinci bir
+     `galeriKart` yazmak İKİ SÜRÜCÜ demekti (KÖ-L2'nin pilot dersi). Kural
+     burada kalır, dışarı yalnız KAPI verilir. */
+  window.DM_GALERI_EKLE = function (kap, ad, url) {
+    if (!kap || !ad) return false;
+    galeriKart(kap, ad, url || '');
+    galeriYaz(kap);
+    return true;
+  };
+
   /* ── KURULUM ────────────────────────────────────────────────────── */
   function kur() {
     document.querySelectorAll('[data-galeri]').forEach(galeriKur);
