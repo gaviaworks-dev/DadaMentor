@@ -2,7 +2,7 @@
    ADMIN İKON KÜTÜPHANESİ — L3'ün veri katmanı
    ───────────────────────────────────────────────────────────────────────
    ÜRETİLMİŞ DOSYA — elle düzenlenmez.
-   Üreten: scripts/_tmp4/L3-ikon-hasat.mjs   Tarih: 2026-09-05
+   Üreten: scripts/kit/L3-ikon-hasat.mjs   Tarih: 2026-09-05
 
    🔴 KÜTÜPHANE UYDURULMADI. Projede (deneme/ + kanon/) GERÇEKTEN
       kullanılan 485 Font Awesome 6.5.1 ikonu hasat edildi. Bir

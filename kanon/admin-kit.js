@@ -4417,10 +4417,18 @@
   }
 
   function numaralariYaz(liste) {
-    tekrarSatirlari(liste).forEach(function (s, i) {
+    var satirlar = tekrarSatirlari(liste);
+    satirlar.forEach(function (s, i) {
       var n = s.querySelector('[data-rol="satir-no"]');
-      if (!n) return;
-      n.textContent = String(i + 1);
+      if (n) n.textContent = String(i + 1);
+      /* 🔴 TEK SATIRLIK LİSTEDE TUTAMAK SIRALAYAMAZ ve ölü buton taraması
+         bunu ölü saydı — HAKLI OLARAK: denetim bir iş VAAT ediyor ve o iş
+         mümkün değil. Sıralanacak bir şey yoksa tutamak da yoktur; ikinci
+         satır doğunca geri gelir. `hidden` kullanılıyor, `display:none`
+         değil — ekran okuyucu da görmemeli (§12'nin tersi: orada metin
+         okunmaya devam etmeli, burada denetim HİÇ YOK). */
+      var t = s.querySelector('.tekrar-tutamak');
+      if (t) t.hidden = satirlar.length < 2;
     });
   }
 
@@ -4462,8 +4470,8 @@
 
         var tut = document.createElement('button');
         tut.type = 'button'; tut.className = 'ikon-dugme tekrar-tutamak';
-        tut.setAttribute('aria-label', 'Satırı taşı — ok tuşlarıyla da sıralanır');
-        tut.setAttribute('data-ipucu', 'Sürükleyerek ya da ok tuşlarıyla sırala');
+        tut.setAttribute('aria-label', 'Satırı bir aşağı taşı — sürüklenebilir, ok tuşlarıyla da sıralanır');
+        tut.setAttribute('data-ipucu', 'Tıkla: bir aşağı · sürükle ya da ok tuşları: serbest');
         tut.innerHTML = '<i class="fa-solid fa-grip-vertical" aria-hidden="true"></i>';
         tut.draggable = true;
 
@@ -4515,6 +4523,31 @@
               'Bu satırdaki bilgiler kaldırılacak. Sürdürmek istiyor musunuz?',
               'Sil', function (evet) { if (evet) git(); });
     } else { git(); }
+  });
+
+  /* ── TIKLAMA DA BİR SIRALAMADIR ──────────────────────────────────
+     🔴 ÖLÜ BUTON TARAMASI TUTAMAKLARI ÖLÜ SAYDI — 8 tanesini. Ve HAKLIYDI:
+        tutamak yalnız sürükleme ve ok tuşlarıyla çalışıyordu, TIKLAYINCA
+        hiçbir şey olmuyordu. Bir denetime bakıp tıklayan kullanıcı için
+        o denetim ölüdür.
+        Kitin kendi sözleşmesi bunu zaten çözmüştü: §24'ün `sirala` eylemi
+        "satırı bir yukarı/aşağı taşır; TIKLAMA ↓, ok tuşları ↑↓" diyor.
+        L10 o kuralı tekrar etmek yerine ondan SAPMIŞTI. Aynı kural.
+     ⚠ Sürükleme sırasında tıklama doğmaz (`dragend` tıklamayı yutar),
+       yani iki yol çakışmıyor. */
+  document.addEventListener('click', function (e) {
+    var t = e.target.closest('.tekrar-tutamak');
+    if (!t) return;
+    e.preventDefault();
+    var s = t.closest('.tekrar-satiri');
+    if (!s || !s.parentNode) return;
+    var liste = s.parentNode;
+    /* Son satırdaysa başa döner — "tıklama ↓" sonsuz bir merdiven değil,
+       döngüsel bir sıralama. Yoksa son satırda düğme yine ölü olurdu. */
+    if (s.nextElementSibling) liste.insertBefore(s.nextElementSibling, s);
+    else liste.insertBefore(s, liste.firstElementChild);
+    numaralariYaz(liste);
+    t.focus();
   });
 
   /* ── SÜRÜKLE-SIRALA ─────────────────────────────────────────────── */
