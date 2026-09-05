@@ -225,7 +225,7 @@
       <form novalidate="">
         <div class="form-duzen">
           <div class="kart panel">
-            <div class="form-bolum" data-pano="sf-icerik">
+            <div class="form-bolum form-icerik icerik" data-pano="sf-icerik">
               <div class="form-bolum-bas"><i class="fa-solid fa-circle-question" aria-hidden="true"></i> Soru ve cevap</div>
               <div class="alan-ozet goster" role="alert">
                 <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>
@@ -243,33 +243,13 @@
               </div>
               <div class="alan">
                 <label class="alan-etiket">Detaylı cevap</label>
-                <div class="metin-duzenleyici">
-                  <div class="duzenleyici-cubuk" role="toolbar" aria-label="Metin biçimlendirme">
-                    <button class="ikon-dugme" type="button" aria-label="Geri al" data-eylem="calistir" data-ad="Geri al"><i class="fa-solid fa-rotate-left" aria-hidden="true"></i></button>
-                    <button class="ikon-dugme" type="button" aria-label="İleri al" data-eylem="calistir" data-ad="İleri al"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i></button>
-                    <span class="duzenleyici-ayrac" aria-hidden="true"></span>
-                    <label class="yalniz-okuyucu" for="sfBlok">Paragraf biçimi</label>
-                    <select class="alan-secim" id="sfBlok"><option>Paragraf</option><option>Başlık 2</option><option>Alıntı</option></select>
-                    <span class="duzenleyici-ayrac" aria-hidden="true"></span>
-                    <button class="ikon-dugme aktif" type="button" aria-pressed="true" aria-label="Kalın"><i class="fa-solid fa-bold" aria-hidden="true"></i></button>
-                    <button class="ikon-dugme" type="button" aria-pressed="false" aria-label="İtalik"><i class="fa-solid fa-italic" aria-hidden="true"></i></button>
-                    <span class="duzenleyici-ayrac" aria-hidden="true"></span>
-                    <button class="ikon-dugme" type="button" aria-label="Madde listesi"><i class="fa-solid fa-list-ul" aria-hidden="true"></i></button>
-                    <button class="ikon-dugme" type="button" aria-label="Numaralı liste"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></button>
-                    <span class="duzenleyici-ayrac" aria-hidden="true"></span>
-                    <button class="ikon-dugme" type="button" aria-label="Alıntı"><i class="fa-solid fa-quote-left" aria-hidden="true"></i></button>
-                    <button class="ikon-dugme" type="button" aria-label="Bağlantı ekle" data-eylem="calistir" data-ad="Bağlantı ekle"><i class="fa-solid fa-link" aria-hidden="true"></i></button>
-                    <span class="duzenleyici-ayrac" aria-hidden="true"></span>
-                    <button class="ikon-dugme" type="button" aria-label="Biçimi temizle"><i class="fa-solid fa-eraser" aria-hidden="true"></i></button>
-                    <button class="ikon-dugme" type="button" aria-label="Kod görünümü" data-eylem="calistir" data-ad="Kod görünümü"><i class="fa-solid fa-code" aria-hidden="true"></i></button>
-                  </div>
-                  <div class="duzenleyici-yuzey" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Detaylı cevap">
-                    <p>Pro aboneliğini iptal etmek için <b>Hesabım → Paketlerim</b> ekranına git ve “Yenilemeyi kapat” düğmesine bas.</p>
+                <!-- ELLE YAZILMIŞ EDİTÖR → KANON EDİTÖRE ÇEVRİLDİ (§7) · 2026-09-06 nöbet turu.
+     ÖLÇÜLDÜ: bu kapta data-editor YOK, TinyMCE YOK — çubuk bu alanın TEK
+     denetimiydi. Silmek geriye denetimsiz bir contenteditable bırakırdı.
+     Donör FIT aynı dönüşümü a353cf4'te yaptı; gövde metni OLDUĞU GİBİ taşındı. -->
+            <textarea class="alan-metin" id="sfCevap" name="cevap" data-editor="cevap"><p>Pro aboneliğini iptal etmek için <b>Hesabım → Paketlerim</b> ekranına git ve “Yenilemeyi kapat” düğmesine bas.</p>
                     <p>İptal <b>dönem sonunda</b> devreye girer: ödediğin dönem bitene kadar bütün Pro içerikleri açık kalır, o tarihten sonra hesabın ücretsiz plana döner. Kayıtların, rozetlerin ve geçmiş verilerin silinmez.</p>
-                    <p>Yenilemeyi kapattıktan sonra fikrini değiştirirsen aynı ekrandan “Yenilemeyi aç” diyerek iptali geri alabilirsin.</p>
-                  </div>
-                  <div class="duzenleyici-ayak"><span>78 kelime</span><span>512 karakter</span><span>2 bağlantı</span></div>
-                </div>
+                    <p>Yenilemeyi kapattıktan sonra fikrini değiştirirsen aynı ekrandan “Yenilemeyi aç” diyerek iptali geri alabilirsin.</p></textarea>
                 <p class="alan-yardim"><i class="fa-solid fa-circle-info" aria-hidden="true"></i><span>Cevaplar site içine bağlanabilir. Adres değişirse bağlantı kırılır — bağlantıları Yönlendirmeler modülünden izle.</span></p>
               </div>
             </div>
@@ -426,9 +406,15 @@
      soru · kategori · sira · durum LİSTE SATIRINDAN.
      UYDURULMADI: kisa_cevap yalnız 4. soruda var — karşılığı Diet public maketinde (hesabim__destek__cozum-merkezi)
      bulunabilen tek soru o. ikon yazılmadı: liste soru başına ikon taşımıyor.
-     🔴 DÜZELTİLMEDİ (bildiriliyor): donörde duran «Detaylı cevap» (name="cevap") textarea'sı Diet formunda YOK,
-     bu yüzden hiçbir kayıtta cevap gövdesi taşınamıyor. sfIkon seçeneklerinin value'ları da düşmüş
-     (donörde value="fa-solid fa-bolt", Diet'te yalnız "bolt" metni). -->
+     ✅ KAPANDI (2026-09-06 nöbet turu): «Detaylı cevap» alanı DOĞDU —
+     bu bölümdeki elle yazılmış editör (çubuk + contenteditable) donörün §7 ölçütüyle
+     kanon editöre çevrildi: <textarea id="sfCevap" name="cevap" data-editor="cevap">.
+     Gövde metni olduğu gibi taşındı, TinyMCE kurulduğu ölçüldü. Artık kayıtlarda
+     cevap gövdesi taşınabilir.
+     🔴 AÇIK KALDI: sfIkon seçeneklerinin value'ları düşmüş (donörde
+     value="fa-solid fa-bolt", Diet'te yalnız "bolt" metni) — 8 seçeneğin 8'i değersiz.
+     Bu ekranın sfIkon'u donörde `data-ikon` TAŞIMIYOR, yani kit ikon kütüphanesi
+     öznesi değil; değerleri yazmak bir İÇERİK kararıdır, uydurulmadı. -->
 <script type="application/json" data-kayitlar>
 {
  "sss-1": {
