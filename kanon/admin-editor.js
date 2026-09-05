@@ -310,7 +310,22 @@
         gorselDugmesi(ed);
         /* Değişiklik doğrulamaya bağlansın: editör textarea'yı ancak
            `save` ile günceller, kit ise textarea'yı okuyor. */
-        ed.on('change keyup', function () { ed.save(); });
+        /* 🔴 `ed.save()` TEXTAREA'YA DOĞRUDAN YAZAR, OLAY GÖNDERMEZ —
+           ajan F ölçtü: K12'nin dil deposu `input` dinliyor ve hiç
+           uyanmıyordu. Değer kaybolmuyor (sekme değişince toplanıyor) ama
+           EKSİK ÇEVİRİ ROZETİ YALAN SAYIYORDU: TR'ye yazıldıktan sonra
+           rozet hâlâ "5" diyor, ancak sekme değişince 4'e iniyordu.
+           Nüfus: `data-editor` taşıyan 49 alan.
+           ⚠ Kapım bunu GÖREMEZDİ: ölçüm `setContent()` kullanıyordu ve o
+             çağrı `change`/`keyup` üretmez. Ajan F iframe'e GERÇEKTEN
+             yazarak buldu — bir kapının yeşili, kullandığı GİRDİ YOLU
+             kadar geçerlidir.
+           Yeni kod yolu açılmadı: kit zaten `input` dinliyor, editör de
+           artık onu gönderiyor. */
+        ed.on('change keyup', function () {
+          ed.save();
+          try { t.dispatchEvent(new Event('input', { bubbles: true })); } catch (h) { /* eski tarayıcı */ }
+        });
         ed.on('blur', function () {
           ed.save();
           if (window.DM_ALAN_DENETLE) window.DM_ALAN_DENETLE(t);

@@ -3300,3 +3300,169 @@ html:has(> body.panel-acik){ overflow:hidden; }
 .yetkili .tablo tbody td.num{ text-align:right; font-variant-numeric:tabular-nums; }
 .yetkili .tablo thead th.sec,
 .yetkili .tablo thead th.eylem{ width:1%; }
+
+
+/* ═══════════════════════════════════════════════════════════════════════
+   K12 · DİL SEKMESİ RAYI — parti 5 · 2026-09-05
+   ───────────────────────────────────────────────────────────────────────
+   Ray §3'ün `.sekmeler` bileşenidir; ikinci bir sekme sınıfı AÇILMAZ.
+   Burada yalnız ÖLÇÜSÜ daraltılır: bu bir SAYFA rayı değil, bir BÖLÜM
+   içi kip anahtarıdır (48 → 34, sekme arası 32 → 16).                */
+.yetkili .dil-sekmeler{
+  gap:var(--kit-grup);
+  margin-bottom:var(--kit-grup);
+  /* 🔴 RAY MİRAS ALDIĞI KENAR BOŞLUKLARIYLA KAYIYORDU — ajan D ölçtü
+     (K17 · Q2): dil rayı `[data-form-panel]` içinde doğuyor ve oradaki
+     kurallar ona `margin-left:auto` / negatif taşma veririyordu; ölçümde
+     bir ray 246px SAĞA kaymış çıktı, ötekilerde `auto` duruyordu.
+     Bu bir K12 kusuru DEĞİL, K12'nin K17'yi TETİKLEMESİ: kural kendi
+     kabında doğru, komşusunun kuralını miras alıyor.
+     Ray kendi kutusuna sabitlenir — bir KİP ANAHTARIDIR, sayfa rayı
+     değil; taşması ve sağa yaslanması yoktur.
+     ⚠ `!important` YOK: kural kitin en sonunda ve aynı özgüllükte
+       kazanıyor (§0'ın katman sırası). */
+  margin-left:0; margin-right:0;
+  width:100%;
+  justify-content:flex-start;
+}
+/* 🔴 RAY KARDEŞİNİN İÇERİK KENARINA HİZALANIR (K17'nin ölçütü). Dil rayı
+   dolgusuz bir panoda (`[data-form-panel]`) doğuyor ama kardeşleri
+   `.form-bolum` ve onların KENDİ dolgusu var; ray 0'da, içerik 24'te
+   kalıyordu — ölçüldü: kayma −24px. Kanca kabın adına değil, kabın
+   DOLGUSUNU ÇOCUKLARININ taşımasına bakar (K17'nin kendi kancası). */
+.yetkili [data-form-panel]:has(> .form-bolum) > .dil-sekmeler,
+.yetkili .kart-govde:has(> .form-bolum) > .dil-sekmeler{
+  padding-left:var(--kit-bolum); padding-right:var(--kit-bolum);
+}
+.yetkili .dil-sekmeler .sekme{
+  min-height:34px;
+  font-size:var(--yazi-13);
+  gap:var(--kit-atom);
+}
+/* Eksik çeviri sayısı bir ROZET DEĞİL, sekmenin yanındaki bir işarettir
+   (§3'ün `.sekme-sayi` kararıyla aynı disiplin: renk taşıyan tek şey
+   alt çizgidir, şerit sakin kalır). Ama BU sayı bir eksiği bildiriyor —
+   uyarı rengini hak ediyor ve yön RENKTEN DEĞİL sayıdan okunuyor. */
+.yetkili .dil-sekmeler .dil-eksik{
+  display:inline-grid; place-items:center;
+  min-width:18px; height:18px; margin-left:var(--kit-atom);
+  padding:0 var(--kit-atom);
+  border-radius:var(--yuvarlak-hap);
+  background:var(--uyari-yikama, var(--aksan-yikama));
+  color:var(--uyari, var(--murekkep));
+  font-size:var(--yazi-11); font-weight:var(--agirlik-kalin);
+  font-variant-numeric:tabular-nums;
+}
+/* Çevrilebilir alan ile çevrilmeyen alan GÖRSEL olarak ayrılır: dil
+   değişince hangisinin değiştiğini kullanıcı görmeli. İşaret etikette,
+   kutuda değil — kutu geometrisi §4'ün tek kararıdır ve bozulmaz. */
+.yetkili .alan-cevrilebilir .alan-etiket[data-dil-isaret]::after{
+  content:attr(data-dil-isaret);
+  margin-left:var(--kit-atom);
+  padding:0 var(--kit-atom);
+  border-radius:var(--yuvarlak-sm);
+  background:var(--aksan-yikama);
+  color:var(--aksan-koyu);
+  font-size:var(--yazi-11);
+  font-weight:var(--agirlik-kalin);
+  text-transform:uppercase;
+  letter-spacing:.02em;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   K13 · KOLON SIRALAMA ÜÇ DURUMLU — görsel taraf
+   ───────────────────────────────────────────────────────────────────────
+   Üçüncü durum (VARSAYILAN) kanonda zaten çizili: `aria-sort` yokken
+   başlık sönük çift ok gösterir. Kit yalnız TIKLANABİLİRLİĞİ ve
+   imleci bildirir — sürücü `admin-kit.js`te.                          */
+.yetkili .tablo thead th[aria-sort]{ cursor:pointer; }
+.yetkili .tablo thead th[data-siralanabilir]{ cursor:pointer; user-select:none; }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   K16 · TÜRETİLEN ROZET — parti 5
+   ───────────────────────────────────────────────────────────────────────
+   Türetilen rozet ile ELLE eklenen rozet GÖRSEL OLARAK ayrılır: ikisi
+   karışırsa yönetici hangisinin nereden geldiğini bilemez ve türetileni
+   silmeye çalışır. Türetilen SÖNÜK ve kilitli, elle eklenen kanonun
+   normal çipi (`.cip.aktif`, silme düğmesiyle).                        */
+.yetkili .turetilen-rozetler{
+  display:flex; flex-wrap:wrap; gap:var(--kit-bagli);
+}
+.yetkili .rozet.turetilen{
+  background:var(--zemin-yumusak, var(--kagit));
+  border:var(--cizgi-1) dashed var(--cizgi-koyu);
+  color:var(--metin-ikincil);
+  cursor:default;
+}
+.yetkili .rozet.turetilen::before{
+  content:"\f0d0";                      /* fa-wand-magic — türetilmiş */
+  font-family:"Font Awesome 6 Free"; font-weight:900;
+  margin-right:var(--kit-atom);
+  font-size:var(--yazi-11);
+  opacity:.7;
+}
+.yetkili .coklu-secim.turetilen-ek{ margin-top:var(--kit-bagli); }
+.yetkili [data-rol="turetilen-not"]{ color:var(--metin-ikincil); }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   K14 · ZAMANLANMIŞ YAYIN ÖNİZLEMESİ — parti 5
+   ───────────────────────────────────────────────────────────────────────
+   Önizleme bir TABLO değil bir LİSTEDİR: iki değer taşıyor (gün · adet)
+   ve tablo kabı (K5) o kadar bilgi için ağır kalır.                     */
+.yetkili .zamanlama-onizleme{
+  display:flex; flex-direction:column; gap:var(--kit-bagli);
+  margin:0; padding:var(--kit-satir) 0 0; list-style:none;
+}
+.yetkili .zamanlama-onizleme > li{
+  display:flex; align-items:baseline; justify-content:space-between;
+  gap:var(--kit-satir);
+  padding:var(--kit-bagli) var(--kit-satir);
+  border:var(--cizgi-1) solid var(--cizgi);
+  border-radius:var(--yuvarlak-sm);
+  background:var(--kagit);
+}
+.yetkili .zamanlama-onizleme > li > b{
+  font-size:var(--yazi-14); font-weight:var(--agirlik-kalin);
+}
+.yetkili .zamanlama-onizleme > li > span{
+  font-size:var(--yazi-13); color:var(--metin-ikincil);
+  font-variant-numeric:tabular-nums;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   K17 · DOLGUSUZ KAPTA RAY TAŞMAZ — parti 5
+   ───────────────────────────────────────────────────────────────────────
+   Beyar: *"Sekme rayı ilk kalem dolgusu."* Gastro kulvarı aynı kusuru
+   KÖ-L3 olarak bildirdi ve pilotladı; kural buraya taşındı.
+
+   🔴 KUSUR BENİM KANONUMDA. §K3'ün kuralı kartın KENDİ 24px dolgusu
+      olduğunu VARSAYIYOR:
+          .yetkili .kart > .sekmeler{ margin:0 -24px 24px; padding:0 24px; }
+      negatif kenar boşluğu dolguyu yer, ray dolgusu içeriği geri getirir.
+      Ama LİSTE kalıbında kartın dolgusu 0'dır; dolguyu her çocuk kendi
+      taşır (`.suzgec-cubuk` `0 24px 16px`). Negatif kenar boşluğu kartın
+      DIŞINA taşıyor ve ray dolgusu sekmeyi ancak kartın KENARINA
+      getiriyor — içerik kenarına değil.
+      ÖLÇÜLDÜ (FIT · `admin-menu`): ray kenarı -24px, ilk sekme süzgeç
+      şeridinin içerik kenarından 24px SOLDA.
+
+   ÇÖZÜM: taşma yalnız DOLGULU kapta geçerlidir. `:has()` ile kabın kendi
+   çocuklarına bakılır — dolgusunu ÇOCUKLARI taşıyan kap (süzgeç şeridi ya
+   da kart gövdesi doğrudan çocuksa) taşma YAPMAZ; ray kutusu kabın
+   kutusuyla aynı olur, alt çizgi yine iki kenara uzar.
+   ⚠ Kanca kabın ADINA değil İÇERİĞİNE bakıyor (K24'ün dersi): "liste
+     kartı" diye bir sınıf yok, ayrım dolgunun KİMDE olduğudur.
+
+   🔴 VE BENİM İLK ÖLÇÜMÜM SAHTE YEŞİL VERDİ: rayın KENDİ kutusunu
+      referans aldım ve 65 rayın 65'ine "sapma 0" dedim. Gözün gördüğü
+      hiza rayın kendi dolgusu değil, KARDEŞİN İÇERİK KENARIDIR. Gastro'nun
+      kapısı bu kusuru zaten belgelemişti; okumadan ölçtüm ve aynı yere
+      düştüm. Doğru ölçütle FIT'te 1, Gastro'da 12 kap kayıyordu.
+   ═══════════════════════════════════════════════════════════════════════ */
+.yetkili .kart:has(> .suzgec-cubuk) > .sekmeler,
+.yetkili .kart:has(> .suzgec-cubuk) > .form-sekmeler,
+.yetkili .kart:has(> .tablo-kap) > .sekmeler,
+.yetkili .kart:has(> .tablo-kap) > .form-sekmeler{
+  margin-left:0; margin-right:0;
+  padding-left:var(--kit-bolum); padding-right:var(--kit-bolum);
+}

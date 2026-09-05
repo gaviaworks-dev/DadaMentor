@@ -1459,32 +1459,44 @@
         var tablo = document.querySelector('.tablo, table');
         var secili = tablo ? tablo.querySelectorAll('tbody .sec input[type=checkbox]:checked') : [];
         if (!secili.length) { toast('Önce en az bir satır seç.', 'hata'); return; }
+        /* 🔴 KİT SEÇİLEN HEDEFİ UYGULAMIYORDU — ajan A ölçtü: yalnız "sil" ve
+           "pasif" tanınıyor, KALAN HER HEDEF `.birlesti` olup hapa
+           "Birleştirildi" yazıyordu. Kanıt: `admin-sozluk`ta 3 satır seçili,
+           "Arşivle" → toast "Arşivle tamamlandı", durum ["Yayında" ×3]
+           DEĞİŞMEDİ. Bu yüzden 20 "Yayınla"/"Arşivle" düğmesi bilerek
+           bağlanmamıştı: bağlamak kronometreyi BAŞKA bir yalanla değiştirirdi.
+           Hedef artık SONUCUNU bildirebilir: `data-hedefler="Arşivle:Arşivlendi|Sil"`.
+           🔴 BİLDİRİLMEMİŞ SONUÇ UYDURULMAZ: "Arşivle"den "Arşivlendi"
+              türetmek fiil çekimi tahmin etmektir ve Gastro'da başka
+              kelimeyle yazıldığında sessizce yanlış yazardı. Sonuç
+              bildirilmemişse hap DEĞİŞTİRİLMEZ ve toast bunu SÖYLER —
+              yanlış bir durum yazmaktansa hiç yazmamak. */
         var hedefler = [];
-        (d.getAttribute('data-hedefler') || 'Birleştir|Pasife al|Sil')
+        (d.getAttribute('data-hedefler') || 'Birleştir:Birleştirildi|Pasife al:Pasif|Sil')
           .split('|').forEach(function (h, i) {
-            hedefler.push({ deger: String(i) + ':' + h, ad: h, ikon: 'fa-arrow-right-arrow-left' });
+            var p = h.split(':');
+            hedefler.push({ deger: String(i) + ':' + p[0] + ':' + (p[1] || ''),
+                            ad: p[0], ikon: 'fa-arrow-right-arrow-left' });
           });
         secimSor(d.getAttribute('data-baslik') || 'Toplu işlem',
                  secili.length + ' satır seçili.', hedefler, function (v) {
-          var ad = v.split(':')[1];
+          var parca = v.split(':');
+          var ad = parca[1], sonuc = parca[2] || '';
           onaySor(ad + '?', secili.length + ' satıra uygulanacak.', 'Uygula', function (evet) {
             if (!evet) return;
+            var yazilan = 0;
             [].forEach.call(secili, function (k) {
               var tr = k.closest('tr'); if (!tr) return;
-              if (/sil/i.test(ad)) { tr.remove(); return; }
-              if (/pasif/i.test(ad)) {
-                tr.classList.add('pasif');
-                var h = tr.querySelector('.durum-hapi, .rozet, .hap');
-                if (h) h.textContent = 'Pasif';
-                return;
-              }
-              tr.classList.add('birlesti');
-              var b = tr.querySelector('.durum-hapi, .rozet, .hap');
-              if (b) b.textContent = 'Birleştirildi';
+              if (/^sil/i.test(ad) && !sonuc) { tr.remove(); return; }
+              tr.classList.add('toplu-islendi');
+              var h = tr.querySelector('.durum-hapi, .rozet, .hap');
+              if (sonuc && h) { h.textContent = sonuc; yazilan++; }
               k.checked = false;
             });
             if (tablo && window.DM_SECIM_TAZELE) window.DM_SECIM_TAZELE(tablo);
-            toast(secili.length + ' satır güncellendi — ' + ad.toLocaleLowerCase('tr') + '.');
+            toast(sonuc
+              ? secili.length + ' satır güncellendi — ' + sonuc.toLocaleLowerCase('tr') + '.'
+              : secili.length + ' satıra “' + ad + '” uygulandı. Sonuç durumu markup\'ta bildirilmediği için satır durumu değiştirilmedi (data-hedefler="' + ad + ':<sonuç>").');
           });
         });
         return;
@@ -2109,7 +2121,19 @@
     if (!liste || !liste.length) return [];
     var m = document.body && document.body.getAttribute('data-marka');
     if (!m) return liste;
-    var s = liste.filter(function (x) { return x && x.m && x.m.indexOf(m) !== -1; });
+    /* 🔴 İKİ BİÇİM TESADÜFEN ÇALIŞIYORDU — ajan B yakaladı: `DM_KAYITLAR`
+       markayı DİZİ taşıyor (`m:["fit"]`), `DM_SABLONLAR` DİZE (`m:"diet"`).
+       `x.m.indexOf(m)` ikisinde de çalışır ama dizede bu ALT DİZE
+       aramasıdır: bir marka adı başkasının içinde geçerse (ya da bir gün
+       "fit" ile "fitness" yan yana olursa) SESSİZ YANLIŞ POZİTİF verir.
+       Biçim burada tekleştirilir; kütük ne taşırsa taşısın karşılaştırma
+       TAM EŞİTLİK üzerinden yapılır. */
+    var s = liste.filter(function (x) {
+      if (!x || !x.m) return false;
+      var mm = (typeof x.m === 'string') ? [x.m] : x.m;
+      for (var i = 0; i < mm.length; i++) if (mm[i] === m) return true;
+      return false;
+    });
     return s;
   }
   window.DM_MARKA_SUZ = markaSuz;
@@ -2158,8 +2182,20 @@
     var oneriAd = kap.getAttribute('data-oneri');
     if (oneriAd) {
       var küme = {}, cikti = [];
+      /* 🔴 YER TUTUCU BİR DEĞER DEĞİLDİR — kapı yakaladı: kütük "Seç…"i
+         süzüyordu ama kitin SAYFA hasadı (2. kaynak) `<option>`ları ham
+         okuyup onu da öneriyordu. FIT ekipman alanında "Seç…" bir etiket
+         olarak seçilebiliyordu. Süzgeç kütükte VE burada aynı olmalı;
+         iki yerde ayrı ölçüt, iki ayrı gerçektir. */
+      var yerTutucu = function (v) {
+        return !v
+          || /^(seç|seçiniz|seçin|tümü|hepsi|—|–|-|\.\.\.)…?$/i.test(v)
+          || /^(seç|seçiniz)\b/i.test(v)
+          || /—\s*(sözlükte yok|kayıt yok|bulunamadı|eşleşme yok)/i.test(v);
+      };
       var kat = function (v) {
         v = (v || '').replace(/\s+/g, ' ').trim();
+        if (yerTutucu(v)) return;
         if (v && !küme[v]) { küme[v] = 1; cikti.push(v); }
       };
       if (window.DM_ONERI && window.DM_ONERI[oneriAd])
@@ -4464,6 +4500,31 @@
       s.setAttribute('data-tekrar-kuruldu', '1');
       yazilan++;
 
+      /* 🔴 KİT İKİNCİ TAKIM ÜRETİYORDU — ajan B ölçtü: 60 tekrar satırının
+         60'ı ÇİFT denetimliydi (iki numara, iki tutamak, iki sil). Markup
+         kendi `.adim-no`sunu ve kendi işlem düğmelerini zaten taşıyor;
+         kit onların üstüne kendi `.tekrar-bas`ını koyuyordu.
+         Kural: KİT İKİNCİ YÜZEY AÇMAZ, VAR OLANI BENİMSER. Satır kendi
+         numarasını/tutamağını/silmesini bildirmişse kit onları kendi
+         rollerine bağlar; bildirmemişse üretir.
+         (L3'ün "çift sürücü yasak" kararının tekrarlayıcı karşılığı —
+          madde 5'in "alan başına tek editör" dersinin üçüncü kaydı.) */
+      var varNo   = s.querySelector('.adim-no, [data-rol="satir-no"]');
+      var varTut  = s.querySelector('.tutamak, .tekrar-tutamak, [data-islem="sirala"], [data-eylem="sirala"]');
+      var varSil  = s.querySelector('[data-islem="sil"], .tekrar-sil');
+      if (!tablo && (varNo || varTut || varSil)) {
+        /* BENİMSE — eksik olanı da üretme; satırın kendi tasarımı kalır. */
+        if (varNo && !varNo.getAttribute('data-rol')) varNo.setAttribute('data-rol', 'satir-no');
+        if (varTut && !varTut.classList.contains('tekrar-tutamak')) {
+          varTut.classList.add('tekrar-tutamak');
+          varTut.draggable = true;
+          if (!varTut.getAttribute('data-ipucu'))
+            varTut.setAttribute('data-ipucu', 'Tıkla: bir aşağı · sürükle ya da ok tuşları: serbest');
+        }
+        s.classList.add('tekrar-satiri');
+        return;
+      }
+
       if (!tablo) {
         var bas = document.createElement('div');
         bas.className = 'tekrar-bas';
@@ -4621,5 +4682,780 @@
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', function () { Lkur(document); });
   } else { Lkur(document); }
+
+})();
+
+
+/* ═══════════════════════════════════════════════════════════════════════
+   K12 · ÇOK DİLLİ İÇERİK — DİL SEKMESİ RAYI
+   ───────────────────────────────────────────────────────────────────────
+   Tarih: 2026-09-05 · parti 5 · lead
+
+   Markup bir alanı ÇEVRİLEBİLİR diye bildirir, kit gerisini kurar:
+
+       <input class="alan-girdi" name="baslik" data-dil>
+
+   Doğan yüzey: alanın bağlı olduğu BÖLÜMÜN üstünde bir dil sekmesi rayı
+   (varsayılan dil ilk kalem). Her sekme AYNI alanları o dil için gösterir.
+   Değer `name="baslik[tr]"` / `name="baslik[en]"` olarak toplanır.
+
+   ── NEDEN ALANLAR TAŞINMIYOR ────────────────────────────────────────
+   🔴 İlk tasarım her dil için alanların KLONUNU ayrı panolara koyuyordu.
+      Uygulanmadı, üç bedeli var ve üçü de ölçülebilir:
+        · EKSİ BİRİNCİ MADDE — markup yeniden dizilir, `.alan-izgara`nın
+          subgrid hizası (K23–K26) bozulur, hata rayı kayar.
+        · TinyMCE her klonda YENİDEN kurulmalı; L10'un klon güvenliğinin
+          editör tarafı burada da doğar (madde 5'in kusuru).
+        · Çevrilmeyen alanlar (fiyat · tarih · ilişki · görsel) araya
+          serpiştirilmiş; onları panonun DIŞINDA tutmak alanları
+          fiziksel olarak ayırmayı gerektirirdi.
+      Kural bunun yerine DEĞERİ değiştirir, ALANI değil: görünen denetim
+      HER ZAMAN aktif dilin denetimidir; öteki diller gizli girdilerde
+      durur. Ekranın düzeni bir piksel bile oynamaz.
+
+   ── ÇEVRİLMEYEN ALAN SEKMENİN DIŞINDADIR ────────────────────────────
+   `data-dil` bildirmeyen alan tek kalır ve dil değişince DEĞİŞMEZ.
+   Kural bunu görsel olarak da söyler: çevrilebilir alan bir dil rozeti
+   taşır, ötekiler taşımaz.
+
+   ── DİL EKLENİNCE/ÇIKINCA ───────────────────────────────────────────
+   Ray `DM_DILLER`den kurulur ve o liste `admin-dil-ceviri` ekranının
+   KENDİ bildiriminden hasat edilir. Üçüncü dil o ekranda açılınca üçüncü
+   sekme kendiliğinden doğar; kapatılınca düşer. Kitte dil listesi YOK.
+
+   ⚠ Public site seçili dile göre o alanı basar — bu KANON kuralıdır ve
+     public uygulaması AYRI TURDUR. Panel `name="<ad>[<kod>]"` sözleşmesini
+     üretir; public tarafın okuyacağı şey budur.
+   ═══════════════════════════════════════════════════════════════════════ */
+(function () {
+  'use strict';
+
+  var KOK = document.body;
+  if (!KOK || !KOK.classList.contains('yetkili')) return;
+
+  var toast = window.DM_TOAST || function () {};
+
+  function diller() {
+    var d = window.DM_DILLER;
+    return (d && d.length) ? d : null;
+  }
+  function varsayilanDil() {
+    var d = diller();
+    if (!d) return null;
+    for (var i = 0; i < d.length; i++) if (d[i].varsayilan) return d[i].kod;
+    return d[0].kod;
+  }
+
+  /* Alanın değerini OKU/YAZ — girdi tipine göre. TinyMCE sürülüyorsa
+     editörün kendi tamponu asıldır; textarea'ya yazmak sessizce kaybolur
+     (L2'nin kayıtlı dersi). */
+  function alanOku(el) {
+    var ed = window.tinymce && window.tinymce.get && el.id && window.tinymce.get(el.id);
+    if (ed) return ed.getContent();
+    return el.value || '';
+  }
+  function alanYaz(el, v) {
+    var ed = window.tinymce && window.tinymce.get && el.id && window.tinymce.get(el.id);
+    if (ed) { ed.setContent(v || ''); return; }
+    el.value = v || '';
+  }
+
+  /* Bir alanın dil deposu: her dil için gizli girdi. Ad sözleşmesi
+     `<ad>[<kod>]` — public tarafın okuyacağı biçim. */
+  function depoKur(el, dl) {
+    var ham = el.getAttribute('data-dil-ad') || el.name || el.id;
+    if (!ham) return null;
+    /* 🔴 DİZİ EKİ SİLİNİYORDU — ajan F ölçtü ve bu bir ENGELLEYİCİYDİ:
+       `adim_baslik[]` dört satırda da `adim_baslik[tr]` oluyordu; 48 depo
+       adının 24'ü ÇİFT. Değerler DOM'da doğru ayrışıyor ama SUNUCUYA GİDEN
+       AD dört satırı BİRE indiriyor — kayıp sessiz, çünkü ekranda her şey
+       doğru görünüyor. Bedeli ölçüldü: 15 ekran / 269 aday (adayların
+       %81'i) bu kural düzelmeden bildirilemezdi.
+       Ad artık `<ad>[<kod>][]` — dil eki dizi ekinin ÖNÜNE girer. */
+    var dizi = /\[\s*\]$/.test(ham);
+    ham = ham.replace(/\[\s*\]$/, '').replace(/\[[a-z-]{2,5}\]$/, '');
+    el.setAttribute('data-dil-ad', ham);
+    el.setAttribute('data-dil-dizi', dizi ? '1' : '0');
+    var kap = el.closest('.alan') || el.parentNode;
+    dl.forEach(function (d) {
+      if (kap.querySelector('input[type=hidden][data-dil-depo="' + d.kod + '"][data-dil-ad="' + ham + '"]')) return;
+      var g = document.createElement('input');
+      g.type = 'hidden';
+      g.setAttribute('data-dil-depo', d.kod);
+      g.setAttribute('data-dil-ad', ham);
+      g.name = ham + '[' + d.kod + ']' + (dizi ? '[]' : '');
+      /* Varsayılan dilin deposu, alanın BUGÜNKÜ değeriyle doğar — mevcut
+         kayıt hiçbir şey kaybetmez. */
+      g.value = d.varsayilan ? alanOku(el) : '';
+      kap.appendChild(g);
+    });
+    /* Görünen denetim artık `name` TAŞIMAZ: değer depolardan gönderilir.
+       İki yerden gönderilseydi sunucu hangisini alacağını bilemezdi. */
+    if (el.name) { el.setAttribute('data-dil-eski-ad', el.name); el.removeAttribute('name'); }
+    return ham;
+  }
+
+  function depo(el, kod) {
+    var ham = el.getAttribute('data-dil-ad');
+    var kap = el.closest('.alan') || el.parentNode;
+    return kap.querySelector('input[type=hidden][data-dil-depo="' + kod + '"][data-dil-ad="' + ham + '"]');
+  }
+
+  /* Bir grubun kapsadığı çevrilebilir alanlar. Kanca ADA DEĞİL İÇERİĞE
+     bakar (K24'ün dersi): grup, `data-dil` çocuğu TAŞIYAN bölümdür. */
+  function grupAlanlari(grup) {
+    return [].slice.call(grup.querySelectorAll('[data-dil]'));
+  }
+
+  function eksikSay(grup, kod) {
+    var n = 0;
+    grupAlanlari(grup).forEach(function (el) {
+      var g = depo(el, kod);
+      if (g && !String(g.value).replace(/<[^>]*>/g, '').trim()) n++;
+    });
+    return n;
+  }
+
+  function rozetTazele(grup) {
+    var dl = diller(); if (!dl) return;
+    var ray = grup.__dilRay; if (!ray) return;
+    dl.forEach(function (d) {
+      var s = ray.querySelector('[data-dil-sekme="' + d.kod + '"]');
+      if (!s) return;
+      var r = s.querySelector('.dil-eksik');
+      var n = eksikSay(grup, d.kod);
+      if (!n) { if (r) r.remove(); return; }
+      if (!r) {
+        r = document.createElement('span');
+        r.className = 'dil-eksik';
+        s.appendChild(r);
+      }
+      r.textContent = n;
+      /* 🔴 SAYI TEK BAŞINA BİR ŞEY SÖYLEMEZ — erişilebilir ad tam cümle. */
+      s.setAttribute('aria-label', d.ad + ' — ' + n + ' alan çevrilmedi');
+    });
+  }
+
+  function dileGec(grup, kod) {
+    var dl = diller(); if (!dl) return;
+    var eski = grup.getAttribute('data-dil-aktif');
+    /* 1 · ÇIKARKEN KAYDET — yoksa sekme değişimi yazılanı yutar. */
+    if (eski && eski !== kod) {
+      grupAlanlari(grup).forEach(function (el) {
+        var g = depo(el, eski);
+        if (g) g.value = alanOku(el);
+      });
+    }
+    /* 2 · GİRERKEN YÜKLE */
+    grupAlanlari(grup).forEach(function (el) {
+      var g = depo(el, kod);
+      alanYaz(el, g ? g.value : '');
+      el.setAttribute('data-dil-su-an', kod);
+      /* Etiketteki dil işareti — kullanıcı hangi dili yazdığını ALANIN
+         KENDİSİNDE görür, yalnız rayda değil. Uzun formda ray ekrandan
+         çıkar ve o an hangi dilde olduğu kaybolurdu. */
+      var kap = el.closest('.alan');
+      if (kap) kap.setAttribute('data-dil-isaret', kod);
+      var et = kap && kap.querySelector('.alan-etiket');
+      if (et) et.setAttribute('data-dil-isaret', kod);
+    });
+    grup.setAttribute('data-dil-aktif', kod);
+    var ray = grup.__dilRay;
+    if (ray) {
+      [].forEach.call(ray.querySelectorAll('[data-dil-sekme]'), function (s) {
+        var a = s.getAttribute('data-dil-sekme') === kod;
+        s.classList.toggle('aktif', a);
+        s.setAttribute('aria-selected', String(a));
+      });
+    }
+    rozetTazele(grup);
+  }
+
+  function grupKur(grup) {
+    if (grup.getAttribute('data-dil-kuruldu') === '1') return false;
+    var dl = diller();
+    if (!dl || dl.length < 2) return false;      /* tek dil → ray DOĞMAZ */
+    var alanlar = grupAlanlari(grup);
+    if (!alanlar.length) return false;
+    grup.setAttribute('data-dil-kuruldu', '1');
+
+    alanlar.forEach(function (el) {
+      depoKur(el, dl);
+      /* Çevrilebilir alan bir dil rozeti taşır; çevrilmeyen taşımaz.
+         🔴 `.alan` SARMALAYICISI HER ZAMAN YOK — ajan F ölçtü: L10
+            satırlarındaki alanlar `.adim-govde` gibi kaplarda duruyor ve
+            16 alan görsel işaret ALMIYORDU (deposu doğruydu, işareti
+            yoktu). Kanca kabın ADINA değil, ETİKETİ TAŞIYAN en yakın
+            kaba bakar; o da yoksa alanın kendi ebeveynine. */
+      var kap = el.closest('.alan') ||
+                (el.parentElement && el.parentElement.querySelector('.alan-etiket, label')
+                  ? el.parentElement : null) ||
+                el.parentElement;
+      if (kap) kap.classList.add('alan-cevrilebilir');
+    });
+
+    var ray = document.createElement('div');
+    ray.className = 'sekmeler dil-sekmeler';
+    ray.setAttribute('role', 'tablist');
+    ray.setAttribute('aria-label', 'İçerik dili');
+    dl.forEach(function (d) {
+      var s = document.createElement('button');
+      s.type = 'button';
+      s.className = 'sekme' + (d.varsayilan ? ' aktif' : '');
+      s.setAttribute('role', 'tab');
+      s.setAttribute('data-dil-sekme', d.kod);
+      s.setAttribute('aria-selected', String(!!d.varsayilan));
+      s.appendChild(document.createTextNode(d.ad));
+      ray.appendChild(s);
+    });
+    /* Ray bölümün BAŞINA — başlık varsa onun ardına (başlık bölümün adıdır,
+       dil onun altındaki bir kiptir). */
+    var bas = grup.querySelector('.form-bolum-bas, .kart-baslik');
+    if (bas && bas.parentNode === grup) grup.insertBefore(ray, bas.nextSibling);
+    else grup.insertBefore(ray, grup.firstChild);
+    grup.__dilRay = ray;
+
+    ray.addEventListener('click', function (e) {
+      var s = e.target.closest('[data-dil-sekme]');
+      if (!s) return;
+      e.preventDefault();
+      dileGec(grup, s.getAttribute('data-dil-sekme'));
+    });
+    /* Yazdıkça rozet tazelenir — kaydetmeyi beklemez. */
+    grup.addEventListener('input', function (e) {
+      if (!e.target.closest('[data-dil]')) return;
+      var kod = grup.getAttribute('data-dil-aktif');
+      var el = e.target.closest('[data-dil]');
+      var g = depo(el, kod);
+      if (g) g.value = alanOku(el);
+      rozetTazele(grup);
+    });
+
+    dileGec(grup, varsayilanDil());
+    return true;
+  }
+
+  /* Grup = `data-dil` çocuğu taşıyan EN YAKIN bölüm. Kanca kabın adına
+     değil içeriğine bakar; `.form-bolum` yoksa `.kart-govde`ye çıkar. */
+  function gruplar() {
+    var bulunan = [];
+    document.querySelectorAll('[data-dil]').forEach(function (el) {
+      /* 🔴 GRUP = PANEL, BÖLÜM DEĞİL — ajan F sordu: "Anlatım" panelinde
+         üç `.form-bolum` var ve ÜÇ bağımsız dil rayı doğuyordu. Kullanıcı
+         "bu paneli İngilizce yaz" diye düşünür, "bu bölümü" diye değil;
+         üç ray üç ayrı dil durumu demek ve biri TR'de biri EN'de kalabilir.
+         Grup önce SEKME PANOSUDUR; pano yoksa bölüme, o da yoksa forma
+         düşer. Böylece panel başına TEK ray, TEK dil durumu. */
+      var g = el.closest('[role="tabpanel"]') || el.closest('.form-bolum') ||
+              el.closest('.kart-govde') || el.closest('form');
+      if (g && bulunan.indexOf(g) === -1) bulunan.push(g);
+    });
+    return bulunan;
+  }
+
+  function K12kur() {
+    var n = 0;
+    gruplar().forEach(function (g) { if (grupKur(g)) n++; });
+    return n;
+  }
+
+  /* ── KAYDET UYARISI ──────────────────────────────────────────────
+     🔴 Uyarı KAYDI ENGELLEMEZ. Eksik çeviri bir DOĞRULAMA HATASI değil,
+        bir iş durumudur: yönetici Türkçeyi bugün, İngilizceyi yarın
+        yazabilir. Engelleyen bir kural onu alanı sahte bir metinle
+        doldurmaya iter — kuralın amacının tersi.
+     ⚠ Yakalama evresinde koşar ki kitin kendi `kaydet` dalından ÖNCE
+       görülsün; ama olayı KESMEZ. */
+  document.addEventListener('click', function (e) {
+    var d = e.target.closest('[data-eylem="kaydet"], [data-eylem="yayinla"], [data-eylem="taslak"]');
+    if (!d) return;
+    var dl = diller(); if (!dl) return;
+    var toplam = 0, dokum = [];
+    gruplar().forEach(function (g) {
+      if (g.getAttribute('data-dil-kuruldu') !== '1') return;
+      /* Görünen alanın son hâli deposuna yazılmamış olabilir. */
+      var aktif = g.getAttribute('data-dil-aktif');
+      grupAlanlari(g).forEach(function (el) {
+        var s = depo(el, aktif); if (s) s.value = alanOku(el);
+      });
+      dl.forEach(function (x) {
+        var n = eksikSay(g, x.kod);
+        if (n) { toplam += n; dokum.push(x.ad + ' ' + n); }
+      });
+      rozetTazele(g);
+    });
+    if (toplam) toast('Kaydedildi — çevrilmemiş alan var: ' + dokum.join(' · ') + '.');
+  }, true);
+
+  window.DM_K12_KUR = K12kur;
+  window.DM_K12_EKSIK = eksikSay;
+  window.DM_K12_GRUPLAR = gruplar;
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function () { K12kur(); });
+  } else { K12kur(); }
+
+})();
+
+
+/* ═══════════════════════════════════════════════════════════════════════
+   K13 · KOLON SIRALAMA ÜÇ DURUMLU — artan → azalan → VARSAYILAN
+   ───────────────────────────────────────────────────────────────────────
+   Beyar: *"artan → azalan → varsayılan; şu an varsayılana dönmüyor."*
+   Gastro kulvarı bunu KÖ-L2 olarak pilotladı (`gastro-ek.js`); kural
+   buraya taşındı ve artık dört markanın ortağı.
+
+   ÖLÇÜLDÜ · `_ortak/panel.js:146` sürücüsü İKİ durumlu:
+       var artan = th.getAttribute('aria-sort') !== 'ascending';
+   Üçüncü tık `descending` görüp yine `ascending` yapıyor; kullanıcının
+   tabloyu GELDİĞİ HÂLE döndürme yolu YOK.
+
+   🔴 SÜRÜCÜ SÖKÜLMEDİ. `panel.js` kittir ve SALT OKUMA (§13); ayrıca dört
+      markada bayt-özdeşliği kendi sözleşmesi. Bu kural onun ÜSTÜNE biner:
+        · YAKALAMA evresi — panel.js sıralamadan ÖNCE tablonun varsayılan
+          hâlini bir kez saklar (satır sırası + başlangıç `aria-sort`ları).
+          Anlık saklama, `DOMContentLoaded`da değil: satırları sonradan
+          değişen tablo da DOĞRU tabanla saklanır.
+        · KABARMA evresi — panel.js kendi işini bitirdikten SONRA koşar
+          (aynı evre, sonra eklenen dinleyici sonra çalışır) ve üçüncü
+          tıkta varsayılanı geri kurar.
+   ⚠ ARAYA GİRİLMİYOR (`stopPropagation` YOK): kesmek panel.js'in seçim ve
+     satır işlemlerini de öldürürdü. Bu bir DÜZELTME, bir kesme değil.
+   ⚠ Üçüncü durumun GÖRSELİ kanonda zaten var: `aria-sort` yokken başlık
+     sönük çift ok gösteriyor. Yeni bir görünüm açılmadı.
+   ═══════════════════════════════════════════════════════════════════════ */
+(function () {
+  'use strict';
+
+  var KOK = document.body;
+  if (!KOK || !KOK.classList.contains('yetkili')) return;
+
+  var TABAN = new WeakMap();       /* tablo → {satirlar:[], sira:[{th,deger}]} */
+  var ONCEKI = new WeakMap();      /* th → tıklamadan ÖNCEKİ aria-sort */
+
+  function basliklar(tablo) {
+    return [].slice.call(tablo.querySelectorAll('thead th'));
+  }
+
+  function tabaniSakla(tablo) {
+    if (TABAN.has(tablo)) return;
+    var g = tablo.tBodies[0];
+    if (!g) return;
+    TABAN.set(tablo, {
+      satirlar: [].slice.call(g.rows),
+      sira: basliklar(tablo).map(function (th) {
+        return { th: th, deger: th.getAttribute('aria-sort') };
+      })
+    });
+  }
+
+  function tabanaDon(tablo) {
+    var t = TABAN.get(tablo);
+    if (!t) return false;
+    var g = tablo.tBodies[0];
+    if (!g) return false;
+    t.satirlar.forEach(function (tr) { if (tr.parentNode === g) g.appendChild(tr); });
+    t.sira.forEach(function (x) {
+      if (x.deger) x.th.setAttribute('aria-sort', x.deger);
+      else x.th.removeAttribute('aria-sort');
+    });
+    return true;
+  }
+
+  /* 1 · YAKALAMA — panel.js'ten ÖNCE */
+  document.addEventListener('click', function (e) {
+    var d = e.target.closest ? e.target.closest('.tablo th.sirali > button') : null;
+    if (!d) return;
+    var th = d.parentElement, tablo = th.closest('table');
+    if (!tablo) return;
+    tabaniSakla(tablo);
+    ONCEKI.set(th, th.getAttribute('aria-sort'));
+  }, true);
+
+  /* 2 · KABARMA — panel.js'ten SONRA */
+  document.addEventListener('click', function (e) {
+    var d = e.target.closest ? e.target.closest('.tablo th.sirali > button') : null;
+    if (!d) return;
+    var th = d.parentElement, tablo = th.closest('table');
+    if (!tablo) return;
+    /* Üçüncü tık: ÖNCESİ azalandı. panel.js onu yine artana çevirdi;
+       biz varsayılana döndürüyoruz. */
+    if (ONCEKI.get(th) !== 'descending') return;
+    if (tabanaDon(tablo)) {
+      ONCEKI.set(th, null);
+      if (window.DM_SECIM_TAZELE) window.DM_SECIM_TAZELE(tablo);
+      if (window.DM_LISTE_TAZELE) window.DM_LISTE_TAZELE(tablo.tBodies[0]);
+    }
+  });
+
+  /* Başlığın üç durumlu olduğu BİLDİRİLİR — ipucu metni ve imleç oradan. */
+  function K13kur() {
+    var n = 0;
+    document.querySelectorAll('.tablo th.sirali > button').forEach(function (b) {
+      var th = b.parentElement;
+      if (th.getAttribute('data-siralanabilir') === '1') return;
+      th.setAttribute('data-siralanabilir', '1');
+      if (!b.getAttribute('data-ipucu'))
+        b.setAttribute('data-ipucu', 'Sırala: artan → azalan → varsayılan');
+      n++;
+    });
+    return n;
+  }
+  window.DM_K13_KUR = K13kur;
+  window.DM_K13_TABAN = function (t) { return TABAN.get(t); };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', K13kur);
+  } else { K13kur(); }
+
+})();
+
+
+/* ═══════════════════════════════════════════════════════════════════════
+   K16 · HESAPLANAN ETİKET/ROZET KAYNAKTAN TÜRETİLİR
+   ───────────────────────────────────────────────────────────────────────
+   Beyar: *"Hesaplanan etiket/rozet kaynaktan türetilir, salt okunur +
+   manuel ek."*
+
+       <div class="rozet-alani" data-turetilen="seviye" data-turetilen-ek></div>
+
+   `data-turetilen` bir ALAN ADI ya da `#id`dir. Kit o alanın değerini
+   okur, rozeti çizer ve kaynak değişince YENİDEN çizer.
+
+   🔴 TÜRETİLEN ROZET DÜZENLENEBİLİR GÖSTERİLMEZ — L7'nin rozet karşılığı:
+      yönetici değiştirebileceğini sanar ve değiştirdiği şey bir sonraki
+      hesapta geri döner. Rozet salt okunur, kaynağı YAZILI.
+   🔴 AMA KAYNAK KİLİTLENMEZ: "manuel ek" gerçek bir ihtiyaç. Türetilenin
+      YANINA elle rozet eklenebilir (`data-turetilen-ek`), ve eklenenler
+      türetilenden GÖRSEL OLARAK ayrılır — ikisi karışırsa yönetici hangi
+      rozetin nereden geldiğini bilemez.
+   ⚠ Kaynak boşsa rozet BASILMAZ (boş bir rozet bir bilgi değil, gürültü).
+     Kaynağın bulunamadığı hâl AYRI: yüzey "kaynak bildirilmedi" der —
+     sessizce boş kalmaz.
+   ═══════════════════════════════════════════════════════════════════════ */
+(function () {
+  'use strict';
+
+  var KOK = document.body;
+  if (!KOK || !KOK.classList.contains('yetkili')) return;
+
+  function kaynakBul(kap) {
+    var ad = kap.getAttribute('data-turetilen');
+    if (!ad) return null;
+    if (ad.charAt(0) === '#') return document.querySelector(ad);
+    var f = kap.closest('form') || document;
+    return f.querySelector('[name="' + ad + '"], [name="' + ad + '[]"], #' + ad);
+  }
+
+  function kaynakDeger(el) {
+    if (!el) return '';
+    if (el.tagName === 'SELECT') {
+      var o = el.selectedOptions && el.selectedOptions[0];
+      return o ? (o.textContent || o.value || '').trim() : '';
+    }
+    if (el.type === 'checkbox') return el.checked ? (el.getAttribute('data-etiket') || 'Evet') : '';
+    /* Çoklu seçim kabının değeri çiplerdedir. */
+    var kap = el.closest && el.closest('.coklu-secim');
+    if (kap) {
+      return [].map.call(kap.querySelectorAll('.cipler [data-deger]'), function (c) {
+        return c.getAttribute('data-deger');
+      }).join(', ');
+    }
+    return (el.value || '').trim();
+  }
+
+  function turetKur(kap) {
+    if (kap.getAttribute('data-turetilen-kuruldu') === '1') return false;
+    kap.setAttribute('data-turetilen-kuruldu', '1');
+
+    var yuzey = document.createElement('div');
+    yuzey.className = 'turetilen-rozetler';
+    yuzey.setAttribute('data-rol', 'turetilen');
+    kap.appendChild(yuzey);
+
+    var not = document.createElement('p');
+    not.className = 'alan-yardim';
+    not.setAttribute('data-rol', 'turetilen-not');
+    kap.appendChild(not);
+
+    function ciz() {
+      var el = kaynakBul(kap);
+      yuzey.innerHTML = '';
+      if (!el) {
+        /* 🔴 SESSİZ BOŞLUK YOK: kaynağın bulunamaması bir KUSURDUR ve
+           yüzeyde yazılır — geliştirici de yönetici de görür. */
+        not.textContent = 'Kaynak bildirilmedi: “' + kap.getAttribute('data-turetilen') + '” adlı alan bu formda bulunamadı.';
+        not.hidden = false;
+        return;
+      }
+      var d = kaynakDeger(el);
+      var parcalar = d ? d.split(',').map(function (x) { return x.trim(); }).filter(Boolean) : [];
+      parcalar.forEach(function (p) {
+        var r = document.createElement('span');
+        r.className = 'rozet turetilen';
+        r.textContent = p;
+        r.setAttribute('data-turetilen-deger', p);
+        yuzey.appendChild(r);
+      });
+      var etiket = (el.closest('.alan') && el.closest('.alan').querySelector('.alan-etiket'));
+      var kaynakAd = (etiket ? etiket.textContent.replace(/\s+/g, ' ').trim().replace(/\s*\*$/, '') : kap.getAttribute('data-turetilen'));
+      not.textContent = parcalar.length
+        ? 'Kaynaktan türetilir: ' + kaynakAd + ' · elle değiştirilmez'
+        : 'Kaynak boş: ' + kaynakAd + ' seçilince rozet doğar.';
+      not.hidden = false;
+    }
+
+    /* Kaynak DEĞİŞİNCE yeniden çizilir — türetme bir kerelik değil. */
+    var el = kaynakBul(kap);
+    var dinle = el && (el.closest('.coklu-secim') || el);
+    if (dinle) {
+      ['input', 'change'].forEach(function (t) {
+        dinle.addEventListener(t, ciz);
+      });
+      /* Çip eklenip silinmesi `input` üretmez — kap gözlenir. */
+      if (el.closest && el.closest('.coklu-secim') && window.MutationObserver) {
+        new MutationObserver(ciz).observe(el.closest('.coklu-secim'), { childList: true, subtree: true });
+      }
+    }
+    ciz();
+
+    /* MANUEL EK — türetilenden AYRI kapta, ayrı görünümde. */
+    if (kap.hasAttribute('data-turetilen-ek')) {
+      var ekKap = document.createElement('div');
+      ekKap.className = 'coklu-secim turetilen-ek';
+      ekKap.setAttribute('data-ad', (kap.getAttribute('data-turetilen') || 'rozet') + '_ek[]');
+      ekKap.setAttribute('data-oneri', kap.getAttribute('data-turetilen') || 'rozet');
+      ekKap.innerHTML =
+        '<div class="cipler"></div>' +
+        '<input class="alan-girdi acilir-arama" type="search" placeholder="Elle rozet ekle…" ' +
+        'aria-label="Elle rozet ekle" role="combobox" aria-expanded="false">';
+      kap.appendChild(ekKap);
+      if (window.DM_COKLU_KUR) window.DM_COKLU_KUR();
+    }
+    return true;
+  }
+
+  function K16kur() {
+    var n = 0;
+    document.querySelectorAll('[data-turetilen]').forEach(function (k) { if (turetKur(k)) n++; });
+    return n;
+  }
+  window.DM_K16_KUR = K16kur;
+
+
+  /* ═══════════════════════════════════════════════════════════════════
+     K14 · ZAMANLANMIŞ YAYIN — TAKVİME BÖLME
+     ───────────────────────────────────────────────────────────────────
+     Beyar'ın amacı: *"AI ile üretilen içeriği editörler TAKVİME BÖLEREK
+     yayına alır"* — 201 taslak tarif, "Cuma 108, Cumartesi 93".
+
+         <div data-zamanlama
+              data-zamanlama-toplam="#kpiTaslakSayisi"
+              data-zamanlama-adet="#gfAdet"
+              data-zamanlama-baslangic="#gfBaslangic"
+              data-zamanlama-tekrar="#gfTekrar">
+           <div data-rol="zamanlama-onizleme"></div>
+         </div>
+
+     Kit dağılımı HESAPLAR ve önizlemeyi yazar.
+
+     🔴 TOPLAM UYDURULMAZ. Sayı `data-zamanlama-toplam`ın gösterdiği
+        yüzeyden OKUNUR (bir KPI, bir sayaç, bir `value`). Bildirilmemişse
+        önizleme "kaç kayıt bölüneceği bildirilmedi" der ve HİÇBİR SAYI
+        BASMAZ. Sahte bir "201" yazmak, panelin en tehlikeli yalanı
+        olurdu: editör ona bakarak takvim kurar.
+     🔴 SON GÜN ARTIĞI GİZLENMEZ. 201 kayıt günde 108 ise iki gün eder ve
+        ikinci gün 93'tür — kit bunu AÇIKÇA yazar, "2 gün" deyip geçmez.
+     ⚠ Hafta sonu/tatil kuralı YOK ve olmadığı YAZILI: takvim bilgisi
+       panelde bildirilmiyor, uydurulmaz (§1).
+     ═══════════════════════════════════════════════════════════════════ */
+
+  /* 🔴 SÖZLEŞME ÇELİŞKİSİ — ajan E buldu ve tuzağa DÜŞTÜ: K14'ün seçicileri
+     `querySelector` çağırıyor ve `#` istiyor; §5b'nin `data-hedef`i ise
+     ÇIPLAK id, çünkü orada kit `getElementById` çağırıyor. Aynı panelde iki
+     karşıt biçim ve İKİSİ DE SESSİZCE başarısız oluyor.
+     §5b'nin kendi çözümü uygulandı: kit İKİ BİÇİMİ DE kabul eder. */
+  function hedefBul(sec) {
+    if (!sec) return null;
+    if (/^[#.\[]/.test(sec)) { try { return document.querySelector(sec); } catch (h) { return null; } }
+    return document.getElementById(sec) || (function () {
+      try { return document.querySelector(sec); } catch (h) { return null; }
+    })();
+  }
+
+  function sayiOku(sec) {
+    var el = hedefBul(sec);
+    if (!el) return null;
+    var ham = (el.value !== undefined && el.value !== '') ? el.value : (el.textContent || '');
+    /* "1.842" · "201 taslak" · "4.120 kişi" → sayı. Binlik NOKTA, TR. */
+    var m = String(ham).replace(/\s/g, '').match(/-?[\d.]+(?:,\d+)?/);
+    if (!m) return null;
+    var n = parseFloat(m[0].replace(/\./g, '').replace(',', '.'));
+    return isFinite(n) ? n : null;
+  }
+
+  var GUN = ['Pazar', 'Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi'];
+  var AY = ['Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran', 'Temmuz',
+            'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'];
+
+  function tarihOku(sec) {
+    var el = hedefBul(sec);
+    if (!el) return null;
+    /* Tarih seçicinin GERÇEK değeri `dataset.iso`da (§8'in sözleşmesi);
+       görünen değer biçimlenmiştir. */
+    var iso = el.dataset && el.dataset.iso;
+    if (iso) { var d = new Date(iso); if (!isNaN(d)) return d; }
+    var v = (el.value || '').trim();
+    var m = /^(\d{2})\.(\d{2})\.(\d{4})(?:\s+(\d{2}):(\d{2}))?$/.exec(v);
+    if (m) return new Date(+m[3], +m[2] - 1, +m[1], +(m[4] || 0), +(m[5] || 0));
+    return null;
+  }
+
+  function zamanlamaHesapla(kap) {
+    var toplam = sayiOku(kap.getAttribute('data-zamanlama-toplam'));
+    var adet = sayiOku(kap.getAttribute('data-zamanlama-adet'));
+    var bas = tarihOku(kap.getAttribute('data-zamanlama-baslangic'));
+    var tekrarEl = hedefBul(kap.getAttribute('data-zamanlama-tekrar'));
+    var tekrar = tekrarEl ? (tekrarEl.value || (tekrarEl.selectedOptions && tekrarEl.selectedOptions[0] && tekrarEl.selectedOptions[0].textContent) || '') : 'gunluk';
+    return { toplam: toplam, adet: adet, bas: bas, tekrar: String(tekrar).toLocaleLowerCase('tr') };
+  }
+
+  function zamanlamaCiz(kap) {
+    var y = kap.querySelector('[data-rol="zamanlama-onizleme"]');
+    if (!y) return;
+    var h = zamanlamaHesapla(kap);
+    y.innerHTML = '';
+
+    var eksik = [];
+    if (h.toplam == null) eksik.push('bölünecek kayıt sayısı');
+    if (!h.adet || h.adet <= 0) eksik.push('günlük adet');
+    if (!h.bas) eksik.push('başlangıç tarihi');
+    if (eksik.length) {
+      var p = document.createElement('p');
+      p.className = 'alan-yardim';
+      p.textContent = 'Önizleme için ' + eksik.join(' · ') + ' gerekli. Bildirilmeden takvim çizilmez.';
+      y.appendChild(p);
+      return;
+    }
+
+    var artis = /hafta/.test(h.tekrar) ? 7 : (/tek/.test(h.tekrar) ? 0 : 1);
+    var kalan = h.toplam, i = 0, satirlar = [];
+    while (kalan > 0 && i < 60) {
+      var g = new Date(h.bas.getTime());
+      g.setDate(g.getDate() + i * (artis || 1));
+      var bu = Math.min(h.adet, kalan);
+      satirlar.push({ tarih: g, adet: bu, son: (kalan - bu) <= 0 });
+      kalan -= bu;
+      i++;
+      if (!artis) break;                 /* tek sefer → tek satır */
+    }
+
+    var liste = document.createElement('ul');
+    liste.className = 'zamanlama-onizleme';
+    satirlar.forEach(function (s) {
+      var li = document.createElement('li');
+      var t = document.createElement('b');
+      t.textContent = GUN[s.tarih.getDay()] + ' ' + s.tarih.getDate() + ' ' + AY[s.tarih.getMonth()];
+      var n = document.createElement('span');
+      /* 🔴 SON GÜN ARTIĞI AÇIKÇA YAZILIR — "2 gün" deyip geçmek editöre
+         yanlış takvim kurdurur. */
+      n.textContent = s.adet + ' kayıt' + (s.son && s.adet < h.adet ? ' (son gün · artan)' : '');
+      li.appendChild(t); li.appendChild(n);
+      liste.appendChild(li);
+    });
+    y.appendChild(liste);
+
+    var ozet = document.createElement('p');
+    ozet.className = 'alan-yardim';
+    ozet.textContent = h.toplam + ' kayıt · günde ' + h.adet + ' · ' + satirlar.length + ' gün' +
+      (kalan > 0 ? ' (ilk 60 gün gösteriliyor, ' + kalan + ' kayıt daha var)' : '') +
+      ' · hafta sonu ve tatil kuralı YOK (panelde bildirilmiyor).';
+    y.appendChild(ozet);
+  }
+
+  function K14kur() {
+    var n = 0;
+    document.querySelectorAll('[data-zamanlama]').forEach(function (kap) {
+      if (kap.getAttribute('data-zamanlama-kuruldu') === '1') return;
+      kap.setAttribute('data-zamanlama-kuruldu', '1');
+      n++;
+      ['data-zamanlama-toplam', 'data-zamanlama-adet', 'data-zamanlama-baslangic', 'data-zamanlama-tekrar']
+        .forEach(function (a) {
+          var el = hedefBul(kap.getAttribute(a));
+          if (!el) return;
+          ['input', 'change'].forEach(function (t) {
+            el.addEventListener(t, function () { zamanlamaCiz(kap); });
+          });
+        });
+      zamanlamaCiz(kap);
+    });
+    return n;
+  }
+  window.DM_K14_KUR = K14kur;
+  window.DM_K14_CIZ = zamanlamaCiz;
+
+  /* ═══════════════════════════════════════════════════════════════════
+     K14b · TİPE BAĞLI ALAN — bildirim vardı, SÜRÜCÜSÜ HİÇ YOKTU
+     ───────────────────────────────────────────────────────────────────
+     🔴 Ajan E ölçtü: `grep -rn 'tip-alan' kanon/ _ortak/` → SIFIR. İki
+        ekran (`admin-gorev-form` · `admin-challenge-form`) bu bildirimi
+        taşıyor ve alanlar HİÇ süzülmüyordu — tür "Tek seferlik" seçilince
+        cron alanı hâlâ görünüyordu. Bildirilmiş ama sürülmeyen bir
+        nitelik, hiç bildirilmemişten kötüdür (§22'nin ARIA dersinin alan
+        karşılığı: yüzey bir söz veriyor, hiçbir şey tutmuyor).
+
+         <select data-tip-alan-secici>            → sürücü
+         <div class="alan" data-tip-alan="sureli seri">  → yalnız o değerlerde
+
+     ⚠ Gizlenen alan `disabled` YAPILMAZ, `hidden` yapılır: `disabled` alan
+       form gönderiminden DÜŞER ve değer sessizce kaybolur (L7'nin dersi).
+     ⚠ Sürücü bildirilmemişse EN YAKIN forma bakılır; o da yoksa kural
+       koşmaz — kit rastgele bir seçim kutusu seçmez.
+     ═══════════════════════════════════════════════════════════════════ */
+  function tipDeger(sec) {
+    if (!sec) return '';
+    var v = sec.value;
+    if ((!v || v === 'on') && sec.selectedOptions && sec.selectedOptions[0])
+      v = sec.selectedOptions[0].getAttribute('data-tip') || sec.selectedOptions[0].textContent;
+    return String(v || '').trim().toLocaleLowerCase('tr');
+  }
+
+  function tipUygula(sec) {
+    var kapsam = sec.closest('form') || document;
+    var v = tipDeger(sec);
+    var gizlenen = 0;
+    kapsam.querySelectorAll('[data-tip-alan]').forEach(function (a) {
+      var izin = (a.getAttribute('data-tip-alan') || '')
+        .split(/[\s,|]+/).map(function (x) { return x.trim().toLocaleLowerCase('tr'); }).filter(Boolean);
+      var goster = !izin.length || izin.indexOf(v) !== -1;
+      a.hidden = !goster;
+      if (!goster) gizlenen++;
+    });
+    return gizlenen;
+  }
+
+  function K14bKur() {
+    var n = 0;
+    document.querySelectorAll('[data-tip-alan-secici]').forEach(function (sec) {
+      if (sec.getAttribute('data-tip-kuruldu') === '1') return;
+      sec.setAttribute('data-tip-kuruldu', '1');
+      n++;
+      ['change', 'input'].forEach(function (t) {
+        sec.addEventListener(t, function () { tipUygula(sec); });
+      });
+      tipUygula(sec);
+    });
+    /* Sürücü bildirilmemiş ama alanlar bildirilmişse SESSİZ KALMAZ. */
+    if (!n && document.querySelector('[data-tip-alan]'))
+      console.warn('[kit K14b] `data-tip-alan` bildirilmiş ama `data-tip-alan-secici` YOK — alanlar süzülmeyecek.');
+    return n;
+  }
+  window.DM_K14B_KUR = K14bKur;
+  window.DM_TIP_UYGULA = tipUygula;
+
+  function kur() { K16kur(); K14kur(); K14bKur(); }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', kur);
+  } else { kur(); }
 
 })();

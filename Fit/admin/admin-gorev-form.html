@@ -195,7 +195,7 @@
             <div class="alan-izgara c2">
               <div class="alan">
                 <label class="alan-etiket" for="gvTur">Tür</label>
-                <select class="alan-secim" id="gvTur" name="tur" data-tip-alan-secici="1"><option value="tekrarlayan" selected="">Tekrarlayan</option><option value="tek-seferlik">Tek seferlik</option><option value="tetikleyici">Tetikleyiciye bağlı</option><option value="veri-senk">Veri senkronizasyonu</option></select><div class="alan-yardim"><span>Dördü de <b>Görevler</b> listesinde geçen türlerdir; başka tür uydurulmadı.</span></div>
+                <select class="alan-secim" id="gvTur" name="tur" data-tip-alan-secici="1"><option value="tekrarlayan" selected="">Tekrarlayan</option><option value="tek-seferlik">Tek seferlik</option><option value="tetikleyici">Tetikleyiciye bağlı</option><option value="toplu-islem">Toplu işlem</option><option value="rapor-gonderim">Rapor gönderimi</option><option value="bildirim-gonderim">Bildirim gönderimi</option><option value="veri-senk">Veri senkronizasyonu</option></select><div class="alan-yardim"><span>Yedisi de <b>Görevler</b> listesinin <b>Tür</b> süzgecinde geçen türlerdir; başka tür uydurulmadı. Süzgeç yedi tür bildirirken bu alan yalnız dördünü sunuyordu — kalan üç tür hiçbir formdan seçilemiyordu.</span></div>
               </div>
               <div class="alan">
                 <label class="alan-etiket" for="gvCron">Zamanlama — cron</label>
@@ -215,6 +215,97 @@
                 <label class="alan-etiket" for="gvDeneme">En çok deneme</label>
                 <input data-girdi="sayi" class="alan-girdi" id="gvDeneme" name="deneme" type="number" min="1" max="10" placeholder="3">
                 <div class="alan-yardim"><span>Çalışma logundaki <b>Deneme</b> sütunu bu sayıya kadar sayar (listede <code>3 / 3</code>).</span></div>
+              </div>
+            </div>
+          </div>
+          <!-- ═══ YAYIN PLANI · K14 ═══════════════════════════════════════
+               Amaç: hazır bekleyen içeriği takvime BÖLEREK yayına almak.
+               🔴 SAYI UYDURULMADI. Modül seçeneklerinin `data-bekleyen`i o
+                  modülün KENDİ liste ekranındaki sekme sayacından okundu ve
+                  `data-kaynak` o sayacı adıyla gösterir. Sayacı olmayan
+                  modül (Sayfalar & SEO) sayı BİLDİRMEZ — "Taslaklar" sekmesi
+                  sayaçsız, KPI ise yalnız "Toplam 57 · Yayında 41" diyor ve
+                  taslak sayısı bu ikisinden ÇIKARILAMAZ (İncelemede,
+                  Planlanan ve Arşivlenen de yayında değil).
+               ⚠ Gün bölünmesini KİT hesaplar (`data-zamanlama`); bu ekran
+                  hesaplanmış hiçbir sayıyı markup'ta taşımaz.
+               ═══════════════════════════════════════════════════════════ -->
+          <div class="form-bolum" data-tip-alan="toplu-islem">
+            <h3 class="form-bolum-bas"><i class="fa-solid fa-calendar-days" aria-hidden="true"></i> Yayın planı</h3>
+            <div class="alan-yardim"><span>Bekleyen kayıtları takvime bölerek yayına alır. Yalnız <b>Toplu işlem</b> türünde kullanılır.</span></div>
+            <div class="alan-izgara c2">
+              <div class="alan">
+                <label class="alan-etiket" for="gvYayinModul">Modül <span class="zorunlu">*</span></label>
+                <select class="alan-secim" id="gvYayinModul" name="yayinModul" data-zorunlu="1">
+                  <option value="" selected="">Modül seç</option>
+                  <option value="sayfalar" data-kaynak="admin-sayfalar.html#Taslaklar">Sayfalar &amp; SEO</option>
+                  <option value="sss" data-bekleyen="3" data-kaynak="admin-sss.html#Taslaklar">Sıkça Sorulan Sorular</option>
+                  <option value="icerik-onaylari" data-bekleyen="96" data-kaynak="admin-icerik-onaylari.html#Onaylanan">İçerik Onayları</option>
+                  <option value="duyurular" data-bekleyen="8" data-kaynak="admin-duyurular.html#Taslaklar">Duyurular</option>
+                  <option value="yasal" data-bekleyen="2" data-kaynak="admin-yasal.html#Taslak">Yasal Metinler</option>
+                </select>
+                <div class="alan-yardim"><span>Beş modülün de bekleyen kayıt sayısı <b>kendi liste ekranının sekme sayacından</b> okunur; bu ekran sayı taşımaz. <b>Sayfalar &amp; SEO</b>'nun "Taslaklar" sekmesi <b>sayaçsızdır</b> — o modülde bekleyen sayısı bildirilmemiştir.</span></div>
+              </div>
+              <div class="alan">
+                <label class="alan-etiket" for="gvYayinBaslangic">İlk yayın günü <span class="zorunlu">*</span></label>
+                <input class="alan-girdi" id="gvYayinBaslangic" name="yayinBaslangic" type="text" data-tarih="saatli" data-zorunlu="1">
+                <div class="alan-yardim"><span>Bölünmenin ilk günü ve saati. Sonraki günler tekrar kuralına göre buradan sayılır.</span></div>
+              </div>
+            </div>
+            <div class="alan-izgara c2">
+              <div class="alan">
+                <label class="alan-etiket" for="gvYayinAdet">Günlük adet <span class="zorunlu">*</span></label>
+                <input data-girdi="sayi" class="alan-girdi" id="gvYayinAdet" name="yayinAdet" type="number" min="1" data-zorunlu="1">
+                <div class="alan-yardim"><span>O günde yayına alınacak kayıt sayısı. Son güne kalan artık, adetten az olabilir.</span></div>
+              </div>
+              <div class="alan">
+                <label class="alan-etiket" for="gvYayinTekrar">Tekrar kuralı</label>
+                <select class="alan-secim" id="gvYayinTekrar" name="yayinTekrar">
+                  <option value="gunluk" selected="">Günlük</option>
+                  <option value="tek-sefer">Tek sefer — hepsi ilk günde</option>
+                  <option value="haftalik">Haftalık</option>
+                  <option value="cron">Cron ifadesi — yukarıdaki <b>Zamanlama</b> alanı</option>
+                </select>
+                <div class="alan-yardim"><span><b>Cron</b> seçilirse gün aralığı bu bölümden değil, <b>Plan</b> bölümündeki cron ifadesinden okunur.</span></div>
+              </div>
+            </div>
+            <div class="alan-izgara c2">
+              <div class="alan">
+                <label class="alan-etiket" for="gvYayinToplam">Yayınlanacak kayıt</label>
+                <input class="alan-girdi" id="gvYayinToplam" name="yayinToplam" type="text"
+                       data-hesaplanan="seçilen modülün liste ekranındaki bekleyen kayıt sayacı">
+              </div>
+            </div>
+            <div class="alan">
+              <span class="alan-etiket">Önizleme — hangi gün kaç kayıt</span>
+              <!-- KİT SÖZLEŞMESİ (admin-ui-kit §K14): kap `data-zamanlama`
+                   bildirir, dört alanı CSS SEÇİCİSİYLE gösterir ve kit
+                   `[data-rol="zamanlama-onizleme"]`i doldurur. Markup
+                   hesaplanmış tek bir gün ya da sayı TAŞIMAZ.
+                   🔴 SEÇİCİ "#" İLE YAZILIR. Kitin `sayiOku`/`tarihOku`u
+                      `querySelector` çağırıyor; çıplak id NULL döner ve
+                      motor sessizce hiçbir şey çizmez — §5b'nin
+                      `data-hedef="#panelId"` kusurunun tersi yönü.
+                   ⚠ "Kaç güne bölünür" ve "Son yayın günü" ayrı alan olarak
+                     BASILMADI: kitin önizleme özeti ikisini de yazıyor ve
+                     aynı hesabın iki yüzeyi ikinci bir gerçek olurdu. -->
+              <div data-zamanlama="onizleme"
+                   data-zamanlama-toplam="#gvYayinToplam"
+                   data-zamanlama-adet="#gvYayinAdet"
+                   data-zamanlama-baslangic="#gvYayinBaslangic"
+                   data-zamanlama-tekrar="#gvYayinTekrar">
+                <div data-rol="zamanlama-onizleme"></div>
+              </div>
+            </div>
+            <div class="alan-izgara c2">
+              <div class="alan">
+                <label class="alan-etiket" for="gvYayinDurum">Plan durumu</label>
+                <select class="alan-secim" id="gvYayinDurum" name="yayinDurum">
+                  <option value="Taslak" selected="">Taslak</option>
+                  <option value="Planlandı">Planlandı</option>
+                  <option value="İptal edildi">İptal edildi</option>
+                </select>
+                <div class="alan-yardim"><span>Üçü de <b>Görevler</b> listesinin <b>Durum</b> süzgecinde geçer. <b>"Yayınlandı" bir plan durumu DEĞİLDİR</b> — o, planın çalışmasının sonucudur ve sağdaki salt okunur <b>Son çalışma durumu</b> alanında görünür.</span></div>
               </div>
             </div>
           </div>
