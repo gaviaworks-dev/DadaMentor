@@ -599,9 +599,19 @@
       <p class="pd-lead">Ekipmansız, baskısız bir başlangıç. Haftada 3 gün, kendi evinde, kendi tempoda —
         her hareketin görsel ve adım adım anlatımıyla. Kaçırdığın gün için suçluluk yok; kaldığın yerden devam.</p>
       <div class="pd-meta">
-        <span><i class="fa-regular fa-calendar"></i> 4 hafta</span>
+        <!-- ⚠ SLUG'A BAĞLI İKİ ÇİP — 2026-09-05. Bu iki çip sabit yazılıydı
+             ve dört slug'ın ÜÇÜNDE yanlış basıyordu ("12 Hafta Güç Temeli"
+             sayfasında "4 hafta · Başlangıç"). Hero şeridi doğru değeri
+             gösterince çelişki EKRANDA görünür oldu; ikisi de aynı
+             türetmeye bağlandı (ad → hafta, tur → seviye).
+             ⚠ Kalan üç çip ("Haftada 3 gün · 12 antrenman" · "Ekipmansız" ·
+               "Hareket alışkanlığı") slug'a bağlanamadı: `VERI` bu alanları
+               TAŞIMIYOR ve `program-liste-v1`in kart eşlemesi kırık
+               (9 kart 4 slug'a dönüşümlü bağlanıyor, kartın kendi planı
+               slug'la uyuşmuyor — raporda ayrı kalem). Uydurulmadı. -->
+        <span><i class="fa-regular fa-calendar"></i> <b id="pdCipHafta" style="font-weight:inherit">4</b> hafta</span>
         <span><i class="fa-solid fa-calendar-week"></i> Haftada 3 gün · 12 antrenman</span>
-        <span><i class="fa-solid fa-signal"></i> Başlangıç</span>
+        <span><i class="fa-solid fa-signal"></i> <b id="pdCipSeviye" style="font-weight:inherit">Başlangıç</b></span>
         <span><i class="fa-solid fa-house"></i> Ekipmansız</span>
         <span><i class="fa-solid fa-bullseye"></i> Hareket alışkanlığı</span>
       </div>
@@ -609,6 +619,24 @@
         <button class="btn btn-fit" type="button" id="pgStart"><i class="fa-solid fa-play"></i> Programa Başla</button>
         <a class="btn btn-line" href="#genel-bakis"><i class="fa-solid fa-circle-info"></i> Önce İncele</a>
       </div>
+    </div>
+    <!-- 🔴 DETAY TİPİ · 3 İSTATİSTİK — BEYAR KARARI, 2026-09-05.
+         Sözleşme (kanon/hero.css): "İstatistik bloğu SAĞDA, dikey, ALTA
+         hizalı, HER ZAMAN 3 kalem". Bu hero'da şerit HİÇ YOKTU
+         (ölçüldü: 0 kalem, `.lib-row` kurulmuyordu).
+         DEĞERLER UYDURULMADI ve SLUG'A BAĞLI — sayfanın kendi `VERI`
+         nesnesinden okunuyor (aşağıdaki betik):
+             hafta   ← programın ADINDAN ("12 Hafta Güç Temeli" → 12)
+             seviye  ← `tur` alanının ikinci jetonu (Başlangıç / Orta / İleri)
+             erişim  ← `tur` "Pro" içeriyorsa Pro, değilse Ücretsiz
+         Üçü de dört slug'ın dördünde de doğru; sabit yazsaydım üçü de
+         üç slug'da yanlış olurdu.
+         Kanon adı bilerek kullanıldı: kabuğun `.lib-row` kurucusu şeridi
+         sağa/alta yerleştirsin diye (`fit-shell.js`). -->
+    <div class="lib-stats">
+      <div class="lib-stat"><b id="pdStatHafta">4</b><span>hafta</span></div>
+      <div class="lib-stat"><b id="pdStatSeviye">Başlangıç</b><span>seviye</span></div>
+      <div class="lib-stat"><b id="pdStatErisim">Ücretsiz</b><span>erişim</span></div>
     </div>
   </div>
 </section>
@@ -1258,6 +1286,20 @@
     document.querySelectorAll('[data-pr="'+k+'"]').forEach(function(el){ el.innerHTML = P[k]; });
   });
   document.title = P.ad + ' — Program | DadaFit';
+  /* 🔴 HERO İSTATİSTİKLERİ — slug'a bağlı, `VERI`den türetilir (2026-09-05).
+     Sabit yazmak dört slug'ın üçünde yanlış olurdu: ad ve tur slug'la
+     değişiyor. Üç değer de uydurulmadı, `P`nin kendi alanlarından okundu. */
+  (function(){
+    var hafta = (P.ad.match(/(\d+)\s*[Hh]afta/) || [])[1];
+    var jeton = P.tur.split('\u00b7').map(function(x){ return x.trim(); });
+    var seviye = jeton[1] || '';
+    var erisim = /Pro/i.test(P.tur) ? 'Pro' : 'Ücretsiz';
+    var yaz = function(id, deger){ var el = document.getElementById(id);
+      if(el && deger) el.textContent = deger; };
+    yaz('pdStatHafta', hafta); yaz('pdStatSeviye', seviye); yaz('pdStatErisim', erisim);
+    /* aynı türetme hero çiplerine de: çipler sabitti ve şeritle çelişiyordu */
+    yaz('pdCipHafta', hafta); yaz('pdCipSeviye', seviye);
+  })();
   /* Yaşam döngüsü bloğu slug'ı ve adı BURADAN alır; iki yerde iki ayrı
      program tablosu tutulmasın diye tek kaynak. */
   window.PD_PROGRAM = {slug:slug, ad:P.ad};

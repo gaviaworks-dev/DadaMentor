@@ -182,8 +182,86 @@
      yatay dolgusu kayboldu, "sol üst" şartı bozuldu. `left:auto`
      bırakılınca kutu YATAYDA statik konumunda kalır — yani kırıntı
      kolonun kendi sol kenarında durur, dikeyde raptiyelenir. */
+}
+
+/* =====================================================================
+   🔴 RAPTİYE DAR LİSTEYE ÇEKİLDİ — 2026-09-05
+   ---------------------------------------------------------------------
+   BULGU (Beyar): `egzersiz-detay-v1.html?slug=…` hero'sunda kırıntı
+   (y=128, absolute) ile ÜST ETİKET (y=133.7) ÜST ÜSTE biniyordu.
+   Aynı kusur `challenge-v1` ve `fit-arama`da da vardı; kardeş markada
+   `g-arama`da bildirildi.
+
+   KÖK — BENİM 2026-09-04 KURALIM. Raptiyeyi (`position:absolute; top:0`)
+   kabuğun BÜTÜN banner ailesine yaymıştım. Oysa aile ikiye ayrılıyor ve
+   ayrımı KAYNAK yapmış (ölçüldü, `hero.css` ağ düzeyinde iptal edilip
+   64 sayfa taranarak):
+
+     kaynağın kırıntısı ZATEN mutlak            → raptiye BAYT-NÖTR
+       .lib-top 33 · .bant 7 · .pd-hero 1        (üçü de y=128)
+     kaynağın kırıntısı AKIŞTA, y ZATEN doğru   → raptiye ZARARLI
+       .ed-top · .chl-hero · .cp-top ·
+       .arama-hero · .giris-hero                 (beşi de y=128)
+     kaynağın kırıntısı AKIŞTA ve KAYIYOR       → raptiye GEREKLİ
+       .ol-top                                   (y=152.3, 24.3 aşağıda)
+
+   NEDEN ZARARLI: akıştaki kırıntı kendi satırını AYIRIR. Raptiyelenince
+   o satır boşalır ve `justify-content:flex-start` taşıyan kaplarda
+   (`.ed-top` · `.chl-hero` · `.arama-hero`) üst etiket kırıntının
+   ÜSTÜNE tırmanır. Ölçülen örtüşme:
+       egzersiz-detay-v1  13.7px (@1440) · 13.7px (@390)
+       challenge-v1       14.5px (@1440) ·  9.5px (@390)
+       fit-arama          18.6px (@1440) · 18.6px (@390)
+   `justify-content:center` taşıyan kaplarda (`.lib-top` · `.pd-hero` ·
+   `.bant`) içerik zaten çok aşağıda olduğu için görünmüyordu — kusuru
+   gizleyen şey kuralın doğruluğu değil, o ailelerin boşluğuydu.
+
+   OLUMSUZ SINAMA: `hero.css` ağ düzeyinde iptal edilip aynı 64 sayfa
+   yeniden tarandı → örtüşme **0**. Yani kusuru üreten tek şey bu kural.
+
+   KURAL: raptiye YALNIZ kaynağın kendi mekanizması olduğu ailelerde
+   (bayt-nötr) ve gerçekten kayan tek ailede uygulanır. Kalan ailelerde
+   kırıntı AKIŞTA kalır — sözleşmenin *"iki kolonun dışında, onların
+   üstünde AYRI BİR SATIR"* ifadesinin birebir karşılığı budur.
+   ⚠ Sayfaya ezme kuralı YAZILMADI; ayrım kanonun kendi seçicisinde.
+   ===================================================================== */
+:where(body[data-fit-hero-kind])
+  :is(.lib-top,.bant,.pd-hero,.ol-top) > .wrap
+  > :is([class*="crumb"],[class*="kirinti"]){
   position:absolute; top:0;
 }
+/* =====================================================================
+   🔴 KIRINTI SATIRI KENDİ DİKEY DOLGUSUNU TAŞIMAZ — 2026-09-05
+   ---------------------------------------------------------------------
+   Sözleşme "kırıntı hero başlangıcından SABİT ofset" diyor ve ofseti
+   `--banner-crumb-ofset` (hero'nun üst dolgusu) veriyor. Kırıntı BİR DE
+   kendi dikey dolgusunu taşırsa, KUTUSU doğru yerde durur ama YAZISI
+   aşağı kayar — ve kutuyu ölçen kapı bunu göremez.
+
+   🔴 ÖLÇÜM DERSİ, DEPODA İKİNCİ KEZ: kutu değil SATIR ölçüldü
+   (`document.createRange().selectNodeContents()`), MADDE 1'deki
+   `text-align-last` tuzağının aynısı. Kutu 10 sayfanın 10'unda 128;
+   SATIR ikisinde 146:
+       antrenor-detay-v1 (`.cp-crumb`)  padding 18/14 → satır 146 · kutu h 51.4
+       fit-giris         (`.kirinti`)   padding 18/14 → satır 146 · kutu h 52.1
+   Kalan sekiz ailede dikey dolgu ZATEN 0 → kural onlar için BAYT-NÖTR.
+
+   YAN ETKİ (aranmadı, ölçüldü): `.cp-top` @390'da 736.3px'ti ve DETAY
+   tipinin 726'sını 10.3px aşıyordu. Kırıntının 32px'lik dolgusu kalkınca
+   doğal yükseklik 726'nın altına iniyor ve `min-height` bağlanıyor →
+   tip içi sapma da kapanıyor. Yani yükseklik sapması kırıntının kutu
+   modelinden doğuyormuş; yüksekliğe hiç dokunulmadı.
+
+   ⚠ YATAY dolgu ve MARGIN'e dokunulmuyor: `.pd-crumb` 8px, `.rd-crumb`
+     20px, `.kirinti` 12px alt boşluk taşıyor ve bunlar kırıntının
+     KENDİ ofsetini değil, ALTINDAKİ içeriğin nefesini belirliyor.
+   ===================================================================== */
+:where(body[data-fit-hero-kind])
+  :is(.lib-top,.bant,.cp-top,.kp-top,.chl-hero,.pd-hero,.fs-top,.ol-top,.ed-top,.arama-hero,.giris-hero) > .wrap
+  > :is([class*="crumb"],[class*="kirinti"]){
+  padding-top:0; padding-bottom:0;
+}
+
 /* Kaydet düğmesi gibi mutlak yerleşimli süsler kırıntıyı İTMEZ. */
 :where(body[data-fit-hero-kind]) .lib-top > .wrap > .kyt-btn{
   position:absolute; top:0; right:0;

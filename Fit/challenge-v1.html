@@ -645,6 +645,22 @@ body[data-fit-over="1"] section.chl-hero{padding-bottom:48px !important}
       <!-- cam panel: kompakt ilerleme önizleme -->
       
     </div>
+    <!-- 🔴 DETAY TİPİ · 3 İSTATİSTİK — BEYAR KARARI, 2026-09-05.
+         Sözleşme (kanon/hero.css): "İstatistik bloğu SAĞDA, dikey, ALTA
+         hizalı, HER ZAMAN 3 kalem". Bu hero'da şerit HİÇ YOKTU (ölçüldü:
+         0 kalem, .lib-row kurulmuyordu).
+         DEĞERLER UYDURULMADI ve SLUG'A BAĞLI — challenge kataloğunun
+         (`assets/js/fit-challenge.js` · KATALOG) kendi alanlarından:
+             gun          → "30 gün"
+             gunlukSure   → "10–15 dk günlük"
+             odul.puan    → "+250 puan"
+         Katalog bu üçünü her satırda taşıyor; sabit yazsaydım dört
+         challenge'ın üçünde yanlış olurdu. -->
+    <div class="lib-stats">
+      <div class="lib-stat"><b data-ch-stat="gun">30</b><span>gün</span></div>
+      <div class="lib-stat"><b data-ch-stat="sure">10–15 dk</b><span>günlük</span></div>
+      <div class="lib-stat"><b data-ch-stat="puan">+250</b><span>puan</span></div>
+    </div>
   </div>
 </section>
 
@@ -1068,6 +1084,18 @@ body[data-fit-over="1"] section.chl-hero{padding-bottom:48px !important}
   var K = C.bul(slug) || C.KATALOG[0];
   slug = K.slug;
   var T = C.TIP[K.tip];
+
+  /* 🔴 HERO İSTATİSTİKLERİ — katalogdan, slug'a bağlı (2026-09-05).
+     Üç değer de `K`nin kendi alanları; hiçbiri sayfaya sabit yazılmadı. */
+  (function(){
+    var yaz = function(ad, deger){
+      var el = document.querySelector('[data-ch-stat="'+ad+'"]');
+      if(el && deger != null && deger !== '') el.textContent = deger;
+    };
+    yaz('gun',  K.gun);
+    yaz('sure', K.gunlukSure);
+    yaz('puan', (K.odul && K.odul.puan != null) ? '+' + K.odul.puan : null);
+  })();
 
   /* EK GÖREV · kaydet düğmesi — challenge `?slug=`ye göre değiştiği için
      data-* alanları statik yazılamaz, K çözülür çözülmez burada doldurulur. */
