@@ -8,8 +8,12 @@
 <link rel="stylesheet" href="../../kanon/markalar/diet.css">
 <link rel="stylesheet" href="../../kanon/bilesenler.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<!-- ADMIN-KIT:CSS:BAS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.css">
+<link rel="stylesheet" href="../../kanon/admin.css">
+<!-- ADMIN-KIT:CSS:SON -->
 </head>
-<body class="yetkili">
+<body class="yetkili" data-marka="diet">
 <!-- ═══════════════════════════════════════════════════════════════════
      DIET ADMIN · KANONİK KABUK — FIT kabuğundan TÜRETİLDİ, elle değiştirilmez
      ───────────────────────────────────────────────────────────────────
@@ -34,24 +38,36 @@
 <!-- ── SOL EKOSİSTEM RAYI ─────────────────────────────────────────── -->
 <aside class="panel-ray" aria-label="Marka rayı">
   <a class="panel-ray-ikon aktif" href="#" style="--eko:var(--eko-diet)"
-     aria-current="true" title="DadaDiet" aria-label="DadaDiet"><i class="fa-solid fa-leaf"></i></a>
+     aria-current="true" title="DadaDiet" aria-label="DadaDiet"><i class="fa-solid fa-heart-pulse"></i></a>
   <span class="panel-ray-ayrac" role="presentation"></span>
   <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-gastro)"  title="DadaGastro"  aria-label="DadaGastro"><i class="fa-solid fa-utensils"></i></a>
+  <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-gourmet)" title="DadaGourmet" aria-label="DadaGourmet"><i class="fa-solid fa-map-location-dot"></i></a>
   <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-fit)"     title="DadaFit"     aria-label="DadaFit"><i class="fa-solid fa-dumbbell"></i></a>
-  <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-gourmet)" title="DadaGourmet" aria-label="DadaGourmet"><i class="fa-solid fa-wine-glass"></i></a>
   <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-campus)"  title="DadaCampus"  aria-label="DadaCampus"><i class="fa-solid fa-graduation-cap"></i></a>
+  <span class="panel-ray-ikon kilitli" title="DadaStore — erişimin yok" aria-label="DadaStore, erişim yok"><i class="fa-solid fa-bag-shopping"></i></span>
   <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-mentor)"  title="DadaMentor"  aria-label="DadaMentor"><i class="fa-solid fa-compass"></i></a>
-  <span class="panel-ray-ikon kilitli" title="DadaStore — erişimin yok" aria-label="DadaStore, erişim yok"><i class="fa-solid fa-lock"></i></span>
   <div class="panel-ray-alt">
     <a class="panel-ray-ikon" href="#" title="Yardım" aria-label="Yardım"><i class="fa-solid fa-circle-question"></i></a>
+<!-- ADMIN-KIT:IMZA:BAS -->
+    <a class="panel-ray-imza" href="https://gaviaworks.com" target="_blank" rel="noopener"
+       title="Gaviaworks" aria-label="Gaviaworks — gaviaworks.com">
+      <span class="yalniz-okuyucu">Gaviaworks</span>
+    </a>
+<!-- ADMIN-KIT:IMZA:SON -->
   </div>
 </aside>
 
 <!-- ── MODÜL MENÜSÜ · DÖRT KATEGORİ ───────────────────────────────── -->
 <nav class="panel-menu" id="panelMenu" aria-label="Modüller">
+<!-- ADMIN-KIT:KABUK:BAS -->
   <div class="panel-menu-bas">
-    <b>DadaDiet</b><span>Yönetim paneli</span>
+    <a class="panel-marka" href="admin-genel-bakis.html" aria-label="DadaDiet yönetim paneli">
+      <span class="yalniz-okuyucu">DadaDiet · Yönetim paneli</span>
+    </a>
   </div>
+  <button type="button" class="panel-katla" aria-pressed="false"
+          aria-label="Menüyü daralt"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i></button>
+<!-- ADMIN-KIT:KABUK:SON -->
   <div class="panel-menu-govde">
 
     <div class="panel-menu-bolum">01 Genel</div>
@@ -65,6 +81,7 @@
     <div class="panel-menu-bolum">Marka modülleri</div>
     <a class="panel-menu-link aktif" aria-current="page" href="admin-besinler.html"><i class="fa-solid fa-apple-whole"></i>Besin Kütüphanesi</a>
     <a class="panel-menu-link" href="admin-programlar.html"><i class="fa-solid fa-clipboard-list"></i>Beslenme Programları</a>
+    <a class="panel-menu-link" href="admin-programini-bul.html"><i class="fa-solid fa-signs-post"></i>Programını Bul</a>
     <a class="panel-menu-link" href="admin-diyetisyenler.html"><i class="fa-solid fa-user-check"></i>Diyetisyenler<span class="sayac">3</span></a>
     <a class="panel-menu-link" href="admin-testler.html"><i class="fa-solid fa-clipboard-check"></i>Beslenme Testleri</a>
     <a class="panel-menu-link" href="admin-hesaplayicilar.html"><i class="fa-solid fa-calculator"></i>Hesaplayıcılar</a>
@@ -207,7 +224,7 @@
                   <label for="hfSlug" class="alan-etiket">Adres <span class="zorunlu">*</span></label>
                   <div class="slug-alani">
                     <span class="slug-onek">https://dadadiet.com/besin/</span>
-                    <input class="alan-girdi" id="hfSlug" name="slug" type="text" required="" pattern="[a-z0-9]+(-[a-z0-9]+)*" placeholder="avokado">
+                    <input data-girdi="slug" class="alan-girdi" id="hfSlug" name="slug" type="text" required="" pattern="[a-z0-9]+(-[a-z0-9]+)*" placeholder="avokado">
                   </div>
                   <div class="alan-yardim"><span>Yalnız küçük harf, rakam ve tire. Adres bir kez yayımlandıktan
                     sonra değiştirilirse eski bağlantılar kırılır.</span></div>
@@ -261,11 +278,92 @@
                 <div class="alan kart-izgara c2">
                   <div class="alan">
                     <label for="hfPop" class="alan-etiket">Popülerlik <span class="acilir-kalem">— sıralama ağırlığı, 0–100</span></label>
-                    <input class="alan-girdi" id="hfPop" name="pop" type="number" min="0" max="100" value="60">
+                    <input data-girdi="sayi" class="alan-girdi" id="hfPop" name="pop" type="number" min="0" max="100" value="60">
                   </div>
                   <div class="alan">
                     <label class="alan-etiket">Süre bandı <span class="acilir-kalem">— hangi öğünlere girer</span></label>
                     <div class="cipler" id="hfBant"><label class="cip"><input type="checkbox" name="sureBant[]" value="5"> 5 dk</label><label class="cip"><input type="checkbox" name="sureBant[]" value="10"> 10 dk</label><label class="cip"><input type="checkbox" name="sureBant[]" value="15"> 15 dk</label><label class="cip"><input type="checkbox" name="sureBant[]" value="20"> 20 dk</label><label class="cip"><input type="checkbox" name="sureBant[]" value="30"> 30 dk</label></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- ---- BESİN DEĞERLERİ ----------------------------------------
+                 Public kaynağı: besin__*.html → "Besin Değerleri · 100 g başına"
+                 tablosu (Enerji · Protein · Yağ · Karbonhidrat · Lif).
+                 `admin-besinler` listesi Enerji ve Lif sütunlarını zaten
+                 basıyordu; alanları buradan doğuyor.
+                 ⚠ "Makro Dağılımı" yüzdeleri ALAN DEĞİL — enerjiye katkıdan
+                   HESAPLANIR, o yüzden forma girmiyor. -->
+            <div class="form-bolum">
+              <h3 class="form-bolum-bas"><i class="fa-solid fa-chart-simple" aria-hidden="true"></i> Besin değerleri</h3>
+              <div>
+                <div class="alan kart-izgara c2">
+                  <div class="alan">
+                    <label for="hfEnerji" class="alan-etiket">Enerji <span class="acilir-kalem">— kcal</span></label>
+                    <input data-girdi="sayi" class="alan-girdi" id="hfEnerji" name="enerji" type="number" min="0" max="900" step="1" placeholder="143">
+                    <div class="alan-yardim"><span>100 g başına kilokalori. Detay sayfasının üst bandında
+                      büyük sayı olarak, listede <b>Enerji</b> sütununda basılır.</span></div>
+                  </div>
+                  <div class="alan">
+                    <label for="hfProtein" class="alan-etiket">Protein <span class="acilir-kalem">— g</span></label>
+                    <input data-girdi="sayi" class="alan-girdi" id="hfProtein" name="protein" type="number" min="0" max="100" step="0.01" placeholder="0.61">
+                    <div class="alan-yardim"><span>100 g başına gram.</span></div>
+                  </div>
+                </div>
+                <div class="alan kart-izgara c3">
+                  <div class="alan">
+                    <label for="hfYag" class="alan-etiket">Yağ <span class="acilir-kalem">— g</span></label>
+                    <input data-girdi="sayi" class="alan-girdi" id="hfYag" name="yag" type="number" min="0" max="100" step="0.01" placeholder="11.48">
+                    <div class="alan-yardim"><span>100 g başına gram.</span></div>
+                  </div>
+                  <div class="alan">
+                    <label for="hfKarb" class="alan-etiket">Karbonhidrat <span class="acilir-kalem">— g</span></label>
+                    <input data-girdi="sayi" class="alan-girdi" id="hfKarb" name="karbonhidrat" type="number" min="0" max="100" step="0.01" placeholder="4.36">
+                    <div class="alan-yardim"><span>100 g başına gram.</span></div>
+                  </div>
+                  <div class="alan">
+                    <label for="hfLif" class="alan-etiket">Lif <span class="acilir-kalem">— g</span></label>
+                    <input data-girdi="sayi" class="alan-girdi" id="hfLif" name="lif" type="number" min="0" max="100" step="0.01" placeholder="9.7">
+                    <div class="alan-yardim"><span>100 g başına gram. Listede <b>Lif</b> sütununda basılır.
+                      Kaynak bu satırı bildirmiyorsa boş bırak — <b>0 yazma</b>, ölçülmemiş
+                      ile sıfır aynı şey değildir.</span></div>
+                  </div>
+                </div>
+                <div class="alan-yardim"><span>Beş değerin tamamı <b>100 g başına</b> girilir; enerji kilokalori,
+                  ötekiler gramdır. Detay sayfasındaki <b>Makro Dağılımı</b> yüzdeleri bu
+                  değerlerden hesaplanır, ayrıca girilmez.</span></div>
+              </div>
+            </div>
+
+            <!-- ---- KAYNAK KÜNYESİ ----------------------------------------
+                 Public kaynağı: besin__*.html → "Kaynaklar" bloğu (veri tabanı
+                 adı · kayıt kodu · porsiyon notu · erişim tarihi). -->
+            <div class="form-bolum">
+              <h3 class="form-bolum-bas"><i class="fa-solid fa-book-open" aria-hidden="true"></i> Kaynak künyesi</h3>
+              <div>
+                <div class="alan">
+                  <label for="hfKaynakAd" class="alan-etiket">Veri tabanı adı</label>
+                  <input class="alan-girdi" id="hfKaynakAd" name="kaynak_ad" type="text" maxlength="120" placeholder="TürKomp — Ulusal Gıda Kompozisyon Veri Tabanı">
+                  <div class="alan-yardim"><span>Detay sayfasının <b>Kaynaklar</b> bloğunda ilk satır olarak basılır.
+                    Bugün iki kaynak kullanılıyor: TürKomp ve USDA FoodData Central.</span></div>
+                </div>
+                <div class="alan kart-izgara c3">
+                  <div class="alan">
+                    <label for="hfKaynakKod" class="alan-etiket">Kayıt kodu</label>
+                    <input class="alan-girdi" id="hfKaynakKod" name="kaynak_kod" type="text" maxlength="40" placeholder="09.01.0005">
+                    <div class="alan-yardim"><span>Kaynağın kendi kayıt numarası — TürKomp'ta noktalı kod,
+                      USDA'da FDC numarası.</span></div>
+                  </div>
+                  <div class="alan">
+                    <label for="hfKaynakPor" class="alan-etiket">Porsiyon notu</label>
+                    <input class="alan-girdi" id="hfKaynakPor" name="kaynak_porsiyon" type="text" maxlength="80" placeholder="100 g yenilebilir kısım">
+                    <div class="alan-yardim"><span>Değerlerin hangi miktara ait olduğunu yazar.</span></div>
+                  </div>
+                  <div class="alan">
+                    <label for="hfKaynakEr" class="alan-etiket">Erişim tarihi</label>
+                    <input class="alan-girdi" id="hfKaynakEr" name="kaynak_erisim" type="text" data-tarih="tarih" placeholder="14.08.2026">
+                    <div class="alan-yardim"><span>Kaynağın hangi gün okunduğu. Değerler güncellenirse
+                      bu tarih de yenilenir.</span></div>
                   </div>
                 </div>
               </div>
@@ -279,8 +377,8 @@
                 <i class="fa-solid fa-list-ol" aria-hidden="true"></i> Nasıl yapılır — adımlar
                 <span class="alan-sayac" id="hfAdimSay">4 adım</span>
               </h3>
-              <div class="adim-liste" id="hfAdimlar"><div class="adim-karti"><span class="adim-no">1</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-shoe-prints" aria-hidden="true"></i> Adım</span><input class="alan-girdi" type="text" name="adimlar[]" data-field="metin" placeholder="Örn. Kabuğunu soyup dilimle, limonla ovuşturarak sakla."><input type="hidden" data-field="position" value="0"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Satırı sil" aria-label="Satırı sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div><div class="adim-karti"><span class="adim-no">2</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-shoe-prints" aria-hidden="true"></i> Adım</span><input class="alan-girdi" type="text" name="adimlar[]" data-field="metin" placeholder="Örn. Kabuğunu soyup dilimle, limonla ovuşturarak sakla."><input type="hidden" data-field="position" value="1"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Satırı sil" aria-label="Satırı sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div><div class="adim-karti"><span class="adim-no">3</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-shoe-prints" aria-hidden="true"></i> Adım</span><input class="alan-girdi" type="text" name="adimlar[]" data-field="metin" placeholder="Örn. Kabuğunu soyup dilimle, limonla ovuşturarak sakla."><input type="hidden" data-field="position" value="2"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Satırı sil" aria-label="Satırı sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div><div class="adim-karti"><span class="adim-no">4</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-shoe-prints" aria-hidden="true"></i> Adım</span><input class="alan-girdi" type="text" name="adimlar[]" data-field="metin" placeholder="Örn. Kabuğunu soyup dilimle, limonla ovuşturarak sakla."><input type="hidden" data-field="position" value="3"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Satırı sil" aria-label="Satırı sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div></div>
-              <button class="satir-ekle" type="button" id="hfAdimEkle">
+              <div class="adim-liste" id="hfAdimlar"><div class="adim-karti"><span class="adim-no">1</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-shoe-prints" aria-hidden="true"></i> Adım</span><input class="alan-girdi" type="text" name="adimlar[]" data-field="metin" placeholder="Örn. Kabuğunu soyup dilimle, limonla ovuşturarak sakla."><input type="hidden" data-field="position" value="0"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır" data-eylem="sirala"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Satırı sil" aria-label="Satırı sil" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div><div class="adim-karti"><span class="adim-no">2</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-shoe-prints" aria-hidden="true"></i> Adım</span><input class="alan-girdi" type="text" name="adimlar[]" data-field="metin" placeholder="Örn. Kabuğunu soyup dilimle, limonla ovuşturarak sakla."><input type="hidden" data-field="position" value="1"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır" data-eylem="sirala"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Satırı sil" aria-label="Satırı sil" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div><div class="adim-karti"><span class="adim-no">3</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-shoe-prints" aria-hidden="true"></i> Adım</span><input class="alan-girdi" type="text" name="adimlar[]" data-field="metin" placeholder="Örn. Kabuğunu soyup dilimle, limonla ovuşturarak sakla."><input type="hidden" data-field="position" value="2"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır" data-eylem="sirala"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Satırı sil" aria-label="Satırı sil" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div><div class="adim-karti"><span class="adim-no">4</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-shoe-prints" aria-hidden="true"></i> Adım</span><input class="alan-girdi" type="text" name="adimlar[]" data-field="metin" placeholder="Örn. Kabuğunu soyup dilimle, limonla ovuşturarak sakla."><input type="hidden" data-field="position" value="3"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır" data-eylem="sirala"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Satırı sil" aria-label="Satırı sil" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div></div>
+              <button class="satir-ekle" type="button" id="hfAdimEkle" data-eylem="satir-ekle">
                 <i class="fa-solid fa-plus" aria-hidden="true"></i> Adım ekle</button>
               <div class="alan-yardim"><span>Sıra public tarafta aynen görünür.
                 Tutamağı sürükleyerek ya da odaktayken ↑ / ↓ ile taşı.</span></div>
@@ -291,7 +389,7 @@
                 <i class="fa-solid fa-lightbulb" aria-hidden="true"></i> Form ipuçları
                 <span class="alan-sayac" id="hfIpucuSay">4 ipucu</span>
               </h3>
-              <div class="adim-liste" id="hfIpuclari"><div class="adim-karti"><span class="adim-no">1</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-lightbulb" aria-hidden="true"></i> İpucu</span><input class="alan-girdi" type="text" name="ipuclari[]" data-field="metin" placeholder="Örn. Porsiyonu avuç içiyle ölç."><input type="hidden" data-field="position" value="0"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Satırı sil" aria-label="Satırı sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div><div class="adim-karti"><span class="adim-no">2</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-lightbulb" aria-hidden="true"></i> İpucu</span><input class="alan-girdi" type="text" name="ipuclari[]" data-field="metin" placeholder="Örn. Porsiyonu avuç içiyle ölç."><input type="hidden" data-field="position" value="1"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Satırı sil" aria-label="Satırı sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div><div class="adim-karti"><span class="adim-no">3</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-lightbulb" aria-hidden="true"></i> İpucu</span><input class="alan-girdi" type="text" name="ipuclari[]" data-field="metin" placeholder="Örn. Porsiyonu avuç içiyle ölç."><input type="hidden" data-field="position" value="2"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Satırı sil" aria-label="Satırı sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div><div class="adim-karti"><span class="adim-no">4</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-lightbulb" aria-hidden="true"></i> İpucu</span><input class="alan-girdi" type="text" name="ipuclari[]" data-field="metin" placeholder="Örn. Porsiyonu avuç içiyle ölç."><input type="hidden" data-field="position" value="3"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Satırı sil" aria-label="Satırı sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div></div>
+              <div class="adim-liste" id="hfIpuclari"><div class="adim-karti"><span class="adim-no">1</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-lightbulb" aria-hidden="true"></i> İpucu</span><input class="alan-girdi" type="text" name="ipuclari[]" data-field="metin" placeholder="Örn. Porsiyonu avuç içiyle ölç."><input type="hidden" data-field="position" value="0"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır" data-eylem="sirala"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Satırı sil" aria-label="Satırı sil" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div><div class="adim-karti"><span class="adim-no">2</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-lightbulb" aria-hidden="true"></i> İpucu</span><input class="alan-girdi" type="text" name="ipuclari[]" data-field="metin" placeholder="Örn. Porsiyonu avuç içiyle ölç."><input type="hidden" data-field="position" value="1"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır" data-eylem="sirala"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Satırı sil" aria-label="Satırı sil" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div><div class="adim-karti"><span class="adim-no">3</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-lightbulb" aria-hidden="true"></i> İpucu</span><input class="alan-girdi" type="text" name="ipuclari[]" data-field="metin" placeholder="Örn. Porsiyonu avuç içiyle ölç."><input type="hidden" data-field="position" value="2"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır" data-eylem="sirala"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Satırı sil" aria-label="Satırı sil" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div><div class="adim-karti"><span class="adim-no">4</span><div class="adim-govde"><span class="tur-rozeti"><i class="fa-solid fa-lightbulb" aria-hidden="true"></i> İpucu</span><input class="alan-girdi" type="text" name="ipuclari[]" data-field="metin" placeholder="Örn. Porsiyonu avuç içiyle ölç."><input type="hidden" data-field="position" value="3"></div><div class="adim-yan"><button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır" data-eylem="sirala"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" title="Satırı sil" aria-label="Satırı sil" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></div></div>
               <button class="satir-ekle" type="button" id="hfIpucuEkle">
                 <i class="fa-solid fa-plus" aria-hidden="true"></i> İpucu ekle</button>
             </div>
@@ -322,13 +420,13 @@
               <div>
                 <div class="alan">
                   <label for="hfVideo" class="alan-etiket">Video adresi</label>
-                  <input class="alan-girdi" id="hfVideo" name="video" type="url" placeholder="https://…">
+                  <input data-girdi="url" class="alan-girdi" id="hfVideo" name="video" type="url" placeholder="https://…">
                   <div class="alan-yardim"><span>Doğru form videosu. Adres yoksa detay sayfasında video bölümü
                     hiç basılmaz — boş bir oynatıcı gösterilmez.</span></div>
                 </div>
                 <div class="alan">
                   <label for="hfVideoSure" class="alan-etiket">Video süresi <span class="acilir-kalem">— sn</span></label>
-                  <input class="alan-girdi" id="hfVideoSure" name="video_sure" type="number" min="0">
+                  <input data-girdi="sayi" class="alan-girdi" id="hfVideoSure" name="video_sure" type="number" min="0">
                 </div>
               </div>
             </div>
@@ -351,7 +449,7 @@
                 </div>
                 <div class="alan">
                   <label for="hfCanon" class="alan-etiket">Canonical adres</label>
-                  <input class="alan-girdi" id="hfCanon" name="canonical" type="url" placeholder="https://dadadiet.com/besin/…">
+                  <input data-girdi="url" class="alan-girdi" id="hfCanon" name="canonical" type="url" placeholder="https://dadadiet.com/besin/…">
                 </div>
                 <div class="alan">
                   <label for="hfOdak" class="alan-etiket">Odak anahtar sözcük</label>
@@ -368,10 +466,10 @@
 
           <div class="form-eylem kart-alt">
             <a class="dugme hayalet" href="admin-besinler.html">İptal</a>
-            <button class="dugme hayalet" type="button" id="hfTaslak">Taslak kaydet</button>
+            <button class="dugme hayalet" type="button" id="hfTaslak" data-eylem="taslak">Taslak kaydet</button>
             <button class="dugme birincil" type="button" id="hfKaydet">Besini kaydet</button>
           </div>
-        <div class="bos-durum kart-ici" hidden=""><span class="bos-ikon"><i class="fa-solid fa-file-circle-question" aria-hidden="true"></i></span><h3>Bu adreste besin yok</h3><p>Adresteki slug katalogda karşılık bulmuyor. Listeye dön ve bir besin seç.</p><a class="dugme birincil" href="admin-besinler.html">Kütüphaneye dön</a></div><div class="bos-durum kart-ici yetkisiz" data-durum="yetkisiz" hidden=""><span class="bos-ikon"><i class="fa-solid fa-lock" aria-hidden="true"></i></span><h3>Bu kaydı düzenleyemezsin</h3><p>Erişim istemek için yöneticinle görüş.</p></div><div class="bos-durum kart-ici servis-hatasi" data-durum="servis" hidden=""><span class="bos-ikon"><i class="fa-solid fa-plug-circle-xmark" aria-hidden="true"></i></span><h3>Kayıt yüklenemedi</h3><p>Bağlantı kurulamadı. Yeniden dene.</p><button class="dugme birincil" type="button"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i> Yeniden dene</button><div class="hata-izi">Referans kodu <code>DIET-ADM-5201</code></div></div></div>
+        <div class="bos-durum kart-ici" hidden=""><span class="bos-ikon"><i class="fa-solid fa-file-circle-question" aria-hidden="true"></i></span><h3>Bu adreste besin yok</h3><p>Adresteki slug katalogda karşılık bulmuyor. Listeye dön ve bir besin seç.</p><a class="dugme birincil" href="admin-besinler.html">Kütüphaneye dön</a></div><div class="bos-durum kart-ici yetkisiz" data-durum="yetkisiz" hidden=""><span class="bos-ikon"><i class="fa-solid fa-lock" aria-hidden="true"></i></span><h3>Bu kaydı düzenleyemezsin</h3><p>Erişim istemek için yöneticinle görüş.</p></div><div class="bos-durum kart-ici servis-hatasi" data-durum="servis" hidden=""><span class="bos-ikon"><i class="fa-solid fa-plug-circle-xmark" aria-hidden="true"></i></span><h3>Kayıt yüklenemedi</h3><p>Bağlantı kurulamadı. Yeniden dene.</p><button class="dugme birincil" type="button" data-eylem="calistir" data-ad="Yeniden dene"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i> Yeniden dene</button><div class="hata-izi">Referans kodu <code>DIET-ADM-5201</code></div></div></div>
 
         <!-- ================= SAĞ KOLON ================= -->
         <aside class="form-yan">
@@ -389,7 +487,7 @@
                 </div>
                 <div class="alan">
                   <label for="hfTarih" class="alan-etiket">Yayın tarihi</label>
-                  <input class="alan-girdi" id="hfTarih" name="yayin_tarihi" type="date">
+                  <input class="alan-girdi" id="hfTarih" name="yayin_tarihi" type="text" data-tarih="tarih">
                 </div>
                 <div class="alan">
                   <span>Öne çıkar</span>
@@ -420,7 +518,7 @@
             <div class="kart-govde">
               <div class="alan-yardim" style="margin-bottom:12px"><span>Silinen besin, onu kullanan
                 <b id="hfKullanim">0</b> programdan da düşer.</span></div>
-              <button class="dugme hayalet tehlike tam-en" type="button" id="hfSil" data-yikici="Avokado" data-fiil="sil">
+              <button class="dugme hayalet tehlike tam-en" type="button" id="hfSil" data-yikici="Avokado" data-fiil="sil" data-islem="sil">
                 <i class="fa-solid fa-trash-can" aria-hidden="true"></i> Besini sil</button>
             </div>
           </div>
@@ -432,4 +530,175 @@
   </div>
 </main>
 <script src="_ortak/panel.js" defer></script>
+<!-- ADMIN-KIT:JS:BAS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/7.3.0/tinymce.min.js" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/l10n/tr.js"></script>
+<script src="../../kanon/admin-editor-tr.js"></script>
+<script src="../../kanon/admin-kit.js" defer></script>
+<script src="../../kanon/admin-editor.js" defer></script>
+<script src="../../kanon/admin-tarih.js" defer></script>
+<!-- ADMIN-KIT:JS:SON -->
+
+<!-- KAYIT KAYNAĞI — form kendi kayıtlarını BİLDİRİR (kit §5b).
+     Anahtar = admin-besinler.html satırının kendi slug'ı; 12 satır, 12 benzersiz anahtar.
+     Değerler İKİ yerden okundu, uydurulmadı:
+       · liste satırının kendi hücreleri  → ad · slug · besin grubu · porsiyon · enerji · lif · durum
+       · Diet public maketi (/tmp/DadaMentor/Diet/besin__<slug>.html)
+                                          → özet · protein · yağ · karbonhidrat · kaynak künyesi · meta
+     🔴 badem · bulgur-pismis · ceviz-ic maket sayfası YOK: makro satırları ve özet
+        BİLDİRİLMEDİ (boş alan, uydurma değerden iyidir).
+     🔴 "Avuç" ve "Yemek kaşığı" porsiyonları formun seçim listesinde YOK; o üç kayıtta
+        `ekipman` bildirilmedi. "İncelemede" durumu da listede yok (taslak/yayin/arsiv).
+     🔴 `seviye` (işlenme düzeyi) hiçbir kaynakta yazılı değil — bildirilmedi. -->
+<script type="application/json" data-kayitlar>
+{
+ "avokado": {
+  "ad": "Avokado", "slug": "avokado",
+  "bolge": "Meyve", "kategori": "Yağlı meyve",
+  "ekipman": "100g", "durum": "yayin",
+  "enerji": "143", "protein": "0.61", "yag": "11.48", "karbonhidrat": "4.36", "lif": "9.7",
+  "ozet": "Tekli doymamış yağ ve lif açısından zengin taze meyve.",
+  "kaynak_ad": "TürKomp — Ulusal Gıda Kompozisyon Veri Tabanı",
+  "kaynak_kod": "09.01.0005",
+  "kaynak_porsiyon": "100 g yenilebilir kısım",
+  "kaynak_erisim": "2026-08-14",
+  "meta_title": "Avokado kaç kalori? 100 gramda yağ ve lif değerleri · DadaDiet",
+  "meta_desc": "Avokadonun 100 gramı 143 kalori ve 11,48 g yağ taşır; 9,7 g lifiyle de dikkat çeker. Değerler TürKomp'un 100 g yenilebilir kısım avokado kaydından alındı.",
+  "canonical": "https://dadadiet.com/besin/avokado"
+ },
+ "badem": {
+  "ad": "Badem", "slug": "badem",
+  "bolge": "Yağlı tohum", "kategori": "Kuruyemiş",
+  "durum": "yayin",
+  "enerji": "579", "lif": "12.5",
+  "canonical": "https://dadadiet.com/besin/badem"
+ },
+ "barbunya-haslanmis": {
+  "ad": "Barbunya (kuru · haşlanmış)", "slug": "barbunya-haslanmis",
+  "bolge": "Baklagil", "kategori": "Kuru baklagil",
+  "ekipman": "subardagi", "durum": "yayin",
+  "enerji": "136", "protein": "9.34", "yag": "0.46", "karbonhidrat": "24.5", "lif": "8.6",
+  "ozet": "Kuru barbunya tanesinin tuzsuz suda haşlanmış hâli. Konserve barbunya kaydıyla karıştırılmamalıdır; konservenin suyu ve tuzu ayrı ölçülür.",
+  "kaynak_ad": "USDA FoodData Central",
+  "kaynak_kod": "173736",
+  "kaynak_porsiyon": "100 g",
+  "kaynak_erisim": "2026-08-22",
+  "meta_title": "Barbunya besin değerleri: haşlanmış 100 g dökümü · DadaDiet",
+  "meta_desc": "Haşlanmış barbunyanın 100 gramı 136 kalori, 9,34 g protein ve 8,6 g lif içeriyor; 24,5 g karbonhidratla birlikte tuzsuz haşlama kaydının tam dökümü.",
+  "canonical": "https://dadadiet.com/besin/barbunya-haslanmis"
+ },
+ "bulgur-pismis": {
+  "ad": "Bulgur (pişmiş)", "slug": "bulgur-pismis",
+  "bolge": "Tahıl", "kategori": "Tam tahıl",
+  "ekipman": "subardagi", "durum": "yayin",
+  "enerji": "83", "lif": "4.5",
+  "canonical": "https://dadadiet.com/besin/bulgur-pismis"
+ },
+ "ceviz-ic": {
+  "ad": "Ceviz (iç)", "slug": "ceviz-ic",
+  "bolge": "Yağlı tohum", "kategori": "Kuruyemiş",
+  "enerji": "654", "lif": "6.7",
+  "canonical": "https://dadadiet.com/besin/ceviz-ic"
+ },
+ "esmer-seker": {
+  "ad": "Esmer Şeker", "slug": "esmer-seker",
+  "bolge": "Şeker ve tatlandırıcı", "kategori": "Şeker ve tatlandırıcı",
+  "durum": "yayin",
+  "enerji": "399", "protein": "0", "yag": "0", "karbonhidrat": "99.82", "lif": "0",
+  "ozet": "Küp esmer şeker. Kalori ve karbonhidrat satırları beyaz şekerle neredeyse birebir aynıdır; aradaki fark ölçülen makro satırlarında görünmez.",
+  "kaynak_ad": "TürKomp — Ulusal Gıda Kompozisyon Veri Tabanı",
+  "kaynak_kod": "10.02.0013",
+  "kaynak_porsiyon": "100 g yenilebilir kısım",
+  "kaynak_erisim": "2026-08-15",
+  "meta_title": "Esmer şeker kaç kalori? Beyaz şekerden farkı ne · DadaDiet",
+  "meta_desc": "Esmer küp şekerin 100 gramı 399 kalori ve 99,82 g karbonhidrat içeriyor. Beyaz şekerle farkın makro satırlarında görünmediğini gör. Yağ satırı 0 gramda duruyor.",
+  "canonical": "https://dadadiet.com/besin/esmer-seker"
+ },
+ "kars-eski-kasari": {
+  "ad": "Kars Eski Kaşarı", "slug": "kars-eski-kasari",
+  "bolge": "Süt ürünü", "kategori": "Peynir",
+  "ekipman": "dilim", "durum": "yayin",
+  "enerji": "377", "protein": "27.56", "yag": "29.4", "karbonhidrat": "0.47", "lif": "0",
+  "ozet": "Kars yöresinde uzun süre olgunlaştırılan sert kaşar. Karbonhidrat satırı sıfıra yakındır; kalorisinin neredeyse tamamı yağ ve proteinden gelir.",
+  "kaynak_ad": "TürKomp — Ulusal Gıda Kompozisyon Veri Tabanı",
+  "kaynak_kod": "12.02.0088",
+  "kaynak_porsiyon": "100 g yenilebilir kısım",
+  "kaynak_erisim": "2026-08-15",
+  "meta_title": "Kars eski kaşarı kaç kalori? 100 gramda 377 kalori · DadaDiet",
+  "meta_desc": "Kars eski kaşarının 100 gramı 377 kalori, 27,56 g protein ve 29,4 g yağ taşıyor. Karbonhidrat satırının neden sıfıra yakın kaldığını tabloda gör.",
+  "canonical": "https://dadadiet.com/besin/kars-eski-kasari"
+ },
+ "mango": {
+  "ad": "Mango (çiğ)", "slug": "mango",
+  "bolge": "Meyve", "kategori": "Taze meyve",
+  "ekipman": "adet", "durum": "yayin",
+  "enerji": "60", "protein": "0.82", "yag": "0.38", "karbonhidrat": "15", "lif": "1.6",
+  "ozet": "Çiğ mangonun kabuğu ve çekirdeği ayrılmış hâli. Tropik bir meyvedir; Türkiye'ye çoğunlukla ithal edilir, Anamur çevresinde sınırlı üretimi vardır.",
+  "kaynak_ad": "USDA FoodData Central",
+  "kaynak_kod": "169910",
+  "kaynak_porsiyon": "100 g",
+  "kaynak_erisim": "2026-08-22",
+  "meta_title": "Mango besin değerleri: 100 gramda kalori ve lif · DadaDiet",
+  "meta_desc": "Çiğ mangonun 100 gramı 60 kalori, 15 g karbonhidrat ve 1,6 g lif içerir; 36,4 mg C vitamini değeriyle birlikte künyeli besin değeri dökümü burada.",
+  "canonical": "https://dadadiet.com/besin/mango"
+ },
+ "semizotu": {
+  "ad": "Semizotu", "slug": "semizotu",
+  "bolge": "Sebze", "kategori": "Yeşillik",
+  "ekipman": "100g", "durum": "yayin",
+  "enerji": "22", "protein": "2.64", "yag": "0.12", "karbonhidrat": "1.77", "lif": "1.59",
+  "ozet": "Çiğ semizotu. Yağ satırı ölçülen yeşillikler içinde en aşağıda duranıdır; protein satırı ise görece yukarıda kalır. Yoğurtlu salatada yaygındır.",
+  "kaynak_ad": "TürKomp — Ulusal Gıda Kompozisyon Veri Tabanı",
+  "kaynak_kod": "08.01.0059",
+  "kaynak_porsiyon": "100 g yenilebilir kısım",
+  "kaynak_erisim": "2026-08-15",
+  "meta_title": "Semizotu kaç kalori? 100 gramda 22 kalori · DadaDiet",
+  "meta_desc": "Semizotunun 100 gramı 22 kalori, 2,64 g protein ve 1,59 g lif içeriyor. Yeşillikler arasında nerede durduğunu künyeli tabloda birlikte gör. Lif payı 1,59 gram.",
+  "canonical": "https://dadadiet.com/besin/semizotu"
+ },
+ "somon-atlantik-ciftlik": {
+  "ad": "Somon (Atlantik · çiftlik · pişmiş)", "slug": "somon-atlantik-ciftlik",
+  "bolge": "Balık", "kategori": "Deniz ürünü",
+  "ekipman": "100g", "durum": "yayin",
+  "enerji": "206", "protein": "22.1", "yag": "12.35", "karbonhidrat": "0", "lif": "0",
+  "ozet": "Omega-3 ve kaliteli protein açısından zengin yağlı balık. Değerler kuru ısıda pişmiş çiftlik Atlantik somonuna aittir.",
+  "kaynak_ad": "USDA FoodData Central",
+  "kaynak_kod": "175168",
+  "kaynak_porsiyon": "100 g",
+  "kaynak_erisim": "2026-08-14",
+  "meta_title": "Pişmiş somon kaç kalori? Protein ve yağ dökümü · DadaDiet",
+  "meta_desc": "Kuru ısıda pişmiş somonun 100 gramı 206 kalori; 22,1 g protein ve 12,35 g yağ içerir. Kaynak: USDA'nın çiftlik Atlantik somonu kaydı, kuru ısıda pişmiş.",
+  "canonical": "https://dadadiet.com/besin/somon-atlantik-ciftlik"
+ },
+ "tavuk-gogsu-izgara": {
+  "ad": "Tavuk Göğsü (ızgara)", "slug": "tavuk-gogsu-izgara",
+  "bolge": "Et ve kümes", "kategori": "Kümes hayvanı",
+  "ekipman": "100g", "durum": "yayin",
+  "enerji": "151", "protein": "30.54", "yag": "3.17", "karbonhidrat": "0", "lif": "0",
+  "ozet": "Yağsız ve yüksek proteinli; kas dostu temel et kaynağı.",
+  "kaynak_ad": "USDA FoodData Central",
+  "kaynak_kod": "171534",
+  "kaynak_porsiyon": "100 g",
+  "kaynak_erisim": "2026-08-14",
+  "meta_title": "Izgara tavuk göğsü kaç kalori, kaç gram protein? · DadaDiet",
+  "meta_desc": "Izgara tavuk göğsünün 100 gramı 151 kalori, 30,54 g proteinle kas dostu bir kaynaktır; yağı yalnızca 3,17 gramdır, sayılar USDA'nın ızgara kaydından alındı.",
+  "canonical": "https://dadadiet.com/besin/tavuk-gogsu-izgara"
+ },
+ "visne": {
+  "ad": "Vişne", "slug": "visne",
+  "bolge": "Meyve", "kategori": "Taze meyve",
+  "ekipman": "subardagi", "durum": "taslak",
+  "enerji": "61", "protein": "0.59", "yag": "0.45", "karbonhidrat": "12.02", "lif": "3.16",
+  "ozet": "Kütahya yöresinde yetişen vişne. Ölçüm çekirdeksiz, çiğ meyve üzerinden yapılmıştır. Lif satırı kirazdan belirgin biçimde yukarıda durur.",
+  "kaynak_ad": "TürKomp — Ulusal Gıda Kompozisyon Veri Tabanı",
+  "kaynak_kod": "09.01.0065",
+  "kaynak_porsiyon": "100 g yenilebilir kısım",
+  "kaynak_erisim": "2026-08-15",
+  "meta_title": "Vişne kaç kalori? 61 kalori ve makro dökümü · DadaDiet",
+  "meta_desc": "Vişnenin 100 gramı 61 kalori, 12,02 g karbonhidrat ve 3,16 g lif taşıyor. Kirazla arasındaki lif farkını künyeli tabloda yan yana karşılaştır.",
+  "canonical": "https://dadadiet.com/besin/visne"
+ }
+}
+</script>
 </body></html>

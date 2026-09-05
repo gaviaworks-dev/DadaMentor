@@ -8,8 +8,12 @@
 <link rel="stylesheet" href="../../kanon/markalar/diet.css">
 <link rel="stylesheet" href="../../kanon/bilesenler.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<!-- ADMIN-KIT:CSS:BAS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.css">
+<link rel="stylesheet" href="../../kanon/admin.css">
+<!-- ADMIN-KIT:CSS:SON -->
 </head>
-<body class="yetkili">
+<body class="yetkili" data-marka="diet">
 <!-- ═══════════════════════════════════════════════════════════════════
      DIET ADMIN · KANONİK KABUK — FIT kabuğundan TÜRETİLDİ, elle değiştirilmez
      ───────────────────────────────────────────────────────────────────
@@ -34,24 +38,36 @@
 <!-- ── SOL EKOSİSTEM RAYI ─────────────────────────────────────────── -->
 <aside class="panel-ray" aria-label="Marka rayı">
   <a class="panel-ray-ikon aktif" href="#" style="--eko:var(--eko-diet)"
-     aria-current="true" title="DadaDiet" aria-label="DadaDiet"><i class="fa-solid fa-leaf"></i></a>
+     aria-current="true" title="DadaDiet" aria-label="DadaDiet"><i class="fa-solid fa-heart-pulse"></i></a>
   <span class="panel-ray-ayrac" role="presentation"></span>
   <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-gastro)"  title="DadaGastro"  aria-label="DadaGastro"><i class="fa-solid fa-utensils"></i></a>
+  <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-gourmet)" title="DadaGourmet" aria-label="DadaGourmet"><i class="fa-solid fa-map-location-dot"></i></a>
   <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-fit)"     title="DadaFit"     aria-label="DadaFit"><i class="fa-solid fa-dumbbell"></i></a>
-  <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-gourmet)" title="DadaGourmet" aria-label="DadaGourmet"><i class="fa-solid fa-wine-glass"></i></a>
   <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-campus)"  title="DadaCampus"  aria-label="DadaCampus"><i class="fa-solid fa-graduation-cap"></i></a>
+  <span class="panel-ray-ikon kilitli" title="DadaStore — erişimin yok" aria-label="DadaStore, erişim yok"><i class="fa-solid fa-bag-shopping"></i></span>
   <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-mentor)"  title="DadaMentor"  aria-label="DadaMentor"><i class="fa-solid fa-compass"></i></a>
-  <span class="panel-ray-ikon kilitli" title="DadaStore — erişimin yok" aria-label="DadaStore, erişim yok"><i class="fa-solid fa-lock"></i></span>
   <div class="panel-ray-alt">
     <a class="panel-ray-ikon" href="#" title="Yardım" aria-label="Yardım"><i class="fa-solid fa-circle-question"></i></a>
+<!-- ADMIN-KIT:IMZA:BAS -->
+    <a class="panel-ray-imza" href="https://gaviaworks.com" target="_blank" rel="noopener"
+       title="Gaviaworks" aria-label="Gaviaworks — gaviaworks.com">
+      <span class="yalniz-okuyucu">Gaviaworks</span>
+    </a>
+<!-- ADMIN-KIT:IMZA:SON -->
   </div>
 </aside>
 
 <!-- ── MODÜL MENÜSÜ · DÖRT KATEGORİ ───────────────────────────────── -->
 <nav class="panel-menu" id="panelMenu" aria-label="Modüller">
+<!-- ADMIN-KIT:KABUK:BAS -->
   <div class="panel-menu-bas">
-    <b>DadaDiet</b><span>Yönetim paneli</span>
+    <a class="panel-marka" href="admin-genel-bakis.html" aria-label="DadaDiet yönetim paneli">
+      <span class="yalniz-okuyucu">DadaDiet · Yönetim paneli</span>
+    </a>
   </div>
+  <button type="button" class="panel-katla" aria-pressed="false"
+          aria-label="Menüyü daralt"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i></button>
+<!-- ADMIN-KIT:KABUK:SON -->
   <div class="panel-menu-govde">
 
     <div class="panel-menu-bolum">01 Genel</div>
@@ -65,6 +81,7 @@
     <div class="panel-menu-bolum">Marka modülleri</div>
     <a class="panel-menu-link" href="admin-besinler.html"><i class="fa-solid fa-apple-whole"></i>Besin Kütüphanesi</a>
     <a class="panel-menu-link" href="admin-programlar.html"><i class="fa-solid fa-clipboard-list"></i>Beslenme Programları</a>
+    <a class="panel-menu-link" href="admin-programini-bul.html"><i class="fa-solid fa-signs-post"></i>Programını Bul</a>
     <a class="panel-menu-link" href="admin-diyetisyenler.html"><i class="fa-solid fa-user-check"></i>Diyetisyenler<span class="sayac">3</span></a>
     <a class="panel-menu-link" href="admin-testler.html"><i class="fa-solid fa-clipboard-check"></i>Beslenme Testleri</a>
     <a class="panel-menu-link" href="admin-hesaplayicilar.html"><i class="fa-solid fa-calculator"></i>Hesaplayıcılar</a>
@@ -192,7 +209,7 @@
             <div class="bos-ikon" aria-hidden="true"><i class="fa-solid fa-triangle-exclamation"></i></div>
             <h3>Kayıt yüklenemedi</h3>
             <p>Bağlantı kurulamadı. Birkaç saniye sonra yeniden dene.</p>
-            <button class="dugme hayalet" type="button"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i>Yeniden dene</button>
+            <button class="dugme hayalet" type="button" data-eylem="calistir" data-ad="Yeniden dene"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i>Yeniden dene</button>
             <p class="hata-izi">Referans: <code>FRM-7C41-5001</code></p>
           </div>
           <div class="form-bolum">
@@ -219,7 +236,7 @@
                   <div class="kart-izgara c2">
             <div class="alan">
               <label class="alan-etiket">Alan adı <span class="zorunlu">*</span></label>
-              <input class="alan-girdi" type="text" placeholder="Örn. Ad soyad" value="Ad soyad">
+              <input name="alan_ad[]" class="alan-girdi" type="text" placeholder="Örn. Ad soyad" value="Ad soyad">
             </div>
             <div class="alan">
               <label class="alan-etiket">Alan türü <span class="zorunlu">*</span></label>
@@ -229,16 +246,16 @@
                   <div class="kart-izgara c2">
             <div class="alan">
               <label class="alan-etiket">Seçenekler</label>
-              <input class="alan-girdi" type="text" placeholder="Virgülle ayır — yalnız liste türlerinde">
+              <input name="alan_secenek[]" class="alan-girdi" type="text" placeholder="Virgülle ayır — yalnız liste türlerinde">
             </div>
             <div class="alan">
               <label class="alan-etiket">Doğrulama kuralı</label>
-              <input class="alan-girdi" type="text" placeholder="Örn. en az 3 karakter" value="En az 3 karakter">
+              <input name="alan_dogrulama[]" class="alan-girdi" type="text" placeholder="Örn. en az 3 karakter" value="En az 3 karakter">
             </div>
                   </div>
             <div class="alan">
               <label class="alan-etiket">Yardım metni</label>
-              <input class="alan-girdi" type="text" placeholder="Alanın altında görünen tek cümle" value="Kimliğindeki adı yaz.">
+              <input name="alan_yardim[]" class="alan-girdi" type="text" placeholder="Alanın altında görünen tek cümle" value="Kimliğindeki adı yaz.">
             </div>
             <div class="alan">
               <span class="alan-etiket" id="swprxitc">Zorunlu alan</span>
@@ -252,8 +269,8 @@
             </div>
                 </div>
                 <div class="adim-yan">
-                  <button class="ikon-dugme tutamak" type="button" aria-label="Sırayı değiştir"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button>
-                  <button class="ikon-dugme yikici" type="button" aria-label="Satırı sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button>
+                  <button class="ikon-dugme tutamak" type="button" aria-label="Sırayı değiştir" data-eylem="sirala"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button>
+                  <button class="ikon-dugme yikici" type="button" aria-label="Satırı sil" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button>
                 </div>
               </div>
               <div class="adim-karti">
@@ -262,7 +279,7 @@
                   <div class="kart-izgara c2">
             <div class="alan">
               <label class="alan-etiket">Alan adı <span class="zorunlu">*</span></label>
-              <input class="alan-girdi" type="text" placeholder="Örn. Ad soyad" value="Uzmanlık alanları">
+              <input name="alan_ad[]" class="alan-girdi" type="text" placeholder="Örn. Ad soyad" value="Uzmanlık alanları">
             </div>
             <div class="alan">
               <label class="alan-etiket">Alan türü <span class="zorunlu">*</span></label>
@@ -272,16 +289,16 @@
                   <div class="kart-izgara c2">
             <div class="alan">
               <label class="alan-etiket">Seçenekler</label>
-              <input class="alan-girdi" type="text" placeholder="Virgülle ayır — yalnız liste türlerinde" value="Kilo Yönetimi, Sporcu Beslenmesi, İnsülin Direnci, Bağırsak Sağlığı, Gebelik">
+              <input name="alan_secenek[]" class="alan-girdi" type="text" placeholder="Virgülle ayır — yalnız liste türlerinde" value="Kilo Yönetimi, Sporcu Beslenmesi, İnsülin Direnci, Bağırsak Sağlığı, Gebelik">
             </div>
             <div class="alan">
               <label class="alan-etiket">Doğrulama kuralı</label>
-              <input class="alan-girdi" type="text" placeholder="Örn. en az 3 karakter" value="En az 1 seçim">
+              <input name="alan_dogrulama[]" class="alan-girdi" type="text" placeholder="Örn. en az 3 karakter" value="En az 1 seçim">
             </div>
                   </div>
             <div class="alan">
               <label class="alan-etiket">Yardım metni</label>
-              <input class="alan-girdi" type="text" placeholder="Alanın altında görünen tek cümle" value="Birden çok seçebilirsin.">
+              <input name="alan_yardim[]" class="alan-girdi" type="text" placeholder="Alanın altında görünen tek cümle" value="Birden çok seçebilirsin.">
             </div>
             <div class="alan">
               <span class="alan-etiket" id="sww10p9o">Zorunlu alan</span>
@@ -295,8 +312,8 @@
             </div>
                 </div>
                 <div class="adim-yan">
-                  <button class="ikon-dugme tutamak" type="button" aria-label="Sırayı değiştir"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button>
-                  <button class="ikon-dugme yikici" type="button" aria-label="Satırı sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button>
+                  <button class="ikon-dugme tutamak" type="button" aria-label="Sırayı değiştir" data-eylem="sirala"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button>
+                  <button class="ikon-dugme yikici" type="button" aria-label="Satırı sil" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button>
                 </div>
               </div>
               <div class="adim-karti">
@@ -305,7 +322,7 @@
                   <div class="kart-izgara c2">
             <div class="alan">
               <label class="alan-etiket">Alan adı <span class="zorunlu">*</span></label>
-              <input class="alan-girdi" type="text" placeholder="Örn. Ad soyad" value="Sertifika">
+              <input name="alan_ad[]" class="alan-girdi" type="text" placeholder="Örn. Ad soyad" value="Sertifika">
             </div>
             <div class="alan">
               <label class="alan-etiket">Alan türü <span class="zorunlu">*</span></label>
@@ -315,16 +332,16 @@
                   <div class="kart-izgara c2">
             <div class="alan">
               <label class="alan-etiket">Seçenekler</label>
-              <input class="alan-girdi" type="text" placeholder="Virgülle ayır — yalnız liste türlerinde" value="PDF, JPG">
+              <input name="alan_secenek[]" class="alan-girdi" type="text" placeholder="Virgülle ayır — yalnız liste türlerinde" value="PDF, JPG">
             </div>
             <div class="alan">
               <label class="alan-etiket">Doğrulama kuralı</label>
-              <input class="alan-girdi" type="text" placeholder="Örn. en az 3 karakter" value="En çok 3 dosya · 5 MB">
+              <input name="alan_dogrulama[]" class="alan-girdi" type="text" placeholder="Örn. en az 3 karakter" value="En çok 3 dosya · 5 MB">
             </div>
                   </div>
             <div class="alan">
               <label class="alan-etiket">Yardım metni</label>
-              <input class="alan-girdi" type="text" placeholder="Alanın altında görünen tek cümle" value="Belgeler yalnız inceleyen yöneticiye görünür.">
+              <input name="alan_yardim[]" class="alan-girdi" type="text" placeholder="Alanın altında görünen tek cümle" value="Belgeler yalnız inceleyen yöneticiye görünür.">
             </div>
             <div class="alan">
               <span class="alan-etiket" id="swj8ksxk">Zorunlu alan</span>
@@ -338,8 +355,8 @@
             </div>
                 </div>
                 <div class="adim-yan">
-                  <button class="ikon-dugme tutamak" type="button" aria-label="Sırayı değiştir"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button>
-                  <button class="ikon-dugme yikici" type="button" aria-label="Satırı sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button>
+                  <button class="ikon-dugme tutamak" type="button" aria-label="Sırayı değiştir" data-eylem="sirala"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button>
+                  <button class="ikon-dugme yikici" type="button" aria-label="Satırı sil" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button>
                 </div>
               </div>
             </div>
@@ -358,13 +375,13 @@
             <h3 class="form-bolum-bas"><i class="fa-solid fa-sliders" aria-hidden="true"></i> Form ayarları</h3>
             <div class="alan">
               <label class="alan-etiket">Form adı <span class="zorunlu">*</span></label>
-              <input class="alan-girdi" type="text" placeholder="Örn. Diyetisyen başvuru formu" value="Diyetisyen başvuru formu">
+              <input name="ad" class="alan-girdi" type="text" placeholder="Örn. Diyetisyen başvuru formu" value="Diyetisyen başvuru formu">
             </div>            <div class="alan">
               <label class="alan-etiket">Adres <span class="zorunlu">*</span></label>
-              <div class="slug-alani"><span class="slug-onek">dadadiet.com/form/</span><input class="alan-girdi" type="text" placeholder="diyetisyen-basvuru"></div>
+              <div class="slug-alani"><span class="slug-onek">dadadiet.com/form/</span><input data-girdi="slug" name="slug" class="alan-girdi" type="text" placeholder="diyetisyen-basvuru"></div>
             </div>            <div class="alan">
               <label class="alan-etiket">Açıklama</label>
-              <textarea class="alan-metin" rows="4" placeholder="Formun üstünde okunan iki cümle."></textarea>
+              <textarea name="aciklama" class="alan-metin" rows="4" placeholder="Formun üstünde okunan iki cümle."></textarea>
             </div>            <div class="alan">
               <label class="alan-etiket">Gönderim sonrası mesajı</label>
               <textarea class="alan-metin" rows="3" placeholder="Başvuru alındığında ekranda ne yazsın?"></textarea>
@@ -387,7 +404,7 @@
               <label class="anahtar"><input type="checkbox" aria-labelledby="swgywmc0" checked=""><span class="anahtar-ray"></span></label>
             </div>            <div class="alan">
               <label class="alan-etiket">Günlük gönderim sınırı</label>
-              <input class="alan-girdi" type="number" placeholder="0 = sınırsız" value="200">
+              <input name="gunluk_limit" data-girdi="sayi" class="alan-girdi" type="number" placeholder="0 = sınırsız" value="200">
             </div>
           </div>
           </div>
@@ -397,13 +414,13 @@
             <h3 class="form-bolum-bas"><i class="fa-solid fa-tower-broadcast" aria-hidden="true"></i> Yayın</h3>
             <div class="alan">
               <label class="alan-etiket">Durum</label>
-              <select class="alan-secim"><option>Yayında</option><option>Taslak</option><option>İncelemede</option><option>Pasif</option></select>
+              <select name="durum" class="alan-secim"><option>Yayında</option><option>Taslak</option><option>İncelemede</option><option>Pasif</option></select>
             </div>            <div class="alan">
               <label class="alan-etiket">Yayın tarihi</label>
-              <input class="alan-girdi" type="date" placeholder="" value="2026-08-01">
+              <input name="yayin_tarihi" class="alan-girdi" type="text" data-tarih="tarih" placeholder="" value="2026-08-01">
             </div>            <div class="alan">
               <label class="alan-etiket">Kapanış tarihi</label>
-              <input class="alan-girdi" type="date" placeholder="">
+              <input class="alan-girdi" type="text" data-tarih="tarih" placeholder="">
               <span class="alan-yardim"><i class="fa-solid fa-circle-info" aria-hidden="true"></i><span>Boş bırakılırsa form süresiz açık kalır.</span></span>
             </div>            <div class="alan">
               <span class="alan-etiket" id="swdybccc">Formu sitede listele</span>
@@ -424,7 +441,7 @@
 
           <div class="kart-alt form-eylem">
             <a class="dugme hayalet" href="#">İptal</a>
-            <button class="dugme hayalet" type="button">Taslak kaydet</button>
+            <button class="dugme hayalet" type="button" data-eylem="taslak">Taslak kaydet</button>
             <button class="dugme birincil" type="submit">Formu kaydet</button>
           </div>
       </div>
@@ -452,7 +469,7 @@
           <div class="kart-bas"><h2 class="kart-baslik"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>Tehlikeli bölge</h2></div>
           <div class="kart-govde">
             <p class="alan-yardim"><span>Formu silmek gelen başvuruları da erişilemez kılar. Önce pasif yap; silme yalnız yetkili rollerce ve geri alınabilir biçimde yapılır.</span></p>
-            <div class="eylem-satiri"><button class="dugme hayalet tehlike" type="button"><i class="fa-solid fa-trash-can" aria-hidden="true"></i>Formu sil</button></div>
+            <div class="eylem-satiri"><button class="dugme hayalet tehlike" type="button" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i>Formu sil</button></div>
           </div>
         </div>
       </aside>
@@ -461,4 +478,153 @@
   </div>
 </main>
 <script src="_ortak/panel.js" defer></script>
+<!-- ADMIN-KIT:JS:BAS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/7.3.0/tinymce.min.js" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/l10n/tr.js"></script>
+<script src="../../kanon/admin-editor-tr.js"></script>
+<script src="../../kanon/admin-kit.js" defer></script>
+<script src="../../kanon/admin-editor.js" defer></script>
+<script src="../../kanon/admin-tarih.js" defer></script>
+<!-- ADMIN-KIT:JS:SON -->
+
+<!-- KAYIT KÜMESİ · §5b. Anahtar = admin-formlar satırının /form/<slug> adresi (7 satır, 7 benzersiz anahtar).
+     ad · slug · durum LİSTE SATIRINDAN. alan_* dizileri yalnız «Diyetisyen başvuru formu» için gerçek —
+     o formun alan tablosu admin-formlar'da basılı (10 satır; formun üç yinelenen alan bloğuna ilk üçü gelir).
+     Donör kalıbı birebir: öteki altı formda alan tablosu HİÇ basılmıyor, bu yüzden alan_* dizileri [""] —
+     yineleyici tek boş satıra iner, uydurma alan adı üretilmez.
+     gunluk_limit ve yayin_tarihi de yalnız formun kendi kaydında var; ötekilerde yazılmadı. -->
+<script type="application/json" data-kayitlar>
+{
+ "diyetisyen-basvuru": {
+  "ad": "Diyetisyen başvuru formu",
+  "slug": "diyetisyen-basvuru",
+  "durum": "Yayında",
+  "alan_ad": [
+   "Ad soyad",
+   "Uzmanlık alanları",
+   "Sertifika"
+  ],
+  "alan_secenek": [
+   "",
+   "12 seçenek",
+   "PDF · JPG · en çok 5 MB"
+  ],
+  "alan_dogrulama": [
+   "En az 3 karakter",
+   "En az 1 seçim",
+   "En çok 3 dosya"
+  ],
+  "alan_yardim": [
+   "Kimliğindeki adı yaz.",
+   "Birden çok seçebilirsin.",
+   "Belgeler yalnız inceleyen yöneticiye görünür."
+  ],
+  "gunluk_limit": "200",
+  "yayin_tarihi": "2026-08-01"
+ },
+ "iletisim": {
+  "ad": "İletişim formu",
+  "slug": "iletisim",
+  "durum": "Yayında",
+  "alan_ad": [
+   ""
+  ],
+  "alan_secenek": [
+   ""
+  ],
+  "alan_dogrulama": [
+   ""
+  ],
+  "alan_yardim": [
+   ""
+  ]
+ },
+ "is-birligi": {
+  "ad": "Kurumsal iş birliği",
+  "slug": "is-birligi",
+  "durum": "Yayında",
+  "alan_ad": [
+   ""
+  ],
+  "alan_secenek": [
+   ""
+  ],
+  "alan_dogrulama": [
+   ""
+  ],
+  "alan_yardim": [
+   ""
+  ]
+ },
+ "sponsorluk": {
+  "ad": "Sponsorluk başvurusu",
+  "slug": "sponsorluk",
+  "durum": "Taslak",
+  "alan_ad": [
+   ""
+  ],
+  "alan_secenek": [
+   ""
+  ],
+  "alan_dogrulama": [
+   ""
+  ],
+  "alan_yardim": [
+   ""
+  ]
+ },
+ "hata-bildirimi": {
+  "ad": "Hata bildirimi",
+  "slug": "hata-bildirimi",
+  "durum": "Yayında",
+  "alan_ad": [
+   ""
+  ],
+  "alan_secenek": [
+   ""
+  ],
+  "alan_dogrulama": [
+   ""
+  ],
+  "alan_yardim": [
+   ""
+  ]
+ },
+ "icerik-oneri": {
+  "ad": "İçerik öneri formu",
+  "slug": "icerik-oneri",
+  "durum": "Pasif",
+  "alan_ad": [
+   ""
+  ],
+  "alan_secenek": [
+   ""
+  ],
+  "alan_dogrulama": [
+   ""
+  ],
+  "alan_yardim": [
+   ""
+  ]
+ },
+ "hizmet-paketi": {
+  "ad": "Diyetisyen hizmet paketi başvurusu",
+  "slug": "hizmet-paketi",
+  "durum": "İncelemede",
+  "alan_ad": [
+   ""
+  ],
+  "alan_secenek": [
+   ""
+  ],
+  "alan_dogrulama": [
+   ""
+  ],
+  "alan_yardim": [
+   ""
+  ]
+ }
+}
+</script>
 </body></html>

@@ -8,8 +8,12 @@
 <link rel="stylesheet" href="../../kanon/tokenlar.css">
 <link rel="stylesheet" href="../../kanon/markalar/diet.css">
 <link rel="stylesheet" href="../../kanon/bilesenler.css">
+<!-- ADMIN-KIT:CSS:BAS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.css">
+<link rel="stylesheet" href="../../kanon/admin.css">
+<!-- ADMIN-KIT:CSS:SON -->
 </head>
-<body class="yetkili">
+<body class="yetkili" data-marka="diet">
 <!-- ═══════════════════════════════════════════════════════════════════
      DIET ADMIN · KANONİK KABUK — FIT kabuğundan TÜRETİLDİ, elle değiştirilmez
      ───────────────────────────────────────────────────────────────────
@@ -34,24 +38,36 @@
 <!-- ── SOL EKOSİSTEM RAYI ─────────────────────────────────────────── -->
 <aside class="panel-ray" aria-label="Marka rayı">
   <a class="panel-ray-ikon aktif" href="#" style="--eko:var(--eko-diet)"
-     aria-current="true" title="DadaDiet" aria-label="DadaDiet"><i class="fa-solid fa-leaf"></i></a>
+     aria-current="true" title="DadaDiet" aria-label="DadaDiet"><i class="fa-solid fa-heart-pulse"></i></a>
   <span class="panel-ray-ayrac" role="presentation"></span>
   <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-gastro)"  title="DadaGastro"  aria-label="DadaGastro"><i class="fa-solid fa-utensils"></i></a>
+  <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-gourmet)" title="DadaGourmet" aria-label="DadaGourmet"><i class="fa-solid fa-map-location-dot"></i></a>
   <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-fit)"     title="DadaFit"     aria-label="DadaFit"><i class="fa-solid fa-dumbbell"></i></a>
-  <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-gourmet)" title="DadaGourmet" aria-label="DadaGourmet"><i class="fa-solid fa-wine-glass"></i></a>
   <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-campus)"  title="DadaCampus"  aria-label="DadaCampus"><i class="fa-solid fa-graduation-cap"></i></a>
+  <span class="panel-ray-ikon kilitli" title="DadaStore — erişimin yok" aria-label="DadaStore, erişim yok"><i class="fa-solid fa-bag-shopping"></i></span>
   <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-mentor)"  title="DadaMentor"  aria-label="DadaMentor"><i class="fa-solid fa-compass"></i></a>
-  <span class="panel-ray-ikon kilitli" title="DadaStore — erişimin yok" aria-label="DadaStore, erişim yok"><i class="fa-solid fa-lock"></i></span>
   <div class="panel-ray-alt">
     <a class="panel-ray-ikon" href="#" title="Yardım" aria-label="Yardım"><i class="fa-solid fa-circle-question"></i></a>
+<!-- ADMIN-KIT:IMZA:BAS -->
+    <a class="panel-ray-imza" href="https://gaviaworks.com" target="_blank" rel="noopener"
+       title="Gaviaworks" aria-label="Gaviaworks — gaviaworks.com">
+      <span class="yalniz-okuyucu">Gaviaworks</span>
+    </a>
+<!-- ADMIN-KIT:IMZA:SON -->
   </div>
 </aside>
 
 <!-- ── MODÜL MENÜSÜ · DÖRT KATEGORİ ───────────────────────────────── -->
 <nav class="panel-menu" id="panelMenu" aria-label="Modüller">
+<!-- ADMIN-KIT:KABUK:BAS -->
   <div class="panel-menu-bas">
-    <b>DadaDiet</b><span>Yönetim paneli</span>
+    <a class="panel-marka" href="admin-genel-bakis.html" aria-label="DadaDiet yönetim paneli">
+      <span class="yalniz-okuyucu">DadaDiet · Yönetim paneli</span>
+    </a>
   </div>
+  <button type="button" class="panel-katla" aria-pressed="false"
+          aria-label="Menüyü daralt"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i></button>
+<!-- ADMIN-KIT:KABUK:SON -->
   <div class="panel-menu-govde">
 
     <div class="panel-menu-bolum">01 Genel</div>
@@ -65,6 +81,7 @@
     <div class="panel-menu-bolum">Marka modülleri</div>
     <a class="panel-menu-link" href="admin-besinler.html"><i class="fa-solid fa-apple-whole"></i>Besin Kütüphanesi</a>
     <a class="panel-menu-link" href="admin-programlar.html"><i class="fa-solid fa-clipboard-list"></i>Beslenme Programları</a>
+    <a class="panel-menu-link" href="admin-programini-bul.html"><i class="fa-solid fa-signs-post"></i>Programını Bul</a>
     <a class="panel-menu-link" href="admin-diyetisyenler.html"><i class="fa-solid fa-user-check"></i>Diyetisyenler<span class="sayac">3</span></a>
     <a class="panel-menu-link" href="admin-testler.html"><i class="fa-solid fa-clipboard-check"></i>Beslenme Testleri</a>
     <a class="panel-menu-link" href="admin-hesaplayicilar.html"><i class="fa-solid fa-calculator"></i>Hesaplayıcılar</a>
@@ -163,8 +180,8 @@
              önce hedefin gerçekten açıldığı sınanır; zincir ve döngü burada yakalanır.</p>
         </div>
         <div class="eylem-satiri">
-          <button class="dugme hayalet" type="button" data-yetki="disa-aktar"><i class="fa-solid fa-file-arrow-down" aria-hidden="true"></i> Dışa aktar</button>
-          <button class="dugme hayalet" type="button"><i class="fa-solid fa-file-import" aria-hidden="true"></i> Toplu içe aktar</button>
+          <button class="dugme hayalet" type="button" data-yetki="disa-aktar" data-eylem="calistir" data-ad="Dışa aktar"><i class="fa-solid fa-file-arrow-down" aria-hidden="true"></i> Dışa aktar</button>
+          <button class="dugme hayalet" type="button" data-eylem="calistir" data-ad="Toplu içe aktar"><i class="fa-solid fa-file-import" aria-hidden="true"></i> Toplu içe aktar</button>
           <button class="dugme birincil" type="button"><i class="fa-solid fa-plus" aria-hidden="true"></i> Yeni yönlendirme</button>
         </div>
       </div>
@@ -236,7 +253,7 @@
               <span>Durum</span><span class="sayi" data-sayi="0"></span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
             </button>
             <div class="acilir-yuzey suzgec" id="ynDurum-yuzey" role="group" aria-label="Durum süzgeci" hidden="">
-              <div class="acilir-bas"><span>Durum</span><button type="button">Temizle</button></div>
+              <div class="acilir-bas"><span>Durum</span><button type="button" data-eylem="suzgec-temizle">Temizle</button></div>
               <button class="cip suzgec aktif" type="button" aria-pressed="true">Tümü</button>
               <button class="cip suzgec" type="button" aria-pressed="false">Aktif</button>
               <button class="cip suzgec" type="button" aria-pressed="false">Pasif</button>
@@ -250,7 +267,7 @@
               <span>Tür</span><span class="sayi" data-sayi="0"></span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
             </button>
             <div class="acilir-yuzey suzgec" id="ynTur-yuzey" role="group" aria-label="Tür süzgeci" hidden="">
-              <div class="acilir-bas"><span>Tür</span><button type="button">Temizle</button></div>
+              <div class="acilir-bas"><span>Tür</span><button type="button" data-eylem="suzgec-temizle">Temizle</button></div>
               <button class="cip suzgec aktif" type="button" aria-pressed="true">Tümü</button>
               <button class="cip suzgec" type="button" aria-pressed="false">301 — kalıcı</button>
               <button class="cip suzgec" type="button" aria-pressed="false">302 — geçici</button>
@@ -261,7 +278,7 @@
               <span>Eşleşme biçimi</span><span class="sayi" data-sayi="0"></span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
             </button>
             <div class="acilir-yuzey suzgec" id="ynEsleme-yuzey" role="group" aria-label="Eşleşme biçimi süzgeci" hidden="">
-              <div class="acilir-bas"><span>Eşleşme biçimi</span><button type="button">Temizle</button></div>
+              <div class="acilir-bas"><span>Eşleşme biçimi</span><button type="button" data-eylem="suzgec-temizle">Temizle</button></div>
               <button class="cip suzgec aktif" type="button" aria-pressed="true">Tümü</button>
               <button class="cip suzgec" type="button" aria-pressed="false">Tam eşleşme</button>
               <button class="cip suzgec" type="button" aria-pressed="false">Ön ek</button>
@@ -270,11 +287,11 @@
           </div>
           <div class="sag">
           <div class="coklu-secim">
-            <button class="suzgec-dugme" type="button" id="ynKolon" aria-haspopup="true" aria-expanded="false" aria-controls="ynKolon-yuzey">
+            <button class="suzgec-dugme" type="button" id="ynKolon" aria-haspopup="true" aria-expanded="false" aria-controls="ynKolon-yuzey" data-eylem="kolonlar">
               <i class="fa-solid fa-table-columns" aria-hidden="true"></i><span>Kolonlar</span>
             </button>
             <div class="acilir-yuzey saga kolon-secim" id="ynKolon-yuzey" role="group" aria-label="Görünen kolonlar" hidden="">
-              <div class="acilir-bas"><span>Görünen kolonlar</span><button type="button">Sıfırla</button></div>
+              <div class="acilir-bas"><span>Görünen kolonlar</span><button type="button" data-eylem="suzgec-temizle">Sıfırla</button></div>
               <label class="acilir-kalem kilitli"><input type="checkbox" checked="" disabled=""> Kaynak URL</label>
               <label class="acilir-kalem"><input type="checkbox" checked=""> Hedef URL</label>
               <label class="acilir-kalem"><input type="checkbox" checked=""> Tür</label>
@@ -294,9 +311,9 @@
         <b>3 kayıt seçildi</b>
         <div class="eylem-satiri">
           <button class="dugme hayalet kucuk" type="button">Test et</button>
-          <button class="dugme hayalet kucuk" type="button">Aktif yap</button>
-          <button class="dugme hayalet kucuk" type="button">Pasif yap</button>
-          <button class="dugme hayalet kucuk tehlike" type="button">Sil</button>
+          <button class="dugme hayalet kucuk" type="button" data-eylem="calistir" data-ad="Aktif yap">Aktif yap</button>
+          <button class="dugme hayalet kucuk" type="button" data-eylem="calistir" data-ad="Pasif yap">Pasif yap</button>
+          <button class="dugme hayalet kucuk tehlike" type="button" data-eylem="calistir" data-ad="Sil">Sil</button>
         </div>
       </div><div class="kart-govde bosluksuz">
           <div class="tablo-kap gomulu">
@@ -322,7 +339,7 @@
                   <td>Tam eşleşme<small>12.06.2026 – süresiz</small></td>
                   <td class="num">1.284</td>
                   <td><span class="durum-hapi ikonlu cozulen"><i class="fa-solid fa-circle-check" aria-hidden="true"></i> Aktif</span></td>
-                  <td class="eylem"><div class="satir-eylem"><button class="ikon-dugme" type="button" aria-label="/programini-bul yönlendirmesini test et" title="/programini-bul yönlendirmesini test et"><i class="fa-solid fa-circle-play" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="/programini-bul yönlendirmesini düzenle" title="/programini-bul yönlendirmesini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" aria-label="/programini-bul yönlendirmesini sil" title="/programini-bul yönlendirmesini sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
+                  <td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" data-islem="duzenle" href="admin-yonlendirme-form.html?id=programini-bul" aria-label="/programini-bul yönlendirmesini düzenle" title="/programini-bul yönlendirmesini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a><button class="ikon-dugme" type="button" aria-label="/programini-bul yönlendirmesini test et" title="/programini-bul yönlendirmesini test et" data-eylem="calistir" data-ad="/programini-bul yönlendirmesini test et"><i class="fa-solid fa-circle-play" aria-hidden="true"></i></button><a class="ikon-dugme" data-islem="duzenle" href="admin-yonlendirme-form.html?id=programini-bul" aria-label="/programini-bul yönlendirmesini düzenle" title="/programini-bul yönlendirmesini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a><button class="ikon-dugme yikici" type="button" aria-label="/programini-bul yönlendirmesini sil" title="/programini-bul yönlendirmesini sil" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
                 </tr>
                 <tr>
                   <td class="sec"><label><input type="checkbox" aria-label="/besin-kutuphanesi yönlendirmesini seç"></label></td>
@@ -332,7 +349,7 @@
                   <td>Tam eşleşme<small>01.05.2026 – süresiz</small></td>
                   <td class="num">942</td>
                   <td><span class="durum-hapi ikonlu cozulen"><i class="fa-solid fa-circle-check" aria-hidden="true"></i> Aktif</span></td>
-                  <td class="eylem"><div class="satir-eylem"><button class="ikon-dugme" type="button" aria-label="/besin-kutuphanesi yönlendirmesini test et" title="/besin-kutuphanesi yönlendirmesini test et"><i class="fa-solid fa-circle-play" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="/besin-kutuphanesi yönlendirmesini düzenle" title="/besin-kutuphanesi yönlendirmesini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" aria-label="/besin-kutuphanesi yönlendirmesini sil" title="/besin-kutuphanesi yönlendirmesini sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
+                  <td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" data-islem="duzenle" href="admin-yonlendirme-form.html?id=besin-kutuphanesi" aria-label="/besin-kutuphanesi yönlendirmesini düzenle" title="/besin-kutuphanesi yönlendirmesini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a><button class="ikon-dugme" type="button" aria-label="/besin-kutuphanesi yönlendirmesini test et" title="/besin-kutuphanesi yönlendirmesini test et" data-eylem="calistir" data-ad="/besin-kutuphanesi yönlendirmesini test et"><i class="fa-solid fa-circle-play" aria-hidden="true"></i></button><a class="ikon-dugme" data-islem="duzenle" href="admin-yonlendirme-form.html?id=besin-kutuphanesi" aria-label="/besin-kutuphanesi yönlendirmesini düzenle" title="/besin-kutuphanesi yönlendirmesini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a><button class="ikon-dugme yikici" type="button" aria-label="/besin-kutuphanesi yönlendirmesini sil" title="/besin-kutuphanesi yönlendirmesini sil" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
                 </tr>
                 <tr>
                   <td class="sec"><label><input type="checkbox" aria-label="/besin-kutuphanesi/* yönlendirmesini seç"></label></td>
@@ -342,7 +359,7 @@
                   <td>Ön ek<small>01.05.2026 – süresiz</small></td>
                   <td class="num">3.610</td>
                   <td><span class="durum-hapi ikonlu cozulen"><i class="fa-solid fa-circle-check" aria-hidden="true"></i> Aktif</span></td>
-                  <td class="eylem"><div class="satir-eylem"><button class="ikon-dugme" type="button" aria-label="/besin-kutuphanesi/* yönlendirmesini test et" title="/besin-kutuphanesi/* yönlendirmesini test et"><i class="fa-solid fa-circle-play" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="/besin-kutuphanesi/* yönlendirmesini düzenle" title="/besin-kutuphanesi/* yönlendirmesini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" aria-label="/besin-kutuphanesi/* yönlendirmesini sil" title="/besin-kutuphanesi/* yönlendirmesini sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
+                  <td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" data-islem="duzenle" href="admin-yonlendirme-form.html?id=besin-kutuphanesi-2" aria-label="/besin-kutuphanesi/* yönlendirmesini düzenle" title="/besin-kutuphanesi/* yönlendirmesini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a><button class="ikon-dugme" type="button" aria-label="/besin-kutuphanesi/* yönlendirmesini test et" title="/besin-kutuphanesi/* yönlendirmesini test et" data-eylem="calistir" data-ad="/besin-kutuphanesi/* yönlendirmesini test et"><i class="fa-solid fa-circle-play" aria-hidden="true"></i></button><a class="ikon-dugme" data-islem="duzenle" href="admin-yonlendirme-form.html?id=besin-kutuphanesi-2" aria-label="/besin-kutuphanesi/* yönlendirmesini düzenle" title="/besin-kutuphanesi/* yönlendirmesini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a><button class="ikon-dugme yikici" type="button" aria-label="/besin-kutuphanesi/* yönlendirmesini sil" title="/besin-kutuphanesi/* yönlendirmesini sil" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
                 </tr>
                 <tr>
                   <td class="sec"><label><input type="checkbox" aria-label="/blog/(.*)-2025 yönlendirmesini seç"></label></td>
@@ -352,7 +369,7 @@
                   <td>Düzenli ifade<small>18.07.2026 – süresiz</small></td>
                   <td class="num">288</td>
                   <td><span class="durum-hapi ikonlu cozulen"><i class="fa-solid fa-circle-check" aria-hidden="true"></i> Aktif</span></td>
-                  <td class="eylem"><div class="satir-eylem"><button class="ikon-dugme" type="button" aria-label="/blog/(.*)-2025 yönlendirmesini test et" title="/blog/(.*)-2025 yönlendirmesini test et"><i class="fa-solid fa-circle-play" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="/blog/(.*)-2025 yönlendirmesini düzenle" title="/blog/(.*)-2025 yönlendirmesini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" aria-label="/blog/(.*)-2025 yönlendirmesini sil" title="/blog/(.*)-2025 yönlendirmesini sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
+                  <td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" data-islem="duzenle" href="admin-yonlendirme-form.html?id=blog-2025" aria-label="/blog/(.*)-2025 yönlendirmesini düzenle" title="/blog/(.*)-2025 yönlendirmesini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a><button class="ikon-dugme" type="button" aria-label="/blog/(.*)-2025 yönlendirmesini test et" title="/blog/(.*)-2025 yönlendirmesini test et" data-eylem="calistir" data-ad="/blog/(.*)-2025 yönlendirmesini test et"><i class="fa-solid fa-circle-play" aria-hidden="true"></i></button><a class="ikon-dugme" data-islem="duzenle" href="admin-yonlendirme-form.html?id=blog-2025" aria-label="/blog/(.*)-2025 yönlendirmesini düzenle" title="/blog/(.*)-2025 yönlendirmesini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a><button class="ikon-dugme yikici" type="button" aria-label="/blog/(.*)-2025 yönlendirmesini sil" title="/blog/(.*)-2025 yönlendirmesini sil" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
                 </tr>
                 <tr>
                   <td class="sec"><label><input type="checkbox" aria-label="/kampanya/yaz yönlendirmesini seç"></label></td>
@@ -362,7 +379,7 @@
                   <td>Tam eşleşme<small>15.09.2026 – 15.11.2026</small></td>
                   <td class="num">0</td>
                   <td><span class="durum-hapi ikonlu acik"><i class="fa-solid fa-calendar-day" aria-hidden="true"></i> Planlandı</span></td>
-                  <td class="eylem"><div class="satir-eylem"><button class="ikon-dugme" type="button" aria-label="/kampanya/yaz yönlendirmesini test et" title="/kampanya/yaz yönlendirmesini test et"><i class="fa-solid fa-circle-play" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="/kampanya/yaz yönlendirmesini düzenle" title="/kampanya/yaz yönlendirmesini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" aria-label="/kampanya/yaz yönlendirmesini sil" title="/kampanya/yaz yönlendirmesini sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
+                  <td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" data-islem="duzenle" href="admin-yonlendirme-form.html?id=kampanya-yaz" aria-label="/kampanya/yaz yönlendirmesini düzenle" title="/kampanya/yaz yönlendirmesini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a><button class="ikon-dugme" type="button" aria-label="/kampanya/yaz yönlendirmesini test et" title="/kampanya/yaz yönlendirmesini test et" data-eylem="calistir" data-ad="/kampanya/yaz yönlendirmesini test et"><i class="fa-solid fa-circle-play" aria-hidden="true"></i></button><a class="ikon-dugme" data-islem="duzenle" href="admin-yonlendirme-form.html?id=kampanya-yaz" aria-label="/kampanya/yaz yönlendirmesini düzenle" title="/kampanya/yaz yönlendirmesini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a><button class="ikon-dugme yikici" type="button" aria-label="/kampanya/yaz yönlendirmesini sil" title="/kampanya/yaz yönlendirmesini sil" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
                 </tr>
                 <tr>
                   <td class="sec"><label><input type="checkbox" aria-label="/uyelik yönlendirmesini seç"></label></td>
@@ -372,7 +389,7 @@
                   <td>Tam eşleşme<small>02.02.2026 – süresiz</small></td>
                   <td class="num">176</td>
                   <td><span class="durum-hapi ikonlu cozulen"><i class="fa-solid fa-circle-check" aria-hidden="true"></i> Aktif</span></td>
-                  <td class="eylem"><div class="satir-eylem"><button class="ikon-dugme" type="button" aria-label="/uyelik yönlendirmesini test et" title="/uyelik yönlendirmesini test et"><i class="fa-solid fa-circle-play" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="/uyelik yönlendirmesini düzenle" title="/uyelik yönlendirmesini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" aria-label="/uyelik yönlendirmesini sil" title="/uyelik yönlendirmesini sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
+                  <td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" data-islem="duzenle" href="admin-yonlendirme-form.html?id=uyelik" aria-label="/uyelik yönlendirmesini düzenle" title="/uyelik yönlendirmesini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a><button class="ikon-dugme" type="button" aria-label="/uyelik yönlendirmesini test et" title="/uyelik yönlendirmesini test et" data-eylem="calistir" data-ad="/uyelik yönlendirmesini test et"><i class="fa-solid fa-circle-play" aria-hidden="true"></i></button><a class="ikon-dugme" data-islem="duzenle" href="admin-yonlendirme-form.html?id=uyelik" aria-label="/uyelik yönlendirmesini düzenle" title="/uyelik yönlendirmesini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a><button class="ikon-dugme yikici" type="button" aria-label="/uyelik yönlendirmesini sil" title="/uyelik yönlendirmesini sil" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
                 </tr>
                 <tr>
                   <td class="sec"><label><input type="checkbox" aria-label="/kampanya/yaz-2025 yönlendirmesini seç"></label></td>
@@ -382,7 +399,7 @@
                   <td>Tam eşleşme<small>01.06.2025 – süresiz</small></td>
                   <td class="num">12</td>
                   <td><span class="durum-hapi ikonlu hata"><i class="fa-solid fa-arrows-rotate" aria-hidden="true"></i> Döngü tespit edildi</span></td>
-                  <td class="eylem"><div class="satir-eylem"><button class="ikon-dugme" type="button" aria-label="/kampanya/yaz-2025 yönlendirmesini test et" title="/kampanya/yaz-2025 yönlendirmesini test et"><i class="fa-solid fa-circle-play" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="/kampanya/yaz-2025 yönlendirmesini düzenle" title="/kampanya/yaz-2025 yönlendirmesini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" aria-label="/kampanya/yaz-2025 yönlendirmesini sil" title="/kampanya/yaz-2025 yönlendirmesini sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
+                  <td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" data-islem="duzenle" href="admin-yonlendirme-form.html?id=kampanya-yaz-2025" aria-label="/kampanya/yaz-2025 yönlendirmesini düzenle" title="/kampanya/yaz-2025 yönlendirmesini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a><button class="ikon-dugme" type="button" aria-label="/kampanya/yaz-2025 yönlendirmesini test et" title="/kampanya/yaz-2025 yönlendirmesini test et" data-eylem="calistir" data-ad="/kampanya/yaz-2025 yönlendirmesini test et"><i class="fa-solid fa-circle-play" aria-hidden="true"></i></button><a class="ikon-dugme" data-islem="duzenle" href="admin-yonlendirme-form.html?id=kampanya-yaz-2025" aria-label="/kampanya/yaz-2025 yönlendirmesini düzenle" title="/kampanya/yaz-2025 yönlendirmesini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a><button class="ikon-dugme yikici" type="button" aria-label="/kampanya/yaz-2025 yönlendirmesini sil" title="/kampanya/yaz-2025 yönlendirmesini sil" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
                 </tr>
                 <tr>
                   <td class="sec"><label><input type="checkbox" aria-label="/eski-sss yönlendirmesini seç"></label></td>
@@ -392,7 +409,7 @@
                   <td>Tam eşleşme<small>11.03.2026 – süresiz</small></td>
                   <td class="num">4</td>
                   <td><span class="durum-hapi ikonlu hata"><i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i> Hatalı — hedef 404</span></td>
-                  <td class="eylem"><div class="satir-eylem"><button class="ikon-dugme" type="button" aria-label="/eski-sss yönlendirmesini test et" title="/eski-sss yönlendirmesini test et"><i class="fa-solid fa-circle-play" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="/eski-sss yönlendirmesini düzenle" title="/eski-sss yönlendirmesini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" aria-label="/eski-sss yönlendirmesini sil" title="/eski-sss yönlendirmesini sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
+                  <td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" data-islem="duzenle" href="admin-yonlendirme-form.html?id=eski-sss" aria-label="/eski-sss yönlendirmesini düzenle" title="/eski-sss yönlendirmesini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a><button class="ikon-dugme" type="button" aria-label="/eski-sss yönlendirmesini test et" title="/eski-sss yönlendirmesini test et" data-eylem="calistir" data-ad="/eski-sss yönlendirmesini test et"><i class="fa-solid fa-circle-play" aria-hidden="true"></i></button><a class="ikon-dugme" data-islem="duzenle" href="admin-yonlendirme-form.html?id=eski-sss" aria-label="/eski-sss yönlendirmesini düzenle" title="/eski-sss yönlendirmesini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a><button class="ikon-dugme yikici" type="button" aria-label="/eski-sss yönlendirmesini sil" title="/eski-sss yönlendirmesini sil" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
                 </tr>
                 <tr>
                   <td class="sec"><label><input type="checkbox" aria-label="/indirim yönlendirmesini seç"></label></td>
@@ -402,7 +419,7 @@
                   <td>Tam eşleşme<small>01.12.2025 – 28.02.2026</small></td>
                   <td class="num">0</td>
                   <td><span class="durum-hapi ikonlu kapali"><i class="fa-solid fa-clock" aria-hidden="true"></i> Süresi doldu</span></td>
-                  <td class="eylem"><div class="satir-eylem"><button class="ikon-dugme" type="button" aria-label="/indirim yönlendirmesini test et" title="/indirim yönlendirmesini test et"><i class="fa-solid fa-circle-play" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="/indirim yönlendirmesini düzenle" title="/indirim yönlendirmesini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" aria-label="/indirim yönlendirmesini sil" title="/indirim yönlendirmesini sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
+                  <td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" data-islem="duzenle" href="admin-yonlendirme-form.html?id=indirim" aria-label="/indirim yönlendirmesini düzenle" title="/indirim yönlendirmesini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a><button class="ikon-dugme" type="button" aria-label="/indirim yönlendirmesini test et" title="/indirim yönlendirmesini test et" data-eylem="calistir" data-ad="/indirim yönlendirmesini test et"><i class="fa-solid fa-circle-play" aria-hidden="true"></i></button><a class="ikon-dugme" data-islem="duzenle" href="admin-yonlendirme-form.html?id=indirim" aria-label="/indirim yönlendirmesini düzenle" title="/indirim yönlendirmesini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a><button class="ikon-dugme yikici" type="button" aria-label="/indirim yönlendirmesini sil" title="/indirim yönlendirmesini sil" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
                 </tr>
                 <tr>
                   <td class="sec"><label><input type="checkbox" aria-label="/diyetisyen-ol yönlendirmesini seç"></label></td>
@@ -412,7 +429,7 @@
                   <td>Tam eşleşme<small>18.07.2026 – süresiz</small></td>
                   <td class="num">431</td>
                   <td><span class="durum-hapi ikonlu cozulen"><i class="fa-solid fa-circle-check" aria-hidden="true"></i> Aktif</span></td>
-                  <td class="eylem"><div class="satir-eylem"><button class="ikon-dugme" type="button" aria-label="/diyetisyen-ol yönlendirmesini test et" title="/diyetisyen-ol yönlendirmesini test et"><i class="fa-solid fa-circle-play" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="/diyetisyen-ol yönlendirmesini düzenle" title="/diyetisyen-ol yönlendirmesini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" aria-label="/diyetisyen-ol yönlendirmesini sil" title="/diyetisyen-ol yönlendirmesini sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
+                  <td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" data-islem="duzenle" href="admin-yonlendirme-form.html?id=diyetisyen-ol" aria-label="/diyetisyen-ol yönlendirmesini düzenle" title="/diyetisyen-ol yönlendirmesini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a><button class="ikon-dugme" type="button" aria-label="/diyetisyen-ol yönlendirmesini test et" title="/diyetisyen-ol yönlendirmesini test et" data-eylem="calistir" data-ad="/diyetisyen-ol yönlendirmesini test et"><i class="fa-solid fa-circle-play" aria-hidden="true"></i></button><a class="ikon-dugme" data-islem="duzenle" href="admin-yonlendirme-form.html?id=diyetisyen-ol" aria-label="/diyetisyen-ol yönlendirmesini düzenle" title="/diyetisyen-ol yönlendirmesini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a><button class="ikon-dugme yikici" type="button" aria-label="/diyetisyen-ol yönlendirmesini sil" title="/diyetisyen-ol yönlendirmesini sil" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
                 </tr>
                 <tr>
                   <td class="sec"><label><input type="checkbox" aria-label="/beta-davet yönlendirmesini seç"></label></td>
@@ -422,7 +439,7 @@
                   <td>Tam eşleşme<small>11.03.2026 – süresiz</small></td>
                   <td class="num">3</td>
                   <td><span class="durum-hapi ikonlu kapali"><i class="fa-solid fa-circle-minus" aria-hidden="true"></i> Pasif</span></td>
-                  <td class="eylem"><div class="satir-eylem"><button class="ikon-dugme" type="button" aria-label="/beta-davet yönlendirmesini test et" title="/beta-davet yönlendirmesini test et"><i class="fa-solid fa-circle-play" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="/beta-davet yönlendirmesini düzenle" title="/beta-davet yönlendirmesini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" aria-label="/beta-davet yönlendirmesini sil" title="/beta-davet yönlendirmesini sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
+                  <td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" data-islem="duzenle" href="admin-yonlendirme-form.html?id=beta-davet" aria-label="/beta-davet yönlendirmesini düzenle" title="/beta-davet yönlendirmesini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a><button class="ikon-dugme" type="button" aria-label="/beta-davet yönlendirmesini test et" title="/beta-davet yönlendirmesini test et" data-eylem="calistir" data-ad="/beta-davet yönlendirmesini test et"><i class="fa-solid fa-circle-play" aria-hidden="true"></i></button><a class="ikon-dugme" data-islem="duzenle" href="admin-yonlendirme-form.html?id=beta-davet" aria-label="/beta-davet yönlendirmesini düzenle" title="/beta-davet yönlendirmesini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a><button class="ikon-dugme yikici" type="button" aria-label="/beta-davet yönlendirmesini sil" title="/beta-davet yönlendirmesini sil" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
                 </tr>
                 <tr>
                   <td class="sec"><label><input type="checkbox" aria-label="/hakkinda yönlendirmesini seç"></label></td>
@@ -432,7 +449,7 @@
                   <td>Tam eşleşme<small>12.06.2026 – süresiz</small></td>
                   <td class="num">89</td>
                   <td><span class="durum-hapi ikonlu cozulen"><i class="fa-solid fa-circle-check" aria-hidden="true"></i> Aktif</span></td>
-                  <td class="eylem"><div class="satir-eylem"><button class="ikon-dugme" type="button" aria-label="/hakkinda yönlendirmesini test et" title="/hakkinda yönlendirmesini test et"><i class="fa-solid fa-circle-play" aria-hidden="true"></i></button><button class="ikon-dugme" type="button" aria-label="/hakkinda yönlendirmesini düzenle" title="/hakkinda yönlendirmesini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></button><button class="ikon-dugme yikici" type="button" aria-label="/hakkinda yönlendirmesini sil" title="/hakkinda yönlendirmesini sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
+                  <td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" data-islem="duzenle" href="admin-yonlendirme-form.html?id=hakkinda" aria-label="/hakkinda yönlendirmesini düzenle" title="/hakkinda yönlendirmesini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a><button class="ikon-dugme" type="button" aria-label="/hakkinda yönlendirmesini test et" title="/hakkinda yönlendirmesini test et" data-eylem="calistir" data-ad="/hakkinda yönlendirmesini test et"><i class="fa-solid fa-circle-play" aria-hidden="true"></i></button><a class="ikon-dugme" data-islem="duzenle" href="admin-yonlendirme-form.html?id=hakkinda" aria-label="/hakkinda yönlendirmesini düzenle" title="/hakkinda yönlendirmesini düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a><button class="ikon-dugme yikici" type="button" aria-label="/hakkinda yönlendirmesini sil" title="/hakkinda yönlendirmesini sil" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
                 </tr>
               </tbody>
             </table>
@@ -512,7 +529,7 @@
           <span class="bos-ikon"><i class="fa-solid fa-inbox" aria-hidden="true"></i></span>
           <h3>Henüz yönlendirme yok</h3>
           <p>İlk yönlendirmeyi ekleyerek başla; 404 kaydından da oluşturabilirsin.</p>
-          <button class="dugme hayalet" type="button">Yönlendirme ekle</button>
+          <button class="dugme hayalet" type="button" data-eylem="satir-ekle">Yönlendirme ekle</button>
         </div>
 
         <!-- 3 · YETKİSİZ ERİŞİM — düğme YOK, sınır bir hata değildir -->
@@ -527,7 +544,7 @@
           <span class="bos-ikon"><i class="fa-solid fa-plug-circle-xmark" aria-hidden="true"></i></span>
           <h3>Liste yüklenemedi</h3>
           <p>Bağlantı kurulamadı. Yeniden dene.</p>
-          <button class="dugme hayalet" type="button"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i> Yeniden dene</button>
+          <button class="dugme hayalet" type="button" data-eylem="calistir" data-ad="Yeniden dene"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i> Yeniden dene</button>
           <p class="hata-izi">Destek talebine ekle: <code>YN-8817-LST</code></p>
         </div>
         </div>
@@ -535,13 +552,13 @@
         <div class="sayfalama kart-ayagi">
           <div class="sayfalama-bilgi"><b>1–12</b> / 211 yönlendirme</div>
           <div class="dugmeler">
-            <button class="sayfa-dugme sade ok" type="button" disabled="" aria-label="Önceki sayfa"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i></button>
-            <button class="sayfa-dugme sade aktif" type="button" aria-current="page">1</button>
-            <button class="sayfa-dugme sade" type="button">2</button>
-            <button class="sayfa-dugme sade" type="button">3</button>
-            <button class="sayfa-dugme sade" type="button">4</button>
-            <button class="sayfa-dugme sade" type="button">5</button>
-            <button class="sayfa-dugme sade ok" type="button" aria-label="Sonraki sayfa"><i class="fa-solid fa-chevron-right" aria-hidden="true"></i></button>
+            <button class="sayfa-dugme sade ok" type="button" disabled="" aria-label="Önceki sayfa" data-eylem="sayfala"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i></button>
+            <button class="sayfa-dugme sade aktif" type="button" aria-current="page" data-eylem="sayfala">1</button>
+            <button class="sayfa-dugme sade" type="button" data-eylem="sayfala">2</button>
+            <button class="sayfa-dugme sade" type="button" data-eylem="sayfala">3</button>
+            <button class="sayfa-dugme sade" type="button" data-eylem="sayfala">4</button>
+            <button class="sayfa-dugme sade" type="button" data-eylem="sayfala">5</button>
+            <button class="sayfa-dugme sade ok" type="button" aria-label="Sonraki sayfa" data-eylem="sayfala"><i class="fa-solid fa-chevron-right" aria-hidden="true"></i></button>
           </div>
         </div>
       </div>
@@ -555,4 +572,13 @@
     </div>
   </main>
 <script src="_ortak/panel.js" defer></script>
+<!-- ADMIN-KIT:JS:BAS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/7.3.0/tinymce.min.js" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/l10n/tr.js"></script>
+<script src="../../kanon/admin-editor-tr.js"></script>
+<script src="../../kanon/admin-kit.js" defer></script>
+<script src="../../kanon/admin-editor.js" defer></script>
+<script src="../../kanon/admin-tarih.js" defer></script>
+<!-- ADMIN-KIT:JS:SON -->
 </body></html>

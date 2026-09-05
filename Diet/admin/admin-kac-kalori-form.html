@@ -8,8 +8,12 @@
 <link rel="stylesheet" href="../../kanon/markalar/diet.css">
 <link rel="stylesheet" href="../../kanon/bilesenler.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<!-- ADMIN-KIT:CSS:BAS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.css">
+<link rel="stylesheet" href="../../kanon/admin.css">
+<!-- ADMIN-KIT:CSS:SON -->
 </head>
-<body class="yetkili">
+<body class="yetkili" data-marka="diet">
 <!-- ═══════════════════════════════════════════════════════════════════
      DIET ADMIN · KANONİK KABUK — FIT kabuğundan TÜRETİLDİ, elle değiştirilmez
      ───────────────────────────────────────────────────────────────────
@@ -34,24 +38,36 @@
 <!-- ── SOL EKOSİSTEM RAYI ─────────────────────────────────────────── -->
 <aside class="panel-ray" aria-label="Marka rayı">
   <a class="panel-ray-ikon aktif" href="#" style="--eko:var(--eko-diet)"
-     aria-current="true" title="DadaDiet" aria-label="DadaDiet"><i class="fa-solid fa-leaf"></i></a>
+     aria-current="true" title="DadaDiet" aria-label="DadaDiet"><i class="fa-solid fa-heart-pulse"></i></a>
   <span class="panel-ray-ayrac" role="presentation"></span>
   <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-gastro)"  title="DadaGastro"  aria-label="DadaGastro"><i class="fa-solid fa-utensils"></i></a>
+  <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-gourmet)" title="DadaGourmet" aria-label="DadaGourmet"><i class="fa-solid fa-map-location-dot"></i></a>
   <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-fit)"     title="DadaFit"     aria-label="DadaFit"><i class="fa-solid fa-dumbbell"></i></a>
-  <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-gourmet)" title="DadaGourmet" aria-label="DadaGourmet"><i class="fa-solid fa-wine-glass"></i></a>
   <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-campus)"  title="DadaCampus"  aria-label="DadaCampus"><i class="fa-solid fa-graduation-cap"></i></a>
+  <span class="panel-ray-ikon kilitli" title="DadaStore — erişimin yok" aria-label="DadaStore, erişim yok"><i class="fa-solid fa-bag-shopping"></i></span>
   <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-mentor)"  title="DadaMentor"  aria-label="DadaMentor"><i class="fa-solid fa-compass"></i></a>
-  <span class="panel-ray-ikon kilitli" title="DadaStore — erişimin yok" aria-label="DadaStore, erişim yok"><i class="fa-solid fa-lock"></i></span>
   <div class="panel-ray-alt">
     <a class="panel-ray-ikon" href="#" title="Yardım" aria-label="Yardım"><i class="fa-solid fa-circle-question"></i></a>
+<!-- ADMIN-KIT:IMZA:BAS -->
+    <a class="panel-ray-imza" href="https://gaviaworks.com" target="_blank" rel="noopener"
+       title="Gaviaworks" aria-label="Gaviaworks — gaviaworks.com">
+      <span class="yalniz-okuyucu">Gaviaworks</span>
+    </a>
+<!-- ADMIN-KIT:IMZA:SON -->
   </div>
 </aside>
 
 <!-- ── MODÜL MENÜSÜ · DÖRT KATEGORİ ───────────────────────────────── -->
 <nav class="panel-menu" id="panelMenu" aria-label="Modüller">
+<!-- ADMIN-KIT:KABUK:BAS -->
   <div class="panel-menu-bas">
-    <b>DadaDiet</b><span>Yönetim paneli</span>
+    <a class="panel-marka" href="admin-genel-bakis.html" aria-label="DadaDiet yönetim paneli">
+      <span class="yalniz-okuyucu">DadaDiet · Yönetim paneli</span>
+    </a>
   </div>
+  <button type="button" class="panel-katla" aria-pressed="false"
+          aria-label="Menüyü daralt"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i></button>
+<!-- ADMIN-KIT:KABUK:SON -->
   <div class="panel-menu-govde">
 
     <div class="panel-menu-bolum">01 Genel</div>
@@ -65,6 +81,7 @@
     <div class="panel-menu-bolum">Marka modülleri</div>
     <a class="panel-menu-link" href="admin-besinler.html"><i class="fa-solid fa-apple-whole"></i>Besin Kütüphanesi</a>
     <a class="panel-menu-link" href="admin-programlar.html"><i class="fa-solid fa-clipboard-list"></i>Beslenme Programları</a>
+    <a class="panel-menu-link" href="admin-programini-bul.html"><i class="fa-solid fa-signs-post"></i>Programını Bul</a>
     <a class="panel-menu-link" href="admin-diyetisyenler.html"><i class="fa-solid fa-user-check"></i>Diyetisyenler<span class="sayac">3</span></a>
     <a class="panel-menu-link" href="admin-testler.html"><i class="fa-solid fa-clipboard-check"></i>Beslenme Testleri</a>
     <a class="panel-menu-link" href="admin-hesaplayicilar.html"><i class="fa-solid fa-calculator"></i>Hesaplayıcılar</a>
@@ -202,7 +219,7 @@
                   <label for="sfSlug" class="alan-etiket">Adres <span class="zorunlu">*</span></label>
                   <div class="slug-alani">
                     <span class="slug-onek">https://dadadiet.com/kac-kalori/</span>
-                    <input class="alan-girdi" id="sfSlug" name="slug" type="text" required="" pattern="[a-z0-9\-]+" placeholder="bir-avuc-badem-kac-kalori">
+                    <input data-girdi="slug" class="alan-girdi" id="sfSlug" name="slug" type="text" required="" pattern="[a-z0-9\-]+" placeholder="bir-avuc-badem-kac-kalori">
                   </div>
                   <div class="alan-yardim"><span>Kayıt başlığından otomatik türetilir (Türkçe harfler sadeleştirilir);
                     istersen düzelt. Yalnız küçük harf, rakam ve tire. Yayımlanmış bir adres
@@ -239,6 +256,42 @@
                     <div class="alan-yardim"><span>Gövde uzunluğundan hesaplanır; elle yazılırsa yazılan değer basılır.</span></div>
                   </div>
                 </div>
+                <div class="alan">
+                  <label for="sfGuncelleme" class="alan-etiket">Son güncelleme <span class="acilir-kalem">— künye satırında basılır</span></label>
+                  <input class="alan-girdi" id="sfGuncelleme" name="guncelleme" type="text" data-tarih="tarih" placeholder="25.08.2026">
+                  <div class="alan-yardim"><span>Detay sayfasının künye satırında <b>“Son güncelleme: 25.08.2026”</b>
+                    olarak, yayın tarihinin yanında basılır (kac-kalori__bir-avuc-kaju-kac-kalori.html → “Son güncelleme: 25 Ağustos 2026”). Yayın tarihinden
+                    ayrı bir değerdir: kayıt yeniden yayımlanmadan da güncellenebilir.</span></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ---- KALORİ DEĞERİ -----------------------------------------
+                 Public kaynağı: kac-kalori__*.html künye şeridi —
+                 <i class="fa-solid fa-fire"></i> <b>172</b> kcal / 100 g
+                 (bir-avuc-kaju 172 · bir-dilim-kek 352 · bir-porsiyon-enginar 48
+                 · kiymayi-suzmek 216). Bugüne dek formda karşılığı yoktu. -->
+            <div class="form-bolum">
+              <h3 class="form-bolum-bas"><i class="fa-solid fa-fire" aria-hidden="true"></i> Kalori değeri</h3>
+              <div>
+                <div class="alan kart-izgara c2">
+                  <div class="alan">
+                    <label for="sfKalori" class="alan-etiket">Kalori <span class="zorunlu">*</span></label>
+                    <input data-girdi="sayi" class="alan-girdi" id="sfKalori" name="kalori" type="number" min="0" max="2000" step="1" required="" placeholder="172">
+                    <div class="alan-yardim"><span>Kartın ve detay sayfasının künye şeridindeki <b>büyük sayı</b>.
+                      Porsiyon alanında yazan miktarın karşılığıdır — porsiyon değişirse bu da değişir.</span></div>
+                  </div>
+                  <div class="alan">
+                    <label for="sfKaloriBirim" class="alan-etiket">Birim</label>
+                    <select class="alan-secim" id="sfKaloriBirim" name="kalori_birim">
+                      <option value="100g" selected="">kcal / 100 g</option>
+                      <option value="porsiyon">kcal / porsiyon</option>
+                      <option value="adet">kcal / adet</option>
+                    </select>
+                    <div class="alan-yardim"><span>Sayının yanında aynen basılır. Bugün yayındaki dört kaydın
+                      dördü de <b>kcal / 100 g</b> yazıyor.</span></div>
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -247,7 +300,7 @@
               <div>
                 <div class="alan">
                   <label for="sfTanim" class="alan-etiket">Tanım metni <span class="zorunlu">*</span></label>
-                  <textarea class="alan-metin" id="sfTanim" name="tanim" placeholder="Porsiyonu ve sayıyı iki-üç cümleyle, ölçüye dayanarak anlat."></textarea><div class="metin-duzenleyici"><div class="duzenleyici-cubuk" role="toolbar" aria-label="Metin biçimlendirme"><button type="button" class="ikon-dugme" data-k="undo" title="Geri al" aria-label="Geri al"><i class="fa-solid fa-rotate-left" aria-hidden="true"></i></button><button type="button" class="ikon-dugme" data-k="redo" title="İleri al" aria-label="İleri al"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i></button><span class="duzenleyici-ayrac" aria-hidden="true"></span><select class="alan-secim" aria-label="Blok biçimi"><option value="p" selected="">Paragraf</option><option value="h2">Başlık 2</option><option value="blockquote">Alıntı</option></select><span class="duzenleyici-ayrac" aria-hidden="true"></span><button type="button" class="ikon-dugme" data-k="bold" title="Kalın" aria-label="Kalın"><i class="fa-solid fa-bold" aria-hidden="true"></i></button><button type="button" class="ikon-dugme" data-k="italic" title="İtalik" aria-label="İtalik"><i class="fa-solid fa-italic" aria-hidden="true"></i></button><span class="duzenleyici-ayrac" aria-hidden="true"></span><button type="button" class="ikon-dugme" data-k="insertUnorderedList" title="Madde listesi" aria-label="Madde listesi"><i class="fa-solid fa-list-ul" aria-hidden="true"></i></button><button type="button" class="ikon-dugme" data-k="insertOrderedList" title="Numaralı liste" aria-label="Numaralı liste"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></button><span class="duzenleyici-ayrac" aria-hidden="true"></span><button type="button" class="ikon-dugme" data-k="blockquote" title="Alıntı" aria-label="Alıntı"><i class="fa-solid fa-quote-left" aria-hidden="true"></i></button><button type="button" class="ikon-dugme" data-k="link" title="Bağlantı" aria-label="Bağlantı"><i class="fa-solid fa-link" aria-hidden="true"></i></button><span class="duzenleyici-ayrac" aria-hidden="true"></span><button type="button" class="ikon-dugme" data-k="removeFormat" title="Biçimi temizle" aria-label="Biçimi temizle"><i class="fa-solid fa-eraser" aria-hidden="true"></i></button><button type="button" class="ikon-dugme" data-k="code" title="Kaynağı gör" aria-label="Kaynağı gör"><i class="fa-solid fa-code" aria-hidden="true"></i></button></div><div class="duzenleyici-yuzey" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Porsiyonu ve sayıyı iki-üç cümleyle, ölçüye dayanarak anlat." data-bos="Porsiyonu ve sayıyı iki-üç cümleyle, ölçüye dayanarak anlat."></div><div class="duzenleyici-ayak"><span><b>0</b> kelime</span><span><b>0</b> karakter</span></div></div>
+                  <textarea class="alan-metin" id="sfTanim" name="tanim" placeholder="Porsiyonu ve sayıyı iki-üç cümleyle, ölçüye dayanarak anlat."></textarea><div class="metin-duzenleyici"><div class="duzenleyici-cubuk" role="toolbar" aria-label="Metin biçimlendirme"><button type="button" class="ikon-dugme" data-k="undo" title="Geri al" aria-label="Geri al" data-eylem="calistir" data-ad="Geri al"><i class="fa-solid fa-rotate-left" aria-hidden="true"></i></button><button type="button" class="ikon-dugme" data-k="redo" title="İleri al" aria-label="İleri al" data-eylem="calistir" data-ad="İleri al"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i></button><span class="duzenleyici-ayrac" aria-hidden="true"></span><select class="alan-secim" aria-label="Blok biçimi"><option value="p" selected="">Paragraf</option><option value="h2">Başlık 2</option><option value="blockquote">Alıntı</option></select><span class="duzenleyici-ayrac" aria-hidden="true"></span><button type="button" class="ikon-dugme" data-k="bold" title="Kalın" aria-label="Kalın"><i class="fa-solid fa-bold" aria-hidden="true"></i></button><button type="button" class="ikon-dugme" data-k="italic" title="İtalik" aria-label="İtalik"><i class="fa-solid fa-italic" aria-hidden="true"></i></button><span class="duzenleyici-ayrac" aria-hidden="true"></span><button type="button" class="ikon-dugme" data-k="insertUnorderedList" title="Madde listesi" aria-label="Madde listesi"><i class="fa-solid fa-list-ul" aria-hidden="true"></i></button><button type="button" class="ikon-dugme" data-k="insertOrderedList" title="Numaralı liste" aria-label="Numaralı liste"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></button><span class="duzenleyici-ayrac" aria-hidden="true"></span><button type="button" class="ikon-dugme" data-k="blockquote" title="Alıntı" aria-label="Alıntı"><i class="fa-solid fa-quote-left" aria-hidden="true"></i></button><button type="button" class="ikon-dugme" data-k="link" title="Bağlantı" aria-label="Bağlantı" data-eylem="calistir" data-ad="Bağlantı"><i class="fa-solid fa-link" aria-hidden="true"></i></button><span class="duzenleyici-ayrac" aria-hidden="true"></span><button type="button" class="ikon-dugme" data-k="removeFormat" title="Biçimi temizle" aria-label="Biçimi temizle"><i class="fa-solid fa-eraser" aria-hidden="true"></i></button><button type="button" class="ikon-dugme" data-k="code" title="Kaynağı gör" aria-label="Kaynağı gör" data-eylem="calistir" data-ad="Kaynağı gör"><i class="fa-solid fa-code" aria-hidden="true"></i></button></div><div class="duzenleyici-yuzey" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Porsiyonu ve sayıyı iki-üç cümleyle, ölçüye dayanarak anlat." data-bos="Porsiyonu ve sayıyı iki-üç cümleyle, ölçüye dayanarak anlat."></div><div class="duzenleyici-ayak"><span><b>0</b> kelime</span><span><b>0</b> karakter</span></div></div>
                   <div class="alan-yardim"><span>Kayıt detay sayfasının ana metni. İki-üç cümle; porsiyonun
                     nasıl ölçüldüğü, sayının nereden geldiği ve neye dikkat edileceği.
                     <!-- `required` BİLEREK YOK. Zengin metin editörü kurulunca kaynak
@@ -309,10 +362,86 @@
             <div class="form-bolum">
               <h3 class="form-bolum-bas">
                 <i class="fa-solid fa-code-compare" aria-hidden="true"></i> Sıkça sorulan sorular
-                <span class="alan-sayac" id="sfKarSay">0 kayıt</span>
+                <span class="alan-sayac" id="sfKarSay">5 kayıt</span>
               </h3>
-              <div class="adim-liste" id="sfKaristirilan"></div>
-              <button class="satir-ekle" type="button" id="sfKarEkle">
+              <div class="adim-liste" id="sfKaristirilan">
+                <div class="adim-karti">
+                  <span class="adim-no">1</span>
+                  <div class="adim-govde">
+                    <span class="tur-rozeti"><i class="fa-solid fa-circle-question" aria-hidden="true"></i> Soru</span>
+                    <input class="alan-girdi" type="text" name="sss_soru[]" data-field="baslik" maxlength="160" placeholder="Soru — okurun kendi cümlesiyle" aria-label="1. soru" value="Bir avuç kaju kaç gram ve kaç tane eder?">
+                    <textarea class="alan-metin" name="sss_cevap[]" data-field="metin" placeholder="Cevap — kaynağa dayanan, tam cümlelerle" aria-label="1. sorunun cevabı">Türkiye Beslenme Rehberi'nin sert kabuklu yemiş tablosunda kaju için tanım nettir: 18-20 adet, bir avuç ya da 30 gram, üçü aynı miktarı ifade eder. Aynı rehberin porsiyon karşılıkları tablosu bu satırı daha da ayrıntılandırır: bir porsiyon 30 gram ve 18-20 adet, dörtte üç porsiyon 25 gram ve 16-17 adet, üçte iki porsiyon 20 gram ve 12-13 adet, yarım porsiyon 15 gram ve 9-10 adettir. Kaju, aynı tabloda badem, fındık, ceviz ve yer fıstığıyla birlikte 30 gramlık ortak porsiyonu paylaşır.
+
+Rehberin kendi dipnotu avuç ölçüsüne temkinli yaklaşır: avuç ölçüleri ölçüm kolaylığı için verilmiş yaklaşık değerlerdir ve avucun doldurulma durumuna göre önemli farklılık gösterebilir. Tartı yoksa aynı tablo 30 gramı bir adet 60 mililitrelik kepçenin silme dolusu olarak da tanımlar. Bir kez tartıp küçük bir kaba ayırmak, sonraki seferlerde gözle yapılan tahmini belirgin biçimde isabetli hâle getirir.</textarea>
+                    <input type="hidden" data-field="position" value="0">
+                  </div>
+                  <div class="adim-yan">
+                    <button data-eylem="sirala" class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="1. soruyu sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button>
+                    <button class="ikon-dugme yikici" type="button" title="Soruyu sil" aria-label="1. soruyu sil" data-islem="sil" data-ad="1. soruyu sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button>
+                  </div>
+                </div>
+                <div class="adim-karti">
+                  <span class="adim-no">2</span>
+                  <div class="adim-govde">
+                    <span class="tur-rozeti"><i class="fa-solid fa-circle-question" aria-hidden="true"></i> Soru</span>
+                    <input class="alan-girdi" type="text" name="sss_soru[]" data-field="baslik" maxlength="160" placeholder="Soru — okurun kendi cümlesiyle" aria-label="2. soru" value="172 kalori hangi kayıttan geliyor?">
+                    <textarea class="alan-metin" name="sss_cevap[]" data-field="metin" placeholder="Cevap — kaynağa dayanan, tam cümlelerle" aria-label="2. sorunun cevabı">Amerikan gıda veri tabanının tuzsuz kuru kavrulmuş kaju kaydı 100 gram için 574 kalori verir. Otuz gramlık bir avuç için hesap 574 × 30 / 100 işleminden 172,2 kalori çıkarır ve bu rakam 172'ye yuvarlanır. Aynı veri tabanının çiğ kaju kaydı ise 100 gramda 553 kaloridir; 30 gram için 165,9, yani yaklaşık 166 kalori eder. İki kayıt arasındaki fark 30 gramda altı kalori civarındadır.
+
+Farkın kaynağı kavurmanın kendisi değil, sudur. Çiğ kayıtta 100 gramda 5,2 gram su ölçülmüşken kuru kavrulmuş kayıtta bu miktar 1,7 grama iner. Su azalınca aynı ağırlıkta daha fazla kuru madde kalır ve enerji yoğunluğu yükselir. Yağda kavrulmuş, tuzlu ya da kaplamalı kaju çeşitleri bu iki kaydın hiçbirine ait değildir; onlarda paketin besin değerleri tablosu esas alınmalıdır.</textarea>
+                    <input type="hidden" data-field="position" value="1">
+                  </div>
+                  <div class="adim-yan">
+                    <button data-eylem="sirala" class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="2. soruyu sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button>
+                    <button class="ikon-dugme yikici" type="button" title="Soruyu sil" aria-label="2. soruyu sil" data-islem="sil" data-ad="2. soruyu sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button>
+                  </div>
+                </div>
+                <div class="adim-karti">
+                  <span class="adim-no">3</span>
+                  <div class="adim-govde">
+                    <span class="tur-rozeti"><i class="fa-solid fa-circle-question" aria-hidden="true"></i> Soru</span>
+                    <input class="alan-girdi" type="text" name="sss_soru[]" data-field="baslik" maxlength="160" placeholder="Soru — okurun kendi cümlesiyle" aria-label="3. soru" value="Yağ, protein ve karbonhidrat nasıl dağılıyor?">
+                    <textarea class="alan-metin" name="sss_cevap[]" data-field="metin" placeholder="Cevap — kaynağa dayanan, tam cümlelerle" aria-label="3. sorunun cevabı">Tuzsuz kuru kavrulmuş kaju kaydına göre 30 gramlık bir avuçta yaklaşık 13,9 gram yağ, 4,6 gram protein ve 9,8 gram karbonhidrat bulunur. Karbonhidratın 1,5 gramı ölçülmüş şekerlerdir, lif miktarı ise 0,9 gramdır. Kalorinin büyük bölümü yağdan gelir: 13,9 gram yağ tek başına yaklaşık 125 kalori eder, yani avucun toplamının üçte ikisinden fazlası.
+
+Mineral tarafında aynı porsiyonda yaklaşık 170 miligram potasyum ve 14 miligram kalsiyum bulunur. Tuzsuz kayıtta sodyum 100 gramda 16 miligramdır, 30 gram için beş miligramın altına iner; tuz eklenmiş çeşitlerde bu rakam yükselir ve etiketten okunması gerekir. Doymuş yağ miktarı 30 gramda 2,7 gram civarındadır.</textarea>
+                    <input type="hidden" data-field="position" value="2">
+                  </div>
+                  <div class="adim-yan">
+                    <button data-eylem="sirala" class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="3. soruyu sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button>
+                    <button class="ikon-dugme yikici" type="button" title="Soruyu sil" aria-label="3. soruyu sil" data-islem="sil" data-ad="3. soruyu sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button>
+                  </div>
+                </div>
+                <div class="adim-karti">
+                  <span class="adim-no">4</span>
+                  <div class="adim-govde">
+                    <span class="tur-rozeti"><i class="fa-solid fa-circle-question" aria-hidden="true"></i> Soru</span>
+                    <input class="alan-girdi" type="text" name="sss_soru[]" data-field="baslik" maxlength="160" placeholder="Soru — okurun kendi cümlesiyle" aria-label="4. soru" value="Çiğ kaju gerçekten çiğ mi?">
+                    <textarea class="alan-metin" name="sss_cevap[]" data-field="metin" placeholder="Cevap — kaynağa dayanan, tam cümlelerle" aria-label="4. sorunun cevabı">Veri tabanının çiğ kaju kaydı kendi dipnotunda ilginç bir ayrıntı verir: çiğ kaju, içi kabuğundan güvenli biçimde ayrılabilsin diye ısıl işlemden geçirilmiştir, ama sonrasında ayrıca kavrulmamıştır. Yani markette çiğ diye satılan kaju, hiç ısı görmemiş bir ürün değildir; kavrulmamış olması işlem görmediği anlamına gelmez. Kajunun kabuğunda tahriş edici bir reçine bulunduğu için bu adım ürünün kendisinin bir parçasıdır.
+
+Bu ayrım kalori açısından küçük bir fark yaratır — 30 gramda altı kalori — ama kartta hangi hâlin anıldığını bilmek gerekir. Buradaki 172 kalori kuru kavrulmuş kajuya aittir. Kavurma sonrası tuz, bal ya da baharat eklenmiş çeşitler ayrı ürünlerdir ve kendi etiketleriyle değerlendirilir.</textarea>
+                    <input type="hidden" data-field="position" value="3">
+                  </div>
+                  <div class="adim-yan">
+                    <button data-eylem="sirala" class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="4. soruyu sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button>
+                    <button class="ikon-dugme yikici" type="button" title="Soruyu sil" aria-label="4. soruyu sil" data-islem="sil" data-ad="4. soruyu sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button>
+                  </div>
+                </div>
+                <div class="adim-karti">
+                  <span class="adim-no">5</span>
+                  <div class="adim-govde">
+                    <span class="tur-rozeti"><i class="fa-solid fa-circle-question" aria-hidden="true"></i> Soru</span>
+                    <input class="alan-girdi" type="text" name="sss_soru[]" data-field="baslik" maxlength="160" placeholder="Soru — okurun kendi cümlesiyle" aria-label="5. soru" value="Kaju bademden ve fındıktan nerede ayrışıyor?">
+                    <textarea class="alan-metin" name="sss_cevap[]" data-field="metin" placeholder="Cevap — kaynağa dayanan, tam cümlelerle" aria-label="5. sorunun cevabı">Aynı veri tabanının tuzsuz kuru kavrulmuş kayıtları 30 gramlık avuç için şu rakamları verir: kaju 172, badem 179, fındık 194 kalori. Üçü birbirine yakındır ve kaju bu üçlünün en düşüğüdür. Asıl ayrım kalori değil, karbonhidrat ve liftedir: 30 gramda kaju 9,8 gram karbonhidrat ve 0,9 gram lif taşırken badem 6,3 gram karbonhidrat ve 3,3 gram lif, fındık 5,3 gram karbonhidrat ve 2,8 gram lif taşır.
+
+Kaju bu yüzden ağızda daha yumuşak ve hafif tatlı bir kuruyemiş olarak durur; nişasta ve şeker oranı diğer ikisinden yüksektir. Kalori tek başına bir besinin beslenme kalitesini belirlemez, üçü de aynı 30 gramlık porsiyon ölçüsünü paylaşır. Sayımın asıl kaçtığı yer paketten doğrudan atıştırmaktır: günlük payı önceden küçük bir kaba ayırmak, kaç avuç tüketildiğini görünür kılar.</textarea>
+                    <input type="hidden" data-field="position" value="4">
+                  </div>
+                  <div class="adim-yan">
+                    <button data-eylem="sirala" class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="5. soruyu sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button>
+                    <button class="ikon-dugme yikici" type="button" title="Soruyu sil" aria-label="5. soruyu sil" data-islem="sil" data-ad="5. soruyu sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button>
+                  </div>
+                </div>
+              </div>
+              <button class="satir-ekle" type="button" id="sfKarEkle" data-eylem="satir-ekle">
                 <i class="fa-solid fa-plus" aria-hidden="true"></i> Soru ekle</button>
               <div class="alan-yardim"><span>Her satır bir soru ve <b>farkı bir
                 cümleyle</b> anlatan not taşır. Detay sayfasında bu not aynen basılır —
@@ -337,7 +466,7 @@
                 </div>
                 <div class="alan">
                   <label for="sfCanon" class="alan-etiket">Canonical adres</label>
-                  <input class="alan-girdi" id="sfCanon" name="canonical" type="url" placeholder="https://dadadiet.com/beslenme-ipuclari/…">
+                  <input data-girdi="url" class="alan-girdi" id="sfCanon" name="canonical" type="url" placeholder="https://dadadiet.com/beslenme-ipuclari/…">
                 </div>
                 <div class="alan">
                   <label for="sfOdak" class="alan-etiket">Odak anahtar sözcük</label>
@@ -363,10 +492,10 @@
 
           <div class="form-eylem kart-alt">
             <a class="dugme hayalet" href="admin-kac-kalori.html">İptal</a>
-            <button class="dugme hayalet" type="button" id="sfTaslak">Taslak kaydet</button>
+            <button class="dugme hayalet" type="button" id="sfTaslak" data-eylem="taslak">Taslak kaydet</button>
             <button class="dugme birincil" type="button" id="sfKaydet">Kayıt kaydını kaydet</button>
           </div>
-        <div class="bos-durum kart-ici" hidden=""><span class="bos-ikon"><i class="fa-solid fa-file-circle-question" aria-hidden="true"></i></span><h3>Bu adreste kayıt yok</h3><p>Adresteki slug listede karşılık bulmuyor. Listeye dön ve bir kayıt seç.</p><a class="dugme birincil" href="admin-kac-kalori.html">Kaç Kalori listesine dön</a></div><div class="bos-durum kart-ici yetkisiz" data-durum="yetkisiz" hidden=""><span class="bos-ikon"><i class="fa-solid fa-lock" aria-hidden="true"></i></span><h3>Bu kaydı düzenleyemezsin</h3><p>Erişim istemek için yöneticinle görüş.</p></div><div class="bos-durum kart-ici servis-hatasi" data-durum="servis" hidden=""><span class="bos-ikon"><i class="fa-solid fa-plug-circle-xmark" aria-hidden="true"></i></span><h3>Kayıt yüklenemedi</h3><p>Bağlantı kurulamadı. Yeniden dene.</p><button class="dugme birincil" type="button"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i> Yeniden dene</button><div class="hata-izi">Referans kodu <code>DIET-ADM-5209</code></div></div></div>
+        <div class="bos-durum kart-ici" hidden=""><span class="bos-ikon"><i class="fa-solid fa-file-circle-question" aria-hidden="true"></i></span><h3>Bu adreste kayıt yok</h3><p>Adresteki slug listede karşılık bulmuyor. Listeye dön ve bir kayıt seç.</p><a class="dugme birincil" href="admin-kac-kalori.html">Kaç Kalori listesine dön</a></div><div class="bos-durum kart-ici yetkisiz" data-durum="yetkisiz" hidden=""><span class="bos-ikon"><i class="fa-solid fa-lock" aria-hidden="true"></i></span><h3>Bu kaydı düzenleyemezsin</h3><p>Erişim istemek için yöneticinle görüş.</p></div><div class="bos-durum kart-ici servis-hatasi" data-durum="servis" hidden=""><span class="bos-ikon"><i class="fa-solid fa-plug-circle-xmark" aria-hidden="true"></i></span><h3>Kayıt yüklenemedi</h3><p>Bağlantı kurulamadı. Yeniden dene.</p><button class="dugme birincil" type="button" data-eylem="calistir" data-ad="Yeniden dene"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i> Yeniden dene</button><div class="hata-izi">Referans kodu <code>DIET-ADM-5209</code></div></div></div>
 
         <!-- ================= SAĞ KOLON ================= -->
         <aside class="form-yan">
@@ -387,7 +516,7 @@
                 </div>
                 <div class="alan">
                   <label for="sfTarih" class="alan-etiket">Yayın tarihi</label>
-                  <input class="alan-girdi" id="sfTarih" name="yayin_tarihi" type="date">
+                  <input class="alan-girdi" id="sfTarih" name="yayin_tarihi" type="text" data-tarih="tarih">
                 </div>
                 <div class="alan">
                   <span>Porsiyon dizininde göster</span>
@@ -408,7 +537,7 @@
             <div class="kart-govde">
               <div class="alan-yardim" style="margin-bottom:12px"><span>Silinen kayıt, ona köprü kuran
                 <b id="sfKullanim">0</b> kayıt kaydının “sıkça sorulan sorular” kutusundan da düşer.</span></div>
-              <button class="dugme hayalet tehlike tam-en" type="button" id="sfSil" data-yikici="Bu kayıt" data-fiil="sil">
+              <button class="dugme hayalet tehlike tam-en" type="button" id="sfSil" data-yikici="Bu kayıt" data-fiil="sil" data-islem="sil">
                 <i class="fa-solid fa-trash-can" aria-hidden="true"></i> Kayıt kaydını sil</button>
             </div>
           </div>
@@ -420,4 +549,200 @@
   </div>
 </main>
 <script src="_ortak/panel.js" defer></script>
+<!-- ADMIN-KIT:JS:BAS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/7.3.0/tinymce.min.js" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/l10n/tr.js"></script>
+<script src="../../kanon/admin-editor-tr.js"></script>
+<script src="../../kanon/admin-kit.js" defer></script>
+<script src="../../kanon/admin-editor.js" defer></script>
+<script src="../../kanon/admin-tarih.js" defer></script>
+<!-- ADMIN-KIT:JS:SON -->
+
+<!-- KAYIT KAYNAĞI — form kendi kayıtlarını BİLDİRİR (kit §5b).
+     Anahtar = admin-kac-kalori.html satırının kendi slug hücresi; 12 satır, 12 benzersiz anahtar.
+     Değerler satırın KENDİ hücrelerinden: kayıt · adres · kategori · porsiyon · kalori · durum.
+     Yazar/Kaynak Diet public maketinin dört kac-kalori sayfasında da aynı — ev kuralı.
+     bir-avuc-kaju-kac-kalori TEK maket sayfası olan kayıttır; tanım · örnek · okuma süresi ·
+     son güncelleme · meta ondan alındı. Markup'taki statik SSS bloğu ZATEN o kayda ait
+     olduğu için bildirilmedi (yerinde bırakıldı); kalan 11 kayıt BOŞ DİZİ bildirir ki
+     kajunun SSS'i onların altında görünmesin (§5b).
+     🔴 "İncelemede" durumu formun seçim listesinde YOK (taslak/yayin/arsiv) — iki kayıtta
+        "durum" bildirilmedi.
+     🔴 Satır ile maket ÇELİŞİYOR: kaju satırı "1 avuç · 28 g · 157 kcal", maket sayfası
+        "30 g · ~172 kcal" diyor. Satırın kendi değeri yazıldı, çelişki rapor edildi. -->
+<script type="application/json" data-kayitlar>
+{
+ "bir-adet-armut-kac-kalori": {
+  "terim": "Bir adet armut kaç kalori?",
+  "slug": "bir-adet-armut-kac-kalori",
+  "kategori": "sebze",
+  "harf": "1 adet · 178 g",
+  "ingilizce": "Genel bilgi içeriği",
+  "kaynak_dil": "DadaDiet Beslenme Ekibi",
+  "canonical": "https://dadadiet.com/kac-kalori/bir-adet-armut-kac-kalori",
+  "durum": "yayin",
+  "kalori": "101",
+  "kalori_birim": "adet",
+  "sss_soru": [],
+  "sss_cevap": []
+ },
+ "bir-avuc-badem-kac-kalori": {
+  "terim": "Bir avuç badem kaç kalori?",
+  "slug": "bir-avuc-badem-kac-kalori",
+  "kategori": "atistirmalik",
+  "harf": "1 avuç · 28 g",
+  "ingilizce": "Genel bilgi içeriği",
+  "kaynak_dil": "DadaDiet Beslenme Ekibi",
+  "canonical": "https://dadadiet.com/kac-kalori/bir-avuc-badem-kac-kalori",
+  "durum": "yayin",
+  "kalori": "162",
+  "kalori_birim": "porsiyon",
+  "sss_soru": [],
+  "sss_cevap": []
+ },
+ "bir-bardak-domates-suyu-kac-kalori": {
+  "terim": "Bir bardak domates suyu kaç kalori?",
+  "slug": "bir-bardak-domates-suyu-kac-kalori",
+  "kategori": "icecek",
+  "harf": "1 bardak · 200 ml",
+  "ingilizce": "Genel bilgi içeriği",
+  "kaynak_dil": "DadaDiet Beslenme Ekibi",
+  "canonical": "https://dadadiet.com/kac-kalori/bir-bardak-domates-suyu-kac-kalori",
+  "durum": "yayin",
+  "kalori": "34",
+  "kalori_birim": "porsiyon",
+  "sss_soru": [],
+  "sss_cevap": []
+ },
+ "bir-bardak-sutlu-kahve-kac-kalori": {
+  "terim": "Bir bardak sütlü kahve kaç kalori?",
+  "slug": "bir-bardak-sutlu-kahve-kac-kalori",
+  "kategori": "icecek",
+  "harf": "1 bardak · 200 ml",
+  "ingilizce": "Genel bilgi içeriği",
+  "kaynak_dil": "DadaDiet Beslenme Ekibi",
+  "canonical": "https://dadadiet.com/kac-kalori/bir-bardak-sutlu-kahve-kac-kalori",
+  "durum": "yayin",
+  "kalori": "88",
+  "kalori_birim": "porsiyon",
+  "sss_soru": [],
+  "sss_cevap": []
+ },
+ "bir-fincan-turk-kahvesi-kac-kalori": {
+  "terim": "Bir fincan Türk kahvesi kaç kalori?",
+  "slug": "bir-fincan-turk-kahvesi-kac-kalori",
+  "kategori": "icecek",
+  "harf": "1 fincan · 60 ml",
+  "ingilizce": "Genel bilgi içeriği",
+  "kaynak_dil": "DadaDiet Beslenme Ekibi",
+  "canonical": "https://dadadiet.com/kac-kalori/bir-fincan-turk-kahvesi-kac-kalori",
+  "durum": "yayin",
+  "kalori": "6",
+  "kalori_birim": "porsiyon",
+  "sss_soru": [],
+  "sss_cevap": []
+ },
+ "bir-kasik-fistik-ezmesi-kac-kalori": {
+  "terim": "Bir kaşık fıstık ezmesi kaç kalori?",
+  "slug": "bir-kasik-fistik-ezmesi-kac-kalori",
+  "kategori": "atistirmalik",
+  "harf": "1 yemek kaşığı · 16 g",
+  "ingilizce": "Genel bilgi içeriği",
+  "kaynak_dil": "DadaDiet Beslenme Ekibi",
+  "canonical": "https://dadadiet.com/kac-kalori/bir-kasik-fistik-ezmesi-kac-kalori",
+  "durum": "yayin",
+  "kalori": "94",
+  "kalori_birim": "porsiyon",
+  "sss_soru": [],
+  "sss_cevap": []
+ },
+ "bir-porsiyon-bamya-kac-kalori": {
+  "terim": "Bir porsiyon bamya kaç kalori?",
+  "slug": "bir-porsiyon-bamya-kac-kalori",
+  "kategori": "sebze",
+  "harf": "1 porsiyon · 150 g",
+  "ingilizce": "Genel bilgi içeriği",
+  "kaynak_dil": "DadaDiet Beslenme Ekibi",
+  "canonical": "https://dadadiet.com/kac-kalori/bir-porsiyon-bamya-kac-kalori",
+  "durum": "yayin",
+  "kalori": "50",
+  "kalori_birim": "porsiyon",
+  "sss_soru": [],
+  "sss_cevap": []
+ },
+ "bir-porsiyon-lahana-kac-kalori": {
+  "terim": "Bir porsiyon lahana kaç kalori?",
+  "slug": "bir-porsiyon-lahana-kac-kalori",
+  "kategori": "sebze",
+  "harf": "1 porsiyon · 150 g",
+  "ingilizce": "Genel bilgi içeriği",
+  "kaynak_dil": "DadaDiet Beslenme Ekibi",
+  "canonical": "https://dadadiet.com/kac-kalori/bir-porsiyon-lahana-kac-kalori",
+  "durum": "yayin",
+  "kalori": "38",
+  "kalori_birim": "porsiyon",
+  "sss_soru": [],
+  "sss_cevap": []
+ },
+ "bir-top-dondurma-kac-kalori": {
+  "terim": "Bir top dondurma kaç kalori?",
+  "slug": "bir-top-dondurma-kac-kalori",
+  "kategori": "atistirmalik",
+  "harf": "1 top · 50 g",
+  "ingilizce": "Genel bilgi içeriği",
+  "kaynak_dil": "DadaDiet Beslenme Ekibi",
+  "canonical": "https://dadadiet.com/kac-kalori/bir-top-dondurma-kac-kalori",
+  "durum": "yayin",
+  "kalori": "103",
+  "kalori_birim": "porsiyon",
+  "sss_soru": [],
+  "sss_cevap": []
+ },
+ "bir-avuc-kaju-kac-kalori": {
+  "terim": "Bir avuç kaju kaç kalori?",
+  "slug": "bir-avuc-kaju-kac-kalori",
+  "kategori": "atistirmalik",
+  "harf": "1 avuç · 28 g",
+  "ingilizce": "Genel bilgi içeriği",
+  "kaynak_dil": "DadaDiet Beslenme Ekibi",
+  "canonical": "https://dadadiet.com/kac-kalori/bir-avuc-kaju-kac-kalori",
+  "durum": "yayin",
+  "kalori": "157",
+  "kalori_birim": "porsiyon",
+  "okunus": "~5 dk",
+  "guncelleme": "25 Ağustos 2026",
+  "tanim": "Bir avuç kaju, Türkiye Beslenme Rehberi'nin ölçüsüyle 18-20 tane ve 30 gramdır; tuzsuz kuru kavrulmuş kaju kaydına göre yaklaşık 172 kalori taşır. Aynı 30 gram çiğ kajuda 166 kaloriye denk gelir. Avuç kişiden kişiye değiştiği için ölçünün kendisi gramdır.",
+  "ornek": "Bir avuç kaju 18-20 tane ve 30 gramdır; tuzsuz kavrulmuş kajuda yaklaşık 172 kalori eder. Karbonhidratı badem ve fındıktan yüksek, lifi düşüktür.",
+  "meta_title": "Bir Avuç Kaju Kaç Kalori? 30 Gram Üzerinden Hesap · DadaDiet",
+  "meta_desc": "Bir avuç kaju 18-20 tane ve 30 gramdır; tuzsuz kavrulmuş kajuda yaklaşık 172 kalori eder. Badem ve fındıkla arasındaki farkı kaynak künyesiyle oku."
+ },
+ "kizartmak-yerine-firinlamak-ne-kazandirir": {
+  "terim": "Kızartmak yerine fırınlamak ne kazandırır?",
+  "slug": "kizartmak-yerine-firinlamak-ne-kazandirir",
+  "kategori": "pisirme",
+  "harf": "1 porsiyon · 150 g",
+  "ingilizce": "Genel bilgi içeriği",
+  "kaynak_dil": "DadaDiet Beslenme Ekibi",
+  "canonical": "https://dadadiet.com/kac-kalori/kizartmak-yerine-firinlamak-ne-kazandirir",
+  "kalori": "-78",
+  "kalori_birim": "porsiyon",
+  "sss_soru": [],
+  "sss_cevap": []
+ },
+ "yumurtayi-yagda-pisirmek-kac-kalori-ekler": {
+  "terim": "Yumurtayı yağda pişirmek kaç kalori ekler?",
+  "slug": "yumurtayi-yagda-pisirmek-kac-kalori-ekler",
+  "kategori": "pisirme",
+  "harf": "1 yumurta · 50 g",
+  "ingilizce": "Genel bilgi içeriği",
+  "kaynak_dil": "DadaDiet Beslenme Ekibi",
+  "canonical": "https://dadadiet.com/kac-kalori/yumurtayi-yagda-pisirmek-kac-kalori-ekler",
+  "kalori": "+45",
+  "kalori_birim": "porsiyon",
+  "sss_soru": [],
+  "sss_cevap": []
+ }
+}
+</script>
 </body></html>

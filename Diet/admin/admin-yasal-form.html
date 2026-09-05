@@ -8,8 +8,12 @@
 <link rel="stylesheet" href="../../kanon/markalar/diet.css">
 <link rel="stylesheet" href="../../kanon/bilesenler.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<!-- ADMIN-KIT:CSS:BAS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.css">
+<link rel="stylesheet" href="../../kanon/admin.css">
+<!-- ADMIN-KIT:CSS:SON -->
 </head>
-<body class="yetkili">
+<body class="yetkili" data-marka="diet">
 <!-- ═══════════════════════════════════════════════════════════════════
      DIET ADMIN · KANONİK KABUK — FIT kabuğundan TÜRETİLDİ, elle değiştirilmez
      ───────────────────────────────────────────────────────────────────
@@ -34,24 +38,36 @@
 <!-- ── SOL EKOSİSTEM RAYI ─────────────────────────────────────────── -->
 <aside class="panel-ray" aria-label="Marka rayı">
   <a class="panel-ray-ikon aktif" href="#" style="--eko:var(--eko-diet)"
-     aria-current="true" title="DadaDiet" aria-label="DadaDiet"><i class="fa-solid fa-leaf"></i></a>
+     aria-current="true" title="DadaDiet" aria-label="DadaDiet"><i class="fa-solid fa-heart-pulse"></i></a>
   <span class="panel-ray-ayrac" role="presentation"></span>
   <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-gastro)"  title="DadaGastro"  aria-label="DadaGastro"><i class="fa-solid fa-utensils"></i></a>
+  <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-gourmet)" title="DadaGourmet" aria-label="DadaGourmet"><i class="fa-solid fa-map-location-dot"></i></a>
   <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-fit)"     title="DadaFit"     aria-label="DadaFit"><i class="fa-solid fa-dumbbell"></i></a>
-  <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-gourmet)" title="DadaGourmet" aria-label="DadaGourmet"><i class="fa-solid fa-wine-glass"></i></a>
   <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-campus)"  title="DadaCampus"  aria-label="DadaCampus"><i class="fa-solid fa-graduation-cap"></i></a>
+  <span class="panel-ray-ikon kilitli" title="DadaStore — erişimin yok" aria-label="DadaStore, erişim yok"><i class="fa-solid fa-bag-shopping"></i></span>
   <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-mentor)"  title="DadaMentor"  aria-label="DadaMentor"><i class="fa-solid fa-compass"></i></a>
-  <span class="panel-ray-ikon kilitli" title="DadaStore — erişimin yok" aria-label="DadaStore, erişim yok"><i class="fa-solid fa-lock"></i></span>
   <div class="panel-ray-alt">
     <a class="panel-ray-ikon" href="#" title="Yardım" aria-label="Yardım"><i class="fa-solid fa-circle-question"></i></a>
+<!-- ADMIN-KIT:IMZA:BAS -->
+    <a class="panel-ray-imza" href="https://gaviaworks.com" target="_blank" rel="noopener"
+       title="Gaviaworks" aria-label="Gaviaworks — gaviaworks.com">
+      <span class="yalniz-okuyucu">Gaviaworks</span>
+    </a>
+<!-- ADMIN-KIT:IMZA:SON -->
   </div>
 </aside>
 
 <!-- ── MODÜL MENÜSÜ · DÖRT KATEGORİ ───────────────────────────────── -->
 <nav class="panel-menu" id="panelMenu" aria-label="Modüller">
+<!-- ADMIN-KIT:KABUK:BAS -->
   <div class="panel-menu-bas">
-    <b>DadaDiet</b><span>Yönetim paneli</span>
+    <a class="panel-marka" href="admin-genel-bakis.html" aria-label="DadaDiet yönetim paneli">
+      <span class="yalniz-okuyucu">DadaDiet · Yönetim paneli</span>
+    </a>
   </div>
+  <button type="button" class="panel-katla" aria-pressed="false"
+          aria-label="Menüyü daralt"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i></button>
+<!-- ADMIN-KIT:KABUK:SON -->
   <div class="panel-menu-govde">
 
     <div class="panel-menu-bolum">01 Genel</div>
@@ -65,6 +81,7 @@
     <div class="panel-menu-bolum">Marka modülleri</div>
     <a class="panel-menu-link" href="admin-besinler.html"><i class="fa-solid fa-apple-whole"></i>Besin Kütüphanesi</a>
     <a class="panel-menu-link" href="admin-programlar.html"><i class="fa-solid fa-clipboard-list"></i>Beslenme Programları</a>
+    <a class="panel-menu-link" href="admin-programini-bul.html"><i class="fa-solid fa-signs-post"></i>Programını Bul</a>
     <a class="panel-menu-link" href="admin-diyetisyenler.html"><i class="fa-solid fa-user-check"></i>Diyetisyenler<span class="sayac">3</span></a>
     <a class="panel-menu-link" href="admin-testler.html"><i class="fa-solid fa-clipboard-check"></i>Beslenme Testleri</a>
     <a class="panel-menu-link" href="admin-hesaplayicilar.html"><i class="fa-solid fa-calculator"></i>Hesaplayıcılar</a>
@@ -182,26 +199,26 @@
             <div class="alan-izgara c2">
             <div class="alan">
               <label class="alan-etiket" for="ysAd">Metin adı <span class="zorunlu" aria-hidden="true">*</span></label>
-              <input class="alan-girdi" id="ysAd" type="text" value="Gizlilik Politikası" placeholder="">
+              <input class="alan-girdi" id="ysAd" name="ad" type="text" value="Gizlilik Politikası" placeholder="">
             </div>
             <div class="alan">
               <label class="alan-etiket" for="ysKod">Belge anahtarı</label>
-              <input class="alan-girdi" id="ysKod" type="text" value="gizlilik" placeholder="" disabled="">
+              <input class="alan-girdi" id="ysKod" name="kod" type="text" value="gizlilik" placeholder="" disabled="">
               <p class="alan-yardim"><i class="fa-solid fa-circle-info" aria-hidden="true"></i><span>Yayına girmiş anahtar değişmez; üye onayları bu anahtara bağlıdır.</span></p>
             </div>
             </div>
             <div class="alan-izgara c3">
             <div class="alan">
               <label class="alan-etiket" for="ysSurum">Sürüm <span class="zorunlu" aria-hidden="true">*</span></label>
-              <input class="alan-girdi" id="ysSurum" type="text" value="v5.1" placeholder="">
+              <input class="alan-girdi" id="ysSurum" name="surum" type="text" value="v5.1" placeholder="">
             </div>
             <div class="alan">
               <label class="alan-etiket" for="ysDil">Dil</label>
-              <select class="alan-secim" id="ysDil"><option selected="">Türkçe</option><option>İngilizce</option></select>
+              <select class="alan-secim" id="ysDil" name="dil"><option selected="">Türkçe</option><option>İngilizce</option></select>
             </div>
             <div class="alan">
               <label class="alan-etiket" for="ysSira">Sıra</label>
-              <input class="alan-girdi" id="ysSira" type="text" value="3" placeholder="">
+              <input class="alan-girdi" id="ysSira" name="sira" type="text" value="3" placeholder="">
             </div>
             </div>
           </div>
@@ -218,7 +235,7 @@
                 <button class="ikon-dugme" type="button" aria-label="Madde listesi"><i class="fa-solid fa-list-ul" aria-hidden="true"></i></button>
                 <button class="ikon-dugme" type="button" aria-label="Numaralı liste"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></button>
                 <span class="duzenleyici-ayrac"></span>
-                <button class="ikon-dugme" type="button" aria-label="Bağlantı"><i class="fa-solid fa-link" aria-hidden="true"></i></button>
+                <button class="ikon-dugme" type="button" aria-label="Bağlantı" data-eylem="calistir" data-ad="Bağlantı"><i class="fa-solid fa-link" aria-hidden="true"></i></button>
                 <button class="ikon-dugme" type="button" aria-label="Tablo"><i class="fa-solid fa-table" aria-hidden="true"></i></button>
               </div>
               <div class="duzenleyici-yuzey" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Metin gövdesi">
@@ -234,7 +251,7 @@
             <div class="alan-izgara">
             <div class="alan">
               <label class="alan-etiket" for="ysOzet">Değişiklik özeti <span class="zorunlu" aria-hidden="true">*</span></label>
-              <textarea class="alan-metin" id="ysOzet" rows="3" placeholder="Bu sürümde ne değişti?"></textarea>
+              <textarea class="alan-metin" id="ysOzet" name="ozet" rows="3" placeholder="Bu sürümde ne değişti?"></textarea>
               <p class="alan-hata goster"><i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>Yeni versiyon için değişiklik özeti zorunlu.</p>
               <p class="alan-yardim"><i class="fa-solid fa-circle-info" aria-hidden="true"></i><span>Üyeye yeniden onay isterken bu özet gösterilir.</span></p>
             </div>
@@ -247,11 +264,11 @@
             <div class="alan-izgara c2">
             <div class="alan">
               <label class="alan-etiket" for="ysTarih">Yürürlük tarihi <span class="zorunlu" aria-hidden="true">*</span></label>
-              <input class="alan-girdi" id="ysTarih" type="date" value="2026-10-01" placeholder="">
+              <input class="alan-girdi" id="ysTarih" name="yururluk" type="text" data-tarih="tarih" value="2026-10-01" placeholder="">
             </div>
             <div class="alan">
               <label class="alan-etiket" for="ysOnay">Onay gereksinimi</label>
-              <select class="alan-secim" id="ysOnay"><option selected="">Zorunlu — kabul edilmeden devam edilemez</option><option>İsteğe bağlı</option></select>
+              <select class="alan-secim" id="ysOnay" name="onay"><option selected="">Zorunlu — kabul edilmeden devam edilemez</option><option>İsteğe bağlı</option></select>
             </div>
             </div>
             <div class="alan-izgara">
@@ -301,7 +318,7 @@
             <div class="kart-govde">
             <div class="alan">
               <label class="alan-etiket" for="ysDurum">Durum</label>
-              <select class="alan-secim" id="ysDurum"><option selected="">Taslak</option><option>Hukuk incelemesinde</option><option>Onaylandı</option><option>Planlandı</option><option>Yürürlükte</option><option>Yürürlükten kalktı</option></select>
+              <select class="alan-secim" id="ysDurum" name="durum"><option selected="">Taslak</option><option>Hukuk incelemesinde</option><option>Onaylandı</option><option>Planlandı</option><option>Yürürlükte</option><option>Yürürlükten kalktı</option></select>
             </div>
               <p class="alan-yardim"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i><span>Yürürlükteki metni düzenlemek yerine yeni versiyon açılır; eski sürüm onay kayıtlarıyla birlikte arşivde kalır.</span></p>
             </div>
@@ -337,11 +354,152 @@
         <span class="bos-ikon"><i class="fa-solid fa-plug-circle-xmark" aria-hidden="true"></i></span>
         <h3>Yeni versiyon — Gizlilik Politikası yüklenemedi</h3>
         <p>Bağlantı kurulamadı. Yeniden dene.</p>
-        <button class="dugme birincil" type="button"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i>Yeniden dene</button>
+        <button class="dugme birincil" type="button" data-eylem="calistir" data-ad="Yeniden dene"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i>Yeniden dene</button>
         <p class="hata-izi">Destek referansı <code>DIET-FRM-3120</code></p>
       </div>
 
     </div>
   </main>
 <script src="_ortak/panel.js" defer></script>
+<!-- §5b · DÜZENLE = OLUŞTUR FORMUNUN AYNISI, DOLU.
+     🔴 ANAHTAR ÇAKIŞMASI ÖLÇÜLDÜ VE AYRILDI: `admin-yasal`ın 12 satırı 11 belge kodu
+        taşıyor — "Kullanım Koşulları" hem v4.2 (yürürlükte) hem v4.1 (yürürlükten kalktı)
+        olarak iki kez geçiyor. Kod anahtar yapılsaydı yürürlükteki metne basan yönetici
+        KALKMIŞ SÜRÜME düşerdi. Anahtar ayırt eden alandan türetildi: <kod>-v<sürüm>.
+        Public slug (`kod` alanı) DEĞİŞMEDİ; yalnız adresteki anahtar ayrıştı.
+     ⚠ `govde` alanı Diyet formunda YOK (donör FIT'te var); bildirilmedi.
+     ⚠ Yürürlük tarihi ISO — `ysTarih` alanı `type="date"`. -->
+<script type="application/json" data-kayitlar>
+{
+ "kullanim-kosullari-v4-2": {
+  "kod": "kullanim-kosullari",
+  "ad": "Kullanım Koşulları",
+  "surum": "v4.2",
+  "dil": "Türkçe",
+  "onay": "Zorunlu — kabul edilmeden devam edilemez",
+  "yururluk": "2026-09-01",
+  "durum": "Yürürlükte",
+  "sira": 1
+ },
+ "uyelik-sozlesmesi-v3-1": {
+  "kod": "uyelik-sozlesmesi",
+  "ad": "Üyelik Sözleşmesi",
+  "surum": "v3.1",
+  "dil": "Türkçe",
+  "onay": "Zorunlu — kabul edilmeden devam edilemez",
+  "yururluk": "2026-09-01",
+  "durum": "Yürürlükte",
+  "sira": 2
+ },
+ "gizlilik-v5-0": {
+  "kod": "gizlilik",
+  "ad": "Gizlilik Politikası",
+  "surum": "v5.0",
+  "dil": "Türkçe",
+  "onay": "Zorunlu — kabul edilmeden devam edilemez",
+  "yururluk": "2026-08-15",
+  "durum": "Yürürlükte",
+  "sira": 3
+ },
+ "kvkk-aydinlatma-v2-4": {
+  "kod": "kvkk-aydinlatma",
+  "ad": "KVKK Aydınlatma Metni",
+  "surum": "v2.4",
+  "dil": "Türkçe",
+  "onay": "Zorunlu — kabul edilmeden devam edilemez",
+  "yururluk": "2026-08-15",
+  "durum": "Yürürlükte",
+  "sira": 4
+ },
+ "acik-riza-v2-0": {
+  "kod": "acik-riza",
+  "ad": "Açık Rıza Metni",
+  "surum": "v2.0",
+  "dil": "Türkçe",
+  "onay": "İsteğe bağlı",
+  "yururluk": "2026-08-15",
+  "durum": "Yürürlükte",
+  "sira": 5
+ },
+ "cerez-v1-8": {
+  "kod": "cerez",
+  "ad": "Çerez Politikası",
+  "surum": "v1.8",
+  "dil": "Türkçe",
+  "onay": "İsteğe bağlı",
+  "yururluk": "2026-07-20",
+  "durum": "Yürürlükte",
+  "sira": 6
+ },
+ "ticari-ileti-v1-3": {
+  "kod": "ticari-ileti",
+  "ad": "Ticari İleti Onayı",
+  "surum": "v1.3",
+  "dil": "Türkçe",
+  "onay": "İsteğe bağlı",
+  "yururluk": "2026-07-20",
+  "durum": "Yürürlükte",
+  "sira": 7
+ },
+ "mesafeli-satis-v2-2": {
+  "kod": "mesafeli-satis",
+  "ad": "Mesafeli Satış Sözleşmesi",
+  "surum": "v2.2",
+  "dil": "Türkçe",
+  "onay": "Zorunlu — kabul edilmeden devam edilemez",
+  "yururluk": "2026-10-01",
+  "durum": "Planlandı",
+  "sira": 8
+ },
+ "iptal-iade-v2-1": {
+  "kod": "iptal-iade",
+  "ad": "İptal ve İade Koşulları",
+  "surum": "v2.1",
+  "dil": "Türkçe",
+  "onay": "Zorunlu — kabul edilmeden devam edilemez",
+  "yururluk": "2026-10-01",
+  "durum": "Hukuk incelemesinde",
+  "sira": 9
+ },
+ "terms-of-use-v4-2": {
+  "kod": "terms-of-use",
+  "ad": "Kullanım Koşulları (EN)",
+  "surum": "v4.2",
+  "dil": "İngilizce",
+  "onay": "Zorunlu — kabul edilmeden devam edilemez",
+  "yururluk": "",
+  "durum": "Taslak",
+  "sira": 10
+ },
+ "privacy-v4-9": {
+  "kod": "privacy",
+  "ad": "Gizlilik Politikası (EN)",
+  "surum": "v4.9",
+  "dil": "İngilizce",
+  "onay": "Zorunlu — kabul edilmeden devam edilemez",
+  "yururluk": "",
+  "durum": "Taslak",
+  "sira": 11
+ },
+ "kullanim-kosullari-v4-1": {
+  "kod": "kullanim-kosullari",
+  "ad": "Kullanım Koşulları",
+  "surum": "v4.1",
+  "dil": "Türkçe",
+  "onay": "Zorunlu — kabul edilmeden devam edilemez",
+  "yururluk": "2026-03-10",
+  "durum": "Yürürlükten kalktı",
+  "sira": 12
+ }
+}
+</script>
+<!-- ADMIN-KIT:JS:BAS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/7.3.0/tinymce.min.js" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/l10n/tr.js"></script>
+<script src="../../kanon/admin-editor-tr.js"></script>
+<script src="../../kanon/admin-kit.js" defer></script>
+<script src="../../kanon/admin-editor.js" defer></script>
+<script src="../../kanon/admin-tarih.js" defer></script>
+<!-- ADMIN-KIT:JS:SON -->
 </body></html>

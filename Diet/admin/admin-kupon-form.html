@@ -8,8 +8,12 @@
 <link rel="stylesheet" href="../../kanon/markalar/diet.css">
 <link rel="stylesheet" href="../../kanon/bilesenler.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<!-- ADMIN-KIT:CSS:BAS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.css">
+<link rel="stylesheet" href="../../kanon/admin.css">
+<!-- ADMIN-KIT:CSS:SON -->
 </head>
-<body class="yetkili">
+<body class="yetkili" data-marka="diet">
 <!-- ═══════════════════════════════════════════════════════════════════
      DIET ADMIN · KANONİK KABUK — FIT kabuğundan TÜRETİLDİ, elle değiştirilmez
      ───────────────────────────────────────────────────────────────────
@@ -34,24 +38,36 @@
 <!-- ── SOL EKOSİSTEM RAYI ─────────────────────────────────────────── -->
 <aside class="panel-ray" aria-label="Marka rayı">
   <a class="panel-ray-ikon aktif" href="#" style="--eko:var(--eko-diet)"
-     aria-current="true" title="DadaDiet" aria-label="DadaDiet"><i class="fa-solid fa-leaf"></i></a>
+     aria-current="true" title="DadaDiet" aria-label="DadaDiet"><i class="fa-solid fa-heart-pulse"></i></a>
   <span class="panel-ray-ayrac" role="presentation"></span>
   <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-gastro)"  title="DadaGastro"  aria-label="DadaGastro"><i class="fa-solid fa-utensils"></i></a>
+  <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-gourmet)" title="DadaGourmet" aria-label="DadaGourmet"><i class="fa-solid fa-map-location-dot"></i></a>
   <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-fit)"     title="DadaFit"     aria-label="DadaFit"><i class="fa-solid fa-dumbbell"></i></a>
-  <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-gourmet)" title="DadaGourmet" aria-label="DadaGourmet"><i class="fa-solid fa-wine-glass"></i></a>
   <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-campus)"  title="DadaCampus"  aria-label="DadaCampus"><i class="fa-solid fa-graduation-cap"></i></a>
+  <span class="panel-ray-ikon kilitli" title="DadaStore — erişimin yok" aria-label="DadaStore, erişim yok"><i class="fa-solid fa-bag-shopping"></i></span>
   <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-mentor)"  title="DadaMentor"  aria-label="DadaMentor"><i class="fa-solid fa-compass"></i></a>
-  <span class="panel-ray-ikon kilitli" title="DadaStore — erişimin yok" aria-label="DadaStore, erişim yok"><i class="fa-solid fa-lock"></i></span>
   <div class="panel-ray-alt">
     <a class="panel-ray-ikon" href="#" title="Yardım" aria-label="Yardım"><i class="fa-solid fa-circle-question"></i></a>
+<!-- ADMIN-KIT:IMZA:BAS -->
+    <a class="panel-ray-imza" href="https://gaviaworks.com" target="_blank" rel="noopener"
+       title="Gaviaworks" aria-label="Gaviaworks — gaviaworks.com">
+      <span class="yalniz-okuyucu">Gaviaworks</span>
+    </a>
+<!-- ADMIN-KIT:IMZA:SON -->
   </div>
 </aside>
 
 <!-- ── MODÜL MENÜSÜ · DÖRT KATEGORİ ───────────────────────────────── -->
 <nav class="panel-menu" id="panelMenu" aria-label="Modüller">
+<!-- ADMIN-KIT:KABUK:BAS -->
   <div class="panel-menu-bas">
-    <b>DadaDiet</b><span>Yönetim paneli</span>
+    <a class="panel-marka" href="admin-genel-bakis.html" aria-label="DadaDiet yönetim paneli">
+      <span class="yalniz-okuyucu">DadaDiet · Yönetim paneli</span>
+    </a>
   </div>
+  <button type="button" class="panel-katla" aria-pressed="false"
+          aria-label="Menüyü daralt"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i></button>
+<!-- ADMIN-KIT:KABUK:SON -->
   <div class="panel-menu-govde">
 
     <div class="panel-menu-bolum">01 Genel</div>
@@ -65,6 +81,7 @@
     <div class="panel-menu-bolum">Marka modülleri</div>
     <a class="panel-menu-link" href="admin-besinler.html"><i class="fa-solid fa-apple-whole"></i>Besin Kütüphanesi</a>
     <a class="panel-menu-link" href="admin-programlar.html"><i class="fa-solid fa-clipboard-list"></i>Beslenme Programları</a>
+    <a class="panel-menu-link" href="admin-programini-bul.html"><i class="fa-solid fa-signs-post"></i>Programını Bul</a>
     <a class="panel-menu-link" href="admin-diyetisyenler.html"><i class="fa-solid fa-user-check"></i>Diyetisyenler<span class="sayac">3</span></a>
     <a class="panel-menu-link" href="admin-testler.html"><i class="fa-solid fa-clipboard-check"></i>Beslenme Testleri</a>
     <a class="panel-menu-link" href="admin-hesaplayicilar.html"><i class="fa-solid fa-calculator"></i>Hesaplayıcılar</a>
@@ -182,44 +199,44 @@
             <div class="alan-izgara c2">
             <div class="alan">
               <label class="alan-etiket" for="kupKod">Kupon kodu <span class="zorunlu" aria-hidden="true">*</span></label>
-              <input class="alan-girdi" id="kupKod" type="text" value="BAHAR40" placeholder="">
+              <input class="alan-girdi" id="kupKod" name="kod" type="text" value="BAHAR40" placeholder="">
               <p class="alan-yardim"><i class="fa-solid fa-circle-info" aria-hidden="true"></i><span>Büyük harf, boşluksuz. Üye bu kodu ödeme adımında yazar.</span></p>
             </div>
             <div class="alan">
               <label class="alan-etiket" for="kupAd">Ad / açıklama <span class="zorunlu" aria-hidden="true">*</span></label>
-              <input class="alan-girdi" id="kupAd" type="text" value="Bahar dönemi kampanyası" placeholder="">
+              <input class="alan-girdi" id="kupAd" name="ad" type="text" value="Bahar dönemi kampanyası" placeholder="">
             </div>
             </div>
             <div class="alan-izgara c2">
             <div class="alan">
               <label class="alan-etiket" for="kupTur">İndirim türü</label>
-              <select class="alan-secim" id="kupTur"><option selected="">Yüzde indirim</option><option>Sabit tutar indirimi</option><option>Ücretsiz deneme süresi</option><option>Belirli dönem ücretsiz</option></select>
+              <select class="alan-secim" id="kupTur" name="tur"><option selected="">Yüzde indirim</option><option>Sabit tutar indirimi</option><option>Ücretsiz deneme süresi</option><option>Belirli dönem ücretsiz</option></select>
             </div>
             <div class="alan">
               <label class="alan-etiket" for="kupDeger">İndirim değeri <span class="zorunlu" aria-hidden="true">*</span></label>
-              <input class="alan-girdi" id="kupDeger" type="text" value="40" placeholder="">
+              <input class="alan-girdi" id="kupDeger" name="deger" type="text" value="40" placeholder="">
               <p class="alan-yardim"><i class="fa-solid fa-circle-info" aria-hidden="true"></i><span>Tutar kuruş tamsayısı olarak tutulur; ekranda para birimiyle basılır.</span></p>
             </div>
             </div>
             <div class="alan-izgara c2">
             <div class="alan">
               <label class="alan-etiket" for="kupPara">Para birimi</label>
-              <select class="alan-secim" id="kupPara"><option selected="">₺ Türk lirası</option><option>$ Amerikan doları</option><option>€ Euro</option></select>
+              <select class="alan-secim" id="kupPara" name="para"><option selected="">₺ Türk lirası</option><option>$ Amerikan doları</option><option>€ Euro</option></select>
             </div>
             <div class="alan">
               <label class="alan-etiket" for="kupAsgari">Asgari sepet tutarı</label>
-              <input class="alan-girdi" id="kupAsgari" type="text" value="" placeholder="0">
+              <input data-girdi="para" class="alan-girdi" id="kupAsgari" name="asgari" type="text" value="" placeholder="0">
               <p class="alan-yardim"><i class="fa-solid fa-circle-info" aria-hidden="true"></i><span>Boş bırakılırsa alt sınır aranmaz.</span></p>
             </div>
             </div>
             <div class="alan-izgara c2">
             <div class="alan">
               <label class="alan-etiket" for="kupBas">Başlangıç tarihi <span class="zorunlu" aria-hidden="true">*</span></label>
-              <input class="alan-girdi" id="kupBas" type="date" value="2026-04-01" placeholder="">
+              <input class="alan-girdi" id="kupBas" name="baslangic" type="text" data-tarih="tarih" value="2026-04-01" placeholder="">
             </div>
             <div class="alan">
               <label class="alan-etiket" for="kupBit">Bitiş tarihi</label>
-              <input class="alan-girdi" id="kupBit" type="date" value="2026-05-31" placeholder="">
+              <input class="alan-girdi" id="kupBit" name="bitis" type="text" data-tarih="tarih" value="2026-05-31" placeholder="">
               <p class="alan-yardim"><i class="fa-solid fa-circle-info" aria-hidden="true"></i><span>Boş bırakılırsa kupon süresiz sayılır.</span></p>
             </div>
             </div>
@@ -231,19 +248,19 @@
             <div class="alan-izgara c2">
             <div class="alan">
               <label class="alan-etiket" for="kupTop">Toplam kullanım sınırı</label>
-              <input class="alan-girdi" id="kupTop" type="text" value="800" placeholder="">
+              <input class="alan-girdi" id="kupTop" name="toplam_limit" type="text" value="800" placeholder="">
               <p class="alan-yardim"><i class="fa-solid fa-circle-info" aria-hidden="true"></i><span>Sınıra ulaşınca kupon kendiliğinden "Limit doldu" olur.</span></p>
             </div>
             <div class="alan">
               <label class="alan-etiket" for="kupUye">Üye başına sınır</label>
-              <input class="alan-girdi" id="kupUye" type="text" value="1" placeholder="">
+              <input class="alan-girdi" id="kupUye" name="uye_limit" type="text" value="1" placeholder="">
               <p class="alan-yardim"><i class="fa-solid fa-circle-info" aria-hidden="true"></i><span>Aynı üyenin bu kuponu kaç kez kullanabileceği.</span></p>
             </div>
             </div>
             <div class="alan-izgara">
             <div class="alan">
               <label class="alan-etiket" for="kupPlan">Hangi planlarda geçerli</label>
-              <select class="alan-secim" id="kupPlan"><option selected="">Pro · Pro Max</option><option>Yalnız Pro</option><option>Yalnız Pro Max</option></select>
+              <select class="alan-secim" id="kupPlan" name="plan"><option selected="">Pro · Pro Max</option><option>Yalnız Pro</option><option>Yalnız Pro Max</option></select>
               <p class="alan-yardim"><i class="fa-solid fa-circle-info" aria-hidden="true"></i><span>Katalog paket modülünden okunur; indirimi olmayan bir tutara kupon uygulanamaz.</span></p>
             </div>
             </div>
@@ -293,7 +310,7 @@
             <span class="not">Son kayıt <b>12.08.2026</b></span>
             <div class="eylem-satiri">
               <a class="dugme hayalet" href="admin-kuponlar.html">İptal</a>
-              <button class="dugme hayalet" type="button">Taslak kaydet</button>
+              <button class="dugme hayalet" type="button" data-eylem="taslak">Taslak kaydet</button>
               <button class="dugme birincil" type="submit">Kuponu kaydet</button>
             </div>
           </div>
@@ -305,7 +322,7 @@
             <div class="kart-govde">
             <div class="alan">
               <label class="alan-etiket" for="kupDurum">Durum</label>
-              <select class="alan-secim" id="kupDurum"><option selected="">Taslak</option><option>Planlandı</option><option>Aktif</option><option>Durduruldu</option></select>
+              <select class="alan-secim" id="kupDurum" name="durum"><option selected="">Taslak</option><option>Planlandı</option><option>Aktif</option><option>Durduruldu</option></select>
               <p class="alan-yardim"><i class="fa-solid fa-circle-info" aria-hidden="true"></i><span>"Limit doldu" ve "Süresi doldu" elle seçilmez: tarih ve sayaç belirler.</span></p>
             </div>
             <div class="alan">
@@ -317,7 +334,7 @@
             <div class="kart-alt form-eylem">
               <span class="not">Test kaydı oluşturmaz.</span>
               <div class="eylem-satiri">
-                <button class="dugme hayalet" type="button"><i class="fa-solid fa-vial" aria-hidden="true"></i>Kuponu test et</button>
+                <button class="dugme hayalet" type="button" data-eylem="calistir" data-ad="Kuponu test et"><i class="fa-solid fa-vial" aria-hidden="true"></i>Kuponu test et</button>
               </div>
             </div>
           </div>
@@ -342,8 +359,8 @@
             <div class="kart-alt form-eylem">
               <span class="not">Bu işlem geri alınamaz.</span>
               <div class="eylem-satiri">
-                <button class="dugme hayalet" type="button"><i class="fa-solid fa-box-archive" aria-hidden="true"></i>Arşivle</button>
-                <button class="dugme hayalet tehlike" type="button"><i class="fa-solid fa-trash-can" aria-hidden="true"></i>Kuponu sil</button>
+                <button class="dugme hayalet" type="button" data-eylem="calistir" data-ad="Arşivle"><i class="fa-solid fa-box-archive" aria-hidden="true"></i>Arşivle</button>
+                <button class="dugme hayalet tehlike" type="button" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i>Kuponu sil</button>
               </div>
             </div>
           </div>
@@ -367,11 +384,167 @@
         <span class="bos-ikon"><i class="fa-solid fa-plug-circle-xmark" aria-hidden="true"></i></span>
         <h3>Yeni kupon yüklenemedi</h3>
         <p>Bağlantı kurulamadı. Yeniden dene.</p>
-        <button class="dugme birincil" type="button"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i>Yeniden dene</button>
+        <button class="dugme birincil" type="button" data-eylem="calistir" data-ad="Yeniden dene"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i>Yeniden dene</button>
         <p class="hata-izi">Destek referansı <code>DIET-FRM-3120</code></p>
       </div>
 
     </div>
   </main>
 <script src="_ortak/panel.js" defer></script>
+<!-- §5b · DÜZENLE = OLUŞTUR FORMUNUN AYNISI, DOLU.
+     Kaynak: `admin-kuponlar` satırının kendi verisi. Anahtar kupon kodu — 12'de 12 benzersiz.
+     🔴 LİSTEDEKİ DURUM ile FORMDAKİ DURUM AYNI ŞEY DEĞİL. Listenin hapı "Limit doldu" ve
+        "Süresi doldu" HESAPLANAN durumlardır (kullanım sayacı + bitiş tarihi); form `durum`
+        seçimi YÖNETSEL durumdur (Taslak/Planlandı/Aktif/Durduruldu). Limiti ya da süresi
+        dolmuş kupon yönetsel olarak hâlâ `Aktif`tir — kimse onu durdurmadı, sistem saydı.
+        Bu yüzden GERIDON · KIS2025 · ELMA20 `Aktif` bildirildi; `Durduruldu` yalnız
+        gerçekten durdurulmuş TESTKOD'da.
+     ⚠ TARİHLER ISO YAZILDI. Diyet'in `kupBas`/`kupBit` alanı `type="date"`; donör FIT'te
+       aynı alan `type="text" data-tarih`. gg.aa.yyyy yazılsaydı tarayıcı değeri REDDEDER
+       ve alan boş açılırdı. Değer alanın kendi biçimine göre yazılır, uydurulmaz. -->
+<script type="application/json" data-kayitlar>
+{
+ "DADADIET10": {
+  "kod": "DADADIET10",
+  "ad": "Yeni üye karşılama indirimi",
+  "tur": "Yüzde indirim",
+  "deger": "%10",
+  "baslangic": "2026-01-01",
+  "bitis": "2026-12-31",
+  "plan": "Pro · Pro Max",
+  "toplam_limit": "1.000",
+  "durum": "Aktif"
+ },
+ "YAZ2026": {
+  "kod": "YAZ2026",
+  "ad": "Yaz kampanyası",
+  "tur": "Yüzde indirim",
+  "deger": "%25",
+  "baslangic": "2026-06-01",
+  "bitis": "2026-09-15",
+  "plan": "Yalnız Pro",
+  "toplam_limit": "500",
+  "durum": "Aktif"
+ },
+ "GERIDON": {
+  "kod": "GERIDON",
+  "ad": "Ayrılan üyeye dönüş indirimi",
+  "tur": "Sabit tutar indirimi",
+  "deger": "₺50",
+  "baslangic": "2026-03-01",
+  "bitis": "2026-06-30",
+  "plan": "Pro · Pro Max",
+  "toplam_limit": "250",
+  "durum": "Aktif"
+ },
+ "DIYETISYEN15": {
+  "kod": "DIYETISYEN15",
+  "ad": "Diyetisyen davetiyesi",
+  "tur": "Yüzde indirim",
+  "deger": "%15",
+  "baslangic": "2026-10-01",
+  "bitis": "2026-12-31",
+  "plan": "Yalnız Pro Max",
+  "toplam_limit": "300",
+  "durum": "Planlandı"
+ },
+ "KIS2025": {
+  "kod": "KIS2025",
+  "ad": "Kış kampanyası",
+  "tur": "Yüzde indirim",
+  "deger": "%20",
+  "baslangic": "2025-12-01",
+  "bitis": "2026-02-28",
+  "plan": "Yalnız Pro",
+  "toplam_limit": "1.500",
+  "durum": "Aktif"
+ },
+ "DENEME30": {
+  "kod": "DENEME30",
+  "ad": "30 gün ücretsiz deneme",
+  "tur": "Ücretsiz deneme süresi",
+  "deger": "30 gün",
+  "baslangic": "2026-02-15",
+  "bitis": "2026-12-31",
+  "plan": "Yalnız Pro",
+  "toplam_limit": "",
+  "durum": "Aktif"
+ },
+ "KURUMSAL5": {
+  "kod": "KURUMSAL5",
+  "ad": "Kurumsal sözleşme indirimi",
+  "tur": "Yüzde indirim",
+  "deger": "%5",
+  "baslangic": "2026-01-01",
+  "bitis": "",
+  "plan": "Yalnız Pro Max",
+  "toplam_limit": "100",
+  "durum": "Aktif"
+ },
+ "BAHAR40": {
+  "kod": "BAHAR40",
+  "ad": "Bahar dönemi kampanyası",
+  "tur": "Sabit tutar indirimi",
+  "deger": "₺40",
+  "baslangic": "2026-04-01",
+  "bitis": "2026-05-31",
+  "plan": "Pro · Pro Max",
+  "toplam_limit": "800",
+  "durum": "Planlandı"
+ },
+ "ILKAY": {
+  "kod": "ILKAY",
+  "ad": "İlk ay ücretsiz",
+  "tur": "Belirli dönem ücretsiz",
+  "deger": "1 ay",
+  "baslangic": "2026-01-01",
+  "bitis": "2026-09-30",
+  "plan": "Yalnız Pro",
+  "toplam_limit": "2.000",
+  "durum": "Aktif"
+ },
+ "ELMA20": {
+  "kod": "ELMA20",
+  "ad": "Basın çalışması kuponu",
+  "tur": "Yüzde indirim",
+  "deger": "%20",
+  "baslangic": "2026-01-10",
+  "bitis": "2026-02-10",
+  "plan": "Yalnız Pro",
+  "toplam_limit": "200",
+  "durum": "Aktif"
+ },
+ "TESTKOD": {
+  "kod": "TESTKOD",
+  "ad": "İç sınama kuponu",
+  "tur": "Yüzde indirim",
+  "deger": "%100",
+  "baslangic": "2026-01-01",
+  "bitis": "",
+  "plan": "Pro · Pro Max",
+  "toplam_limit": "",
+  "durum": "Durduruldu"
+ },
+ "OGRENCI25": {
+  "kod": "OGRENCI25",
+  "ad": "Öğrenci indirimi",
+  "tur": "Yüzde indirim",
+  "deger": "%25",
+  "baslangic": "2026-09-01",
+  "bitis": "2027-06-30",
+  "plan": "Yalnız Pro",
+  "toplam_limit": "1.000",
+  "durum": "Planlandı"
+ }
+}
+</script>
+<!-- ADMIN-KIT:JS:BAS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/7.3.0/tinymce.min.js" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/l10n/tr.js"></script>
+<script src="../../kanon/admin-editor-tr.js"></script>
+<script src="../../kanon/admin-kit.js" defer></script>
+<script src="../../kanon/admin-editor.js" defer></script>
+<script src="../../kanon/admin-tarih.js" defer></script>
+<!-- ADMIN-KIT:JS:SON -->
 </body></html>

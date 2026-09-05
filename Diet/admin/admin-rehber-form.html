@@ -8,8 +8,12 @@
 <link rel="stylesheet" href="../../kanon/markalar/diet.css">
 <link rel="stylesheet" href="../../kanon/bilesenler.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<!-- ADMIN-KIT:CSS:BAS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.css">
+<link rel="stylesheet" href="../../kanon/admin.css">
+<!-- ADMIN-KIT:CSS:SON -->
 </head>
-<body class="yetkili">
+<body class="yetkili" data-marka="diet">
 <!-- ═══════════════════════════════════════════════════════════════════
      DIET ADMIN · KANONİK KABUK — FIT kabuğundan TÜRETİLDİ, elle değiştirilmez
      ───────────────────────────────────────────────────────────────────
@@ -34,24 +38,36 @@
 <!-- ── SOL EKOSİSTEM RAYI ─────────────────────────────────────────── -->
 <aside class="panel-ray" aria-label="Marka rayı">
   <a class="panel-ray-ikon aktif" href="#" style="--eko:var(--eko-diet)"
-     aria-current="true" title="DadaDiet" aria-label="DadaDiet"><i class="fa-solid fa-leaf"></i></a>
+     aria-current="true" title="DadaDiet" aria-label="DadaDiet"><i class="fa-solid fa-heart-pulse"></i></a>
   <span class="panel-ray-ayrac" role="presentation"></span>
   <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-gastro)"  title="DadaGastro"  aria-label="DadaGastro"><i class="fa-solid fa-utensils"></i></a>
+  <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-gourmet)" title="DadaGourmet" aria-label="DadaGourmet"><i class="fa-solid fa-map-location-dot"></i></a>
   <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-fit)"     title="DadaFit"     aria-label="DadaFit"><i class="fa-solid fa-dumbbell"></i></a>
-  <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-gourmet)" title="DadaGourmet" aria-label="DadaGourmet"><i class="fa-solid fa-wine-glass"></i></a>
   <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-campus)"  title="DadaCampus"  aria-label="DadaCampus"><i class="fa-solid fa-graduation-cap"></i></a>
+  <span class="panel-ray-ikon kilitli" title="DadaStore — erişimin yok" aria-label="DadaStore, erişim yok"><i class="fa-solid fa-bag-shopping"></i></span>
   <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-mentor)"  title="DadaMentor"  aria-label="DadaMentor"><i class="fa-solid fa-compass"></i></a>
-  <span class="panel-ray-ikon kilitli" title="DadaStore — erişimin yok" aria-label="DadaStore, erişim yok"><i class="fa-solid fa-lock"></i></span>
   <div class="panel-ray-alt">
     <a class="panel-ray-ikon" href="#" title="Yardım" aria-label="Yardım"><i class="fa-solid fa-circle-question"></i></a>
+<!-- ADMIN-KIT:IMZA:BAS -->
+    <a class="panel-ray-imza" href="https://gaviaworks.com" target="_blank" rel="noopener"
+       title="Gaviaworks" aria-label="Gaviaworks — gaviaworks.com">
+      <span class="yalniz-okuyucu">Gaviaworks</span>
+    </a>
+<!-- ADMIN-KIT:IMZA:SON -->
   </div>
 </aside>
 
 <!-- ── MODÜL MENÜSÜ · DÖRT KATEGORİ ───────────────────────────────── -->
 <nav class="panel-menu" id="panelMenu" aria-label="Modüller">
+<!-- ADMIN-KIT:KABUK:BAS -->
   <div class="panel-menu-bas">
-    <b>DadaDiet</b><span>Yönetim paneli</span>
+    <a class="panel-marka" href="admin-genel-bakis.html" aria-label="DadaDiet yönetim paneli">
+      <span class="yalniz-okuyucu">DadaDiet · Yönetim paneli</span>
+    </a>
   </div>
+  <button type="button" class="panel-katla" aria-pressed="false"
+          aria-label="Menüyü daralt"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i></button>
+<!-- ADMIN-KIT:KABUK:SON -->
   <div class="panel-menu-govde">
 
     <div class="panel-menu-bolum">01 Genel</div>
@@ -65,6 +81,7 @@
     <div class="panel-menu-bolum">Marka modülleri</div>
     <a class="panel-menu-link" href="admin-besinler.html"><i class="fa-solid fa-apple-whole"></i>Besin Kütüphanesi</a>
     <a class="panel-menu-link" href="admin-programlar.html"><i class="fa-solid fa-clipboard-list"></i>Beslenme Programları</a>
+    <a class="panel-menu-link" href="admin-programini-bul.html"><i class="fa-solid fa-signs-post"></i>Programını Bul</a>
     <a class="panel-menu-link" href="admin-diyetisyenler.html"><i class="fa-solid fa-user-check"></i>Diyetisyenler<span class="sayac">3</span></a>
     <a class="panel-menu-link" href="admin-testler.html"><i class="fa-solid fa-clipboard-check"></i>Beslenme Testleri</a>
     <a class="panel-menu-link" href="admin-hesaplayicilar.html"><i class="fa-solid fa-calculator"></i>Hesaplayıcılar</a>
@@ -211,7 +228,7 @@
                   <label for="rfSlug" class="alan-etiket">Adres <span class="zorunlu">*</span></label>
                   <div class="slug-alani">
                     <span class="slug-onek">dadadiet.com/</span>
-                    <input class="alan-girdi" id="rfSlug" name="slug" type="text" required="" maxlength="60" pattern="[a-z0-9]+(-[a-z0-9]+)*" placeholder="beslenme-rehberi/dengeli-tabak">
+                    <input data-girdi="slug" class="alan-girdi" id="rfSlug" name="slug" type="text" required="" maxlength="60" pattern="[a-z0-9]+(-[a-z0-9]+)*" placeholder="beslenme-rehberi/dengeli-tabak">
                   </div>
                   <div class="alan-yardim"><span>Yalnız küçük harf, rakam ve tire. Rehber sayfalarının adresi
                     <b>destek sayfasından, hub'dan ve kardeş rehberlerden</b> bağlanıyor; bir kez
@@ -240,7 +257,7 @@
                 </div>
                 <div class="alan">
                   <label for="rfGiris" class="alan-etiket">Giriş metni <span class="acilir-kalem">— akordiyondan önceki prose bloğu</span></label>
-                  <textarea class="alan-metin" id="rfGiris" name="giris"></textarea><div class="metin-duzenleyici"><div class="duzenleyici-cubuk" role="toolbar" aria-label="Metin biçimlendirme"><button type="button" class="ikon-dugme" data-k="undo" title="Geri al" aria-label="Geri al"><i class="fa-solid fa-rotate-left" aria-hidden="true"></i></button><button type="button" class="ikon-dugme" data-k="redo" title="İleri al" aria-label="İleri al"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i></button><span class="duzenleyici-ayrac" aria-hidden="true"></span><select class="alan-secim" aria-label="Blok biçimi"><option value="p" selected="">Paragraf</option><option value="h2">Başlık 2</option><option value="blockquote">Alıntı</option></select><span class="duzenleyici-ayrac" aria-hidden="true"></span><button type="button" class="ikon-dugme" data-k="bold" title="Kalın" aria-label="Kalın"><i class="fa-solid fa-bold" aria-hidden="true"></i></button><button type="button" class="ikon-dugme" data-k="italic" title="İtalik" aria-label="İtalik"><i class="fa-solid fa-italic" aria-hidden="true"></i></button><span class="duzenleyici-ayrac" aria-hidden="true"></span><button type="button" class="ikon-dugme" data-k="insertUnorderedList" title="Madde listesi" aria-label="Madde listesi"><i class="fa-solid fa-list-ul" aria-hidden="true"></i></button><button type="button" class="ikon-dugme" data-k="insertOrderedList" title="Numaralı liste" aria-label="Numaralı liste"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></button><span class="duzenleyici-ayrac" aria-hidden="true"></span><button type="button" class="ikon-dugme" data-k="blockquote" title="Alıntı" aria-label="Alıntı"><i class="fa-solid fa-quote-left" aria-hidden="true"></i></button><button type="button" class="ikon-dugme" data-k="link" title="Bağlantı" aria-label="Bağlantı"><i class="fa-solid fa-link" aria-hidden="true"></i></button><span class="duzenleyici-ayrac" aria-hidden="true"></span><button type="button" class="ikon-dugme" data-k="removeFormat" title="Biçimi temizle" aria-label="Biçimi temizle"><i class="fa-solid fa-eraser" aria-hidden="true"></i></button><button type="button" class="ikon-dugme" data-k="code" title="Kaynağı gör" aria-label="Kaynağı gör"><i class="fa-solid fa-code" aria-hidden="true"></i></button></div><div class="duzenleyici-yuzey" contenteditable="true" role="textbox" aria-multiline="true" aria-label="İçerik" data-bos="Yazmaya başla…"></div><div class="duzenleyici-ayak"><span><b>0</b> kelime</span><span><b>0</b> karakter</span></div></div>
+                  <textarea class="alan-metin" id="rfGiris" name="giris"></textarea><div class="metin-duzenleyici"><div class="duzenleyici-cubuk" role="toolbar" aria-label="Metin biçimlendirme"><button type="button" class="ikon-dugme" data-k="undo" title="Geri al" aria-label="Geri al" data-eylem="calistir" data-ad="Geri al"><i class="fa-solid fa-rotate-left" aria-hidden="true"></i></button><button type="button" class="ikon-dugme" data-k="redo" title="İleri al" aria-label="İleri al" data-eylem="calistir" data-ad="İleri al"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i></button><span class="duzenleyici-ayrac" aria-hidden="true"></span><select class="alan-secim" aria-label="Blok biçimi"><option value="p" selected="">Paragraf</option><option value="h2">Başlık 2</option><option value="blockquote">Alıntı</option></select><span class="duzenleyici-ayrac" aria-hidden="true"></span><button type="button" class="ikon-dugme" data-k="bold" title="Kalın" aria-label="Kalın"><i class="fa-solid fa-bold" aria-hidden="true"></i></button><button type="button" class="ikon-dugme" data-k="italic" title="İtalik" aria-label="İtalik"><i class="fa-solid fa-italic" aria-hidden="true"></i></button><span class="duzenleyici-ayrac" aria-hidden="true"></span><button type="button" class="ikon-dugme" data-k="insertUnorderedList" title="Madde listesi" aria-label="Madde listesi"><i class="fa-solid fa-list-ul" aria-hidden="true"></i></button><button type="button" class="ikon-dugme" data-k="insertOrderedList" title="Numaralı liste" aria-label="Numaralı liste"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></button><span class="duzenleyici-ayrac" aria-hidden="true"></span><button type="button" class="ikon-dugme" data-k="blockquote" title="Alıntı" aria-label="Alıntı"><i class="fa-solid fa-quote-left" aria-hidden="true"></i></button><button type="button" class="ikon-dugme" data-k="link" title="Bağlantı" aria-label="Bağlantı" data-eylem="calistir" data-ad="Bağlantı"><i class="fa-solid fa-link" aria-hidden="true"></i></button><span class="duzenleyici-ayrac" aria-hidden="true"></span><button type="button" class="ikon-dugme" data-k="removeFormat" title="Biçimi temizle" aria-label="Biçimi temizle"><i class="fa-solid fa-eraser" aria-hidden="true"></i></button><button type="button" class="ikon-dugme" data-k="code" title="Kaynağı gör" aria-label="Kaynağı gör" data-eylem="calistir" data-ad="Kaynağı gör"><i class="fa-solid fa-code" aria-hidden="true"></i></button></div><div class="duzenleyici-yuzey" contenteditable="true" role="textbox" aria-multiline="true" aria-label="İçerik" data-bos="Yazmaya başla…"></div><div class="duzenleyici-ayak"><span><b>0</b> kelime</span><span><b>0</b> karakter</span></div></div>
                 </div>
               </div>
             </div>
@@ -286,21 +303,21 @@
         </div>
         <div class="alan">
           <label class="alan-etiket">Gövde</label>
-          <textarea class="alan-metin" data-field="govde" name="bolum_govde[]" placeholder="Bölümün paragrafları."></textarea><div class="metin-duzenleyici"><div class="duzenleyici-cubuk" role="toolbar" aria-label="Metin biçimlendirme"><button type="button" class="ikon-dugme" data-k="undo" title="Geri al" aria-label="Geri al"><i class="fa-solid fa-rotate-left" aria-hidden="true"></i></button><button type="button" class="ikon-dugme" data-k="redo" title="İleri al" aria-label="İleri al"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i></button><span class="duzenleyici-ayrac" aria-hidden="true"></span><select class="alan-secim" aria-label="Blok biçimi"><option value="p" selected="">Paragraf</option><option value="h2">Başlık 2</option><option value="blockquote">Alıntı</option></select><span class="duzenleyici-ayrac" aria-hidden="true"></span><button type="button" class="ikon-dugme" data-k="bold" title="Kalın" aria-label="Kalın"><i class="fa-solid fa-bold" aria-hidden="true"></i></button><button type="button" class="ikon-dugme" data-k="italic" title="İtalik" aria-label="İtalik"><i class="fa-solid fa-italic" aria-hidden="true"></i></button><span class="duzenleyici-ayrac" aria-hidden="true"></span><button type="button" class="ikon-dugme" data-k="insertUnorderedList" title="Madde listesi" aria-label="Madde listesi"><i class="fa-solid fa-list-ul" aria-hidden="true"></i></button><button type="button" class="ikon-dugme" data-k="insertOrderedList" title="Numaralı liste" aria-label="Numaralı liste"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></button><span class="duzenleyici-ayrac" aria-hidden="true"></span><button type="button" class="ikon-dugme" data-k="blockquote" title="Alıntı" aria-label="Alıntı"><i class="fa-solid fa-quote-left" aria-hidden="true"></i></button><button type="button" class="ikon-dugme" data-k="link" title="Bağlantı" aria-label="Bağlantı"><i class="fa-solid fa-link" aria-hidden="true"></i></button><span class="duzenleyici-ayrac" aria-hidden="true"></span><button type="button" class="ikon-dugme" data-k="removeFormat" title="Biçimi temizle" aria-label="Biçimi temizle"><i class="fa-solid fa-eraser" aria-hidden="true"></i></button><button type="button" class="ikon-dugme" data-k="code" title="Kaynağı gör" aria-label="Kaynağı gör"><i class="fa-solid fa-code" aria-hidden="true"></i></button></div><div class="duzenleyici-yuzey" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Bölümün paragrafları." data-bos="Bölümün paragrafları."></div><div class="duzenleyici-ayak"><span><b>0</b> kelime</span><span><b>0</b> karakter</span></div></div>
+          <textarea class="alan-metin" data-field="govde" name="bolum_govde[]" placeholder="Bölümün paragrafları."></textarea><div class="metin-duzenleyici"><div class="duzenleyici-cubuk" role="toolbar" aria-label="Metin biçimlendirme"><button type="button" class="ikon-dugme" data-k="undo" title="Geri al" aria-label="Geri al" data-eylem="calistir" data-ad="Geri al"><i class="fa-solid fa-rotate-left" aria-hidden="true"></i></button><button type="button" class="ikon-dugme" data-k="redo" title="İleri al" aria-label="İleri al" data-eylem="calistir" data-ad="İleri al"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i></button><span class="duzenleyici-ayrac" aria-hidden="true"></span><select class="alan-secim" aria-label="Blok biçimi"><option value="p" selected="">Paragraf</option><option value="h2">Başlık 2</option><option value="blockquote">Alıntı</option></select><span class="duzenleyici-ayrac" aria-hidden="true"></span><button type="button" class="ikon-dugme" data-k="bold" title="Kalın" aria-label="Kalın"><i class="fa-solid fa-bold" aria-hidden="true"></i></button><button type="button" class="ikon-dugme" data-k="italic" title="İtalik" aria-label="İtalik"><i class="fa-solid fa-italic" aria-hidden="true"></i></button><span class="duzenleyici-ayrac" aria-hidden="true"></span><button type="button" class="ikon-dugme" data-k="insertUnorderedList" title="Madde listesi" aria-label="Madde listesi"><i class="fa-solid fa-list-ul" aria-hidden="true"></i></button><button type="button" class="ikon-dugme" data-k="insertOrderedList" title="Numaralı liste" aria-label="Numaralı liste"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></button><span class="duzenleyici-ayrac" aria-hidden="true"></span><button type="button" class="ikon-dugme" data-k="blockquote" title="Alıntı" aria-label="Alıntı"><i class="fa-solid fa-quote-left" aria-hidden="true"></i></button><button type="button" class="ikon-dugme" data-k="link" title="Bağlantı" aria-label="Bağlantı" data-eylem="calistir" data-ad="Bağlantı"><i class="fa-solid fa-link" aria-hidden="true"></i></button><span class="duzenleyici-ayrac" aria-hidden="true"></span><button type="button" class="ikon-dugme" data-k="removeFormat" title="Biçimi temizle" aria-label="Biçimi temizle"><i class="fa-solid fa-eraser" aria-hidden="true"></i></button><button type="button" class="ikon-dugme" data-k="code" title="Kaynağı gör" aria-label="Kaynağı gör" data-eylem="calistir" data-ad="Kaynağı gör"><i class="fa-solid fa-code" aria-hidden="true"></i></button></div><div class="duzenleyici-yuzey" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Bölümün paragrafları." data-bos="Bölümün paragrafları."></div><div class="duzenleyici-ayak"><span><b>0</b> kelime</span><span><b>0</b> karakter</span></div></div>
         </div>
         <div class="alan">
           <label class="alan-etiket">Madde listesi <span class="acilir-kalem">— gövdenin altındaki maddeler</span></label>
           <div class="adim-liste" data-madde-liste=""></div>
-          <button class="satir-ekle" type="button" data-madde-ekle="">
+          <button class="satir-ekle" type="button" data-madde-ekle="" data-eylem="satir-ekle">
             <i class="fa-solid fa-plus" aria-hidden="true"></i> Madde ekle</button>
         </div>
       </div>
       <input type="hidden" data-field="position" value="0">
     </div>
     <div class="adim-yan">
-      <button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Bölümü sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır">
+      <button class="ikon-dugme tutamak" type="button" title="Sürükleyerek ya da ↑/↓ ile sırala" aria-label="Bölümü sırala — yukarı ok ve aşağı ok tuşlarıyla taşınır" data-eylem="sirala">
         <i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button>
-      <button class="ikon-dugme yikici" type="button" title="Bölümü sil" aria-label="Bölümü sil">
+      <button class="ikon-dugme yikici" type="button" title="Bölümü sil" aria-label="Bölümü sil" data-islem="sil">
         <i class="fa-solid fa-trash-can" aria-hidden="true"></i></button>
     </div>
   </div></div>
@@ -329,7 +346,7 @@
                 </div>
                 <div class="alan">
                   <label for="rfCanon" class="alan-etiket">Canonical adres</label>
-                  <input class="alan-girdi" id="rfCanon" name="canonical" type="url" placeholder="https://dadadiet.com/beslenme-rehberi/…">
+                  <input data-girdi="url" class="alan-girdi" id="rfCanon" name="canonical" type="url" placeholder="https://dadadiet.com/beslenme-rehberi/…">
                   <div class="alan-yardim"><span>Ölçüldü: bugün <b>54 sayfanın 54'ünde</b> canonical boş —
                     Sayfalar ve SEO ekranı da aynı eksiği gösteriyor.</span></div>
                 </div>
@@ -348,10 +365,10 @@
 
           <div class="form-eylem kart-alt">
             <a class="dugme hayalet" href="admin-rehber.html">İptal</a>
-            <button class="dugme hayalet" type="button" id="rfTaslak">Taslak kaydet</button>
+            <button class="dugme hayalet" type="button" id="rfTaslak" data-eylem="taslak">Taslak kaydet</button>
             <button class="dugme birincil" type="button" id="rfKaydet">Rehber sayfasını kaydet</button>
           </div>
-        <div class="bos-durum kart-ici" hidden=""><span class="bos-ikon"><i class="fa-solid fa-file-circle-question" aria-hidden="true"></i></span><h3>Bu adreste rehber sayfası yok</h3><p>Adresteki slug rehberde karşılık bulmuyor. Listeye dön ve bir sayfa seç.</p><a class="dugme birincil" href="admin-rehber.html">Rehbere dön</a></div><div class="bos-durum kart-ici yetkisiz" data-durum="yetkisiz" hidden=""><span class="bos-ikon"><i class="fa-solid fa-lock" aria-hidden="true"></i></span><h3>Bu kaydı düzenleyemezsin</h3><p>Erişim istemek için yöneticinle görüş.</p></div><div class="bos-durum kart-ici servis-hatasi" data-durum="servis" hidden=""><span class="bos-ikon"><i class="fa-solid fa-plug-circle-xmark" aria-hidden="true"></i></span><h3>Kayıt yüklenemedi</h3><p>Bağlantı kurulamadı. Yeniden dene.</p><button class="dugme birincil" type="button"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i> Yeniden dene</button><div class="hata-izi">Referans kodu <code>DIET-ADM-5210</code></div></div></div>
+        <div class="bos-durum kart-ici" hidden=""><span class="bos-ikon"><i class="fa-solid fa-file-circle-question" aria-hidden="true"></i></span><h3>Bu adreste rehber sayfası yok</h3><p>Adresteki slug rehberde karşılık bulmuyor. Listeye dön ve bir sayfa seç.</p><a class="dugme birincil" href="admin-rehber.html">Rehbere dön</a></div><div class="bos-durum kart-ici yetkisiz" data-durum="yetkisiz" hidden=""><span class="bos-ikon"><i class="fa-solid fa-lock" aria-hidden="true"></i></span><h3>Bu kaydı düzenleyemezsin</h3><p>Erişim istemek için yöneticinle görüş.</p></div><div class="bos-durum kart-ici servis-hatasi" data-durum="servis" hidden=""><span class="bos-ikon"><i class="fa-solid fa-plug-circle-xmark" aria-hidden="true"></i></span><h3>Kayıt yüklenemedi</h3><p>Bağlantı kurulamadı. Yeniden dene.</p><button class="dugme birincil" type="button" data-eylem="calistir" data-ad="Yeniden dene"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i> Yeniden dene</button><div class="hata-izi">Referans kodu <code>DIET-ADM-5210</code></div></div></div>
 
         <!-- ================= SAĞ KOLON ================= -->
         <aside class="form-yan">
@@ -369,7 +386,7 @@
                 </div>
                 <div class="alan">
                   <label for="rfTarih" class="alan-etiket">Yayın tarihi</label>
-                  <input class="alan-girdi" id="rfTarih" name="yayin_tarihi" type="date">
+                  <input class="alan-girdi" id="rfTarih" name="yayin_tarihi" type="text" data-tarih="tarih">
                 </div>
                 <div class="alan">
                   <span>Rehber merkezinde kart olarak göster</span>
@@ -396,7 +413,7 @@
               <div class="alan-yardim" style="margin-bottom:12px"><span>Silinen rehber sayfası, ona bağlanan
                 <b id="rfBaglanti">0</b> kardeş sayfadan da düşer; kırık bağlantı bırakmamak için
                 önce o bağlantılar temizlenmeli.</span></div>
-              <button class="dugme hayalet tehlike tam-en" type="button" id="rfSil" data-yikici="Rehber sayfası" data-fiil="sil">
+              <button class="dugme hayalet tehlike tam-en" type="button" id="rfSil" data-yikici="Rehber sayfası" data-fiil="sil" data-eylem="sil">
                 <i class="fa-solid fa-trash-can" aria-hidden="true"></i> Sayfayı sil</button>
             </div>
           </div>
@@ -408,4 +425,135 @@
   </div>
 </main>
 <script src="_ortak/panel.js" defer></script>
+<!-- ADMIN-KIT:JS:BAS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/7.3.0/tinymce.min.js" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/l10n/tr.js"></script>
+<script src="../../kanon/admin-editor-tr.js"></script>
+<script src="../../kanon/admin-kit.js" defer></script>
+<script src="../../kanon/admin-editor.js" defer></script>
+<script src="../../kanon/admin-tarih.js" defer></script>
+<!-- ADMIN-KIT:JS:SON -->
+
+<!-- KAYIT KAYNAĞI — form kendi kayıtlarını BİLDİRİR (kit §5b).
+     Anahtar = admin-rehber.html satırının kendi `data-slug`ı; 9 satır, 9 benzersiz anahtar.
+     Değerler İKİ yerden okundu, uydurulmadı:
+       · liste satırının kendi hücreleri → başlık · üst etiket · adres · durum · merkez mi
+       · Diet public maketi (/tmp/DadaMentor/Diet/beslenme-rehberi__<slug>.html, beslenme.html)
+                                        → özet · bölüm başlıkları · meta başlık/açıklama
+     🔴 "Son güncelleme" sütunu YAYIN TARİHİ DEĞİLDİR; formda yalnız `yayin_tarihi` var,
+        o yüzden bildirilmedi (yanlış alana doğru veri koymaktansa boş bırakıldı).
+     🔴 Merkez sayfa (beslenme-rehberi) bir hub'dır; akordeon bölümü yok → `bolum_baslik`
+        boş dizi bildirildi, kit tek satıra iner ve onu BOŞALTIR. -->
+<script type="application/json" data-kayitlar>
+{
+ "beslenme-rehberi": {
+  "baslik": "Dengeli beslenme, doğru porsiyon, günlük düzen",
+  "slug": "beslenme",
+  "ust": "Beslenme Rehberi",
+  "ozet": "Besin değerleri, makro rehberleri ve uygulanabilir beslenme bilgisi tek merkezde. Önce mantığı anla, sonra tabağını kur.",
+  "bolum_baslik": [],
+  "durum": "yayin",
+  "merkezde": true,
+  "meta_title": "Beslenme · DadaDiet",
+  "canonical": "https://dadadiet.com/beslenme"
+ },
+ "saglikli-mutfak-aliskanliklari": {
+  "baslik": "Sağlıklı mutfak alışkanlıkları kurmak",
+  "slug": "saglikli-mutfak-aliskanliklari",
+  "ust": "Sağlıklı Mutfak",
+  "ozet": "Kısıtlama değil keşif: pişirme yöntemi, baharat ve kademeli değişimle lezzeti korumak.",
+  "bolum_baslik": ["Sağlıklı mutfak kısıtlama mı?","Pişirme yöntemi neden önemli?","Baharat & lezzetle sağlık","Kademeli değişim nasıl kalıcı olur?"],
+  "durum": "yayin",
+  "merkezde": false,
+  "meta_title": "Sağlıklı Mutfak Alışkanlıkları Nasıl Kurulur? · DadaDiet",
+  "meta_desc": "Sağlıklı mutfağın kısıtlama değil keşif olduğunu, pişirme yönteminin farkını, baharatla lezzet kurmayı ve küçük değişimlerin nasıl kalıcı olduğunu anlatıyor.",
+  "canonical": "https://dadadiet.com/beslenme-rehberi/saglikli-mutfak-aliskanliklari"
+ },
+ "dengeli-tabak": {
+  "baslik": "Dengeli tabak: porsiyonu gözle kurmak",
+  "slug": "dengeli-tabak",
+  "ust": "Dengeli Tabak",
+  "ozet": "Beslenmeyi karmaşık kurallara dönüştürmeden, tabağına bakarak sağlıklı bir denge kurmanın yolları.",
+  "bolum_baslik": ["Dengeli tabak nasıl hazırlanır?","Protein, karbonhidrat ve sebze dengesi nasıl kurulur?","Ev yemeklerinde porsiyon dengesi","Akşam yemeğinde hafif seçim nasıl yapılır?"],
+  "durum": "yayin",
+  "merkezde": false,
+  "meta_title": "Dengeli Tabak Nasıl Kurulur? Pratik Rehber · DadaDiet",
+  "meta_desc": "Tabağın yarısını sebzeyle doldurmayı, protein ve tahılı dengelemeyi, ev porsiyonunu el ölçüsüyle ayarlamayı ve akşama hafif seçimler yapmayı anlatan rehber.",
+  "canonical": "https://dadadiet.com/beslenme-rehberi/dengeli-tabak"
+ },
+ "besin-ogeleri-tabakta-nasil-karsilik-bulur": {
+  "baslik": "Besin ögeleri tabakta nasıl karşılık bulur",
+  "slug": "besin-ogeleri-tabakta-nasil-karsilik-bulur",
+  "ust": "Haftalık Menü",
+  "ozet": "Besin ögeleri sofraya tek tek gelmez; yemek olarak gelir. Bu rehber, ögelerin ne işe yaradığını ve günlük tabakta neye karşılık geldiğini anlatıyor.",
+  "bolum_baslik": ["Besin ögesi ile yiyecek aynı şey değil","Enerji veren üç öge nerede durur","Az miktarda gereken ögeler neden gözden kaçar","Tabağa bakarken hangi soru işe yarar","Bir öğün eksik kaldığında ne yapılır","Tek ögeye odaklanmak nerede yanlışa dönüşür"],
+  "durum": "yayin",
+  "merkezde": false,
+  "meta_title": "Besin ögeleri nedir? Tabaktaki karşılığı · DadaDiet",
+  "meta_desc": "Besin ögeleri sofraya yemek olarak gelir. Protein, karbonhidrat, yağ ve mikro ögelerin günlük tabakta nasıl karşılık bulduğunu kaynağıyla oku.",
+  "canonical": "https://dadadiet.com/beslenme-rehberi/besin-ogeleri-tabakta-nasil-karsilik-bulur"
+ },
+ "alisveris-ve-etiket-okuma": {
+  "baslik": "Alışveriş ve etiket okuma: rafta seçim",
+  "slug": "alisveris-ve-etiket-okuma",
+  "ust": "Alışveriş ve Etiket",
+  "ozet": "Etiketi anlamaktan sağlıklı alışverişe — markete bilinçli bir gözle girmenin pratik rehberi.",
+  "bolum_baslik": ["Etikette önce neye bakılır?","İçindekiler listesi nasıl okunur?","Markete bilinçli girmenin yolları","Paketli mi taze mi?"],
+  "durum": "yayin",
+  "merkezde": false,
+  "meta_title": "Alışveriş ve Etiket Okuma: Bilinçli Seçim Rehberi · DadaDiet",
+  "meta_desc": "Etikette önce nereye bakılacağını, içindekiler listesinin sıralama mantığını, markete hazırlıklı girmenin yollarını ve paketli-taze dengesini anlatan rehber.",
+  "canonical": "https://dadadiet.com/beslenme-rehberi/alisveris-ve-etiket-okuma"
+ },
+ "porsiyon-kontrolu": {
+  "baslik": "Porsiyon kontrolü: ölçüyü elle tutmak",
+  "slug": "porsiyon-kontrolu",
+  "ust": "Porsiyon Kontrolü",
+  "ozet": "Ne yediğini kısıtlamak değil tanımak: porsiyonu farkındalıkla, suçlamadan yönetmenin yolları.",
+  "bolum_baslik": ["Porsiyon kontrolü kısıtlama mı?","El ölçüsü yaklaşımı nedir?","Yavaş yemek & doyma sinyali","Ev mutfağında porsiyon farkındalığı"],
+  "durum": "yayin",
+  "merkezde": false,
+  "meta_title": "Porsiyon Kontrolü: Kısıtlamadan Farkındalığa · DadaDiet",
+  "meta_desc": "Porsiyon kontrolünün kısıtlama değil farkındalık olduğunu, el ölçüsü yaklaşımını, yavaş yemenin doyma sinyaline etkisini ve ev mutfağı alışkanlıklarını anlatır.",
+  "canonical": "https://dadadiet.com/beslenme-rehberi/porsiyon-kontrolu"
+ },
+ "haftalik-menu-nasil-kurulur": {
+  "baslik": "Haftalık menü nasıl kurulur",
+  "slug": "haftalik-menu-nasil-kurulur",
+  "ust": "Besin Ögeleri",
+  "ozet": "Haftalık menü, yedi günü tek tek planlamak değildir. Birkaç sabit karar alıp geri kalanını esnek bırakan bir iskeletin nasıl kurulduğunu anlatan rehber.",
+  "bolum_baslik": ["Menü neden akşam yorgunluğunu azaltır","Nereden başlanır: üç ana yemek","Sabit parça ile esnek parça nasıl ayrılır","Alışveriş listesi menüden çıkar","Hazırlığı bir güne toplamak","Aynı yemekten iki öğün çıkarmak","Kaç öğün planlanır, kaçı boş bırakılır","Menü nerede kendini bozar"],
+  "durum": "yayin",
+  "merkezde": false,
+  "meta_title": "Haftalık menü nasıl kurulur? Pratik yöntem · DadaDiet",
+  "meta_desc": "Haftalık menü yedi günü tek tek yazmak değildir. Üç ana yemekle iskeleti kurmayı, listeyi menüden çıkarmayı ve planın nerede bozulduğunu oku.",
+  "canonical": "https://dadadiet.com/beslenme-rehberi/haftalik-menu-nasil-kurulur"
+ },
+ "ogun-planlama": {
+  "baslik": "Öğün planlama: haftayı önden kurmak",
+  "slug": "ogun-planlama",
+  "ust": "Öğün Planlama",
+  "ozet": "Öğünleri ne zaman ve nasıl planlayacağın; herkesin bedenine ve gününe uyan esnek bir düzen.",
+  "bolum_baslik": ["Öğün planlama nedir, ne değildir?","Nereden başlamalı?","Esnek bir düzen nasıl kurulur?","Plan bozulunca ne yapmalı?"],
+  "durum": "yayin",
+  "merkezde": false,
+  "meta_title": "Öğün Planlama Nasıl Yapılır? Esnek Bir Yol · DadaDiet",
+  "meta_desc": "Öğün planlamanın katı bir kural olmadığını, küçük bir adımla nasıl başlanacağını, esnekliğin nasıl korunacağını ve planın bozulunca ne yapılacağını anlatır.",
+  "canonical": "https://dadadiet.com/beslenme-rehberi/ogun-planlama"
+ },
+ "su-ve-icecekler": {
+  "baslik": "Su ve içecekler: gün boyu denge",
+  "slug": "su-ve-icecekler",
+  "ust": "Su ve İçecekler",
+  "ozet": "Beslenme yalnız tabakta değil bardakta da olur: su, çay, kahve ve şekerli içeceklerin günündeki yeri.",
+  "bolum_baslik": ["Günde ne kadar su yeterli?","Susuzluğu nasıl fark ederiz?","Çay ve kahve suyun yerini tutar mı?","Şekerli içecekler neden ayrı bir başlık?"],
+  "durum": "yayin",
+  "merkezde": false,
+  "meta_title": "Su ve İçecekler: Günlük Sıvı İhtiyacı Rehberi · DadaDiet",
+  "meta_desc": "Günde ne kadar su yeterli sayıldığını, susuzluğun nasıl fark edildiğini, çay-kahvenin suyun yerini tutup tutmadığını ve şekerli içeceklerin farkını anlatıyor.",
+  "canonical": "https://dadadiet.com/beslenme-rehberi/su-ve-icecekler"
+ }
+}
+</script>
 </body></html>

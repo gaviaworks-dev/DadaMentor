@@ -9,8 +9,12 @@
 <link rel="stylesheet" href="../../kanon/tokenlar.css">
 <link rel="stylesheet" href="../../kanon/markalar/diet.css">
 <link rel="stylesheet" href="../../kanon/bilesenler.css">
+<!-- ADMIN-KIT:CSS:BAS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.css">
+<link rel="stylesheet" href="../../kanon/admin.css">
+<!-- ADMIN-KIT:CSS:SON -->
 </head>
-<body class="yetkili">
+<body class="yetkili" data-marka="diet">
 <!-- ═══════════════════════════════════════════════════════════════════
      DIET ADMIN · KANONİK KABUK — FIT kabuğundan TÜRETİLDİ, elle değiştirilmez
      ───────────────────────────────────────────────────────────────────
@@ -35,24 +39,36 @@
 <!-- ── SOL EKOSİSTEM RAYI ─────────────────────────────────────────── -->
 <aside class="panel-ray" aria-label="Marka rayı">
   <a class="panel-ray-ikon aktif" href="#" style="--eko:var(--eko-diet)"
-     aria-current="true" title="DadaDiet" aria-label="DadaDiet"><i class="fa-solid fa-leaf"></i></a>
+     aria-current="true" title="DadaDiet" aria-label="DadaDiet"><i class="fa-solid fa-heart-pulse"></i></a>
   <span class="panel-ray-ayrac" role="presentation"></span>
   <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-gastro)"  title="DadaGastro"  aria-label="DadaGastro"><i class="fa-solid fa-utensils"></i></a>
+  <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-gourmet)" title="DadaGourmet" aria-label="DadaGourmet"><i class="fa-solid fa-map-location-dot"></i></a>
   <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-fit)"     title="DadaFit"     aria-label="DadaFit"><i class="fa-solid fa-dumbbell"></i></a>
-  <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-gourmet)" title="DadaGourmet" aria-label="DadaGourmet"><i class="fa-solid fa-wine-glass"></i></a>
   <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-campus)"  title="DadaCampus"  aria-label="DadaCampus"><i class="fa-solid fa-graduation-cap"></i></a>
+  <span class="panel-ray-ikon kilitli" title="DadaStore — erişimin yok" aria-label="DadaStore, erişim yok"><i class="fa-solid fa-bag-shopping"></i></span>
   <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-mentor)"  title="DadaMentor"  aria-label="DadaMentor"><i class="fa-solid fa-compass"></i></a>
-  <span class="panel-ray-ikon kilitli" title="DadaStore — erişimin yok" aria-label="DadaStore, erişim yok"><i class="fa-solid fa-lock"></i></span>
   <div class="panel-ray-alt">
     <a class="panel-ray-ikon" href="#" title="Yardım" aria-label="Yardım"><i class="fa-solid fa-circle-question"></i></a>
+<!-- ADMIN-KIT:IMZA:BAS -->
+    <a class="panel-ray-imza" href="https://gaviaworks.com" target="_blank" rel="noopener"
+       title="Gaviaworks" aria-label="Gaviaworks — gaviaworks.com">
+      <span class="yalniz-okuyucu">Gaviaworks</span>
+    </a>
+<!-- ADMIN-KIT:IMZA:SON -->
   </div>
 </aside>
 
 <!-- ── MODÜL MENÜSÜ · DÖRT KATEGORİ ───────────────────────────────── -->
 <nav class="panel-menu" id="panelMenu" aria-label="Modüller">
+<!-- ADMIN-KIT:KABUK:BAS -->
   <div class="panel-menu-bas">
-    <b>DadaDiet</b><span>Yönetim paneli</span>
+    <a class="panel-marka" href="admin-genel-bakis.html" aria-label="DadaDiet yönetim paneli">
+      <span class="yalniz-okuyucu">DadaDiet · Yönetim paneli</span>
+    </a>
   </div>
+  <button type="button" class="panel-katla" aria-pressed="false"
+          aria-label="Menüyü daralt"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i></button>
+<!-- ADMIN-KIT:KABUK:SON -->
   <div class="panel-menu-govde">
 
     <div class="panel-menu-bolum">01 Genel</div>
@@ -66,6 +82,7 @@
     <div class="panel-menu-bolum">Marka modülleri</div>
     <a class="panel-menu-link" href="admin-besinler.html"><i class="fa-solid fa-apple-whole"></i>Besin Kütüphanesi</a>
     <a class="panel-menu-link" href="admin-programlar.html"><i class="fa-solid fa-clipboard-list"></i>Beslenme Programları</a>
+    <a class="panel-menu-link" href="admin-programini-bul.html"><i class="fa-solid fa-signs-post"></i>Programını Bul</a>
     <a class="panel-menu-link" href="admin-diyetisyenler.html"><i class="fa-solid fa-user-check"></i>Diyetisyenler<span class="sayac">3</span></a>
     <a class="panel-menu-link" href="admin-testler.html"><i class="fa-solid fa-clipboard-check"></i>Beslenme Testleri</a>
     <a class="panel-menu-link" href="admin-hesaplayicilar.html"><i class="fa-solid fa-calculator"></i>Hesaplayıcılar</a>
@@ -165,8 +182,8 @@
           <p>elif.sahin@eposta.com · Pro · aylık · <span class="durum-hapi cozulen">Aktif</span></p>
         </div>
         <div class="eylem-satiri">
-          <button class="dugme hayalet" type="button"><i class="fa-solid fa-clock-rotate-left" aria-hidden="true"></i> Geçmişi görüntüle</button>
-          <button class="dugme hayalet" type="button" data-yetki="disa-aktar"><i class="fa-solid fa-file-export" aria-hidden="true"></i> Dışa aktar</button>
+          <button class="dugme hayalet" type="button" data-eylem="calistir" data-ad="Geçmişi görüntüle"><i class="fa-solid fa-clock-rotate-left" aria-hidden="true"></i> Geçmişi görüntüle</button>
+          <button class="dugme hayalet" type="button" data-yetki="disa-aktar" data-eylem="calistir" data-ad="Dışa aktar"><i class="fa-solid fa-file-export" aria-hidden="true"></i> Dışa aktar</button>
           <button class="dugme birincil" type="button"><i class="fa-solid fa-layer-group" aria-hidden="true"></i> Paket değiştir</button>
         </div>
       </div>
@@ -200,7 +217,7 @@
           <span class="bos-ikon"><i class="fa-solid fa-plug-circle-xmark" aria-hidden="true"></i></span>
           <h3>Abonelik yüklenemedi</h3>
           <p>Bağlantı kurulamadı. Yeniden dene.</p>
-          <button class="dugme hayalet" type="button"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i> Yeniden dene</button>
+          <button class="dugme hayalet" type="button" data-eylem="calistir" data-ad="Yeniden dene"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i> Yeniden dene</button>
           <p class="hata-izi">Referans <code>ABN-4B77-2E10</code></p>
         </div>
       </div>
@@ -280,7 +297,7 @@
               </div>
               <div class="alan">
                 <label class="alan-etiket" for="abdUzat">Süre uzat — ay <span class="zorunlu" aria-hidden="true">*</span></label>
-                <input class="alan-girdi" id="abdUzat" type="number" min="1" max="12" value="1">
+                <input data-girdi="sayi" class="alan-girdi" id="abdUzat" type="number" min="1" max="12" value="1">
                 <p class="alan-yardim"><i class="fa-solid fa-circle-info" aria-hidden="true"></i><span>Üst sınır Ayarlar → Finans altındaki bir panel ayarıdır.</span></p>
                 <p class="alan-hata" id="abdUzatHata"><i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i> En az 1 ay girilmeli.</p>
               </div>
@@ -309,7 +326,7 @@
               </div>
               <div class="alan">
                 <label class="alan-etiket" for="abdIadeTutar">Tutar (₺) <span class="zorunlu" aria-hidden="true">*</span></label>
-                <input class="alan-girdi hatali" id="abdIadeTutar" type="text" inputmode="decimal" value="" aria-describedby="abdIadeTutarHata">
+                <input data-girdi="para" class="alan-girdi hatali" id="abdIadeTutar" type="text" inputmode="decimal" value="" aria-describedby="abdIadeTutarHata">
                 <p class="alan-hata goster" id="abdIadeTutarHata"><i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i> Tutar boş bırakılamaz. Bu dönemin tutarı 99,00 ₺.</p>
               </div>
               <div class="alan">
@@ -323,7 +340,7 @@
               </div>
             </div>
             <div class="kart-alt form-eylem">
-              <button class="dugme hayalet" type="button"><i class="fa-solid fa-rotate-left" aria-hidden="true"></i> İade başlat</button>
+              <button class="dugme hayalet" type="button" data-eylem="yikici"><i class="fa-solid fa-rotate-left" aria-hidden="true"></i> İade başlat</button>
             </div>
           </div>
 
@@ -343,13 +360,62 @@
               </div>
             </div>
             <div class="kart-alt form-eylem">
-              <button class="dugme hayalet" type="button"><i class="fa-solid fa-ban" aria-hidden="true"></i> Erişimi hemen kes</button>
+              <button class="dugme hayalet" type="button" data-islem="pasif"><i class="fa-solid fa-ban" aria-hidden="true"></i> Erişimi hemen kes</button>
             </div>
           </div>
         </aside>
       </div>
     </div>
-  </main>
+  <script type="application/json" data-kayitlar>
+{
+ "ABN-2026-0412": {
+  "ad": "Elif Şahin — ABN-2026-0412"
+ },
+ "ABN-2026-0388": {
+  "ad": "Uzm. Dyt. Selin Korkmaz — ABN-2026-0388"
+ },
+ "ABN-2026-0401": {
+  "ad": "Gizem Polat — ABN-2026-0401"
+ },
+ "ABN-2026-0433": {
+  "ad": "Kerem Aslan — ABN-2026-0433"
+ },
+ "ABN-2026-0295": {
+  "ad": "Emre Şen — ABN-2026-0295"
+ },
+ "ABN-2026-0177": {
+  "ad": "Hakan Uçar — ABN-2026-0177"
+ },
+ "ABN-2026-0350": {
+  "ad": "Ceren Aktaş — ABN-2026-0350"
+ },
+ "ABN-2026-0118": {
+  "ad": "İpek Doğan — ABN-2026-0118"
+ },
+ "ABN-2025-0904": {
+  "ad": "Leyla Şimşek — ABN-2025-0904"
+ },
+ "ABN-2025-0812": {
+  "ad": "Zeynep Arı — ABN-2025-0812"
+ },
+ "ABN-2026-0466": {
+  "ad": "Naz Erdem — ABN-2026-0466"
+ },
+ "ABN-2026-0207": {
+  "ad": "Dyt. Elif Şahin — ABN-2026-0207"
+ }
+}
+</script>
+</main>
 <script src="_ortak/panel.js" defer></script>
+<!-- ADMIN-KIT:JS:BAS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/7.3.0/tinymce.min.js" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/l10n/tr.js"></script>
+<script src="../../kanon/admin-editor-tr.js"></script>
+<script src="../../kanon/admin-kit.js" defer></script>
+<script src="../../kanon/admin-editor.js" defer></script>
+<script src="../../kanon/admin-tarih.js" defer></script>
+<!-- ADMIN-KIT:JS:SON -->
 </body>
 </html>

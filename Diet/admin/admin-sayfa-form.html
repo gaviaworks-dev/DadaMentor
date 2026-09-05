@@ -8,8 +8,12 @@
 <link rel="stylesheet" href="../../kanon/tokenlar.css">
 <link rel="stylesheet" href="../../kanon/markalar/diet.css">
 <link rel="stylesheet" href="../../kanon/bilesenler.css">
+<!-- ADMIN-KIT:CSS:BAS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.css">
+<link rel="stylesheet" href="../../kanon/admin.css">
+<!-- ADMIN-KIT:CSS:SON -->
 </head>
-<body class="yetkili">
+<body class="yetkili" data-marka="diet">
 <!-- ═══════════════════════════════════════════════════════════════════
      DIET ADMIN · KANONİK KABUK — FIT kabuğundan TÜRETİLDİ, elle değiştirilmez
      ───────────────────────────────────────────────────────────────────
@@ -34,24 +38,36 @@
 <!-- ── SOL EKOSİSTEM RAYI ─────────────────────────────────────────── -->
 <aside class="panel-ray" aria-label="Marka rayı">
   <a class="panel-ray-ikon aktif" href="#" style="--eko:var(--eko-diet)"
-     aria-current="true" title="DadaDiet" aria-label="DadaDiet"><i class="fa-solid fa-leaf"></i></a>
+     aria-current="true" title="DadaDiet" aria-label="DadaDiet"><i class="fa-solid fa-heart-pulse"></i></a>
   <span class="panel-ray-ayrac" role="presentation"></span>
   <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-gastro)"  title="DadaGastro"  aria-label="DadaGastro"><i class="fa-solid fa-utensils"></i></a>
+  <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-gourmet)" title="DadaGourmet" aria-label="DadaGourmet"><i class="fa-solid fa-map-location-dot"></i></a>
   <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-fit)"     title="DadaFit"     aria-label="DadaFit"><i class="fa-solid fa-dumbbell"></i></a>
-  <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-gourmet)" title="DadaGourmet" aria-label="DadaGourmet"><i class="fa-solid fa-wine-glass"></i></a>
   <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-campus)"  title="DadaCampus"  aria-label="DadaCampus"><i class="fa-solid fa-graduation-cap"></i></a>
+  <span class="panel-ray-ikon kilitli" title="DadaStore — erişimin yok" aria-label="DadaStore, erişim yok"><i class="fa-solid fa-bag-shopping"></i></span>
   <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-mentor)"  title="DadaMentor"  aria-label="DadaMentor"><i class="fa-solid fa-compass"></i></a>
-  <span class="panel-ray-ikon kilitli" title="DadaStore — erişimin yok" aria-label="DadaStore, erişim yok"><i class="fa-solid fa-lock"></i></span>
   <div class="panel-ray-alt">
     <a class="panel-ray-ikon" href="#" title="Yardım" aria-label="Yardım"><i class="fa-solid fa-circle-question"></i></a>
+<!-- ADMIN-KIT:IMZA:BAS -->
+    <a class="panel-ray-imza" href="https://gaviaworks.com" target="_blank" rel="noopener"
+       title="Gaviaworks" aria-label="Gaviaworks — gaviaworks.com">
+      <span class="yalniz-okuyucu">Gaviaworks</span>
+    </a>
+<!-- ADMIN-KIT:IMZA:SON -->
   </div>
 </aside>
 
 <!-- ── MODÜL MENÜSÜ · DÖRT KATEGORİ ───────────────────────────────── -->
 <nav class="panel-menu" id="panelMenu" aria-label="Modüller">
+<!-- ADMIN-KIT:KABUK:BAS -->
   <div class="panel-menu-bas">
-    <b>DadaDiet</b><span>Yönetim paneli</span>
+    <a class="panel-marka" href="admin-genel-bakis.html" aria-label="DadaDiet yönetim paneli">
+      <span class="yalniz-okuyucu">DadaDiet · Yönetim paneli</span>
+    </a>
   </div>
+  <button type="button" class="panel-katla" aria-pressed="false"
+          aria-label="Menüyü daralt"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i></button>
+<!-- ADMIN-KIT:KABUK:SON -->
   <div class="panel-menu-govde">
 
     <div class="panel-menu-bolum">01 Genel</div>
@@ -65,6 +81,7 @@
     <div class="panel-menu-bolum">Marka modülleri</div>
     <a class="panel-menu-link" href="admin-besinler.html"><i class="fa-solid fa-apple-whole"></i>Besin Kütüphanesi</a>
     <a class="panel-menu-link" href="admin-programlar.html"><i class="fa-solid fa-clipboard-list"></i>Beslenme Programları</a>
+    <a class="panel-menu-link" href="admin-programini-bul.html"><i class="fa-solid fa-signs-post"></i>Programını Bul</a>
     <a class="panel-menu-link" href="admin-diyetisyenler.html"><i class="fa-solid fa-user-check"></i>Diyetisyenler<span class="sayac">3</span></a>
     <a class="panel-menu-link" href="admin-testler.html"><i class="fa-solid fa-clipboard-check"></i>Beslenme Testleri</a>
     <a class="panel-menu-link" href="admin-hesaplayicilar.html"><i class="fa-solid fa-calculator"></i>Hesaplayıcılar</a>
@@ -166,7 +183,7 @@
         </div>
         <div class="eylem-satiri">
           <a class="dugme hayalet" href="#" target="_blank" rel="noopener"><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i> Üye yüzünü gör</a>
-          <button class="dugme hayalet" type="button"><i class="fa-solid fa-clock-rotate-left" aria-hidden="true"></i> Versiyon geçmişi</button>
+          <button class="dugme hayalet" type="button" data-eylem="calistir" data-ad="Versiyon geçmişi"><i class="fa-solid fa-clock-rotate-left" aria-hidden="true"></i> Versiyon geçmişi</button>
         </div>
       </div>
 
@@ -206,7 +223,7 @@
           <span class="bos-ikon"><i class="fa-solid fa-plug-circle-xmark" aria-hidden="true"></i></span>
           <h3>Kayıt yüklenemedi</h3>
           <p>Bağlantı kurulamadı. Yeniden dene.</p>
-          <button class="dugme hayalet" type="button"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i> Yeniden dene</button>
+          <button class="dugme hayalet" type="button" data-eylem="calistir" data-ad="Yeniden dene"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i> Yeniden dene</button>
           <p class="hata-izi">Destek talebine ekle: <code>SF-6034-FRM</code></p>
         </div>
       </div>
@@ -228,7 +245,7 @@
               <h3 class="form-bolum-bas"><i class="fa-solid fa-id-card" aria-hidden="true"></i> Künye</h3>
                 <div class="alan">
                   <label class="alan-etiket" for="sfAd">Sayfa başlığı <span class="zorunlu" aria-hidden="true">*</span></label>
-                  <input class="alan-girdi" id="sfAd" type="text" maxlength="180" value="Kurumsal Üyelik" placeholder="Sayfanın kendi başlığı — gövdenin en üstünde basılır">
+                  <input class="alan-girdi" id="sfAd" name="ad" type="text" maxlength="180" value="Kurumsal Üyelik" placeholder="Sayfanın kendi başlığı — gövdenin en üstünde basılır">
 
                   <div class="alan-hata"><i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i><span>Bu alan zorunlu.</span></div>
                 </div>
@@ -236,14 +253,14 @@
                   <label class="alan-etiket" for="sfSlug">Adres <span class="zorunlu" aria-hidden="true">*</span></label>
                   <div class="slug-alani">
                     <span class="slug-onek">dadadiet.com /</span>
-                    <input class="alan-girdi" id="sfSlug" type="text" value="kurumsal" pattern="[a-z0-9]+(-[a-z0-9]+)*">
+                    <input data-girdi="slug" class="alan-girdi" id="sfSlug" name="slug" type="text" value="kurumsal" pattern="[a-z0-9]+(-[a-z0-9]+)*">
                   </div>
                   <div class="alan-yardim"><i class="fa-solid fa-circle-info" aria-hidden="true"></i><span>Yalnız küçük harf, rakam ve tire. Adres değişirse eski adres için bir yönlendirme kurulur.</span></div>
                   <div class="alan-hata"><i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i><span>Bu alan zorunlu.</span></div>
                 </div>
                 <div class="alan">
                   <label class="alan-etiket" for="sfOzet">Özet <span class="istege-bagli">— isteğe bağlı</span></label>
-                  <textarea class="alan-metin" id="sfOzet" maxlength="300" placeholder="Bir cümleyle: bu sayfa ne anlatıyor?">Şirketlere özel toplu üyelik paketleri, faturalandırma ve çalışan raporlaması.</textarea>
+                  <textarea class="alan-metin" id="sfOzet" name="ozet" maxlength="300" placeholder="Bir cümleyle: bu sayfa ne anlatıyor?">Şirketlere özel toplu üyelik paketleri, faturalandırma ve çalışan raporlaması.</textarea>
                   <div class="alan-yardim"><i class="fa-solid fa-circle-info" aria-hidden="true"></i><span>Başlığın altında, gövdeden önce basılır. En çok 300 karakter.</span></div>
                   <div class="alan-hata"><i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i><span>Bu alan zorunlu.</span></div>
                 </div>
@@ -254,7 +271,7 @@
               <div class="alan-izgara c2">
                 <div class="alan">
                   <label class="alan-etiket" for="sfSablon">Şablon <span class="istege-bagli">— isteğe bağlı</span></label>
-                  <select class="alan-secim" id="sfSablon">
+                  <select class="alan-secim" id="sfSablon" name="sablon">
                     <option>Statik içerik sayfası</option>
                     <option selected="">SEO landing</option>
                     <option>Kurumsal / yasal</option>
@@ -264,7 +281,7 @@
                 </div>
                 <div class="alan">
                   <label class="alan-etiket" for="sfUst">Üst sayfa <span class="istege-bagli">— isteğe bağlı</span></label>
-                  <select class="alan-secim" id="sfUst">
+                  <select class="alan-secim" id="sfUst" name="ust">
                     <option selected="">— üst sayfa yok</option>
                     <option>Hakkımızda</option>
                     <option>Yasal Metinler</option>
@@ -275,13 +292,13 @@
                 </div>
                 <div class="alan">
                   <label class="alan-etiket" for="sfSira">Sıralama <span class="istege-bagli">— isteğe bağlı</span></label>
-                  <input class="alan-girdi" id="sfSira" type="number" value="30" min="0" step="10">
+                  <input data-girdi="sayi" class="alan-girdi" id="sfSira" name="sira" type="number" value="30" min="0" step="10">
                   <div class="alan-yardim"><i class="fa-solid fa-circle-info" aria-hidden="true"></i><span>Küçük sayı üstte durur. Menü ve site haritası bu sırayı okur.</span></div>
                   <div class="alan-hata"><i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i><span>Bu alan zorunlu.</span></div>
                 </div>
                 <div class="alan">
                   <label class="alan-etiket" for="sfGorunurluk">Görünürlük <span class="istege-bagli">— isteğe bağlı</span></label>
-                  <select class="alan-secim" id="sfGorunurluk">
+                  <select class="alan-secim" id="sfGorunurluk" name="gorunurluk">
                     <option selected="">Herkese açık</option>
                     <option>Yalnız üyeler</option>
                     <option>Bağlantısı olanlar</option>
@@ -298,7 +315,7 @@
                 <span class="birak-ikon"><i class="fa-solid fa-cloud-arrow-up" aria-hidden="true"></i></span>
                 <b>Görseli sürükle ya da seçmek için tıkla</b>
                 <span>JPG · PNG · WebP · en çok 5 MB · 1600×900 önerilir</span>
-                <input type="file" accept="image/*" class="yalniz-okuyucu" id="sfKapak" aria-label="Kapak görseli seç">
+                <input type="file" accept="image/*" class="yalniz-okuyucu" id="sfKapak" name="kapak" aria-label="Kapak görseli seç">
                 <a class="dugme hayalet dosya-sec" href="admin-medya.html">Kütüphaneden seç</a>
               </div>
             </div>
@@ -315,7 +332,7 @@
                   <button class="ikon-dugme" type="button" aria-label="Madde listesi"><i class="fa-solid fa-list-ul" aria-hidden="true"></i></button>
                   <button class="ikon-dugme" type="button" aria-label="Numaralı liste"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></button>
                   <span class="duzenleyici-ayrac" aria-hidden="true"></span>
-                  <button class="ikon-dugme" type="button" aria-label="Bağlantı ekle"><i class="fa-solid fa-link" aria-hidden="true"></i></button>
+                  <button class="ikon-dugme" type="button" aria-label="Bağlantı ekle" data-eylem="calistir" data-ad="Bağlantı ekle"><i class="fa-solid fa-link" aria-hidden="true"></i></button>
                   <button class="ikon-dugme" type="button" aria-label="Görsel ekle"><i class="fa-solid fa-image" aria-hidden="true"></i></button>
                   <button class="ikon-dugme" type="button" aria-label="Alıntı"><i class="fa-solid fa-quote-left" aria-hidden="true"></i></button>
                 </div>
@@ -343,8 +360,8 @@
                     <textarea class="alan-metin" aria-label="Paragraf — metin">Kurumsal üyelik, çalışanlarına düzenli beslenme alışkanlığı kazandırmak isteyen şirketler için hazırlandı.</textarea>
                   </div>
                   <div class="adim-yan">
-                    <button class="ikon-dugme tutamak" type="button" aria-label="1. bloğu sırala — yukarı ve aşağı ok tuşlarıyla taşınır"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button>
-                    <button class="ikon-dugme yikici" type="button" aria-label="1. bloğu sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button>
+                    <button class="ikon-dugme tutamak" type="button" aria-label="1. bloğu sırala — yukarı ve aşağı ok tuşlarıyla taşınır" data-eylem="sirala"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button>
+                    <button class="ikon-dugme yikici" type="button" aria-label="1. bloğu sil" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button>
                   </div>
                 </div>
                 <div class="adim-karti">
@@ -354,8 +371,8 @@
                     <textarea class="alan-metin" aria-label="Alt başlık — metin">Pakete neler dahil?</textarea>
                   </div>
                   <div class="adim-yan">
-                    <button class="ikon-dugme tutamak" type="button" aria-label="2. bloğu sırala — yukarı ve aşağı ok tuşlarıyla taşınır"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button>
-                    <button class="ikon-dugme yikici" type="button" aria-label="2. bloğu sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button>
+                    <button class="ikon-dugme tutamak" type="button" aria-label="2. bloğu sırala — yukarı ve aşağı ok tuşlarıyla taşınır" data-eylem="sirala"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button>
+                    <button class="ikon-dugme yikici" type="button" aria-label="2. bloğu sil" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button>
                   </div>
                 </div>
                 <div class="adim-karti">
@@ -365,8 +382,8 @@
                     <textarea class="alan-metin" aria-label="Liste — metin">Sınırsız program erişimi · Çalışan başına ilerleme raporu · Aylık toplu fatura</textarea>
                   </div>
                   <div class="adim-yan">
-                    <button class="ikon-dugme tutamak" type="button" aria-label="3. bloğu sırala — yukarı ve aşağı ok tuşlarıyla taşınır"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button>
-                    <button class="ikon-dugme yikici" type="button" aria-label="3. bloğu sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button>
+                    <button class="ikon-dugme tutamak" type="button" aria-label="3. bloğu sırala — yukarı ve aşağı ok tuşlarıyla taşınır" data-eylem="sirala"><i class="fa-solid fa-grip-vertical" aria-hidden="true"></i></button>
+                    <button class="ikon-dugme yikici" type="button" aria-label="3. bloğu sil" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button>
                   </div>
                 </div>
               </div>
@@ -375,10 +392,10 @@
                 <span class="bos-ikon"><i class="fa-solid fa-layer-group" aria-hidden="true"></i></span>
                 <h3>Henüz blok yok</h3>
                 <p>İlk bloğu ekleyerek gövdeyi kurmaya başla.</p>
-                <button class="dugme hayalet" type="button">Blok ekle</button>
+                <button class="dugme hayalet" type="button" data-eylem="satir-ekle">Blok ekle</button>
               </div>
               <div class="eylem-satiri ust">
-                <button class="satir-ekle" type="button"><i class="fa-solid fa-plus" aria-hidden="true"></i> Blok ekle</button>
+                <button class="satir-ekle" type="button" data-eylem="satir-ekle"><i class="fa-solid fa-plus" aria-hidden="true"></i> Blok ekle</button>
               </div>
               <div class="alan-yardim"><i class="fa-solid fa-circle-info" aria-hidden="true"></i><span>Sıra public tarafta aynen görünür. Tutamağı sürükleyerek ya da odaktayken ↑ / ↓ ile taşı.</span></div>
             </div>
@@ -390,26 +407,26 @@
               <h3 class="form-bolum-bas"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i> Arama motoru</h3>
                 <div class="alan">
                   <label class="alan-etiket" for="sfMetaT">SEO başlığı <span class="istege-bagli">— isteğe bağlı</span></label>
-                  <input class="alan-girdi" id="sfMetaT" type="text" maxlength="180" value="Kurumsal Üyelik — Şirketler için DadaDiet">
+                  <input class="alan-girdi" id="sfMetaT" name="meta_title" type="text" maxlength="180" value="Kurumsal Üyelik — Şirketler için DadaDiet">
                   <div class="alan-yardim"><i class="fa-solid fa-circle-info" aria-hidden="true"></i><span>Arama sonucunda 60 karakterden sonrası kırpılır. Boş bırakılırsa sayfa başlığı kullanılır.</span></div>
                   <div class="alan-hata"><i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i><span>Bu alan zorunlu.</span></div>
                 </div>
                 <div class="alan">
                   <label class="alan-etiket" for="sfMetaD">Meta açıklama <span class="istege-bagli">— isteğe bağlı</span></label>
-                  <textarea class="alan-metin" id="sfMetaD" maxlength="320" placeholder="Arama sonucunda görünen iki cümle."></textarea>
+                  <textarea class="alan-metin" id="sfMetaD" name="meta_desc" maxlength="320" placeholder="Arama sonucunda görünen iki cümle."></textarea>
                   <div class="alan-yardim"><i class="fa-solid fa-circle-info" aria-hidden="true"></i><span>Boş. Önerilen aralık 70–160 karakter.</span></div>
                   <div class="alan-hata"><i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i><span>Bu alan zorunlu.</span></div>
                 </div>
               <div class="alan-izgara c2">
                 <div class="alan">
                   <label class="alan-etiket" for="sfCanon">Canonical adres <span class="istege-bagli">— isteğe bağlı</span></label>
-                  <input class="alan-girdi" id="sfCanon" type="url" placeholder="https://dadadiet.com/kurumsal">
+                  <input data-girdi="url" class="alan-girdi" id="sfCanon" name="canonical" type="url" placeholder="https://dadadiet.com/kurumsal">
 
                   <div class="alan-hata"><i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i><span>Bu alan zorunlu.</span></div>
                 </div>
                 <div class="alan">
                   <label class="alan-etiket" for="sfSchema">Schema türü <span class="istege-bagli">— isteğe bağlı</span></label>
-                  <select class="alan-secim" id="sfSchema">
+                  <select class="alan-secim" id="sfSchema" name="schema">
                     <option selected="">WebPage</option>
                     <option>Organization</option>
                     <option>Article</option>
@@ -423,12 +440,12 @@
                 <div class="ayar-satir">
                   <span class="as-ikon"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i></span>
                   <span class="as-metin"><b>Arama motorlarında indekslensin</b><span>Kapalıysa sayfa <code>noindex</code> basar.</span></span>
-                  <label class="anahtar" for="sfIndex"><input type="checkbox" id="sfIndex"><span class="anahtar-ray"></span><span class="yalniz-okuyucu">Arama motorlarında indekslensin</span></label>
+                  <label class="anahtar" for="sfIndex"><input type="checkbox" id="sfIndex" name="indeksle"><span class="anahtar-ray"></span><span class="yalniz-okuyucu">Arama motorlarında indekslensin</span></label>
                 </div>
                 <div class="ayar-satir">
                   <span class="as-ikon"><i class="fa-solid fa-link" aria-hidden="true"></i></span>
                   <span class="as-metin"><b>Bağlantılar izlensin</b><span>Kapalıysa sayfa <code>nofollow</code> basar.</span></span>
-                  <label class="anahtar" for="sfFollow"><input type="checkbox" id="sfFollow"><span class="anahtar-ray"></span><span class="yalniz-okuyucu">Bağlantılar izlensin</span></label>
+                  <label class="anahtar" for="sfFollow"><input type="checkbox" id="sfFollow" name="izle"><span class="anahtar-ray"></span><span class="yalniz-okuyucu">Bağlantılar izlensin</span></label>
                 </div>
               </div>
             </div>
@@ -437,13 +454,13 @@
               <h3 class="form-bolum-bas"><i class="fa-solid fa-share-nodes" aria-hidden="true"></i> Open Graph</h3>
                 <div class="alan">
                   <label class="alan-etiket" for="sfOgT">OG başlığı <span class="istege-bagli">— isteğe bağlı</span></label>
-                  <input class="alan-girdi" id="sfOgT" type="text" placeholder="Paylaşımda görünen başlık — boşsa SEO başlığı kullanılır">
+                  <input class="alan-girdi" id="sfOgT" name="og_title" type="text" placeholder="Paylaşımda görünen başlık — boşsa SEO başlığı kullanılır">
 
                   <div class="alan-hata"><i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i><span>Bu alan zorunlu.</span></div>
                 </div>
                 <div class="alan">
                   <label class="alan-etiket" for="sfOgD">OG açıklaması <span class="istege-bagli">— isteğe bağlı</span></label>
-                  <textarea class="alan-metin" id="sfOgD" maxlength="200" placeholder="Paylaşım kartında görünen tek cümle."></textarea>
+                  <textarea class="alan-metin" id="sfOgD" name="og_desc" maxlength="200" placeholder="Paylaşım kartında görünen tek cümle."></textarea>
 
                   <div class="alan-hata"><i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i><span>Bu alan zorunlu.</span></div>
                 </div>
@@ -453,7 +470,7 @@
                   <span class="birak-ikon"><i class="fa-solid fa-cloud-arrow-up" aria-hidden="true"></i></span>
                   <b>Paylaşım görselini sürükle ya da seçmek için tıkla</b>
                   <span>JPG · PNG · en çok 2 MB</span>
-                  <input type="file" accept="image/*" class="yalniz-okuyucu" id="sfOg" aria-label="Paylaşım görseli seç">
+                  <input type="file" accept="image/*" class="yalniz-okuyucu" id="sfOg" name="og_image" aria-label="Paylaşım görseli seç">
                   <a class="dugme hayalet dosya-sec" href="admin-medya.html">Kütüphaneden seç</a>
                 </div>
               </div>
@@ -467,9 +484,9 @@
                satır içi stil YAZILMADI. -->
           <div class="kart-alt form-eylem">
             <a class="dugme hayalet" href="admin-sayfalar.html">İptal</a>
-            <button class="dugme hayalet" type="button"><i class="fa-solid fa-eye" aria-hidden="true"></i> Önizle</button>
-            <button class="dugme hayalet" type="button">Taslak kaydet</button>
-            <button class="dugme birincil" type="submit"><i class="fa-solid fa-circle-check" aria-hidden="true"></i> Yayınla</button>
+            <button class="dugme hayalet" type="button" data-eylem="onizle"><i class="fa-solid fa-eye" aria-hidden="true"></i> Önizle</button>
+            <button class="dugme hayalet" type="button" data-eylem="taslak">Taslak kaydet</button>
+            <button class="dugme birincil" type="submit" data-eylem="calistir" data-ad="Yayınla"><i class="fa-solid fa-circle-check" aria-hidden="true"></i> Yayınla</button>
           </div>
         </div>
 
@@ -480,7 +497,7 @@
             <div class="kart-govde">
               <div class="alan">
                 <label class="alan-etiket" for="sfDurum">Durum</label>
-                <select class="alan-secim" id="sfDurum">
+                <select class="alan-secim" id="sfDurum" name="durum">
                   <option>Taslak</option>
                   <option selected="">İncelemede</option>
                   <option>Onaylandı</option>
@@ -492,17 +509,17 @@
               </div>
               <div class="alan">
                 <label class="alan-etiket" for="sfTarih">Yayın tarihi</label>
-                <input class="alan-girdi" id="sfTarih" type="date" value="2026-09-15">
+                <input class="alan-girdi" id="sfTarih" name="yayin_tarihi" type="text" data-tarih="tarih" value="2026-09-15">
                 <div class="alan-yardim"><i class="fa-solid fa-circle-info" aria-hidden="true"></i><span>İleri tarih verilirse durum <b>Planlandı</b>'ya döner.</span></div>
               </div>
               <div class="ayar-liste">
                 <div class="ayar-satir">
                   <span class="as-metin"><b>Footer bağlantısında görünsün</b></span>
-                  <label class="anahtar" for="sfFooter"><input type="checkbox" id="sfFooter"><span class="anahtar-ray"></span><span class="yalniz-okuyucu">Footer bağlantısında görünsün</span></label>
+                  <label class="anahtar" for="sfFooter"><input type="checkbox" id="sfFooter" name="footer"><span class="anahtar-ray"></span><span class="yalniz-okuyucu">Footer bağlantısında görünsün</span></label>
                 </div>
                 <div class="ayar-satir">
                   <span class="as-metin"><b>Site haritasına girsin</b></span>
-                  <label class="anahtar" for="sfSitemap"><input type="checkbox" id="sfSitemap" checked=""><span class="anahtar-ray"></span><span class="yalniz-okuyucu">Site haritasına girsin</span></label>
+                  <label class="anahtar" for="sfSitemap"><input type="checkbox" id="sfSitemap" name="sitemap" checked=""><span class="anahtar-ray"></span><span class="yalniz-okuyucu">Site haritasına girsin</span></label>
                 </div>
               </div>
             </div>
@@ -537,8 +554,8 @@
                 <span><b>Önce arşiv, sonra silme.</b> Arşivlenen sayfanın adresi korunur; silinen sayfanın adresi kırılır ve ona bağlanan her bağlantı 404 döner.</span>
               </div>
               <div class="eylem-satiri">
-                <button class="dugme hayalet" type="button"><i class="fa-solid fa-box-archive" aria-hidden="true"></i> Arşivle</button>
-                <button class="dugme hayalet tehlike" type="button"><i class="fa-solid fa-trash-can" aria-hidden="true"></i> Sayfayı sil</button>
+                <button class="dugme hayalet" type="button" data-eylem="calistir" data-ad="Arşivle"><i class="fa-solid fa-box-archive" aria-hidden="true"></i> Arşivle</button>
+                <button class="dugme hayalet tehlike" type="button" data-eylem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i> Sayfayı sil</button>
               </div>
             </div>
           </div>
@@ -548,4 +565,167 @@
     </div>
   </main>
 <script src="_ortak/panel.js" defer></script>
+<!-- ADMIN-KIT:JS:BAS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/7.3.0/tinymce.min.js" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/l10n/tr.js"></script>
+<script src="../../kanon/admin-editor-tr.js"></script>
+<script src="../../kanon/admin-kit.js" defer></script>
+<script src="../../kanon/admin-editor.js" defer></script>
+<script src="../../kanon/admin-tarih.js" defer></script>
+<!-- ADMIN-KIT:JS:SON -->
+
+<!-- KAYIT KAYNAĞI — form kendi kayıtlarını BİLDİRİR (kit §5b).
+     Anahtar = admin-sayfalar.html satırının kendi ADRES hücresinin son parçası;
+     12 satır, 12 benzersiz anahtar (hakkimizda · kullanim-kosullari · gizlilik ·
+     diyetisyen-ol · kurumsal · basin · kariyer · sonbahar-2026 · sss ·
+     mesafeli-satis · yaz-2025 · beta).
+     Değerler İKİ yerden okundu:
+       · liste satırının kendi hücreleri → sayfa adı · adres · yayın tarihi · durum
+       · Diet public maketi (hakkimizda.html · yasal__kullanim-kosullari.html ·
+         yasal__gizlilik.html · diyetisyen-ol.html) → özet · meta başlık/açıklama
+     🔴 ALAN ADLARI GERİ KONDU. Bu formdaki 21 alanın HİÇBİRİNDE "name" yoktu; FIT
+        donöründe (deneme/admin-fit/admin-sayfa-form.html) 21'inin de var ve id'ler
+        birebir aynı. Kit alanları "name" ile eşlediği için form hiçbir kayıtla
+        dolduramıyordu. Eşleme donörden BİREBİR alındı, alan yapısına dokunulmadı.
+     🔴 Markup demo değerleri Kurumsal Üyelik kaydına aitti (sıra 30 · meta başlık ·
+        15.09.2026). Bildirilmeseler 12 kaydın 12'sinde onlar görünürdü; "sira" ve
+        "meta_title" her kayıtta BİLDİRİLİYOR, maketi olmayanda BOŞ.
+     🔴 Kurumsal Üyelik'in yayın tarihi markup'ta 15.09.2026, listede 28.08.2026.
+        Satırın kendi değeri yazıldı; çelişki rapor edildi.
+     🔴 "Görünürlük" ve "Schema türü" hiçbir kaynakta yazılı değil — bildirilmedi.
+     🔴 Gövde blokları (üç adsız textarea) FIT'te "govde_blok[]" adını taşıyor,
+        burada taşımıyor. DOKUNULMADI (alan yapısı görev dışı), rapor edildi. -->
+<script type="application/json" data-kayitlar>
+{
+ "hakkimizda": {
+  "ad": "Hakkımızda",
+  "slug": "hakkimizda",
+  "canonical": "https://dadadiet.com/hakkimizda",
+  "durum": "Yayında",
+  "yayin_tarihi": "2026-06-12",
+  "sira": "",
+  "meta_title": "Hakkımızda — DadaDiet Beslenme Platformu · DadaDiet",
+  "ust": "— üst sayfa yok",
+  "ozet": "DadaDiet nedir, neyi amaçlar.",
+  "meta_desc": "DadaDiet'in ne yaptığını, içeriklerin TürKomp, TÜBER ve USDA kaynaklarıyla nasıl hazırlandığını ve hangi araçları sunduğunu bu sayfada öğren."
+ },
+ "kullanim-kosullari": {
+  "ad": "Kullanım Koşulları",
+  "slug": "kullanim-kosullari",
+  "canonical": "https://dadadiet.com/yasal/kullanim-kosullari",
+  "durum": "Yayında",
+  "yayin_tarihi": "2026-08-01",
+  "sira": "",
+  "meta_title": "Kullanım Koşulları · DadaDiet",
+  "ust": "Yasal Metinler",
+  "sablon": "Kurumsal / yasal"
+ },
+ "gizlilik": {
+  "ad": "Gizlilik Politikası",
+  "slug": "gizlilik",
+  "canonical": "https://dadadiet.com/yasal/gizlilik",
+  "durum": "Yayında",
+  "yayin_tarihi": "2026-08-01",
+  "sira": "",
+  "meta_title": "Gizlilik Politikası · DadaDiet",
+  "ust": "Yasal Metinler",
+  "sablon": "Kurumsal / yasal"
+ },
+ "diyetisyen-ol": {
+  "ad": "Diyetisyen Ol",
+  "slug": "diyetisyen-ol",
+  "canonical": "https://dadadiet.com/diyetisyen-ol",
+  "durum": "Yayında",
+  "yayin_tarihi": "2026-07-18",
+  "sira": "",
+  "meta_title": "Diyetisyen Ol · DadaDiet",
+  "ust": "— üst sayfa yok",
+  "ozet": "Diploması doğrulanmış uzmanlar platformunda profilini oluştur, online ya da yüz yüze randevu al, beslenme içeriği üret. Başvurun ekibimizce incelenir."
+ },
+ "kurumsal": {
+  "ad": "Kurumsal Üyelik",
+  "slug": "kurumsal",
+  "canonical": "https://dadadiet.com/kurumsal",
+  "durum": "İncelemede",
+  "yayin_tarihi": "2026-08-28",
+  "sira": "",
+  "meta_title": "Kurumsal Üyelik — Şirketler için DadaDiet",
+  "ust": "— üst sayfa yok"
+ },
+ "basin": {
+  "ad": "Basında Biz",
+  "slug": "basin",
+  "canonical": "https://dadadiet.com/basin",
+  "durum": "Taslak",
+  "yayin_tarihi": "2026-08-30",
+  "sira": "",
+  "meta_title": "",
+  "ust": "— üst sayfa yok"
+ },
+ "kariyer": {
+  "ad": "Kariyer",
+  "slug": "kariyer",
+  "canonical": "https://dadadiet.com/kariyer",
+  "durum": "Onaylandı",
+  "yayin_tarihi": "2026-09-02",
+  "sira": "",
+  "meta_title": "",
+  "ust": "— üst sayfa yok"
+ },
+ "sonbahar-2026": {
+  "ad": "Sonbahar Kampanyası",
+  "slug": "sonbahar-2026",
+  "canonical": "https://dadadiet.com/kampanya/sonbahar-2026",
+  "durum": "Planlandı",
+  "yayin_tarihi": "2026-09-15",
+  "sira": "",
+  "meta_title": "",
+  "ust": "— üst sayfa yok",
+  "sablon": "SEO landing"
+ },
+ "sss": {
+  "ad": "Sıkça Sorulan Sorular",
+  "slug": "sss",
+  "canonical": "https://dadadiet.com/sss",
+  "durum": "Yayında",
+  "yayin_tarihi": "2026-05-22",
+  "sira": "",
+  "meta_title": "",
+  "ust": "— üst sayfa yok"
+ },
+ "mesafeli-satis": {
+  "ad": "Mesafeli Satış Sözleşmesi",
+  "slug": "mesafeli-satis",
+  "canonical": "https://dadadiet.com/yasal/mesafeli-satis",
+  "durum": "Yayında",
+  "yayin_tarihi": "2026-08-01",
+  "sira": "",
+  "meta_title": "",
+  "ust": "Yasal Metinler",
+  "sablon": "Kurumsal / yasal"
+ },
+ "yaz-2025": {
+  "ad": "Yaz Kampı 2025",
+  "slug": "yaz-2025",
+  "canonical": "https://dadadiet.com/kampanya/yaz-2025",
+  "durum": "Arşivlendi",
+  "yayin_tarihi": "2025-06-01",
+  "sira": "",
+  "meta_title": "",
+  "ust": "— üst sayfa yok",
+  "sablon": "SEO landing"
+ },
+ "beta": {
+  "ad": "Beta Davet Sayfası",
+  "slug": "beta",
+  "canonical": "https://dadadiet.com/beta",
+  "durum": "Pasif",
+  "yayin_tarihi": "2026-03-11",
+  "sira": "",
+  "meta_title": "",
+  "ust": "— üst sayfa yok"
+ }
+}
+</script>
 </body></html>

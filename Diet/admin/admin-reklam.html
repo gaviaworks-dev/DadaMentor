@@ -8,8 +8,12 @@
 <link rel="stylesheet" href="../../kanon/markalar/diet.css">
 <link rel="stylesheet" href="../../kanon/bilesenler.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<!-- ADMIN-KIT:CSS:BAS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.css">
+<link rel="stylesheet" href="../../kanon/admin.css">
+<!-- ADMIN-KIT:CSS:SON -->
 </head>
-<body class="yetkili">
+<body class="yetkili" data-marka="diet">
 <!-- ═══════════════════════════════════════════════════════════════════
      DIET ADMIN · KANONİK KABUK — FIT kabuğundan TÜRETİLDİ, elle değiştirilmez
      ───────────────────────────────────────────────────────────────────
@@ -34,24 +38,36 @@
 <!-- ── SOL EKOSİSTEM RAYI ─────────────────────────────────────────── -->
 <aside class="panel-ray" aria-label="Marka rayı">
   <a class="panel-ray-ikon aktif" href="#" style="--eko:var(--eko-diet)"
-     aria-current="true" title="DadaDiet" aria-label="DadaDiet"><i class="fa-solid fa-leaf"></i></a>
+     aria-current="true" title="DadaDiet" aria-label="DadaDiet"><i class="fa-solid fa-heart-pulse"></i></a>
   <span class="panel-ray-ayrac" role="presentation"></span>
   <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-gastro)"  title="DadaGastro"  aria-label="DadaGastro"><i class="fa-solid fa-utensils"></i></a>
+  <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-gourmet)" title="DadaGourmet" aria-label="DadaGourmet"><i class="fa-solid fa-map-location-dot"></i></a>
   <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-fit)"     title="DadaFit"     aria-label="DadaFit"><i class="fa-solid fa-dumbbell"></i></a>
-  <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-gourmet)" title="DadaGourmet" aria-label="DadaGourmet"><i class="fa-solid fa-wine-glass"></i></a>
   <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-campus)"  title="DadaCampus"  aria-label="DadaCampus"><i class="fa-solid fa-graduation-cap"></i></a>
+  <span class="panel-ray-ikon kilitli" title="DadaStore — erişimin yok" aria-label="DadaStore, erişim yok"><i class="fa-solid fa-bag-shopping"></i></span>
   <a class="panel-ray-ikon" href="#" style="--eko:var(--eko-mentor)"  title="DadaMentor"  aria-label="DadaMentor"><i class="fa-solid fa-compass"></i></a>
-  <span class="panel-ray-ikon kilitli" title="DadaStore — erişimin yok" aria-label="DadaStore, erişim yok"><i class="fa-solid fa-lock"></i></span>
   <div class="panel-ray-alt">
     <a class="panel-ray-ikon" href="#" title="Yardım" aria-label="Yardım"><i class="fa-solid fa-circle-question"></i></a>
+<!-- ADMIN-KIT:IMZA:BAS -->
+    <a class="panel-ray-imza" href="https://gaviaworks.com" target="_blank" rel="noopener"
+       title="Gaviaworks" aria-label="Gaviaworks — gaviaworks.com">
+      <span class="yalniz-okuyucu">Gaviaworks</span>
+    </a>
+<!-- ADMIN-KIT:IMZA:SON -->
   </div>
 </aside>
 
 <!-- ── MODÜL MENÜSÜ · DÖRT KATEGORİ ───────────────────────────────── -->
 <nav class="panel-menu" id="panelMenu" aria-label="Modüller">
+<!-- ADMIN-KIT:KABUK:BAS -->
   <div class="panel-menu-bas">
-    <b>DadaDiet</b><span>Yönetim paneli</span>
+    <a class="panel-marka" href="admin-genel-bakis.html" aria-label="DadaDiet yönetim paneli">
+      <span class="yalniz-okuyucu">DadaDiet · Yönetim paneli</span>
+    </a>
   </div>
+  <button type="button" class="panel-katla" aria-pressed="false"
+          aria-label="Menüyü daralt"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i></button>
+<!-- ADMIN-KIT:KABUK:SON -->
   <div class="panel-menu-govde">
 
     <div class="panel-menu-bolum">01 Genel</div>
@@ -65,6 +81,7 @@
     <div class="panel-menu-bolum">Marka modülleri</div>
     <a class="panel-menu-link" href="admin-besinler.html"><i class="fa-solid fa-apple-whole"></i>Besin Kütüphanesi</a>
     <a class="panel-menu-link" href="admin-programlar.html"><i class="fa-solid fa-clipboard-list"></i>Beslenme Programları</a>
+    <a class="panel-menu-link" href="admin-programini-bul.html"><i class="fa-solid fa-signs-post"></i>Programını Bul</a>
     <a class="panel-menu-link" href="admin-diyetisyenler.html"><i class="fa-solid fa-user-check"></i>Diyetisyenler<span class="sayac">3</span></a>
     <a class="panel-menu-link" href="admin-testler.html"><i class="fa-solid fa-clipboard-check"></i>Beslenme Testleri</a>
     <a class="panel-menu-link" href="admin-hesaplayicilar.html"><i class="fa-solid fa-calculator"></i>Hesaplayıcılar</a>
@@ -221,7 +238,7 @@
               <span>Durum</span><span class="sayi" data-sayi="0">0</span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
             </button>
             <div class="acilir-yuzey suzgec" id="rk-f0" role="group" aria-label="Durum" hidden="">
-              <div class="acilir-bas"><span>Durum</span><button type="button">Temizle</button></div>
+              <div class="acilir-bas"><span>Durum</span><button type="button" data-eylem="suzgec-temizle">Temizle</button></div>
               <button class="cip suzgec aktif" type="button" aria-pressed="true">Tümü</button>
               <button class="cip suzgec" type="button" aria-pressed="false">Taslak</button>
               <button class="cip suzgec" type="button" aria-pressed="false">Onay bekliyor</button>
@@ -237,7 +254,7 @@
               <span>Yerleşim</span><span class="sayi" data-sayi="0">0</span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
             </button>
             <div class="acilir-yuzey suzgec" id="rk-f1" role="group" aria-label="Yerleşim" hidden="">
-              <div class="acilir-bas"><span>Yerleşim</span><button type="button">Temizle</button></div>
+              <div class="acilir-bas"><span>Yerleşim</span><button type="button" data-eylem="suzgec-temizle">Temizle</button></div>
               <button class="cip suzgec aktif" type="button" aria-pressed="true">Tümü</button>
               <button class="cip suzgec" type="button" aria-pressed="false">Ana sayfa</button>
               <button class="cip suzgec" type="button" aria-pressed="false">Program</button>
@@ -251,7 +268,7 @@
               <span>Cihaz</span><span class="sayi" data-sayi="0">0</span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
             </button>
             <div class="acilir-yuzey suzgec" id="rk-f2" role="group" aria-label="Cihaz" hidden="">
-              <div class="acilir-bas"><span>Cihaz</span><button type="button">Temizle</button></div>
+              <div class="acilir-bas"><span>Cihaz</span><button type="button" data-eylem="suzgec-temizle">Temizle</button></div>
               <button class="cip suzgec aktif" type="button" aria-pressed="true">Tümü</button>
               <button class="cip suzgec" type="button" aria-pressed="false">Masaüstü</button>
               <button class="cip suzgec" type="button" aria-pressed="false">Mobil</button>
@@ -260,11 +277,11 @@
           </div>
           <div class="sag">
             <div class="coklu-secim kolon-secim">
-              <button class="suzgec-dugme" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="rk-kolon">
+              <button class="suzgec-dugme" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="rk-kolon" data-eylem="kolonlar">
                 <i class="fa-solid fa-table-columns" aria-hidden="true"></i><span>Kolonlar</span>
               </button>
               <div class="acilir-yuzey saga" id="rk-kolon" role="group" aria-label="Görünen kolonlar" hidden="">
-                <div class="acilir-bas"><span>Görünen kolonlar</span><button type="button">Sıfırla</button></div>
+                <div class="acilir-bas"><span>Görünen kolonlar</span><button type="button" data-eylem="suzgec-temizle">Sıfırla</button></div>
                 <label class="acilir-kalem kilitli"><input type="checkbox" checked="" disabled=""><span>Kampanya</span></label>
                 <label class="acilir-kalem"><input type="checkbox" checked=""><span>Firma</span></label>
                 <label class="acilir-kalem"><input type="checkbox" checked=""><span>Yerleşim</span></label>
@@ -273,7 +290,7 @@
                 <label class="acilir-kalem"><input type="checkbox" checked=""><span>Durum</span></label>
               </div>
             </div>
-            <button class="dugme hayalet kucuk" type="button" data-yetki="disa-aktar"><i class="fa-solid fa-file-export" aria-hidden="true"></i>Dışa aktar</button>
+            <button class="dugme hayalet kucuk" type="button" data-yetki="disa-aktar" data-eylem="calistir" data-ad="Dışa aktar"><i class="fa-solid fa-file-export" aria-hidden="true"></i>Dışa aktar</button>
             <span class="suzgec-sayac"><b>12</b> kampanya</span>
           </div>
         </div>
@@ -285,10 +302,10 @@
         <div class="toplu-islem" hidden="">
           <b><span data-rol="secim-sayisi">0</span> kayıt seçildi</b>
           <div class="eylem-satiri">
-            <button class="dugme hayalet kucuk" type="button">Onayla</button>
-            <button class="dugme hayalet kucuk" type="button">Reddet</button>
-            <button class="dugme hayalet kucuk" type="button">Durdur</button>
-            <button class="dugme hayalet kucuk" type="button">Planla</button>
+            <button class="dugme hayalet kucuk" type="button" data-eylem="calistir" data-ad="Onayla">Onayla</button>
+            <button class="dugme hayalet kucuk" type="button" data-eylem="calistir" data-ad="Reddet">Reddet</button>
+            <button class="dugme hayalet kucuk" type="button" data-eylem="calistir" data-ad="Durdur">Durdur</button>
+            <button class="dugme hayalet kucuk" type="button" data-eylem="calistir" data-ad="Planla">Planla</button>
           </div>
         </div>
           <div class="tablo-kap gomulu">
@@ -315,7 +332,7 @@
                   <td>01.09.2026<small>→ 30.09.2026</small></td>
                   <td class="num">128.400<small>3.912 tıklama</small></td>
                   <td><span class="rozet olumlu"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>Yayında</span></td>
-                  <td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" href="admin-reklam-kampanya-form.html?kampanya=KAMP-2026-014" aria-label="Kış Kolajeni Lansmanı kampanyası — düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a><button class="ikon-dugme yikici" type="button" aria-label="Kış Kolajeni Lansmanı kampanyası — sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
+                  <td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" href="admin-reklam-kampanya-form.html?id=KAMP-2026-014" aria-label="Kış Kolajeni Lansmanı kampanyası — düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a><button class="ikon-dugme yikici" type="button" aria-label="Kış Kolajeni Lansmanı kampanyası — sil" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
                 </tr>
                 <tr>
                   <td class="sec"><label><input type="checkbox" aria-label="Protein Bar Tanıtımı satırını seç"></label></td>
@@ -325,7 +342,7 @@
                   <td>15.08.2026<small>→ 15.10.2026</small></td>
                   <td class="num">96.220<small>2.140 tıklama</small></td>
                   <td><span class="rozet olumlu"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>Yayında</span></td>
-                  <td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" href="admin-reklam-kampanya-form.html?kampanya=KAMP-2026-013" aria-label="Protein Bar Tanıtımı kampanyası — düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a><button class="ikon-dugme yikici" type="button" aria-label="Protein Bar Tanıtımı kampanyası — sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
+                  <td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" href="admin-reklam-kampanya-form.html?id=KAMP-2026-013" aria-label="Protein Bar Tanıtımı kampanyası — düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a><button class="ikon-dugme yikici" type="button" aria-label="Protein Bar Tanıtımı kampanyası — sil" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
                 </tr>
                 <tr>
                   <td class="sec"><label><input type="checkbox" aria-label="Mevsim Sebzeleri Sezonu satırını seç"></label></td>
@@ -335,7 +352,7 @@
                   <td>01.10.2026<small>→ 31.10.2026</small></td>
                   <td class="num">0<small>0 tıklama</small></td>
                   <td><span class="rozet bekleme"><i class="fa-solid fa-clock" aria-hidden="true"></i>Planlandı</span></td>
-                  <td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" href="admin-reklam-kampanya-form.html?kampanya=KAMP-2026-012" aria-label="Mevsim Sebzeleri Sezonu kampanyası — düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a><button class="ikon-dugme yikici" type="button" aria-label="Mevsim Sebzeleri Sezonu kampanyası — sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
+                  <td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" href="admin-reklam-kampanya-form.html?id=KAMP-2026-012" aria-label="Mevsim Sebzeleri Sezonu kampanyası — düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a><button class="ikon-dugme yikici" type="button" aria-label="Mevsim Sebzeleri Sezonu kampanyası — sil" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
                 </tr>
                 <tr>
                   <td class="sec"><label><input type="checkbox" aria-label="Akıllı Bileklik satırını seç"></label></td>
@@ -345,7 +362,7 @@
                   <td>20.08.2026<small>→ 20.09.2026</small></td>
                   <td class="num">54.310<small>1.822 tıklama</small></td>
                   <td><span class="rozet olumlu"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>Yayında</span></td>
-                  <td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" href="admin-reklam-kampanya-form.html?kampanya=KAMP-2026-011" aria-label="Akıllı Bileklik kampanyası — düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a><button class="ikon-dugme yikici" type="button" aria-label="Akıllı Bileklik kampanyası — sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
+                  <td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" href="admin-reklam-kampanya-form.html?id=KAMP-2026-011" aria-label="Akıllı Bileklik kampanyası — düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a><button class="ikon-dugme yikici" type="button" aria-label="Akıllı Bileklik kampanyası — sil" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
                 </tr>
                 <tr>
                   <td class="sec"><label><input type="checkbox" aria-label="Yaz Kampı Sponsorluğu satırını seç"></label></td>
@@ -355,7 +372,7 @@
                   <td>01.06.2026<small>→ 31.08.2026</small></td>
                   <td class="num">212.900<small>6.401 tıklama</small></td>
                   <td><span class="rozet pasif"><i class="fa-solid fa-flag-checkered" aria-hidden="true"></i>Tamamlandı</span></td>
-                  <td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" href="admin-reklam-kampanya-form.html?kampanya=KAMP-2026-010" aria-label="Yaz Kampı Sponsorluğu kampanyası — düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a><button class="ikon-dugme yikici" type="button" aria-label="Yaz Kampı Sponsorluğu kampanyası — sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
+                  <td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" href="admin-reklam-kampanya-form.html?id=KAMP-2026-010" aria-label="Yaz Kampı Sponsorluğu kampanyası — düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a><button class="ikon-dugme yikici" type="button" aria-label="Yaz Kampı Sponsorluğu kampanyası — sil" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
                 </tr>
                 <tr>
                   <td class="sec"><label><input type="checkbox" aria-label="Kreatin Kampanyası satırını seç"></label></td>
@@ -365,7 +382,7 @@
                   <td>05.09.2026<small>→ 05.11.2026</small></td>
                   <td class="num">12.980<small>318 tıklama</small></td>
                   <td><span class="rozet durdu"><i class="fa-solid fa-circle-pause" aria-hidden="true"></i>Durduruldu</span></td>
-                  <td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" href="admin-reklam-kampanya-form.html?kampanya=KAMP-2026-009" aria-label="Kreatin Kampanyası kampanyası — düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a><button class="ikon-dugme yikici" type="button" aria-label="Kreatin Kampanyası kampanyası — sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
+                  <td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" href="admin-reklam-kampanya-form.html?id=KAMP-2026-009" aria-label="Kreatin Kampanyası kampanyası — düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a><button class="ikon-dugme yikici" type="button" aria-label="Kreatin Kampanyası kampanyası — sil" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
                 </tr>
                 <tr>
                   <td class="sec"><label><input type="checkbox" aria-label="Fizyoterapi Kliniği satırını seç"></label></td>
@@ -375,7 +392,7 @@
                   <td>10.09.2026<small>→ 10.12.2026</small></td>
                   <td class="num">0<small>0 tıklama</small></td>
                   <td><span class="rozet bekleme"><i class="fa-solid fa-hourglass-half" aria-hidden="true"></i>Onay bekliyor</span></td>
-                  <td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" href="admin-reklam-kampanya-form.html?kampanya=KAMP-2026-008" aria-label="Fizyoterapi Kliniği kampanyası — düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a><button class="ikon-dugme yikici" type="button" aria-label="Fizyoterapi Kliniği kampanyası — sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
+                  <td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" href="admin-reklam-kampanya-form.html?id=KAMP-2026-008" aria-label="Fizyoterapi Kliniği kampanyası — düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a><button class="ikon-dugme yikici" type="button" aria-label="Fizyoterapi Kliniği kampanyası — sil" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
                 </tr>
                 <tr>
                   <td class="sec"><label><input type="checkbox" aria-label="Isı Bandı Tanıtımı satırını seç"></label></td>
@@ -385,7 +402,7 @@
                   <td>01.07.2026<small>→ 31.07.2026</small></td>
                   <td class="num">78.640<small>1.204 tıklama</small></td>
                   <td><span class="rozet pasif"><i class="fa-solid fa-flag-checkered" aria-hidden="true"></i>Tamamlandı</span></td>
-                  <td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" href="admin-reklam-kampanya-form.html?kampanya=KAMP-2026-007" aria-label="Isı Bandı Tanıtımı kampanyası — düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a><button class="ikon-dugme yikici" type="button" aria-label="Isı Bandı Tanıtımı kampanyası — sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
+                  <td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" href="admin-reklam-kampanya-form.html?id=KAMP-2026-007" aria-label="Isı Bandı Tanıtımı kampanyası — düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a><button class="ikon-dugme yikici" type="button" aria-label="Isı Bandı Tanıtımı kampanyası — sil" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
                 </tr>
                 <tr>
                   <td class="sec"><label><input type="checkbox" aria-label="Gym Zinciri Açılışı satırını seç"></label></td>
@@ -395,7 +412,7 @@
                   <td>12.09.2026<small>→ 12.10.2026</small></td>
                   <td class="num">0<small>0 tıklama</small></td>
                   <td><span class="rozet durdu"><i class="fa-solid fa-circle-xmark" aria-hidden="true"></i>Reddedildi</span></td>
-                  <td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" href="admin-reklam-kampanya-form.html?kampanya=KAMP-2026-006" aria-label="Gym Zinciri Açılışı kampanyası — düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a><button class="ikon-dugme yikici" type="button" aria-label="Gym Zinciri Açılışı kampanyası — sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
+                  <td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" href="admin-reklam-kampanya-form.html?id=KAMP-2026-006" aria-label="Gym Zinciri Açılışı kampanyası — düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a><button class="ikon-dugme yikici" type="button" aria-label="Gym Zinciri Açılışı kampanyası — sil" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
                 </tr>
                 <tr>
                   <td class="sec"><label><input type="checkbox" aria-label="Vitamin Serisi satırını seç"></label></td>
@@ -405,7 +422,7 @@
                   <td>01.09.2026<small>→ 31.12.2026</small></td>
                   <td class="num">31.220<small>702 tıklama</small></td>
                   <td><span class="rozet olumlu"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>Yayında</span></td>
-                  <td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" href="admin-reklam-kampanya-form.html?kampanya=KAMP-2026-005" aria-label="Vitamin Serisi kampanyası — düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a><button class="ikon-dugme yikici" type="button" aria-label="Vitamin Serisi kampanyası — sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
+                  <td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" href="admin-reklam-kampanya-form.html?id=KAMP-2026-005" aria-label="Vitamin Serisi kampanyası — düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a><button class="ikon-dugme yikici" type="button" aria-label="Vitamin Serisi kampanyası — sil" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
                 </tr>
                 <tr>
                   <td class="sec"><label><input type="checkbox" aria-label="Kurumsal Sağlık Paketi satırını seç"></label></td>
@@ -415,7 +432,7 @@
                   <td>15.09.2026<small>→ 15.11.2026</small></td>
                   <td class="num">0<small>0 tıklama</small></td>
                   <td><span class="rozet bekleme"><i class="fa-solid fa-clock" aria-hidden="true"></i>Planlandı</span></td>
-                  <td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" href="admin-reklam-kampanya-form.html?kampanya=KAMP-2026-004" aria-label="Kurumsal Sağlık Paketi kampanyası — düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a><button class="ikon-dugme yikici" type="button" aria-label="Kurumsal Sağlık Paketi kampanyası — sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
+                  <td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" href="admin-reklam-kampanya-form.html?id=KAMP-2026-004" aria-label="Kurumsal Sağlık Paketi kampanyası — düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a><button class="ikon-dugme yikici" type="button" aria-label="Kurumsal Sağlık Paketi kampanyası — sil" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
                 </tr>
                 <tr>
                   <td class="sec"><label><input type="checkbox" aria-label="Su Şişesi Hediye satırını seç"></label></td>
@@ -425,7 +442,7 @@
                   <td>01.05.2026<small>→ 30.06.2026</small></td>
                   <td class="num">164.020<small>5.008 tıklama</small></td>
                   <td><span class="rozet pasif"><i class="fa-solid fa-flag-checkered" aria-hidden="true"></i>Tamamlandı</span></td>
-                  <td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" href="admin-reklam-kampanya-form.html?kampanya=KAMP-2026-003" aria-label="Su Şişesi Hediye kampanyası — düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a><button class="ikon-dugme yikici" type="button" aria-label="Su Şişesi Hediye kampanyası — sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
+                  <td class="eylem"><div class="satir-eylem"><a class="ikon-dugme" href="admin-reklam-kampanya-form.html?id=KAMP-2026-003" aria-label="Su Şişesi Hediye kampanyası — düzenle"><i class="fa-solid fa-pen" aria-hidden="true"></i></a><button class="ikon-dugme yikici" type="button" aria-label="Su Şişesi Hediye kampanyası — sil" data-islem="sil"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></button></div></td>
                 </tr>
               </tbody>
               <tbody aria-busy="true" hidden="">
@@ -447,7 +464,7 @@
           <span class="bos-ikon"><i class="fa-solid fa-filter-circle-xmark" aria-hidden="true"></i></span>
           <h3>Bu süzgeçle sonuç yok</h3>
           <p>Süzgeci genişlet ya da aramayı değiştir.</p>
-          <button class="dugme hayalet" type="button">Süzgeci temizle</button>
+          <button class="dugme hayalet" type="button" data-eylem="suzgec-temizle">Süzgeci temizle</button>
         </div>
         <div class="bos-durum kart-ici yetkisiz" hidden="" data-durum="yetkisiz">
           <span class="bos-ikon"><i class="fa-solid fa-lock" aria-hidden="true"></i></span>
@@ -458,18 +475,18 @@
           <span class="bos-ikon"><i class="fa-solid fa-plug-circle-xmark" aria-hidden="true"></i></span>
           <h3>Kampanya listesi yüklenemedi</h3>
           <p>Bağlantı kurulamadı. Yeniden dene.</p>
-          <button class="dugme birincil" type="button"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i>Yeniden dene</button>
+          <button class="dugme birincil" type="button" data-eylem="calistir" data-ad="Yeniden dene"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i>Yeniden dene</button>
           <p class="hata-izi">Destek referansı <code>DIET-RKL-8802</code></p>
         </div>
         </div>
         <div class="sayfalama kart-ayagi">
           <span class="sayfalama-bilgi"><b>12</b> kampanyadan <b>1–12</b> arası</span>
           <div class="dugmeler">
-            <button class="sayfa-dugme sade ok" type="button" disabled="" aria-label="Önceki sayfa"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i></button>
-            <button class="sayfa-dugme sade aktif" type="button" aria-current="page">1</button>
-            <button class="sayfa-dugme sade" type="button">2</button>
-            <button class="sayfa-dugme sade" type="button">3</button>
-            <button class="sayfa-dugme sade ok" type="button" aria-label="Sonraki sayfa"><i class="fa-solid fa-chevron-right" aria-hidden="true"></i></button>
+            <button class="sayfa-dugme sade ok" type="button" disabled="" aria-label="Önceki sayfa" data-eylem="sayfala"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i></button>
+            <button class="sayfa-dugme sade aktif" type="button" aria-current="page" data-eylem="sayfala">1</button>
+            <button class="sayfa-dugme sade" type="button" data-eylem="sayfala">2</button>
+            <button class="sayfa-dugme sade" type="button" data-eylem="sayfala">3</button>
+            <button class="sayfa-dugme sade ok" type="button" aria-label="Sonraki sayfa" data-eylem="sayfala"><i class="fa-solid fa-chevron-right" aria-hidden="true"></i></button>
           </div>
         </div>
       </div>
@@ -477,4 +494,13 @@
     </div>
   </main>
 <script src="_ortak/panel.js" defer></script>
+<!-- ADMIN-KIT:JS:BAS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/7.3.0/tinymce.min.js" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/l10n/tr.js"></script>
+<script src="../../kanon/admin-editor-tr.js"></script>
+<script src="../../kanon/admin-kit.js" defer></script>
+<script src="../../kanon/admin-editor.js" defer></script>
+<script src="../../kanon/admin-tarih.js" defer></script>
+<!-- ADMIN-KIT:JS:SON -->
 </body></html>
