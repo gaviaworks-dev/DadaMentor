@@ -611,7 +611,13 @@
          Tekrarlayıcı satırı onay SORMADAN gider: geri alma çipi yok ama
          satır boş bir form satırıdır, yıkıcılık eşiğinin altında; yerine
          toast + `Geri al` verilir, silme kuralının kendisi korunur. */
-      var tekrar = !tr && d.closest('.adim-karti, .kalem-satiri, .tekrar-satiri');
+      /* 🔴 `<tr>` DE BİR TEKRAR SATIRI OLABİLİR. Koşul `!tr` diyordu ve
+         tablo tekrarlayıcısının satırı her zaman genel silme dalına
+         düşüyordu: BOŞ satırda bile onay soruyor, "son satır silinmez"
+         korumasını hiç görmüyordu — L10'un iki kuralı da çiğneniyordu.
+         Ölçüt satırın ETİKETİ değil, tekrarlayıcı olarak BENİMSENMİŞ
+         olması (`.tekrar-satiri`). */
+      var tekrar = d.closest('.adim-karti, .kalem-satiri, .tekrar-satiri');
       if (tekrar) {
         e.preventDefault();
         var listeT = tekrar.parentElement;
@@ -5598,7 +5604,17 @@
       var varNo   = s.querySelector('.adim-no, [data-rol="satir-no"]');
       var varTut  = s.querySelector('.tutamak, .tekrar-tutamak, [data-islem="sirala"], [data-eylem="sirala"]');
       var varSil  = s.querySelector('[data-islem="sil"], .tekrar-sil');
-      if (!tablo && (varNo || varTut || varSil)) {
+      /* 🔴 TABLODA DA BENİMSENİR — ajan M2 ölçtü. Eski koşul `!tablo`
+         diyordu ve tablo tekrarlayıcısının satırı hiçbir rol almıyordu:
+         (a) `.tekrar-satiri` sınıfı doğmadığı için L10'un silme dalı
+             onu HİÇ görmüyor, boş satırda bile onay soruyordu;
+         (b) tutamak `draggable` olmadığı ve `.tekrar-tutamak` sınıfını
+             almadığı için SÜRÜKLEME hiç bağlanmıyordu — `admin-rehber`
+             satırının başlığı "Sürükleyerek…" diye söz veriyor ve o söz
+             ÖLÜYDÜ.
+         "İkinci yüzey açma" kararı ÜRETMEYE aitti, BENİMSEMEYE değil:
+         aşağıdaki üretim dalı hâlâ `!tablo` ile korunuyor. */
+      if (varNo || varTut || varSil) {
         /* BENİMSE — eksik olanı da üretme; satırın kendi tasarımı kalır. */
         if (varNo && !varNo.getAttribute('data-rol')) varNo.setAttribute('data-rol', 'satir-no');
         if (varTut && !varTut.classList.contains('tekrar-tutamak')) {

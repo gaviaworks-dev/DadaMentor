@@ -302,7 +302,44 @@
      ⚠ Kap AYNI kart: bir sayfada iki tablo varsa (yemek modu) her süzgeç
        yalnız KENDİ kartının tablosunu süzer.
      ═══════════════════════════════════════════════════════════════ */
+  /* 🔴 ÇİP METNİ SAYAÇ TAŞIYOR — ölçüt METİN DEĞİL, DEĞERDİR.
+     Gastro'nun çipleri "Sebzeler (134)" biçiminde: parantez içindeki sayı
+     kaç kayıt olduğunu söyler, kaydın kendisinde GEÇMEZ. Ham metinle
+     arayan ilk yazım yedi ekranda tabloyu BOŞALTIYORDU (ölçüldü ·
+     `rapor/tazele/suzgec-kolon-gtaban-taban.json`: ansiklopedi 12→0,
+     sözlük 12→0, püf noktaları 12→0, yemek modu 20→0 …). Süzgeç
+     "sonuç yok" diyordu ve sebep veride değil ÖLÇÜTTEYDİ — sessiz
+     yalanların en pahalısı, çünkü ekran haklı görünüyor.
+     Kitin `data-deger` sözleşmesiyle aynı sadeleştirme: sondaki
+     "(sayı)" yalnız ÖLÇÜTTEN düşülür, çipin görünen metni aynen kalır. */
+  function cipDegeri(c) {
+    var d = c.getAttribute('data-deger');
+    if (d && d !== 'hepsi') return d.trim().toLocaleLowerCase('tr');
+    return (c.textContent || '').replace(/\s*\(\s*[\d.]+\s*\)\s*$/, '')
+      .trim().toLocaleLowerCase('tr');
+  }
+
+  /* 🔴 "TÜMÜ" KONUMLA DEĞİL DEĞERLE TANINIR. İlk yazım `cipler[0]`ı
+     "Tümü" sayıyordu. Ölçüldü: 178 süzgeç yüzeyinin 25'inde "Tümü" çipi
+     YOK (§4 onu şart koşuyor) ve o yüzeylerin İLK GERÇEK DEĞERİ sessizce
+     "Tümü" muamelesi görüyordu — `admin-uyeler` "Üye", `admin-faturalar`
+     "Taslak", `admin-sss` "Üyelik ve Hesap" tıklanınca hiçbir şey olmuyor,
+     üstelik ölçüte de girmiyordu. Ölü değil, YANLIŞ AD TAKILMIŞ değer.
+     Ölçüt: metni "Tümü" ya da `data-deger="hepsi"`. Yoksa yüzeyde
+     dışlayıcı çip yoktur ve HER çip gerçek bir değerdir. */
+  function tumuCipi(cipler) {
+    for (var i = 0; i < cipler.length; i++) {
+      var c = cipler[i];
+      if (c.getAttribute('data-deger') === 'hepsi') return c;
+      if (/^tümü$/i.test((c.textContent || '').trim())) return c;
+    }
+    return null;
+  }
+
   function suzgecUygula(yuzey) {
+    /* Kip seçici satır süzmez (sıralama · para birimi · tarih aralığı ·
+       gösterim · hedef dil) — bildirimi markup'ta: `data-suzgec-disi`. */
+    if (yuzey.hasAttribute('data-suzgec-disi')) return;
     var kart = yuzey.closest('.kart') || document;
     var tablo = kart.querySelector('.tablo, table');
     if (!tablo) return;
@@ -311,18 +348,21 @@
 
     var cipler = $$('.cip.suzgec', yuzey);
     if (!cipler.length) return;
-    var tumu = cipler[0];
-    var secili = cipler.slice(1).filter(function (c) { return c.classList.contains('aktif'); });
+    var tumu = tumuCipi(cipler);
+    var degerCipleri = cipler.filter(function (c) { return c !== tumu; });
+    var secili = degerCipleri.filter(function (c) { return c.classList.contains('aktif'); });
 
-    tumu.classList.toggle('aktif', secili.length === 0);
+    if (tumu) tumu.classList.toggle('aktif', secili.length === 0);
     cipler.forEach(function (c) { c.setAttribute('aria-selected', String(c.classList.contains('aktif'))); });
 
     /* Aynı kartın BÜTÜN süzgeçleri VE ile birleşir. */
-    var yuzeyler = $$('.acilir-yuzey.suzgec', kart);
+    var yuzeyler = $$('.acilir-yuzey.suzgec', kart)
+      .filter(function (y) { return !y.hasAttribute('data-suzgec-disi'); });
     var kume = yuzeyler.map(function (y) {
-      return $$('.cip.suzgec', y).slice(1)
-        .filter(function (c) { return c.classList.contains('aktif'); })
-        .map(function (c) { return (c.textContent || '').trim().toLocaleLowerCase('tr'); });
+      var cs = $$('.cip.suzgec', y);
+      var t = tumuCipi(cs);
+      return cs.filter(function (c) { return c !== t && c.classList.contains('aktif'); })
+        .map(function (c) { return cipDegeri(c); });
     }).filter(function (k) { return k.length; });
 
     var gorunur = 0;
@@ -352,10 +392,34 @@
       .forEach(function (t) { t.hidden = acik === 0; });
     var sayi = document.querySelector('[data-rol="suzgec-sayisi"]');
     if (sayi) sayi.textContent = acik ? acik + ' süzgeç açık' : '';
-    var bos = kart.querySelector('[data-durum="bos"]');
-    if (bos) bos.hidden = gorunur !== 0;
+    /* 🔴 "HİÇ YOK" İLE "SÜZGEÇ ELEDİ" AYRI GÖRÜNMELİ. Ekranda bir boş
+       durum yüzeyi varsa o açılır; YOKSA sessizce boş bir tablo kalıyordu
+       ve kullanıcı süzgecin bozuk olduğunu sanıyordu (ölçüldü: dört
+       ekranda "BOŞ DURUM YOK"). Kitin kendi geri düşüşüyle aynı kalıp —
+       `.suzgec-bos-satiri` — burada da kurulur; markup ÜRETMEK değil,
+       DURUMU söylemek (toast'la aynı sınıf). */
+    var bos = kart.querySelector('[data-durum="bos"], .bos-durum');
     var kap = tablo.closest('.tablo-kap');
-    if (kap) kap.hidden = gorunur === 0;
+    if (bos) {
+      bos.hidden = gorunur !== 0;
+      if (kap) kap.hidden = gorunur === 0;
+    } else {
+      if (kap) kap.hidden = false;
+      var bs = govde.querySelector('.suzgec-bos-satiri');
+      if (gorunur === 0 && acik > 0) {
+        if (!bs) {
+          bs = document.createElement('tr');
+          bs.className = 'suzgec-bos-satiri';
+          var kolon = (tablo.tHead && tablo.tHead.rows[0]) ? tablo.tHead.rows[0].cells.length
+                    : (govde.rows[0] ? govde.rows[0].cells.length : 1);
+          bs.innerHTML = '<td colspan="' + kolon + '"><div class="sonuc-kutu">' +
+            '<span class="sonuc-bas"><i class="fa-solid fa-filter-circle-xmark" aria-hidden="true"></i> ' +
+            'Bu süzgeçle eşleşen kayıt yok</span></div></td>';
+          govde.appendChild(bs);
+        }
+        bs.hidden = false;
+      } else if (bs) { bs.hidden = true; }
+    }
   }
 
   document.addEventListener('click', function (e) {
@@ -363,8 +427,9 @@
     if (c) {
       var y = c.closest('.acilir-yuzey');
       /* "Tümü" DIŞLAYICIDIR — öbürlerini düşürür. */
-      if (c === $$('.cip.suzgec', y)[0]) {
-        $$('.cip.suzgec', y).slice(1).forEach(function (x) { x.classList.remove('aktif'); });
+      var cs = $$('.cip.suzgec', y);
+      if (c === tumuCipi(cs)) {                    /* "Tümü" DIŞLAYICIDIR */
+        cs.forEach(function (x) { if (x !== c) x.classList.remove('aktif'); });
       }
       setTimeout(function () { suzgecUygula(y); }, 0);
       return;
@@ -392,8 +457,10 @@
       toast(acildi ? acildi + ' kolon geri getirildi.' : 'Bütün kolonlar zaten görünür.');
       return;
     }
-    $$('.acilir-yuzey.suzgec', kart).forEach(function (y) {
-      $$('.cip.suzgec', y).slice(1).forEach(function (x) { x.classList.remove('aktif'); });
+    $$('.acilir-yuzey.suzgec:not([data-suzgec-disi])', kart).forEach(function (y) {
+      var cs = $$('.cip.suzgec', y);
+      var t = tumuCipi(cs);
+      cs.forEach(function (x) { if (x !== t) x.classList.remove('aktif'); });
       suzgecUygula(y);
     });
   });
