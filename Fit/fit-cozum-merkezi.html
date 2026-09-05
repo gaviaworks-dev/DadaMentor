@@ -20391,6 +20391,51 @@ body{ background:var(--zemin); font-family:var(--yuz); }
 
 <!-- TOHUM: kaynagin-kendi-verisi -->
 <script>
+/* FIT-PAGI:PARITE — madde 7, kalem 5. Gerekçe: scripts/olcum/rev/rk-pagi-enjekte.mjs */
+window.FIT_PAGI = window.FIT_PAGI || function (o) {
+  var kap = o.kap; if (!kap) return null;
+  var boy = o.sayfaBoy || 10, sayfa = 1;
+  var not = kap.querySelector('.pagi-note');
+
+  function ciz() {
+    var hepsi = o.liste(), n = hepsi.length;
+    var toplam = Math.max(1, Math.ceil(n / boy));
+    if (sayfa > toplam) sayfa = toplam;
+    var bas = (sayfa - 1) * boy, son = Math.min(n, bas + boy);
+    o.ciz(hepsi.slice(bas, son), hepsi);
+
+    /* düğmeleri markup'ın kendi kipiyle yeniden kur */
+    kap.querySelectorAll('.sayfa-dugme').forEach(function (b) { b.remove(); });
+    function dugme(etiket, ikon, hedef, pasif, aktif) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'sayfa-dugme' + (ikon ? ' arrow' : '') + (aktif ? ' aktif' : '');
+      b.setAttribute('aria-label', etiket);
+      if (aktif) b.setAttribute('aria-current', 'page');
+      if (pasif) b.disabled = true;
+      b.innerHTML = ikon ? '<i class="fa-solid ' + ikon + '" aria-hidden="true"></i>' : String(hedef);
+      b.addEventListener('click', function () { sayfa = hedef; ciz(); });
+      kap.insertBefore(b, not || null);
+    }
+    dugme('İlk sayfa', 'fa-angles-left', 1, sayfa === 1, false);
+    dugme('Önceki sayfa', 'fa-chevron-left', sayfa - 1, sayfa === 1, false);
+    for (var i = 1; i <= toplam; i++) dugme(i + '. sayfa', null, i, false, i === sayfa);
+    dugme('Sonraki sayfa', 'fa-chevron-right', sayfa + 1, sayfa === toplam, false);
+    dugme('Son sayfa', 'fa-angles-right', toplam, sayfa === toplam, false);
+
+    if (not) not.textContent = n === 0
+      ? ('0 ' + (o.birim || 'kayıt'))
+      : (n + ' ' + (o.birim || 'kayıt') + ' · ' + (bas + 1) + '–' + son +
+         ' gösteriliyor · sayfa ' + sayfa + ' / ' + toplam);
+    kap.hidden = toplam <= 1;
+    if (o.ust && sayfa > 1) { /* sayfa değişince başlığa dön — sayfa KAYDIRILMAZ, yalnız odak */ }
+  }
+
+  ciz();
+  return { yenile: function () { sayfa = 1; ciz(); }, ciz: ciz };
+};
+</script>
+<script>
 /* ══ TOHUM · KAYNAĞIN KENDİ VERİSİ · YAZILMADI, ÇIKARILDI ══
    Kaynak: scripts/olcum/s2v3-render-tohum.mjs · addInitScript
    gövdesi. Beyar kararı 2026-09-03: kaynağın kendi verisi
@@ -22819,7 +22864,13 @@ window.FIT_FATURA = (function () {
      kopya yazılmadı. */
   function talepSatiriYap(no, bas, kat, iso, trh){
     var li = document.createElement('a');
-    li.className = 'set-row is-new';
+    /* 🔴 SINIF UYUŞMAZLIĞI — madde 7, kalem 2 (2026-09-05).
+       Bu satır `.set-row` basıyordu; liste/sayaç/süzgeç ise
+       `querySelectorAll('.ayar-satir')` ile arıyor (ölçüldü, tek geçiş).
+       Sonuç: eklenen talep GÖRÜNÜYOR ama listeye ait sayılmıyor —
+       sayaca girmiyor, süzgeç onu bulamıyor, sayfalama saymıyor.
+       Sınıf listenin kendi bildirdiği ada çevrildi; `is-new` korunuyor. */
+    li.className = 'ayar-satir is-new';
     li.setAttribute('href','destek-talebi-detay-v1.html?talep=' + no);
     li.setAttribute('data-durum','acik');
     li.setAttribute('data-no', no);
@@ -23271,130 +23322,162 @@ window.FIT_FATURA = (function () {
   });
 
 
-/* ── BÖLÜM · ek dosya ─────────────────────
-   GEREKÇE: seçilen dosyanın adı YAZIYLA gösterilir — dosya seçildiğini kullanıcıya söyleyen tek geri bildirim. */
-/* ---- ek dosya: seçilen dosyanın adı YAZIYLA gösterilir (renk tek sinyal
-         değil), "Kaldır" ile geri alınır. Mesaj başına TEK dosya olduğu için
-         input `multiple` taşımaz. ---- */
-  var ekInput = document.getElementById('tkEk');
-  var ekName  = document.getElementById('tkEkName');
-  var ekClear = document.getElementById('tkEkClear');
-  function ekYaz(){
-    if(!ekInput || !ekName) return;
-    var f = ekInput.files && ekInput.files[0];
-    ekName.textContent = f ? f.name : 'Dosya seçilmedi';
-    if(ekClear) ekClear.hidden = !f;
-  }
-  if(ekInput) ekInput.addEventListener('change', ekYaz);
-  if(ekClear) ekClear.addEventListener('click', function(){
-    ekInput.value = ''; ekYaz(); ekInput.focus();
-  });
 
-  form.addEventListener('submit', function(e){
-    e.preventDefault();
-    var bad = [];
-    fields.forEach(function(el){
-      el.dataset.seen = '1';
-      var m = problem(el);
-      mark(el, m);
-      if(m) bad.push(el);
-    });
-    if(bad.length){
-      if(okBox) okBox.hidden = true;
-      if(sum){ syncSummary(); sum.hidden = false; }
-      bad[0].focus();
-      return;
-    }
-    if(sum) sum.hidden = true;
-
-    var no  = nextNo();
-    if(!no){
-      /* Kanon §5.3'ün maket karşılığı: 8 denemenin hepsi çakışırsa bu
-         GÖRÜLECEK bir arızadır, sessizce geçilecek değil. */
-      if(okBox) okBox.hidden = true;
-      if(sum && sumText){
-        sumText.textContent = 'Talep numarası üretilemedi. Talebin gönderilmedi — sayfayı yenileyip tekrar dener misin?';
-        sum.hidden = false;
-        sum.setAttribute('tabindex','-1');
-        try{ sum.focus({preventScroll:true}); }catch(err){ sum.focus(); }
-      }
-      return;
-    }
-    var kat = document.getElementById('tkKategori').value;
-    var bas = document.getElementById('tkBaslik').value.trim();
-    var d   = new Date();
-    var iso = d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
-    var trh = d.getDate() + ' ' + AYLAR[d.getMonth()] + ' ' + d.getFullYear();
-
-    /* §Ö7/§Ö8 · yeni satır da kanon kitle basılır: `a.set-row`, satırın
-       TAMAMI bağlantı. §Ö9 · alt metin sırası referans · kategori ·
-       son hareket · mesaj sayısı. §Ö25 · yeni talep `acik` → `.pstat wait`. */
-    var li = talepSatiriYap(no, bas, kat, iso, trh);
-    list.insertBefore(li, list.firstElementChild);
-
-    /* K21 · yerel kalıcılık — satır önce yalnız DOM'a giriyordu,
-       localStorage yazması 0'dı; yenilemede kaybolan satır kalan tıklamada
-       "Talep bulunamadı" veriyordu (destek-talebi-detay-v1.html detayı
-       tanımıyordu). Şimdi aynı talep dm_fit_destek_v1'e de yazılır; bu liste
-       AÇILIŞTA (aşağıdaki `yerelSatirlariHidrat`) ve detay sayfası her
-       açılışta bu anahtarı okur — satır da yazışma da artık kalıcı.
-       Sözleşmenin dört zorunlu alanına (no/konu/mesaj/durum/tarih/yerel)
-       `kategori` eklendi: liste satırı kategoriyi göstermek zorunda,
-       şema bunu genişletmek dışında bozulmadı. */
-    (function(){
-      var mesajAlan = document.getElementById('tkMesaj');
-      var mesajMetni = mesajAlan ? mesajAlan.value.trim() : '';
-      try{
-        var DEPO = 'dm_fit_destek_v1';
-        var mevcut = null;
-        try{ mevcut = JSON.parse(localStorage.getItem(DEPO)); }catch(errOku){ mevcut = null; }
-        if(!mevcut || typeof mevcut !== 'object' || !Array.isArray(mevcut.talepler)){
-          mevcut = { surum:1, talepler:[], guncelleme:null };
-        }
-        mevcut.talepler.unshift({ no:no, konu:bas, kategori:kat, mesaj:mesajMetni, durum:'acik', tarih:d.toISOString(), yerel:true });
-        mevcut.guncelleme = d.toISOString();
-        localStorage.setItem(DEPO, JSON.stringify(mevcut));
-      }catch(errYaz){ /* depolama kapalıysa satır yalnız DOM'da kalır — form uyarısı zaten dürüst */ }
-    })();
-
-    recount();
-    /* Yeni talep "Açık talep" doğar (kanon §1: DB default 'acik').
-       Hangi süzgeç seçiliyse ona göre yeniden süzülür ve 1. sayfaya dönülür. */
-    apply(secili, false);
-
-    if(okBox){
-      /* DÜRÜST DURUM EKRANI — "gönderildi" YAZILMAZ, çünkü gönderilmedi.
-         İki cümle iki ayrı gerçeği söyler: (1) makette ne oldu, (2) gerçekte
-         ne olmadı. Talep numarası da makette üretildi, sunucuda değil.
-         K21 · SON CÜMLE GÜNCELLENDİ: satır ve yazışma artık dm_fit_destek_v1'e
-         yazılıyor (bu dosyanın açılış hidrasyonu + detay sayfasının kendi
-         okuması), yani "yenilersen kaybolur" artık YANLIŞ olurdu — doğrusu
-         "yalnız bu tarayıcıda kalıcı, sunucuya hiç gitmez"dir. */
-      okBox.querySelector('span').innerHTML =
-        'Talebin <b>gönderilmedi</b> — bu ekran maket, arkasında sunucu yok. ' +
-        'Makette olan şu: <b>' + esc(no) + '</b> numarasıyla örnek bir satır ' +
-        /* tam adres DEĞİL, yalnız çapa: tam adres sayfayı yeniden yükler ve
-           az önce eklenen maket satırı kaybolurdu — cümlenin kendisiyle
-           çelişirdi. Çıplak çapa kabuğun panel yönlendiricisini tetikler. */
-        '<a href="#taleplerim">Destek Taleplerim</a> sekmesinin en üstüne eklendi ' +
-        've <a href="destek-talebi-detay-v1.html?talep=' + esc(no) + '">örnek bir yazışma sayfası</a> açılıyor. ' +
-        'İkisi de yalnız bu tarayıcıda kalıcı — sayfayı yenilesen de dururlar, ama sunucuya hiç gitmezler.';
-      okBox.hidden = false;
-    }
-
-    form.reset();
-    fields.forEach(function(el){ delete el.dataset.seen; mark(el, ''); });
-    if(mc) mc.textContent = '0';
-    /* `reset()` kategoriyi yer tutucuya döndürür ama `change` OLAYINI
-       ATMAZ — çağrılmazsa bağlam grubu açık kalır ve konusuz bir forma
-       "İlgili randevu" alanı asılı durur. */
-    baglamBoya();
-    ekYaz();
-    if(okBox){ okBox.setAttribute('tabindex','-1'); try{ okBox.focus({preventScroll:true}); }catch(err){ okBox.focus(); } }
-  });
-
+  /* 🔴 ÇİFTLENMİŞ BLOK SÖKÜLDÜ — 2026-09-05, madde 7 (parite borcu).
+     Bu noktada 122 satırlık "ek dosya + submit" bölümü İKİNCİ KEZ
+     yapıştırılmıştı (23273–23394); ikisi de aynı `form`a bağlanıyordu.
+     İki dinleyici SIRAYLA koşuyor ve net etki şuydu:
+        1. dinleyici doğrular → satır ekler → `form.reset()`
+        2. dinleyici SIFIRLANMIŞ formu doğrular → "3 alan eksik" →
+           `okBox.hidden = true`  ← onay paneli GİZLENİR
+     ÖLÇÜLDÜ (`scripts/olcum/rev/rk-cozum.mjs`, sekmeye TIKLAYARAK).
+     Konsol hatası ikisinde de 0 — kusur sessizdi.
+     (hafıza: "Üretilen DOM çiftlenmesi"nin JS karşılığı) */
 })();
 
+</script>
+
+
+
+<script>
+/* =====================================================================
+   MADDE 7 · PARİTE BORCU · kalem 6 + 7
+   SSS ARAMASI · KATEGORİ ÇİPLERİ · ÖNERİ/ŞİKÂYET GÖNDER
+   ---------------------------------------------------------------------
+   Gourmet kulvarı bildirdi, lead TIKLAYARAK doğruladı (rk-cozum-oteki.mjs):
+
+     SSS arama kutusu   var · "üyelik" yazıldı → görünen soru 4 → 4  🔴
+     kategori çipleri   6 çip · ikinciye tıklandı → görünen 4 → 4    🔴
+     Öneri "Gönder"     form dolduruldu, basıldı → onay YOK, hata YOK 🔴
+
+   Üçünün de dinleyicisi hiç yoktu (`grep faqSearch|faqTabs|conForm` +
+   `addEventListener` → eşleşme 0). Yüzey tam, sürücü yok.
+
+   🔴 ÇİP SAYAÇLARI DA YALAN SÖYLÜYORDU — ölçüldü:
+        çip "Üyelik & Hesap 11"   ·  o kategorideki gerçek soru: 4
+        çip "Programlar 4"        ·  gerçek: 4   ✅
+      Sayaç markup'a elle yazılmıştı. Artık LİSTEDEN sayılıyor: iki
+      yerde iki farklı rakam olamaz. (Sayı uydurulmuyor, DOM'dan geliyor.)
+
+   ⚠ ARAMA VE ÇİP TEK SÜZGEÇTİR, iki ayrı süzgeç değil: ikisi birden
+     uygulanır ve boş durum ikisinin KESİŞİMİNE bakar. Ayrı ayrı
+     çalışsalardı "arama sonucu var ama çip gizliyor" hâli sessiz
+     kalırdı.
+   ⚠ Öneri formu maket: kayıt gönderilmez, onay paneli açılır ve form
+     sıfırlanır — `tkForm`un ölçülen davranışıyla AYNI sözleşme.
+   ===================================================================== */
+(function () {
+  var d = document;
+
+  /* ── SSS · arama + kategori çipleri ─────────────────────────────── */
+  var ara   = d.getElementById('faqSearch');
+  var tabs  = d.getElementById('faqTabs');
+  var liste = d.getElementById('faqList');
+  var yok   = d.getElementById('faqNone');
+  var temiz = d.getElementById('faqClear');
+
+  if (liste) {
+    var kalemler = [].slice.call(liste.querySelectorAll('.akordeon-kalem'));
+
+    /* Sayaçlar listeden türetilir — markup'ın elle yazdığı rakam değil. */
+    if (tabs) {
+      [].forEach.call(tabs.querySelectorAll('[data-kat]'), function (b) {
+        var kat = b.getAttribute('data-kat');
+        var n = kalemler.filter(function (k) { return k.getAttribute('data-kat') === kat; }).length;
+        var c = b.querySelector('.cnt');
+        if (c) c.textContent = String(n);
+      });
+    }
+
+    var seciliKat = null;
+
+    function suz() {
+      var q = (ara && ara.value || '').trim().toLocaleLowerCase('tr');
+      var gorunen = 0;
+      kalemler.forEach(function (k) {
+        var katUyar = !seciliKat || k.getAttribute('data-kat') === seciliKat;
+        var metinUyar = !q || (k.textContent || '').toLocaleLowerCase('tr').indexOf(q) !== -1;
+        var uyar = katUyar && metinUyar;
+        k.hidden = !uyar;
+        if (uyar) gorunen++;
+      });
+      if (yok) yok.hidden = gorunen !== 0;
+      if (temiz) temiz.hidden = !q && !seciliKat;
+    }
+
+    if (ara) ara.addEventListener('input', suz);
+    if (tabs) tabs.addEventListener('click', function (e) {
+      var b = e.target.closest('[data-kat]');
+      if (!b) return;
+      var kat = b.getAttribute('data-kat');
+      /* ikinci tık seçimi kaldırır — "Tümü" çipi yok, dışlayıcı da yok */
+      seciliKat = (seciliKat === kat) ? null : kat;
+      [].forEach.call(tabs.querySelectorAll('[data-kat]'), function (x) {
+        var bu = x.getAttribute('data-kat') === seciliKat;
+        x.classList.toggle('aktif', bu);
+        if (x.hasAttribute('aria-pressed')) x.setAttribute('aria-pressed', String(bu));
+      });
+      suz();
+    });
+    if (temiz) temiz.addEventListener('click', function () {
+      if (ara) ara.value = '';
+      seciliKat = null;
+      [].forEach.call(tabs ? tabs.querySelectorAll('[data-kat]') : [], function (x) {
+        x.classList.remove('aktif');
+        if (x.hasAttribute('aria-pressed')) x.setAttribute('aria-pressed', 'false');
+      });
+      suz();
+    });
+
+    /* Açılış: markup ilk çipi `aktif` bildiriyorsa ONU uygula —
+       durumu markup söyler, kit uydurmaz. */
+    var acikCip = tabs && tabs.querySelector('[data-kat].aktif, [data-kat][aria-pressed="true"]');
+    seciliKat = acikCip ? acikCip.getAttribute('data-kat') : null;
+    suz();
+  }
+
+  /* ── Öneri / Şikâyet · gönder ───────────────────────────────────── */
+  var cf = d.getElementById('conForm');
+  if (cf) {
+    var conOk = d.getElementById('conOk');
+    if (!conOk) {
+      /* Onay paneli markup'ta YOK — `tkOk`un kardeşi olarak kurulur.
+         Metin `tkOk`un kalıbından değil, BU formun kendi konusundan. */
+      conOk = d.createElement('div');
+      conOk.id = 'conOk';
+      conOk.className = 'pnl-ok';
+      conOk.setAttribute('role', 'status');
+      conOk.hidden = true;
+      conOk.innerHTML = '<i class="fa-solid fa-circle-check" aria-hidden="true"></i>' +
+        '<div><b>Mesajın alındı.</b><span>Genellikle 1 iş günü içinde dönüyoruz. ' +
+        'Bu ekran maket: mesaj kaydedilmez.</span></div>';
+      cf.parentNode.insertBefore(conOk, cf);
+    }
+    cf.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var eksik = [].slice.call(cf.querySelectorAll('[required]')).filter(function (el) {
+        return el.type === 'checkbox' ? !el.checked : !String(el.value || '').trim();
+      });
+      var ozet = d.getElementById('conErrSum');
+      eksik.forEach(function (el) { el.setAttribute('aria-invalid', 'true'); });
+      cf.querySelectorAll('[required]').forEach(function (el) {
+        if (eksik.indexOf(el) === -1) el.removeAttribute('aria-invalid');
+      });
+      if (eksik.length) {
+        if (ozet) { ozet.hidden = false; ozet.textContent = eksik.length + ' alan düzeltilmeli.'; }
+        conOk.hidden = true;
+        eksik[0].focus();
+        return;
+      }
+      if (ozet) ozet.hidden = true;
+      cf.reset();
+      conOk.hidden = false;
+      conOk.setAttribute('tabindex', '-1');
+      try { conOk.focus({ preventScroll: true }); } catch (err) { conOk.focus(); }
+    });
+  }
+  window.DM_FIT_SSS_SURUCU = 1;
+})();
 </script>
 </body>
 </html>

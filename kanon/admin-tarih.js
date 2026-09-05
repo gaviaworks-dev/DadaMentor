@@ -74,8 +74,20 @@
     }
   }
 
+  /* ── Ö2 · TİPTEN TÜR TÜRETİLİR ────────────────────────────────────
+     `data-tarih` bildirilmemişse tür girdinin KENDİ tipinden okunur.
+     Varsayılanı körü körüne 'tarih' yapmak `datetime-local` alanının
+     saat yarısını sessizce düşürürdü. */
+  function turBul(girdi) {
+    var bildirilen = girdi.getAttribute('data-tarih');
+    if (bildirilen) return bildirilen;
+    if (girdi.type === 'datetime-local') return 'saatli';
+    if (girdi.type === 'time') return 'saat';
+    return 'tarih';
+  }
+
   function kurBir(girdi) {
-    var tur = girdi.getAttribute('data-tarih') || 'tarih';
+    var tur = turBul(girdi);
     /* native girdiyi metne çevir — tarayıcının biçimi devreye girmesin */
     if (girdi.type === 'date' || girdi.type === 'datetime-local' || girdi.type === 'time') {
       var v = girdi.value;
@@ -183,11 +195,25 @@
   function kur() {
     if (!window.flatpickr) return;
     if (window.flatpickr.l10ns && window.flatpickr.l10ns.tr) flatpickr.localize(flatpickr.l10ns.tr);
-    document.querySelectorAll('input[data-tarih]').forEach(function (g) {
-      if (g._flatpickr) return;
-      if (g.closest('[data-tarih-suzgec]')) return;   /* süzgeç kendi kuruyor */
-      kurBir(g);
-    });
+    /* ── Ö2 · KANCA `type="date"`İ DE KAPSAR ────────────────────────
+       2026-09-05 · Gastro önerisi Ö2, sayıldı:
+           çıplak type=date/datetime-local/time   gastro 23 · fit 0
+       Kanca yalnız `input[data-tarih]` arıyordu; niteliksiz alanlar
+       tarayıcının kendi `mm/dd/yyyy` yüzeyiyle çiziliyordu — panelin
+       geri kalanı `04.09.2026` yazarken AYNI EKRANDA ikinci bir tarih
+       biçimi, üstelik yanlış sırada. Kusur kuralın yokluğu değil,
+       kancanın dar oluşuydu: dosya başındaki "native girdi KALMAZ"
+       kararı zaten yazılıydı ve 23 alanda hiç koşmuyordu.
+       (parti 3'ün "yazılmış bir kural, koşan bir kural değildir"
+        dersinin bu turdaki karşılığı.)
+       ⚠ Ad SÖZLEŞMESİ değişmedi: `data-tarih` hâlâ birincil bildirim
+         ve türü O söyler; tip yalnız bildirilmemişse okunur. */
+    document.querySelectorAll('input[data-tarih], input[type="date"], input[type="datetime-local"], input[type="time"]')
+      .forEach(function (g) {
+        if (g._flatpickr) return;
+        if (g.closest('[data-tarih-suzgec]')) return; /* süzgeç kendi kuruyor */
+        kurBir(g);
+      });
     kurSuzgecAraligi();
     window.DM_TARIH_HAZIR = HAZIR;                    /* doğrulama okusun diye */
   }

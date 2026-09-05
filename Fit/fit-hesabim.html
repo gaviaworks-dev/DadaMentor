@@ -24240,5 +24240,82 @@ window.FIT_SHELL = window.FIT_SHELL || {};
 })();
 
 </script>
+
+<script>
+/* =====================================================================
+   MADDE 7 · PARİTE BORCU · `role="switch"` ANAHTAR SÜRÜCÜSÜ
+   ---------------------------------------------------------------------
+   2026-09-05 · Gourmet kulvarı bildirdi, lead TIKLAYARAK doğruladı:
+
+       FIT  fit-hesabim   .fp-sw[role=switch]  23 anahtar · denenen 8 · ÇALIŞAN 0  🔴
+       GOURMET go-hesabim aynı seçici          23 anahtar · denenen 6 · ÇALIŞAN 6  ✅
+
+   Yüzey TAMDI, sürücü yoktu — *"markup taşındı, davranış kalmadı"*.
+   Kullanıcı anahtara basıyor, hiçbir şey olmuyor ve konsol da susuyor.
+
+   🔴 KOD UYDURULMADI: Gourmet kopyasındaki sürücünün AYNISI. FIT'in
+      markup'ı zaten birebir aynı sözleşmeyi taşıyor — ölçüldü:
+        `data-perm` · `.ba-frow[data-flow]` · `.ba-dir[data-role=dir]`
+        (`data-base` + `data-base-html`) · `.ba-warn[data-role=nozin]`
+      Yani parite bir çeviri değil, eksik parçanın geri konmasıdır.
+
+   ⚠ `disabled` anahtara DOKUNULMAZ: bağlanmamış kartın anahtarı
+     görünür ama çevrilemez olmalı (donörün kendi kararı, 5 anahtar).
+   ⚠ Yön metni ÜRETİLMEZ, `data-base-html`den GERİ KONUR — nitelikte
+     zaten yazılı. Üretmek ikinci bir metin kaynağı açardı.
+   ⚠ Açılış durumu da sürülür (`akis` ilk kez çağrılır): markup'ın
+     bildirdiği `aria-checked` ile akış satırları BAŞTAN tutarlı olsun;
+     yoksa sayfa açılışında kapalı bir izin "aktarılıyor" görünür.
+   ===================================================================== */
+(function () {
+  var d = document;
+  var anahtarlar = [].slice.call(d.querySelectorAll('#pageMain .fp-sw[role="switch"]'));
+  if (!anahtarlar.length) return;
+
+  function etiket(sw, acik) {
+    var kap = sw.closest('.fp-toggle') || sw.parentElement;
+    var l = kap ? kap.querySelector('.fp-sw-lbl') : null;
+    if (l) l.textContent = acik ? 'Açık' : 'Kapalı';
+  }
+
+  function akis(sw, acik) {
+    var perm = sw.getAttribute('data-perm');
+    if (!perm) return;
+    var kart = sw.closest('.ba-kart') || sw.closest('section') || d;
+    var satir = kart.querySelector('.ba-frow[data-flow="' + perm + '"]');
+    if (satir) {
+      var dir = satir.querySelector('[data-role="dir"]');
+      satir.classList.toggle('is-off', !acik);
+      if (dir) {
+        if (acik) {
+          dir.className = 'ba-dir ' + (dir.getAttribute('data-base') || 'in');
+          dir.innerHTML = dir.getAttribute('data-base-html') || dir.innerHTML;
+        } else {
+          dir.className = 'ba-dir none';
+          dir.innerHTML = '<i class="fa-solid fa-ban" aria-hidden="true"></i> Aktarılmıyor';
+        }
+      }
+    }
+    var uyari = kart.querySelector('.ba-warn[data-role="nozin"]');
+    if (uyari) {
+      var acikVar = [].slice.call(kart.querySelectorAll('.fp-sw[data-perm]'))
+        .some(function (x) { return x.getAttribute('aria-checked') === 'true'; });
+      uyari.hidden = acikVar;
+    }
+  }
+
+  anahtarlar.forEach(function (sw) {
+    akis(sw, sw.getAttribute('aria-checked') === 'true');
+    if (sw.disabled) return;                       /* bağlanmamış kart: dokunulmaz */
+    sw.addEventListener('click', function () {
+      var acik = sw.getAttribute('aria-checked') !== 'true';
+      sw.setAttribute('aria-checked', acik ? 'true' : 'false');
+      etiket(sw, acik);
+      akis(sw, acik);
+    });
+  });
+  window.DM_FIT_SW_SURUCU = anahtarlar.length;
+})();
+</script>
 </body>
 </html>

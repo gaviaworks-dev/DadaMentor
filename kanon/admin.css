@@ -302,6 +302,82 @@
 .yetkili .suzgec-cubuk .sag{ gap:var(--kit-satir); }
 .yetkili .suzgec-sayac{ margin-left:var(--kit-atom); }
 
+/* ── K35 · ŞERİTTEKİ HER DENETİM AYNI ÜST KENARDA ────────────────────
+   2026-09-05 · madde 5-EK. Beyar: *"süzgeç şeridinde etiket üstte YOK,
+   her süzgeç kit çip-dropdown'u, arama kutusuyla aynı satır ve aynı
+   yükseklik, üst kenar aynı y."*
+
+   ÖLÇÜLDÜ (`rk-suzgec-hiza.mjs` · 131 ekran · üç marka):
+       arama kutusu (input)      y565 h44
+       süzgeç düğmesi (button)   y557 h44      ← 8px YUKARIDA
+   Yükseklikler zaten eşitti; kayan şey ÜST KENARDI.
+
+   🔴 KÖK: BOŞ BİR ÇİP KABI. `.coklu-secim` sarmalayıcısının içinde,
+      düğmenin ardından, İÇİ BOŞ bir `.cipler` duruyor:
+          .suzgec-dugme      h44
+          .acilir-yuzey      h0   (hidden)
+          .cipler            h16  ← BOŞ ama `display:flex`, satır boyu kadar
+      Kap 44 değil 60px oluyor. Şerit `align-items:center` olduğu için
+      60px'lik kap merkeze göre hizalanıyor ve İÇİNDEKİ 44px'lik düğme
+      kabın üstünde kaldığı için 8px yukarı kayıyor.
+      Yani kusur hizalama kuralında değil, YER KAPLAYAN BOŞ KAPTA.
+
+   ⚠ Kap SİLİNMEZ, yalnız boşken yer kaplamaz: çip eklenince (kullanıcı
+     bir değer seçince) geri gelmesi gerekiyor. `:empty` tam olarak bunu
+     söyler — kalıcı bir gizleme değil, boşluğun kendi durumu.
+   ⚠ Ölçümün kendi kusuru da kayda geçiyor: ilk iki yazımım KABIN
+     kutusunu ölçüyordu ve 209 sahte "hizasız" veriyordu. Hizanın
+     kurulduğu yüzey kap değil DENETİMDİR.
+     (hafıza: "denetimin öznesi kayar")                                */
+.yetkili .suzgec-cubuk .cipler:empty{ display:none; }
+
+/* ── K35b · ADSIZ SARMALAYICI ŞERİDİ İKİ SATIRA BÖLMEZ ──────────────
+   ÖLÇÜLDÜ (gastro `admin-log`, üç markada 8 ekran): şeridin ikinci
+   çocuğu SINIFSIZ bir `<div>` ve yüksekliği 88px — yani İKİ SATIR
+   (44×2). İçindeki süzgeçler alt alta diziliyor, şerit 121px oluyor
+   ve arama kutusu ile süzgeçler ortak bir üst kenarda duramıyor.
+
+   `display:contents` sarmalayıcının KUTUSUNU kaldırır, düğümü değil:
+   çocukları doğrudan şeridin flex öğesi olur, `gap` · hiza · K33'ün
+   taşma sayımı hepsi onlara uygulanır. Markup'a dokunulmaz.
+
+   ⚠ KAPSAM DAR: yalnız SINIFSIZ sarmalayıcı. Sınıf taşıyan her kap
+     (`.sag` · `.coklu-secim` · `.panel-arama` · `.suzgec-tasma`) kendi
+     kuralına sahiptir ve şeffaflaştırılırsa o kurallar düşerdi.       */
+.yetkili .suzgec-cubuk > div:not([class]){ display:contents; }
+
+/* ── K33 · SÜZGEÇ TAŞMA MENÜSÜ · "•••" ────────────────────────────────
+   2026-09-05 · madde 5. Kutu SÜZGEÇ AÇILIRININ kutusudur (K4) — yeni
+   bir denetim geometrisi açılmıyor, "•••" de bir süzgeç açılırıdır.
+   Yüzey `.acilir-yuzey`in kendi kuralını alır; buradaki tek ek, inen
+   denetimlerin ALT ALTA dizilmesi: yüzey dar ve dikey bir listedir.  */
+.yetkili .suzgec-tasma{ position:relative; flex:0 0 auto; }
+.yetkili .suzgec-tasma > .suzgec-dugme{ padding:0 var(--kit-satir); }
+.yetkili .suzgec-tasma-yuzey{
+  position:absolute; top:calc(100% + var(--kit-bagli)); right:0;
+  /* Kademe KARDEŞ taşma menüsünden alındı (`.eylem-tasma-yuzey`,
+     satır ~142) — yeni bir kat açılmadı. İlk yazımda `--kat-acilir`
+     diye VAR OLMAYAN bir token yazmıştım; tokenlar.css'te öyle bir ad
+     yok ve kural sessizce z-index'siz kalırdı (kayıtlı ders: "token
+     yazmadan önce 01-tokenlar.md taranır"). */
+  z-index:var(--kat-menu);
+  display:flex; flex-direction:column; align-items:stretch;
+  gap:var(--kit-bagli);
+  min-width:220px; max-height:60vh; overflow:auto;
+  background:var(--kagit);
+}
+/* İnen denetim şeritteki kutusunu korur, yalnız tam genişliğe yayılır —
+   menüde ikinci bir görünüm doğmaz. */
+.yetkili .suzgec-tasma-yuzey > *{ width:100%; }
+.yetkili .suzgec-tasma-yuzey .suzgec-dugme{ width:100%; justify-content:space-between; }
+/* Menüye inen süzgecin KENDİ açılırı, menünün içinde açılır ve
+   kırpılmaz — `overflow:auto` kabında `position:absolute` yüzey
+   kaybolurdu, bu yüzden akışa alınır. */
+.yetkili .suzgec-tasma-yuzey .coklu-secim{ position:static; }
+.yetkili .suzgec-tasma-yuzey .acilir-yuzey{
+  position:static; box-shadow:none; border:0; padding:var(--kit-bagli) 0 0;
+}
+
 /* Açılır YÜZEYİ — gölgesi tarih seçicininkiyle AYNI (EK-3 şartı). */
 .yetkili .acilir-yuzey{
   border-radius:var(--yuvarlak-md);
@@ -729,6 +805,30 @@
 .yetkili .panel-katla:focus-visible{
   outline:var(--odak-kalinlik) solid var(--odak-renk); outline-offset:2px;
 }
+/* ── ÇENTİĞİN İPUCUSU · SAĞA AÇILIR ───────────────────────────────────
+   2026-09-05 · madde 3. §24'ün genel balonu ALTA açıyordu ve çentik
+   menünün dikey ortasında durduğu için balon modül adlarının üstüne
+   düşüyordu (ölçüldü: üç markada da bir kalemle çakışıyor).
+   Çentik sidebar'ın DIŞ kenarında; balonu da dışarı, sayfanın üstüne
+   açılır — orada çakışacak menü metni yok. Kutu K12'nin kutusudur,
+   yeni bir ipucu yüzeyi açılmıyor. */
+.yetkili .panel-katla[data-ipucu]::after{
+  content:attr(data-ipucu);
+  position:absolute; left:calc(100% + var(--kit-satir)); top:50%;
+  transform:translateY(-50%);
+  z-index:calc(var(--kat-ray) + 5);
+  padding:var(--kit-bagli) var(--kit-satir);
+  border-radius:var(--yuvarlak-sm);
+  background:var(--kagit); color:var(--murekkep);
+  border:var(--cizgi-1) solid var(--cizgi);
+  box-shadow:var(--golge-lg);
+  font-size:var(--yazi-12-5); font-weight:var(--agirlik-kalin);
+  white-space:nowrap; pointer-events:none;
+  opacity:0; visibility:hidden;
+  transition:var(--sure) var(--yumusama);
+}
+.yetkili .panel-katla[data-ipucu]:hover::after,
+.yetkili .panel-katla[data-ipucu]:focus-visible::after{ opacity:1; visibility:visible; }
 /* Katlıyken çentik ok yönünü değiştirir — sınıf değil ikon döner
    (`admin-kit.js`), böylece ekran okuyucudaki etiket de birlikte döner. */
 
@@ -998,6 +1098,31 @@
     padding-inline:var(--kit-grup);
     flex-wrap:wrap;
   }
+
+  /* ── Ö4 · ALAN SATIRININ KENDİ IZGARASI DA TEK SÜTUNA İNER ─────────
+     2026-09-05 · Gastro önerisi Ö4, iki markada da ölçüldü (390×900,
+     `admin-uye-form`):
+
+       .alan-izgara.c2  grid-template-columns  →  146px 146px  🔴
+       "Kullanıcı adı" girdisinin genişliği    →  gastro 28px · fit 30px
+
+     Bu blok `.form-duzen`i zaten tek sütuna indiriyordu ama ALAN
+     SATIRININ kendi ızgarasını indirmiyordu. Alanın önünde bir adres ön
+     eki duruyor (`dadagastro.com/u/`) ve 146px'in neredeyse tamamını
+     yiyor; kullanıcıya kalan **28 piksel**.
+
+     🔴 HİÇBİR KAPI KIRMIZI VERMİYORDU: alan görünüyor, odaklanılabiliyor,
+        `required` doğrulaması çalışıyor — yalnız YAZILAMIYOR.
+     ⚠ Kusur markaya göre BÜYÜYOR (Gastro'nun ön eki 2 karakter uzun,
+       girdisi 2px dar) ama kaynağı markada değil: donör FIT aynı ölçümü
+       veriyor. Kararın `.form-duzen` için verilmiş hâlinin alan
+       satırına genişletilmesi.
+     ⚠ Kanca kabın ADINA değil sütun BİLDİRİMİNE bakıyor: `c2`·`c3`·`c4`
+       hepsi aynı kaba iner (parti 3'ün "kanca kabın adına değil
+       içeriğine bakar" dersinin ızgara karşılığı).                     */
+  .yetkili :is(.alan-izgara, .kart-izgara)[class*="c"]:has(> .alan){
+    grid-template-columns:minmax(0,1fr);
+  }
 }
 
 
@@ -1056,6 +1181,37 @@
 
   /* Gövde kaydırma kilidi — çekmece açıkken arkadaki sayfa DURUR. */
   .yetkili.panel-acik{ overflow:hidden; touch-action:none; }
+
+  /* ── Ö3 · PERDE (backdrop) ─────────────────────────────────────────
+     2026-09-05 · Gastro önerisi Ö3, HER İKİ MARKADA da ölçüldü:
+
+                           beklenen          ölçülen (önce)
+       ray  x/w/h          0 / 76 / 844      0 / 76 / 844     ✅
+       menü x/w/h          76 / 264 / 844    76 / 264 / 844   ✅
+       kaydırma kilidi     açıkken 0         açıkken 0        ✅
+       raya tıklayınca     açık kalır        açık kalır       ✅
+       PERDE               var               YOK              🔴
+
+     Çekmece açıkken `position:fixed` çizilen eleman yalnız üçtü:
+     `.panel-ray` (87) · `.panel-menu` (85) · `.panel-ust` (70).
+     390'da çekmece 0–340px'i kaplıyor ve sağdaki **50px'lik şerit**
+     karartılmadan, TIKLANABİLİR hâlde duruyordu: altındaki sayfanın
+     düğmeleri erişilebilir, çekmecenin bir KİP olduğu görsel olarak
+     hiç söylenmiyordu.
+
+     ⚠ YENİ ELEMAN GEREKTİRMEZ, markup'a dokunulmaz — `::after`.
+       Kapanma zaten `panel.js`in "dışarıya tıkla" dalında var; perde
+       onun GÖRÜNÜR karşılığıdır, ikinci bir kapatıcı yazılmıyor.
+     ⚠ Kademe: menünün (85) ALTINDA, üst çubuğun (70) ÜSTÜNDE — perde
+       çekmeceyi değil, ARKASINDAKİ sayfayı örter. Değer iki kanon
+       kademesinin arasından türetildi, yeni token açılmadı.
+     ⚠ `pointer-events` AÇIK bırakılıyor: perdeye dokunmak da dışarı
+       tıklamaktır ve panel.js onu zaten kapatma sayıyor.               */
+  .yetkili.panel-acik::after{
+    content:""; position:fixed; inset:0;
+    background:var(--perde);
+    z-index:calc(var(--kat-ray) - 3);
+  }
 }
 html:has(> body.panel-acik){ overflow:hidden; }
 
@@ -1079,8 +1235,33 @@ html:has(> body.panel-acik){ overflow:hidden; }
    ⚠ 300ms gecikme: imleç satırın üstünden geçerken balon yağmuru
      olmasın. Odakta gecikme YOK — klavye kullanıcısı beklemez.
    ═══════════════════════════════════════════════════════════════════════ */
-.yetkili [data-ipucu]{ position:relative; }
-.yetkili [data-ipucu]::after{
+/* ═══ K31 · GENEL İPUCU KABUĞUN KENDİ YÜZEYLERİNİ EZMEZ ═══════════════
+   2026-09-05 · revize turu madde 3 + 4 + Gastro önerisi Ö1.
+
+   ÖLÇÜLDÜ (üç markada da, 1440×950, `rk-kabuk.mjs`):
+                            beklenen      ölçülen
+     .panel-katla x          339            97      ← menünün İÇİ
+     .panel-katla position    absolute      relative
+     logo bandı ↔ 01 GENEL    ~16px         54px    ← çentiğin AKIŞ payı
+     açık kipte kalem ipucu   YOK           var, "Sayfalar & SEO"nun üstünde
+
+   🔴 ÜÇ KUSUR TEK KÖKTEN. Yukarıdaki §24 kuralı yalnız-ikon her düğmeye
+      `position:relative` yazıyor. `.panel-katla` da yalnız-ikon bir
+      düğme: kural onun `position:absolute`unu EŞİT ÖZGÜLLÜKLE ve SONRA
+      GELDİĞİ için eziyor. Çentik akışta kalınca (a) menünün ortasına
+      düşüp modül adlarının üstüne biniyor, (b) akışta 54px yer kaplayıp
+      logo bandı ile "01 Genel" arasını açıyor. Aynı kural
+      `.panel-menu-link`i de yakalıyor ve K12'nin "ipucu YALNIZ dar
+      kipte" kararını AÇIK KİPTE de bozuyor.
+
+   ÇÖZÜM: genel kural kabuğun KENDİ ipucu yüzeylerini dışlar. Dışlama
+   `:where()` ile yazılır — özgüllük artmaz, kuralın geri kalanı aynen
+   kalır. Kabuk kalemlerinin ipucusu K12'nin kendi bloğundadır ve o blok
+   sağa açar; çentiğinki hemen altta.
+   *(hafıza: "Kabuk ↔ kanon eşit özgüllük çarpışması" — dördüncü kayıt.)*
+   ═══════════════════════════════════════════════════════════════════ */
+.yetkili [data-ipucu]:where(:not(.panel-katla, .panel-menu-link, .panel-ray-ikon, .panel-ray-imza)){ position:relative; }
+.yetkili [data-ipucu]:where(:not(.panel-katla, .panel-menu-link, .panel-ray-ikon, .panel-ray-imza))::after{
   content:attr(data-ipucu);
   position:absolute; left:50%; top:calc(100% + var(--kit-atom));
   transform:translateX(-50%) translateY(2px);
@@ -1100,13 +1281,13 @@ html:has(> body.panel-acik){ overflow:hidden; }
 .yetkili td.eylem [data-ipucu]::after,
 .yetkili .satir-eylem > :last-child[data-ipucu]::after{ left:auto; right:0; transform:translateY(2px); }
 
-.yetkili [data-ipucu]:hover::after{
+.yetkili [data-ipucu]:where(:not(.panel-katla, .panel-menu-link, .panel-ray-ikon, .panel-ray-imza)):hover::after{
   opacity:1; visibility:visible; transform:translateX(-50%) translateY(0);
   transition-delay:.3s;                       /* 300ms — Beyar ölçüsü */
 }
 .yetkili td.eylem [data-ipucu]:hover::after,
 .yetkili .satir-eylem > :last-child[data-ipucu]:hover::after{ transform:translateY(0); }
-.yetkili [data-ipucu]:focus-visible::after{
+.yetkili [data-ipucu]:where(:not(.panel-katla, .panel-menu-link, .panel-ray-ikon, .panel-ray-imza)):focus-visible::after{
   opacity:1; visibility:visible; transform:translateX(-50%) translateY(0);
   transition-delay:0s;                        /* klavye beklemez */
 }
@@ -2324,12 +2505,43 @@ html:has(> body.panel-acik){ overflow:hidden; }
 
    ÇÖZÜM: yol admin.css'in içinde yaşar (orada `varlik/…` her iki
    ortamda da doğru çözülür), marka `<body data-marka>` ile seçilir. */
+/* ═══ K32 · KELİME MARKASI ÜÇ MARKADA AYNI BOYDA ═════════════════════
+   2026-09-05 · revize turu madde 8.
+
+   🔴 KUTU TEK ORANLA YAZILMIŞTI. `width:calc(20px * 3.9182)` — 3.9182
+      DadaFit kelime markasının viewBox oranı. `mask-size:contain` kutuya
+      SIĞDIRDIĞI için, oranı daha geniş olan kardeş markalar kutunun
+      genişliğine takılıp BOYUNDAN küçülüyordu. Ölçüldü (viewBox'lardan,
+      uydurulmadı):
+
+        marka     viewBox (w/h)                oran     20px kutuda boy
+        fit       1129.594 / 288.296          3.9182    20.00  ✅
+        gastro    1721.825 / 348.042          4.9472    15.84  🔴 −21%
+        diet      1374.988 / 290.422          4.7345    16.55  🔴 −17%
+        gourmet   1982.461 / 348.812          5.6835    13.79  🔴 −31%
+
+   ÇÖZÜM: boy TEK kaynaktan (`--marka-kelime-h`, kabuk kararı), genişlik
+   her markanın KENDİ viewBox oranından türer. Oran ölçülmüş bir sayıdır,
+   marka dosyası ezmez — kit burada bildirir.
+
+   ⚠ `--marka-kelime-h` public tokeninin admin karşılığı `.yetkili`
+     kapsamında yeniden bildiriliyor (aşağıda). Böylece markalar/
+     dosyasının public için yazdığı optik katsayı (K-G4, gastro 29px)
+     admin sidebar'ına SIZMAZ: public'te iki kelime markası aynı yüzeyde
+     yan yana durabilir, admin sidebar'ında aynı anda tek marka vardır.
+   ═══════════════════════════════════════════════════════════════════ */
+.yetkili{ --marka-kelime-h:20px; --marka-kelime-oran:3.9182; }
+.yetkili[data-marka="fit"]     .panel-marka{ --marka-kelime-oran:3.9182; }
+.yetkili[data-marka="gastro"]  .panel-marka{ --marka-kelime-oran:4.9472; }
+.yetkili[data-marka="diet"]    .panel-marka{ --marka-kelime-oran:4.7345; }
+.yetkili[data-marka="gourmet"] .panel-marka{ --marka-kelime-oran:5.6835; }
 .yetkili .panel-marka::before{
   content:""; display:block;
-  height:20px; width:calc(20px * 3.9182);      /* ölçülen en/boy */
+  height:var(--marka-kelime-h);
+  width:calc(var(--marka-kelime-h) * var(--marka-kelime-oran));
   background:currentColor;
   -webkit-mask-repeat:no-repeat; mask-repeat:no-repeat;
-  -webkit-mask-position:center;  mask-position:center;
+  -webkit-mask-position:left center;  mask-position:left center;
   -webkit-mask-size:contain;     mask-size:contain;
 }
 .yetkili[data-marka="fit"]     .panel-marka::before{ -webkit-mask-image:url(varlik/dadafit-kelime.svg);     mask-image:url(varlik/dadafit-kelime.svg); }
@@ -2353,6 +2565,19 @@ html:has(> body.panel-acik){ overflow:hidden; }
    aralığı 6. Üçü de ölçümün son turunda adıyla bulundu.
    Geriye YALNIZ türetilmiş çerçeve değerleri kalıyor (88 · 116) ve
    onlar ölçek kademesi değil. */
+/* ── Ö11 · TEHLİKELİ BÖLGE · YARDIM SATIRI ↔ YIKICI DÜĞME ────────────
+   2026-09-05 · Gastro önerisi Ö11. `admin-taksonomi-form`da satır içi
+   `style="margin-bottom:12px"` kaldırılınca (satır içi `style=` yasak)
+   yardım metniyle "Terimi sil" düğmesi arasındaki boşluk ÖLÇÜLDÜ:
+   **12px → 0px**. Sebep: `.kart-govde` `display:block` ve `row-gap` yok.
+
+   Aynı satır içi stil donörde ve dört kardeş Gastro formunda HÂLÂ
+   duruyor; yani kural inince beş ekrandaki satır içi stil de tek
+   hamlede sökülebilir. Boşluk ölçekten (`--kit-satir` = 12) alınıyor —
+   kaldırılan satır içi değerin kendisi zaten 12'ydi, uydurma yok. */
+.yetkili .kart-govde > .alan-yardim + .dugme.tehlike,
+.yetkili .kart-govde > .alan-yardim + .dugme.yikici{ margin-top:var(--kit-satir); }
+
 .yetkili .bos-ikon,
 .yetkili .bos-durum.kart-ici .bos-ikon{ margin-bottom:var(--kit-grup); }
 .yetkili .toplu-islem{ gap:var(--kit-satir); }
