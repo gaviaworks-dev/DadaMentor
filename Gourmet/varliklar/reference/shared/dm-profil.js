@@ -28,7 +28,7 @@
      olunca çıkarıcı onu tohumlayabiliyor ve kural düşmüyor.
      ⚠ Bu satır değişirse `scripts/olcum/_tmpB-css-cikar.mjs` yeniden
        koşulmalı; aksi hâlde yeni sınıf çizimsiz doğar. */
-  var SATIR_KALIBI = '<span class="ks-ikon"><i class="@@IKON@@" aria-hidden="true"></i></span><span class="ks-metin"><b></b><small></small></span><span class="ks-eylem"><span class="rozet pasif"></span><button class="dugme hayalet dm-mini" type="button" data-dm-durum>Durumu gör</button><button class="dugme hayalet dm-mini" type="button" data-dm-sil>Kaldır</button></span><div class="dm-durum-govde" hidden></div>';
+  var SATIR_KALIBI = '<span class="ks-ikon"><i class="@@IKON@@" aria-hidden="true"></i></span><span class="ks-metin"><b></b><small></small></span><span class="ks-uc"><span class="rozet pasif"></span><button class="dugme hayalet dm-mini" type="button" data-dm-durum>Durumu gör</button><button class="dugme hayalet dm-mini" type="button" data-dm-sil>Kaldır</button></span><div class="dm-durum-govde" hidden></div>';
   var qa = function (s, k) { return Array.prototype.slice.call((k || d).querySelectorAll(s)); };
 
   /* ── 1 · SEKME RAYI ─────────────────────────────────────────────────
