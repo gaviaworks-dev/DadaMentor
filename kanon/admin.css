@@ -728,12 +728,74 @@
 .yetkili .panel-ray{ gap:var(--kit-satir); padding:var(--kit-grup) 0; }
 .yetkili .panel-ray-ikon{
   background:transparent;
-  color:var(--koyu-metin-78);              /* TEK renk — `--eko` okunmuyor */
+  color:var(--koyu-metin-78);              /* liste kalemleri TEK renk */
 }
 .yetkili .panel-ray-ikon:hover{ background:var(--koyu-yikama); color:var(--koyu-metin-ust); }
 .yetkili .panel-ray-ikon.aktif{
   background:var(--koyu-yikama-2); color:var(--koyu-metin-ust);
 }
+
+/* ═══ K37 · RAYIN ÜST HÜCRESİ = AKTİF MARKA ══════════════════════════
+   2026-09-05 · Beyar kuralı: *"üst marka hücresi her zaman AKTİF
+   markanın ikonu ve rengiyle (Gastro: çatal-bıçak turuncu, Diet: kalp
+   yeşil, FIT: dumbbell mavi); liste = diğer markalar aynı sırayla,
+   aktif marka listede tekrar etmez; Gavia G altta."*
+
+   ÖLÇÜLDÜ (`rk-ray-hucre.mjs` · üç markada, GÖRSEL sıraya göre):
+                        önce                       sonra
+     fit    üst hücre   fit · beyaz                fit · rgb(0,147,208)
+     gastro üst hücre   FIT (dumbbell) 🔴          gastro · rgb(220,61,23)
+     diet   üst hücre   FIT (dumbbell) 🔴          diet   · rgb(0,154,68)
+     listede tekrar     gastro 1 · diet 1  🔴      0
+     KUSUR              9                          0
+
+   🔴 SIRA MARKUP'TA DEĞİL, KURALDA. Ray üç markada BAYT-ÖZDEŞ olmak
+      zorunda (madde 1) — yani markup aktif markayı başa alamaz. Sırayı
+      `order` veriyor ve kanca `body[data-marka]` ile kalemin
+      `data-eko`sunun EŞLEŞMESİ. Dört marka için dört satır; CSS'te
+      "iki niteliğin değeri aynı mı" diye sorulamadığı için eşleşme
+      açıkça yazılır.
+
+   🔴 SIRA CSS'TEN GELİR, JS'TEN DEĞİL. `.aktif` sınıfını kit yazıyor
+      (§1a, ARIA için) ama yerleşim ona BAĞLANMADI: betik yüklenmezse
+      ray sırası bozulmaz. Görsel durum ile erişilebilirlik durumu iki
+      ayrı yoldan gelir ve ikisi de aynı kaynağı okur.
+
+   ⚠ §75a'nın "ray ikonları TEK RENK — ciddiyet" kararı LİSTE için
+     duruyor; geri alınan yalnız ÜST HÜCRE. Gerekçe: üst hücre bir
+     liste kalemi değil, "şu an neredesin"in kendisi. Kanon
+     (`bilesenler.css:10143`) zaten `--eko`yu okuyordu; kit onu
+     susturmuştu. Burada yalnız aktif hücre için geri açılıyor.
+   ⚠ `--eko` yuvası satır içi `style` ile DEĞİL, `data-eko`dan
+     dolduruluyor — madde 1'de satır içi stiller sökülmüştü ve geri
+     gelmiyor.
+   ═══════════════════════════════════════════════════════════════════ */
+.yetkili .panel-ray-ikon[data-eko="fit"]    { --eko:var(--eko-fit); }
+.yetkili .panel-ray-ikon[data-eko="gastro"] { --eko:var(--eko-gastro); }
+.yetkili .panel-ray-ikon[data-eko="diet"]   { --eko:var(--eko-diet); }
+.yetkili .panel-ray-ikon[data-eko="gourmet"]{ --eko:var(--eko-gourmet); }
+.yetkili .panel-ray-ikon[data-eko="campus"] { --eko:var(--eko-campus); }
+
+/* Aktif marka görsel sırada BAŞA gelir. Yalnız SIRA — bandın içindeki
+   kalemin kutusunu ve rengini §75a-2'nin marka bandı kuralı veriyor
+   (aşağıda, aynı kancayla). */
+.yetkili[data-marka="fit"]     .panel-ray-ikon[data-eko="fit"],
+.yetkili[data-marka="gastro"]  .panel-ray-ikon[data-eko="gastro"],
+.yetkili[data-marka="diet"]    .panel-ray-ikon[data-eko="diet"],
+.yetkili[data-marka="gourmet"] .panel-ray-ikon[data-eko="gourmet"]{ order:-1; }
+
+/* 🔴 İKON MARKA RENGİNE BOYANMADI — ÖLÇÜM KARARI DEĞİŞTİRDİ.
+   İlk yazımım Beyar'ın *"Gastro: çatal-bıçak turuncu"* cümlesini
+   "ikonun kendisi turuncu" diye okudu ve `color:var(--eko)` yazdı.
+   Kapı YEŞİL verdi (renk = marka tokeni ✅) ama KARE KIRMIZIYDI:
+   rayın tepesinde zaten marka renginde bir BANT var
+   (`.panel-ray::before`, `background:var(--marka)`) ve turuncu bandın
+   içindeki turuncu ikon kayboluyordu — yalnız zemin farkıyla seçilir
+   hâle gelmişti.
+   Doğru okuma: TURUNCU OLAN BANT, ikon onun üstünde beyaz durur.
+   "Gastro: çatal-bıçak turuncu" = turuncu bantta çatal-bıçak.
+   (hafıza: "Kapıyı yeşile boyamak" — kırmızıyı silmek ekranı
+    kötüleştirebilir; ölçüt renk eşitliği değil OKUNURLUK olmalı.) */
 .yetkili .panel-ray-ikon.kilitli{ color:var(--koyu-metin-42); background:transparent; }
 /* Ayırıcı çizgiler kalktı — markup'taki `<span>`ler yerinde, görünmez. */
 .yetkili .panel-ray-ayrac{ display:none; }
@@ -2808,8 +2870,23 @@ html:has(> body.panel-acik){ overflow:hidden; }
    ötekiler ekosistem şeridinin sırasında altında. */
 .yetkili .panel-ray{ padding-top:0; }
 .yetkili .panel-ray > .panel-ray-ikon{ position:relative; z-index:1; }
-/* Aktif kalem bandın dikey ortasında — kelime markasıyla aynı hizada. */
-.yetkili .panel-ray > .panel-ray-ikon.aktif:first-of-type{
+/* Aktif kalem bandın dikey ortasında — kelime markasıyla aynı hizada.
+   🔴 KANCA `:first-of-type`TAN EŞLEŞMEYE ÇEVRİLDİ — 2026-09-05, K37.
+      `:first-of-type` DOM'un ilk `<a>`sını seçiyor ve ray üç markada
+      bayt-özdeş olduğu için o HER ZAMAN FIT kalemi. FIT'te tesadüfen
+      doğruydu (`.aktif` de oydu); Gastro ve Diet'te kural hiç
+      tutmuyordu — bant boyanıyor, içine giren kalem FIT'in dumbbell'ı
+      oluyordu. Ölçüldü (`rk-ray-hucre.mjs`): üst hücre gastro'da da
+      diet'te de `fit` · `fa-dumbbell`.
+      Kanca artık `body[data-marka]` ile kalemin `data-eko`sunun
+      eşleşmesi — `order:-1` ile aynı kaynak, tek karar iki yerde
+      ayrışamaz.
+   ⚠ `.aktif` sınıfı ölçütten ÇIKARILDI: o sınıfı kit yazıyor ve
+     yerleşim betiğe bağlanmamalı (betik gelmezse bant boş kalırdı). */
+.yetkili[data-marka="fit"]     .panel-ray > .panel-ray-ikon[data-eko="fit"],
+.yetkili[data-marka="gastro"]  .panel-ray > .panel-ray-ikon[data-eko="gastro"],
+.yetkili[data-marka="diet"]    .panel-ray > .panel-ray-ikon[data-eko="diet"],
+.yetkili[data-marka="gourmet"] .panel-ray > .panel-ray-ikon[data-eko="gourmet"]{
   margin-top:calc((var(--kit-ust-h) - 44px) / 2);
   margin-bottom:var(--kit-satir);
   background:color-mix(in srgb, #fff 18%, transparent);
