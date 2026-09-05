@@ -3058,3 +3058,245 @@ html:has(> body.panel-acik){ overflow:hidden; }
 }
 .yetkili .suzgec-adres-notu > i{ color:var(--aksan-koyu); }
 .yetkili .suzgec-adres-notu .dugme{ margin-left:auto; }
+
+
+/* ═══════════════════════════════════════════════════════════════════════
+   L1–L11 · LOGIC REVİZE — parti 4 · 2026-09-05
+   ───────────────────────────────────────────────────────────────────────
+   🔴 NUMARA NEDEN "L": Beyar'ın görev metni bu turun kurallarına K1–K11
+      diyor; kanonda K1–K37 DOLU (bu dosyanın K1'i ölçek, K11'i görsel
+      girdisi). Sözleşme üç markaya gidiyor ve ikinci bir K1 sözleşmede
+      ikinci bir gerçektir — §5b'nin "anahtar adı tek" dersinin kural
+      karşılığı. Eşleme tablosu `docs/admin-ui-kit.md` §14'te.
+
+   Tokenlar dışında çıplak değer YOK; ölçek §1'in yedi kademesi.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* ═══ L8 · İPUCU BALONU SARAR — "etiket çipe sığmıyor"un KÖKÜ ═════════
+   Beyar bildirdi: *"Satır işlem düğmesi hover'ı: etiket chip'e sığmıyor
+   (admin-odemeler)."*
+
+   ÖLÇÜLDÜ (`scripts/_tmp4/L8-cip-olc.mjs` · 1440×950 · GERÇEKTEN hover
+   edilerek — `::after` ancak hover'da çizilir, okuyarak ölçülemez):
+
+     ipuculu satır düğmesi        24
+     balon genişliği           220px = max-width'in TA KENDİSİ
+     balon yüksekliği         24.2px = TEK SATIR
+     balon çok satıra sarıyor      0 / 24        ← kusur burada
+
+   🔴 KÖK MİRASTA. `::after` bir sözde ELEMANDIR ve `white-space`ı
+      sahibinden miras alır. Zincir ölçüldü:
+          .ikon-dugme            white-space: nowrap
+          .satir-eylem           white-space: nowrap
+          td.eylem               white-space: nowrap
+      Üçü de haklı — bir satır eylemi kendi içinde SARMAMALI. Ama balon
+      o zincirin içinde doğduğu için `nowrap`ı da alıyor: `max-width`
+      kutuyu 220'de kesiyor, metin `overflow:visible` ile koyu zeminin
+      DIŞINA taşıyor. Yani etiket kırpılmıyor — kabından çıkıyor.
+
+   🔴 KUSUR "ÇİP DAR" DEĞİL, "BALON SARMIYOR". Çipi genişletmek 46
+      karakterlik bir ipucunu tek satırda 380px yapardı ve tablo
+      kenarından çıkardı — yanlış kökün yanlış çözümü.
+   ⚠ `white-space` DÜĞMEDE değil YALNIZ BALONDA çevrilir; satır
+     eyleminin kendi `nowrap`ı yerinde kalır.                          */
+.yetkili [data-ipucu]::after{
+  white-space:normal;
+  overflow-wrap:anywhere;         /* ODM-2026-118420 gibi uzun anahtarlar */
+}
+
+/* ═══ L1 · VİDEO GİRDİSİ — BAĞLANTI VEYA DOSYA, TEK BİLEŞEN ══════════
+   Kabuk `.alan-girdi`nin kutusunu TEKRAR ETMEZ: asıl girdi zaten o
+   kutuyu çiziyor. Kap yalnız sekmeleri, önizlemeyi ve süreyi dizer. */
+.yetkili .video-girdi{
+  display:flex; flex-direction:column; gap:var(--kit-bagli);
+}
+/* Sekme rayı §3'ün kendi bileşeni; burada yalnız ÖLÇÜSÜ daraltılır —
+   alan içi bir ray, sayfa rayı değil (48 → 36, 32 → 16). */
+.yetkili .video-sekmeler{ gap:var(--kit-grup); }
+.yetkili .video-sekmeler .sekme{ min-height:36px; font-size:var(--yazi-13); }
+.yetkili .video-pano{ display:flex; flex-direction:column; gap:var(--kit-bagli); }
+.yetkili .video-onizleme{
+  display:flex; flex-direction:column; gap:var(--kit-bagli);
+  padding:var(--kit-grup);
+  border:var(--cizgi-1) solid var(--cizgi);
+  border-radius:var(--yuvarlak-md);
+  background:var(--zemin-yumusak, var(--kagit));
+}
+.yetkili .video-oynatici,
+.yetkili .video-kucuk{
+  display:block; width:100%; max-width:480px;
+  border-radius:var(--yuvarlak-sm);
+  background:var(--murekkep);
+}
+/* Küçük resim 16:9 gelir; kutunun oranı SABİT ki ağ yokken de yer
+   kaplasın ve altındaki künye zıplamasın. */
+.yetkili .video-kucuk{ aspect-ratio:16/9; object-fit:cover; }
+
+/* ═══ L2 · ŞABLON SEÇİCİ ═════════════════════════════════════════════
+   Düğme alanın SONUNDA, kendi rayında; denetimi aşağı itmez (K25). */
+.yetkili .sablon-dugme{
+  align-self:flex-start;
+  margin-top:var(--kit-bagli);
+  min-height:36px; font-size:var(--yazi-13);
+}
+/* Kit kapısı — kitin kendi modal kabı (`admin-kit.js`). Kanonun
+   `.modal`ını KOPYALAMAZ; onun sözleşmesi (odak tuzağı, ARIA) kendi
+   bileşeninde. Buradaki kap yalnız kitin ürettiği geçici kapılar için. */
+.yetkili .kit-kapi{
+  position:fixed; inset:0; z-index:var(--kat-modal, 900);
+  display:grid; place-items:center;
+  padding:var(--kit-bolum);
+  background:var(--perde, rgba(0,0,0,.45));
+}
+.yetkili .kit-kapi-kutu{
+  display:flex; flex-direction:column; gap:var(--kit-grup);
+  width:min(560px, 100%); max-height:80vh;
+  padding:var(--kit-bolum);
+  border-radius:var(--yuvarlak-lg);
+  background:var(--kagit); color:var(--murekkep);
+  box-shadow:var(--golge-lg);
+}
+.yetkili .kit-kapi-kutu > h2{ font-size:var(--yazi-17); font-weight:var(--agirlik-kalin); margin:0; }
+.yetkili .sablon-listesi{
+  display:flex; flex-direction:column; gap:var(--kit-bagli);
+  overflow-y:auto; min-height:0;
+}
+.yetkili .sablon-kalem{
+  display:grid; grid-template-columns:auto minmax(0,1fr);
+  gap:var(--kit-satir); align-items:start;
+  padding:var(--kit-satir);
+  border:var(--cizgi-1) solid var(--cizgi);
+  border-radius:var(--yuvarlak-md);
+  cursor:pointer;
+}
+.yetkili .sablon-kalem:hover{ border-color:var(--cizgi-koyu); }
+.yetkili .sablon-kalem:has(input:checked){ border-color:var(--aksan); background:var(--aksan-yikama); }
+.yetkili .sablon-govde{ display:flex; flex-direction:column; gap:var(--kit-atom); min-width:0; }
+.yetkili .sablon-govde b{ font-size:var(--yazi-14); font-weight:var(--agirlik-kalin); }
+/* Şablon metni ÖNİZLEMEDİR: üç satır gösterilir, gerisi seçilince
+   alana iner. Kırpma burada gizleme değil, listeyi taranabilir tutmak. */
+.yetkili .sablon-govde small{
+  font-size:var(--yazi-13); color:var(--metin-ikincil); line-height:1.45;
+  display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden;
+}
+
+/* ═══ L3 · İKON SEÇİCİ — GÖRSELLİ, ARANABİLİR ════════════════════════
+   Tetik `.alan-girdi` kutusunu AYNEN alır (§4'ün kararı: panelde tek
+   kutu geometrisi); içinde ikon + adı yan yana. */
+.yetkili .ikon-secici{ position:relative; }
+.yetkili .ikon-tetik{
+  display:flex; align-items:center; gap:var(--kit-bagli);
+  width:100%; min-height:44px; padding:0 var(--kit-grup);
+  text-align:left; cursor:pointer;
+}
+.yetkili .ikon-gosterim{ display:flex; align-items:center; gap:var(--kit-bagli); min-width:0; }
+.yetkili .ikon-gosterim > i{ font-size:var(--yazi-17); color:var(--aksan-koyu); width:1.25em; text-align:center; }
+.yetkili .ikon-gosterim > span{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.yetkili .ikon-bos{ color:var(--metin-ikincil); }
+.yetkili .ikon-yuzey{
+  position:absolute; z-index:var(--kat-acilir, 600);
+  left:0; right:0; top:calc(100% + var(--kit-bagli));
+  display:flex; flex-direction:column; gap:var(--kit-satir);
+  padding:var(--kit-satir);
+  max-height:340px;
+  border:var(--cizgi-1) solid var(--cizgi);
+  border-radius:var(--yuvarlak-md);
+  background:var(--kagit);
+  box-shadow:var(--golge-lg);       /* §4: açılır gölgesi tarih seçiciyle AYNI */
+}
+.yetkili .ikon-ara{ flex:0 0 auto; }
+/* 🔴 IZGARA SABİT SÜTUN SAYISI ALMAZ: seçici hem 320px'lik yan sütunda
+   hem tam genişlikte doğuyor. `auto-fill` ölçüyü kabın kendisinden
+   alır — "tek eksen düzeltmesi" dersinin ızgara karşılığı. */
+.yetkili .ikon-izgara{
+  display:grid; grid-template-columns:repeat(auto-fill, minmax(88px, 1fr));
+  gap:var(--kit-bagli);
+  overflow-y:auto; min-height:0;
+}
+.yetkili .ikon-kalem{
+  display:flex; flex-direction:column; align-items:center; gap:var(--kit-atom);
+  padding:var(--kit-satir) var(--kit-bagli);
+  border:var(--cizgi-1) solid transparent;
+  border-radius:var(--yuvarlak-sm);
+  background:transparent; color:var(--murekkep);
+  cursor:pointer;
+}
+.yetkili .ikon-kalem > i{ font-size:var(--yazi-20); }
+/* İkon ADI daralan sütunda taşmaz; ad ikinci bilgidir, ikon birinci. */
+.yetkili .ikon-kalem > span{
+  font-size:var(--yazi-11); color:var(--metin-ikincil);
+  max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+}
+.yetkili .ikon-kalem:hover{ border-color:var(--cizgi); background:var(--aksan-yikama); }
+.yetkili .ikon-kalem[aria-selected="true"]{ border-color:var(--aksan); background:var(--aksan-yikama); }
+.yetkili .ikon-kalem[aria-selected="true"] > i{ color:var(--aksan-koyu); }
+
+/* ═══ L4 · ÖNERİ — "…ekle" kalemi öteki seçeneklerden AYRILIR ════════
+   Yeni bir etiket doğurmak, var olanı seçmekle aynı şey değil; yüzey
+   bunu görsel olarak da söyler. */
+.yetkili .acilir-kalem.acilir-yeni{ color:var(--aksan-koyu); font-weight:var(--agirlik-orta); }
+.yetkili .acilir-kalem.acilir-yeni > i{ margin-right:var(--kit-atom); }
+
+/* ═══ L5b · RADYO SAKLAMASI ══════════════════════════════════════════
+   Dörtten çok seçenekli radyo grubu açılıra çevrilir ama radyolar
+   SİLİNMEZ (EKSİ BİRİNCİ MADDE) — değeri onlar taşır, form gönderimi
+   bozulmaz. `hidden` niteliği kabuğun reset'inde zaten `display:none`. */
+.yetkili .radyo-saklama{ display:none; }
+
+/* ═══ L7 · HESAPLANAN ALAN ═══════════════════════════════════════════
+   Salt okunur alan DÜZENLENEBİLİR GÖRÜNMEZ: zemin bir kademe sönük,
+   imleç metin imleci değil. Ama SÖNÜK DEĞİL — değer okunabilir kalır
+   (kontrast §9'un ölçütünde). */
+.yetkili .alan-hesaplanan .alan-girdi[readonly],
+.yetkili .alan-hesaplanan .alan-secim[readonly]{
+  background:var(--zemin-yumusak, var(--kagit-ikincil, var(--kagit)));
+  border-style:dashed;
+  cursor:default;
+}
+.yetkili .alan-hesaplanan [data-rol="hesaplanan-not"]{ color:var(--metin-ikincil); }
+.yetkili .alan-hesaplanan [data-rol="hesaplanan-not"] > i{ margin-right:var(--kit-atom); }
+
+/* ═══ L10 · TEKRARLAYAN SATIR — NUMARA · TUTAMAK · SİL ═══════════════
+   Satırın başı üç atomdur ve akışta TEK SATIRDIR: tutamak · numara ·
+   sil. Alanların hizasını bozmaz çünkü kendi rayında durur. */
+.yetkili .tekrar-satiri{ position:relative; }
+.yetkili .tekrar-bas{
+  display:flex; align-items:center; gap:var(--kit-bagli);
+  margin-bottom:var(--kit-bagli);
+}
+.yetkili .tekrar-no{
+  display:inline-grid; place-items:center;
+  min-width:24px; height:24px; padding:0 var(--kit-atom);
+  border-radius:var(--yuvarlak-hap);
+  background:var(--aksan-yikama); color:var(--aksan-koyu);
+  font-size:var(--yazi-12); font-weight:var(--agirlik-kalin);
+  font-variant-numeric:tabular-nums;
+}
+.yetkili .tekrar-tutamak{ cursor:grab; }
+.yetkili .tekrar-tutamak:active{ cursor:grabbing; }
+/* Sil satırın SAĞ ucunda — yıkıcı eylem, okuma yönünün sonunda. */
+.yetkili .tekrar-sil{ margin-left:auto; }
+.yetkili .tekrar-sil:hover{ color:var(--hata); }
+/* Sürüklenen satır yerini BELLİ EDER; opaklık değil zemin değişir
+   (yarı saydam zemin kontrastı yerin özelliği yapardı — kayıtlı ders). */
+.yetkili .tekrar-satiri.surukleniyor{
+  background:var(--aksan-yikama);
+  outline:var(--cizgi-1) dashed var(--aksan);
+  outline-offset:2px;
+}
+
+/* ═══ L11 · TABLO BAŞLIĞI ════════════════════════════════════════════
+   Başlık hücresi sütunun sahibidir: sola hizalı, ikincil renkte, ve
+   SAYI sütununda sağa — başlık gövdeyle aynı yönde okunur. Kit hücre
+   UYDURMAZ; `<th>`/`<td>` sayısı uyuşmuyorsa konsola yazar (§L11). */
+.yetkili .tablo thead th{
+  text-align:left; vertical-align:bottom;
+  font-size:var(--yazi-12); font-weight:var(--agirlik-kalin);
+  color:var(--metin-ikincil);
+  white-space:nowrap;
+}
+.yetkili .tablo thead th.num,
+.yetkili .tablo thead th:has(+ td.num),
+.yetkili .tablo tbody td.num{ text-align:right; font-variant-numeric:tabular-nums; }
+.yetkili .tablo thead th.sec,
+.yetkili .tablo thead th.eylem{ width:1%; }

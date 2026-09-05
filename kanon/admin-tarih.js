@@ -36,7 +36,14 @@
       time_24hr: true,                    /* 24 saat */
       allowInput: true,                   /* klavyeyle yazılabilir */
       disableMobile: true,                /* mobil native'e düşmesin — biçim kayar */
-      monthSelectorType: 'static',
+      /* ── L6 · AY/YIL HIZLI SEÇİM (2026-09-05 · parti 4) ──────────────
+         `'static'` ayı DÜZ METİN yazar: 2019'da doğmuş bir kaydı bulmak
+         için ok tuşuna 80 kez basmak gerekiyordu. `'dropdown'` ayı bir
+         `<select>` yapar; yıl flatpickr'ın kendi sayı girdisidir ve
+         ÜSTÜNE YAZILABİLİR (ok tuşu tek yol değil).
+         ⚠ `allowInput` zaten açıktı — L6'nın "klavyeyle yazılabilir"
+           yarısı parti 1'den beri koşuyor; ÖLÇÜLDÜ, yeniden yazılmadı. */
+      monthSelectorType: 'dropdown',
       nextArrow: '<i class="fa-solid fa-chevron-right" aria-hidden="true"></i>',
       prevArrow: '<i class="fa-solid fa-chevron-left" aria-hidden="true"></i>',
     };

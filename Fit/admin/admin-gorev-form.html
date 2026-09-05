@@ -71,7 +71,7 @@
 
     <!-- ADMIN-KIT:MENU:BAS -->
     <div class="panel-menu-bolum">Marka modülleri</div>
-    <a class="panel-menu-link" href="admin-hareketler.html"><i class="fa-solid fa-dumbbell"></i>Hareket Kütüphanesi</a>
+    <a class="panel-menu-link" href="admin-hareketler.html"><i class="fa-solid fa-dumbbell"></i>DadaFit Egzersizleri</a>
     <a class="panel-menu-link" href="admin-rehber.html"><i class="fa-solid fa-compass"></i>Hareket Rehberi</a>
     <a class="panel-menu-link" href="admin-sozluk.html"><i class="fa-solid fa-book"></i>Spor Sözlüğü</a>
     <a class="panel-menu-link" href="admin-sozluk-kategori.html"><i class="fa-solid fa-book-bookmark"></i>Sözlük Kategorileri</a>
@@ -86,7 +86,7 @@
     <!-- ADMIN-KIT:MENU:SON -->
 <div class="panel-menu-bolum">02 Operasyon</div>
     <a class="panel-menu-link" href="admin-uyeler.html"><i class="fa-solid fa-users"></i>Üyeler &amp; Yetkiler</a>
-    <a class="panel-menu-link" href="admin-abonelikler.html"><i class="fa-solid fa-credit-card"></i>Abonelikler</a>
+    <a class="panel-menu-link" href="admin-paket-alimlari.html"><i class="fa-solid fa-credit-card"></i>Paket Alımları</a>
     <a class="panel-menu-link" href="admin-odemeler.html"><i class="fa-solid fa-money-bill-wave"></i>Ödemeler</a>
     <a class="panel-menu-link" href="admin-faturalar.html"><i class="fa-solid fa-file-invoice"></i>Faturalar<span class="sayac">7</span></a>
     <a class="panel-menu-link" href="admin-destek.html"><i class="fa-solid fa-life-ring"></i>Destek Talepleri<span class="sayac">12</span></a>
@@ -195,12 +195,50 @@
             <div class="alan-izgara c2">
               <div class="alan">
                 <label class="alan-etiket" for="gvTur">Tür</label>
-                <select class="alan-secim" id="gvTur" name="tur"><option>Tekrarlayan</option><option>Tek sefer</option><option>El ile</option></select>
+                <select class="alan-secim" id="gvTur" name="tur" data-tip-alan-secici="1"><option value="tekrarlayan" selected="">Tekrarlayan</option><option value="tek-seferlik">Tek seferlik</option><option value="tetikleyici">Tetikleyiciye bağlı</option><option value="veri-senk">Veri senkronizasyonu</option></select><div class="alan-yardim"><span>Dördü de <b>Görevler</b> listesinde geçen türlerdir; başka tür uydurulmadı.</span></div>
               </div>
               <div class="alan">
-                <label class="alan-etiket" for="gvCron">Zamanlama</label>
-                <input class="alan-girdi" id="gvCron" name="cron" type="text" placeholder="0 3 * * *">
-                <div class="alan-yardim"><span>Beş alanlı cron ifadesi: dakika saat gün ay haftagünü.</span></div>
+                <label class="alan-etiket" for="gvCron">Zamanlama — cron</label>
+                <input class="alan-girdi" id="gvCron" name="cron" type="text" placeholder="0 3 * * *" data-tip-alan="tekrarlayan veri-senk">
+                <div class="alan-yardim"><span>Beş alanlı cron ifadesi: dakika saat gün ay haftagünü.
+                  <b>Tekrarlayan</b> ve <b>Veri senkronizasyonu</b> türlerinde kullanılır; listedeki örnek: <code>0 3 * * *</code>, <code>*/5 * * * *</code>, <code>0 */6 * * *</code>.</span></div>
+              </div>
+            </div>
+            <div class="alan-izgara c2">
+              <div class="alan">
+                <label class="alan-etiket" for="gvZaman">Tek seferlik çalışma zamanı <span class="istege-bagli">isteğe bağlı</span></label>
+                <input class="alan-girdi" id="gvZaman" name="zaman" type="text" data-tarih="saatli" data-tip-alan="tek-seferlik">
+                <div class="alan-yardim"><span><b>Tek seferlik</b> türünde cron yerine bu alan kullanılır — listedeki karşılığı
+                  <code>05.09.2026 06:00</code>. <b>Tetikleyiciye bağlı</b> görevde ikisi de boş kalır; planı bir olay açar.</span></div>
+              </div>
+              <div class="alan">
+                <label class="alan-etiket" for="gvDeneme">En çok deneme</label>
+                <input data-girdi="sayi" class="alan-girdi" id="gvDeneme" name="deneme" type="number" min="1" max="10" placeholder="3">
+                <div class="alan-yardim"><span>Çalışma logundaki <b>Deneme</b> sütunu bu sayıya kadar sayar (listede <code>3 / 3</code>).</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="form-bolum">
+            <h3 class="form-bolum-bas"><i class="fa-solid fa-bullseye" aria-hidden="true"></i> Kapsam ve kanal</h3>
+            <div class="alan-izgara c2">
+              <div class="alan">
+                <label class="alan-etiket" for="gvKapsam">Hedef kayıt / kapsam <span class="istege-bagli">isteğe bağlı</span></label>
+                <input class="alan-girdi" id="gvKapsam" name="kapsam" type="text">
+                <div class="alan-yardim"><span>Görevin yürüdüğü kayıt kümesi. Boş bırakılırsa görev anahtarının kendi
+                  varsayılan kümesini yürür. ⚠ Listede bu alanın bir sütunu YOK — değer uydurulmadı, alan boş açılır.</span></div>
+              </div>
+              <div class="alan">
+                <label class="alan-etiket" for="gvKanal">Bildirim kanalı <span class="istege-bagli">isteğe bağlı</span></label>
+                <select class="alan-secim" id="gvKanal" name="kanal">
+                  <option value="" selected="">Kanal yok — sessiz çalışır</option>
+                  <option value="eposta">E-posta</option>
+                  <option value="sms">SMS</option>
+                  <option value="push">Push</option>
+                  <option value="uygulama">Uygulama içi</option>
+                </select>
+                <div class="alan-yardim"><span>Yalnız bildirim gönderen görevler için (<code>gorev.rapor-mail</code>,
+                  <code>gorev.bildirim</code>, <code>gorev.deneme-uyari</code>). Kanal listesi
+                  <b>Bildirimler</b> ekranının kendi süzgecinden alındı; beşinci bir kanal uydurulmadı.</span></div>
               </div>
             </div>
           </div>
@@ -236,11 +274,11 @@
             <div class="kart-govde">
               <div class="alan">
                 <label class="alan-etiket" for="gvDurum">Son çalışma durumu</label>
-                <select class="alan-secim" id="gvDurum" name="durum"><option>Başarılı</option><option>Başarısız</option><option>Çalışıyor</option><option>Beklemede</option></select>
+                <select class="alan-secim" id="gvDurum" name="durum" disabled=""><option>Başarılı</option><option>Kısmi başarılı</option><option>Başarısız</option><option>Çalışıyor</option><option>Planlandı</option><option>Yeniden denenecek</option><option>Durduruldu</option></select><div class="alan-yardim"><span>Yedi değer <b>Görevler</b> listesinde geçen durumlardır. Alan SALT OKUNUR: durum çalışmanın sonucudur, elle seçilmez — durdurmak için aşağıdaki <b>Görev etkin</b> anahtarı kullanılır.</span></div>
               </div>
               <div class="alan">
-                <span>Görev etkin</span>
-                <label class="anahtar"><input type="checkbox" name="aktif" checked><span class="anahtar-ray"></span><span></span></label>
+                <span id="an-gorev-1">Görev etkin</span>
+                <label class="anahtar"><input type="checkbox" name="aktif" checked aria-labelledby="an-gorev-1"><span class="anahtar-ray"></span><span></span></label>
               </div>
             </div>
           </div>
@@ -264,6 +302,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/l10n/tr.js"></script>
 <script src="../../kanon/admin-editor-tr.js"></script>
+<script src="../../kanon/admin-ikon-kutuphane.js" defer></script>
+<script src="../../kanon/admin-veri.js" defer></script>
 <script src="../../kanon/admin-kit.js" defer></script>
 <script src="../../kanon/admin-editor.js" defer></script>
 <script src="../../kanon/admin-tarih.js" defer></script>

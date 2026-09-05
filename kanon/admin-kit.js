@@ -466,9 +466,25 @@
       if (h.classList.contains('sec')) continue;
       if (h.querySelector('input[type=checkbox]')) continue;
       if (h.querySelector('.satir-islem, [data-islem]')) continue;
+      /* 🔴 FORM SATIRINDA METİN YOKTUR — ajan C ölçtü (admin-paket-form):
+         hücrede `<input>` var, `textContent` boş, ilk metinli hücre bir
+         `<select>` ve onun METNİ TÜM SEÇENEK LİSTESİ. Onay modalı
+         «"ErişimKotaNitelik" listeden kaldırılacak» diyordu.
+         Ad önce DENETİMİN DEĞERİNDEN okunur; metin ikinci sıradadır. */
+      var d = h.querySelector('input:not([type=checkbox]):not([type=radio]):not([type=hidden]), select, textarea');
+      if (d) {
+        var dv = d.tagName === 'SELECT'
+          ? ((d.selectedOptions && d.selectedOptions[0] && d.selectedOptions[0].textContent) || '')
+          : (d.value || '');
+        dv = dv.trim().replace(/\s+/g, ' ');
+        if (dv) return dv.slice(0, 60);
+        continue;                    /* boş girdi → sonraki hücre; METNİNE bakma */
+      }
       var t = (h.textContent || '').trim().replace(/\s+/g, ' ');
       if (t) return t.slice(0, 60);
     }
+    /* Satır kendi adını BİLDİRMİŞ olabilir — bildirim sezgiden önce gelir. */
+    if (tr.getAttribute && tr.getAttribute('data-ad')) return tr.getAttribute('data-ad').slice(0, 60);
     return 'kayıt';
   }
 
@@ -595,11 +611,38 @@
          Tekrarlayıcı satırı onay SORMADAN gider: geri alma çipi yok ama
          satır boş bir form satırıdır, yıkıcılık eşiğinin altında; yerine
          toast + `Geri al` verilir, silme kuralının kendisi korunur. */
-      var tekrar = !tr && d.closest('.adim-karti, .kalem-satiri');
+      var tekrar = !tr && d.closest('.adim-karti, .kalem-satiri, .tekrar-satiri');
       if (tekrar) {
         e.preventDefault();
         var listeT = tekrar.parentElement;
         var komsuT = tekrar.nextElementSibling;
+
+        /* 🔴 İKİNCİ SİLME YOLU L10'UN İKİ KURALINI DA ÇİĞNİYORDU — ajan C
+           ölçtü (admin-challenge-form #chTaslar, gerçek `fill()` ile):
+             tek BOŞ satır, sil  → satır 1 → 0   "son satır silinmez" İHLAL
+             iki satır, 2. DOLU  → onay YOK      "dolu satır onay ister" İHLAL
+           Ve birincisinin bedeli ölçüldü: liste boşalınca `satir-ekle`
+           klonlayacak kalıp bulamıyor ve kartın dibine ALAKASIZ TEK ALANLI
+           bir satır açıyor — bu dosyanın kendi `satir-ekle` yorumunda
+           yazılı olan kusurun ta kendisi. L10'un guard'ı tam da bunu
+           önlemek için vardı ama bu dal onu hiç görmüyordu.
+           İki dal birbirinin TERSİYDİ: `<tr>` dalı boş satırda bile
+           soruyor, `.adim-karti` dalı dolu satırda bile sormuyordu.
+           Kural artık TEK KAYNAKTAN (L10) okunuyor. */
+        var koruma = window.DM_TEKRAR_KORUMA;
+        if (koruma && listeT && koruma.sonMu(listeT)) {
+          toast('Son satır silinemez — yeni satır bu satırın kalıbından üretiliyor. İçeriğini boşaltabilirsiniz.');
+          return;
+        }
+        if (koruma && koruma.dolu(tekrar)) {
+          onaySor('Satırı sil',
+                  'Bu satırdaki bilgiler kaldırılacak. Sürdürmek istiyor musunuz?',
+                  'Sil', function (evet) { if (evet) tekrarSil(); });
+          return;
+        }
+        return tekrarSil();
+
+        function tekrarSil() {
         tekrar.remove();
         /* ⚠ `listeTazele` BAŞKA IIFE'DE. Bu dosyada birden çok IIFE var
            (kayıtlı vaka: `duzAc` 1.'de, `panel-ac` 2.'de) ve doğrudan
@@ -619,6 +662,7 @@
           tT.remove(); toast('Satır geri alındı.');
         });
         var spT = tT.querySelector('span'); if (spT) spT.insertAdjacentElement('afterend', gT);
+        }
         return;
       }
       var ad = tr ? satirAdi(tr) : (d.getAttribute('data-ad') || 'kayıt');
@@ -1872,6 +1916,9 @@
         yeniSatir.classList.add('yeni');
         liste.appendChild(yeniSatir);
         listeTazele(liste);
+        /* L10 · klon numarasını, tutamağını ve sil düğmesini kazanır;
+           kurulum idempotent (ikinci koşuda 0 yazar). */
+        if (window.DM_TEKRAR_KUR) window.DM_TEKRAR_KUR(liste);
         var ilkG = yeniSatir.querySelector('input, select, textarea');
         if (ilkG) ilkG.focus();
         toast('Yeni satır eklendi.');
@@ -2046,6 +2093,27 @@
      yoksa kabın `id`sinden türetilir. Çipler `.cipler` kabına yazılır,
      kap yoksa kit onu açar.
      ═══════════════════════════════════════════════════════════════ */
+  /* ── MARKA SÜZGECİ — L4/L5 kütüğünün ikinci boyutu ────────────────
+     🔴 "KURAL MARKA BAĞIMSIZ" DEMEK "VERİ MARKA BAĞIMSIZ" DEMEK DEĞİL.
+        Ajan C ölçerek çürüttü: kütük üç markanın birleşimiydi ve marka
+        bilgisini atıyordu. FIT antrenörüne `ekipman` alanında "Baharat ·
+        Baklagil · Balık · Bitkisel süt · Blender" öneriliyordu (47
+        değerin 29'u FIT'te yok); `seviye`de 10 değerin ÜÇÜ ŞEF ADIYDI
+        (Canan Komi · Ece Aşçı · Nurgül Karaca); `programlar` kütüğündeki
+        21 programın 12'si Diet ÖĞÜN PLANIYDI ve antrenör formunda
+        "Glütensiz Hafta" bir koçluk programı gibi önerilecekti.
+        Kural her markada aynı; VERİNİN markası vardır.
+     ⚠ Marka bildirilmemişse (`body[data-marka]` yok) süzme YAPILMAZ —
+       kütüğün tamamı döner. Bildirim yoksa varsayım da yoktur. */
+  function markaSuz(liste) {
+    if (!liste || !liste.length) return [];
+    var m = document.body && document.body.getAttribute('data-marka');
+    if (!m) return liste;
+    var s = liste.filter(function (x) { return x && x.m && x.m.indexOf(m) !== -1; });
+    return s;
+  }
+  window.DM_MARKA_SUZ = markaSuz;
+
   function csKap(el) { return el && el.closest ? el.closest('.coklu-secim') : null; }
 
   function csSecenekler(kap) {
@@ -2061,6 +2129,48 @@
         return (o.textContent || o.value || '').trim();
       }).filter(Boolean);
     }
+
+    /* ── L5 · İLİŞKİLİ KAYIT SEÇİMİ — `data-kayit="<modül>"` ──────────
+       "Antrenör dizininden seç", "hareket kataloğundan seç" bir SERBEST
+       METİN alanı değildir: kaynak, o modülün liste ekranındaki gerçek
+       kayıtlardır. Kütük `kanon/admin-veri.js`te ve HASAT edilmiştir —
+       burada hiçbir ad uydurulmaz.
+       ⚠ Kütükte olmayan modül `null` döner, yani alan SERBEST GİRİŞE
+         düşer (3. basamak). "Bağlı değil" diyen bir yüzey basılmaz. */
+    var modul = kap.getAttribute('data-kayit');
+    if (modul && window.DM_KAYITLAR && window.DM_KAYITLAR[modul]) {
+      var kk = markaSuz(window.DM_KAYITLAR[modul]);
+      if (kk.length) return kk.map(function (r) { return r.n; });
+      /* Bu markada kayıt yoksa alan SERBEST GİRİŞE düşer — başka markanın
+         kaydını önermek uydurma kayıt üretmektir. */
+      return null;
+    }
+
+    /* ── L4 · ÖNERİ — `data-oneri="<alan adı>"` ───────────────────────
+       "Önceden girilmiş verilerden otomatik tamamlama." Öneri kümesi iki
+       yerden BİRLEŞTİRİLİR ve ikisi de gerçektir:
+         1 · hasat edilmiş sözlük (`DM_ONERI`, üç markanın ekranlarından)
+         2 · BU SAYFADA o ada bağlı ne varsa (aynı `data-ad`ı taşıyan
+             öteki kapların çipleri, aynı adı taşıyan `<select>`in
+             seçenekleri, `<datalist>`)
+       İkincisi olmadan öneri DONUK kalırdı: kullanıcının bu oturumda
+       girdiği değer bir sonraki alanda önerilmez.                     */
+    var oneriAd = kap.getAttribute('data-oneri');
+    if (oneriAd) {
+      var küme = {}, cikti = [];
+      var kat = function (v) {
+        v = (v || '').replace(/\s+/g, ' ').trim();
+        if (v && !küme[v]) { küme[v] = 1; cikti.push(v); }
+      };
+      if (window.DM_ONERI && window.DM_ONERI[oneriAd])
+        markaSuz(window.DM_ONERI[oneriAd]).forEach(function (o) { kat(o.v); });
+      document.querySelectorAll('.coklu-secim[data-oneri="' + oneriAd + '"] .cipler [data-deger]')
+        .forEach(function (c) { kat(c.getAttribute('data-deger')); });
+      document.querySelectorAll('select[name="' + oneriAd + '"] option, select[name="' + oneriAd + '[]"] option, datalist#dl-' + oneriAd + ' option')
+        .forEach(function (o) { kat(o.textContent || o.value); });
+      if (cikti.length) return cikti;
+    }
+
     return null;                       /* kaynak yok → serbest giriş */
   }
 
@@ -2164,6 +2274,21 @@
           k.textContent = o;
           y.appendChild(k);
         });
+      }
+      /* 🔴 L4 · ÖNERİ ALANI KAPALI LİSTE DEĞİLDİR. `data-oneri` bir
+         ETİKET alanıdır: geçmiş değerler ÖNERİLİR, ama yeni bir etiket
+         yazılabilir. Öneri kümesi dolu diye serbest girişi kapatmak,
+         alanı sessizce bir açılıra çevirirdi — kullanıcı yazdığı etiketi
+         ekleyemez, sebebini de göremezdi.
+         ⚠ `data-kayit` (ilişkili kayıt) BU DALDAN GEÇMEZ: olmayan bir
+           antrenörü seçtirmek uydurma kayıt üretmektir. */
+      if (kap.hasAttribute('data-oneri') && q &&
+          kaynak.indexOf(q) === -1 && secili.indexOf(q) === -1) {
+        var yeni = document.createElement('button');
+        yeni.type = 'button'; yeni.className = 'acilir-kalem acilir-yeni';
+        yeni.setAttribute('role', 'option'); yeni.setAttribute('data-cs-deger', q);
+        yeni.innerHTML = '<i class="fa-solid fa-plus" aria-hidden="true"></i> “' + q + '” ekle';
+        y.appendChild(yeni);
       }
     } else if (q) {
       var ek = document.createElement('button');
@@ -3509,5 +3634,959 @@
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', ilkKurulum);
   } else { ilkKurulum(); }
+
+})();
+
+
+/* ═══════════════════════════════════════════════════════════════════════
+   ADMIN UI KİTİ · LOGIC REVİZE — L1–L11
+   ───────────────────────────────────────────────────────────────────────
+   Tarih: 2026-09-05 · FIT admin revize · parti 4 · lead
+   Kural belgesi: `docs/admin-ui-kit.md` §14 (L kuralları)
+
+   🔴 NUMARA NEDEN "L": Beyar'ın görev metni bu turun kurallarına K1–K11
+      diyor. Kanonda K1–K37 DOLU (`admin.css` K1 = ölçek, K11 = görsel
+      girdisi) ve sözleşme üç markaya gidiyor — ikinci bir K1 sözleşmede
+      ikinci bir gerçektir (§5b'nin "anahtar adı tek" dersinin kural
+      karşılığı). Bu turun kuralları L1–L11 olarak yazıldı; eşleme
+      tablosu belgede. Beyar'ın adları raporda korunuyor.
+
+   Bu blok YALNIZ bu turun kurallarını taşır. Önceki davranışa
+   dokunulmadı; `.coklu-secim` seçenek kaynağına iki basamak (L4 · L5)
+   ve `satir-ekle`ye üç yetenek (L10) YERİNDE eklendi — çünkü onlar
+   mevcut kalıbın genişlemesi, ikinci bir kalıp değil.
+   ═══════════════════════════════════════════════════════════════════════ */
+(function () {
+  'use strict';
+
+  var KOK = document.body;
+  if (!KOK || !KOK.classList.contains('yetkili')) return;
+
+  var toast = window.DM_TOAST || function () {};
+  var onaySor = window.DM_ONAY || function (o, e) { e && e(); };
+
+  function ek(etiket, sinif, metin) {
+    var e = document.createElement(etiket);
+    if (sinif) e.className = sinif;
+    if (metin != null) e.textContent = metin;
+    return e;
+  }
+
+  /* ═══════════════════════════════════════════════════════════════════
+     L1 · VİDEO GİRDİSİ — BAĞLANTI **VEYA** DOSYA, TEK BİLEŞEN
+     ───────────────────────────────────────────────────────────────────
+     Markup bir alanı bildirir, kit bileşeni kurar:
+
+         <input class="alan-girdi" data-video="video" name="video">
+
+     Doğan yüzey: iki sekme (Bağlantı · Dosya) + önizleme + süre.
+     Değer HEP `name`i taşıyan asıl girdide kalır — kit ikinci bir
+     kaynak açmaz (§24'ün "ikinci metin kaynağı doğmaz" dersinin video
+     karşılığı).
+
+     ── SÜRE: NE OTOMATİK, NE DEĞİL — ölçülerek ayrıldı ─────────────
+     🔴 "Süre otomatik" her iki sekmede AYNI ŞEKİLDE karşılanamaz ve
+        karşılanmış gibi yapmak yalan olurdu:
+          DOSYA      → süre GERÇEKTEN okunur. `<video>` öğesinin
+                       `loadedmetadata` olayı saniyeyi verir; ölçüm
+                       tarayıcının kendisinden gelir, uydurma yok.
+          BAĞLANTI   → YouTube/Vimeo süresi ancak o servisin API'siyle
+                       bilinir. Panel bir MAKET ve kit ağ çağrısı
+                       YAPMAZ (§7'nin `content_css` dersi: yayında
+                       sessizce 404 olan bir bağımlılık, hiç olmayan
+                       bağımlılıktan kötüdür). Süre alanı elle kalır ve
+                       yüzey bunu YAZAR — sessizce boş bırakmaz.
+
+     ── ÖNİZLEME ────────────────────────────────────────────────────
+     YouTube → küçük resim (`img.youtube.com`, `<img>` ile; CORS
+     gerekmez ve ağ yoksa alt metne düşer). Vimeo → adres doğrulanır ve
+     "Vimeo · <id>" künyesi çizilir (Vimeo küçük resmi ancak API ile
+     gelir — uydurulmadı). Dosya → `<video controls>` ile GERÇEK oynatma.
+
+     ⚠ Gerçek yükleme YOK; toast bunu yazar (§10'un kuralı).
+     ═══════════════════════════════════════════════════════════════ */
+
+  /* Adres çözümleme — üç servis, hepsi ÖLÇÜLEBİLİR desenle. */
+  function videoCozumle(adres) {
+    adres = (adres || '').trim();
+    if (!adres) return null;
+    var yt = /(?:youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/)|youtu\.be\/)([A-Za-z0-9_-]{11})/.exec(adres);
+    if (yt) return { servis: 'YouTube', kimlik: yt[1], adres: adres,
+                     kucuk: 'https://img.youtube.com/vi/' + yt[1] + '/hqdefault.jpg' };
+    var vm = /vimeo\.com\/(?:video\/)?(\d{6,})/.exec(adres);
+    if (vm) return { servis: 'Vimeo', kimlik: vm[1], adres: adres, kucuk: null };
+    if (/^https?:\/\//i.test(adres) && /\.(mp4|webm|ogg|mov)(\?|#|$)/i.test(adres))
+      return { servis: 'Doğrudan dosya', kimlik: adres.split('/').pop(), adres: adres, kucuk: null, dogrudan: true };
+    return { servis: null, adres: adres };
+  }
+
+  function sureYaz(kap, saniye) {
+    /* 🔴 `querySelector('')` FIRLATIR — bildirim yoksa boş dize geçiyordu
+       ve kapı üç JS hatası saydı. Hedef bildirilmemişse alan YOKTUR. */
+    var hedefSec = kap.getAttribute('data-sure-hedef');
+    var alan = hedefSec ? document.querySelector(hedefSec) : null;
+    var etiket = kap.querySelector('[data-rol="video-sure"]');
+    if (saniye == null || !isFinite(saniye)) {
+      if (etiket) etiket.textContent = '';
+      return;
+    }
+    var s = Math.round(saniye);
+    var dk = Math.floor(s / 60), sn = s % 60;
+    if (etiket) etiket.textContent = 'Süre: ' + dk + ':' + (sn < 10 ? '0' : '') + sn + ' (' + s + " sn, dosyadan okundu)";
+    /* Hedef alan BİLDİRİLMİŞSE doldurulur — kit rastgele bir "süre"
+       alanı aramaz (denetimin öznesi kayar dersi). */
+    if (alan) { alan.value = String(s); alan.dispatchEvent(new Event('input', { bubbles: true })); }
+  }
+
+  function videoOnizle(kap) {
+    var yuzey = kap.querySelector('[data-rol="video-onizleme"]');
+    var asil = kap.querySelector('[data-rol="video-adres"]');
+    if (!yuzey || !asil) return;
+    yuzey.innerHTML = '';
+    var v = videoCozumle(asil.value);
+    if (!v) { yuzey.hidden = true; sureYaz(kap, null); return; }
+    yuzey.hidden = false;
+
+    if (!v.servis) {
+      var uy = ek('p', 'alan-yardim');
+      uy.appendChild(ek('span', null, 'Adres tanınmadı. YouTube, Vimeo ya da doğrudan bir video dosyası adresi bekleniyor.'));
+      yuzey.appendChild(uy);
+      sureYaz(kap, null);
+      return;
+    }
+
+    if (v.dogrudan) {
+      var vid = document.createElement('video');
+      vid.className = 'video-oynatici'; vid.controls = true; vid.preload = 'metadata';
+      vid.src = v.adres;
+      vid.addEventListener('loadedmetadata', function () { sureYaz(kap, vid.duration); });
+      yuzey.appendChild(vid);
+    } else if (v.kucuk) {
+      var im = document.createElement('img');
+      im.className = 'video-kucuk'; im.src = v.kucuk; im.loading = 'lazy';
+      im.alt = v.servis + ' videosunun küçük resmi';
+      yuzey.appendChild(im);
+    }
+    var kunye = ek('p', 'alan-yardim');
+    kunye.appendChild(ek('span', null, v.servis + ' · ' + v.kimlik));
+    yuzey.appendChild(kunye);
+
+    if (!v.dogrudan) {
+      /* 🔴 SESSİZ BOŞLUK YOK — sürenin NEDEN okunamadığı yazılır. */
+      var not = ek('p', 'alan-yardim');
+      not.appendChild(ek('span', null, 'Süre ' + v.servis + ' bağlantısından okunamaz (servis API’si gerekir); elle girilir. Dosya yüklenirse süre kendiliğinden dolar.'));
+      yuzey.appendChild(not);
+      sureYaz(kap, null);
+    }
+  }
+
+  function videoKur(girdi) {
+    if (girdi.getAttribute('data-video-kuruldu') === '1') return;
+    girdi.setAttribute('data-video-kuruldu', '1');
+
+    var kap = ek('div', 'video-girdi');
+    var kimlik = girdi.id || ('vg-' + Math.random().toString(36).slice(2, 8));
+    if (girdi.getAttribute('data-sure-hedef')) kap.setAttribute('data-sure-hedef', girdi.getAttribute('data-sure-hedef'));
+
+    /* İki sekme — kanonun `.sekmeler` sözleşmesi (§3), ikinci bir
+       sekme sınıfı AÇILMAZ. */
+    var ray = ek('div', 'sekmeler video-sekmeler');
+    ray.setAttribute('role', 'tablist');
+    ray.setAttribute('aria-label', 'Video kaynağı');
+    var sBag = ek('button', 'sekme aktif', 'Bağlantı');
+    var sDos = ek('button', 'sekme', 'Dosya yükle');
+    [sBag, sDos].forEach(function (s, i) {
+      s.type = 'button'; s.setAttribute('role', 'tab');
+      s.setAttribute('aria-selected', i === 0 ? 'true' : 'false');
+      s.setAttribute('data-video-sekme', i === 0 ? 'bag' : 'dosya');
+      ray.appendChild(s);
+    });
+
+    var pBag = ek('div', 'video-pano'); pBag.setAttribute('data-video-pano', 'bag');
+    var pDos = ek('div', 'video-pano'); pDos.setAttribute('data-video-pano', 'dosya'); pDos.hidden = true;
+
+    /* Asıl girdi YERİNDE kalır — `name`i, değeri, doğrulaması onun. */
+    girdi.setAttribute('data-rol', 'video-adres');
+    girdi.parentNode.insertBefore(kap, girdi);
+    pBag.appendChild(girdi);
+
+    var dosya = document.createElement('input');
+    dosya.type = 'file'; dosya.accept = 'video/*'; dosya.className = 'alan-girdi';
+    dosya.id = kimlik + '-dosya';
+    dosya.setAttribute('aria-label', 'Video dosyası seç');
+    pDos.appendChild(dosya);
+
+    var onizleme = ek('div', 'video-onizleme');
+    onizleme.setAttribute('data-rol', 'video-onizleme');
+    onizleme.hidden = true;
+    var sure = ek('p', 'alan-yardim');
+    var sureSpan = ek('span'); sureSpan.setAttribute('data-rol', 'video-sure');
+    sure.appendChild(sureSpan);
+
+    kap.appendChild(ray); kap.appendChild(pBag); kap.appendChild(pDos);
+    kap.appendChild(onizleme); kap.appendChild(sure);
+
+    ray.addEventListener('click', function (e) {
+      var s = e.target.closest('[data-video-sekme]');
+      if (!s) return;
+      var bag = s.getAttribute('data-video-sekme') === 'bag';
+      [sBag, sDos].forEach(function (x) {
+        var a = x === s;
+        x.classList.toggle('aktif', a);
+        x.setAttribute('aria-selected', String(a));
+      });
+      pBag.hidden = !bag; pDos.hidden = bag;
+    });
+
+    girdi.addEventListener('input', function () { videoOnizle(kap); });
+    girdi.addEventListener('change', function () { videoOnizle(kap); });
+
+    dosya.addEventListener('change', function () {
+      var f = dosya.files && dosya.files[0];
+      if (!f) return;
+      onizleme.hidden = false; onizleme.innerHTML = '';
+      var vid = document.createElement('video');
+      vid.className = 'video-oynatici'; vid.controls = true; vid.preload = 'metadata';
+      var url = URL.createObjectURL(f);
+      vid.src = url;
+      vid.addEventListener('loadedmetadata', function () { sureYaz(kap, vid.duration); });
+      onizleme.appendChild(vid);
+      var k = ek('p', 'alan-yardim');
+      k.appendChild(ek('span', null, f.name + ' · ' + (f.size / 1048576).toFixed(1) + ' MB'));
+      onizleme.appendChild(k);
+      /* 🔴 MAKET OLDUĞU YAZILIR — dosya sunucuya GİTMEZ. */
+      toast('Video önizlemesi hazır. Bu makette dosya sunucuya yüklenmez.');
+    });
+
+    if (girdi.value) videoOnizle(kap);
+  }
+
+  /* ═══════════════════════════════════════════════════════════════════
+     L2 · HAZIR METİN ŞABLONU — ARA, SEÇ, ÜSTÜNE YAZ
+     ───────────────────────────────────────────────────────────────────
+     "Güvenlik uyarısı", "güvenlik notu", "program uyarısı" gibi alanlar
+     her kayıtta yeniden yazılmaz: şablon kütüphanesinden ARANIP seçilir,
+     seçilen metin alana İNER ve orada SERBESTÇE düzenlenir.
+
+         <textarea data-sablon="guvenlik" …>
+
+     Kütüphane `window.DM_SABLONLAR` — `admin-ayarlar`ın "Metin
+     şablonları" sekmesinde liste + form ile yönetilir (§5b: düzenle =
+     tam sayfa form, `admin-sablon-form.html?id=`).
+
+     🔴 ÇOK SEÇİM, VE SEÇİLEN METİN ALANA İNER — kit alanı KİLİTLEMEZ.
+        Şablon bir başlangıç metnidir, bir değer değil. Seçim alanın
+        SONUNA eklenir; var olan metin silinmez (yazdığını yutan bir
+        yardımcı, yardımcı değildir).
+     ⚠ Kütük yoksa düğme HİÇ DOĞMAZ — "şablon yok" diyen ölü bir düğme
+       basmak §11'in yasağıdır.
+     ═══════════════════════════════════════════════════════════════ */
+
+  function sablonlar(tur) {
+    var k = window.DM_SABLONLAR && window.DM_SABLONLAR[tur];
+    if (!k || !k.length) return null;
+    /* 🔴 ŞABLONUN DA MARKASI VAR (ajan C): `not` türündeki 10 şablonun
+       10'unun kaynağı Diet'in hesaplayıcı formu (BMH/BKİ metodoloji
+       notları). FIT challenge özetine "Mifflin-St Jeor denklemi
+       kullanılır" önermek olurdu — tür aynı, İÇERİĞİ başka markanın. */
+    var s = window.DM_MARKA_SUZ ? window.DM_MARKA_SUZ(k) : k;
+    return s.length ? s : null;      /* bu markada şablon yoksa düğme DOĞMAZ */
+  }
+
+  function sablonAc(alan, tur) {
+    var liste = sablonlar(tur);
+    if (!liste) return;
+    var secili = {};
+    var kap = ek('div', 'kit-kapi');
+    kap.setAttribute('role', 'dialog');
+    kap.setAttribute('aria-modal', 'true');
+    kap.setAttribute('aria-label', 'Hazır metin şablonları');
+
+    var kutu = ek('div', 'kit-kapi-kutu');
+    kutu.appendChild(ek('h2', null, 'Hazır metin şablonu'));
+    var ara = document.createElement('input');
+    ara.type = 'search'; ara.className = 'alan-girdi'; ara.placeholder = 'Şablon ara…';
+    ara.setAttribute('aria-label', 'Şablon ara');
+    kutu.appendChild(ara);
+    var govde = ek('div', 'sablon-listesi');
+    kutu.appendChild(govde);
+    var sayac = ek('p', 'alan-yardim');
+    var sayacSpan = ek('span'); sayac.appendChild(sayacSpan);
+    kutu.appendChild(sayac);
+
+    var satir = ek('div', 'eylem-satiri');
+    var vaz = ek('button', 'dugme hayalet', 'Vazgeç'); vaz.type = 'button';
+    var uyg = ek('button', 'dugme birincil', 'Seçilenleri ekle'); uyg.type = 'button';
+    satir.appendChild(vaz); satir.appendChild(uyg);
+    kutu.appendChild(satir);
+    kap.appendChild(kutu);
+
+    function ciz() {
+      var q = (ara.value || '').toLocaleLowerCase('tr').trim();
+      govde.innerHTML = '';
+      var uyan = liste.filter(function (s) {
+        return !q || (s.ad + ' ' + s.metin).toLocaleLowerCase('tr').indexOf(q) !== -1;
+      });
+      uyan.forEach(function (s, i) {
+        var l = ek('label', 'sablon-kalem');
+        var c = document.createElement('input');
+        c.type = 'checkbox'; c.value = s.ad; c.checked = !!secili[s.ad];
+        c.addEventListener('change', function () {
+          if (c.checked) secili[s.ad] = s.metin; else delete secili[s.ad];
+          say();
+        });
+        l.appendChild(c);
+        var g = ek('span', 'sablon-govde');
+        g.appendChild(ek('b', null, s.ad));
+        g.appendChild(ek('small', null, s.metin));
+        l.appendChild(g);
+        govde.appendChild(l);
+      });
+      if (!uyan.length) {
+        /* Boş sonuç KAÇ KAYITTA arandığını yazar (§18'in dersi). */
+        govde.appendChild(ek('div', 'acilir-bos', '“' + ara.value + '” ' + liste.length + ' şablonda bulunamadı'));
+      }
+    }
+    function say() {
+      var n = Object.keys(secili).length;
+      sayacSpan.textContent = n ? n + ' şablon seçildi' : liste.length + ' şablon · birden çok seçilebilir';
+      uyg.disabled = !n;
+    }
+
+    ara.addEventListener('input', ciz);
+    ciz(); say();
+
+    function kapat() { kap.remove(); if (alan && document.contains(alan)) alan.focus(); }
+    vaz.addEventListener('click', kapat);
+    kap.addEventListener('click', function (e) { if (e.target === kap) kapat(); });
+    document.addEventListener('keydown', function esc(e) {
+      if (e.key === 'Escape' && document.contains(kap)) { kapat(); document.removeEventListener('keydown', esc); }
+    });
+    uyg.addEventListener('click', function () {
+      var metin = Object.keys(secili).map(function (a) { return secili[a]; }).join('\n\n');
+      if (!metin) return;
+      /* TinyMCE sürülüyorsa değeri EDİTÖRE yazmak gerekir; textarea'ya
+         yazmak sessizce kaybolurdu (editörün kendi tamponu var). */
+      var ed = window.tinymce && window.tinymce.get && alan.id && window.tinymce.get(alan.id);
+      if (ed) {
+        var eski = ed.getContent({ format: 'text' }).trim();
+        ed.setContent((eski ? ed.getContent() : '') +
+          metin.split('\n\n').map(function (p) { return '<p>' + p + '</p>'; }).join(''));
+      } else {
+        alan.value = (alan.value.trim() ? alan.value.replace(/\s+$/, '') + '\n\n' : '') + metin;
+        alan.dispatchEvent(new Event('input', { bubbles: true }));
+      }
+      kapat();
+      toast(Object.keys(secili).length + ' şablon eklendi. Metin serbestçe düzenlenebilir.');
+    });
+
+    document.body.appendChild(kap);
+    ara.focus();
+  }
+
+  function sablonKur(alan) {
+    if (alan.getAttribute('data-sablon-kuruldu') === '1') return;
+    var tur = alan.getAttribute('data-sablon');
+    if (!sablonlar(tur)) return;          /* kütük yok → düğme DOĞMAZ */
+    alan.setAttribute('data-sablon-kuruldu', '1');
+    var d = ek('button', 'dugme hayalet sablon-dugme');
+    d.type = 'button';
+    d.innerHTML = '<i class="fa-solid fa-file-lines" aria-hidden="true"></i> Hazır şablondan ekle';
+    d.addEventListener('click', function () { sablonAc(alan, tur); });
+    var etiket = alan.closest('.alan');
+    if (etiket) etiket.appendChild(d); else alan.parentNode.insertBefore(d, alan.nextSibling);
+  }
+
+  /* ═══════════════════════════════════════════════════════════════════
+     L3 · İKON SEÇİCİ — GÖRSELLİ, ARANABİLİR
+     ───────────────────────────────────────────────────────────────────
+     🔴 SERBEST METİN İKON ADI YASAK. Bir ikon alanına elle "fa-star"
+        yazmak iki kusur üretir: yanlış yazım sessizce boş bir kare
+        çizer, ve yönetici hangi adların var olduğunu HİÇ göremez.
+
+         <input data-ikon name="ikon">      → seçiciye çevrilir
+
+     Kütüphane `kanon/admin-ikon-kutuphane.js` — 485 ikon, projede
+     GERÇEKTEN kullanılanlardan hasat edilmiş. Yazınca süzer; ikonun
+     KENDİSİ ve adı birlikte görünür.
+
+     ⚠ Değer yine `name`i taşıyan girdide durur (gizlenir, silinmez):
+       form gönderimi, `formDoldur` ve doğrulama onu bulmaya devam eder.
+       "Eleman durdu, öznitelik düştü" dersinin tersi — eleman DURUYOR.
+     ═══════════════════════════════════════════════════════════════ */
+
+  function ikonKutuphane() {
+    return (window.DM_IKONLAR && window.DM_IKONLAR.length) ? window.DM_IKONLAR : null;
+  }
+
+  /* Değer iki biçimde geliyor: "fa-star" ve "star" (ekranların yarısı
+     ön eki yazmıyor — ölçüldü). İkisi de aynı ikondur. */
+  function ikonNormal(v) {
+    v = (v || '').trim().replace(/^fa-(solid|regular|brands)\s+/, '').trim();
+    if (!v) return '';
+    return /^fa-/.test(v) ? v : 'fa-' + v;
+  }
+
+  function ikonSeciciKur(girdi) {
+    if (girdi.getAttribute('data-ikon-kuruldu') === '1') return;
+    /* 🔴 ÇİFT SÜRÜCÜ YASAK — ajan C ölçtü: `admin-rozet-form`un ikon alanı
+       bu turda zaten `.coklu-secim`e bağlanmış (46 ikon, hepsi kütüphanede
+       var). Oraya `data-ikon` eklenince yüzey 1 → 3 oldu: tek alanda iki
+       sürücü. Bir alanın tek yüzeyi olur; kit ikinciyi AÇMAZ.
+       (Madde 5'in "alan başına tek editör" dersinin ikon karşılığı.) */
+    if (girdi.closest && girdi.closest('.coklu-secim')) return;
+    var kut = ikonKutuphane();
+    if (!kut) return;                    /* kütüphane yok → alan olduğu gibi kalır */
+    girdi.setAttribute('data-ikon-kuruldu', '1');
+
+    /* 🔴 İKON ALANI HER ZAMAN `<input>` DEĞİL — ÖLÇÜLDÜ. FIT'te 66 ikon
+       alanının 10'u `<select class="alan-secim">` (admin-hareket-form'un
+       ÜÇÜ de öyle). İlk yazım yalnız `<input>` kuruyordu ve o ekranlarda
+       seçici HİÇ DOĞMUYORDU — kapı "ikon alanı bulunamadı" diyordu ve
+       kusur alanın TİPİNDEYDİ, yokluğunda değil.
+       `<select>` değeri taşımaya devam eder (form gönderimi, `formDoldur`);
+       yalnız yüzeyi gizlenir. Seçilen ikon listede yoksa seçeneği kit
+       EKLER — kütüphane 485, bir ekranın listesi 81. */
+    var secimMi = girdi.tagName === 'SELECT';
+
+    var kap = ek('div', 'ikon-secici');
+    girdi.parentNode.insertBefore(kap, girdi);
+    kap.appendChild(girdi);
+    if (secimMi) { girdi.hidden = true; girdi.setAttribute('aria-hidden', 'true'); girdi.tabIndex = -1; }
+    else { girdi.type = 'hidden'; }      /* değer DURUYOR, yüzeyi değişti */
+
+    var tetik = ek('button', 'alan-girdi ikon-tetik');
+    tetik.type = 'button';
+    tetik.setAttribute('aria-haspopup', 'listbox');
+    tetik.setAttribute('aria-expanded', 'false');
+    var goster = ek('span', 'ikon-gosterim');
+    tetik.appendChild(goster);
+    kap.appendChild(tetik);
+
+    var yuzey = ek('div', 'acilir-yuzey ikon-yuzey');
+    yuzey.hidden = true;
+    yuzey.setAttribute('role', 'listbox');
+    yuzey.setAttribute('aria-label', 'İkon seç');
+    var ara = document.createElement('input');
+    ara.type = 'search'; ara.className = 'alan-girdi ikon-ara';
+    ara.placeholder = 'İkon ara…';
+    ara.setAttribute('aria-label', 'İkon ara');
+    var izgara = ek('div', 'ikon-izgara');
+    var bos = ek('p', 'acilir-bos');
+    bos.hidden = true;
+    yuzey.appendChild(ara); yuzey.appendChild(izgara); yuzey.appendChild(bos);
+    kap.appendChild(yuzey);
+
+    function tetikCiz() {
+      var v = ikonNormal(girdi.value);
+      goster.innerHTML = '';
+      if (v) {
+        var i = document.createElement('i');
+        i.className = 'fa-solid ' + v; i.setAttribute('aria-hidden', 'true');
+        goster.appendChild(i);
+        goster.appendChild(ek('span', null, v));
+        tetik.setAttribute('aria-label', 'Seçili ikon: ' + v + ' — değiştir');
+      } else {
+        goster.appendChild(ek('span', 'ikon-bos', 'İkon seç'));
+        tetik.setAttribute('aria-label', 'İkon seç');
+      }
+    }
+
+    function izgaraCiz() {
+      var q = (ara.value || '').toLocaleLowerCase('tr').trim();
+      izgara.innerHTML = '';
+      var uyan = kut.filter(function (x) {
+        if (!q) return true;
+        if (x.i.indexOf(q) !== -1) return true;
+        for (var j = 0; j < x.k.length; j++) if (x.k[j].indexOf(q) !== -1) return true;
+        return false;
+      });
+      /* 🔴 SINIRSIZ ÇİZİM YOK: 485 ikonun hepsini her tuşta çizmek
+         ölçülebilir bir yavaşlık. İlk 120 çizilir, kalanı sayıyla
+         BİLDİRİLİR — "gizlendi" değil, "daraltın" denir. */
+      uyan.slice(0, 120).forEach(function (x) {
+        var d = ek('button', 'ikon-kalem');
+        d.type = 'button';
+        d.setAttribute('role', 'option');
+        d.setAttribute('data-ikon-deger', x.i);
+        d.setAttribute('aria-selected', String(ikonNormal(girdi.value) === x.i));
+        d.title = '';
+        d.setAttribute('data-ipucu', x.i);
+        d.innerHTML = '<i class="fa-solid ' + x.i + '" aria-hidden="true"></i><span>' + x.i.replace(/^fa-/, '') + '</span>';
+        izgara.appendChild(d);
+      });
+      bos.hidden = uyan.length !== 0;
+      if (!uyan.length) bos.textContent = '“' + ara.value + '” ' + kut.length + ' ikonda bulunamadı';
+      else if (uyan.length > 120) {
+        bos.hidden = false;
+        bos.textContent = uyan.length + ' ikon uyuyor · ilk 120 gösteriliyor, aramayı daraltın';
+      }
+    }
+
+    function ac() {
+      yuzey.hidden = false; tetik.setAttribute('aria-expanded', 'true');
+      izgaraCiz(); ara.focus();
+    }
+    function kapat() {
+      yuzey.hidden = true; tetik.setAttribute('aria-expanded', 'false');
+    }
+
+    tetik.addEventListener('click', function () { yuzey.hidden ? ac() : kapat(); });
+    ara.addEventListener('input', izgaraCiz);
+    izgara.addEventListener('click', function (e) {
+      var k = e.target.closest('[data-ikon-deger]');
+      if (!k) return;
+      var yeniDeger = k.getAttribute('data-ikon-deger');
+      if (secimMi) {
+        /* Seçenek listede yoksa eklenir — yoksa `value` ataması sessizce
+           DÜŞER ve seçici çalışıyor görünüp hiçbir şey kaydetmezdi. */
+        var varMi = [].some.call(girdi.options, function (o) { return ikonNormal(o.value) === yeniDeger; });
+        if (!varMi) {
+          var o = document.createElement('option');
+          o.value = yeniDeger; o.textContent = yeniDeger.replace(/^fa-/, '');
+          girdi.appendChild(o);
+        }
+        [].forEach.call(girdi.options, function (o) {
+          if (ikonNormal(o.value) === yeniDeger) girdi.value = o.value;
+        });
+      } else {
+        girdi.value = yeniDeger;
+      }
+      girdi.dispatchEvent(new Event('change', { bubbles: true }));
+      tetikCiz(); kapat(); tetik.focus();
+    });
+    yuzey.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') { kapat(); tetik.focus(); }
+    });
+    document.addEventListener('click', function (e) {
+      if (!kap.contains(e.target)) kapat();
+    });
+    girdi.addEventListener('change', tetikCiz);
+    tetikCiz();
+  }
+
+  /* ═══════════════════════════════════════════════════════════════════
+     L5b · DÖRT VE ÜSTÜ SEÇENEKLİ RADYO → AÇILIR
+     ───────────────────────────────────────────────────────────────────
+     Beyar: *"4+ seçenekli radio yok → dropdown."* Kural KİTTE sürülür,
+     ekranlarda değil — çünkü aynı kural Gastro ve Diet'in markup'ına
+     dokunmadan orada da koşmalı (marka bağımsızlık ölçütü).
+
+     🔴 DEĞER KORUNUR: `name` · seçili değer · `required` · `disabled`
+        aynen geçer. Radyoların kendisi SİLİNMEZ, `hidden` bir kapta
+        durur — EKSİ BİRİNCİ MADDE (eleman silinmez) ve form gönderimi
+        bozulmaz.
+     ⚠ ÜÇ VE ALTI DOKUNULMAZ: az seçenekli radyo grubu hepsini AYNI ANDA
+       gösterir ve bu bir üstünlüktür; açılıra çevirmek gizlerdi.
+     ⚠ Görsel/ikonlu seçenek kartları (`.secim-karti`) dışarıda: onlar
+       bir radyo grubu değil, bir GÖRSEL seçim yüzeyi.
+     ═══════════════════════════════════════════════════════════════ */
+
+  function radyoGruplari(kok) {
+    var harita = {};
+    (kok || document).querySelectorAll('.alan input[type="radio"][name]').forEach(function (r) {
+      if (r.closest('.secim-karti, .oran-grubu, [data-radyo-birak]')) return;
+      (harita[r.name] = harita[r.name] || []).push(r);
+    });
+    return harita;
+  }
+
+  function radyoAcilira(kok) {
+    var harita = radyoGruplari(kok), donusen = 0;
+    Object.keys(harita).forEach(function (ad) {
+      var rs = harita[ad];
+      if (rs.length < 4) return;
+      var alan = rs[0].closest('.alan');
+      if (!alan || alan.getAttribute('data-radyo-donustu') === '1') return;
+      alan.setAttribute('data-radyo-donustu', '1');
+
+      var sec = document.createElement('select');
+      sec.className = 'alan-secim';
+      var etiket = alan.querySelector('.alan-etiket');
+      if (etiket) {
+        if (!etiket.id) etiket.id = 'lbl-' + ad.replace(/[^\w-]/g, '');
+        sec.setAttribute('aria-labelledby', etiket.id);
+      } else {
+        sec.setAttribute('aria-label', ad);
+      }
+      if (rs[0].required) sec.required = true;
+
+      var bos = document.createElement('option');
+      bos.value = ''; bos.textContent = 'Seçiniz…';
+      sec.appendChild(bos);
+
+      rs.forEach(function (r) {
+        var o = document.createElement('option');
+        o.value = r.value;
+        /* Etiket metni radyonun KENDİ etiketinden okunur; ikinci bir
+           metin kaynağı doğmaz. */
+        var lb = r.closest('label') ||
+                 (r.id && document.querySelector('label[for="' + r.id + '"]'));
+        o.textContent = (lb ? lb.textContent : r.value).replace(/\s+/g, ' ').trim() || r.value;
+        if (r.checked) o.selected = true;
+        if (r.disabled) o.disabled = true;
+        sec.appendChild(o);
+      });
+
+      /* Radyolar YAŞAMAYA DEVAM EDER; değeri onlar taşır. */
+      var saklama = ek('div', 'radyo-saklama');
+      saklama.hidden = true;
+      rs.forEach(function (r) {
+        var l = r.closest('label');
+        saklama.appendChild(l && l.parentNode ? l : r);
+      });
+
+      sec.addEventListener('change', function () {
+        rs.forEach(function (r) { r.checked = (r.value === sec.value); });
+        rs[0].dispatchEvent(new Event('change', { bubbles: true }));
+      });
+
+      var sarma = rs[0].closest('.secenek-grubu, .radyo-grubu') || null;
+      var yer = sarma && sarma.parentNode ? sarma : alan;
+      if (sarma) { sarma.parentNode.insertBefore(sec, sarma); sarma.remove(); }
+      else { alan.appendChild(sec); }
+      alan.appendChild(saklama);
+      donusen++;
+    });
+    return donusen;
+  }
+
+  /* ═══════════════════════════════════════════════════════════════════
+     L7 · HESAPLANAN ALAN SALT OKUNUR — KAYNAĞI YAZILI
+     ───────────────────────────────────────────────────────────────────
+         <input data-hesaplanan="katılımcı sayısı" …>
+
+     🔴 Hesaplanan bir değeri DÜZENLENEBİLİR göstermek iki kere yalandır:
+        yönetici değiştirebileceğini sanır, ve değiştirdiği şey bir
+        sonraki hesapta geri döner. Alan `readonly` olur, kaynağı
+        yardım rayında YAZILIR ("sistemden: …").
+     ⚠ `disabled` DEĞİL `readonly`: `disabled` alan form gönderiminden
+       düşer ve değer sessizce kaybolurdu.
+     ═══════════════════════════════════════════════════════════════ */
+
+  function hesaplananKur(girdi) {
+    if (girdi.getAttribute('data-hesaplanan-kuruldu') === '1') return;
+    girdi.setAttribute('data-hesaplanan-kuruldu', '1');
+    girdi.readOnly = true;
+    girdi.setAttribute('aria-readonly', 'true');
+    var kaynak = girdi.getAttribute('data-hesaplanan') || '';
+    var alan = girdi.closest('.alan');
+    if (!alan) return;
+    alan.classList.add('alan-hesaplanan');
+    if (alan.querySelector('[data-rol="hesaplanan-not"]')) return;
+    var p = ek('p', 'alan-yardim');
+    p.setAttribute('data-rol', 'hesaplanan-not');
+    var i = document.createElement('i');
+    i.className = 'fa-solid fa-calculator'; i.setAttribute('aria-hidden', 'true');
+    p.appendChild(i);
+    p.appendChild(ek('span', null, ' Sistemden hesaplanır: ' + kaynak + ' · elle değiştirilmez'));
+    alan.appendChild(p);
+  }
+
+  /* ═══════════════════════════════════════════════════════════════════
+     L8b · KRİTİK SATIR İŞLEMİ ONAY İSTER
+     ───────────────────────────────────────────────────────────────────
+     İade · iptal · geri alma geri alınamaz para işlemleridir; `sil`in
+     onay kapısı onlarda da geçerlidir. Kitte zaten `yikici` eylemi var
+     (§11) — kural bu eyleme BAĞLANMAKTIR, yeni bir kapı açmak değil.
+
+     🔴 Kanca ada değil BİLDİRİME bakar: `data-kritik` taşıyan her
+        denetim onay ister. Ekran metnine ("İade") bakan bir kanca
+        Gastro'da başka kelimeyle yazıldığında sessizce kaçardı.
+     ═══════════════════════════════════════════════════════════════ */
+
+  document.addEventListener('click', function (e) {
+    var d = e.target.closest('[data-kritik]');
+    if (!d || d.getAttribute('data-kritik-onaylandi') === '1') return;
+    /* 🔴 ÇİFT KAPI YASAK — ajan C ölçtü: `data-kritik` + `data-eylem="yikici"`
+       birlikte bildirilince AYNI SORU İKİ KEZ soruluyordu (önce L8b'nin
+       genel metni, Evet'e basınca ekranın kendi metni). Ve `data-kritik`
+       YALNIZ bildirilince kapı açılıyor, onaydan sonra HİÇBİR ŞEY olmuyordu
+       (§11'in ölü yüzeyi — üstelik kullanıcı "iade başlattım" sanır).
+       Karar: `data-kritik` bir EYLEM DEĞİL, bir NİTELEMEDİR — "bu eylem
+       onay ister" der. Kitin kendi onay kapısı olan eylemlerde (`yikici`,
+       `sil`) gereklilik ZATEN karşılanmıştır ve o kapının metni ekranın
+       kendi metnidir, yani DAHA İYİDİR. L8b orada susar.
+       ⚠ Böylece `data-kritik` bir BİLDİRİM olarak kalır: kapı onu sayar,
+         Gastro/Diet'te kelime değişse de kanca kaymaz. */
+    if (d.matches('[data-eylem="yikici"], [data-eylem="sil"], [data-islem="sil"]')) return;
+    e.preventDefault();
+    e.stopPropagation();
+    var ne = d.getAttribute('data-kritik') || (d.getAttribute('aria-label') || d.textContent || 'Bu işlem').trim();
+    /* 🔴 İMZA YANLIŞTI — AJAN C TIKLAYARAK BULDU. `onaySor` KONUMSAL
+       (`baslik, metin, dugmeMetni, cb`); ilk yazımım nesne+callback
+       veriyordu ve modal "[object Object]" ile fonksiyon kaynağını
+       basıyordu. 🔴 KAPI AÇILIYORDU: kapı SAYAN bir ölçüm bunu YEŞİL
+       görür — "onay kapısı doğdu mu" sorusunun cevabı evetti, "ne YAZIYOR"
+       diye sorulmamıştı. Kayıtlı dersin bir kardeşi: kapı sorduğu soruyu
+       ölçer. Kapıya artık metin ölçütü de eklendi. */
+    onaySor(ne + ' onayı',
+            ne + ' geri alınamaz. Sürdürmek istiyor musunuz?',
+            'Evet, sürdür',
+            function (evet) {
+      /* 🔴 `onayKapat` GERİ ÇAĞRIYI İPTALDE DE ÇAĞIRIR — `cb(sonuc)`,
+         `sonuc` false. Kitin kendi çağrıları bunu `if (!evet) return;`
+         ile okuyor; benim ilk yazımım argümanı YOK SAYIYORDU, yani
+         "Vazgeç"e basınca eylem YİNE KOŞUYORDU. Onay kapısı açılıyor
+         ama KAPATMIYORDU — kapının en kötü hâli, çünkü kullanıcı
+         korunduğunu sanır. Kapı bunu ölçerek buldu (satır 4→3). */
+      if (!evet) return;
+      d.setAttribute('data-kritik-onaylandi', '1');
+      d.click();
+      d.removeAttribute('data-kritik-onaylandi');
+    });
+  }, true);
+
+  /* ═══════════════════════════════════════════════════════════════════
+     L11 · TABLO BAŞLIĞI — BAŞLIK SAYISI HÜCRE SAYISINA EŞİTTİR
+     ───────────────────────────────────────────────────────────────────
+     Bir tablonun `<thead>`indeki `<th>` sayısı satırların `<td>`
+     sayısıyla UYUŞMAZSA her başlık yanlış sütuna düşer ve tablo
+     sessizce yalan söyler. Kit bunu ÖLÇER ve konsola yazar; düzeltmesi
+     markup işidir (kit hücre uydurmaz).
+
+     Kitin YAPTIĞI: başlığın kendi sözleşmesi — `scope="col"`, sıralama
+     düğmesi varsa `aria-sort`, ve `<thead>`in yapışkan kalması.
+     ═══════════════════════════════════════════════════════════════ */
+
+  function tabloBasligiKur() {
+    var kusur = [];
+    document.querySelectorAll('table').forEach(function (t) {
+      var bas = t.tHead && t.tHead.rows[0];
+      if (!bas) return;
+      var thSay = 0;
+      [].forEach.call(bas.cells, function (c) { thSay += (c.colSpan || 1); });
+      [].forEach.call(bas.cells, function (c) {
+        if (c.tagName === 'TH' && !c.getAttribute('scope')) c.setAttribute('scope', 'col');
+      });
+      var govde = t.tBodies && t.tBodies[0];
+      var ilk = govde && govde.rows[0];
+      if (!ilk) return;
+      var tdSay = 0;
+      [].forEach.call(ilk.cells, function (c) { tdSay += (c.colSpan || 1); });
+      if (thSay !== tdSay) kusur.push({ tablo: t.id || t.className || '(adsız)', baslik: thSay, hucre: tdSay });
+    });
+    if (kusur.length) {
+      /* Sessiz kalmaz — ama toast da basmaz: bu yöneticinin değil,
+         geliştiricinin göreceği bir kusurdur. */
+      console.warn('[kit L11] tablo başlığı hücreyle uyuşmuyor:', kusur);
+    }
+    return kusur;
+  }
+
+  /* ═══════════════════════════════════════════════════════════════════
+     L10 · TEKRARLAYAN SATIR — NUMARALI · SÜRÜKLE-SIRALA · SİL ONAYLI
+     ───────────────────────────────────────────────────────────────────
+     "Yeni özellik", "hizmet paketleri", "adımlar", "sorular" — hepsi
+     aynı kalıptır ve kitte `satir-ekle` olarak zaten var. L10 o kalıba
+     ÜÇ YETENEK ekler; ikinci bir tekrarlayıcı kalıbı AÇMAZ:
+
+         numara     satırın kaçıncı olduğu GÖRÜNÜR ve sürükleyince döner
+         tutamak    sürükle-bırak ile sıra değişir (klavyeyle de: ok tuşu)
+         sil        onay ister — yazılmış bir satır tek tıkla kaybolmaz
+
+     Kanca ADA DEĞİL İÇERİĞE bakar (K24'ün dersi): bir kap, içinde
+     `satir-ekle` düğmesinin BİLDİRDİĞİ liste ise tekrarlayıcıdır. Kapın
+     adı `.adim-liste` de olabilir `.kalem-listesi` de — liste büyümez.
+
+     🔴 SİL ONAYI BOŞ SATIRDA SORULMAZ. Yeni eklenmiş, hiç yazılmamış bir
+        satırı silmek geri alınabilir bir şey değil, YANLIŞLIKLA EKLEMEYİ
+        geri almaktır. Onay kapısı orada gürültüdür ve kullanıcı onay
+        kapılarını okumayı bırakır. Dolu satır onay ister, boş satır
+        doğrudan gider.
+     ⚠ Sürükleme HTML5 `draggable` ile; `mouse.wheel`in kayıtlı dersi
+       gibi ölçüm aracıyla çakışmasın diye tutamak AYRI bir eleman
+       (satırın kendisi sürüklenebilir yapılırsa içindeki metin seçimi
+       ölür).
+     ═══════════════════════════════════════════════════════════════ */
+
+  /* Bir liste kabı tekrarlayıcı mı — SORUYU DÜĞME CEVAPLAR. */
+  function tekrarListeleri() {
+    var kaplar = [];
+    document.querySelectorAll('[data-eylem="satir-ekle"], .satir-ekle').forEach(function (d) {
+      var yakin = d.closest('.form-bolum') || d.closest('.kart') || document;
+      var l = (d.getAttribute('data-hedef') && document.querySelector(d.getAttribute('data-hedef')))
+            || yakin.querySelector('.adim-liste, .kalem-listesi, .tablo tbody');
+      if (l && kaplar.indexOf(l) === -1) kaplar.push(l);
+    });
+    return kaplar;
+  }
+
+  function tekrarSatirlari(liste) {
+    return [].filter.call(liste.children, function (c) { return c.nodeType === 1; });
+  }
+
+  function numaralariYaz(liste) {
+    tekrarSatirlari(liste).forEach(function (s, i) {
+      var n = s.querySelector('[data-rol="satir-no"]');
+      if (!n) return;
+      n.textContent = String(i + 1);
+    });
+  }
+
+  function satirDolu(s) {
+    var dolu = false;
+    s.querySelectorAll('input, textarea, select').forEach(function (x) {
+      if (x.type === 'hidden' || x.type === 'button') return;
+      if (x.type === 'checkbox' || x.type === 'radio') { if (x.checked) dolu = true; return; }
+      /* 🔴 `<select>` HER ZAMAN BİR DEĞER TAŞIR — varsayılan seçim veri
+         değildir. İlk yazım `x.value` okuyordu ve seçim taşıyan HER satır
+         "dolu" sayılıyordu: yeni eklenmiş bomboş bir satır bile onay
+         soruyordu (ölçüldü, admin-challenge-form #chTaslar senaryo C).
+         Onay gürültüsü, kullanıcıya onay kapılarını okumayı bıraktırır.
+         Ölçüt: seçim VARSAYILANDAN ayrılmış mı. */
+      if (x.tagName === 'SELECT') {
+        if (x.selectedIndex > 0) dolu = true;
+        return;
+      }
+      if ((x.value || '').trim()) dolu = true;
+    });
+    if (!dolu && s.querySelector('.cipler [data-deger]')) dolu = true;
+    return dolu;
+  }
+
+  function tekrarKur(liste) {
+    if (!liste) return 0;
+    var yazilan = 0;
+    /* Tablo gövdesi bir tekrarlayıcı olabilir ama SATIR İŞLEMİ zaten
+       vardır (§11 `data-islem`); orada ikinci bir sil düğmesi açmayız. */
+    var tablo = liste.tagName === 'TBODY';
+    tekrarSatirlari(liste).forEach(function (s) {
+      if (s.getAttribute('data-tekrar-kuruldu') === '1') return;
+      s.setAttribute('data-tekrar-kuruldu', '1');
+      yazilan++;
+
+      if (!tablo) {
+        var bas = document.createElement('div');
+        bas.className = 'tekrar-bas';
+
+        var tut = document.createElement('button');
+        tut.type = 'button'; tut.className = 'ikon-dugme tekrar-tutamak';
+        tut.setAttribute('aria-label', 'Satırı taşı — ok tuşlarıyla da sıralanır');
+        tut.setAttribute('data-ipucu', 'Sürükleyerek ya da ok tuşlarıyla sırala');
+        tut.innerHTML = '<i class="fa-solid fa-grip-vertical" aria-hidden="true"></i>';
+        tut.draggable = true;
+
+        var no = document.createElement('span');
+        no.className = 'tekrar-no'; no.setAttribute('data-rol', 'satir-no');
+
+        var sil = document.createElement('button');
+        sil.type = 'button'; sil.className = 'ikon-dugme tekrar-sil';
+        sil.setAttribute('aria-label', 'Satırı sil');
+        sil.setAttribute('data-ipucu', 'Satırı sil');
+        sil.innerHTML = '<i class="fa-solid fa-xmark" aria-hidden="true"></i>';
+
+        bas.appendChild(tut); bas.appendChild(no); bas.appendChild(sil);
+        s.insertBefore(bas, s.firstChild);
+        s.classList.add('tekrar-satiri');
+      }
+    });
+    numaralariYaz(liste);
+    return yazilan;
+  }
+
+  function tumTekrarlariKur() {
+    var n = 0;
+    tekrarListeleri().forEach(function (l) { n += tekrarKur(l); });
+    return n;
+  }
+
+  /* ── SİL — dolu satır ONAY ister, boş satır gitmez sadece gider ──── */
+  document.addEventListener('click', function (e) {
+    var d = e.target.closest('.tekrar-sil');
+    if (!d) return;
+    e.preventDefault();
+    var s = d.closest('.tekrar-satiri');
+    if (!s) return;
+    var liste = s.parentNode;
+    /* 🔴 SON SATIR SİLİNMEZ: kalıp orada yaşıyor. `satir-ekle` son satırı
+       KLONLAYARAK çalışır — listeyi boşaltmak eylemi ölü bırakırdı ve
+       kusur sessiz olurdu (düğme çalışır, hiçbir şey doğmaz). */
+    if (tekrarSatirlari(liste).length <= 1) {
+      toast('Son satır silinemez — yeni satır bu satırın kalıbından üretiliyor. İçeriğini boşaltabilirsiniz.');
+      return;
+    }
+    function git() { s.remove(); numaralariYaz(liste); toast('Satır silindi.'); }
+    if (satirDolu(s)) {
+      /* Aynı imza kusuru buradaydı da — kendi kapım bu YOLU HİÇ SINAMAMIŞTI
+         (numara ve tutamak ölçülüyordu, SİLME ölçülmüyordu). Bir kapının
+         yeşili, kapının sınadığı yol kadar geçerlidir. */
+      onaySor('Satırı sil',
+              'Bu satırdaki bilgiler kaldırılacak. Sürdürmek istiyor musunuz?',
+              'Sil', function (evet) { if (evet) git(); });
+    } else { git(); }
+  });
+
+  /* ── SÜRÜKLE-SIRALA ─────────────────────────────────────────────── */
+  var surukAktif = null;
+  document.addEventListener('dragstart', function (e) {
+    var t = e.target.closest('.tekrar-tutamak');
+    if (!t) return;
+    surukAktif = t.closest('.tekrar-satiri');
+    if (!surukAktif) return;
+    surukAktif.classList.add('surukleniyor');
+    try { e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/plain', ''); } catch (h) { /* eski tarayıcı */ }
+  });
+  document.addEventListener('dragover', function (e) {
+    if (!surukAktif) return;
+    var uzeri = e.target.closest ? e.target.closest('.tekrar-satiri') : null;
+    if (!uzeri || uzeri === surukAktif || uzeri.parentNode !== surukAktif.parentNode) return;
+    e.preventDefault();
+    var k = uzeri.getBoundingClientRect();
+    var once = (e.clientY - k.top) < k.height / 2;
+    uzeri.parentNode.insertBefore(surukAktif, once ? uzeri : uzeri.nextSibling);
+  });
+  document.addEventListener('dragend', function () {
+    if (!surukAktif) return;
+    surukAktif.classList.remove('surukleniyor');
+    numaralariYaz(surukAktif.parentNode);
+    surukAktif = null;
+  });
+
+  /* ── KLAVYE — tutamakta ok tuşu satırı taşır ─────────────────────
+     §24'ün dersi: `aria-label` bir şey VAAT ediyorsa o şey çalışmalı. */
+  document.addEventListener('keydown', function (e) {
+    var t = e.target.closest && e.target.closest('.tekrar-tutamak');
+    if (!t || (e.key !== 'ArrowUp' && e.key !== 'ArrowDown')) return;
+    var s = t.closest('.tekrar-satiri');
+    if (!s) return;
+    e.preventDefault();
+    var liste = s.parentNode;
+    if (e.key === 'ArrowUp' && s.previousElementSibling) liste.insertBefore(s, s.previousElementSibling);
+    if (e.key === 'ArrowDown' && s.nextElementSibling) liste.insertBefore(s.nextElementSibling, s);
+    numaralariYaz(liste);
+    t.focus();
+  });
+
+  /* ═══════════════════════════════════════════════════════════════════
+     KURULUM — tek giriş, klondan sonra yeniden çağrılabilir
+     ═══════════════════════════════════════════════════════════════ */
+  function Lkur(kok) {
+    kok = kok || document;
+    kok.querySelectorAll('[data-video]').forEach(videoKur);
+    kok.querySelectorAll('[data-sablon]').forEach(sablonKur);
+    kok.querySelectorAll('[data-ikon]').forEach(ikonSeciciKur);
+    kok.querySelectorAll('[data-hesaplanan]').forEach(hesaplananKur);
+    radyoAcilira(kok);
+    if (kok === document) { tabloBasligiKur(); tumTekrarlariKur(); }
+  }
+
+  window.DM_L_KUR = Lkur;
+  window.DM_TEKRAR_KUR = tekrarKur;
+  /* Silme kuralının TEK KAYNAĞI — `data-islem="sil"` dalı da bunu okur.
+     İki dal aynı soruyu iki farklı şekilde yanıtlıyordu; artık yanıt bir. */
+  window.DM_TEKRAR_KORUMA = {
+    dolu: satirDolu,
+    sonMu: function (liste) { return tekrarSatirlari(liste).length <= 1; }
+  };
+  window.DM_TEKRAR_TUMU = tumTekrarlariKur;
+  window.DM_RADYO_ACILIRA = radyoAcilira;
+  window.DM_TABLO_BASLIK = tabloBasligiKur;
+  window.DM_IKON_NORMAL = ikonNormal;
+  window.DM_VIDEO_COZUMLE = videoCozumle;
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function () { Lkur(document); });
+  } else { Lkur(document); }
 
 })();
