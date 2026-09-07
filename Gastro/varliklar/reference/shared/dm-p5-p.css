@@ -86,6 +86,26 @@
 .p5p-kapaksiz i{ font-size:var(--yazi-24); color:var(--metin-pasif-4, var(--metin-ikincil)); }
 .p5p-kapaksiz span{ font-size:var(--yazi-11-5); font-weight:var(--agirlik-orta); }
 
+/* 🔴 KAPSAM EKSİĞİ · HARF AVATARI ÇİZİLMİYORDU. Donörde `.av` boş bir
+   daire, harfi içindeki `<span>` mutlak kaplama olarak basıyor; o kural
+   `portal-DQfW7by7.css`te (bu sayfada YÜKLÜ DEĞİL). `tarif-liste.css`
+   yalnız ölçü/yuvarlaklık veriyor, zemin ve ortalama vermiyor: canlıda
+   harf çıplak, sola yapışık duruyordu (ekran görüntüsüyle görüldü).
+   Değerler donörün RENDER DOM'undan ÖLÇÜLDÜ, tahmin edilmedi:
+     .av        28×28 · %50 · position:relative · zemin saydam
+     .av > span inset:0 · flex ortalı · zemin var(--cream) ·
+                renk var(--tomato-deep) · 800 · 11px
+   İki token da bu sayfada tanımlı (ölçüldü: #EFE5D3 ve
+   color-mix(#DC3D17 70.9%, #000) → donörün #9C2B10'u). */
+.r-card.p5p-tarif .r-author .av{ position:relative; }
+.r-card.p5p-tarif .r-author .av > span{
+  position:absolute; inset:0;
+  display:flex; align-items:center; justify-content:center;
+  border-radius:inherit; overflow:hidden;
+  background:var(--cream); color:var(--tomato-deep);
+  font-weight:800; font-size:var(--yazi-11, 11px);
+}
+
 /* Alt satır donörün kendisi: solda `.r-author`, sağda `.r-stats`.
    🔴 `.p5p-not` ve `.durum-hapi` KALDIRILDI — donörün kartında karşılığı
       yok; ikisi de kartı donörden 1 satır uzatıyordu. Erişim durumu
