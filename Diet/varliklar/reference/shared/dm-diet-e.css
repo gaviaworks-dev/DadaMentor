@@ -1,9 +1,212 @@
 /* =====================================================================
-   T4 · DIET PUBLIC REVİZE — KULVAR E · CSS
+   T4 · DIET PUBLIC REVİZE — KULVAR E · CSS   (MADDE 7 · SAYFALAMA)
    ---------------------------------------------------------------------
    Bu dosyanın İÇİNİ yalnız ajan E yazar. Bağını LEAD atar (L0).
    Kural: satır içi style YASAK · sayfa <style> bloğu YASAK ·
           ölçüler kanon tokenlarından (--bosluk-* · --yazi-*).
-   Boş bırakılırsa hiçbir şey yapmaz — bağ ile kural AYRI şeylerdir;
-   L0 hijyeni bağın varlığını değil kuralın UYGULANDIĞINI ölçer.
+
+   ── BU DOSYA NEDİR: DIET'İN §8 İKİZİ ────────────────────────────────
+   Kanon `bilesenler.css` §8 (satır 952–1020) sayfalamayı KANON adlarıyla
+   yazar: `.sayfalama / .sayfa-dugme / .sayfa-dugme.aktif / .ok /
+   .sayfa-nokta / .sayfalama-not`.
+   Diet'in KAYNAK adları (`.pagi / .pg / .pg.active / .pg.arrow /
+   .pg[disabled] / .pg-dots / .pagi-note`) zaten çiziliyor:
+       varliklar/reference/diet/css/dd-shell.css:1645–1667  (§SAYFALAMA)
+   Bu yüzden kaynak adları BURADA YENİDEN YAZILMAZ — "kaynağın kuralı
+   zaten bildirilmiş": ikinci bir bildirim ya kopya olur ya sessizce
+   kaybeder. Eksik olan yan KANON adlarıdır ve bu dosya onu kapatır;
+   Gastro'nun `dm-pagi.css` ikizinin (kanon §8a) Diet karşılığıdır.
+
+   ── ÖLÇÜLDÜ 2026-09-07 · NEDEN HER var() YEDEKLİ ────────────────────
+   Diet'in 157 kabuklu sayfasının 138'i kanon token dosyasını YÜKLEMİYOR
+   (`kanon/tokenlar.css` yalnız 19 sayfada). Ölçüm (rapor/t4/e-once.json):
+       programlar · testler · besin-kutuphanesi · beslenme-ipuclari__liste
+       → --bosluk-* --yazi-* --murekkep --kagit --cizgi --aksan* HEPSİ YOK
+       → yalnız kabuğun kendi tokenları var:
+         --green #009A44 · --green-deep #00602b · --muted #717171
+         --line #ECECEC · --paper #ffffff · --ink #211E16
+         --radius-md 12px · --ease cubic-bezier(.22,.61,.36,1)
+   ⚠ Tanımsız `var()` kuralı ELEMEZ, özelliği başlangıç değerine çeker.
+     Yedeksiz yazılsaydı bu 138 sayfada düğme 44px yerine içerik boyu,
+     yazı 14px yerine 16px, köşe 12px yerine 0 çizerdi.
+     Kanıtı bu depoda duruyor: `dd-kabuk.css:420`
+       `.sayfa-dugme.ok i{ font-size:var(--yazi-12) }`
+     yedeksiz yazılmış ve 138 sayfada ok ikonunu 12px'e DEĞİL, kalıtıma
+     düşürüyor. Aşağıdaki `.ok i` kuralı onu yedekle kapatıyor.
+   Zincir hep aynı: kanon adı → kabuk adı → sabit.
+
+   ── ÖLÇÜLDÜ · DÜZELTİLEN KUSUR: AKTİF HAP KONTRASTI ────────────────
+   `destek-taleplerim.html` kanon §8'in ESKİ bir kopyasını kendi <style>
+   bloğunda taşıyor (satır 3845–3876) ve aktif hapı `var(--aksan)` ile
+   boyuyor:
+       ölçüldü @1440  arka plan rgb(0,154,68) · metin beyaz  → 3.68:1  🔴
+   Kanon §8 bu kararı ölçüsüyle birlikte geri almıştı ("METİN ZEMİNİ
+   --aksan OLAMAZ", şerh bilesenler.css:975–987, diet için 3.68 → 5.33).
+   Sayfanın kopyası o düzeltmeden ÖNCEye ait. Aşağıdaki `.aktif` kuralı
+   `--aksan-koyu`ya döndürüyor; o sayfada `--aksan-koyu` = #00602b:
+       rgb(0,96,43) · beyaz metin → 7.75:1  ✅  (WCAG AA eşiği 4.5)
+   ⚠ Kontrastı DÜŞÜRMÜYOR, yükseltiyor — "kapıyı yeşile boyamak" değil.
+   Aynı kural `d-cozum-merkezi.html`de değer DEĞİŞTİRMİYOR: orada
+   `--aksan-koyu` = #1c7a4e (5.32:1) ve zaten uygulanıyordu.
+
+   ── SAPMA KAYDI (düzeltilmedi, bildirilir) ─────────────────────────
+   Aktif hap Diet içinde İKİ değer alıyor, ikisi de AA'yı geçiyor:
+       .pagi kulvarı (20 sayfa) + destek-taleplerim  → #00602b  7.75:1
+       d-cozum-merkezi (kanon token dosyasını yükler) → #1c7a4e  5.32:1
+   Fark bileşenin değil TOKEN KULVARININ: destek-taleplerim
+   `kanon/markalar/diet.css`i yüklemiyor, `--aksan-koyu`yu kabuğun
+   `--tomato-deep`inden alıyor. Sayfalama kulvarının işi değil.
    ===================================================================== */
+
+
+/* =====================================================================
+   E1 · KANON ADLI SAYFALAMA — §8'in Diet ikizi
+   Değerler bilesenler.css:952–1020 ile birebir; tek fark yedek zinciri.
+   ===================================================================== */
+
+.sayfalama{
+  display:flex; align-items:center; justify-content:center;
+  gap:var(--bosluk-8,8px);
+  margin-top:var(--bosluk-40,40px);
+  flex-wrap:wrap;
+}
+
+.sayfa-dugme{
+  /* 12px→13px · kanon §8'in ölçtüğü kaynak değeri (`.pg{padding:0 13px}`) */
+  min-width:44px; height:44px; padding:0 var(--bosluk-13,13px);
+  display:inline-flex; align-items:center; justify-content:center;
+  font-family:inherit;
+  font-size:var(--yazi-14,14px);
+  font-weight:var(--agirlik-kalin,700);
+  color:var(--murekkep,var(--ink,#211E16));
+  background:var(--kagit,var(--paper,#ffffff));
+  border:var(--cizgi-1,1px) solid var(--cizgi,var(--line,#ECECEC));
+  border-radius:var(--yuvarlak-md,var(--radius-md,12px));
+  cursor:pointer;
+  transition:var(--sure,.2s) var(--yumusama,var(--ease,cubic-bezier(.22,.61,.36,1)));
+}
+
+.sayfa-dugme:hover:not([disabled]):not(.aktif){
+  border-color:var(--aksan,var(--green,#009A44));
+  color:var(--aksan-koyu,var(--green-deep,#00602b));
+}
+.sayfa-dugme:focus-visible{
+  outline:var(--odak-kalinlik,3px) solid var(--odak-renk,var(--green,#009A44));
+  outline-offset:var(--odak-ofset,2px);
+}
+
+/* AKTİF HAP — yukarıdaki kontrast şerhi. Zemin KOYU adım, parlak aksan DEĞİL. */
+.sayfa-dugme.aktif{
+  background:var(--aksan-koyu,var(--green-deep,#00602b));
+  border-color:var(--aksan-koyu,var(--green-deep,#00602b));
+  color:var(--kagit,var(--paper,#ffffff));
+  cursor:default;
+}
+
+/* OK İKONU · İKİ AD BİRDEN — ölçüldü: kanon `.ok`, üretici betikler
+   `.arrow` basıyor. Fit `fit-cozum-merkezi` ve Gastro `g-cozum-merkezi`
+   `sayfa-dugme arrow`, Diet `destek-taleplerim` `sayfa-dugme ok` yazıyor.
+   Tek ad yazılsaydı iki kulvardan biri 14px ok çizerdi. */
+.sayfa-dugme.ok i,
+.sayfa-dugme.arrow i{ font-size:var(--yazi-12,12px); }
+
+.sayfa-dugme[disabled],
+.sayfa-dugme[aria-disabled="true"]{ opacity:.4; pointer-events:none; }
+
+.sayfa-nokta{
+  color:var(--metin-ikincil,var(--muted,#717171));
+  font-weight:var(--agirlik-kalin,700);
+  padding:0 2px;
+  font-size:var(--yazi-14,14px);
+  user-select:none;
+}
+
+.sayfalama-not{
+  /* `text-align-last:auto` — kanon §8'in ölçtüğü kusur: kabuğun yaslama
+     sistemi `p,li,dd,blockquote,.lead,.lib-sub{text-align-last:start}`
+     yazıyor, not TEK SATIR olduğu için hizasını `text-align` değil
+     `text-align-last` belirliyor. Hesaplanmış `text-align` ölçümü bu
+     kusuru GÖREMEZ. */
+  width:100%; text-align:center; text-align-last:auto;
+  font-size:var(--yazi-12-5,12.5px);
+  color:var(--metin-ikincil,var(--muted,#717171));
+  font-weight:var(--agirlik-govde,500);
+  margin-top:var(--bosluk-6,6px);
+}
+
+@media (max-width:640px){
+  .sayfalama{ gap:var(--bosluk-6,6px); margin-top:var(--bosluk-32,32px); }
+  .sayfa-dugme{
+    min-width:40px; height:40px;
+    font-size:var(--yazi-13,13px);
+    padding:0 var(--bosluk-10,10px);
+  }
+}
+
+
+/* =====================================================================
+   E2 · KART AYAĞINDAKİ SAYFALAMA — kanon 9338–9354 · 9498–9510
+   Akıştaki sayfalama tablodan 40px sonra başlar; KART AYAĞINDA (.kart-alt)
+   bant zaten kendi dolgusunu taşır, üst pay ÇİFTLENİR. Kanon bunu
+   `bilesenler.css`te kapatmış; kanonu YÜKLEMEYEN sayfada (destek-taleplerim
+   gibi) kural sayfanın kendi <style>'ından geliyordu — ikiz tamamlıyor.
+   ⚠ Özgüllük (0,2,0) — E1'in (0,1,0) kuralını yener, sıradan bağımsız.
+   ===================================================================== */
+.kart-alt > .sayfalama{ margin-top:0; flex:1 1 100%; }
+
+
+/* =====================================================================
+   E3 · SAYFA DIŞI KART — `dm-diet-e.js` sayfalama kurduğunda kullanılır
+   ---------------------------------------------------------------------
+   ⚠ `hidden` NİTELİĞİ YETMEZ: kartların kendi kuralı (`.hub-card{
+     display:flex}`, testler.html:132) tarayıcının `[hidden]{display:none}`
+     UA kuralını YENER — kart gizlenmez, sayfalama sessizce çalışmaz
+     görünür. Bu yüzden ayrı bir nitelik + !important.
+   Nitelik seçildi, SINIF değil: kartın `className`i başka kulvarların
+   ölçüm imzası, ona dokunulmaz.
+   ===================================================================== */
+[data-dm-e="gizli"]{ display:none !important; }
+
+
+/* =====================================================================
+   E4 · TEK SAYFALIK LİSTEDE RAY GİZLENİR
+   ---------------------------------------------------------------------
+   DONÖR KURALI, uydurma değil. Kanon `02-bilesenler.md` §21 bulgusu:
+     "✅ Tek sayfalık sonuçta ray gizlenir, özet satırı kalır. İyi karar,
+      kanona aynen geçti."
+   Donörde ÖLÇÜLDÜ (rapor/t4/e-once.json · 1440):
+     Fit `fit-programlarim`  · nav.sayfalama → görünür DEĞİL (1 sayfa)
+     Fit `fit-egzersizlerim` · nav.sayfalama → görünür DEĞİL (1 sayfa)
+
+   DIET'TE KUSUR · ÖLÇÜLDÜ 2026-09-07 (scripts/olcum/t4/gecici/e-k7.mjs):
+     `destek-taleplerim.html` ve `d-cozum-merkezi.html` durum süzgeci
+     tek sayfaya indirdiğinde (Açık 2 · Yanıt bekleyen 3 · Çözülen 2 ·
+     Kapatılan 4 — dördü de ≤10, yani tek sayfa) ray GÖRÜNÜR kalıyor:
+       nav yüksekliği 44px · 5 düğme · dördü edilgen, biri aktif "1"
+     Yani kullanıcıya gezilecek yer yokken beş düğmelik bir ray duruyor.
+   Düzeltme sayfanın betiğinde olurdu (HTML'e dokunulamıyor); ölçüt
+   TAMAMEN yapısal olduğu için CSS'ten kapatılabiliyor.
+
+   ── SEÇİCİ NİYE BÖYLE ───────────────────────────────────────────────
+   "Tek sayfa" = rayda AKTİF olmayan, OK olmayan hiçbir sayı düğmesi yok.
+     `:not(:has(.sayfa-dugme:not(.ok):not(.arrow):not(.aktif)))`
+   `:has(.sayfa-dugme.aktif)` ÖN KOŞULU şart: onsuz HENÜZ ÇİZİLMEMİŞ boş
+   ray da (betik doldurmadan önce `<nav class="sayfalama"></nav>`) eşleşir
+   ve kart ayağı bir an için kaybolur.
+   ⚠ `:has()` özgüllüğü en özgül argümanından alır: bu kural (0,4,0).
+     Yalnız GİZLEME ekliyor, hiçbir çizim kuralını devirmiyor.
+   ===================================================================== */
+.sayfalama:has(.sayfa-dugme.aktif):not(:has(.sayfa-dugme:not(.ok):not(.arrow):not(.aktif))){
+  display:none;
+}
+/* kaynak adlı ikiz — Diet `.pagi` kulvarında bugün tetiklenmiyor
+   (20 sayfanın hepsi ≥2 sayfa), betik sayfalaması gelirse hazır. */
+.pagi:has(.pg.active):not(:has(.pg:not(.arrow):not(.ok):not(.active))){
+  display:none;
+}
+/* Ray gizlenince kart ayağı BOŞ KENAR ÇİZGİSİ olarak kalmasın.
+   Yalnız ayağın TEK çocuğu sayfalama ise geçerli — başka kalem
+   (not, eylem düğmesi) taşıyan ayak elenmez. */
+.kart-alt:has(> .sayfalama:has(.sayfa-dugme.aktif):not(:has(.sayfa-dugme:not(.ok):not(.arrow):not(.aktif)))):not(:has(> :not(.sayfalama))){
+  display:none;
+}

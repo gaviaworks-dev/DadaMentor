@@ -7,3 +7,28 @@
    Boş bırakılırsa hiçbir şey yapmaz — bağ ile kural AYRI şeylerdir;
    L0 hijyeni bağın varlığını değil kuralın UYGULANDIĞINI ölçer.
    ===================================================================== */
+
+/* ─────────────────────────────────────────────────────────────────────
+   MADDE 4 · prototip bilgi kutusu kalktı — BURAYA KURAL YAZILMADI, NEDEN:
+   ---------------------------------------------------------------------
+   ÖLÇÜM (önizleme 8781, 1440 + 390, taze context, waitUntil:'load'):
+     · Diet giriş panosu ÖNCE : `p.giris-not[data-maket-not]`
+       (yük 84.13px @1440 · 103.5px @390) — kutu ile "Giriş Yap" arası **0px**
+       (kutu `margin-bottom:0`, düğme `margin-top:0`).
+     · DONÖR `Gastro/g-giris.html`, aynı yer: kutu YOK, görünür önceki kardeş
+       `.giris-satir`, düğme arası **20px** (1440 ve 390 aynı).
+       Kayıt panosunda `.onay-satirlari` → düğme **20px** (donör ve Diet aynı).
+     · 20px'in kaynağı kanon TOKEN bildirimi:
+         `bilesenler.css` `.giris-satir{margin:var(--bosluk-16) 0 var(--bosluk-20)}`
+         `bilesenler.css` `.onay-satirlari{margin:var(--bosluk-18) 0 var(--bosluk-20)}`
+       → `--bosluk-20` = 20px. Kutu SİLİNİNCE aralık kendiliğinden bu tokena
+       oturuyor; donörle birebir.
+
+   🔴 DENENDİ VE GERİ ALINDI: `#auPaneGiris .giris-gonder,#auPaneKayit
+   .giris-gonder{margin-top:var(--bosluk-20)}` yazıldı, kapı KIRMIZI verdi:
+   aralık 20 değil **40px** oldu (1440 ve 390). Sebep ölçüldü — `.giris-gonder`
+   `display:inline-flex`, satır-içi seviyede bir kutu; üst marjı kardeşin
+   `margin-bottom`ı ile ÇÖKMÜYOR, üstüne EKLENİYOR. "Token yazmış olmak" için
+   konan kural dikey ritmi 2 katına çıkarıyordu. İş kural yazmak değil,
+   kutuyu kaldırıp kanonun zaten bildirdiği tokena bırakmak.
+   ───────────────────────────────────────────────────────────────────── */

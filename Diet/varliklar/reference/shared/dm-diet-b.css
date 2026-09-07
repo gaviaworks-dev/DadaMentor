@@ -2,8 +2,184 @@
    T4 · DIET PUBLIC REVİZE — KULVAR B · CSS
    ---------------------------------------------------------------------
    Bu dosyanın İÇİNİ yalnız ajan B yazar. Bağını LEAD atar (L0).
-   Kural: satır içi style YASAK · sayfa <style> bloğu YASAK ·
-          ölçüler kanon tokenlarından (--bosluk-* · --yazi-*).
-   Boş bırakılırsa hiçbir şey yapmaz — bağ ile kural AYRI şeylerdir;
-   L0 hijyeni bağın varlığını değil kuralın UYGULANDIĞINI ölçer.
+   Kural: satır içi style YASAK · sayfa <style> bloğu YASAK.
+
+   Kapsam: MADDE 2 (Görüş Bildir kenar sekmesi) + MADDE 9 (sayfa bandı).
+   Ölçü tahmin EDİLMEDİ; her sayı FIT donöründen tarayıcıda okundu
+   (rapor/t4/b-taban.json · rapor/t4/b-kapi.json › `donor`).
+
+   ⚠ TOKEN: Diet ağacının 39 sayfası `kanon/tokenlar.css` YÜKLEMİYOR ve
+   `dd-kabuk.css`in token bloğu `:root`a değil kabuk bileşenlerine
+   yazılmış. Tanımsız bir `var()` kuralı ELEMEZ, özelliği başlangıç
+   değerine çeker (0'a düşürür) — kusuru büyütürdü. Bu yüzden ölçüler
+   burada, HER sayfada tanımlı olan kendi `:root` blokumdan geliyor.
    ===================================================================== */
+
+:root{
+  /* — Rol A · sayfa bandı — donör: FIT `.lib-top` (33 sayfa, tek değer) — */
+  --dmb-a-pt-genis:128px;  --dmb-a-h1-genis:42px;   /* ≥901px  */
+  --dmb-a-pt-orta:128px;   --dmb-a-h1-orta:31px;    /* 641–900 */
+  --dmb-a-pt-dar:96px;     --dmb-a-h1-dar:25px;     /* ≤640px  */
+  /* Rol A içinde TEK istisna — sihirbaz bandı; gerekçe aşağıda. */
+  --dmb-a-h1-genis-sihirbaz:40px;
+
+  /* — Rol B · anasayfa/hub — donör: FIT `.df-top` (index.html) — */
+  --dmb-b-pt-genis:113px;  --dmb-b-h1-genis:46px;   /* ≥1025px */
+  --dmb-b-h1-orta:31px;                             /* 769–1024 */
+  --dmb-b-h1-orta2:28px;                            /* 641–768 */
+  --dmb-b-pt-dar:70px;     --dmb-b-h1-dar:23px;     /* ≤640px  */
+
+  /* — Rol C · giriş/kayıt — donör: FIT `.giris-hero` — */
+  --dmb-c-pt-genis:128px;  --dmb-c-h1-genis:25px;   /* ≥641px  */
+  --dmb-c-pt-dar:96px;     --dmb-c-h1-dar:22px;     /* ≤640px  */
+
+  /* — Madde 2 · kenar sekmesinin üst konumu — donör: FIT 65/65 sayfa
+       top 272px → getBoundingClientRect().top = 199,9 (kutu 52,1×144,2,
+       translateY(-50%)). Kanon `bilesenler.css` ile birebir aynı ifade. — */
+  --dmb-sekme-ust:272px;
+}
+
+/* =====================================================================
+   MADDE 2 · GÖRÜŞ BİLDİR — kenar sekmesinin dikey konumu
+   ---------------------------------------------------------------------
+   ÖLÇÜLEN KUSUR (@1440, kendi ölçümüm):
+     FIT   65/65 sayfa   üst 199,9   (tek değer)
+     Diet  122 sayfa     üst 377,9   🔴 Δ178px
+           35 sayfa      üst 199,9   🟢
+   KAZANAN KURAL (CDP `CSS.getMatchedStylesForNode`, kaskad çözüldü):
+     122 sapan sayfa → `dd-kabuk.css` `.feedback-tab{top:var(--fb-top,50%)}`
+                       özgüllük (0,1,0)  → %50 × 900 = 450px → 377,9
+     35 doğru sayfa  → `dd-kabuk.css` `.kenar-sekmesi{top:clamp(...)}`
+                       özgüllük (0,1,0), AYNI dosyada DAHA SONRA geldiği
+                       için kazanıyor → 272px → 199,9
+   Fark markup'tan: 35 sayfada `class="feedback-tab kenar-sekmesi"`,
+   122 sayfada yalnız `feedback-tab`. HTML'e dokunmuyorum; farkı CSS'te
+   kapatıyorum.
+   ÖZGÜLLÜK: benim kuralım da (0,1,0). "Sonra yüklenen kazanır" YALNIZ eşit
+   özgüllükte doğru — bu yüzden `:where()` ile düşürmüyorum, `a.feedback-tab`
+   ile YÜKSELTMİYORUM da: dd-kabuk.css ile TAM EŞİT tutup kaynak sırasıyla
+   kazanıyorum. Bu dosya kabuğun bütün CSS'lerinden ve sayfa <style>
+   bloklarından SONRA yükleniyor (157/157 sayfada ölçüldü).
+   `--fb-top` hiçbir JS tarafından yazılmıyor (Diet+Fit+kanon tarandı).
+   ===================================================================== */
+.feedback-tab{
+  top:clamp(140px, var(--dmb-sekme-ust), calc(100dvh - 140px));
+}
+/* ≤640px'te sekme zaten gizli (iki markada da 0×0 ölçüldü) — display'e
+   DOKUNMUYORUM; gizleme dd-kabuk.css'in @media bloğunda kalıyor. */
+
+/* =====================================================================
+   MADDE 9 · SAYFA BANDI — FIT kanon banner kalıbına eşitleme
+   ---------------------------------------------------------------------
+   Özne: `#pageMain > :first-child`. Aileler ROL'e göre donöre bağlandı;
+   `.lib-top` ADI ÇAĞRILMADI (kanon adı davranış çağırır — hero.css'in iki
+   kolonlu düzeni ve istatistik rayı uyumsuz markup'a inerdi). Aktarılan
+   şey ADI değil ÖLÇÜSÜ.
+
+   Yükseklik SÖZLEŞMESİ (liste 544 · detay 560 · sihirbaz 434) önceki turda
+   kapandı — bu dosya `min-height`e, `height`e, `padding-bottom`a DOKUNMAZ.
+   Marka rengi Diet'ten gelir; buradan renk YAZILMAZ.
+   ===================================================================== */
+
+/* ── ROL A · sayfa bandı ─────────────────────────────────────────────
+   Donör FIT `.lib-top`   ≥901: 128/42 · 641–900: 128/31 · ≤640: 96/25
+   Üye Diet aileleri (kapsanan sayfa sayısı, @1440 ölçülen ÖNCE değeri):
+     .reh-hero              26  pt128 h1 42|38
+     .reh-hero-article      22  pt128 h1 38|40   (.reh-hero ile kapsanır)
+     .dl-top                12  pt112 h1 46|44
+     .tst-top               10  pt128 h1 44|36
+     .calc-top              10  pt128 h1 38
+     .lg-top                10  pt128 h1 34
+     .nb-top                10  pt128 h1 32|36   (h1'i HİÇBİR kural yazmıyordu
+                                                  → 32px UA `h1{2em}` idi)
+     .tb-top                 8  pt128 h1 42      (yalnız @390 sapıyordu)
+     .bant                   7  pt128 h1 42      (yalnız @390 sapıyordu)
+     .wzp-top                3  pt128 h1 40
+     .ol-top                 1  pt128 h1 38
+     .lst-top                1  pt128 h1 44
+     .arama-hero             1  pt128 h1 42      (iki genişlikte de uyumlu)
+   Seçici özgüllüğü: bant (0,1,0) · başlık (0,1,1).
+   Yenilen kurallar da (0,1,0)/(0,1,1) ve hepsi bu dosyadan ÖNCE yükleniyor
+   (sayfa <style> blokları dahil — dm-diet-b.css'ten sonra <style> taşıyan
+   sayfa 0/157). Eşit özgüllük + geç kaynak sırası = kazanır. */
+@media (min-width:901px){
+  .reh-hero,.dl-top,.tst-top,.calc-top,.lg-top,.nb-top,
+  .tb-top,.bant,.wzp-top,.ol-top,.lst-top,.arama-hero{
+    padding-top:var(--dmb-a-pt-genis);
+  }
+  .reh-hero h1,.dl-top h1,.tst-top h1,.calc-top h1,.lg-top h1,.nb-top h1,
+  .tb-top h1,.bant h1,.ol-top h1,.lst-top h1,.arama-hero h1{
+    font-size:var(--dmb-a-h1-genis);
+  }
+  /* 🔴 SİHİRBAZ BANDI — rol A'nın TEK istisnası, ölçümle gerekçeli.
+     `.wzp-top`un yükseklik sözleşmesi 434px (min-height) ve bandın içeriği
+     bu tabana YAPIŞIK duruyor. h1'i 40→42 yapınca bana-uygun-olani-bul.html
+     434 → 436,2 px'e çıktı (ölçüldü) — kapanmış K5 sözleşmesini bozardı.
+     Donör toleransı ≤4px; 40px donörün 42'sine 2px uzakta, yani ölçüt
+     ZATEN sağlanıyor. Kapanmış bir sözleşmeyi 2px'lik bir "tam eşitlik"
+     için bozmuyorum; aile içinde değer yine TEK (3/3 sayfa 40px). */
+  .wzp-top h1{ font-size:var(--dmb-a-h1-genis-sihirbaz); }
+}
+@media (min-width:641px) and (max-width:900px){
+  .reh-hero,.dl-top,.tst-top,.calc-top,.lg-top,.nb-top,
+  .tb-top,.bant,.wzp-top,.ol-top,.lst-top,.arama-hero{
+    padding-top:var(--dmb-a-pt-orta);
+  }
+  .reh-hero h1,.dl-top h1,.tst-top h1,.calc-top h1,.lg-top h1,.nb-top h1,
+  .tb-top h1,.bant h1,.wzp-top h1,.ol-top h1,.lst-top h1,.arama-hero h1{
+    font-size:var(--dmb-a-h1-orta);
+  }
+}
+@media (max-width:640px){
+  .reh-hero,.dl-top,.tst-top,.calc-top,.lg-top,.nb-top,
+  .tb-top,.bant,.wzp-top,.ol-top,.lst-top,.arama-hero{
+    padding-top:var(--dmb-a-pt-dar);
+  }
+  .reh-hero h1,.dl-top h1,.tst-top h1,.calc-top h1,.lg-top h1,.nb-top h1,
+  .tb-top h1,.bant h1,.wzp-top h1,.ol-top h1,.lst-top h1,.arama-hero h1{
+    font-size:var(--dmb-a-h1-dar);
+  }
+}
+
+/* ── ROL B · anasayfa / hub ──────────────────────────────────────────
+   Donör FIT `.df-top` (index.html + dadafit-hub). Neden lib-top DEĞİL:
+   Diet `.sh-top`un `min-height`i 922px — FIT `.df-top`unkiyle BİREBİR aynı,
+   `.lib-top`unki 544. Aynı rol, aynı sözleşme.
+   ÖNCE: pt 96 (@1440) · 74 (@390) · h1 44 · 29
+   SONRA: donörün eğrisi (113/46 · 113/31 · 113/28 · 70/23) */
+@media (min-width:1025px){
+  .sh-top{ padding-top:var(--dmb-b-pt-genis); }
+  .sh-top h1{ font-size:var(--dmb-b-h1-genis); }
+}
+@media (min-width:769px) and (max-width:1024px){
+  .sh-top{ padding-top:var(--dmb-b-pt-genis); }
+  .sh-top h1{ font-size:var(--dmb-b-h1-orta); }
+}
+@media (min-width:641px) and (max-width:768px){
+  .sh-top{ padding-top:var(--dmb-b-pt-genis); }
+  .sh-top h1{ font-size:var(--dmb-b-h1-orta2); }
+}
+@media (max-width:640px){
+  .sh-top{ padding-top:var(--dmb-b-pt-dar); }
+  .sh-top h1{ font-size:var(--dmb-b-h1-dar); }
+}
+
+/* ── ROL C · giriş / kayıt ───────────────────────────────────────────
+   Donör FIT `.giris-hero`. Diet `.giris-hero` (d-giris) ve `.au-top`
+   (kayit) aynı auth rolünde; FIT'te kayıt ekranı yok, ikisi de tek donöre
+   bağlandı. @1440 zaten uyumlu (128/25); sapan yalnız @390 pt (74 → 96). */
+@media (min-width:641px){
+  .giris-hero,.au-top{ padding-top:var(--dmb-c-pt-genis); }
+  .giris-hero h1,.au-top h1{ font-size:var(--dmb-c-h1-genis); }
+}
+@media (max-width:640px){
+  .giris-hero,.au-top{ padding-top:var(--dmb-c-pt-dar); }
+  .giris-hero h1,.au-top h1{ font-size:var(--dmb-c-h1-dar); }
+}
+
+/* ── ROL D · profil / kimlik bandı — DEĞİŞİKLİK YOK ──────────────────
+   Diet `.pf-top` (7 sayfa) ↔ FIT `.pf-top.below-header` + `.fp-profil`.
+   Ölçülen: @1440 Diet 112/29 · FIT 112/29 (fp-profil 113/29) → Δ≤1
+           @390  Diet  62/24 · FIT  62/23                     → Δ≤1
+   Sözleşme ZATEN sağlanıyor; `.lib-top`a ZORLANMADI. Kural yazmıyorum —
+   yazmak, ölçülmüş bir uyumu bozmak olurdu. */

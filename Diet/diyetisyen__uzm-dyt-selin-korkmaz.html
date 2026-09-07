@@ -453,8 +453,16 @@ html,body{overflow-x:clip}
 .pf-disclaimer p{font-size:13.5px;color:var(--slate-2);font-weight:500;line-height:1.65;max-width:960px}
 .pf-disclaimer b{color:var(--slate);font-weight:700}
 </style>
+<link data-t4="d" rel="stylesheet" href="../kanon/tokenlar.css">
+<link data-t4="d" rel="stylesheet" href="../kanon/markalar/diet.css">
+<link data-t4="d" rel="stylesheet" href="../kanon/bilesenler.css">
+<link data-t4="d" rel="stylesheet" href="varliklar/reference/diet/diet-profil/diet-taban.css">
+<script data-t4="d" src="varliklar/reference/diet/diet-profil/diet-profil.js" defer></script>
 <link rel="stylesheet" href="varliklar/reference/shared/dd-kabuk.css">
 <link rel="stylesheet" href="../kanon/alt-cubuk.css">
+<link data-t4="b" rel="stylesheet" href="varliklar/reference/shared/dm-diet-b.css">
+<link data-t4="d" rel="stylesheet" href="varliklar/reference/shared/dm-diet-d.css">
+<link data-t4="e" rel="stylesheet" href="varliklar/reference/shared/dm-diet-e.css">
 </head>
 
 <body data-brand="diet" data-nav="diyetisyenler">
@@ -476,7 +484,7 @@ html,body{overflow-x:clip}
         <a class="bs-item bs-gastro" href="../Gastro/anasayfa.html" title="DadaGastro" data-eco="gastro"><i class="fa-solid fa-utensils"></i><span class="bs-name"><span class="bd">dada</span><span class="sf">gastro</span></span></a>
         <a class="bs-item bs-diet is-active" href="anasayfa.html" aria-current="page"><i class="fa-solid fa-heart-pulse"></i><span class="bs-name"><span class="bd">dada</span><span class="sf">diet</span></span></a>
         <a class="bs-item bs-gourmet" href="../Gourmet/anasayfa.html" title="DadaGourmet" data-eco="gourmet"><i class="fa-solid fa-map-location-dot"></i><span class="bs-name"><span class="bd">dada</span><span class="sf">gourmet</span></span></a>
-        <a class="bs-item bs-fit is-active" href="anasayfa.html" aria-current="page"><i class="fa-solid fa-dumbbell"></i><span class="bs-name"><span class="bd">dada</span><span class="sf">fit</span></span></a>
+        <a class="bs-item bs-fit" href="anasayfa.html"><i class="fa-solid fa-dumbbell"></i><span class="bs-name"><span class="bd">dada</span><span class="sf">fit</span></span></a>
         <span class="bs-item bs-akademi is-soon" aria-disabled="true" aria-label="DadaAkademi — kilitli"><i class="fa-solid fa-graduation-cap"></i><span class="bs-name"><span class="bd">dada</span><span class="sf">akademi</span></span><i class="fa-solid fa-lock sr-lock" aria-hidden="true"></i></span>
         <span class="bs-item bs-store is-soon" aria-disabled="true" aria-label="DadaStore — kilitli"><i class="fa-solid fa-bag-shopping"></i><span class="bs-name"><span class="bd">dada</span><span class="sf">store</span></span><i class="fa-solid fa-lock sr-lock" aria-hidden="true"></i></span>
       </nav>
@@ -962,105 +970,249 @@ html,body{overflow-x:clip}
   </div>
 </section>
 
-<section class="sec" style="background:var(--bg-white);padding-top:40px">
-  <div class="wrap">
-    <div class="pf-tabbar">
-      <div class="pf-tabs" role="tablist" aria-label="Profil bölümleri">
-        <button class="dt active" type="button" data-tab="hakkinda"><i class="fa-solid fa-user" aria-hidden="true"></i> Hakkında</button>
-        <button class="dt" type="button" data-tab="hizmetler"><i class="fa-solid fa-stethoscope" aria-hidden="true"></i> Hizmetler <span class="cnt">3</span></button>
-        <button class="dt" type="button" data-tab="yorumlar"><i class="fa-solid fa-comment-dots" aria-hidden="true"></i> Yorumlar <span class="cnt">0</span></button>
-              </div>
-      
-    </div>
+<!-- ══ T4/D · madde 8 — DİYETİSYEN PUBLIC PROFİLİ, KULLANICI PROFİLİ KALIBI ══
+     Kalıp donörü: `Gastro/g-sef-panelim.html` → Diet karşılığı
+     `d-diyetisyenim.html`. ÖLÇEREK seçildi: Gastro'nun public şef
+     sayfası (`sefler__*.html`) bu sayfayla ZATEN aynı ESKİ kalıptaydı
+     (`.pf-tabbar/.dt/.pf-pane`, `role="tab"` yok, sürücü sayfa içi);
+     "kullanıcı profiliyle eş kalıp" yalnız şef PANELİNDE vardı.
+     Kalıbın parçaları: `.zebra` → `.sekme-ray > .wrap.kap >
+     nav.sekmeler.ortali[role=tablist][data-sekme-grup]` →
+     `.fit-pane[role=tabpanel]` → `.wrap.kap` → `.bolum-bas` →
+     `.kart.panel` → `.kart-sayac/.ayar-satir/.kart-alt.eylem`.
+     Sürücü `diet-profil.js` — kullanıcı profiliyle AYNI dosya: klavye
+     gezinmesi, `aria-selected`, `#hash` ve `data-sekme-git` burada
+     da çalışır.
+     ⚠ Sayfanın kendi eski sürücüsü (`.pf-tabs .dt`) artık özne
+       bulamıyor; ölü kod olarak duruyor, iki sürücü çakışmıyor.
+     ⚠ Zebra: kalıp pano bölgesini ŞERİTLEMEZ — donörde de `.zebra`nın
+       tek `.bolum` çocuğu kimlik bandıdır. Sarmalayıcı parite için
+       var; uydurma bir şeritleme eklenmedi.
+     VERİ: bütün satırlar sayfanın KENDİ kaynağından. Yorum ve içerik
+     kaydı kaynakta SIFIR olduğu için uydurulmadı — dürüst boş durum.
+     ═══════════════════════════════════════════════════════════════ -->
+<div class="zebra">
 
-    <!-- ===== HAKKINDA ===== -->
-    <div class="pf-pane" data-pane="hakkinda">
-      <div class="ab-grid">
-        <div class="ab-main">
-          
-                      <h2>Uzmanlık alanları</h2>
-            <div class="ab-spec chips drag-scroll">
-                              <span class="chip">Gebelik &amp; Emzirme</span>
-                              <span class="chip">Geriatri Beslenmesi</span>
-                          </div>
-          
-          
-        </div>
-
-        <aside class="ab-side">
-                      <div class="info-card">
-              <h4><i class="fa-solid fa-graduation-cap" aria-hidden="true"></i> Eğitim &amp; Belgeler</h4>
-                                          
-                              <div class="ic-row"><span class="ic-ico"><i class="fa-solid fa-calendar-check" aria-hidden="true"></i></span><div><b>Doğrulama Tarihi</b><span>19 Mayıs 2026</span></div></div>
-                          </div>
-                                <div class="info-card">
-              <h4><i class="fa-solid fa-circle-info" aria-hidden="true"></i> Hızlı Bilgi</h4>
-              <div class="ic-row"><span class="ic-ico"><i class="fa-solid fa-video" aria-hidden="true"></i></span><div><b>Görüşme</b><span>Online &amp; Yüz yüze</span></div></div>
-              
-            </div>
-                  </aside>
-      </div>
-    </div>
-
-    <!-- ===== HİZMETLER ===== -->
-    <div class="pf-pane" data-pane="hizmetler" hidden="">
-              <div class="svc-grid">
-                      <article class="svc-card ">
-              <span class="svc-tag">Online</span>
-              <div class="svc-ico"><i class="fa-solid fa-clipboard-list" aria-hidden="true"></i></div>
-              <h3>İlk Görüşme</h3>
-                            <ul class="svc-feats">
-                <li><i class="fa-solid fa-check" aria-hidden="true"></i> 45 dk görüntülü görüşme</li>
-              </ul>
-              <div class="svc-foot">
-                <div class="svc-price">
-                                      <b>850 ₺</b> <span>/ görüşme</span>
-                                  </div>
-                <button class="svc-book" type="button" data-svc="İlk Görüşme" data-price="850" data-service-id="7"><i class="fa-solid fa-calendar-check" aria-hidden="true"></i> Randevu</button>
-              </div>
-            </article>
-                      <article class="svc-card  feat ">
-              <span class="svc-tag">Online</span>
-              <div class="svc-ico"><i class="fa-solid fa-clipboard-list" aria-hidden="true"></i></div>
-              <h3>Kontrol Görüşmesi</h3>
-                            <ul class="svc-feats">
-                <li><i class="fa-solid fa-check" aria-hidden="true"></i> 30 dk görüntülü görüşme</li>
-              </ul>
-              <div class="svc-foot">
-                <div class="svc-price">
-                                      <b>600 ₺</b> <span>/ görüşme</span>
-                                  </div>
-                <button class="svc-book" type="button" data-svc="Kontrol Görüşmesi" data-price="600" data-service-id="8"><i class="fa-solid fa-calendar-check" aria-hidden="true"></i> Randevu</button>
-              </div>
-            </article>
-                      <article class="svc-card ">
-              <span class="svc-tag">Online</span>
-              <div class="svc-ico"><i class="fa-solid fa-clipboard-list" aria-hidden="true"></i></div>
-              <h3>Aylık Takip Paketi</h3>
-                            <ul class="svc-feats">
-                <li><i class="fa-solid fa-check" aria-hidden="true"></i> 45 dk görüntülü görüşme</li>
-              </ul>
-              <div class="svc-foot">
-                <div class="svc-price">
-                                      <b>2.600 ₺</b> <span>/ görüşme</span>
-                                  </div>
-                <button class="svc-book" type="button" data-svc="Aylık Takip Paketi" data-price="2600" data-service-id="9"><i class="fa-solid fa-calendar-check" aria-hidden="true"></i> Randevu</button>
-              </div>
-            </article>
-                  </div>
-          </div>
-
-    
-
-    <!-- ===== YORUMLAR ===== -->
-    <div class="pf-pane" data-pane="yorumlar" hidden="">
-              
-        <p style="text-align:center;padding:40px 0;color:var(--muted);font-weight:500">Bu diyetisyen için henüz onaylı bir danışan yorumu yok.</p>
-          </div>
-
-    
+<div class="sekme-ray">
+  <div class="wrap kap">
+    <nav class="sekmeler ortali" role="tablist" data-sekme-grup="dp" aria-label="Uzm. Dyt. Selin Korkmaz profil bölümleri">
+        <button class="sekme aktif" type="button" role="tab" id="dp-tab-profil" data-tab="profil" aria-controls="dp-pane-profil" aria-selected="true" tabindex="0"><i class="fa-solid fa-user" aria-hidden="true"></i> Profil</button>
+        <button class="sekme" type="button" role="tab" id="dp-tab-hizmet" data-tab="hizmet" aria-controls="dp-pane-hizmet" aria-selected="false" tabindex="-1"><i class="fa-solid fa-stethoscope" aria-hidden="true"></i> Hizmetler ve Paketler <span class="sekme-sayi">3</span></button>
+        <button class="sekme" type="button" role="tab" id="dp-tab-yorum" data-tab="yorum" aria-controls="dp-pane-yorum" aria-selected="false" tabindex="-1"><i class="fa-solid fa-comment-dots" aria-hidden="true"></i> Danışan Yorumları <span class="sekme-sayi">0</span></button>
+        <button class="sekme" type="button" role="tab" id="dp-tab-icerik" data-tab="icerik" aria-controls="dp-pane-icerik" aria-selected="false" tabindex="-1"><i class="fa-solid fa-book-open" aria-hidden="true"></i> İçerikler <span class="sekme-sayi">0</span></button>
+        <button class="sekme" type="button" role="tab" id="dp-tab-hakkinda" data-tab="hakkinda" aria-controls="dp-pane-hakkinda" aria-selected="false" tabindex="-1"><i class="fa-solid fa-circle-info" aria-hidden="true"></i> Hakkında</button>
+    </nav>
   </div>
-</section>
+</div>
+
+<div class="fit-pane" data-pane="profil" id="dp-pane-profil" role="tabpanel" aria-labelledby="dp-tab-profil" tabindex="-1">
+  <div class="wrap kap">
+      <div class="bolum-bas">
+        <div>
+          <span class="ust-etiket"><i class="fa-solid fa-user-doctor" aria-hidden="true"></i> Diyetisyen profili</span>
+          <h2>Uzm. Dyt. Selin Korkmaz ile çalışmak</h2>
+          <p class="giris-metni">Selin Korkmaz hakkındaki doğrulanmış künye bilgileri, hizmet kapsamı ve randevu uygunluğu bu sayfada toplanır.</p>
+          <div class="bolum-araclar"><a class="dugme orta" href="diyetisyenler.html">Bütün diyetisyenler <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a></div>
+        </div>
+      </div>
+      <div class="kart panel">
+        <div class="kart-bas">
+          <div>
+            <h3 class="kart-baslik"><i class="fa-solid fa-id-card" aria-hidden="true"></i> Uzm. Dyt. Selin Korkmaz</h3>
+            <p>Künye bilgileri profilin üst bandındaki kayıtla aynıdır.</p>
+          </div>
+          <span class="durum-hapi cozulen"><i class="fa-solid fa-circle-check" aria-hidden="true"></i> Doğrulanmış</span>
+        </div>
+        <div class="kart-govde">
+          <div class="kart-sayac">
+          <div class="sayac"><i class="fa-solid fa-graduation-cap" aria-hidden="true"></i><div><span>Unvan</span><b>Uzman Diyetisyen</b></div></div>
+          <div class="sayac"><i class="fa-solid fa-briefcase" aria-hidden="true"></i><div><span>Deneyim</span><b>6 yıl</b></div></div>
+          <div class="sayac"><i class="fa-solid fa-video" aria-hidden="true"></i><div><span>Görüşme kipi</span><b>Online &amp; Yüz yüze</b></div></div>
+          <div class="sayac"><i class="fa-solid fa-location-dot" aria-hidden="true"></i><div><span>Konum</span><b>İzmir</b></div></div>
+          </div>
+
+        <div class="ayar-satir">
+          <span class="as-ikon" aria-hidden="true"><i class="fa-solid fa-certificate"></i></span>
+          <div class="as-metin"><b>Diploma ve unvan doğrulaması</b><span>Diploma belgesi ve meslek odası kaydı DadaDiet tarafından incelendi.</span></div>
+          <span class="durum-hapi cozulen"><i class="fa-solid fa-circle-check" aria-hidden="true"></i> Onaylı</span>
+        </div>
+        <div class="ayar-satir">
+          <span class="as-ikon" aria-hidden="true"><i class="fa-solid fa-user-group"></i></span>
+          <div class="as-metin"><b>Danışan sayısı</b><span>Bu profil üzerinden henüz danışan kaydı görünmüyor.</span></div>
+          <span class="durum-hapi">0</span>
+        </div>
+        <div class="ayar-satir">
+          <span class="as-ikon" aria-hidden="true"><i class="fa-solid fa-star"></i></span>
+          <div class="as-metin"><b>Danışan puanı</b><span>Puan, görüşmesi tamamlanmış danışanların değerlendirmesinden oluşur.</span></div>
+          <span class="durum-hapi">Henüz puan yok</span>
+        </div>
+        <div class="ayar-satir">
+          <span class="as-ikon" aria-hidden="true"><i class="fa-solid fa-stethoscope"></i></span>
+          <div class="as-metin"><b>Öne çıkan alan</b><span>Gebelik &amp; Emzirme alanında çalışıyor.</span></div>
+        </div>
+        </div>
+      </div>
+      <div class="kart panel">
+        <div class="kart-bas">
+          <div>
+            <h3 class="kart-baslik"><i class="fa-solid fa-calendar-days" aria-hidden="true"></i> Randevu uygunluğu</h3>
+            <p>Önümüzdeki yedi gün (2026-09-03 – 2026-09-09) için takvimde açık görüşme saati görünmüyor.</p>
+          </div>
+          <span class="durum-hapi"><i class="fa-regular fa-clock" aria-hidden="true"></i> Açık saat yok</span>
+        </div>
+        <div class="kart-govde">
+          <p class="giris-metni">Bu, kaynak takvimin bu hafta boş olmasından geliyor — uydurma bir saat listesi basılmadı. Üst banttaki <b>Randevu Al</b> penceresi açılır ve gün ızgarası görünür, ama seçilebilir saat gelmez. Hizmetleri ve ücretleri şimdiden inceleyebilirsin.</p>
+        </div>
+        <div class="kart-alt eylem">
+          <button class="dugme hayalet" type="button" data-sekme-git="hakkinda"><i class="fa-solid fa-circle-info" aria-hidden="true"></i> Çalışma koşulları</button>
+          <button class="dugme birincil" type="button" data-sekme-git="hizmet"><i class="fa-solid fa-stethoscope" aria-hidden="true"></i> Hizmetleri gör</button>
+        </div>
+      </div>
+  </div>
+</div>
+
+<div class="fit-pane" data-pane="hizmet" id="dp-pane-hizmet" role="tabpanel" aria-labelledby="dp-tab-hizmet" tabindex="-1" hidden>
+  <div class="wrap kap">
+      <div class="bolum-bas">
+        <div>
+          <span class="ust-etiket"><i class="fa-solid fa-hand-holding-medical" aria-hidden="true"></i> Hizmet kapsamı</span>
+          <h2>Hizmetler ve paketler</h2>
+          <p class="giris-metni">Selin Korkmaz bu profil üzerinden 3 hizmet sunuyor. Görüşme ücretleri 600 ₺ ile 2.600 ₺ arasında. Randevu düğmeleri üst banttaki randevu penceresini açar.</p>
+        </div>
+      </div>
+      <div class="kart panel">
+        <div class="kart-govde">
+  <div class="svc-grid">
+                        <article class="svc-card ">
+                <span class="svc-tag">Online</span>
+                <div class="svc-ico"><i class="fa-solid fa-clipboard-list" aria-hidden="true"></i></div>
+                <h3>İlk Görüşme</h3>
+                              <ul class="svc-feats">
+                  <li><i class="fa-solid fa-check" aria-hidden="true"></i> 45 dk görüntülü görüşme</li>
+                </ul>
+                <div class="svc-foot">
+                  <div class="svc-price">
+                                        <b>850 ₺</b> <span>/ görüşme</span>
+                                    </div>
+                  <button class="svc-book" type="button" data-svc="İlk Görüşme" data-price="850" data-service-id="7"><i class="fa-solid fa-calendar-check" aria-hidden="true"></i> Randevu</button>
+                </div>
+              </article>
+                        <article class="svc-card  feat ">
+                <span class="svc-tag">Online</span>
+                <div class="svc-ico"><i class="fa-solid fa-clipboard-list" aria-hidden="true"></i></div>
+                <h3>Kontrol Görüşmesi</h3>
+                              <ul class="svc-feats">
+                  <li><i class="fa-solid fa-check" aria-hidden="true"></i> 30 dk görüntülü görüşme</li>
+                </ul>
+                <div class="svc-foot">
+                  <div class="svc-price">
+                                        <b>600 ₺</b> <span>/ görüşme</span>
+                                    </div>
+                  <button class="svc-book" type="button" data-svc="Kontrol Görüşmesi" data-price="600" data-service-id="8"><i class="fa-solid fa-calendar-check" aria-hidden="true"></i> Randevu</button>
+                </div>
+              </article>
+                        <article class="svc-card ">
+                <span class="svc-tag">Online</span>
+                <div class="svc-ico"><i class="fa-solid fa-clipboard-list" aria-hidden="true"></i></div>
+                <h3>Aylık Takip Paketi</h3>
+                              <ul class="svc-feats">
+                  <li><i class="fa-solid fa-check" aria-hidden="true"></i> 45 dk görüntülü görüşme</li>
+                </ul>
+                <div class="svc-foot">
+                  <div class="svc-price">
+                                        <b>2.600 ₺</b> <span>/ görüşme</span>
+                                    </div>
+                  <button class="svc-book" type="button" data-svc="Aylık Takip Paketi" data-price="2600" data-service-id="9"><i class="fa-solid fa-calendar-check" aria-hidden="true"></i> Randevu</button>
+                </div>
+              </article>
+                    </div>
+            </div>
+        </div>
+      </div>
+  </div>
+</div>
+
+<div class="fit-pane" data-pane="yorum" id="dp-pane-yorum" role="tabpanel" aria-labelledby="dp-tab-yorum" tabindex="-1" hidden>
+  <div class="wrap kap">
+      <div class="bolum-bas">
+        <div>
+          <span class="ust-etiket"><i class="fa-solid fa-comment-dots" aria-hidden="true"></i> Danışan geri bildirimi</span>
+          <h2>Danışan yorumları</h2>
+          <p class="giris-metni">Yorumlar yalnız bu uzmandan hizmet almış ve görüşmesi tamamlanmış danışanlardan alınır; onaydan geçmeden yayımlanmaz.</p>
+        </div>
+      </div>
+      <div class="kart panel">
+        <div class="bos-durum kart-ici">
+          <span class="bos-ikon"><i class="fa-solid fa-comment-slash" aria-hidden="true"></i></span>
+          <h4>Bu diyetisyen için henüz onaylı bir danışan yorumu yok</h4>
+          <p>Liste boş olduğu için sayfalama denetimi de basılmadı — sıfır kayıt üzerinde çalışan bir sayfalama yalan düğme olurdu. İlk onaylı yorum geldiğinde liste ve sayfalaması burada görünür.</p>
+          <a class="dugme birincil" href="yasal__diyetisyen-dogrulama.html">Doğrulama nasıl yapılıyor?</a>
+        </div>
+      </div>
+  </div>
+</div>
+
+<div class="fit-pane" data-pane="icerik" id="dp-pane-icerik" role="tabpanel" aria-labelledby="dp-tab-icerik" tabindex="-1" hidden>
+  <div class="wrap kap">
+      <div class="bolum-bas">
+        <div>
+          <span class="ust-etiket"><i class="fa-solid fa-book-open" aria-hidden="true"></i> Uzman içerikleri</span>
+          <h2>İçerikler</h2>
+          <p class="giris-metni">Bu uzmanın kendi imzasıyla yayımladığı yazı, rehber ve ipuçları burada listelenir.</p>
+        </div>
+      </div>
+      <div class="kart panel">
+        <div class="bos-durum kart-ici">
+          <span class="bos-ikon"><i class="fa-solid fa-file-circle-xmark" aria-hidden="true"></i></span>
+          <h4>Bu uzmanın imzalı içeriği yok</h4>
+          <p>Kaynakta bu profile bağlı yayımlanmış içerik kaydı bulunmuyor. Platformun beslenme yazıları başka yazarların; onları bu uzmana yazmak yerine liste boş bırakıldı.</p>
+          <a class="dugme birincil" href="beslenme-ipuclari__liste.html">Beslenme ipuçlarına göz at</a>
+        </div>
+      </div>
+  </div>
+</div>
+
+<div class="fit-pane" data-pane="hakkinda" id="dp-pane-hakkinda" role="tabpanel" aria-labelledby="dp-tab-hakkinda" tabindex="-1" hidden>
+  <div class="wrap kap">
+      <div class="bolum-bas">
+        <div>
+          <span class="ust-etiket"><i class="fa-solid fa-graduation-cap" aria-hidden="true"></i> Uzmanlık ve belgeler</span>
+          <h2>Hakkında</h2>
+          <p class="giris-metni">Selin Korkmaz hangi alanlarda çalışıyor, doğrulaması ne zaman yapıldı ve görüşmeler hangi kipte yürüyor.</p>
+        </div>
+      </div>
+      <div class="kart panel">
+        <div class="kart-govde">
+  <div class="ab-grid">
+          <div class="ab-main">
+            
+                        <h2>Uzmanlık alanları</h2>
+              <div class="ab-spec chips drag-scroll">
+                                <span class="chip">Gebelik &amp; Emzirme</span>
+                                <span class="chip">Geriatri Beslenmesi</span>
+                            </div>
+            
+            
+          </div>
+
+          <aside class="ab-side">
+                        <div class="info-card">
+                <h4><i class="fa-solid fa-graduation-cap" aria-hidden="true"></i> Eğitim &amp; Belgeler</h4>
+                                            
+                                <div class="ic-row"><span class="ic-ico"><i class="fa-solid fa-calendar-check" aria-hidden="true"></i></span><div><b>Doğrulama Tarihi</b><span>19 Mayıs 2026</span></div></div>
+                            </div>
+                                  <div class="info-card">
+                <h4><i class="fa-solid fa-circle-info" aria-hidden="true"></i> Hızlı Bilgi</h4>
+                <div class="ic-row"><span class="ic-ico"><i class="fa-solid fa-video" aria-hidden="true"></i></span><div><b>Görüşme</b><span>Online &amp; Yüz yüze</span></div></div>
+                
+              </div>
+                    </aside>
+        </div>
+      </div>
+  </div>
+</div>
+
+</div>
 
 <!-- (Rozet Koleksiyonu alt galerisi kaldırıldı — üstteki .pf-badges özeti yeterli; tam liste rozetler-v1.html'de) -->
 
@@ -1600,4 +1752,6 @@ html,body{overflow-x:clip}
 <script src="varliklar/reference/shared/maket-auth.js"></script>
 <script src="varliklar/reference/diet/js/dd-shell.js"></script>
 <script src="varliklar/reference/shared/dd-kabuk.js"></script>
+<script data-t4="d" src="varliklar/reference/shared/dm-diet-d.js"></script>
+<script data-t4="e" src="varliklar/reference/shared/dm-diet-e.js"></script>
 </body></html>

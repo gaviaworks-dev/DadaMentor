@@ -1,0 +1,70 @@
+/* =====================================================================
+   T4 · DIET PUBLIC REVİZE — KULVAR C · CSS
+   ---------------------------------------------------------------------
+   Bu dosyanın İÇİNİ yalnız ajan C yazar. Bağını LEAD atar (L0).
+   Kural: satır içi style YASAK · sayfa <style> bloğu YASAK ·
+          ölçüler kanon tokenlarından (--bosluk-* · --yazi-*).
+   Boş bırakılırsa hiçbir şey yapmaz — bağ ile kural AYRI şeylerdir;
+   L0 hijyeni bağın varlığını değil kuralın UYGULANDIĞINI ölçer.
+   ===================================================================== */
+
+
+/* =====================================================================
+   MADDE 5 · ZEBRA YÜZEY SÖZLEŞMESİ — DIET ORTAK PROFİL (5 EKRAN)
+   ---------------------------------------------------------------------
+   KANON SÖZLEŞMESİ (kaynak: kanon/bilesenler.css)
+     1622  .zebra>.bolum{ padding:var(--bolum-nefes-sik) 0 }
+     1645  .zebra>.bolum:nth-of-type(odd) :not(kendi-zemini,kimlik-bant) → --kagit
+     1646  .zebra>.bolum:nth-of-type(even):not(kendi-zemini,kimlik-bant) → --zemin
+     1652  .zebra>.bolum.kabuk-alti{ padding-top:var(--kabuk-h) }
+     1667  .zebra>.bolum.kimlik-bant{ padding-bottom:0; background:var(--zemin) }
+     1733  .zebra>.bolum:has(.kart,.fp-card,.ozet-karti):not(…)   → --zemin
+           ("KART TAŞIYAN BANT KÂĞIT OLAMAZ — zemine iner", A3 · 2026-09-03)
+     1804  .modul-govde .fit-pane>section:not(…){ background:transparent }
+           ("bant kendi zeminini boyamaz", 2026-09-04 — bandın işi KOLONU
+            TAŞIMAK; zemin gri modül gövdesinden gelir)
+
+   🔴 DIET NEDEN AYRIŞIYOR — ÖLÇÜLDÜ (rapor/t4/c-sekme-once.json)
+   Donörde (Gastro/Fit) bantlar `.modul-govde .fit-pane > section`tır;
+   1804 onları SAYDAM yapar, 1733 kart taşıyanı `--zemin`e indirir. Sonuç:
+   beş ekranın 23 sekmesinin HİÇBİRİNDE kâğıt bant yok — hepsi `--zemin`.
+   Diet'te aynı bantlar `.modul-govde .zebra > section.bolum`tur; `.fit-pane`
+   sarmalayıcısı YOK, dolayısıyla 1804 hiç eşleşmiyor ve devreye 1645/1646
+   şeritlemesi giriyor. Ölçülen fark — donörde `zemin`, Diet'te `kagit`:
+       d-rozetlerim  T0 bant1 · T1 bant3 · T3 bant1
+       d-paketlerim  T0 bant1 · T1 bant1 · T2 bant1
+   (1440 ve 390'da birebir aynı altı bant.)
+
+   ÇÖZÜM — YENİ RENK YAZILMADI, YENİ AD AÇILMADI.
+   Kanonun 1804'teki kararı ("bant kendi zeminini boyamaz, yüzey tek
+   kalır") Diet'in kap biçimine taşınıyor. Değer kanonun kendi tokenı:
+   `--zemin` — donörde de ekrana çıkan renk odur (#f9f9f9, alfa 1).
+   Saydam DEĞİL opak yazılıyor: yarı saydam/saydam zemin kontrastı
+   bileşenin değil YERİNİN özelliği yapar; burada bandın kendi yüzeyi
+   bildiriliyor ve ata zincirine bağımlılık kalmıyor.
+
+   ÖZGÜLLÜK YAZILI, SESSİZ DEĞİL — (0,5,1):
+     body[data-brand="diet"](0,1,1) + .zebra + .bolum + iki :not() = (0,5,1)
+   Yendiği iki kural da (0,5,0): 1645/1646 şeritlemesi ve 1733 kart
+   kuralı. 1733'ü yenmesi zararsız DEĞİL, KASITLI: ikisi de aynı değeri
+   (`--zemin`) veriyor, yani kart bandının yüzeyi değişmiyor — kart
+   kuralının A3 kararı korunuyor, yalnız tek bir sözlükten yazılıyor.
+   `kimlik-bant` (1667) ve `kendi-zemini` seçicinin KENDİSİNDE dışlandı;
+   ikisi de yüzeyini kendi bildiren bantlar ve zebra ritminin dışındadır.
+
+   🔴 MARKA KAPSAMI YAZILI: `body[data-brand="diet"]`. Kanonun kendi
+      `body[data-govde="gastro"]` guard'ıyla aynı disiplin — kural Diet
+      kabuğunun dışına çıkmaz. Dosyanın bağı zaten yalnız bu beş ekranda.
+
+   ⚠ TOKEN VARLIĞI ÖLÇÜLDÜ: beş sayfada da `--zemin` = `#f9f9f9`
+     (rapor/t4/c-sekme-once.json · tok). Tanımsız `var()` kuralı ELEMEZ,
+     özelliği başlangıç değerine çeker — bu yüzden ölçüldü, varsayılmadı.
+
+   ⚠ DİKİŞ (border-top) DEĞİŞMEDİ: kanonun dikiş kuralı iki KOMŞUNUN da
+     kart taşımasını ister; bu blok yalnız `background` yazar, komşuluk
+     kurmaz. Ölçüldü: Diet'te dikiş 0 (Gastro da 0 — kardeş marka sınavı
+     raporda). ===================================================== */
+
+body[data-brand="diet"] .zebra > .bolum:not(.kendi-zemini):not(.kimlik-bant){
+  background:var(--zemin);
+}

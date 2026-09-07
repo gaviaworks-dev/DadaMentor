@@ -1,0 +1,42 @@
+/* =====================================================================
+   T4 · DIET PUBLIC REVİZE — KULVAR D · CSS
+   ---------------------------------------------------------------------
+   Bu dosyanın İÇİNİ yalnız ajan D yazar. Bağını LEAD attı (L0) ve
+   YALNIZ ajan D'nin on iki sayfasında yüklü (ölçüldü: `grep -l` → 12).
+   Kural: satır içi style YASAK · sayfa <style> bloğu YASAK ·
+          ölçüler kanon tokenlarından (--bosluk-* · --yazi-*).
+   ⚠ Tanımsız `var()` kuralı ELEMEZ, özelliği BAŞLANGIÇ değerine çeker.
+     Bu dosyada kullanılan her token, kullanıldığı sayfada TANIMLI
+     olduğu ölçülerek yazıldı (`scripts/olcum/t4/gecici/d-token.mjs`).
+   ⚠ Yükleme sırası ölçüldü: kanon → dd-kabuk → alt-cubuk → dm-diet-b →
+     dm-diet-d → dm-diet-e. Yani bu dosya kanondan SONRA gelir; eşit
+     özgüllükte kazanır ve `:where()`e gerek yoktur.
+   ===================================================================== */
+
+/* ── S1 · SAYAÇ KUTUSUNDA METİN TAŞMASI (dar ekran) ──────────────────
+   ÖLÇÜLDÜ (@390, `scripts/olcum/t4/gecici/d-sayac2.mjs`):
+     `.kart-sayac`  → flex; `.sayac` @≤640 `flex:1 1 44%` → İKİ KOLON,
+                      kutu 131px
+     `.sayac > i`   → flex:none, 38px · `.sayac > div` → 53px kalıyor
+     `.sayac b`     → `--yazi-16-5`; "Diyetisyen" tek kelimesinin
+                      max-content'i 77px. 53px'lik kutuyu 24px AŞIYOR.
+   `overflow:visible` olduğu için KESİLMİYOR ama komşunun oluğuna taşıyor
+   ve "Online & Yüz yüze" üç satıra kırılıyor.
+
+   🔴 İLK DENEME YANLIŞTI, ÖLÇÜLDÜ VE ATILDI: `.sayac>div{flex:1 1 auto}`
+      yazıldı — kural UYGULANDI (hesaplanmış değer `1 1 auto` okundu) ama
+      genişlik 53px'te KALDI. Sebep: kutuda BOŞ ALAN YOK; 131 − yatay
+      dolgu − 38px ikon − oluk = tam 53. Yani sorun kutunun büyümemesi
+      değil, KOLON SAYISI. Kural, uygulandığı hâlde hiçbir şeyi
+      değiştirmediği için silindi.
+
+   ÇÖZÜM: çok dar ekranda sayaç şeridi TEK KOLONA iner. Kutu ~312px'e
+   çıkar, metin kutusuna sığar (77 ≪ 234) ve kelime kırmaya, punto
+   düşürmeye gerek kalmaz.
+   🔴 KANONA DOKUNULMADI; kural bu kulvarın kendi dosyasında ve yalnız
+      ≤420px'te. @1440'ta taşma zaten 0 ölçülmüştü — orada değişen yok.
+   ⚠ İKİ EKSEN: yalnız `flex-basis` %100'e çekildi; dikey ritim kanonun
+     kendi dolgusundan gelmeye devam eder. */
+@media (max-width:420px){
+  .kart-sayac .sayac{ flex:1 1 100%; }
+}
