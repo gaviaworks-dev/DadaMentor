@@ -7402,6 +7402,8 @@ p.jt, li.jt, dd.jt, blockquote.jt,
   <link rel="stylesheet" href="varliklar/reference/shared/dm-pagi.css">
   <link rel="stylesheet" href="varliklar/reference/shared/dm-profil-ritim.css">
   <link rel="stylesheet" href="varliklar/reference/shared/dm-p3.css">
+  <link rel="stylesheet" href="varliklar/reference/shared/dm-p4.css">
+  <link rel="stylesheet" href="varliklar/reference/shared/dm-p4-b.css">
 </head>
 <body data-brand="gastro" data-gastro-page="odemelerim-v1" data-fit-hero-kind="profil" class="is-auth" data-roles="kullanici sef" data-govde="gastro">
 <a id="fitSkip" class="skip-link atlama-baglantisi" href="#pageMain">İçeriğe atla</a>
@@ -7815,7 +7817,7 @@ p.jt, li.jt, dd.jt, blockquote.jt,
         <p class="kimlik-giris">Şef profilin, abonelik planların, abonelerin, abonelere özel içeriklerin, kazancın, ödeme taleplerin ve vergi bilgilerin tek adreste. Bu alan yalnız onaylı şef ve içerik üreticisi hesaplarında görünür.</p>
       </div>
       <div class="eylem-satiri">
-        <button class="dugme birincil" type="button"><i class="fa-solid fa-plus" aria-hidden="true"></i> Abonelik Planı Oluştur</button>
+        <button class="dugme birincil" type="button" id="spPlanEkleHero"><i class="fa-solid fa-plus" aria-hidden="true"></i> Abonelik Planı Oluştur</button>
       </div>
     </div>
     <div class="cp-stats sayac-serit" role="group" aria-label="Şef panelinin özeti">
@@ -8202,10 +8204,54 @@ p.jt, li.jt, dd.jt, blockquote.jt,
               <h3><i class="fa-solid fa-toggle-on" aria-hidden="true"></i> İçerik erişimi</h3>
               <p>Anahtar açık: yalnız abonelerin görür. Anahtar kapalı: herkese açık. Değişiklik anında yayına girer.</p>
             </div>
-            <span class="durum-hapi kapali" id="spIcerikSay">38 / 162 kilitli</span>
+            <span class="durum-hapi kapali" id="spIcerikSay">6 herkese açık · 5 abonelere özel</span>
           </div>
           <div class="kart-govde">
-            <div class="ayar-liste">
+            <!-- ── B1 · ARAÇ ÇUBUĞU ─────────────────────────────────────
+                 Arama + tür/erişim süzgeci. Süzgeç seçeneklerinin
+                 SAYILARI dm-p4-b.js tarafından sayfanın kendi
+                 verisinden yazılır; markupta sabit sayı yoktur. -->
+            <div class="ie-araclar" id="spIcerikAraclar">
+              <div class="ie-arama">
+                <label class="alan-etiket" for="spIcerikArama">İçerik ara</label>
+                <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+                <input class="alan-girdi" id="spIcerikArama" type="search" placeholder="Ad ya da kategori" autocomplete="off">
+                <button class="ie-arama-sil" type="button" id="spIcerikAramaSil" aria-label="Aramayı temizle"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
+              </div>
+              <div class="ie-suzgec">
+                <label class="alan-etiket" for="spIcerikTur">Tür</label>
+                <select class="alan-secim" id="spIcerikTur">
+                  <option value="">Tümü</option>
+                  <option value="Tarif">Tarif</option>
+                  <option value="Püf noktası">Püf noktası</option>
+                  <option value="Video bölümü">Video bölümü</option>
+                </select>
+              </div>
+              <div class="ie-suzgec">
+                <label class="alan-etiket" for="spIcerikDurum">Erişim</label>
+                <select class="alan-secim" id="spIcerikDurum">
+                  <option value="">Tümü</option>
+                  <option value="acik">Herkese açık</option>
+                  <option value="ozel">Abonelere özel</option>
+                </select>
+              </div>
+            </div>
+            <!-- Toplu şerit seçim YOKKEN de duruyor; eylemler seçim
+                 gelince ETKİNLEŞİR (beliren şerit düzeni zıplatır). -->
+            <div class="ie-toplu" id="spIcerikToplu">
+              <label class="ie-toplu-tumu" for="spIcerikTumu"><input type="checkbox" class="ie-sec" id="spIcerikTumu"> Süzülen tümünü seç</label>
+              <span class="ie-toplu-say" id="spIcerikTopluSay">Toplu işlem için satırları seç</span>
+              <div class="ie-toplu-eylem">
+                <button class="dugme hayalet" type="button" id="spIcerikTopluAcik" disabled=""><i class="fa-solid fa-globe" aria-hidden="true"></i> Herkese Aç</button>
+                <button class="dugme birincil" type="button" id="spIcerikTopluOzel" disabled=""><i class="fa-solid fa-lock" aria-hidden="true"></i> Abonelere Özel Yap</button>
+              </div>
+            </div>
+            <!-- 🔴 KAYNAK LİSTESİ YERİNDE DURUYOR: dm-p4-b.js buradan
+                 HASAT eder, .as-ikon ve .anahtar ELEMANLARINI
+                 tabloya TAŞIR (id / for / .sr-only korunur) ve kap boş
+                 kalır (.ayar-liste:empty gizli). JS yoksa sayfa bu
+                 listeyi çizmeye devam eder — yüzey ölmez. -->
+            <div class="ayar-liste" id="spIcerikKaynak">
               <div class="ayar-satir">
                 <span class="as-ikon" aria-hidden="true"><i class="fa-solid fa-fish"></i></span>
                 <div class="as-metin"><b>Füme Somonlu Krem Peynir Ezmesi</b><span>Meze · 15 dk · 4.870 okunma · 731 kaydetme · 5,0 puan</span></div>
@@ -8237,11 +8283,34 @@ p.jt, li.jt, dd.jt, blockquote.jt,
                 <label class="anahtar" for="spIc6"><input type="checkbox" id="spIc6"><span class="anahtar-ray"></span><span class="sr-only">Airfryer'da Bastırmalı Yumurta abonelere özel</span></label>
               </div>
             </div>
+            <!-- B1 LISTE: sayfanin kendi .tablo kipi.
+                 Kolonlar: gorsel+ad, tur, tarih, erisim anahtari.
+                 Karar serhi ve olcum: dm-p4-b.css, rapor/p4/b1-alternatif.json -->
+            <div class="tablo-kap gomulu" id="spIcerikListe" tabindex="0" role="region" aria-label="Abonelere özel içerik listesi" hidden="">
+              <table class="tablo ie-tablo">
+                <thead>
+                  <tr>
+                    <th class="sec" scope="col"><span class="sr-only">Toplu işlem seçimi</span></th>
+                    <th scope="col">İçerik</th>
+                    <th class="tur-h" scope="col">Tür</th>
+                    <th class="tarih-h" scope="col">Tarih</th>
+                    <th class="erisim" scope="col">Erişim</th>
+                  </tr>
+                </thead>
+                <tbody id="spIcerikGovde"></tbody>
+              </table>
+            </div>
+            <div class="ie-bos" id="spIcerikBos" hidden=""></div>
+            <!-- ── B1 · SAYFALAMA — kanonun TEK kaynağı (dm-pagi.css).
+                 Yeni sayfalama uydurulmadı; ilk/son atlama sayfanın
+                 kendi kaydettigi karardan (sayfa CSS'i). -->
+            <div class="pagi" id="spIcerikPagi" role="navigation" aria-label="İçerik listesi sayfaları"></div>
+            <p class="pagi-note" id="spIcerikPagiNot" role="status"></p>
             <p class="od-sonuc" id="spIcerikSonuc" role="status">
               <i class="fa-solid fa-circle-half-stroke" aria-hidden="true"></i>
               <span class="od-sonuc-txt"></span>
             </p>
-            <div class="alt-not"><i class="fa-solid fa-circle-info" aria-hidden="true"></i> <span>Listede içeriklerinin en çok okunan altısı var; tam liste <a href="g-mutfak-defterim.html#yayindakiler">Mutfak Defterim › Yayındaki İçerikler</a>'de ve orada da aynı anahtar duruyor. Kilitli içerik arama sonuçlarında görünür, gövdesi kilitli açılır. Yeni içerik eklerken görünürlüğü formun kendisinde seçersin: <a href="tarif-ekle.html">Tarif ekle</a> · <a href="puf-noktasi-ekle.html">Püf noktası ekle</a> · <a href="g-video-serilerim.html#video-ekle" data-l7-seri-bag>Video ekle</a>.</span></div>
+            <div class="alt-not"><i class="fa-solid fa-circle-info" aria-hidden="true"></i> <span>Bu listede şef panelinin <b>kendi kayıtlarındaki 11 içerik</b> var: erişim listesinin altısı, premium seri bölümlerinin üçü ve en çok okunanlar tablosundan gelen ikisi. <b>162 içeriğin tamamı bu makette yok</b> — panel ne taşıyorsa liste onu gösterir, satır uydurulmaz. Kilitli içerik arama sonuçlarında görünür, gövdesi kilitli açılır. Yeni içerik eklerken görünürlüğü formun kendisinde seçersin: <a href="tarif-ekle.html">Tarif ekle</a> · <a href="puf-noktasi-ekle.html">Püf noktası ekle</a> · <a href="g-video-serilerim.html#video-ekle" data-l7-seri-bag>Video ekle</a>.</span></div>
           </div>
         </div>
 
@@ -12864,5 +12933,101 @@ function sonuc(id, baslik, metin){
 <script src="varliklar/reference/shared/dm-kabuk.js"></script>
 <script src="varliklar/reference/shared/dm-sef-icerik.js"></script>
 <script src="varliklar/reference/shared/maket-auth.js"></script>
+<script src="varliklar/reference/shared/dm-p4-depo.js" defer></script>
+<script src="varliklar/reference/shared/dm-p4-b.js" defer></script>
+
+
+
+
+
+
+<!-- L6-MODAL-BAS -->
+<!-- ══ L6 · ABONELİK PLANI TASLAĞI ═══════════════════════════════════
+     Kabuk: dm-p4.css `.dm-modal` (lead yazdı) — yeni kapı açılmadı.
+     Form ve önizleme kartı DONÖRDEN: dadamutfak-view/v7-6cu356/
+     mutfak-defteri-v1.html#uyelik → `.uy-card` (plan editörü) +
+     `.uy-plan` (abonenin gördüğü kart) + `.uy-feat-edit` (tekrarlayan
+     satır). Kanon L10'un üç yeteneği eklendi: numara · tutamak ·
+     onaylı sil.
+     🔴 ÖDEME SAĞLAYICI YOK → "yayına al" düğmesi YOK; önizlemedeki
+        abone düğmesi `disabled` ve sebebini yazıyor. -->
+<div class="dm-modal" id="spPlanModal" role="dialog" aria-modal="true" aria-labelledby="spPlanModalBaslik" hidden="">
+  <div class="dm-modal-bas">
+    <span class="dm-modal-ico" aria-hidden="true"><i class="fa-solid fa-layer-group"></i></span>
+    <div>
+      <h2 id="spPlanModalBaslik">Abonelik planı oluştur</h2>
+      <p>Plan <b>taslak</b> olarak kaydedilir. Ödeme altyapısı bağlanmadığı için bu makette yayına alma adımı yoktur.</p>
+    </div>
+    <button class="dm-modal-kapat" type="button" data-plan-kapat="" aria-label="Pencereyi kapat"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
+  </div>
+  <div class="dm-modal-govde">
+    <div class="plan-duzen">
+      <form class="plan-duzen-form" id="spPlanForm" autocomplete="off" novalidate="">
+        <!-- B2 · yayındaki plan salt okunur açılınca sebebi BURADA yazar -->
+        <div class="uyari-kutu" id="spPlanYayinUyari" hidden="">
+          <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+          <span></span>
+        </div>
+        <div class="alan">
+          <label class="alan-etiket" for="spPlanAd">Plan adı <span class="zorunlu" aria-hidden="true">*</span></label>
+          <input class="alan-girdi" id="spPlanAd" type="text" maxlength="60" placeholder="Örneğin: Mutfak Sohbeti" required="" aria-describedby="spPlanAdHata">
+          <p class="fk-hata" id="spPlanAdHata" role="alert"><i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i> <span>Plan adı en az 3 karakter olmalı.</span></p>
+        </div>
+        <div class="alan-izgara c2">
+          <div class="alan">
+            <label class="alan-etiket" for="spPlanAylik">Aylık ücret (₺) <span class="zorunlu" aria-hidden="true">*</span></label>
+            <input class="alan-girdi" id="spPlanAylik" type="text" inputmode="numeric" placeholder="49" required="" aria-describedby="spPlanAylikHata">
+            <p class="fk-hata" id="spPlanAylikHata" role="alert"><i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i> <span>En az ₺29, en çok ₺999 arasında bir tutar gir.</span></p>
+          </div>
+          <div class="alan">
+            <label class="alan-etiket" for="spPlanYillik">Yıllık ücret (₺) <span class="zorunlu" aria-hidden="true">*</span></label>
+            <input class="alan-girdi" id="spPlanYillik" type="text" inputmode="numeric" placeholder="490" required="" aria-describedby="spPlanYillikHata">
+            <p class="fk-hata" id="spPlanYillikHata" role="alert"><i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i> <span>Yıllık ücret aylığın on katından az olmalı (sayfanın kendi kuralı).</span></p>
+          </div>
+        </div>
+        <div class="alan">
+          <label class="alan-etiket" for="spPlanAciklama">Kısa açıklama <span class="zorunlu" aria-hidden="true">*</span></label>
+          <textarea class="alan-metin" id="spPlanAciklama" rows="3" maxlength="220" placeholder="Abonelerin ne alacağını bir iki cümleyle yaz — bu metin abonenin gördüğü kartta çıkar." required="" aria-describedby="spPlanAciklamaHata"></textarea>
+          <p class="fk-hata" id="spPlanAciklamaHata" role="alert"><i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i> <span>En az 20 karakter yaz — bu metin abonenin gördüğü kartta çıkar.</span></p>
+        </div>
+        <div class="alan">
+          <label class="alan-etiket" id="spPlanDahilEtiket">Dahil olanlar</label>
+          <ul class="dahil-liste" id="spPlanDahil" aria-labelledby="spPlanDahilEtiket"></ul>
+          <button class="dahil-ekle" type="button" id="spPlanDahilEkle"><i class="fa-solid fa-plus" aria-hidden="true"></i> Madde Ekle</button>
+        </div>
+        <div class="alan">
+          <label class="alan-etiket">Abonelere özel içerik sayısı <span class="istege-bagli">(otomatik)</span></label>
+          <div class="plan-otomatik">
+            <i class="fa-solid fa-lock" aria-hidden="true"></i>
+            <b id="spPlanOtoSay">0</b>
+            <span id="spPlanOtoNot">Abonelere Özel İçerikler sekmesinden okunur.</span>
+          </div>
+        </div>
+      </form>
+      <div class="plan-onizleme-kap">
+        <p class="plan-onizleme-bas"><i class="fa-solid fa-eye" aria-hidden="true"></i> Abonenin göreceği kart</p>
+        <article class="plan-onizleme">
+          <span class="po-etiket">Taslak · yayında değil</span>
+          <span class="po-ikon" aria-hidden="true"><i class="fa-solid fa-star"></i></span>
+          <h4 id="spPoAd">Plan adı</h4>
+          <p id="spPoAciklama">Planın kısa açıklaması burada görünür.</p>
+          <div class="po-fiyat"><b id="spPoFiyat">₺—</b><span>/ ay</span></div>
+          <p class="po-yillik" id="spPoYillik">Yıllık ücret girilmedi</p>
+          <ul class="po-madde" id="spPoMadde"></ul>
+          <button class="po-cta" type="button" disabled="" aria-describedby="spPoNot"><i class="fa-solid fa-lock" aria-hidden="true"></i> Abone Ol</button>
+          <p class="po-not" id="spPoNot"><i class="fa-solid fa-circle-info" aria-hidden="true"></i> Ödeme altyapısı bağlanınca etkinleşir</p>
+        </article>
+      </div>
+    </div>
+  </div>
+  <div class="dm-modal-ayak">
+    <p class="durum-satir" role="status"><i class="fa-solid fa-circle-info" aria-hidden="true"></i> <span>Kayıt <b>taslak</b> kalır; yayına alma düğmesi yoktur.</span></p>
+    <div class="sag">
+      <button class="dugme hayalet" type="button" data-plan-kapat="">Vazgeç</button>
+      <button class="dugme birincil" type="submit" form="spPlanForm" id="spPlanKaydet"><i class="fa-solid fa-check" aria-hidden="true"></i> Taslak Olarak Kaydet</button>
+    </div>
+  </div>
+</div>
+<!-- L6-MODAL-SON -->
 </body>
 </html>

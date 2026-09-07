@@ -1,0 +1,346 @@
+/* =====================================================================
+   AJAN B · ŞEF PANELİM — PARTİ 4
+   BAĞI lead attı (gastro-p4-lead.mjs --adim l0); İÇERİĞİNİ yalnız
+   kendi kulvarı yazar. Başka kulvar bu dosyaya dokunmaz.
+   KAYNAK BURASI: scripts/p4-varlik/dm-p4-b.css — ağaca kopyalanır.
+
+   İÇİNDE NE VAR
+     B1 · #icerikler erişim yönetimi — araç çubuğu · toplu şerit ·
+          satır uzantısı · boş durum          (sayfalama: dm-pagi.css)
+     L6 · #planlar plan taslağı — modal iki kolon · K10 tekrarlayan
+          satır · canlı önizleme kartı · taslak satırı
+
+   🔴 YENİ BİLEŞEN AÇILMADI:
+     · sayfalama       → `dm-pagi.css` (`.pagi/.pg`) — kanonun tek kaynağı
+     · modal kabuğu    → `dm-p4.css` (`.dm-modal*`) — lead yazdı
+     · toast           → `dm-p4.css` (`.dm-toast*`)
+     · anahtar         → sayfanın kendi `.anahtar` + `.anahtar-ray`ı
+     · alan/etiket     → sayfanın kendi `.alan` · `.alan-etiket` ·
+                         `.alan-girdi` · `.alan-secim`ı
+     · durum rozeti    → sayfanın kendi `.durum-hapi`sı
+     · önizleme kartı  → DONÖR `mutfak-defteri-v1.html#uyelik > .uy-plan`
+                         (ölçülen değerler korunarak; `--tomato`
+                          ailesi public kanonun `--aksan` ailesine
+                          çevrildi — ikisi de bu sayfada TANIMLI ve
+                          aynı değeri veriyor, ölçüldü)
+     · tekrarlayan satır → DONÖR `.uy-feat-edit`/`.uy-del`/`.uy-add`
+                          + kanon L10'un üç yeteneği (numara · tutamak ·
+                          onaylı sil)
+   ===================================================================== */
+
+/* ═══════════════════════════════════════════════════════════════════
+   B1 · İÇERİK ERİŞİM YÖNETİMİ
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── araç çubuğu: arama + iki süzgeç ───────────────────────────────
+   Kartın gövdesinin İÇİNDE, listenin ÜSTÜNDE. Kart başlığındaki
+   sayaç hapı yerinde kalır (sayfanın kendi kalıbı). */
+.ie-araclar{
+  display:flex; align-items:flex-end; gap:var(--bosluk-12);
+  flex-wrap:wrap; margin-bottom:var(--bosluk-16);
+}
+.ie-arama{ position:relative; flex:1 1 260px; min-width:0; }
+.ie-arama > i{
+  position:absolute; left:14px; top:50%; transform:translateY(-50%);
+  font-size:13px; color:var(--metin-ikincil); pointer-events:none;
+}
+.ie-arama .alan-girdi{ padding-left:38px; }
+/* tarayıcının kendi temizle düğmesi 44px hedefini bozuyor; kendi
+   temizleyicimiz aynı ölçüde ve klavyeyle erişilebilir */
+.ie-arama input[type=search]::-webkit-search-cancel-button{ display:none; }
+.ie-arama-sil{
+  position:absolute; right:6px; top:50%; transform:translateY(-50%);
+  width:32px; height:32px; display:none; place-items:center;
+  border:0; background:transparent; color:var(--metin-ikincil);
+  border-radius:var(--yuvarlak-md); cursor:pointer; font-size:13px;
+}
+.ie-arama.dolu .ie-arama-sil{ display:grid; }
+.ie-arama-sil:hover{ color:var(--murekkep); }
+.ie-suzgec{ flex:0 1 200px; min-width:150px; }
+.ie-suzgec .alan-etiket,
+.ie-arama .alan-etiket{
+  display:block; font-size:12px; font-weight:var(--agirlik-kalin);
+  color:var(--metin-ikincil); margin-bottom:6px;
+}
+.ie-araclar .alan-girdi,
+.ie-araclar .alan-secim{ width:100%; }
+
+/* ── toplu seçim şeridi ────────────────────────────────────────────
+   Seçim YOKKEN de duruyor (yalnız "tümünü seç" ve sayım); eylemler
+   seçim gelince ETKİNLEŞİR. Şerit seçimle birlikte BELİRSE düzen
+   zıplar ve kullanıcı neyi kaybettiğini göremez. */
+.ie-toplu{
+  display:flex; align-items:center; gap:var(--bosluk-12); flex-wrap:wrap;
+  padding:10px var(--bosluk-12);
+  border:var(--cizgi-1) solid var(--cizgi); border-radius:var(--yuvarlak-md);
+  background:var(--zemin); margin-bottom:var(--bosluk-12);
+}
+.ie-toplu.var{ border-color:var(--aksan); background:var(--aksan-yikama); }
+.ie-toplu-tumu{ display:inline-flex; align-items:center; gap:9px; cursor:pointer;
+  font-size:var(--yazi-13); font-weight:var(--agirlik-kalin); color:var(--murekkep); }
+.ie-toplu-say{ font-size:var(--yazi-12-5); color:var(--metin-ikincil); font-weight:var(--agirlik-orta); }
+.ie-toplu-eylem{ margin-left:auto; display:flex; gap:8px; flex-wrap:wrap; }
+.ie-toplu-eylem .dugme[disabled]{ opacity:.45; pointer-events:none; }
+
+/* ── liste: sayfanın KENDİ `.tablo` kipi ────────────────────────────
+   🔴 KARAR (b1-alt-b): iki alternatif 1440'ta gerçek render edilip
+      ölçüldü. `.ayar-satir` listesi (alt-a) aynı 6 satır için 1177,4px,
+      tablo (alt-b) 985,8px — %16 daha kısa VE tür/tarih hizalı kolonda.
+      "Yüzlerce içerik" ölçütünde belirleyici olan tarama hızıdır.
+      Tablo bir KİP İCADI DEĞİL: bu sayfa aynı veriyi iki yerde zaten
+      tabloyla basıyor (`#spSeriBody` — aynı panoda, "Erişim" kolonuyla;
+      `#spIcerikIstBody`). Donörün kendi şef yönetim görümü de tablo
+      (`mutfak-defteri-v1.html#uyelik > .uy-table`). İki tanık.
+   🔴 Alt-b'nin ölçülen zayıflığı @390 yatay ray (tablo 329,2 ↔ kap 324)
+      idi; DONÖRÜN KENDİ `.uy-table` @640 bloğuyla kapatıldı — üçüncü
+      bir çözüm uydurulmadı. */
+.ie-tablo th,.ie-tablo td{ padding-left:0; }
+/* kaynak listesi elemanlarını tabloya verince BOŞALIR; boş kap
+   kart içinde ölü bir çizgi bırakmasın. JS yoksa dolu kalır ve
+   sayfanın eski yüzeyi çalışmaya devam eder. */
+.ayar-liste:empty{ display:none; }
+.ie-tablo th:last-child,.ie-tablo td:last-child{ padding-right:0; }
+.ie-tablo .sec{ width:38px; padding-right:0; }
+.ie-tablo .tur-h{ width:136px; }
+.ie-tablo .tarih-h{ width:104px; }
+.ie-tablo .erisim{ width:92px; text-align:right; }
+.ie-tablo tr.secili > td{ background:var(--aksan-yikama); }
+.ie-sec{ flex:none; width:18px; height:18px; margin:0; cursor:pointer; accent-color:var(--aksan); }
+.ie-ic{ display:flex; align-items:center; gap:11px; min-width:0; }
+.ie-ic .as-ikon,.ie-ic .avatar.harf{ flex:none; }
+.ie-ic .ie-govde{ min-width:0; }
+.ie-tablo .erisim .anahtar{ margin-left:auto; }
+.ie-tur{
+  display:inline-flex; align-items:center; gap:6px;
+  font-size:11px; font-weight:var(--agirlik-kalin); letter-spacing:.04em;
+  text-transform:uppercase; color:var(--metin-ikincil);
+  background:var(--zemin); border:var(--cizgi-1) solid var(--cizgi);
+  padding:3px 9px; border-radius:var(--yuvarlak-md); white-space:nowrap;
+}
+.ie-tarih{ font-size:var(--yazi-12-5); color:var(--metin-ikincil);
+  font-weight:var(--agirlik-orta); white-space:nowrap; }
+.ie-tarih.yok{ color:var(--metin-ikincil); opacity:.62; }
+
+/* @640 · DONÖRÜN `.uy-table` blokLAŞMASI: satır blok olur, başlık
+   gizlenir, yatay ray DOĞMAZ (ölçülen kusur burada kapanıyor). */
+@media (max-width:640px){
+  .ie-tablo thead{ display:none; }
+  .ie-tablo,.ie-tablo tbody,.ie-tablo td{ display:block; width:auto; }
+  .ie-tablo tr{
+    display:flex; flex-wrap:wrap; align-items:center;
+    position:relative; padding:14px 0;
+    border-bottom:var(--cizgi-1) solid var(--cizgi);
+  }
+  .ie-tablo tbody tr:last-child{ border-bottom:0; }
+  .ie-tablo td{ padding:0; border:none; }
+  .ie-tablo td.sec{ position:absolute; right:0; top:16px; width:auto; }
+  .ie-tablo td.icerik{ flex:1 1 100%; order:1; padding-right:34px; }
+  .ie-tablo td.tur-h{ order:2; width:auto; margin:9px 9px 0 0; }
+  .ie-tablo td.tarih-h{ order:3; width:auto; margin:9px 0 0; }
+  /* anahtar tür/tarih ile AYNI satırda, sağ uçta — kendi başına bir
+     satır kaplayınca hangi içeriğe ait olduğu okunmuyordu (@390 gözle) */
+  .ie-tablo td.erisim{ order:4; width:auto; margin:9px 0 0 auto; text-align:right; }
+}
+
+/* ── boş durum ─────────────────────────────────────────────────────
+   Süzgeç hiçbir şey bulmazsa liste SESSİZ kalmaz. */
+.ie-bos{
+  padding:36px 24px; text-align:center;
+  border:1.5px dashed var(--cizgi); border-radius:var(--yuvarlak-lg);
+  color:var(--metin-ikincil); font-size:var(--yazi-13-5); font-weight:var(--agirlik-orta);
+}
+.ie-bos i{ display:block; font-size:22px; margin-bottom:10px; color:var(--cizgi-vurgu, #c9c9c9); }
+.ie-bos b{ display:block; color:var(--murekkep); margin-bottom:5px; font-size:15px; }
+
+/* sayfalamanın kart içindeki üst boşluğu 40px'ten kart ritmine iner */
+.kart-govde .pagi{ margin-top:var(--bosluk-24); }
+
+@media (max-width:640px){
+  .ie-araclar{ gap:10px; }
+  .ie-arama, .ie-suzgec{ flex:1 1 100%; }
+  /* iki düğme yan yana sığmıyor; etiketleri kısaltmak yerine (metin
+     uydurmak olurdu) alt alta tam genişlik — @390 gözle ölçüldü */
+  .ie-toplu-eylem{ margin-left:0; width:100%; flex-direction:column; }
+  .ie-toplu-eylem .dugme{ width:100%; justify-content:center; white-space:nowrap; }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   L6 · ABONELİK PLANI TASLAĞI
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── modal gövdesi: form (sol) + canlı önizleme (sağ) ───────────────
+   Donörün `.uy-grid`i: `minmax(0,360px)` önizleme kolonu. Donörde
+   önizleme SOLDA çünkü orası public görüm; burada form önce gelir
+   (düzenlenen şey solda, sonucu sağda) — okuma yönü kararı. */
+.plan-duzen{ display:grid; grid-template-columns:minmax(0,1fr) minmax(0,340px);
+  gap:26px; align-items:start; }
+.plan-duzen .alan:last-child{ margin-bottom:0; }
+.plan-duzen-form .alan-izgara.c2{ gap:var(--bosluk-16); }
+
+/* ── K10 · tekrarlayan satır (dahil olanlar) ────────────────────────
+   Donör `.uy-feat-edit` + kanon L10: NUMARA · TUTAMAK · ONAYLI SİL.
+   🔴 Tutamak AYRI eleman: satırın kendisi `draggable` olsaydı
+      içindeki metin seçimi ölürdü (L10'un kendi şerhi). */
+.dahil-liste{ list-style:none; margin:0 0 14px; padding:0;
+  display:flex; flex-direction:column; gap:10px; }
+.dahil-satir{ display:flex; align-items:center; gap:10px; }
+.dahil-satir.suruklenen{ opacity:.45; }
+.dahil-satir.hedef{ box-shadow:0 0 0 2px var(--aksan) inset; border-radius:var(--yuvarlak-md); }
+.dahil-tutamak{
+  flex:none; width:34px; height:42px; display:grid; place-items:center;
+  border:0; background:transparent; color:var(--metin-ikincil);
+  cursor:grab; border-radius:var(--yuvarlak-md); font-size:13px;
+}
+.dahil-tutamak:active{ cursor:grabbing; }
+.dahil-tutamak:hover{ color:var(--murekkep); background:var(--zemin); }
+.dahil-tutamak:focus-visible{ outline:var(--odak-kalinlik) solid var(--odak-renk); outline-offset:var(--odak-ofset); }
+.dahil-no{
+  flex:none; min-width:22px; text-align:right;
+  font-size:var(--yazi-12-5); font-weight:var(--agirlik-kalin);
+  color:var(--metin-ikincil); font-variant-numeric:tabular-nums;
+}
+.dahil-satir .alan-girdi{ flex:1 1 auto; min-width:0; }
+.dahil-sil{
+  flex:none; width:42px; height:42px;
+  border:var(--cizgi-1) solid var(--cizgi); border-radius:var(--yuvarlak-md);
+  background:var(--kagit); color:var(--metin-ikincil); cursor:pointer;
+  transition:.2s var(--ease);
+}
+.dahil-sil:hover{ border-color:var(--aksan); color:var(--aksan); background:var(--aksan-yikama); }
+.dahil-sil:focus-visible,
+.dahil-ekle:focus-visible{ outline:var(--odak-kalinlik) solid var(--odak-renk); outline-offset:var(--odak-ofset); }
+.dahil-sil[disabled]{ opacity:.35; pointer-events:none; }
+.dahil-ekle{
+  display:inline-flex; align-items:center; gap:8px;
+  font-family:inherit; font-size:var(--yazi-13); font-weight:var(--agirlik-kalin);
+  color:var(--aksan-koyu); background:var(--aksan-yikama);
+  border:1px dashed var(--aksan); border-radius:var(--yuvarlak-md);
+  padding:10px 16px; cursor:pointer; transition:.2s var(--ease);
+}
+.dahil-ekle:hover{ background:var(--kagit); border-style:solid; }
+/* silme onayı satırın İÇİNDE sorulur — modal içinde ikinci modal açmak
+   odak tuzağını çiftler; L10 "onaylı sil" der, "ikinci modal" demez */
+.dahil-onay{
+  display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+  padding:9px 12px; border-radius:var(--yuvarlak-md);
+  background:var(--aksan-yikama); border:var(--cizgi-1) solid var(--aksan);
+  font-size:var(--yazi-12-5); font-weight:var(--agirlik-orta); color:var(--murekkep);
+}
+.dahil-onay .sag{ margin-left:auto; display:flex; gap:8px; }
+.dahil-onay button{
+  font-family:inherit; font-size:var(--yazi-12-5); font-weight:var(--agirlik-kalin);
+  border:var(--cizgi-1) solid var(--cizgi); background:var(--kagit);
+  color:var(--murekkep); border-radius:var(--yuvarlak-md); padding:7px 13px; cursor:pointer;
+}
+.dahil-onay button.evet{ border-color:var(--aksan); color:#fff; background:var(--aksan-koyu); }
+
+/* otomatik alan: elle girilmez, nereden geldiği YAZAR */
+.plan-otomatik{
+  display:flex; align-items:center; gap:10px;
+  padding:12px 14px; border-radius:var(--yuvarlak-md);
+  border:var(--cizgi-1) solid var(--cizgi); background:var(--zemin);
+}
+.plan-otomatik b{ font-size:19px; color:var(--murekkep); font-variant-numeric:tabular-nums; }
+.plan-otomatik span{ font-size:var(--yazi-12-5); color:var(--metin-ikincil);
+  font-weight:var(--agirlik-orta); line-height:var(--satir-orta); }
+.plan-otomatik i{ color:var(--aksan-koyu); }
+
+/* ── canlı önizleme kartı — DONÖRÜN `.uy-plan`ı ────────────────────
+   Ölçüler donörden birebir: 26px/24px dolgu · 19px başlık · 30px
+   fiyat · 11px madde aralığı. Renk ailesi çevrildi (K29: ölçü alınır,
+   palet alınmaz). Kolon yapışkan: form uzayınca kart görüşte kalır. */
+.plan-onizleme-kap{ position:sticky; top:0; }
+.plan-onizleme-bas{
+  display:flex; align-items:center; gap:8px; margin-bottom:10px;
+  font-size:12px; font-weight:var(--agirlik-kalin); color:var(--metin-ikincil);
+  text-transform:uppercase; letter-spacing:.05em;
+}
+.plan-onizleme{
+  display:flex; flex-direction:column;
+  background:var(--kagit); border:1.5px solid var(--aksan);
+  border-radius:var(--yuvarlak-lg); padding:26px 24px;
+  box-shadow:0 12px 32px rgba(220,61,23,.07);
+}
+.plan-onizleme .po-etiket{
+  align-self:flex-start; font-size:10.5px; font-weight:var(--agirlik-kalin);
+  letter-spacing:.05em; text-transform:uppercase;
+  color:var(--aksan-koyu); background:var(--aksan-yikama);
+  padding:5px 11px; border-radius:8px; margin-bottom:14px;
+}
+.plan-onizleme .po-ikon{
+  width:48px; height:48px; border-radius:var(--yuvarlak-md);
+  background:var(--aksan-yikama); color:var(--aksan-koyu);
+  display:grid; place-items:center; font-size:19px; margin-bottom:16px;
+}
+.plan-onizleme h4{ font-size:19px; margin:0 0 7px; color:var(--murekkep); line-height:1.3; }
+.plan-onizleme > p{ font-size:var(--yazi-13-5); color:var(--metin-ikincil);
+  font-weight:var(--agirlik-orta); line-height:1.6; margin:0 0 18px; }
+.po-fiyat{ display:flex; align-items:baseline; gap:6px; padding:14px 0;
+  border-top:var(--cizgi-1) solid var(--cizgi); border-bottom:var(--cizgi-1) solid var(--cizgi); margin-bottom:8px; }
+.po-fiyat b{ font-size:30px; font-weight:var(--agirlik-kalin); color:var(--murekkep); letter-spacing:-.02em; }
+.po-fiyat span{ font-size:13px; color:var(--metin-ikincil); font-weight:var(--agirlik-orta); }
+.po-yillik{ font-size:var(--yazi-12-5); color:var(--metin-ikincil);
+  font-weight:var(--agirlik-orta); margin:0 0 18px; }
+.po-madde{ list-style:none; margin:0 0 18px; padding:0;
+  display:flex; flex-direction:column; gap:11px; }
+.po-madde li{ display:flex; gap:10px; font-size:var(--yazi-13-5);
+  color:var(--murekkep); font-weight:var(--agirlik-orta); line-height:1.45; }
+.po-madde li i{ flex:none; color:var(--aksan-koyu); font-size:13px; margin-top:3px; }
+.po-madde li.otomatik{ color:var(--metin-ikincil); }
+/* 🔴 ÖDEME SAĞLAYICI YOK — önizlemedeki abone düğmesi ÇALIŞMAZ ve
+   çalışıyormuş gibi de durmaz: `disabled`, gri, altında sebebi yazılı.
+   "Yalan düğme 0" bunun kapı ölçütü. */
+.po-cta{
+  width:100%; display:inline-flex; align-items:center; justify-content:center; gap:9px;
+  font-family:inherit; font-size:14px; font-weight:var(--agirlik-kalin);
+  color:var(--metin-ikincil); background:var(--zemin);
+  border:1px dashed var(--cizgi); border-radius:var(--yuvarlak-md);
+  padding:14px 22px; cursor:not-allowed;
+}
+.po-not{ font-size:12px; color:var(--metin-ikincil); font-weight:var(--agirlik-orta);
+  text-align:center; margin:13px 0 0; display:flex; align-items:center; justify-content:center; gap:7px; }
+.po-not i{ color:var(--aksan-koyu); font-size:11px; }
+
+/* ── taslak satırı: plan listesindeki kip ──────────────────────────
+   Sayfanın kendi `.paket-satiri`sı; taslağa özel yalnız kesikli
+   kenar ve altındaki sebep satırı. */
+.paket-satiri.taslak{ border-style:dashed; }
+.taslak-not{
+  display:flex; align-items:flex-start; gap:9px;
+  margin-top:10px; padding:9px 12px;
+  border-radius:var(--yuvarlak-md); background:var(--zemin);
+  font-size:var(--yazi-12-5); color:var(--metin-ikincil);
+  font-weight:var(--agirlik-orta); line-height:var(--satir-orta);
+}
+.taslak-not i{ flex:none; margin-top:2px; color:var(--aksan-koyu); }
+/* B2 · yayın satırındaki açıklama şeridi — eylemin ne yapacağını ve
+   neden bugün yapılamadığını söyler; kapatılabilir. */
+.plan-serit{ align-items:flex-start; border:var(--cizgi-1) solid var(--cizgi); }
+.plan-serit-kapat{
+  margin-left:auto; flex:none; width:28px; height:28px;
+  display:grid; place-items:center; border:0; background:transparent;
+  color:var(--metin-ikincil); cursor:pointer; border-radius:var(--yuvarlak-md);
+}
+.plan-serit-kapat:hover{ color:var(--murekkep); background:var(--kagit); }
+.plan-serit-kapat:focus-visible{ outline:var(--odak-kalinlik) solid var(--odak-renk); outline-offset:var(--odak-ofset); }
+/* salt okunur alan: girilebilir görünmesin */
+.plan-duzen-form .alan-girdi[readonly],
+.plan-duzen-form .alan-metin[readonly]{ background:var(--zemin); color:var(--metin-ikincil); cursor:default; }
+.plan-duzen-form .alan-girdi[readonly]:focus,
+.plan-duzen-form .alan-metin[readonly]:focus{ border-color:var(--cizgi); box-shadow:none; }
+
+@media (max-width:900px){
+  .plan-duzen{ grid-template-columns:1fr; }
+  .plan-onizleme-kap{ position:static; }
+}
+/* @390 gözle ölçüldü: modal ayağı tek satırda kalınca "Taslak Olarak
+   Kaydet" sağ kenardan taşıyordu. Kural LEAD'in `dm-p4.css`indeki
+   ortak `.dm-modal-ayak`a değil, YALNIZ bu modala yazıldı — kulvar
+   dışına ezme kuralı yazılmaz; ortak dosyaya taşınması lead kararı
+   (rapor §10 md.6). */
+@media (max-width:640px){
+  #spPlanModal .dm-modal-ayak{ flex-wrap:wrap; }
+  #spPlanModal .dm-modal-ayak .durum-satir{ flex:1 1 100%; }
+  #spPlanModal .dm-modal-ayak .sag{ width:100%; margin-left:0; }
+  #spPlanModal .dm-modal-ayak .sag .dugme{ flex:1 1 0; justify-content:center; }
+}

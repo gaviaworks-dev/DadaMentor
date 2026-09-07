@@ -1,0 +1,124 @@
+/* =====================================================================
+   AJAN A · PARTİ 4 — g-mutfak-defterim · tarif-ekle · puf-noktasi-ekle
+   BAĞI lead attı (L0); İÇERİĞİNİ yalnız ajan A yazar.
+   KAYNAK BURASI: scripts/p4-varlik/dm-p4-a.css — ağaca kopyalanır.
+   Satır içi `style` yok; bütün değerler kanon tokenlarından.
+   ===================================================================== */
+
+/* ═══ A2 · KART PANELİ MODALDE ══════════════════════════════════════
+   🔴 `.dk-pop` kuralları p3'te `.modul-govde` ile KAPSANMIŞ; modal
+   `<body>`nin çocuğu olduğu için o kapsam DIŞINDA kalır ve panel
+   çıplak düşerdi ("kabuk ↔ kanon eşit özgüllük" değil, KAPSAM kaybı).
+   Gereken kurallar burada, modal kapsamında yeniden bildirilir. */
+.dm-modal .dk-pop{
+  border-top:0; background:transparent; padding:0;
+}
+.dm-modal .dk-pop[hidden]{ display:none; }
+/* Panelin kendi başlığı modalın başlığında zaten yazıyor — SİLİNMEZ,
+   yalnız modal kipinde ikinci kez çizilmez. */
+.dm-modal .dk-pop-bas{ display:none; }
+.dm-modal .dk-pop .alan + .alan{ margin-top:var(--bosluk-12); }
+.dm-modal .dk-pop-ayak{
+  display:flex; align-items:center; justify-content:flex-end;
+  gap:var(--bosluk-8); margin-top:var(--bosluk-14); flex-wrap:wrap;
+}
+.dm-modal .dk-pop-durum{
+  margin-right:auto; font-size:var(--yazi-12-5);
+  font-weight:var(--agirlik-govde); color:var(--aksan-koyu);
+}
+.dm-modal .dk-olgu{
+  display:flex; align-items:flex-start; gap:var(--bosluk-10);
+  padding:var(--bosluk-9) 0;
+  font-size:var(--yazi-13); font-weight:var(--agirlik-govde);
+  color:var(--murekkep-yumusak); line-height:var(--satir-govde);
+}
+.dm-modal .dk-olgu + .dk-olgu{ border-top:var(--cizgi-1) solid var(--cizgi); }
+.dm-modal .dk-olgu i{
+  flex:none; width:16px; text-align:center; margin-top:2px;
+  font-size:var(--yazi-12); color:var(--tomato);
+}
+.dm-modal .dk-olgu b{ color:var(--slate); font-weight:var(--agirlik-kalin); }
+.dm-modal .dk-pop-ayarlar .acilir-kalem{ width:100%; }
+.dm-modal .dk-pop-ayarlar .acilir-kalem i{
+  flex:none; width:16px; text-align:center; font-size:var(--yazi-12);
+}
+.dm-modal .dk-pop-ayarlar .acilir-kalem.yikici:hover{
+  background:var(--tehlike-yikama); color:var(--tehlike);
+}
+.dm-modal .dk-onay{
+  display:flex; align-items:center; flex-wrap:wrap; gap:var(--bosluk-8);
+  margin-top:var(--bosluk-8); padding:var(--bosluk-10) var(--bosluk-11);
+  background:var(--tehlike-yikama); border-radius:var(--yuvarlak-sm);
+  font-size:var(--yazi-12-5); font-weight:var(--agirlik-govde); color:var(--slate);
+}
+.dm-modal .dk-onay span{ margin-right:auto; }
+/* Kartın adı modal başlığının altında; uzun ad başlığı taşırmasın. */
+.dm-modal .dm-modal-bas [data-p4a-modal-alt]{
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+}
+
+/* ═══ A3 · SÜZGEÇ SATIRI · BOŞ HÂL ═════════════════════════════════ */
+/* Yeni araç çubuğu ve çip satırı, panonun kendi ritmiyle otursun. */
+.modul-govde .dk-arac[data-p4a="arac"]{ margin-bottom:var(--bosluk-12); }
+.modul-govde .cipler[data-p4a="cipler"]{ margin-bottom:var(--bosluk-12); }
+/* tablo/not panolarında araç çubuğu kartın hemen üstünde */
+.modul-govde [data-pane="taslaklarim"] .dk-arac[data-p4a="arac"],
+.modul-govde [data-pane="yayinda"] .dk-arac[data-p4a="arac"],
+.modul-govde [data-pane="notlarim"] .dk-arac[data-p4a="arac"]{ margin-top:var(--bosluk-8); }
+
+/* Sayaç kaynağın kendi kalıbı (`g-bildirimler.html`): etiketten sonra
+   `.cip-sayi`. Boşluğu kanon veriyor; burada yalnız ayrım. */
+.modul-govde .cip.suzgec .cip-sayi{ margin-left:var(--bosluk-5); }
+/* 🔴 Süzgeci olmayan çip GİZLENMEZ (içerik silinmez) — sayacı gerçeği
+   söyler ve tıklanınca boş hâl açılır; sessizce ölü kalmaz. */
+.modul-govde .cip.suzgec[data-p4a-karsiliksiz]{ opacity:.72; }
+
+/* BOŞ HÂL — kanon `.bos-durum.kart-ici`; p2'nin `.dk-bos` kuralı
+   ızgara sütununu ve kesik çerçeveyi veriyor, kanon iç düzeni. */
+.modul-govde .dk-bos.bos-durum{
+  display:flex; flex-direction:column; align-items:center;
+  text-align:center; color:var(--metin-ikincil);
+}
+.modul-govde .dk-bos.bos-durum[hidden]{ display:none; }
+/* p2'nin `.dk-bos i` kuralı ikon karosunun İÇİNDEKİ `i`ye de düşüyor
+   (descendant seçici) — karo ölçüsü kanonun. */
+.modul-govde .dk-bos.bos-durum .bos-ikon{
+  display:grid; place-items:center; width:58px; height:58px;
+  border-radius:var(--yuvarlak-md);
+  background:var(--aksan-yikama); color:var(--aksan-koyu);
+  margin:0 0 var(--bosluk-14);
+}
+.modul-govde .dk-bos.bos-durum .bos-ikon i{
+  font-size:var(--yazi-22); color:inherit; opacity:1;
+  display:block; margin:0;
+}
+.modul-govde .dk-bos.bos-durum h4{
+  font-size:var(--yazi-15-5); font-weight:var(--agirlik-kalin);
+  color:var(--murekkep); margin:0 0 var(--bosluk-5);
+}
+.modul-govde .dk-bos.bos-durum p{
+  font-size:var(--yazi-13); color:var(--metin-ikincil);
+  font-weight:var(--agirlik-govde); line-height:var(--satir-govde);
+  max-width:300px; margin:0 0 var(--bosluk-16);
+  text-align:center; text-align-last:auto;
+}
+/* tablo ve not panolarında boş hâl ızgara sütunu almaz */
+.modul-govde .kart > .dk-bos.bos-durum,
+.modul-govde .pd-grid + .dk-bos.bos-durum{ grid-column:auto; }
+
+/* ═══ A1 · DÜZENLEME KİPİ ŞERİDİ (tarif-ekle · puf-noktasi-ekle) ════
+   Kanonun kendi `.bilgi-notu` bileşeni; yeni bileşen açılmadı. */
+.ek-govde .p4a-serit{ margin-bottom:var(--bosluk-20); }
+.ek-govde .p4a-serit .p4a-serit-alt{
+  margin-top:var(--bosluk-6);
+  font-size:var(--yazi-12-5); line-height:var(--satir-govde);
+  color:var(--metin-ikincil); font-weight:var(--agirlik-govde);
+}
+.ek-govde .p4a-serit-hata{
+  background:var(--tehlike-yikama);
+  border-color:var(--tehlike-cizgi, var(--cizgi));
+}
+.ek-govde .p4a-serit-hata > i{ color:var(--tehlike); }
+/* Düzenleme kipinde gelen mevcut kapak, yüklenmiş görselden ayrılsın:
+   kaynağın kendi `.ek-gorsel` kutusu, yalnız kenarı işaretli. */
+.ek-govde .ek-gorsel[data-p4a-mevcut]{ outline:var(--cizgi-2, 2px) solid var(--aksan-koyu); outline-offset:-2px; }

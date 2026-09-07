@@ -1,0 +1,116 @@
+/* =====================================================================
+   LEAD KULVARI · PARTİ 4 — L4 (ekleme sayfaları) + L5 (video hub bandı)
+   ---------------------------------------------------------------------
+   BAĞI lead attı (gastro-p4-lead.mjs --adim l0). Nüfus 7 sayfa:
+     tarif-ekle · puf-noktasi-ekle · video-mutfagi(+4 alt sayfa)
+   KAYNAK BURASI: scripts/p4-varlik/dm-p4-lead.css — ağaca kopyalanır.
+
+   🔴 NEDEN AYRI DOSYADA, SAYFANIN KENDİ CSS'İNDE DEĞİL:
+      Parti 3 L1'in kararı "değer donörün, YERİ kaynağın" idi ve doğruydu
+      — ama o dosyalar (`video-mutfagi.css`, `ekle.css`) YALNIZ AĞAÇTA
+      yaşıyor, depoda karşılıkları yok (`dump/` .gitignore'da). Bu turun
+      başında ölçüldü: makine yeniden başlayınca `/tmp/DadaMentor`
+      tamamen kayboldu. Ağaçta yazılan kural KAYNAKSIZ kuraldır.
+      Bedeli: paylaşılan dosyaya eş özgüllüklü kural yazmanın tuzağı
+      (sayfanın kendi @media blokları ayaktayken kademede ters düşme).
+      Bu tuzak, donörün ÜÇ KADEMESİNİN DE burada aynen aynalanmasıyla
+      kapatıldı — base · ≤1024 · ≤640 üçü de aşağıda yazılı, hiçbiri
+      sayfanın kendi bloğuna bırakılmadı.
+
+   ═══════════════════════════════════════════════════════════════════
+   L4 · BANNER ↔ BEYAZ PANEL BOŞLUĞU
+   -------------------------------------------------------------------
+   ÖLÇÜLDÜ (90 bantlı sayfa · 1440 · render):
+     43 sayfa   margin-top -22 + padding-top 38  = bandın 16px altında  ← KANON
+     11         -22 + 58   (sofra-duzeni detay ailesi)
+      7         -22 + 52   ·   5   -22 + 74   ·   3   -22 + 48   ·  3  -22 + 34
+      5         -22 +  0   ← tarif-ekle · puf-noktasi-ekle + 3 hub sayfası
+   390'da aynı kova yeniden ölçüldü: 12/14 sayfa `padding-top:24px`
+   (puf-noktalari 26, kunye 22 — ikisi de tekil).
+
+   Yani beyaz panel banner'a yapışık DEĞİL, banner'ın 22px İÇİNE
+   giriyordu: `.ek-govde` yuvarlatma bindirmesini (-22) alıyor ama
+   donörün nefesini (`padding-top`) hiç almıyordu.
+
+   DEĞER DONÖRÜN: `varliklar/reference/tarif-liste/tarif-liste.css`
+     .lst-sec{padding:38px 0 74px}          @640 {padding:24px 0 50px}
+   Alt dolgu `--bolum-nefes` (74) ile ZATEN aynı; değişen yalnız ÜST.
+   ═══════════════════════════════════════════════════════════════════ */
+.zebra > .ek-tepe + .ek-govde{ padding-top:38px; }
+@media (max-width:640px){
+  .zebra > .ek-tepe + .ek-govde{ padding-top:24px; }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   L5 · VIDEO HUB BANDI → LİSTE HERO KALIBI
+   -------------------------------------------------------------------
+   ÖLÇÜLDÜ (1440 / 1024 / 390 · render · networkidle):
+
+     ölçü                video-mutfagi   liste donörü (tarifler·puf·sefler)
+     bant yüksekliği     552 552 552     552 552 552   ← ZATEN AYNI
+     bant padding-top    112 112  62     128 128  74
+     bant padding-bottom  64  64  44      48  48  48
+     h1                   40  33  28      44  44  29
+     istatistik yönü     YATAY (row)     DİKEY (column) · @1024 row
+     istatistik kabı     .vh-stats       .lst-stats (sol kenarlı sütun)
+
+   Yani "yükseklik" zaten tutuyordu — tutmayan KALIPTI: bant nefesi,
+   başlık ölçüsü ve istatistik şeridinin yönü. İstek ("kısa, tutarlı ·
+   istatistikler dikey") tam bu üç sapmayı adlandırıyor.
+
+   🔴 İSTATİSTİK @1024'TE YATAYA DÖNER — bu bir sapma değil, KANONUN
+      KENDİ KADEMESİ (`tarif-liste.css` @1024: `.lst-stats{flex-
+      direction:row; padding-left:0; border-left:none; border-top:…}`).
+      "Dikey" isteği 1440'ın kararıdır; dar ekranda donörün kendi kararı
+      geçerli, yoksa "diğer liste hero'larıyla aynı kalıp" bozulurdu.
+
+   🔴 BEYAZ PANEL: ÖLÇÜLDÜ, ZATEN YOK. `.vfeat-sec` zemini
+      `linear-gradient(180deg,#1F1C14,#211E16)` + `border-radius
+      22px 22px 0 0` — videonun koyu radiuslu paneli. Bant ölçüsü
+      değişirken bu panelin BEYAZA DÖNMEMESİ bir kapı ölçütü;
+      burada hiçbir zemin kuralı yazılmadı ki değişmesin.
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ① bant nefesi — donörün `.lst-top` değeri */
+.vhub-hero{ padding-top:128px; padding-bottom:48px; }
+
+/* ② başlık bloğu — donörün `.lst-hero` dolgusu ve ölçüsü.
+   `.vh-head` kaynağın kendi kutusu; `.lst-hero`nun grid kolonları
+   ZATEN karşılığı olan flex ile kuruluyor (baş + istatistik, uçlara
+   yaslı). Değişen dolgu ve hizalama. */
+.vhub-hero .vh-head{ padding:10px 0 42px; margin-bottom:0; align-items:flex-end; gap:44px; }
+.vhub-hero .vh-head h1{ font-size:44px; }
+
+/* ③ istatistik şeridi DİKEY — donörün `.lst-stats` kutusu.
+   Ayırıcı da donörün: yatay şeritte kalemler arası çizgi
+   (`.st+.st::before`), dikey şeritte kutunun SOL kenarı. İkisi bir
+   arada durursa iki ayırıcı görünür; yatay olan kapatılır. */
+.vhub-hero .vh-stats{
+  flex-direction:column; align-items:stretch; gap:16px;
+  padding-left:38px; border-left:1px solid rgba(255,255,255,.18);
+}
+.vhub-hero .vh-stats .st{ padding-left:0; }
+.vhub-hero .vh-stats .st + .st::before{ content:none; }
+.vhub-hero .vh-stats b{ font-size:29px; letter-spacing:-.02em; line-height:1.1; }
+.vhub-hero .vh-stats span{ font-size:12.5px; color:#aebcc6; }
+
+/* ── ≤1024 · donörün kendi kademesi ─────────────────────────────── */
+@media (max-width:1024px){
+  .vhub-hero .vh-head{ gap:22px; align-items:flex-start; padding-bottom:32px; }
+  .vhub-hero .vh-head h1{ font-size:44px; }
+  .vhub-hero .vh-stats{
+    flex-direction:row; align-items:center; gap:34px;
+    padding-left:0; border-left:none;
+    padding-top:18px; border-top:1px solid rgba(255,255,255,.18);
+  }
+}
+
+/* ── ≤640 · donörün kendi kademesi ──────────────────────────────── */
+@media (max-width:640px){
+  .vhub-hero{ padding-top:74px; padding-bottom:48px; }
+  .vhub-hero .vh-head{ padding:2px 0 26px; }
+  .vhub-hero .vh-head h1{ font-size:29px; }
+  .vhub-hero .vh-stats{ gap:10px; }
+  .vhub-hero .vh-stats .st{ flex:1; }
+  .vhub-hero .vh-stats b{ font-size:20px; }
+}

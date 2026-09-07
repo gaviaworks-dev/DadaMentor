@@ -1,0 +1,126 @@
+/* ajan F · liste süzgeç paneli — PARTİ 4
+   BAĞI lead attı (gastro-p4-lead.mjs --adim l0); İÇERİĞİNİ yalnız
+   kendi kulvarı yazar. Başka kulvar bu dosyaya dokunmaz.
+   KAYNAK BURASI: scripts/p4-varlik/dm-p4-f.css — ağaca kopyalanır. */
+
+/* =====================================================================
+   L7 · SOL SÜZGEÇ PANELİ SAYFA SCROLL'UNA BAĞIMLIYDI
+   ---------------------------------------------------------------------
+   ÖLÇÜLEN ÖNCE (1440, viewport 950):
+     .lst-side  position:sticky top:130px  max-height:NONE  overflow-y:VISIBLE
+       (tarif-liste.css @media(min-width:1025px) max-height'ı SÖKÜYORDU)
+     panel yüksekliği tarifler/en__tarifler'de 2406,4px — görünüm 950px
+       → panel kendi içinde KAYMIYOR (scrollHeight==clientHeight),
+         süzgeç listesinin dibi ancak SAYFA kaydırılarak görülüyor
+     .sheet-foot (#sheetApply "N Tarifi Göster")  display:NONE  → masaüstünde
+       UYGULA DÜĞMESİ HİÇ ÇİZİLMİYOR
+     "Tümünü Temizle" .fil-top içinde, yani kaydırma gövdesinde:
+       dip noktasında ekranda=0 (kayboluyor)
+   ---------------------------------------------------------------------
+   🔴 ÖLÇÜLEN HEADER (sabit yazılmadı, iki kipte de okundu):
+     1440/1024 saydam(at-top) header alt kenarı 113px · solid 113px  → AYNI
+     390       saydam 63px · solid 63px                              → AYNI
+   Yine de sabit sayı yazılmıyor: --f-hdr-alt'ı dm-p4-f.js her yükleme,
+   yeniden boyutlama ve header sınıf değişiminde ÖLÇÜP yazar. CSS'teki
+   113px yalnız JS yetişene kadarki geri düşüş (bugün ölçülmüş değer).
+   ===================================================================== */
+
+:root{
+  --f-hdr-alt: 113px;      /* JS ölçer — header alt kenarının ekrandaki y'si */
+  --f-panel-ara: 17px;     /* header ile panel arası — bugünkü 130-113 KORUNDU */
+  --f-panel-dip: 24px;     /* panel dibi ile görünüm dibi arası nefes */
+  --f-alt-engel: 0px;      /* JS ölçer — ekranın dibini örten sabit katman
+                              (çerez bandı). Bant kapanınca 0'a döner. */
+}
+
+@media (min-width:1025px){
+
+  /* --- 1 · panel header'ın ALTINDAN başlar, 2 · kendi içinde kayar ----
+     tarif-liste.css:60 `@media(min-width:1025px){.lst-side{max-height:none;
+     overflow-y:visible}}` ile AYNI özgüllük (0,0,1,0) — bu dosya SONRA
+     yüklendiği için kaskadda kazanır (CDP getMatchedStylesForNode ile
+     doğrulandı, rapor/p4/f-kazanan.json).                              */
+  .lst-side{
+    top: calc(var(--f-hdr-alt) + var(--f-panel-ara));
+    max-height: calc(100vh - var(--f-hdr-alt) - var(--f-panel-ara) - var(--f-panel-dip) - var(--f-alt-engel));
+    /* kaydırma panelin KENDİSİNDE değil .sheet-body'de — ayak dışarıda kalsın */
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 0;
+  }
+
+  /* form, panelin flex kolonunu kesmesin: sheet-body/sheet-foot'un flex
+     ebeveyni O olur (≤1024 çekmece kipindeki kanıtlanmış desenin aynısı) */
+  .lst-side > form[data-facet-form]{
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    min-height: 0;
+  }
+
+  /* 🔴 flex-shrink dersi (parti 3 · B3): max-height verilen yapışkan kutuda
+     çocuklar TAŞMAK yerine KISILIR. Kaydıran tek çocuk sheet-body'dir ve
+     min-height:0 ile sıfıra kısılabilir; ayak ve baş flex:none.
+     sheet-body'nin İÇİ blok akışıdır → .fct blokları kısılmaz (ölçüldü). */
+  .lst-side .sheet-body{
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    /* 3 · ince kaydırma çubuğu — ikisi birlikte, renkler tokenlardan */
+    scrollbar-width: thin;
+    scrollbar-color: var(--scroll-thumb) transparent;
+    /* çubuk içerik metnini kesmesin */
+    padding-right: 8px;
+    margin-right: -8px;
+  }
+  .lst-side .sheet-body::-webkit-scrollbar{ width: var(--scroll-size,6px); }
+  .lst-side .sheet-body::-webkit-scrollbar-track{ background: transparent; }
+  .lst-side .sheet-body::-webkit-scrollbar-thumb{
+    background: var(--scroll-thumb);
+    border-radius: var(--radius-pill);
+  }
+  .lst-side .sheet-body::-webkit-scrollbar-thumb:hover{ background: var(--scroll-thumb-hover); }
+
+  /* --- 3 · UYGULA / TEMİZLE panelin AYAĞINDA, kaydırma alanının DIŞINDA --
+     Yeni düğme UYDURULMADI: ayakta duran ikisi de sayfanın kendi
+     denetimleri — #sheetApply ("N Tarifi Göster", zaten markup'ta ama
+     masaüstünde display:none idi) ve .fil-top'tan taşınan .fil-clear
+     ("Tümünü Temizle" / "Clear All", href'i değişmedi).               */
+  /* ÖLÇÜLDÜ: panel 272px, ayak iç genişliği 232px. Yan yana dizilince
+     "N Tarifi Göster" düğmesine 128px kalıyor ve metin İKİ SATIRA sarıyor
+     (rapor/ss/p4 ilk çekim). Bu yüzden ayak KOLON: bağlantı üstte, düğme
+     tam genişlikte altta — çekmecedeki tam genişlik düğmesiyle de tutarlı. */
+  .lst-side .sheet-foot{
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    flex: 0 0 auto;
+    padding: 12px 0 14px;
+    border-top: 1px solid var(--line);
+    background: var(--paper);   /* opak — yarı saydam zemin kontrastı dersi */
+  }
+  .lst-side .sheet-foot .btn{ width: 100%; white-space: nowrap; }
+  .lst-side .sheet-foot .fil-clear[data-f-ayak]{
+    align-self: center;
+    padding: 2px 4px;
+    white-space: nowrap;
+  }
+
+  /* .fil-top artık yalnız başlık taşıyor (Temizle ayağa taşındı) */
+  .lst-side .fil-top{ justify-content: flex-start; }
+}
+
+/* ---------------------------------------------------------------------
+   5 · ≤1024 ÇEKMECE KİPİ — MEVCUT DAVRANIŞ KORUNUR.
+   Yukarıdaki hiçbir kural burada uygulanmaz (min-width:1025 kapısı).
+   Tek dokunuş: ayağa TAŞINAN Temizle bağlantısı çekmecede GİZLENİR —
+   çekmecenin ayağı bugünkü gibi yalnız "N Tarifi Göster" taşır ve
+   Temizle bugünkü yerinde (.sheet-head) kalır. Yani çekmecenin görünen
+   hâli taşımadan ÖNCEKİYLE birebir aynıdır (ölçüldü).
+   --------------------------------------------------------------------- */
+@media (max-width:1024px){
+  .sheet-foot .fil-clear[data-f-ayak]{ display: none; }
+}
