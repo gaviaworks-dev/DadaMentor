@@ -601,3 +601,26 @@ article.menu-detail.mnl-suz-disi{ display:none; }
 @media (max-width:640px){
   article.menu-detail.mnl-kapali{ min-height:99px; }
 }
+
+/* ═══════════════════════════════════════════════════════════════════
+   M1b · HAVUZ SÜZGECİ AÇILIRI MODAL KABINI AŞMAZ
+   -------------------------------------------------------------------
+   ÖLÇÜLDÜ @1440: dördüncü kutunun (Beslenme) paneli modalın sağından
+   **89px** taşıyor (1279 ↔ 1190), kart ızgarasının üstüne biniyor ve
+   alttaki kartın metnini kesiyordu.
+
+   Yatay: kanonun kendi `.acilir-yuzey.saga` sınıfı (`left:auto;
+   right:0`) — YENİ kural yazılmadı, JS ölçüp sınıfı takıyor.
+   Dikey: `--rp-pop-y` JS'in ölçtüğü KALAN alan; kanonun 420px
+   tavanıyla birlikte küçük olan kazanır, panel kendi içinde kayar
+   (kanon zaten `overflow-y:auto`), modal UZAMAZ.
+   Yığılma: panel kartların üstünde, modal başlığının ALTINDA.
+   ⚠ `style` özniteliği burada bir DEĞER taşıyıcı (çalışma zamanında
+   ölçülen piksel), yazılmış bir kural değil — markupta satır içi
+   style yok.
+   ═══════════════════════════════════════════════════════════════════ */
+.rp-tools .coklu-secim .acilir-yuzey{
+  max-height:min(420px, var(--rp-pop-y, 420px));
+  z-index:var(--kat-menu);
+}
+.rp-modal .rp-head{ position:relative; z-index:calc(var(--kat-menu) + 1); }

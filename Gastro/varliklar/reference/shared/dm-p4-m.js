@@ -184,12 +184,44 @@
     araclar.appendChild(cipSatir);
     document.addEventListener('click', function () { GRUPLAR.forEach(function (g) { ac(g.k, false); }); });
 
+    /* 🔴 AÇILIR PANEL MODAL KABINDAN TAŞIYORDU. Beyar ekranda gördü,
+       sonra ölçüldü (1440): dört kutunun SONUNCUSU (Beslenme)
+         panel sağ kenarı 1279  ↔  modal sağ kenarı 1190   → 89px TAŞMA
+       Panel kart ızgarasının üstüne biniyor ve alttaki kartın metnini
+       kesiyordu. Sayaçlar ve "Temizle" aslında BASILIYORDU — panel
+       kırpıldığı için görünmüyorlardı; ekran görüntüsünden "eksik"
+       diye okumak yanlış teşhis olurdu, ölçüm düzeltti.
+
+       Üç kural, üçü de ÖLÇÜMLE karar veriyor (sabit "sonuncu ise sağa
+       yasla" DEĞİL — 390'da kutu sayısı ve sıra değişiyor):
+         1 · sağa taşıyorsa kanonun `.saga` sınıfı (`left:auto;right:0`)
+         2 · yükseklik modalın görünür alanını aşarsa panelin KENDİ
+             `max-height`i kısılır (kanon zaten `overflow-y:auto`
+             taşıyor; modal UZAMAZ)
+         3 · yığılma: panel kartların üstünde, modal başlığının altında
+             (CSS'te, `.rp-head`in katından düşük)
+       Ölçüm panel GÖRÜNÜR olduktan SONRA yapılır: gizli elemanın
+       kutusu 0'dır ("özne yoksa kapı susar"). */
+    function yerlestir(b) {
+      var pop = b.pop;
+      pop.classList.remove('saga');
+      pop.style.removeProperty('--rp-pop-y');
+      var modal = document.getElementById('rpModal');
+      if (!modal) return;
+      var mr = modal.getBoundingClientRect();
+      var pr = pop.getBoundingClientRect();
+      if (pr.right > mr.right - 8) pop.classList.add('saga');
+      /* Kalan dikey alan: panelin üstünden modalın altına. */
+      var kalan = Math.max(160, Math.round(mr.bottom - pr.top - 16));
+      pop.style.setProperty('--rp-pop-y', kalan + 'px');
+    }
     function ac(k, acik) {
       GRUPLAR.forEach(function (g) {
         var b = kutular[g.k];
         var a = (g.k === k) ? !!acik : false;
         b.pop.hidden = !a;
         b.kutu.setAttribute('aria-expanded', a ? 'true' : 'false');
+        if (a) yerlestir(b);
       });
     }
     function araSuz(k) {
@@ -1042,15 +1074,36 @@
 
   function metin(el) { return (el.textContent || '').replace(/\s+/g, ' ').trim().toLocaleLowerCase('tr'); }
 
-  /* Öznelerin ORTAK ATASI — araç çubuğu oraya, listenin ÜSTÜNE girer.
-     Kap uydurulmaz: gerçekten var olan ata bulunur. */
-  function kapBul(ozneler) {
-    if (!ozneler.length) return null;
-    var a = ozneler[0].parentNode;
+  /* Araç çubuğunun EKLEME NOKTASI — {ebeveyn, hedef}.
+     Çubuk `hedef`in ÖNÜNE, `ebeveyn`in İÇİNE girer.
+
+     🔴 İLK İKİ YAZIM DA ÇUBUĞU SAYFA KABININ DIŞINA KOYDU ve kusuru
+     sayı DEĞİL GÖZ yakaladı: DOM ölçümü "araclar:true" diyordu,
+     hash'li/hash'siz karşılaştırması da "aynı" diyordu — iki hâlde de
+     aynı biçimde YANLIŞTI. Ekranda çubuk viewport'un sol kenarına
+     yapışıktı (x=0), sayfanın kendi içerik kabı ise x=132.
+       1. yazım: ortak ata `<section>` → çubuk section'ın KARDEŞİ
+       2. yazım: ortak ata `.wrap` → `insertBefore(çubuk, wrap)`,
+                 yani yine wrap'ın DIŞINA (kap.parentNode kullanılıyordu)
+     Kök ikisinde de aynı: ata bulunuyor ama ekleme onun ÖNÜNE
+     yapılıyor; oysa çubuk kabın İÇİNDE, listenin üstünde durmalı. */
+  function ekleNoktasi(ozneler, pano, dinamik) {
+    var ilk = ozneler[0] || (dinamik ? pano.querySelector('.shop-list') : null);
+    if (!ilk) return null;
+    var wrap = ilk.closest('.wrap');
+    if (wrap) {
+      /* wrap'ın DOĞRUDAN çocuğu olan bloğu bul; çubuk onun önüne. */
+      var d = ilk;
+      while (d && d.parentNode !== wrap) d = d.parentNode;
+      if (d) return { ebeveyn: wrap, hedef: d };
+      return { ebeveyn: wrap, hedef: wrap.firstChild };
+    }
+    /* `.wrap` yoksa: öznelerin ortak atasının önüne (eski davranış). */
+    var a = ilk.parentNode;
     for (var i = 1; i < ozneler.length; i++) {
       while (a && !a.contains(ozneler[i])) a = a.parentNode;
     }
-    return a;
+    return a && a.parentNode ? { ebeveyn: a.parentNode, hedef: a } : null;
   }
 
   function pagiCiz(nav, sayfa, toplamSayfa, git) {
@@ -1094,11 +1147,10 @@
     if (!pano || pano.getAttribute('data-mnl-liste') === '1') return null;
 
     var ozneler = [].slice.call(pano.querySelectorAll(tanim.ozne));
-    var kap = kapBul(ozneler);
     /* Dinamik sekmede özne SONRADAN doğar; kap markupta bildirilmiş
        olmalı, yoksa kurulum ERTELENİR — uydurma kap açılmaz. */
-    if (!kap && tanim.dinamik) kap = pano.querySelector('.shop-list');
-    if (!kap) return null;
+    var nokta = ekleNoktasi(ozneler, pano, tanim.dinamik);
+    if (!nokta) return null;
 
     pano.setAttribute('data-mnl-liste', '1');
 
@@ -1116,19 +1168,19 @@
           '<i class="fa-solid fa-xmark" aria-hidden="true"></i></button>' +
       '</div>' +
       '<p class="mnl-sayac" data-mnl-sayac aria-live="polite"></p>';
-    kap.parentNode.insertBefore(araclar, kap);
+    nokta.ebeveyn.insertBefore(araclar, nokta.hedef);
 
     var bos = document.createElement('p');
     bos.className = 'mnl-bos';
     bos.setAttribute('data-mnl-bos', anahtar);
     bos.hidden = true;
-    kap.parentNode.insertBefore(bos, kap.nextSibling);
+    nokta.ebeveyn.insertBefore(bos, nokta.hedef.nextSibling);
 
     var nav = document.createElement('nav');
     nav.className = 'pagi mnl-pagi';
     nav.setAttribute('aria-label', 'Sayfalama');
     nav.hidden = true;
-    kap.parentNode.insertBefore(nav, bos.nextSibling);
+    nokta.ebeveyn.insertBefore(nav, bos.nextSibling);
 
     var arama = araclar.querySelector('.alan-girdi');
     var aramaKap = araclar.querySelector('.ie-arama');
