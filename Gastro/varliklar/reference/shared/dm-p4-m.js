@@ -989,3 +989,245 @@
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', kur);
   else kur();
 })();
+
+/* ═══════════════════════════════════════════════════════════════════
+   M7 · SEKME BAŞINA ARAMA + SAYFALAMA (g-menulerim · ALTI SEKME)
+   -------------------------------------------------------------------
+   Beyar isteği: "#gunluk dahil TÜM sekmelere sayfalama + arama."
+
+   ÖLÇÜLEN TABAN (rapor/p4/menu-arama-once.json · 1440 ve 390):
+     sekme        özne                       adet   arama  sayfalama
+     gunluk       article.menu-detail          6      yok     yok
+     haftalik     article.menu-detail          3      yok     yok
+     ozel-gun     article.menu-detail          4      yok     yok
+     taslak       tbody tr                     3      yok     yok
+     paylastigim  article.menu-detail          3      yok     yok
+     alisveris    .shop-item              DİNAMİK     yok     yok
+
+   🔴 ÖZNE SEKMEDEN SEKMEYE DEĞİŞİYOR ve bu bir kusur değil, sayfanın
+      kendi taksonomisi: menü sekmeleri SATIR (`article.menu-detail`),
+      taslak sekmesi TABLO, alışveriş sekmesi LİSTE KALEMİ. Tek bir
+      seçiciye zorlamak "denetimin öznesi kayar" kusurunu koda taşırdı;
+      her sekme kendi öznesini bildiriyor.
+
+   🔴 `alisveris` DİNAMİK: kalemler `dmDepo`dan doğuyor. `dm-depo`
+      olayında yeniden dizinleniyor, yoksa arama bayat liste süzerdi.
+
+   🔴 YENİ BİLEŞEN AÇILMADI:
+      arama      → ortak `.ie-arama` (`dm-p4.css`, ikon hizası düzeltilmiş)
+      sayfalama  → kanon `dm-pagi` (`.pagi` · `.pg` · `.pg.active` ·
+                   `.pg.arrow` · `.pg-dots` · `.pagi-note`)
+      boş hâl    → sayfanın kendi boş hâl dili
+
+   🔴 SAYFALAMA `<a href>` DEĞİL `<button>`: sayfa değişimi aynı
+      sayfada oluyor, gidilecek bir adres YOK. Kanonun `.pg` sınıfları
+      aynen kullanılıyor; `href` uydurmak ölü bağ üretmek olurdu.
+
+   🔴 SAYFA BOYU 5 — ve sayfalama YALNIZ birden çok sayfa varken
+      basılıyor. Tek sayfalık bir listenin altına "1" yazan bir gezinti
+      gürültüdür ve kullanıcıya yanlış bir çokluk vaat eder.
+   ═══════════════════════════════════════════════════════════════════ */
+(function () {
+  'use strict';
+  var SAYFA_BOYU = 5;
+
+  var SEKME = {
+    'gunluk':      { ozne:'article.menu-detail', ad:'menü',   yerTutucu:'Menü adı ya da tarif' },
+    'haftalik':    { ozne:'article.menu-detail', ad:'plan',   yerTutucu:'Plan adı ya da tarif' },
+    'ozel-gun':    { ozne:'article.menu-detail', ad:'menü',   yerTutucu:'Menü adı ya da tarif' },
+    'paylastigim': { ozne:'article.menu-detail', ad:'menü',   yerTutucu:'Menü adı ya da tarif' },
+    'taslak':      { ozne:'tbody tr',            ad:'taslak', yerTutucu:'Taslak adı' },
+    'alisveris':   { ozne:'.shop-item',          ad:'kalem',  yerTutucu:'Malzeme adı', dinamik:true }
+  };
+
+  function metin(el) { return (el.textContent || '').replace(/\s+/g, ' ').trim().toLocaleLowerCase('tr'); }
+
+  /* Öznelerin ORTAK ATASI — araç çubuğu oraya, listenin ÜSTÜNE girer.
+     Kap uydurulmaz: gerçekten var olan ata bulunur. */
+  function kapBul(ozneler) {
+    if (!ozneler.length) return null;
+    var a = ozneler[0].parentNode;
+    for (var i = 1; i < ozneler.length; i++) {
+      while (a && !a.contains(ozneler[i])) a = a.parentNode;
+    }
+    return a;
+  }
+
+  function pagiCiz(nav, sayfa, toplamSayfa, git) {
+    nav.innerHTML = '';
+    if (toplamSayfa < 2) { nav.hidden = true; return; }
+    nav.hidden = false;
+    function dugme(etiket, hedef, sinif, etiketMetni) {
+      var e = document.createElement('button');
+      e.type = 'button';
+      e.className = 'pg' + (sinif ? ' ' + sinif : '');
+      e.innerHTML = etiket;
+      if (etiketMetni) e.setAttribute('aria-label', etiketMetni);
+      if (hedef == null) { e.disabled = true; e.setAttribute('aria-disabled', 'true'); }
+      else e.addEventListener('click', function () { git(hedef); });
+      nav.appendChild(e);
+      return e;
+    }
+    dugme('<i class="fa-solid fa-chevron-left" aria-hidden="true"></i>',
+      sayfa > 1 ? sayfa - 1 : null, 'arrow', 'Önceki sayfa');
+    for (var i = 1; i <= toplamSayfa; i++) {
+      if (toplamSayfa > 7 && i > 2 && i < toplamSayfa - 1 && Math.abs(i - sayfa) > 1) {
+        if (nav.lastChild && nav.lastChild.className !== 'pg-dots') {
+          var d = document.createElement('span');
+          d.className = 'pg-dots'; d.setAttribute('aria-hidden', 'true'); d.textContent = '…';
+          nav.appendChild(d);
+        }
+        continue;
+      }
+      if (i === sayfa) {
+        var a = document.createElement('span');
+        a.className = 'pg active'; a.setAttribute('aria-current', 'page'); a.textContent = i;
+        nav.appendChild(a);
+      } else dugme(String(i), i, '', i + '. sayfa');
+    }
+    dugme('<i class="fa-solid fa-chevron-right" aria-hidden="true"></i>',
+      sayfa < toplamSayfa ? sayfa + 1 : null, 'arrow', 'Sonraki sayfa');
+  }
+
+  function sekmeKur(anahtar, tanim) {
+    var pano = document.querySelector('[data-pane="' + anahtar + '"]');
+    if (!pano || pano.getAttribute('data-mnl-liste') === '1') return null;
+
+    var ozneler = [].slice.call(pano.querySelectorAll(tanim.ozne));
+    var kap = kapBul(ozneler);
+    /* Dinamik sekmede özne SONRADAN doğar; kap markupta bildirilmiş
+       olmalı, yoksa kurulum ERTELENİR — uydurma kap açılmaz. */
+    if (!kap && tanim.dinamik) kap = pano.querySelector('.shop-list');
+    if (!kap) return null;
+
+    pano.setAttribute('data-mnl-liste', '1');
+
+    var araclar = document.createElement('div');
+    araclar.className = 'mnl-araclar';
+    araclar.setAttribute('data-mnl-araclar', anahtar);
+    var kimlik = 'mnlAra-' + anahtar;
+    araclar.innerHTML =
+      '<div class="ie-arama">' +
+        '<label class="alan-etiket" for="' + kimlik + '">Bu sekmede ara</label>' +
+        '<i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>' +
+        '<input class="alan-girdi" id="' + kimlik + '" type="search" autocomplete="off" ' +
+               'placeholder="' + tanim.yerTutucu + '">' +
+        '<button class="ie-arama-sil" type="button" aria-label="Aramayı temizle">' +
+          '<i class="fa-solid fa-xmark" aria-hidden="true"></i></button>' +
+      '</div>' +
+      '<p class="mnl-sayac" data-mnl-sayac aria-live="polite"></p>';
+    kap.parentNode.insertBefore(araclar, kap);
+
+    var bos = document.createElement('p');
+    bos.className = 'mnl-bos';
+    bos.setAttribute('data-mnl-bos', anahtar);
+    bos.hidden = true;
+    kap.parentNode.insertBefore(bos, kap.nextSibling);
+
+    var nav = document.createElement('nav');
+    nav.className = 'pagi mnl-pagi';
+    nav.setAttribute('aria-label', 'Sayfalama');
+    nav.hidden = true;
+    kap.parentNode.insertBefore(nav, bos.nextSibling);
+
+    var arama = araclar.querySelector('.alan-girdi');
+    var aramaKap = araclar.querySelector('.ie-arama');
+    var sil = araclar.querySelector('.ie-arama-sil');
+    var sayac = araclar.querySelector('[data-mnl-sayac]');
+    var durum = { sayfa: 1, q: '' };
+
+    function liste() { return [].slice.call(pano.querySelectorAll(tanim.ozne)); }
+
+    function ciz() {
+      var hepsi = liste();
+      var q = durum.q;
+      var uyan = q ? hepsi.filter(function (e) { return metin(e).indexOf(q) !== -1; }) : hepsi;
+      var toplamSayfa = Math.max(1, Math.ceil(uyan.length / SAYFA_BOYU));
+      if (durum.sayfa > toplamSayfa) durum.sayfa = toplamSayfa;
+      var bas = (durum.sayfa - 1) * SAYFA_BOYU;
+      var gosterilecek = uyan.slice(bas, bas + SAYFA_BOYU);
+
+      hepsi.forEach(function (e) {
+        var g = gosterilecek.indexOf(e) !== -1;
+        e.hidden = !g;
+        /* `hidden` niteliği tabloda `display:table-row`u yenemiyor;
+           sınıf da yazılıyor ve CSS onu `display:none` yapıyor. */
+        e.classList.toggle('mnl-gizli', !g);
+      });
+
+      aramaKap.classList.toggle('dolu', !!q);
+      bos.hidden = uyan.length !== 0;
+      if (!uyan.length) {
+        bos.textContent = q
+          ? '“' + arama.value.trim() + '” aramasına uyan ' + tanim.ad + ' yok.'
+          : 'Bu sekmede henüz ' + tanim.ad + ' yok.';
+        if (q) {
+          var t = document.createElement('button');
+          t.type = 'button'; t.className = 'mnl-bos-temizle';
+          t.textContent = 'Aramayı temizle';
+          t.addEventListener('click', function () { arama.value = ''; durum.q = ''; durum.sayfa = 1; ciz(); arama.focus(); });
+          bos.appendChild(document.createTextNode(' '));
+          bos.appendChild(t);
+        }
+      }
+      sayac.textContent = hepsi.length
+        ? (q ? uyan.length + ' / ' + hepsi.length + ' ' + tanim.ad : hepsi.length + ' ' + tanim.ad)
+        : '';
+      pagiCiz(nav, durum.sayfa, toplamSayfa, function (s) {
+        durum.sayfa = s; ciz();
+        araclar.scrollIntoView({ block: 'nearest' });
+      });
+    }
+
+    var zaman;
+    arama.addEventListener('input', function () {
+      clearTimeout(zaman);
+      zaman = setTimeout(function () {
+        durum.q = arama.value.trim().toLocaleLowerCase('tr');
+        durum.sayfa = 1;                       /* arama sayfayı BAŞA alır */
+        ciz();
+      }, 180);
+    });
+    sil.addEventListener('click', function () {
+      arama.value = ''; durum.q = ''; durum.sayfa = 1; ciz(); arama.focus();
+    });
+
+    ciz();
+    return { anahtar: anahtar, sifirla: function () { durum.sayfa = 1; ciz(); }, ciz: ciz };
+  }
+
+  function kur() {
+    var kurulan = [];
+    Object.keys(SEKME).forEach(function (k) {
+      var s = sekmeKur(k, SEKME[k]);
+      if (s) kurulan.push(s);
+    });
+    if (!kurulan.length) return;
+
+    /* 🔴 SEKME DEĞİŞİNCE 1. SAYFAYA DÖNER. Sekme düğmesi panoyu
+       gösteriyor; pano gizliyken ölçüm 0 döner, o yüzden sıfırlama
+       tıklamadan SONRA ve kısa bir gecikmeyle koşuyor. */
+    document.querySelectorAll('[data-tab]').forEach(function (d) {
+      d.addEventListener('click', function () {
+        var t = d.getAttribute('data-tab');
+        setTimeout(function () {
+          kurulan.forEach(function (s) { if (s.anahtar === t) s.sifirla(); });
+        }, 0);
+      });
+    });
+
+    /* Dinamik sekme: depo değişince yeniden dizinlenir. */
+    document.addEventListener('dm-depo', function () {
+      setTimeout(function () {
+        Object.keys(SEKME).forEach(function (k) {
+          if (!SEKME[k].dinamik) return;
+          var s = kurulan.filter(function (x) { return x.anahtar === k; })[0];
+          if (s) s.ciz(); else sekmeKur(k, SEKME[k]);
+        });
+      }, 60);
+    });
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', kur);
+  else kur();
+})();

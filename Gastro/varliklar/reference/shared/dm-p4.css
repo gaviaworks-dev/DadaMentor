@@ -154,3 +154,50 @@ body.dm-modal-acik{ overflow:hidden; }
   .dm-modal-ayak .sag{ margin-left:0; width:100%; justify-content:flex-end; }
   .dm-modal-ayak .sag > *{ flex:1 1 auto; justify-content:center; }
 }
+
+
+/* ═══════════════════════════════════════════════════════════════════
+   3 · ARAMA KUTUSU · `.ie-arama`
+   -------------------------------------------------------------------
+   ORTAK — iki kulvar kullanıyor (ajan B · `g-sef-panelim#icerikler`
+   ve ajan M · `g-menulerim`in altı sekmesi). Önce `dm-p4-b.css`te
+   doğdu; ikinci kullanıcı çıkınca TEK KAYNAĞA taşındı, kopya
+   BIRAKILMADI. ("İş kural yazmak değil KAPSAM tamamlamaktır.")
+
+   🔴 İKON GİRDİYE HİZALANIR, SARMALAYICIYA DEĞİL. Beyar canlıda gördü,
+   sonra ölçüldü: ikon merkezi girdi merkezinden **12,3px YUKARIDA**.
+   Kök — `.ie-arama` konumlu ATA ve içinde ETİKET de var
+   (`.alan-etiket` 12px + 6px margin); `top:50%` girdinin değil
+   ETİKET+GİRDİ toplamının ortasına çözülüyordu. Kural doğru yazılmıştı,
+   YANLIŞ KUTUYA göre çözülüyordu — "denetimin öznesi kayar"ın CSS
+   karşılığı.
+   Çözüm: dikey çapa ÜSTTEN değil ALTTAN. Girdi sarmalayıcının SON
+   elemanı olduğu için alt kenar = girdinin alt kenarı.
+   45px = kanonun `min-height:44px` + 1px kenarlığı (1440 ve 390'da
+   ölçüldü, ikisinde de aynı). Sabit olduğu için KAPI koruyor:
+   "ikon merkezi ↔ girdi merkezi farkı ≤1px".
+   ═══════════════════════════════════════════════════════════════════ */
+.ie-arama{ position:relative; flex:1 1 260px; min-width:0; }
+.ie-arama > i{
+  position:absolute; left:14px; top:auto; bottom:0; height:45px;
+  display:flex; align-items:center; transform:none;
+  font-size:13px; color:var(--metin-ikincil); pointer-events:none;
+}
+.ie-arama .alan-girdi{ padding-left:38px; }
+/* tarayıcının kendi temizle düğmesi 44px hedefini bozuyor; kendi
+   temizleyicimiz aynı ölçüde ve klavyeyle erişilebilir */
+.ie-arama input[type=search]::-webkit-search-cancel-button{ display:none; }
+.ie-arama-sil{
+  position:absolute; right:6px; top:auto; bottom:calc((45px - 32px) / 2);
+  transform:none;
+  width:32px; height:32px; display:none; place-items:center;
+  border:0; background:transparent; color:var(--metin-ikincil);
+  border-radius:var(--yuvarlak-md); cursor:pointer; font-size:13px;
+}
+.ie-arama.dolu .ie-arama-sil{ display:grid; }
+.ie-arama-sil:hover{ color:var(--murekkep); }
+.ie-arama-sil:focus-visible{ outline:var(--odak-kalinlik) solid var(--odak-renk); outline-offset:var(--odak-ofset); }
+.ie-arama .alan-etiket{
+  display:block; font-size:12px; font-weight:var(--agirlik-kalin);
+  color:var(--metin-ikincil); margin-bottom:6px;
+}

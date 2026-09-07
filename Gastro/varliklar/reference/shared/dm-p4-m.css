@@ -545,3 +545,59 @@ article.menu-detail.mnl-suz-disi{ display:none; }
 /* Boş hâl kanonun `.bos-durum`u; buraya yalnız yerleşimi yazılır. */
 .mnl-suz-bos{ margin:var(--bosluk-16) 0 var(--bosluk-34); }
 .mnl-suz-bos[hidden]{ display:none; }
+
+/* ═══════════════════════════════════════════════════════════════════
+   M7 · SEKME ARAÇ ÇUBUĞU · BOŞ HÂL · SAYFALAMA
+   -------------------------------------------------------------------
+   Değerlerin hepsi kanon tokenlarından; sayfa CSS'ine yazılmadı,
+   satır içi style yok. Arama kutusunun kendisi ortak `dm-p4.css`te
+   (`.ie-arama`), burada yalnız YERLEŞİMİ var.
+   ═══════════════════════════════════════════════════════════════════ */
+.mnl-araclar{
+  display:flex; align-items:flex-end; gap:var(--bosluk-16);
+  flex-wrap:wrap; margin:0 0 var(--bosluk-16);
+}
+.mnl-araclar .ie-arama{ flex:1 1 300px; max-width:420px; }
+.mnl-sayac{
+  margin:0 0 var(--bosluk-12); flex:0 0 auto;
+  font-size:var(--yazi-12-5); color:var(--metin-ikincil);
+  font-weight:var(--agirlik-orta);
+}
+
+/* 🔴 `hidden` niteliği tablo satırında `display:table-row`u YENMEZ —
+   `taslak` sekmesinin öznesi `tbody tr`. Sınıf de yazılıyor. */
+.mnl-gizli{ display:none !important; }
+
+.mnl-bos{
+  margin:var(--bosluk-16) 0; padding:var(--bosluk-20);
+  border:var(--cizgi-1) dashed var(--cizgi);
+  border-radius:var(--yuvarlak-md);
+  background:var(--zemin); color:var(--metin-ikincil);
+  font-size:var(--yazi-13-5); line-height:var(--satir-orta);
+}
+.mnl-bos[hidden]{ display:none; }
+.mnl-bos-temizle{
+  border:0; background:transparent; padding:0; cursor:pointer;
+  color:var(--aksan-koyu); font:inherit; font-weight:var(--agirlik-kalin);
+  text-decoration:underline;
+}
+.mnl-bos-temizle:focus-visible{ outline:var(--odak-kalinlik) solid var(--odak-renk); outline-offset:var(--odak-ofset); }
+
+/* Kanon `dm-pagi` bileşeni; yalnız YERİ ayarlanıyor. */
+.mnl-pagi{ margin-top:var(--bosluk-24); }
+.mnl-pagi[hidden]{ display:none; }
+/* Sayfa düğmeleri `<button>` — aynı sayfada geçiş var, gidilecek
+   adres YOK. Kanonun `.pg` görünümü `<a>` varsayıyor; düğme için
+   tarayıcı varsayılanları sıfırlanıyor, ÖLÇÜ değişmiyor. */
+.mnl-pagi button.pg{ font:inherit; cursor:pointer; }
+.mnl-pagi button.pg[disabled]{ cursor:default; }
+
+/* 🔴 SATIR YÜKSEKLİĞİ SEKMELER ARASINDA SABİT.
+   ÖLÇÜLDÜ (`rapor/p4/menu-arama-once.json`): 1440'ta altı sekmede de
+   92px — zaten sabitti. 390'da İKİ değer vardı: 99 ve 83; uzun menü
+   adı iki satıra sarıyordu ve son satırdaki kısa kart hizayı bozuyordu.
+   Yükseklik SABİTLENMEZ (kırpardı), TABAN verilir: kısa olan uzuna
+   çıkar, uzun olan kendi boyunda kalır. Böylece kırpılma 0. */
+@media (max-width:640px){
+  article.menu-detail.mnl-kapali{ min-height:99px; }
+}
