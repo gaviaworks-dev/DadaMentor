@@ -1,0 +1,45 @@
+/* =====================================================================
+   dm-diet-t5.css — T5 revize turu · DIET PROFİL EKRANLARI · LEAD kulvarı
+   ---------------------------------------------------------------------
+   Sahip: LEAD. Ajanlar bu dosyaya YAZMAZ.
+   Yüklenme sırası: kanon/bilesenler.css'ten SONRA (eşit özgüllükte sıra
+   kazansın diye — `Kabuk ↔ kanon eşit özgüllük çarpışması` dersi).
+
+   MADDE 4 · SAYFA SONU ALT BOŞLUĞU
+   ---------------------------------------------------------------------
+   ÖLÇÜLDÜ (donör, render edilmiş DOM, sekmeye TIKLANARAK):
+       Fit/fit-programlarim   .fit-pane > .bolum.kap   padding-bottom  32px @1440 · 22px @390
+       Fit/fit-egzersizlerim  .fit-pane > section      padding-bottom  32px @1440 · 22px @390
+       Gastro/g-mutfak-defterim .fit-pane > section    padding-bottom  32px @1440 · 22px @390
+       Diet/d-*               .fit-pane > .wrap.kap    padding-bottom   0px  ← KUSUR
+   Diet'in panel kabı `.wrap.kap`; `.kap` yalnız `padding-inline` yazar,
+   dikey nefesi hiçbir kural vermiyor → içerik footer'a yapışıyor.
+
+   Değer İCAT EDİLMEDİ: donörün 32/22'si kanonda zaten token olarak var
+   (`--bolum-nefes-sik:32px`, ≤680px kademesinde 26px değil 22px'e düşen
+   `.bolum` nefesiyle aynı ölçü). Yedek yazıldı — bu sayfalar tokenlar.css
+   yüklüyor ama yedeksiz `var()` `Tanımsız var() başlangıca çeker` dersinin
+   kuyruğu.
+
+   ⚠ ÖZGÜLLÜK NOTU — kanonda eşit özgüllükte bir rakip var:
+       bilesenler.css  .modul-govde>.fit-pane:last-child>*:last-child{padding-bottom:0}  (0,4,0)
+       buradaki kural  .modul-govde .fit-pane > .wrap.kap                                (0,4,0)
+   Eşitlikte SIRA kazanır; bu dosya sonra bağlanıyor. Kanon DEĞİŞTİRİLMEDİ
+   (kardeş markalara dokunmamak için) — kapsam Diet'in kap adına (`.wrap.kap`)
+   bağlı, donörlerin kabı (`.bolum.kap` / `section`) bu seçiciye girmez.
+   ===================================================================== */
+/* 🔴 İKİ SEÇİCİ, ÇÜNKÜ İKİ YAPI VAR — ölçüldü:
+     d-*.html                 main > .modul-govde > .fit-pane > .wrap.kap
+     diyetisyen__*.html       .modul-govde YOK; .fit-pane > .wrap.kap doğrudan
+   (0,3,0) tek başına yazılsaydı kanonun `:last-child` kuralına (0,4,0)
+   `.modul-govde`li sayfalarda KAYBEDERDİ; (0,4,0) tek başına yazılsaydı
+   diyetisyen sayfalarına HİÇ inmezdi. İkisi de yazıldı.
+   Dosya YALNIZ bu 12 sayfaya bağlı — (0,3,0)'ın kapsamı dosyanın kapsamı. */
+.fit-pane > .wrap.kap,
+.modul-govde .fit-pane > .wrap.kap{
+  padding-bottom: var(--bolum-nefes-sik, 32px);
+}
+@media (max-width:680px){
+  .fit-pane > .wrap.kap,
+  .modul-govde .fit-pane > .wrap.kap{ padding-bottom: var(--bosluk-22, 22px); }
+}
