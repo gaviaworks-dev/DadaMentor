@@ -1,0 +1,109 @@
+/* DadaDiet T5D · ajan A yüzeyi — mesajlaşma bileşenleri.
+   Donör: Fit `#ant-mesaj`. Değerler donörden ÖLÇÜLDÜ (getComputedStyle,
+   `rapor/t5d/a-donor-olc` koşumu), tahmin edilmedi; kanon tokenıyla yazıldı.
+
+     donör ölçümü            burada
+     .msj-ara      44px · 0 14px · gap 11 · r8 · mb16
+     input         14px / 500
+     i             14px / solgun
+     button        32×32 · 13px
+     liste b       14px / 700
+     liste small   12.5px / 500 · mt 3
+     #msjSayi      12.5px / 500 / solgun
+
+   🔴 Yeni bileşen uydurulmadı: uyarı bandı `.bilgi-notu`, rozet `.rozet dolu`,
+      durum hapı `.durum-hapi cozulen` — üçü de kanonun mevcut bileşenleri.
+   🔴 Satır içi style ve sayfa <style> kullanılmadı. */
+
+/* ---- ARAMA ---- */
+.sohbet-ara-kol { margin-block: var(--bosluk-24) 0; }
+.sohbet-ara {
+  display: flex; align-items: center; gap: var(--bosluk-11);
+  height: 44px; padding-inline: var(--bosluk-14);
+  background: var(--kagit); border: 1px solid var(--cizgi);
+  border-radius: var(--yuvarlak-sm);
+  transition: border-color .2s ease;
+}
+.sohbet-ara:focus-within { border-color: var(--marka); }
+.sohbet-ara > i { flex: none; font-size: var(--yazi-14); color: var(--metin-ikincil); }  /* donör #717171 */
+.sohbet-ara input {
+  flex: 1; min-width: 0; border: 0; outline: 0; background: none;
+  font-family: inherit; font-size: var(--yazi-14);
+  font-weight: var(--agirlik-orta); color: var(--murekkep);   /* donör rgb(33,30,22)=#211E16 */
+}
+.sohbet-ara input::placeholder { color: var(--metin-pasif); }
+.sohbet-ara button {
+  flex: none; width: 32px; height: 32px; border: 0; background: none;
+  cursor: pointer; font-size: var(--yazi-13);
+  color: var(--murekkep-yumusak); border-radius: var(--yuvarlak-sm);  /* donör #56514a */
+}
+.sohbet-ara button:hover { color: var(--marka-koyu); }
+.sohbet-ara button[hidden] { display: none; }
+
+/* ---- ARAMA SONUCU — akışın yerine değil ÜSTÜNDE (donör kipi) ---- */
+.sohbet-sonuc { margin-top: var(--bosluk-16); }
+.sohbet-sonuc[hidden] { display: none; }
+.sohbet-sonuc-not {
+  font-size: var(--yazi-13); font-weight: var(--agirlik-kalin);
+  color: var(--metin-ikincil); margin-bottom: var(--bosluk-10);
+}
+.sohbet-sonuc-bos { font-size: var(--yazi-13); color: var(--metin-ikincil); }
+.sohbet-sonuc-oge {
+  display: block; width: 100%; text-align: left; cursor: pointer;
+  font-family: inherit; padding: var(--bosluk-11) var(--bosluk-14);
+  margin-bottom: var(--bosluk-8);
+  background: var(--kagit); border: 1px solid var(--cizgi);
+  border-radius: var(--yuvarlak-sm);
+}
+.sohbet-sonuc-oge:hover { border-color: var(--marka-cizgi); }
+.sohbet-sonuc-oge b { display: block; font-size: var(--yazi-13); color: var(--murekkep); }
+.sohbet-sonuc-oge span {
+  display: block; margin-top: var(--bosluk-3);
+  font-size: var(--yazi-13); color: var(--murekkep-yumusak);
+}
+.sohbet-vurgu { background: var(--marka-yikama); color: var(--marka-koyu); font-weight: var(--agirlik-kalin); border-radius: 3px; }
+
+/* ---- LİSTE ÖĞESİ · ad + son mesaj önizlemesi ---- */
+.sohbet-kisi-txt { display: flex; flex-direction: column; min-width: 0; flex: 1; text-align: left; }
+.sohbet-kisi-txt b {
+  font-size: var(--yazi-14); font-weight: var(--agirlik-kalin); color: var(--murekkep);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.sohbet-kisi-txt small {
+  margin-top: var(--bosluk-3);
+  font-size: var(--yazi-12); font-weight: var(--agirlik-orta); color: var(--murekkep-yumusak);  /* donör #56514a */
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+
+/* ---- OKUNMAMIŞ ROZETİ — kanon `.rozet dolu`, yalnız yerleşimi ---- */
+.sohbet-kisi .sohbet-okunmamis { flex: none; margin-left: auto; }
+
+/* ---- SAYAÇ ---- */
+.sohbet-sayi {
+  font-size: var(--yazi-12); font-weight: var(--agirlik-orta); color: var(--metin-ikincil);  /* donör #717171 */
+}
+
+/* ---- SAĞ PANEL BAŞLIĞI — durum rozeti kimlikle düğme arasında ---- */
+.sohbet-bas [data-sohbet-bas-durum] { flex: none; margin-left: auto; }
+
+/* 🔴 ÖLÇÜLDÜ, KURAL GERİ ALINDI: 390'da durum rozetini gizleyen bir medya
+   kuralı yazmıştım. Donör (Fit #ant-mesaj) 390'da rozeti GÖSTERİYOR
+   (`rapor/t5d/a-kapi-sonra.json` · donor[390].sagBas.rozet = ["Onaylandı"]).
+   Gizleme benim uydurduğum sapmaydı; donör kazanır. */
+@media (max-width: 640px) {
+  .sohbet-sonuc-oge span { white-space: normal; }
+
+}
+
+/* ---- IZGARA ÖĞESİNİN DARALABİLMESİ — donörün kuralı Diet'te düşmüş ----
+   Ölçüldü @390:
+     Fit  `.msj-panel-kart` overflow=hidden → kart 358px (kabına oturuyor)
+     Diet `.msj-panel-kart` overflow=visible → kart 515px (kabı 358px)
+   Kolon zaten `1fr`; `1fr` = `minmax(auto,1fr)` ve `auto` alt sınırı öğenin
+   min-content'idir. `overflow:hidden` o otomatik alt sınırı 0'a indirir —
+   ızgara bu yüzden donörde daralıyor, Diet'te daralmıyordu. Zincir
+   `body{overflow-x:clip}`e kadar taşıyordu: sayfa kaydırmıyor ama içerik
+   KIRPILIYOR ve 390'da erişilemiyordu.
+   🔴 Kusur bu turdan ÖNCE de vardı (kuralım kapalıyken 556px, açıkken 515px);
+      eklediğim önizleme/rozet onu büyütmedi, görünür kıldı. */
+#dy-pane-mesaj .msj-panel-kart { overflow: hidden; }

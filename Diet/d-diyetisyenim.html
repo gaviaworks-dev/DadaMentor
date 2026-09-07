@@ -17,6 +17,7 @@
 <link data-t4="d" rel="stylesheet" href="varliklar/reference/shared/dm-diet-d.css">
 <link data-t4="e" rel="stylesheet" href="varliklar/reference/shared/dm-diet-e.css">
 <link data-t5="lead" rel="stylesheet" href="varliklar/reference/shared/dm-diet-t5.css">
+<link data-t5d="a" rel="stylesheet" href="varliklar/reference/shared/dm-diet-t5d-a.css">
 </head>
 <body data-brand="diet" data-verified="1"><a class="atlama-baglantisi" href="#pageMain">İçeriğe atla</a>
 
@@ -1256,6 +1257,28 @@
       </div>
     </div>
 
+    <!-- DÜRÜSTLÜK ŞERİDİ — donörde (Fit #ant-mesaj) panelin ilk kalemi.
+         Kanon bileşeni `.bilgi-notu`; yeni sınıf üretilmedi. -->
+    <div class="bilgi-notu">
+      <i class="fa-solid fa-flask" aria-hidden="true"></i>
+      <p><b>Bu ekran maket: mesajın kaydedilir ama diyetisyenine iletilmez.</b>
+      Yazdıkların yalnız bu tarayıcıda durur, karşı taraftan yanıt gelmez ve
+      örnek yazışma açılış içeriğidir. Dosya ekinde dosyanın adı ve boyutu
+      gerçekten kaydedilir; dosyanın kendisi hiçbir yere yüklenmez.</p>
+    </div>
+
+    <!-- ARAMA — donörde akışın ÜSTÜNDE; sonuç sohbeti kaybetmeden gösterilir -->
+    <div class="sohbet-ara-kol">
+      <label class="sr-only" for="sohbetAra">Mesajlarda ara</label>
+      <div class="sohbet-ara">
+        <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+        <input type="search" id="sohbetAra" placeholder="Mesajlarda ara — en az 2 harf" autocomplete="off">
+        <button type="button" id="sohbetAraSil" aria-label="Aramayı temizle" hidden>
+          <i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
+      </div>
+      <div class="sohbet-sonuc" id="sohbetSonuc" hidden></div>
+    </div>
+
     <div class="msj-sayfa" data-sohbet>
 
       <!-- SOL KOLON · yazışma listesi — S26 gereği YAPIŞKAN -->
@@ -1263,25 +1286,25 @@
         <div class="kart-bas">
           <div>
             <h3 class="kart-baslik"><i class="fa-solid fa-inbox" aria-hidden="true"></i> Yazışmalar</h3>
-            <p>Üç diyetisyen</p>
+            <p class="sohbet-sayi" id="sohbetSayi" data-sohbet-sayi>—</p>
           </div>
         </div>
         <div class="kart-govde bosluksuz">
           <div class="sohbet-kisiler" role="group" aria-label="Diyetisyenlerin">
             <button class="sohbet-kisi secili" type="button" aria-pressed="true" data-kisi="da" data-kisi-ad="Uzm. Dyt. Deniz Aksoy">
               <span class="sohbet-mono ok" aria-hidden="true">DA</span>
-              <span>Deniz Aksoy</span>
-              <span class="sohbet-nokta" aria-label="okunmamış mesaj"></span>
+              <span class="sohbet-kisi-txt"><b>Deniz Aksoy</b><small data-sohbet-onizleme></small></span>
+              <span class="sohbet-nokta" aria-label="okunmamış mesaj"></span><span class="rozet dolu sohbet-okunmamis" data-sohbet-okunmamis hidden></span>
             </button>
             <button class="sohbet-kisi" type="button" aria-pressed="false" data-kisi="sk" data-kisi-ad="Uzm. Dyt. Selin Korkmaz">
               <span class="sohbet-mono ok" aria-hidden="true">SK</span>
-              <span>Selin Korkmaz</span>
-              <span class="sohbet-nokta" aria-label="okunmamış mesaj" hidden></span>
+              <span class="sohbet-kisi-txt"><b>Selin Korkmaz</b><small data-sohbet-onizleme></small></span>
+              <span class="sohbet-nokta" aria-label="okunmamış mesaj" hidden></span><span class="rozet dolu sohbet-okunmamis" data-sohbet-okunmamis hidden></span>
             </button>
             <button class="sohbet-kisi" type="button" aria-pressed="false" data-kisi="ma" data-kisi-ad="Dyt. Mert Aydın">
               <span class="sohbet-mono ok" aria-hidden="true">MA</span>
-              <span>Mert Aydın</span>
-              <span class="sohbet-nokta" aria-label="okunmamış mesaj" hidden></span>
+              <span class="sohbet-kisi-txt"><b>Mert Aydın</b><small data-sohbet-onizleme></small></span>
+              <span class="sohbet-nokta" aria-label="okunmamış mesaj" hidden></span><span class="rozet dolu sohbet-okunmamis" data-sohbet-okunmamis hidden></span>
             </button>
           </div>
         </div>
@@ -1295,6 +1318,7 @@
             <h3 data-sohbet-bas-ad>Uzm. Dyt. Deniz Aksoy</h3>
             <p class="sohbet-bas-alt">Sıradaki görüşmen · 25 Ağustos, 18:30</p>
           </div>
+          <span class="durum-hapi cozulen" data-sohbet-bas-durum><i class="fa-solid fa-circle-check" aria-hidden="true"></i> Onaylandı</span>
           <a class="dugme ikon" href="diyetisyen__uzm-dyt-deniz-aksoy.html" aria-label="Diyetisyen profili" title="Diyetisyen profili">
             <i class="fa-solid fa-up-right-from-square" aria-hidden="true"></i>
           </a>
@@ -3063,5 +3087,6 @@ function modalKur(modalId, ortuId, kapatId){
 <script src="varliklar/reference/shared/dd-kabuk.js"></script>
 <script data-t4="d" src="varliklar/reference/shared/dm-diet-d.js"></script>
 <script data-t4="e" src="varliklar/reference/shared/dm-diet-e.js"></script>
+<script data-t5d="a" src="varliklar/reference/shared/dm-diet-t5d-a.js"></script>
 </body>
 </html>
