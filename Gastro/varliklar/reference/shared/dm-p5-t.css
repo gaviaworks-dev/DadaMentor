@@ -1,0 +1,66 @@
+/* =====================================================================
+   PARTİ 5 · AJAN T · dm-p5-t.css
+   MADDE 4 — g-toplulugum.html `#takipci` ("Seni kimler izliyor?"):
+   kart yığınının dikey ritmi.
+
+   ÖLÇÜLEN KUSUR (1440 ve 390, `rapor/p5/t-kesif-once.json` · `t-emsal.json`):
+   `#takipci .wrap.kap` içindeki DÖRT ardışık blok kart BİRBİRİNE YAPIŞIK
+   çiziliyordu — aralarındaki boşluk 0px:
+       .fp-card.ozet-karti → p.galeri-not → .pd-grid → .paket-liste
+   Sebep: bu dört bileşenin hiçbiri kanonda kendi dikey payını taşımıyor
+   (`.galeri-ozet{margin-bottom:12px}` · `.galeri-cipler{margin-bottom:22px}`
+   gibi bir karşılığı yok), sayfadaki ritmi hep KOMŞU bileşenin payı
+   kuruyor. `#takipci` bu paylı komşulardan hiçbirini içermediği için
+   yığın tamamen paysız kaldı.
+
+   SEÇİLEN DEĞER — 34px = var(--bosluk-34)  (kanon/tokenlar.css:620, :root)
+   Uydurma değil, ölçülen BASKIN aralık (`rapor/p5/t-emsal.json`,
+   10 sayfa · 154 ardışık blok çifti):
+     · 34px, 154 çiftin 67'sinde — en kalabalık değer
+     · `.sec-head` → ilk blok: 57/57 kesitte 34px, istisnasız
+     · `.fp-card.ozet-karti` → sonraki blok: takipci DIŞINDA 2/2 örnek 34px
+       (g-toplulugum `aldigim` · `degerlendirme`)
+     · `.pd-grid` → sonraki blok: 3 örneğin 2'si 34px
+       (g-menulerim `ozel-gun` · g-mutfak-defterim `puf`)
+     · `.paket-liste` → `.bilgi-notu`: `#takipci`nin KENDİSİNDE zaten 34px
+   Yani düzeltme yığına yabancı bir ölçü sokmuyor; aynı kabın alt ucunda
+   hâlihazırda geçerli olan aralığı üst uca da taşıyor.
+
+   TEK İSTİSNA — 12px = var(--bosluk-12)  (kanon/tokenlar.css:577, :root)
+   `p.galeri-not` bir KART değil, altındaki listeyi tanıtan alt yazıdır ve
+   kanonda üstündeki özet bloğuna 12px ile bağlanır:
+   `bilesenler.css:5311 .galeri-ozet{ margin-bottom:var(--bosluk-12) }`.
+   Bu "özet bloğu → not" mesafesinin 5 bağımsız örneği ölçüldü
+   (g-toplulugum `takip` · `paylasim`, g-menulerim `alisveris`,
+   g-mutfak-defterim `tariflerim`, g-rozetlerim `koleksiyon`) — hepsi 12px.
+   `#takipci`de notun üstündeki blok `.galeri-ozet` değil
+   `.fp-card.ozet-karti` olduğu için o pay hiç doğmuyordu.
+
+   KAPSAM: kural `#takipci` ile sınırlı. Panonun İKİNCİ `.wrap.kap`ı
+   (`<section>` id'siz, "Son gelen takipçiler") kapsam DIŞINDA kalır ve
+   ölçümde de değişmedi. Diğer beş sekmeye hiç değmez.
+
+   ÖZGÜLLÜK: `#takipci` id'si (1,2,0) kabuğun sınıf kurallarının üstünde;
+   `!important` GEREKMEDİ ve kullanılmadı. İkinci kural (1,4,0) birinciyi
+   yener — sıraya değil özgüllüğe dayanıyor.
+
+   PAY YÖNÜ: pay ARDIŞIK kardeşin ÜSTÜNE yazılır. Böylece `.sec-head`in
+   kendi 34px alt payı ve `.bilgi-notu`nun kendi 34px üst payı ile
+   ÇÖKÜŞÜR (max = 34px) — o iki sınır ölçümde bire bir aynı kaldı.
+   🔴 DOKUNULMAYAN İKİ SINIR — ilk taslak burada YANILDI, ölçüm yakaladı:
+   1) `.sec-head` → ilk blok DAR EKRANDA 34px DEĞİL 24px'tir
+      (`rapor/p5/t-emsal-390.json`: 57 kesitin 52'sinde 24px). İlk taslak
+      `> * + *` yazdığı için bu sınırı 390'da 24 → 34 çekiyordu; yani
+      kusuru düzeltirken diğer sekmelerle olan uyumu BOZUYORDU. Kural bu
+      yüzden `* + *` değil, yalnız `.galeri-not +` ve `.pd-grid +`
+      kardeşlerini hedefler — `.sec-head`in sınırına hiç değmez.
+   2) `.paket-liste` → `.bilgi-notu`: `.bilgi-notu` kendi 34px üst payını
+      zaten taşıyor, iki genişlikte de. Ona da yazılmadı.
+   Kart aralığının kendisi (34px) ve not mesafesi (12px) genişlikten
+   BAĞIMSIZ doğrulandı: `.fp-card`→`.bilgi-notu` 390'da da 34px (2/2),
+   `.galeri-ozet`→`.galeri-not` 390'da da 12px (4/4).
+   ===================================================================== */
+
+#takipci .wrap.kap > .fp-card + .galeri-not{ margin-top:var(--bosluk-12); }
+#takipci .wrap.kap > .galeri-not + *,
+#takipci .wrap.kap > .pd-grid   + *{ margin-top:var(--bosluk-34); }

@@ -553,15 +553,43 @@ article.menu-detail.mnl-suz-disi{ display:none; }
    satır içi style yok. Arama kutusunun kendisi ortak `dm-p4.css`te
    (`.ie-arama`), burada yalnız YERLEŞİMİ var.
    ═══════════════════════════════════════════════════════════════════ */
+/* 🔴 TEK SATIR · ÇİP SOLDA · ARAMA SAĞDA · SAYAÇ EN SAĞDA.
+   ÖNCE ölçüldü (1440 · `rapor/p5/d-once.json`): `.cipler` y=1180.8 h=58,
+   `.mnl-araclar` y=1238.8 → İKİ AYRI SATIR, dikey merkez farkı 76,1px.
+   Çip şeridi çalışma zamanında çubuğun İÇİNE taşınıyor (JS · M7);
+   burada yalnız yerleşimi var.
+   `align-items:flex-end` idi — etiket satırı kalkınca hizanın çapası
+   ALT kenar olmaktan çıktı, MERKEZ oldu. */
 .mnl-araclar{
-  display:flex; align-items:flex-end; gap:var(--bosluk-16);
+  display:flex; align-items:center; gap:var(--bosluk-16);
   flex-wrap:wrap; margin:0 0 var(--bosluk-16);
 }
-.mnl-araclar .ie-arama{ flex:1 1 300px; max-width:420px; }
+/* Şerit BÜYÜR → arama sağa itilir. Kendi dikey `padding`i çubuğu
+   şişirmesin diye sıfırlanıyor (kanon `.cipler` `padding:7px 0`). */
+.mnl-araclar > .cipler{ flex:1 1 auto; min-width:0; padding:0; margin:0; }
+/* 🔴 ÇİPSİZ DÖRT SEKMEDE ARAMA GERİLMEZ: `flex-grow:0`. Eskiden
+   `flex:1 1 300px` idi ve arama bütün çubuğu kaplıyordu. */
+.mnl-araclar .ie-arama{ flex:0 1 320px; max-width:420px; align-self:center; }
+/* Sayaç HER ZAMAN en sağda — çip yoksa boşluğu o yutar. */
 .mnl-sayac{
-  margin:0 0 var(--bosluk-12); flex:0 0 auto;
+  margin:0; margin-left:auto; flex:0 0 auto;
   font-size:var(--yazi-12-5); color:var(--metin-ikincil);
   font-weight:var(--agirlik-orta);
+}
+
+/* 🔴 ETİKET KALKTI → İKONUN DİKEY ÇAPASI DÜZELTİLDİ.
+   `dm-p4.css`in kuralı (`bottom:0; height:45px`) sarmalayıcının içinde
+   ETİKET + GİRDİ olduğunu varsayıyor; ajan B'nin `g-sef-panelim`inde
+   etiket DURUYOR, o yüzden ortak dosyaya DOKUNULMADI — düzeltme
+   `.mnl-araclar` kapsamında. `top:0;bottom:0` ikonu sarmalayıcının
+   (= girdinin) tam ortasına oturtur, yüksekliğe bağlı sabit yok. */
+.mnl-araclar .ie-arama > i{ top:0; bottom:0; height:auto; }
+.mnl-araclar .ie-arama-sil{ top:50%; bottom:auto; transform:translateY(-50%); }
+
+/* 390: çipler ÜSTTE, arama ALTTA — ikisi de tam genişlik. */
+@media (max-width:640px){
+  .mnl-araclar > .cipler{ flex:1 1 100%; }
+  .mnl-araclar .ie-arama{ flex:1 1 100%; max-width:none; }
 }
 
 /* 🔴 `hidden` niteliği tablo satırında `display:table-row`u YENMEZ —

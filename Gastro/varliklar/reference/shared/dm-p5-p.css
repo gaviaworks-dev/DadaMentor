@@ -1,0 +1,134 @@
+/* =====================================================================
+   PARTİ 5 · AJAN P · `g-toplulugum.html#paylasim`
+   ---------------------------------------------------------------------
+   KAPSAM: yalnız "Ne paylaştın, nasıl karşılandı" bölümü.
+     madde 5 · Tarifler ailesi GERÇEK tarif kartına geçti (`article.r-card`)
+     madde 6 · her paylaşım bölümüne `.ie-arama` (başlığın SAĞINDA)
+     madde 7 · ızgara hizası + eşit yükseklik + kırpılma 0
+
+   🔴 KURAL KOPYALANMADI. `.r-card` ailesinin tam kural kümesi
+      `varliklar/reference/tarif-liste/tarif-liste.css`te ve sayfaya
+      L0'da bağlandı; arama kutusunun kuralı `shared/dm-p4.css`
+      (`.ie-arama`). Burada YALNIZ iki kaynağın bu bağlamda eksik
+      bıraktığı/uyarlanması gereken kalemler var.
+      ("İş kural yazmak değil KAPSAM tamamlamaktır.")
+
+   🔴 YÜKLEME SIRASI: bu dosya `tarif-liste.css` ve `dm-p4.css`ten
+      SONRA bağlı, yani eşit özgüllükte KAZANIR. Özgüllüğü şişirmeye
+      gerek yok; `:where()`e de gerek yok çünkü kimse bunun üstüne
+      yazmıyor. ("Kabuk ↔ kanon eşit özgüllük çarpışması.")
+   ===================================================================== */
+
+
+/* ═══════════════════════════════════════════════════════════════════
+   1 · IZGARA — DONÖRÜN KENDİ IZGARASI
+   -------------------------------------------------------------------
+   Tarifler ailesinin kabı hem `.rozet-izgara` (kanon · repeat(5,1fr))
+   hem `.lst-grid` (donör · repeat(3,1fr)) taşıyor. İkisi de (0,1,0);
+   `tarif-liste.css` `bilesenler.css`ten SONRA yüklendiği için donör
+   kazanır — kırılma noktaları da donörün: >1024 üç, ≤1024 iki,
+   ≤640 tek kolon + yatay kart.
+   🔴 5 kolona 6 kart girmiyordu: son satırda TEK kart kalıyordu.
+      3 kolonda 6 kart = iki TAM satır; madde 7'nin "son satır hizayı
+      bozmasın" koşulu ızgaranın kendisinden geliyor, yama ile değil.
+   `margin-top` donörde 24px; kanonun ailesinde başlık notu zaten
+   `--bosluk-24` bırakıyor, ikisi toplanmasın diye sıfırlanır.
+   ═══════════════════════════════════════════════════════════════════ */
+.rozet-izgara.lst-grid{ margin-top:0; }
+
+/* 🔴 SÜZÜLEN KART GERÇEKTEN KAYBOLUR. `[hidden]` tarayıcı sayfasında
+   `display:none` bildirir ama `.r-card{display:flex}` YAZAR kuralıdır
+   ve tarayıcı sayfasını yener: `el.hidden = true` yazan bir süzgeç
+   HİÇBİR ŞEYİ gizlemez, sayım da yeşil basar. Sınıf + nitelik birlikte
+   yazılır; `display` burada bildirildiği için çakışma bitiyor. */
+.rozet-izgara .p5p-gizli{ display:none !important; }
+
+
+/* ═══════════════════════════════════════════════════════════════════
+   2 · TARİF KARTI — DONÖR KALIBININ BU BAĞLAMDAKİ EKSİKLERİ
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* Donörde kart bir `<a>` sarmalıyor ve tüm yüzey tıklanabilir; burada
+   tıklanabilir olan YALNIZ başlıktaki bağ. `cursor:pointer` bütün karta
+   "tıkla" diyordu — tıklanmayan yüzeyde YALAN İMLEÇ. */
+.r-card.p5p-tarif{ cursor:default; }
+.r-card.p5p-tarif .r-body h4 a{ cursor:pointer; }
+
+/* Bağı ÇÖZÜLMEYEN kartın başlığı `<a>` DEĞİL `<span>` (yalan düğme 0).
+   Donörün `h4 a` kuralı (2 satır kırpma) span'e de gerekli. */
+.r-card.p5p-tarif .r-body h4 > span{
+  display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
+}
+
+/* Kapağı ağaçta ÇÖZÜLMEYEN kart: uydurma görsel BASILMAZ, yer de
+   çökmez. Nötr yıkama + kartın kendi dilinde bir açıklama.
+   ("Yanlış değer basmaktansa hiç basmamak.") */
+.r-card.p5p-tarif .r-media.p5p-kapaksiz{
+  background:var(--aksan-yikama);
+  display:grid; place-items:center; gap:var(--bosluk-6);
+  color:var(--metin-ikincil); text-align:center; padding:var(--bosluk-16);
+}
+.p5p-kapaksiz i{ font-size:var(--yazi-24); color:var(--metin-pasif-4, var(--metin-ikincil)); }
+.p5p-kapaksiz span{ font-size:var(--yazi-11-5); font-weight:var(--agirlik-orta); }
+
+/* Paylaşımın kendi editör notu — donörde karşılığı YOK, kartın kendi
+   verisi. Kaynağın ipucu balonundan geldi; balon `.rozet-karti:hover`e
+   bağlıydı ve o kanca ARTIK YOK. Balonu diriltmek `.r-card`ın
+   `overflow:hidden`ını sökmeyi gerektirirdi (medya köşe kırpması ve
+   `:hover` yakınlaştırması oradan geliyor); not GÖVDEYE alındı —
+   dokunmatikte de okunur, gizli değil. */
+.r-card.p5p-tarif .p5p-not{
+  margin:0 0 var(--bosluk-13);
+  font-size:var(--yazi-12); line-height:var(--satir-govde, 1.55);
+  color:var(--metin-ikincil);
+  display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
+}
+
+/* Alt satır: solda erişim/durum hapı, sağda puan + okunma.
+   Donörün `.r-author` yuvası KULLANILMADI — gerekçe raporda. */
+.r-card.p5p-tarif .r-foot .durum-hapi{ min-width:0; overflow:hidden; text-overflow:ellipsis; }
+.r-card.p5p-tarif .r-stats{ display:inline-flex; align-items:center; gap:var(--bosluk-10); flex:none; }
+
+/* Kategori çipi kapağın üstünde: donörün `.r-chip` kuralı `.r-media`
+   içinde mutlak konumlu; başka bir şey eklemiyoruz. */
+
+
+/* ═══════════════════════════════════════════════════════════════════
+   3 · ARAMA — BAŞLIĞIN SAĞINDA, TEK SATIR
+   -------------------------------------------------------------------
+   `.ie-arama`nın kendisi `dm-p4.css`te. Orada kutu bir ALAN ızgarasının
+   içinde yaşıyor ve `flex:1 1 260px` ile satırı dolduruyor; burada
+   başlık satırının SAĞ ucunda durması gerek.
+   🔴 `.rozet-aile-sayi` kanonda `margin-left:auto` taşıyor. Arama da
+      `auto` alsaydı iki `auto` boşluğu PAYLAŞIR ve kutu ortaya kayardı;
+      sayının `auto`su sıfırlanıp itme işi tek yere veriliyor.
+   🔴 ETİKET YOK (parti 5 kararı) — `dm-p4.css`teki ikon/temizle
+      çapaları zaten ALTTAN (`bottom:0` · 45px) ölçülü, etiketsiz
+      kutuda da girdinin ortasına çözülüyorlar.
+   ═══════════════════════════════════════════════════════════════════ */
+.rozet-aile-bas .ie-arama{ flex:0 1 clamp(200px, 26vw, 300px); margin-left:auto; }
+/* 🔴 KARDEŞ SEÇİCİ, `:has()` DEĞİL. Sayının `auto`su YALNIZ arama kutusu
+   olan ailede sıfırlanır; "Mutfak sırları" ailesinde kutu YOK ve sayı
+   sağ uçta kalmalı. `:has(.ie-arama)` de çözerdi ama özgüllüğü
+   argümanından alır ve bu satırı gereksizce yükseltirdi. */
+.p5p-sayac + .rozet-aile-sayi{ margin-left:0; }
+
+/* Süzgeç sayacı — aramanın SAĞINDA. `.rozet-aile-sayi` TOPLAM paylaşım
+   sayısıdır (128), görünen kart sayısı değil; ona dokunulmadı. */
+.p5p-sayac{
+  flex:none;
+  font-size:var(--yazi-12-5); font-weight:var(--agirlik-orta);
+  color:var(--metin-ikincil); white-space:nowrap;
+}
+.p5p-sayac[hidden]{ display:none; }
+
+/* Boş hâl — kanonun kendi `.bos-durum` bileşeni; `[hidden]` kuralı
+   `bilesenler.css:898`te zaten var. Izgaranın altında, ailenin içinde. */
+.rozet-ailesi .p5p-bos{ margin-top:var(--bosluk-12); }
+
+@media (max-width:640px){
+  /* 390'da başlık · sayı üstte kalır, arama ALT ALTA düşer. */
+  .rozet-aile-bas{ flex-wrap:wrap; }
+  .rozet-aile-bas .ie-arama{ flex:1 1 100%; margin-left:0; order:3; }
+  .p5p-sayac + .rozet-aile-sayi{ margin-left:auto; }
+}

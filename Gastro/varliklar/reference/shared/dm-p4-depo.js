@@ -102,18 +102,156 @@
       .replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
   };
 
-  /* ═══ ALIŞVERİŞ LİSTESİ ═══════════════════════════════════════════ */
-  function liste() { var d = hamOku(); return Array.isArray(d.alisveris) ? d.alisveris : []; }
-  function listeYaz(l) { var d = hamOku(); d.alisveris = l; var ok = hamYaz(d); yay('alisveris', { liste:l, kalici:ok }); return ok; }
+  /* ═══ ALIŞVERİŞ LİSTELERİ · ŞEMA SÜRÜM 2 ═════════════════════════
+     PARTİ 5 · madde 11 — TEK liste yerine LİSTE DİZİSİ.
 
-  function kalemVar(ad) { var id = slugla(ad); return liste().some(function (k) { return k.id === id; }); }
+     ŞEMA
+       d.alisverisV2 = {
+         s: 2,
+         etkin: '<listeId>',
+         listeler: [ { id, ad, olusturuldu, guncellendi, kalemler:[…] } ]
+       }
+     Kalem şeması DEĞİŞMEDİ: { id, ad, miktar, reyon, kaynak[], alindi,
+     el, eklendi } — parti 4'ün yazdığı her kalem olduğu gibi taşınır.
+
+     🔴 GÖÇ İDEMPOTENT. "İdempotent olmayan dönüşüm" bu deponun kayıtlı
+        dersi: betik iki kez koşunca veri bozulur ve üç ölçüm birden
+        yeşil kalır. Kapı `alisverisV2` varlığı; ikinci koşum hiçbir şey
+        yapmaz.
+     🔴 VERİ KAYBI YOK — eski `d.alisveris` dizisi SİLİNMEZ, yerinde
+        yedek olarak durur (`d.alisverisGoc` göçün ne zaman ve kaç
+        kalemle yapıldığını yazar). Göç sonrası okuma yolu yalnız
+        `alisverisV2`; eski anahtar bir daha yazılmaz.
+     🔴 GERİYE UYUMLU YÜZEY: `liste/ekle/cikar/isaretle/temizle/kalemVar`
+        imzaları aynı kaldı ve ETKİN listeye çalışıyor. Parti 4'ün üç
+        çağıranı (dm-p4-m.js M3a·M3b·M4) değiştirilmeden koşar.
+        Hepsi isteğe bağlı SON argüman olarak `listeId` alır. */
+
+  var GOC_AD = 'Listem';          /* eski tek listenin göç adı (madde 11) */
+
+  function yeniId(ad, mevcut) {
+    var t = slugla(ad) || 'liste', k = t, n = 2;
+    while (mevcut.indexOf(k) !== -1) { k = t + '-' + n; n++; }
+    return k;
+  }
+
+  /* Depoyu sürüm 2'ye getirir ve v2 gövdesini döndürür. */
+  function kok() {
+    var d = hamOku();
+    var v = d.alisverisV2;
+    if (v && v.s === 2 && Array.isArray(v.listeler)) return { d: d, v: v };
+
+    var eski = Array.isArray(d.alisveris) ? d.alisveris : [];
+    var t = Date.now();
+    v = { s: 2, etkin: 'listem',
+          listeler: [ { id:'listem', ad:GOC_AD, olusturuldu:t, guncellendi:t,
+                        kalemler: eski.slice() } ] };
+    d.alisverisV2 = v;
+    /* eski anahtar SİLİNMEZ — yedek. Göçün kaydı da düşülür. */
+    d.alisverisGoc = { zaman:t, kalem:eski.length, ad:GOC_AD };
+    hamYaz(d);
+    return { d: d, v: v };
+  }
+
+  function v2Yaz(v, bolum, ayrinti) {
+    var d = hamOku();
+    d.alisverisV2 = v;
+    var ok = hamYaz(d);
+    yay(bolum || 'alisveris', Object.assign({ kalici:ok, listeler:v.listeler, etkin:v.etkin }, ayrinti || {}));
+    return ok;
+  }
+
+  function listeBul(v, id) {
+    for (var i = 0; i < v.listeler.length; i++) if (v.listeler[i].id === id) return v.listeler[i];
+    return null;
+  }
+  /* Etkin liste HER ZAMAN vardır: silinmiş/boş durumda ilk liste, hiç
+     liste yoksa göç adıyla bir tane doğar. "Özne yoksa kapı susar" —
+     çağıranın elinde null kalmasın. */
+  function etkinKayit(v) {
+    var l = listeBul(v, v.etkin);
+    if (l) return l;
+    if (!v.listeler.length) {
+      var t = Date.now();
+      v.listeler.push({ id:'listem', ad:GOC_AD, olusturuldu:t, guncellendi:t, kalemler:[] });
+    }
+    v.etkin = v.listeler[0].id;
+    return v.listeler[0];
+  }
+  function hedefKayit(v, listeId) {
+    return (listeId ? listeBul(v, listeId) : null) || etkinKayit(v);
+  }
+
+  function ozet(l) {
+    var alinan = 0;
+    l.kalemler.forEach(function (k) { if (k.alindi) alinan++; });
+    return { id:l.id, ad:l.ad, olusturuldu:l.olusturuldu, guncellendi:l.guncellendi,
+             kalem:l.kalemler.length, alinan:alinan };
+  }
+
+  /* ── ÇOK LİSTE YÜZEYİ (parti 5) ─────────────────────────────────── */
+  function listeler()      { var r = kok(); etkinKayit(r.v); return r.v.listeler.map(ozet); }
+  function etkinListe()    { var r = kok(); return ozet(etkinKayit(r.v)); }
+  function etkinSec(id) {
+    var r = kok(); if (!listeBul(r.v, id)) return false;
+    r.v.etkin = id; v2Yaz(r.v, 'alisveris', { eylem:'etkin', liste:id }); return true;
+  }
+  function listeAc(ad) {
+    var r = kok(), t = Date.now();
+    var kimlik = yeniId(ad, r.v.listeler.map(function (x) { return x.id; }));
+    r.v.listeler.push({ id:kimlik, ad:String(ad || GOC_AD).trim() || GOC_AD,
+                        olusturuldu:t, guncellendi:t, kalemler:[] });
+    r.v.etkin = kimlik;
+    v2Yaz(r.v, 'alisveris', { eylem:'liste-ac', liste:kimlik });
+    return kimlik;
+  }
+  function listeAdlandir(id, ad) {
+    var r = kok(), l = listeBul(r.v, id);
+    if (!l) return false;
+    var y = String(ad || '').trim(); if (!y) return false;
+    l.ad = y; l.guncellendi = Date.now();
+    v2Yaz(r.v, 'alisveris', { eylem:'liste-ad', liste:id }); return true;
+  }
+  function listeKopyala(id) {
+    var r = kok(), l = listeBul(r.v, id);
+    if (!l) return null;
+    var t = Date.now();
+    var kimlik = yeniId(l.ad + ' kopya', r.v.listeler.map(function (x) { return x.id; }));
+    r.v.listeler.push({ id:kimlik, ad:l.ad + ' (kopya)', olusturuldu:t, guncellendi:t,
+      kalemler: l.kalemler.map(function (k) {
+        return { id:k.id, ad:k.ad, miktar:k.miktar, reyon:k.reyon,
+                 kaynak:(k.kaynak || []).map(function (x) { return { ad:x.ad, slug:x.slug }; }),
+                 alindi:false, el:!!k.el, eklendi:t };
+      }) });
+    v2Yaz(r.v, 'alisveris', { eylem:'liste-kopya', liste:kimlik });
+    return kimlik;
+  }
+  function listeSil(id) {
+    var r = kok(), n = r.v.listeler.filter(function (x) { return x.id !== id; });
+    if (n.length === r.v.listeler.length) return false;
+    r.v.listeler = n;
+    if (r.v.etkin === id) r.v.etkin = n.length ? n[0].id : '';
+    v2Yaz(r.v, 'alisveris', { eylem:'liste-sil', liste:id }); return true;
+  }
+  function listeKalem(id) {
+    var r = kok(), l = id ? listeBul(r.v, id) : etkinKayit(r.v);
+    return l ? l.kalemler.slice() : [];
+  }
+
+  /* ── PARTİ 4 YÜZEYİ — imza aynı, hedef ETKİN liste ───────────────── */
+  function liste(listeId) { return listeKalem(listeId); }
+
+  function kalemVar(ad, listeId) {
+    var id = slugla(ad);
+    return listeKalem(listeId).some(function (k) { return k.id === id; });
+  }
 
   /* Kalem eklenir; AYNI kalem başka tariften de geliyorsa satır
      ÇOĞALTILMAZ — kaynak listesine eklenir ve miktar satırı büyür.
      (Sayfanın kendi cümlesi: "aynı malzeme tek satırda toplanır".) */
-  function ekle(kalem) {
-    var l = liste(), id = slugla(kalem.ad);
-    var v = null;
+  function ekle(kalem, listeId) {
+    var r = kok(), h = hedefKayit(r.v, listeId), l = h.kalemler;
+    var id = slugla(kalem.ad), v = null;
     for (var i = 0; i < l.length; i++) if (l[i].id === id) { v = l[i]; break; }
     if (v) {
       var yeni = false;
@@ -121,28 +259,34 @@
         if (!v.kaynak.some(function (x) { return x.slug === k.slug; })) { v.kaynak.push(k); yeni = true; }
       });
       if (kalem.miktar && v.miktar.indexOf(kalem.miktar) === -1) { v.miktar += ' + ' + kalem.miktar; yeni = true; }
-      if (yeni) listeYaz(l);
-      return { durum: yeni ? 'birlesti' : 'zaten', kalem: v };
+      if (yeni) { h.guncellendi = Date.now(); v2Yaz(r.v, 'alisveris', { eylem:'ekle', liste:h.id }); }
+      return { durum: yeni ? 'birlesti' : 'zaten', kalem: v, liste: h.id, listeAd: h.ad };
     }
-    var r = kalem.reyon || reyonBul(kalem.ad);
-    v = { id:id, ad:kalem.ad, miktar:kalem.miktar || '', reyon:r,
+    var rey = kalem.reyon || reyonBul(kalem.ad);
+    v = { id:id, ad:kalem.ad, miktar:kalem.miktar || '', reyon:rey,
           kaynak:kalem.kaynak || [], alindi:false, el:!!kalem.el, eklendi:Date.now() };
-    l.push(v); listeYaz(l);
-    return { durum:'eklendi', kalem:v };
+    l.push(v); h.guncellendi = Date.now();
+    v2Yaz(r.v, 'alisveris', { eylem:'ekle', liste:h.id });
+    return { durum:'eklendi', kalem:v, liste:h.id, listeAd:h.ad };
   }
-  function cikar(id) {
-    var l = liste(), n = l.filter(function (k) { return k.id !== id; });
-    if (n.length === l.length) return false;
-    listeYaz(n); return true;
+  function cikar(id, listeId) {
+    var r = kok(), h = hedefKayit(r.v, listeId);
+    var n = h.kalemler.filter(function (k) { return k.id !== id; });
+    if (n.length === h.kalemler.length) return false;
+    h.kalemler = n; h.guncellendi = Date.now();
+    v2Yaz(r.v, 'alisveris', { eylem:'cikar', liste:h.id }); return true;
   }
-  function isaretle(id, alindi) {
-    var l = liste(), d = false;
-    l.forEach(function (k) { if (k.id === id) { k.alindi = !!alindi; d = true; } });
-    if (d) listeYaz(l); return d;
+  function isaretle(id, alindi, listeId) {
+    var r = kok(), h = hedefKayit(r.v, listeId), d = false;
+    h.kalemler.forEach(function (k) { if (k.id === id) { k.alindi = !!alindi; d = true; } });
+    if (d) { h.guncellendi = Date.now(); v2Yaz(r.v, 'alisveris', { eylem:'isaret', liste:h.id }); }
+    return d;
   }
-  function temizle(yalnizAlinan) {
-    var l = liste();
-    listeYaz(yalnizAlinan ? l.filter(function (k) { return !k.alindi; }) : []);
+  function temizle(yalnizAlinan, listeId) {
+    var r = kok(), h = hedefKayit(r.v, listeId);
+    h.kalemler = yalnizAlinan ? h.kalemler.filter(function (k) { return !k.alindi; }) : [];
+    h.guncellendi = Date.now();
+    v2Yaz(r.v, 'alisveris', { eylem:'temizle', liste:h.id });
   }
 
   /* ═══ GENEL BÖLÜM DEPOSU — B1 · L6 · A2 buradan yazar ══════════════ */
@@ -158,6 +302,12 @@
     reyonKaydi: reyonKaydi,
     liste: liste, ekle: ekle, cikar: cikar, isaretle: isaretle,
     temizle: temizle, kalemVar: kalemVar,
+    /* çok liste — parti 5 · madde 11 */
+    surum: 2,
+    listeler: listeler, etkinListe: etkinListe, etkinSec: etkinSec,
+    listeAc: listeAc, listeAdlandir: listeAdlandir,
+    listeKopyala: listeKopyala, listeSil: listeSil, listeKalem: listeKalem,
+    gocBilgisi: function () { return hamOku().alisverisGoc || null; },
     oku: bolumOku, yaz: bolumYaz
   };
 

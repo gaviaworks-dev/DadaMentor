@@ -955,6 +955,15 @@
           var d = c.getAttribute('data-suz-deger') || '';
           secili = (secili === d) ? '' : d;      /* ikinci tık Tümü'ye döner */
           ciz();
+          /* 🔴 TEK KAYNAK · M5 ↔ M7. Süzgeç `.mnl-suz-disi` ile gizliyor,
+             sayfalama `hidden`/`.mnl-gizli` ile: İKİ BAĞIMSIZ GÖRÜNÜRLÜK
+             SİSTEMİ vardı ve M7 SÜZÜLMEMİŞ nüfusu sayfalıyordu — 1. sayfada
+             "5 kart" gösteriliyor ama ekranda 1 kart kalıyordu. Artık M7'nin
+             nüfusu = süzgeçten geçenler; süzgeç değişince 1. sayfaya döner.
+             🔴 Haber MutationObserver'dan DEĞİL tıklamadan veriliyor: gözlemci
+             M7'nin kendi çizimini de görür ve iki sistem birbirini tetikler. */
+          var pk = pano.getAttribute('data-pane');
+          if (pk && window.dmMnlListe && window.dmMnlListe.sifirla) window.dmMnlListe.sifirla(pk);
         });
       });
       /* Menü klonlanınca/çıkarılınca sayaçlar gerçeği söylemeye devam etsin */
@@ -1072,38 +1081,88 @@
     'alisveris':   { ozne:'.shop-item',          ad:'kalem',  yerTutucu:'Malzeme adı', dinamik:true }
   };
 
+  var KAYIT = {};
+
   function metin(el) { return (el.textContent || '').replace(/\s+/g, ' ').trim().toLocaleLowerCase('tr'); }
 
-  /* Araç çubuğunun EKLEME NOKTASI — {ebeveyn, hedef}.
-     Çubuk `hedef`in ÖNÜNE, `ebeveyn`in İÇİNE girer.
+  /* ═══ SÖZLEŞME · PANO KENDİ ÖZNESİNİ BİLDİREBİLİR ═══════════════════
+     Lead `#alisveris`i "çok liste" modeline çevirecek ve öznesi
+     değişecek. `data-mnl-ozne` / `data-mnl-ad` / `data-mnl-yer-tutucu`
+     panoda varsa `SEKME` tablosundaki VARSAYILANI EZER. Böylece yeni
+     sekme biçimi bu dosyayı düzenlemeden bildirilebilir — "denetimin
+     öznesi kayar" kusurunun tersi: özneyi sekme kendi söyler.
+     ═══════════════════════════════════════════════════════════════════ */
+  function tanimla(anahtar, taban) {
+    var v = taban || SEKME[anahtar] || {};
+    var t = { ozne: v.ozne, ad: v.ad, yerTutucu: v.yerTutucu, dinamik: !!v.dinamik };
+    var pano = document.querySelector('[data-pane="' + anahtar + '"]');
+    if (pano) {
+      var o = pano.getAttribute('data-mnl-ozne');
+      var a = pano.getAttribute('data-mnl-ad');
+      var y = pano.getAttribute('data-mnl-yer-tutucu');
+      if (o) t.ozne = o;
+      if (a) t.ad = a;
+      if (y) t.yerTutucu = y;
+    }
+    return t.ozne ? t : null;
+  }
+
+  /* Sayfalanan KAP — çubuk ve sayfalama onun DOĞRUDAN çocuğu olur.
 
      🔴 İLK İKİ YAZIM DA ÇUBUĞU SAYFA KABININ DIŞINA KOYDU ve kusuru
-     sayı DEĞİL GÖZ yakaladı: DOM ölçümü "araclar:true" diyordu,
-     hash'li/hash'siz karşılaştırması da "aynı" diyordu — iki hâlde de
-     aynı biçimde YANLIŞTI. Ekranda çubuk viewport'un sol kenarına
-     yapışıktı (x=0), sayfanın kendi içerik kabı ise x=132.
-       1. yazım: ortak ata `<section>` → çubuk section'ın KARDEŞİ
-       2. yazım: ortak ata `.wrap` → `insertBefore(çubuk, wrap)`,
-                 yani yine wrap'ın DIŞINA (kap.parentNode kullanılıyordu)
-     Kök ikisinde de aynı: ata bulunuyor ama ekleme onun ÖNÜNE
-     yapılıyor; oysa çubuk kabın İÇİNDE, listenin üstünde durmalı. */
-  function ekleNoktasi(ozneler, pano, dinamik) {
+     sayı DEĞİL GÖZ yakaladı: DOM ölçümü "araclar:true" diyordu, ekranda
+     çubuk viewport'un sol kenarına yapışıktı (x=0), sayfanın kendi
+     içerik kabı ise x=132. Kök: ata bulunuyor ama ekleme onun ÖNÜNE
+     yapılıyordu; oysa çubuk kabın İÇİNDE, listenin üstünde durmalı. */
+  function kapBul(ozneler, pano, dinamik) {
+    /* 🔴 PANO KENDİ KABINI BİLDİREBİLİR — `[data-mnl-cubuk-kap]`.
+
+       ⚠ AD ÇAKIŞMASI ÖLÇÜLDÜ: ilk yazım `[data-mnl-kap]` sordu ve
+       ağaçta o ad ZATEN TUTULU — `g-menulerim.html`de **220** kez,
+       menü kartlarının içindeki tarif eylem bağlarında
+       (`data-mnl-menu` + `data-mnl-kap` = "hangi menüde hangi tarif").
+       `querySelector` ilk eşleşeni döndürdüğü için çubuk KAPALI bir
+       menü kartının içine kuruldu: dört sekmede çubuk yüksekliği 0,
+       arama görünmez, çizim sayacı 900 ms'de 30→41 (döngü).
+       Ad `data-mnl-cubuk-kap`. Çakışan ad KABUL EDİLMİYOR — sorulmuyor
+       bile; "kanon adı davranış çağırır".
+       ÖLÇÜLEN KUSUR (lead · `#alisveris`): pano İKİ bölüm taşıyor
+       (`section[data-p5-listeler]` = liste listesi, `section.al-body` =
+       GİZLİ detay ekranı). Yüklemede özne sayısı 0 (kartları
+       `dm-p5-l.js` sonradan çiziyor), `.shop-list` yedeği ise GİZLİ
+       bölümün içinde: çubuk yanlış bölümde doğuyor, ekranda arama da
+       sayfalama da YOK. Bildirilen kap özne 0 iken de çapayı DOĞRU
+       bölüme koyar — "özne yoksa kapı susar"ın DOM karşılığı.
+       Bildirim VARSA `.wrap` tahminini EZER: tahmin, bildirimin üstüne
+       çıkamaz. */
+    var bildirilen = pano.querySelector('[data-mnl-cubuk-kap]');
+    if (bildirilen) {
+      /* Çubuk kabın İÇİNE değil ÖNÜNE, aynı bölümün içine (lead'in
+         tarifi): kap kendi liste ızgarası, çubuk onun kardeşi.
+         Sayfalama da aynı çapadan: kap TEK BLOK sayıldığı için
+         `sonBlok()` onu döndürür ve sayfalama kabın ARDINA iner —
+         özne 0 iken bile yer doğrudur. */
+      var ust = bildirilen.closest('.wrap');
+      var kapUst = (ust && ust !== bildirilen) ? ust : bildirilen.parentNode;
+      if (kapUst) return { kap: kapUst, ilk: bildirilen, bildirilen: true };
+    }
     var ilk = ozneler[0] || (dinamik ? pano.querySelector('.shop-list') : null);
     if (!ilk) return null;
     var wrap = ilk.closest('.wrap');
-    if (wrap) {
-      /* wrap'ın DOĞRUDAN çocuğu olan bloğu bul; çubuk onun önüne. */
-      var d = ilk;
-      while (d && d.parentNode !== wrap) d = d.parentNode;
-      if (d) return { ebeveyn: wrap, hedef: d };
-      return { ebeveyn: wrap, hedef: wrap.firstChild };
-    }
-    /* `.wrap` yoksa: öznelerin ortak atasının önüne (eski davranış). */
+    if (wrap) return { kap: wrap, ilk: ilk };
     var a = ilk.parentNode;
     for (var i = 1; i < ozneler.length; i++) {
       while (a && !a.contains(ozneler[i])) a = a.parentNode;
     }
-    return a && a.parentNode ? { ebeveyn: a.parentNode, hedef: a } : null;
+    if (!a || !a.parentNode) return null;
+    return { kap: a.parentNode, ilk: ilk };
+  }
+
+  /* `el`i içeren, `kap`ın DOĞRUDAN çocuğu olan blok. */
+  function blok(kap, el) {
+    var d = el;
+    while (d && d.parentNode !== kap) d = d.parentNode;
+    return d;
   }
 
   function pagiCiz(nav, sayfa, toplamSayfa, git) {
@@ -1142,74 +1201,147 @@
       sayfa < toplamSayfa ? sayfa + 1 : null, 'arrow', 'Sonraki sayfa');
   }
 
-  function sekmeKur(anahtar, tanim) {
+  function sekmeKur(anahtar, tanimGiris) {
     var pano = document.querySelector('[data-pane="' + anahtar + '"]');
-    if (!pano || pano.getAttribute('data-mnl-liste') === '1') return null;
+    if (!pano) return null;
+    if (pano.getAttribute('data-mnl-liste') === '1') return KAYIT[anahtar] || null;
+
+    var tanim = tanimla(anahtar, tanimGiris);
+    if (!tanim) return null;
 
     var ozneler = [].slice.call(pano.querySelectorAll(tanim.ozne));
     /* Dinamik sekmede özne SONRADAN doğar; kap markupta bildirilmiş
        olmalı, yoksa kurulum ERTELENİR — uydurma kap açılmaz. */
-    var nokta = ekleNoktasi(ozneler, pano, tanim.dinamik);
-    if (!nokta) return null;
+    var kb = kapBul(ozneler, pano, tanim.dinamik);
+    if (!kb) return null;
+    var kap = kb.kap;
+    /* Bildirilen kapta özne HENÜZ yoksa çubuk kabın BAŞINA girer
+       (`insertBefore(x, null)` = sona ekler; kap boşken ikisi aynı).
+       Bildirilmemiş kapta çapa bulunamazsa kurulum ERTELENİR —
+       uydurma yer açılmaz. */
+    var ustBlok = kb.ilk ? blok(kap, kb.ilk) : null;
+    if (!ustBlok && !kb.bildirilen) return null;
 
     pano.setAttribute('data-mnl-liste', '1');
 
+    /* ── ARAÇ ÇUBUĞU ─────────────────────────────────────────────────
+       🔴 `<label class="alan-etiket">Bu sekmede ara</label>` KALKTI:
+       çip şeridi ile arama AYNI SATIRDA duracak, etiket satırı ikinci
+       bir satır doğuruyordu. Erişilebilirlik DÜŞMEDİ — yer tutucu tek
+       başına etiket değildir, girdiye `aria-label` yazıldı. */
     var araclar = document.createElement('div');
     araclar.className = 'mnl-araclar';
     araclar.setAttribute('data-mnl-araclar', anahtar);
     var kimlik = 'mnlAra-' + anahtar;
     araclar.innerHTML =
       '<div class="ie-arama">' +
-        '<label class="alan-etiket" for="' + kimlik + '">Bu sekmede ara</label>' +
         '<i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>' +
         '<input class="alan-girdi" id="' + kimlik + '" type="search" autocomplete="off" ' +
-               'placeholder="' + tanim.yerTutucu + '">' +
+               'aria-label="Bu sekmede ara" placeholder="' + tanim.yerTutucu + '">' +
         '<button class="ie-arama-sil" type="button" aria-label="Aramayı temizle">' +
           '<i class="fa-solid fa-xmark" aria-hidden="true"></i></button>' +
       '</div>' +
       '<p class="mnl-sayac" data-mnl-sayac aria-live="polite"></p>';
-    nokta.ebeveyn.insertBefore(araclar, nokta.hedef);
+    kap.insertBefore(araclar, ustBlok);
+
+    /* ── ÇİP ŞERİDİ ÇUBUĞUN İÇİNE ────────────────────────────────────
+       Çipler markupta, çubuk çalışma zamanında doğuyor; şerit ÇUBUĞUN
+       İÇİNE TAŞINIR (HTML dosyasına yazılmaz).
+       🔴 TAŞIMA M5'TEN SONRA: M5 bu IIFE'den ÖNCEKİ IIFE'de kuruluyor,
+          dinleyicileri ve `MutationObserver`ı taşımadan etkilenmez —
+          DOM taşıması dinleyiciyi düşürmez ve şerit `[data-pane]`in
+          İÇİNDE kalır (M5 `kap.closest('[data-pane]')` kullanıyor). */
+    var cipler = pano.querySelector('.cipler');
+    if (cipler && cipler.querySelector('.cip.suzgec[data-suz-deger]') && kap.contains(cipler)) {
+      araclar.insertBefore(cipler, araclar.firstChild);
+      araclar.setAttribute('data-mnl-cipli', '1');
+    }
 
     var bos = document.createElement('p');
     bos.className = 'mnl-bos';
     bos.setAttribute('data-mnl-bos', anahtar);
     bos.hidden = true;
-    nokta.ebeveyn.insertBefore(bos, nokta.hedef.nextSibling);
+    kap.insertBefore(bos, araclar.nextSibling);
 
     var nav = document.createElement('nav');
     nav.className = 'pagi mnl-pagi';
     nav.setAttribute('aria-label', 'Sayfalama');
     nav.hidden = true;
-    nokta.ebeveyn.insertBefore(nav, bos.nextSibling);
 
     var arama = araclar.querySelector('.alan-girdi');
     var aramaKap = araclar.querySelector('.ie-arama');
     var sil = araclar.querySelector('.ie-arama-sil');
     var sayac = araclar.querySelector('[data-mnl-sayac]');
-    var durum = { sayfa: 1, q: '' };
+    var durum = { sayfa: 1, q: '', cizim: 0 };
 
-    function liste() { return [].slice.call(pano.querySelectorAll(tanim.ozne)); }
+    /* ── SAYFALAMANIN YERİ: LİSTENİN EN ALTI ─────────────────────────
+       🔴 ÖNCE: ekleme noktası İLK kart olduğu için sayfalama listenin
+          ORTASINDA duruyordu (`#gunluk`te 5. kardeş, ARDINDA 5 kart).
+       🔴 "İlk kartın kardeşi" varsayımına dönülmedi: özne sekmeden
+          sekmeye değişiyor (`taslak` sekmesinin öznesi `tbody tr`),
+          bu yüzden SON öznenin ÜST BLOĞU bulunup ondan sonrasına
+          ekleniyor. Blok = sayfalanan kabın doğrudan çocuğu.
+       🔴 M5'in süzgeç boş hâli (`.mnl-suz-bos`) son kartın hemen
+          ardında duruyor; sayfalama ONDAN da sonra. */
+    function sonBlok() {
+      var l = [].slice.call(pano.querySelectorAll(tanim.ozne)).filter(function (e) { return kap.contains(e); });
+      var son = l.length ? l[l.length - 1] : (kb.ilk && kap.contains(kb.ilk) ? kb.ilk : null);
+      if (!son) return null;
+      var b = blok(kap, son);
+      if (!b) return null;
+      var n = b.nextElementSibling;
+      while (n && (n === bos || n.classList.contains('mnl-suz-bos'))) { b = n; n = b.nextElementSibling; }
+      return b;
+    }
+    function konumla() {
+      var b = sonBlok();
+      if (!b) {
+        /* Özne HENÜZ yok — sayfalama kabın sonunda bekler; kartlar
+           doğunca bir sonraki çizim onu son bloğun ardına taşır. */
+        if (nav.parentNode !== kap || nav.nextElementSibling) kap.appendChild(nav);
+        return;
+      }
+      if (nav.parentNode === kap && nav.previousElementSibling === b) return;
+      kap.insertBefore(nav, b.nextSibling);
+    }
+
+    /* ── NÜFUS · TEK KAYNAK ──────────────────────────────────────────
+       Sayfalanan nüfus = M5 çip süzgecinden GEÇENLER. İki bağımsız
+       görünürlük sistemi tek kaynağa indirildi. */
+    function tumOzne() { return [].slice.call(pano.querySelectorAll(tanim.ozne)); }
+    function suzuldu(e) { return e.classList.contains('mnl-suz-disi'); }
 
     function ciz() {
-      var hepsi = liste();
+      durum.cizim++;
+      var tumu = tumOzne();
+      var nufus = tumu.filter(function (e) { return !suzuldu(e); });
       var q = durum.q;
-      var uyan = q ? hepsi.filter(function (e) { return metin(e).indexOf(q) !== -1; }) : hepsi;
+      var uyan = q ? nufus.filter(function (e) { return metin(e).indexOf(q) !== -1; }) : nufus;
       var toplamSayfa = Math.max(1, Math.ceil(uyan.length / SAYFA_BOYU));
       if (durum.sayfa > toplamSayfa) durum.sayfa = toplamSayfa;
+      if (durum.sayfa < 1) durum.sayfa = 1;
       var bas = (durum.sayfa - 1) * SAYFA_BOYU;
       var gosterilecek = uyan.slice(bas, bas + SAYFA_BOYU);
 
-      hepsi.forEach(function (e) {
+      /* 🔴 GÖRÜNÜRLÜK TÜM ÖZNEYE YAZILIR, yalnız nüfusa değil: süzgeç
+         dışı kalan kalemin bayat `hidden`ı üstünde kalmasın. */
+      tumu.forEach(function (e) {
         var g = gosterilecek.indexOf(e) !== -1;
         e.hidden = !g;
         /* `hidden` niteliği tabloda `display:table-row`u yenemiyor;
-           sınıf da yazılıyor ve CSS onu `display:none` yapıyor. */
-        e.classList.toggle('mnl-gizli', !g);
+           sınıf da yazılıyor ve CSS onu `display:none` yapıyor.
+           🔴 `toggle(ad, kosul)` yerine açık `add`/`remove`. */
+        if (g) e.classList.remove('mnl-gizli'); else e.classList.add('mnl-gizli');
       });
 
-      aramaKap.classList.toggle('dolu', !!q);
-      bos.hidden = uyan.length !== 0;
-      if (!uyan.length) {
+      if (q) aramaKap.classList.add('dolu'); else aramaKap.classList.remove('dolu');
+
+      /* Çip süzgeci her şeyi elediyse SÖZ M5'İN: `.mnl-suz-bos` zaten
+         "Bu süzgeçle menü yok" diyor, ikinci boş hâl basılmaz. */
+      var cipSuzuyor = nufus.length !== tumu.length;
+      var kendiBos = uyan.length === 0 && !(cipSuzuyor && !q);
+      bos.hidden = !kendiBos;
+      if (kendiBos) {
         bos.textContent = q
           ? '“' + arama.value.trim() + '” aramasına uyan ' + tanim.ad + ' yok.'
           : 'Bu sekmede henüz ' + tanim.ad + ' yok.';
@@ -1222,9 +1354,16 @@
           bos.appendChild(t);
         }
       }
-      sayac.textContent = hepsi.length
-        ? (q ? uyan.length + ' / ' + hepsi.length + ' ' + tanim.ad : hepsi.length + ' ' + tanim.ad)
+
+      /* 🔴 SAYAÇ GERÇEK: uydurma sayı yok. Süzgeç ya da arama daralttıysa
+         "süzülen / toplam", daraltmadıysa yalnız toplam. */
+      sayac.textContent = tumu.length
+        ? (uyan.length !== tumu.length
+            ? uyan.length + ' / ' + tumu.length + ' ' + tanim.ad
+            : tumu.length + ' ' + tanim.ad)
         : '';
+
+      konumla();
       pagiCiz(nav, durum.sayfa, toplamSayfa, function (s) {
         durum.sayfa = s; ciz();
         araclar.scrollIntoView({ block: 'nearest' });
@@ -1244,9 +1383,99 @@
       arama.value = ''; durum.q = ''; durum.sayfa = 1; ciz(); arama.focus();
     });
 
+    /* ── PANO DEĞİŞİRSE YENİDEN DİZİNLE ──────────────────────────────
+       🔴 KENDİ ÇİZİMİNİ DUYMAZ. Gözlemci çubuğun · sayfalamanın · boş
+          hâllerin İÇİNDEKİ değişimi eler; elenmeseydi `pagiCiz`in
+          `innerHTML` yazımı gözlemciyi, gözlemci `ciz()`i, `ciz()`
+          yeniden `pagiCiz`i çağırırdı — sonsuz döngü. */
+    var gozZaman;
+    var ELEK = '.mnl-araclar, .pagi.mnl-pagi, .mnl-bos, .mnl-suz-bos';
+    var gozcu = new MutationObserver(function (kayitlar) {
+      var ilgili = kayitlar.some(function (m) {
+        var t = m.target && m.target.nodeType === 1 ? m.target : (m.target && m.target.parentElement);
+        if (!t || !t.closest) return true;
+        return !t.closest(ELEK);
+      });
+      if (!ilgili) return;
+      clearTimeout(gozZaman);
+      gozZaman = setTimeout(function () { ciz(); }, 80);
+    });
+    gozcu.observe(pano, { childList: true, subtree: true });
+
     ciz();
-    return { anahtar: anahtar, sifirla: function () { durum.sayfa = 1; ciz(); }, ciz: ciz };
+    var kayit = {
+      anahtar: anahtar, pano: pano, tanim: tanim, kap: kap,
+      araclar: araclar, nav: nav, bos: bos,
+      durum: durum, ciz: ciz,
+      sifirla: function () { durum.sayfa = 1; ciz(); },
+      /* 🔴 SÖKÜLEBİLİR OLMAK ZORUNDA: yeniden kurulumda eski gözlemci
+         ayakta kalırsa eski `ciz()` yeni kurulumun görünürlüğüyle
+         çakışır — iki sürücü, tek yüzey. */
+      durdur: function () { clearTimeout(gozZaman); gozcu.disconnect(); }
+    };
+    KAYIT[anahtar] = kayit;
+    return kayit;
   }
+
+  /* ═══ SÖZLEŞME · `window.dmMnlListe` ════════════════════════════════
+     Lead `#alisveris` panosunun DOM'unu yeniden yazdıktan sonra
+     `tazele('alisveris')` çağırıp yeniden dizinleyebilsin diye dışa
+     açılıyor. Pano baştan yazıldıysa (çubuk artık ağaçta değilse)
+     `tazele` KURULUMU BAŞTAN yapar — bayat referansla çizmez.
+     ═══════════════════════════════════════════════════════════════════ */
+  window.dmMnlListe = {
+    SAYFA_BOYU: SAYFA_BOYU,
+    SEKME: SEKME,
+    kur: function (anahtar, tanim) { return sekmeKur(anahtar, tanim); },
+    tazele: function (anahtar) {
+      var pano = document.querySelector('[data-pane="' + anahtar + '"]');
+      if (!pano) return null;
+      var k = KAYIT[anahtar];
+      if (!k) { pano.removeAttribute('data-mnl-liste'); return sekmeKur(anahtar, null); }
+
+      /* 🔴 ÇUBUĞUN VARLIĞI DOĞRU YERDE OLDUĞUNU KANITLAMAZ.
+         Eski sınama `pano.contains(k.araclar)` idi ve pano yeniden
+         yazıldığında HÂLÂ true dönüyordu: çubuk panonun içinde ama
+         YANLIŞ BÖLÜMDE (gizli `section.al-body`) duruyordu; `tazele`
+         yeniden kurmuyor, bayat çapayla çiziyordu — arama da sayfalama
+         da ekranda yoktu. Soru artık "panoda mı" değil "ÖZNELERLE AYNI
+         KAPTA mı": ekleme noktası YENİDEN hesaplanıp karşılaştırılıyor.
+         ("Kapı bayat kopya okur"un DOM karşılığı.) */
+      var t = tanimla(anahtar, k.tanim) || k.tanim;
+      var ozneler = [].slice.call(pano.querySelectorAll(t.ozne));
+      var kb = kapBul(ozneler, pano, t.dinamik);
+      var yerYanlis = !pano.contains(k.araclar) || !kb || k.araclar.parentNode !== kb.kap;
+
+      if (yerYanlis) {
+        if (k.durdur) k.durdur();
+        /* Çip şeridi çubuğun İÇİNE taşınmıştı — çubukla birlikte
+           SİLİNMESİN, önce dışarı alınır; yeni kurulum onu yeniden
+           bulup yeni çubuğa taşır. */
+        var cip = k.araclar.querySelector('.cipler');
+        if (cip && k.araclar.parentNode) k.araclar.parentNode.insertBefore(cip, k.araclar);
+        /* Eski `ciz()`in bıraktığı görünürlük DAMGASI temizlenir;
+           yoksa yeni seçiciye uymayan özne bayat `hidden` ile ölü kalır. */
+        [].slice.call(pano.querySelectorAll(k.tanim.ozne)).forEach(function (e) {
+          e.hidden = false; e.classList.remove('mnl-gizli');
+        });
+        [k.araclar, k.bos, k.nav].forEach(function (e) { if (e && e.parentNode) e.parentNode.removeChild(e); });
+        pano.removeAttribute('data-mnl-liste');
+        delete KAYIT[anahtar];
+        return sekmeKur(anahtar, k.tanim);
+      }
+
+      k.tanim = t;
+      k.durum.sayfa = 1;
+      k.ciz();
+      return k;
+    },
+    sifirla: function (anahtar) {
+      var k = KAYIT[anahtar];
+      if (!k) return false;
+      k.durum.sayfa = 1; k.ciz(); return true;
+    },
+    kayit: function (anahtar) { return KAYIT[anahtar] || null; }
+  };
 
   function kur() {
     var kurulan = [];
@@ -1263,7 +1492,7 @@
       d.addEventListener('click', function () {
         var t = d.getAttribute('data-tab');
         setTimeout(function () {
-          kurulan.forEach(function (s) { if (s.anahtar === t) s.sifirla(); });
+          if (KAYIT[t]) KAYIT[t].sifirla();
         }, 0);
       });
     });
@@ -1273,8 +1502,7 @@
       setTimeout(function () {
         Object.keys(SEKME).forEach(function (k) {
           if (!SEKME[k].dinamik) return;
-          var s = kurulan.filter(function (x) { return x.anahtar === k; })[0];
-          if (s) s.ciz(); else sekmeKur(k, SEKME[k]);
+          if (KAYIT[k]) KAYIT[k].ciz(); else sekmeKur(k, SEKME[k]);
         });
       }, 60);
     });
