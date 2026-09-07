@@ -116,3 +116,36 @@
   .al-listeler .sec-tools .dugme{ width:100%; justify-content:center; }
   .al-liste-menu{ margin-left:var(--bosluk-4); }
 }
+
+/* =====================================================================
+   MENÜ KARTI ARALIĞI  (Beyar · 2026-09-07: "menü kartları arası boşluk
+   çok dar — kartlar bitişik duruyor; #takipci'deki kanon aralığın aynısı
+   tüm sekmelerde")
+   ---------------------------------------------------------------------
+   ÖLÇÜLEN KUSUR (1440 ve 390, altı sekmenin hepsi): ardışık iki
+   `article.menu-detail.mnl-kapali` arası 14px. Kaynağı `dm-p4-m.css`:
+       .menu-detail{ margin-bottom:34px }            ← KANON
+       .menu-detail.mnl-kapali{ margin-bottom:14px } ← daraltma
+   Yani kanon değeri zaten 34px; kapalı kart onu 14'e indiriyordu.
+   `#takipci`de seçilen kanon aralık da 34px = var(--bosluk-34)
+   (`dm-p5-t.css`, 10 sayfa · 154 ardışık blok çiftinde baskın değer).
+   Düzeltme yeni bir ölçü getirmiyor, kartın KENDİ kanon payını geri
+   veriyor — ve iki ekranda aynı: kart↔kart aralığı `#takipci`de de
+   genişlikten bağımsız 34px ölçülmüştü.
+
+   🔴 YALNIZ KART↔KART. Dokunulmayan sınırlar (ölçüldü, kasıtlı):
+      `.sec-head` → ilk blok  (1440'ta 34, 390'da 24 — kanonun kendi
+      duraklaması; "#takipci"de de bu sınıra değilmemişti)
+      `.mnl-araclar` → ilk kart (16px, araç çubuğunun kendi payı)
+   🔴 ÖZGÜLLÜK — İLK YAZIM KAYBETTİ, ÖLÇÜM YAKALADI. `dm-p4-m.css`teki
+      daraltma `article.menu-detail.mnl-kapali`, yani ETİKET ADIYLA
+      yazılmış: (0,2,1). `.menu-detail.mnl-kapali` (0,2,0) daha sonra
+      yüklenmesine rağmen SESSİZCE kaybediyordu (ölçüm: computed
+      margin-bottom hâlâ 14px). Kural etiketi de taşır; özgüllük eşit,
+      sıra karar verir. `!important` gerekmedi.
+   🔴 KAPSAM: `dm-p5-l.css` 521 tarif sayfasına da bağlı; oralarda
+      `.menu-detail` YOK (ağaçta yalnız g-menulerim ve
+      bugun-ne-pisirsem kullanıyor, ikincisi bu dosyayı yüklemiyor),
+      yani kural özne bulamaz ve sessizce düşer.
+   ===================================================================== */
+article.menu-detail.mnl-kapali{ margin-bottom:var(--bosluk-34); }

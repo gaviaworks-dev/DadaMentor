@@ -5,6 +5,11 @@
      madde 5 · Tarifler ailesi GERÇEK tarif kartına geçti (`article.r-card`)
      madde 6 · her paylaşım bölümüne `.ie-arama` (başlığın SAĞINDA)
      madde 7 · ızgara hizası + eşit yükseklik + kırpılma 0
+     r1 · tarif kartı donörün render DOM'undan BİREBİR (kartın kendi
+          icadı `.p5p-not` ve `.durum-hapi` kalktı)
+     r2 · püf kartı `puf-noktalari.html`in `a.puf-card`ı — kaynağın
+          kuralı KOPYALANMADI, `puf-noktalari.css` sayfaya bağlandı
+     r3 · iki ızgaranın altında kanon sayfalama (`dm-pagi.css`)
 
    🔴 KURAL KOPYALANMADI. `.r-card` ailesinin tam kural kümesi
       `varliklar/reference/tarif-liste/tarif-liste.css`te ve sayfaya
@@ -48,6 +53,16 @@
    2 · TARİF KARTI — DONÖR KALIBININ BU BAĞLAMDAKİ EKSİKLERİ
    ═══════════════════════════════════════════════════════════════════ */
 
+/* 🔴 KAPSAM EKSİĞİ · `.r-save` KARTIN DIŞINA KAÇIYORDU. `.r-save`
+   `position:absolute` ve konumunu KARTA göre alması gerekiyor; donörde
+   `.r-card{position:relative}` `portal-DQfW7by7.css`te (bu sayfada
+   YÜKLÜ DEĞİL — sayfa kanon + `tarif-liste.css` ile çiziliyor ve o
+   dosyada `position` YOK). Bildirim olmadan düğme en yakın konumlu
+   ataya çözülüyor ve ÖLÇÜLDÜ: y = −934px, yani kartın 900px üstünde.
+   `dm-p3-a.css` aynı eksiği g-mutfak-defterim için aynı satırla
+   kapatmıştı. ("İş kural yazmak değil KAPSAM tamamlamak.") */
+.r-card.p5p-tarif{ position:relative; }
+
 /* Donörde kart bir `<a>` sarmalıyor ve tüm yüzey tıklanabilir; burada
    tıklanabilir olan YALNIZ başlıktaki bağ. `cursor:pointer` bütün karta
    "tıkla" diyordu — tıklanmayan yüzeyde YALAN İMLEÇ. */
@@ -71,26 +86,48 @@
 .p5p-kapaksiz i{ font-size:var(--yazi-24); color:var(--metin-pasif-4, var(--metin-ikincil)); }
 .p5p-kapaksiz span{ font-size:var(--yazi-11-5); font-weight:var(--agirlik-orta); }
 
-/* Paylaşımın kendi editör notu — donörde karşılığı YOK, kartın kendi
-   verisi. Kaynağın ipucu balonundan geldi; balon `.rozet-karti:hover`e
-   bağlıydı ve o kanca ARTIK YOK. Balonu diriltmek `.r-card`ın
-   `overflow:hidden`ını sökmeyi gerektirirdi (medya köşe kırpması ve
-   `:hover` yakınlaştırması oradan geliyor); not GÖVDEYE alındı —
-   dokunmatikte de okunur, gizli değil. */
-.r-card.p5p-tarif .p5p-not{
-  margin:0 0 var(--bosluk-13);
-  font-size:var(--yazi-12); line-height:var(--satir-govde, 1.55);
-  color:var(--metin-ikincil);
-  display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
-}
+/* Alt satır donörün kendisi: solda `.r-author`, sağda `.r-stats`.
+   🔴 `.p5p-not` ve `.durum-hapi` KALDIRILDI — donörün kartında karşılığı
+      yok; ikisi de kartı donörden 1 satır uzatıyordu. Erişim durumu
+      sayfada kaybolmadı: bölüm notu ("124'ü herkese açık, 38'i abonelere
+      özel") ve `g-sef-panelim.html#icerikler` onu zaten taşıyor.
+   🔴 `.r-author` burada `<div>`: sayfa sahibinin ağaçta genel profil
+      sayfası YOK, `<a href>` 404 basardı. Kural eleman türüne bakmıyor,
+      kutu birebir aynı kalıyor. */
 
-/* Alt satır: solda erişim/durum hapı, sağda puan + okunma.
-   Donörün `.r-author` yuvası KULLANILMADI — gerekçe raporda. */
-.r-card.p5p-tarif .r-foot .durum-hapi{ min-width:0; overflow:hidden; text-overflow:ellipsis; }
-.r-card.p5p-tarif .r-stats{ display:inline-flex; align-items:center; gap:var(--bosluk-10); flex:none; }
 
-/* Kategori çipi kapağın üstünde: donörün `.r-chip` kuralı `.r-media`
-   içinde mutlak konumlu; başka bir şey eklemiyoruz. */
+/* ═══════════════════════════════════════════════════════════════════
+   2b · PÜF KARTI — DONÖRÜN `a.puf-card`ı
+   -------------------------------------------------------------------
+   🔴 KURAL KOPYALANMADI: `.puf-card/.puf-fig/.puf-ico/.puf-body/
+      .puf-tag/.puf-reads` kümesinin kaynağı
+      `varliklar/reference/puf-noktalari/puf-noktalari.css` ve L0 onu
+      bu sayfaya bağladı. Çarpışma denetlendi: o dosyanın çıplak sınıf
+      adlarından (`.rd-crumb .lst-top .lst-hero .lst-stats .pufl-* .dt
+      .pufc .ke-filter`) HİÇBİRİ g-toplulugum'da geçmiyor; tek ortak ad
+      `.chip` ve orada `.ke-filter .chip` olarak kapsanmış.
+   `.pufl-grid` (1fr 1fr) `.rozet-izgara`nın (repeat(5,1fr)) üstünde
+   kazanır çünkü `bilesenler.css`ten SONRA yüklenir — `.lst-grid`le
+   aynı mekanizma, özgüllük şişirilmedi.
+   ═══════════════════════════════════════════════════════════════════ */
+.rozet-izgara.pufl-grid{ margin-top:0; }
+
+
+/* ═══════════════════════════════════════════════════════════════════
+   2c · SAYFALAMA — SON KARTIN ALTINDA
+   -------------------------------------------------------------------
+   Bileşenin kendisi `dm-pagi.css` (tek kaynak, sayfaya zaten bağlı).
+   Burada YALNIZ iki kalem var:
+   🔴 `.pagi{display:flex}` YAZAR kuralıdır ve tarayıcı sayfasının
+      `[hidden]{display:none}`ını YENER. Süzgeç açıkken JS `hidden`
+      yazıyor; bildirim olmadan sayfalama görünür kalır ve "128 tariften
+      1–6" derken ekranda 1 kart durur. ("Boş liste her koşulu sağlar"ın
+      kardeşi: gizlenmeyen bileşen sahte yeşil verir.)
+   🔴 Kanon aile bloğu kartlardan sonra kendi boşluğunu bırakıyor;
+      donörün 40px'i üstüne binmesin diye ölçülü tek değer.
+   ═══════════════════════════════════════════════════════════════════ */
+.rozet-ailesi .pagi[hidden]{ display:none; }
+.rozet-ailesi .pagi{ margin-top:var(--bosluk-24); }
 
 
 /* ═══════════════════════════════════════════════════════════════════

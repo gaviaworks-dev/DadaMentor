@@ -16,10 +16,14 @@
       ve bağ DELEGASYONLA `document`ta.
 
    🔴 `stopPropagation` DELEGASYONU ÖLDÜRÜR — donörün `.r-card` kalıbında
-      `<form onclick="event.stopPropagation()">` var. Bu kartlara O FORM
-      KOPYALANMADI (kaydet düğmesinin sürücüsü bu sayfada yüklü değil,
-      ölü düğme olurdu); yine de dinleyiciler `input`/`click` için
-      `document`ta ve süzme klavyeden geliyor.
+      `<form onclick="event.stopPropagation()">` var; orada gerekli
+      çünkü kartın TAMAMI bir bağ. Burada kart bağ değil ve o öznitelik
+      `document`taki delegasyonu keserdi: form KOPYALANDI, ÖZNİTELİK
+      KOPYALANMADI. Kaydet düğmesinin sürücüsü de burada (aşağıda).
+
+   REVİZE (2026-09-07): iki iş eklendi —
+     · `.r-save` sınıf takası (kaynağın kendi sözleşmesi)
+     · süzgeç açıkken sayfalamayı gizleme
    ===================================================================== */
 (function () {
   'use strict';
@@ -39,6 +43,17 @@
   function kartlar(aile) {
     var izgara = aile.querySelector('.rozet-izgara');
     return izgara ? Array.prototype.slice.call(izgara.children) : [];
+  }
+
+  /* Sayfalama "128 tariften 1–6 arası" der; süzgeç açıkken bu cümle
+     YANLIŞ olur (ekranda 1 kart durabilir). Terim varken gizlenir.
+     🔴 `.pagi{display:flex}` yazar kuralı `[hidden]`ı yener; gizleme
+        bildirimi `dm-p5-p.css`te (`.rozet-ailesi .pagi[hidden]`). */
+  function pagiTazele(aile, terimVar) {
+    var pagi = aile.querySelector('[data-p5p-pagi]');
+    if (!pagi) return;
+    if (terimVar) pagi.setAttribute('hidden', '');
+    else pagi.removeAttribute('hidden');
   }
 
   function gizle(el, gizliMi) {
@@ -78,6 +93,8 @@
         sayac.setAttribute('hidden', '');
       }
     }
+
+    pagiTazele(aile, !!terim);
 
     var bos = aile.querySelector('[data-p5p-bos]');
     if (bos) {
@@ -119,6 +136,29 @@
         var aile = dug.closest('.rozet-ailesi');
         var kutu = aile && aile.querySelector('[data-p5p-arama]');
         if (kutu) temizle(kutu, true);
+        return;
+      }
+
+      /* KAYDET — SÜRÜCÜ İCAT EDİLMEDİ. Kaynağın kendi sözleşmesi
+         (`portal-Co4op6F_.js` · `.r-save:not([data-save-toggle])`):
+         `.saved` sınıfı takas edilir, kalp `fa-regular` ↔ `fa-solid`
+         çiftini değiştirir. `dm-p3-a.js` aynı sözleşmeyi
+         g-mutfak-defterim'de kurmuştu; kural `tarif-liste.css`te
+         (`.r-save.saved`) zaten yürürlükte.
+         🔴 `toggle(ad)` TEK argümanla çağrılıyor ve dönüşü okunuyor —
+            `toggle(ad, undefined)` her çağrıda takas edip aria'yı
+            durumdan koparıyordu (bu depoda ölçülmüş kusur). */
+      var kaydet = t.closest('.r-card.p5p-tarif .r-save');
+      if (kaydet) {
+        e.preventDefault();
+        var acik = kaydet.classList.toggle('saved');
+        var kalp = kaydet.querySelector('i');
+        if (kalp) {
+          kalp.classList.toggle('fa-solid', acik);
+          kalp.classList.toggle('fa-regular', !acik);
+        }
+        kaydet.setAttribute('aria-pressed', acik ? 'true' : 'false');
+        kaydet.setAttribute('aria-label', acik ? 'Kaydedilenlerden çıkar' : 'Kaydet');
       }
     });
 
