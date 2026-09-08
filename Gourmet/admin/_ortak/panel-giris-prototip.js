@@ -1,40 +1,38 @@
 /*
- * PANEL GİRİŞ — PROTOTİP KATMANI
+ * PANEL GİRİŞ — MAKET KATMANI
  *
  * 🔴 BU DOSYA DONÖRDE YOK ve donörün davranışını DEĞİŞTİRMEZ.
  * Donörün kendi betiği (`panel-giris.js`) birebir kopyalandı ve şifre
- * gözünü kurar. Bu ayrı dosya yalnız PROTOTİPİN gerçeğini söyler.
+ * gözünü kurar. Bu ayrı dosya yalnız PROTOTİPİN kipini kurar.
  *
- * Sorun: donörde form `POST /yonetim/giris`e gider ve gerçekten oturum
- * açar. Bu ağaç statik bir prototip; oturum servisi YOK.
+ * Donörde form `POST /yonetim/giris`e gider ve gerçekten oturum açar.
+ * Bu ağaç statik; oturum servisi YOK. Beyar kararı (2026-09-08): kapı
+ * MAKET olarak çalışsın — düğme kullanıcıyı panele geçirsin.
  *
- * Üç yol vardı, ikisi elendi:
- *   1 · Düğmeyi olduğu gibi bırak → statik sunucuda POST 405, GET ise
- *       sayfayı yazdıklarıyla birlikte yeniden yükler. Ölü düğme.
- *   2 · Panele yönlendir (`admin-genel-bakis.html`) → public prototipin
- *       giriş ekranı bunu yapıyor (`go-giris.html`, `?auth=1`), ama bu
- *       kimlik doğrulandı demektir. Doğrulanmadı: YALAN YÜZEY.
- *   3 · DOĞRUNUN kendisini söyle. Seçilen bu.
+ * ⚠ Bu bir "yalan yüzey" DEĞİL, çünkü kapı ne yaptığını SÖYLÜYOR:
+ * sayfa açılır açılmaz donörün kendi `.sa-flash` bileşeni (not kipi)
+ * "maket giriş, kimlik doğrulanmaz" diyor. Yalan olan, sessizce panele
+ * geçirip doğrulama yapılmış gibi göstermekti; not basılınca kullanıcı
+ * tam olarak ne olacağını biliyor.
  *
- * Kullanılan yüzey UYDURULMADI: donörün kendi `.sa-flash.is-error`
- * bileşeni (panel-giris.css § ŞERİT). Tarayıcının kendi doğrulaması
- * (`required`, `type=email`) ÖNCE koşar — o gerçek davranıştır ve
- * engellenmez; şerit yalnız geçerli bir gönderimden sonra basılır.
+ * Tarayıcının kendi doğrulaması (`required`, `type=email`) GERÇEKTEN
+ * koşar ve engellenmez — maket olan kimlik denetimi, form denetimi değil.
  *
- * Şerit sayfada gizli DURMUYOR, tıklamada KURULUYOR: `.sa-flash`
- * `display:flex` taşıyor ve yazar kuralı `[hidden]`in tarayıcı
- * varsayılanını ezerdi — kayıtlı tuzak ("gizli sanılan şerit görünür
- * kalır"). Kurulmayan bir düğüm yanlış görünemez.
+ * 🔴 PANELE ADRES PARAMETRESİ TAŞINMAZ. Public prototipin giriş ekranı
+ * hedefe `?auth=1` ekliyor; burada aynısını yapmak kayıtlı tuzağa düşerdi:
+ * `admin-kit.js`in `adrestenSuzgec()`i (satır 3515) beyaz listede olmayan
+ * HER adres parametresini SÜZGEÇ sayıyor ve tabloyu boşaltabiliyor.
+ * Hedef bu yüzden çıplak: `admin-genel-bakis.html`.
  */
 (function () {
   'use strict';
 
-  function serit(form, govde) {
-    var eski = document.querySelector('.sa-flash.is-error[data-prototip]');
+  function serit(form, govde, kip) {
+    var eski = document.querySelector('.sa-flash[data-prototip]');
     if (eski) eski.remove();
 
     var s = document.createElement('div');
-    s.className = 'sa-flash is-error';
+    s.className = 'sa-flash ' + (kip || 'is-note');
     s.setAttribute('role', 'alert');
     s.setAttribute('data-prototip', '1');
     s.innerHTML =
@@ -44,36 +42,38 @@
     s.scrollIntoView({ block: 'nearest' });
   }
 
-  var GONDERIM =
-    '<b>Bu prototipte oturum servisi yok.</b> ' +
-    'Giriş ekranı donörün yapısıyla kuruldu; kimlik doğrulama ' +
-    'full-stack uygulamada çalışır. Buradan gönderilen form bir oturum ' +
-    'açmaz ve panele geçirmez.';
+  var MAKET =
+    '<b>Maket giriş.</b> Bu prototipte kimlik doğrulanmaz — alanları ' +
+    'doldurup “Giriş Yap”a bastığında kapı seni doğrudan panele geçirir. ' +
+    'Gerçek doğrulama full-stack uygulamada çalışır.';
 
   /* 🔴 ÇIKIŞ "OTURUMU KAPATTIM" DEMEZ.
      Panelin hesap menüsündeki "Çıkış yap" bu kapıya `?cikis=1` ile gelir.
      Statik ağaçta oturum servisi yok, dolayısıyla KAPATILAN BİR OTURUM DA
      YOK; kullanıcıyı giriş ekranına getirip susmak, çıkış yapılmış gibi
-     göstermek olurdu — giriş formundaki kararın aynısı, aynı bileşenle.
+     göstermek olurdu.
      ⚠ Adres parametresi bilerek YALNIZ bu sayfada okunuyor: panelin kit
-     süzgeçleri adres parametresi okuyor (kayıtlı tuzak: "adres parametresi
-     süzgeç olur"), bu kapı ise kit yüklemiyor — çakışacak okuyucu yok. */
+     süzgeçleri adres parametresi okuyor (kayıtlı tuzak), bu kapı ise kit
+     yüklemiyor — çakışacak okuyucu yok. */
   var CIKIS =
     '<b>Oturum kapatılmadı — kapatılacak bir oturum yok.</b> ' +
-    'Bu prototipte oturum servisi yok; panelden “Çıkış yap” seni bu kapıya ' +
-    'getirir, ama arkada açılmış bir oturum hiç yoktu.';
+    'Bu maket kapıda kimlik doğrulanmaz; “Giriş Yap” seni yeniden panele geçirir.';
+
+  var HEDEF = 'admin-genel-bakis.html';
 
   function bagla() {
     var form = document.querySelector('form.fk-form');
     if (!form || form.dataset.prototipBound) return;
     form.dataset.prototipBound = '1';
-    form.addEventListener('submit', function (e) {
-      e.preventDefault();          /* tarayıcı doğrulaması bu noktada GEÇMİŞTİR */
-      serit(form, GONDERIM);
-    });
 
-    /* panelden çıkışla gelindiyse şerit AÇILIŞTA basılır */
-    if (/(?:^|[?&])cikis=1(?:&|$)/.test(location.search)) serit(form, CIKIS);
+    /* kapı ne olduğunu AÇILIŞTA söyler; çıkışla gelindiyse onu söyler */
+    var cikisla = /(?:^|[?&])cikis=1(?:&|$)/.test(location.search);
+    serit(form, cikisla ? CIKIS : MAKET, 'is-note');
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();      /* tarayıcı doğrulaması bu noktada GEÇMİŞTİR */
+      location.href = HEDEF;   /* çıplak hedef — adres parametresi TAŞINMAZ */
+    });
   }
 
   if (document.readyState === 'loading') {
