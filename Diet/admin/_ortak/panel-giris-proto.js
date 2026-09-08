@@ -1,22 +1,24 @@
 /*
- * PANEL GİRİŞ — PROTOTİP DÜRÜSTLÜĞÜ
+ * PANEL GİRİŞ — MAKET DAVRANIŞI
  *
  * 🔴 BU DOSYA DONÖRÜN DEĞİL, BİZİM. Donörde (`panel-giris.js`) yalnız şifre
- * gözü var; orada form GERÇEKTEN çalışıyor çünkü arkasında Laravel oturumu
- * duruyor. Bu ağaç statik bir maket: `deneme/admin-diet/` altında sunucu yok,
- * kimlik doğrulama yok, oturum yok.
+ * gözü var; orada form gerçekten çalışıyor çünkü arkasında Laravel oturumu
+ * duruyor. Bu ağaç statik bir maket: sunucu yok, oturum yok.
  *
- * Bu yüzden düğmenin iki yanlış davranışı olabilirdi ve ikisi de yasak:
- *   1) SAHTE BAŞARI — "Giriş yapıldı" basmak. Hiçbir şey doğrulanmadan
- *      doğrulanmış demek; bu kulvarın m1 maddesinde 33 ekranda kapatılan
- *      yalanın aynısı olurdu.
- *   2) ÖLÜ DÜĞME — hiçbir şey yapmamak. Tıklanır, sayfa kıpırdamaz,
- *      kullanıcı neyin olmadığını anlamaz.
+ * Kapı: "Giriş Yap" panele SOKAR. Maket bir kapının işi budur; panelin
+ * kendisi de maket. Yasak olan şey giriş yapılmadan "giriş yapıldı" DEMEK —
+ * sahte başarı mesajı, sahte hoş geldin, sahte oturum bildirimi. Onların
+ * hiçbiri basılmıyor: form gönderilmiyor, hiçbir bilgi hiçbir yere
+ * gitmiyor, sayfa yalnızca panele geçiyor.
  *
- * Üçüncü yol: DOĞRUYU SÖYLEMEK. Gönderim engellenir ve donörün KENDİ
- * `.sa-flash` bileşeniyle (yeni bileşen uydurulmadı) durumun kendisi
- * yazılır. Panele giden bağ gerçek bir bağdır ve gerçekten panele gider —
- * ama "giriş yapıldı" demez.
+ * ⚠ İLK YAZIM YANLIŞTI ve geri alındı: gönderimde "bu maket kimlik
+ * doğrulaması yapmıyor" şeridi basıp kullanıcıyı kapıda tutuyordu. Doğru
+ * olan cümleyi söylüyordu ama KAPIYI KİLİTLİYORDU — maket kapısının tek işi
+ * panele açılmak.
+ *
+ * Zorunlu alan denetimi tarayıcının kendi doğrulamasıyla çalışır: `required`
+ * alanlar boşken `submit` olayı hiç doğmaz, dolayısıyla boş formla panele
+ * geçilmez.
  */
 (function () {
   'use strict';
@@ -27,26 +29,8 @@
     form.dataset.protoBound = '1';
 
     form.addEventListener('submit', function (olay) {
-      olay.preventDefault();
-
-      /* Aynı şerit iki kez basılmaz. */
-      var eski = document.querySelector('[data-proto-serit]');
-      if (eski) { eski.focus(); return; }
-
-      var serit = document.createElement('div');
-      serit.className = 'sa-flash is-error';
-      serit.setAttribute('role', 'alert');
-      serit.setAttribute('tabindex', '-1');
-      serit.setAttribute('data-proto-serit', '1');
-      serit.innerHTML =
-        '<i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>' +
-        '<span><b>Bu maket kimlik doğrulaması yapmıyor.</b> Giriş sunucu ' +
-        'tarafında çalışır; burada oturum açılmadı ve hiçbir bilgi ' +
-        'gönderilmedi. Panel ekranlarını görmek için ' +
-        '<a href="admin-genel-bakis.html">Genel Bakış</a>\'a gidebilirsin.</span>';
-
-      form.parentNode.insertBefore(serit, form);
-      serit.focus();
+      olay.preventDefault();          // maket: hiçbir yere GÖNDERİLMEZ
+      window.location.href = 'admin-genel-bakis.html';
     });
   }
 
