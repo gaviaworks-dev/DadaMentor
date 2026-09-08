@@ -1,0 +1,170 @@
+/* T5D · GOURMET — kulvar C · SAYFA CSS'İ DEĞİL, KULVAR DOSYASI.
+   Bu dosyayı YALNIZ ajan C yazar. Değerler kanon tokenlarından.
+   Sayfaya <style> ve satır içi style YASAK — kural buraya yazılır.
+
+   Yükleme sırası: kabuk → t5-* → t5b-* → t5d-a,b,**c**,d,e
+   Yani buradaki kurallar kabuğunkiyle EŞİT özgüllükte kazanır. Özgüllüğü
+   yükseltmek (`:has()`/`:is()`/id) BİLEREK yapılmadı: kaybeden kural
+   sessizce ölür ve ölçüme görünmez, o yüzden her kuralın KAZANDIĞI
+   render DOM'unda ölçüldü. */
+
+
+/* =====================================================================
+   MADDE 12 · ALT GEZİNME ÇUBUĞU — MAVİ DÜŞÜYOR, MARKA MORU OLMALI
+   ---------------------------------------------------------------------
+   ÖLÇÜLDÜ (@390, 148 sayfa · rapor/gourmet-t5d/c-m12-once.json):
+     .bn-item.active           color      rgb(0,119,168)    ← FIT MAVİSİ
+     .bn-item.active > i       background rgb(232,245,251)  ← FIT MAVİSİ
+     .bn-fab                   background rgb(0,119,168)    ← FIT MAVİSİ
+   KÖK: `kanon-alt-cubuk.css` `var(--aksan-koyu, #0077a8)` ve
+   `var(--aksan-yikama, #e8f5fb)` yazıyor; yedekler KANONUN FIT İÇİN
+   ölçtüğü değerler. Bu ağaçta iki token TANIMSIZ, yedek düşüyor.
+   Ölçüldü: `--aksan-koyu`/`--aksan-yikama` `:root`ta yalnız 14 sayfada
+   bildirilmiş (`gourmet-ekran.css` 9 · `dm-profil.css` 5); kalan 134
+   sayfada hiç yok. Alt çubuk `</main>`ten SONRA gelir, yani
+   `gourmet-ortak.css`in `#pageMain{--aksan-koyu:var(--marka-koyu)}`
+   bildirimi onu HİÇ kapsamaz (ayrıca `--marka-koyu` de tanımsız).
+
+   ── DEĞER NEREDEN GELİYOR · YENİ RENK ÜRETİLMEDİ ─────────────────────
+   Zincir KANONUN kendi zinciri, kısayol alınmadı:
+       kanon/markalar/gourmet.css:122  --marka:#742982   (PANTONE 259 C)
+       kanon/markalar/gourmet.css:130  --marka-koyu  :color-mix(… --marka 82.2%, #000)
+       kanon/markalar/gourmet.css:210  --marka-yikama:color-mix(… --marka 13.7%, #fff)
+       kanon/tokenlar.css:392          --aksan-koyu  :var(--marka-koyu)
+       kanon/tokenlar.css:395          --aksan-yikama:var(--marka-yikama)
+   Ağaçta `:root`ta `--tomato` (ve `--b-gourmet`) ZATEN #742982, yani
+   `--marka`nın kendisi — zincirin çıpası oradan alınıyor. Yüzdeler
+   kanonun ÖLÇÜLMÜŞ değerleri, dokunulmadı; sabit renk yazılmadı.
+   Doğrulama (ağaçta sabit duran ikizlere karşı, üç kanal birebir):
+       --marka-koyu   → #5f226b  ( == ağaçtaki --tomato-dark )
+       --marka-yikama → #ECE2EE  ( == ağaçtaki --tomato-tint )
+   ⚠ ROL KARIŞTIRMA YASAK — `kanon-alt-cubuk.css`in kendi şerhinden
+     doğrulandı: `--aksan-yikama` (AÇIK mor) ikon HAPI ZEMİNİ,
+     `--aksan-koyu` (KOYU mor) FAB zemini ve aktif metin. İkisini takas
+     etmek ekranı düzeltmez, bozar.
+   ⚠ `color-mix()` `color(srgb r g b)` biçiminde ÇÖZÜLÜR (kanallar 0–1).
+     Yalnız `rgba?()` metni arayan bir kapı bu biçimi HİÇ görmez; ölçüm
+     betikleri bu yüzden değer tabanlı karşılaştırmaya çevrildi ve
+     `color(srgb …)` biçiminde enjekte edilmiş FIT mavisiyle sınandı
+     (rapor/gourmet-t5d/c-kapi-sinama.json — 12 sapma yakalandı).
+
+   ── NEDEN `:where(:root)` · SIFIR ÖZGÜLLÜK ───────────────────────────
+   İş "kural yazmak" değil "KAPSAM tamamlamak". 14 sayfa bu tokenları
+   ZATEN bildiriyor; sıfır özgüllükle yazınca onların bildirimi kazanır
+   ve bu dosya YALNIZ tanımsız kalan yerlere iner. Sonradan yüklenip
+   var olan doğru bildirimi ezmek, düzeltmediğim bir yüzeyi bedavaya
+   değiştirmek olurdu.
+   ⚠ `--marka-*`ın burada bildirilmesi `gourmet-ortak.css`in
+     `#pageMain{--aksan-*:var(--marka-*)}` zincirini de canlandırabilirdi.
+     A/B ile ÖLÇÜLDÜ (6 sayfa × 2 genişlik, görünür her elemanın
+     renk parmak izi · rapor/gourmet-t5d/c-token-ab.json):
+     `<main>` İÇİNDE fark 0 · fark yalnız alt çubukta (17) ve o da
+     DEĞER değil BİÇİM farkı (#5f226b ↔ color(srgb .3739 .1322 .4191)
+     — aynı renk). Yani zincir bedavaya bir yüzey değiştirmiyor. */
+:where(:root){
+  --marka:var(--tomato);
+  --marka-koyu:color-mix(in srgb, var(--marka) 82.2%, #000);
+  --marka-yikama:color-mix(in srgb, var(--marka) 13.7%, #fff);
+  --marka-cizgi:color-mix(in srgb, var(--marka) 20%, #fff);   /* kanon/markalar/gourmet.css:227 */
+  --aksan:var(--marka);
+  --aksan-koyu:var(--marka-koyu);
+  --aksan-yikama:var(--marka-yikama);
+  --aksan-cizgi:var(--marka-cizgi);                           /* kanon/tokenlar.css:397 */
+}
+
+
+/* =====================================================================
+   MADDE 11 · «GÖRÜŞ BİLDİR» POP-UP'I — DONÖR FIT'E OTURTULUYOR
+   ---------------------------------------------------------------------
+   Donör ölçümü (render DOM, `#fbModal` açık, @1440 ve @390 ·
+   rapor/gourmet-t5d/c-m11-once.json). YAPI Fit'in, RENK Gourmet'in.
+   Yapı zaten büyük ölçüde aynı: modal kutusu · panel 520/350px ·
+   .fb-head · .fb-body 22px 24px 24px · 5 konu · 5 alan grubu · alan
+   sıraları · .fb-kvkk · .fb-send 45px — hepsi BİREBİR eşleşti.
+   Kapatılan farklar aşağıda; kapanmayanlar raporda ölçülü olarak yazılı.
+   ===================================================================== */
+
+/* 11.1 · KONU SEÇİCİ KİPİ — donör IZGARA, Gourmet yatay ŞERİT.
+   ÖLÇÜLDÜ  Fit    display:grid · 1fr 1fr · gap 9px · yükseklik 150px
+                   çip 231.5×44 (@1440) · 146.5×44 (@390)
+                   [data-topic="puan"] grid-column 1/-1 → tam satır
+   ÖLÇÜLDÜ  Gourmet display:flex · overflow-x:auto · scroll-snap
+                   yükseklik 46px · çip 112–138 × **42** (değişken)
+   Şerit kipinde beş konudan üçü ekran dışında kalıyor ve yalnız yatay
+   kaydırmayla bulunuyor; ayrıca çip yüksekliği 42px, WCAG 2.5.5'in
+   44px dokunma tabanının ALTINDA. Izgaraya dönüyor. */
+.fb-topics{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:9px;
+  margin-bottom:16px;
+  overflow-x:visible;
+  padding-bottom:0;
+  scroll-snap-type:none;
+}
+.fb-topics>.fb-topic{
+  flex:none;
+  white-space:normal;     /* şeritte nowrap'ti; ızgarada kutu sabit, metin sarabilir */
+  scroll-snap-align:none;
+  min-height:44px;        /* donör ölçüsü — WCAG 2.5.5 dokunma tabanı */
+}
+/* Beşinci konu tam satır — donörün kendi kuralı
+   (`.fb-topic[data-topic="puan"]{grid-column:1/-1;justify-content:center}`). */
+.fb-topic[data-topic="puan"]{
+  grid-column:1 / -1;
+  justify-content:center;
+}
+
+/* 11.2 · AKTİF KONU ÇİPİ — donörde DOLU zemin + ters metin.
+   ÖLÇÜLDÜ  Fit     background var(--fit-deep) · color #fff · kenar aynı ton
+   ÖLÇÜLDÜ  Gourmet background var(--tomato-tint) · color var(--tomato)
+                    kenar #74298266 (SABİT RENK, ağaçta yazılı)
+   Yapı donörün: dolu zemin. Renk Gourmet'in: `--tomato-dark` — yukarıda
+   ölçüldüğü gibi kanonun `--marka-koyu`sunun ta kendisi. Sabit renk
+   yazılmadı; ters metin `--paper` (ağaçta #ffffff). */
+.fb-topic.active{
+  border-color:var(--tomato-dark);
+  background:var(--tomato-dark);
+  color:var(--paper);
+}
+.fb-topic.active i{ color:var(--paper); }
+
+/* 11.3 · KAPATMA DÜĞMESİ — 44px dokunma hedefi.
+   ÖLÇÜLDÜ  Fit 44×44 · radius var(--radius-md) · zemin var(--bg)
+            Gourmet 40×40 · radius 8px · zemin var(--paper)
+   ⚠ Doğru kural bu ağaçta ZATEN VAR ama ÖLÜ: `gourmet-ortak.css`
+     `#pageMain .fb-close{width:44px;height:44px;…}` yazıyor — oysa
+     `#fbModal` `</main>`ten SONRA duruyor, yani o seçici hiç eşleşmiyor.
+     Kural yazmak değil, kapsamı düzeltmek gerekiyordu. */
+.fb-close{
+  width:44px; height:44px;
+  border-radius:var(--radius-md);
+  background:var(--bg);
+}
+.fb-close i{ font-size:18px; }   /* donörün ölçüsü (gourmet-ortak.css'te de aynı, orada da ölü) */
+
+
+/* 11.4 · MAKET DÜRÜSTLÜK ŞERİDİ `.hr-note` — MARKUP VAR, KURAL YOKTU.
+   ÖLÇÜLDÜ: blok 145 sayfaya eklendi ama bu ağaçta `.hr-note` için TEK BİR
+   CSS kuralı yok — kayıtlı dersin birebir örneği, "kanon sınıfı ≠ kanon
+   kuralı": şerit stilsiz akıyordu.
+       donör Fit   flex · gap 11px · 13px 15px · mb 16px · zemin
+                   --aksan-yikama · 1px --aksan-cizgi · radius --radius-md
+                   yükseklik 67px · ikon 15px/900 --aksan, mt 2px
+                   metin 12.5px/500 satır 1.55 · rgb(86,81,74)
+       Gourmet ÖNCE display:block · padding 0 · margin 0 · zemin YOK ·
+                   kenar YOK · radius YOK · yükseklik 100px (sarıyor)
+   Renkler yine zincirden: zemin `--aksan-yikama`, kenar `--aksan-cizgi`
+   (kanon Gourmet için %20 · fit.css %17.8 — MARKANIN KENDİ oranı alındı,
+   donörünki taşınmadı). Metin rengi ağaçta tanımlı `--slate-2` (#56514a),
+   yani donörde ölçülen değerin ta kendisi; sabit renk yazılmadı. */
+.hr-note{
+  display:flex; align-items:flex-start; gap:11px;
+  padding:13px 15px;
+  margin-bottom:16px;
+  background:var(--aksan-yikama);
+  border:1px solid var(--aksan-cizgi);
+  border-radius:var(--radius-md);
+}
+.hr-note>i{ flex:0 0 auto; margin-top:2px; font-size:15px; color:var(--aksan); }
+.hr-note p{ font-size:12.5px; line-height:1.55; color:var(--slate-2); }

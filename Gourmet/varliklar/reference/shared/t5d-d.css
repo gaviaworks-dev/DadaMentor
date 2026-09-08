@@ -1,0 +1,112 @@
+/* T5D · GOURMET — kulvar D · SAYFA CSS'İ DEĞİL, KULVAR DOSYASI.
+   Bu dosyayı YALNIZ ajan D yazar. Değerler kanon tokenlarından.
+   Sayfaya <style> ve satır içi style YASAK — kural buraya yazılır. */
+
+/* ══ MADDE 3 · go-etkinliklerim — satır sonu kalemleri sıfır aralıkla bitişik ══
+   ÖLÇÜLEN KUSUR (d-m3-once.json · 7 sekmenin 7'si · 1440·1024·768·390):
+     .kalem-satiri  display:flex · gap:14px          ← satırın kendi ritmi DOĞRU
+     .ks-uc         display:block · gap:normal       ← satır sonu kabı FLEX DEĞİL
+     kalemler arası ölçülen aralık: [0, 0] px        ← rozet ⟂ «Durumu gör» ⟂ «Kaldır»
+                                                       kutuları BİRBİRİNE DEĞİYOR
+   Kök: `dm-profil.css:302` `.ks-uc{flex:0 0 auto; text-align:right}` — blok kap.
+   Çocuklar satır içi kutu; HTML'de `</span><button>` arasında boşluk KARAKTERİ de
+   olmadığı için satır içi boşluk bile doğmuyor. `.kalem-satiri`nin `gap:14px`i
+   kabın İÇİNE inmez. Kullanıcının «üç düğme yan yana sıkışık» dediği şey bu.
+
+   DONÖR — ölçüyle seçildi (d-m3-donor2.json · Fit · 3 genişlik · çok tanık):
+     • `fit-ilerlemem` · `.ks-uc.fpx-end-ikili` — rozet + BAĞIMSIZ eylem:
+         display:flex · align-items:center · justify-content:flex-end
+         gap 14px @1440·@768 · gap 10px @390 · flex-wrap:wrap
+         ölçülen kalem arası: 14 / 14 / 10 px (4 satır × 3 genişlik)   ← SEÇİLEN
+     • `fit-egzersizlerim` · `.ks-uc` ÇIPLAK + `.fpx-ops` (inline-flex·gap:2px):
+         `.fpx-ops` üç kalemli SEGMENT (Tam/Yarım/Atladım) — birbirini dışlayan
+         ikon anahtarları, aralık 2px. Gourmet'inkiler bağımsız eylem, segment
+         değil → bu donör DEĞİL.
+     ⚠ Aynı sayfadaki çıplak `.ks-uc` de 0 aralık ölçüyor (ara=[0]) — yani Fit
+       de aynı gizli kusuru taşıyor. İki tanık ÇELİŞİYOR; 0'ı "kanon kararı"
+       saymadım: `fpx-end-ikili` tam bu iş için BİLEREK yazılmış düzeltme sınıfı,
+       çıplak hâl ise düzeltilmemiş taban. Donör olarak DÜZELTİLMİŞ olan alındı.
+     ⚠ `fpx-end-ikili` Fit'te PAYLAŞILAN kanon dosyasında değil, `fit-ilerlemem`
+       sayfa içi <style>'ında (satır 5882-5883) bildirilmiş; Gourmet ağacında hiç
+       yok. Sınıf ADI taşınmadı (kanon adı davranış çağırır) — yalnız ÖLÇÜLEN
+       ritim taşındı. Kanon önerisi raporda.
+
+   Aralık kanon tokenından: --bosluk-14:14px · --bosluk-10:10px
+   (kanon/tokenlar.css:612,605 · ağaçta dm-profil.css:53,55 bildiriyor).
+   Kırılma noktası 640, donörün medya kapısıyla AYNI. */
+body[data-t5d-d="etkinliklerim"] #pageMain .fp-list .kalem-satiri > .ks-uc{
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: var(--bosluk-14);
+}
+@media (max-width: 640px){
+  /* Donörün kendi medya kuralı: dar ekranda sola yanaşır ve aralık 10'a iner.
+     t5-d.css zaten ≤640'ta `.ks-uc{flex:1 1 100%}` veriyor (satır alta iniyor);
+     `text-align:left` flex kapta iş görmez, yerini justify-content alıyor. */
+  body[data-t5d-d="etkinliklerim"] #pageMain .fp-list .kalem-satiri > .ks-uc{
+    justify-content: flex-start;
+    gap: var(--bosluk-10);
+  }
+}
+
+/* ══ MADDE 13 · mekan-bul — banner dikey ritmi ═══════════════════════════════
+   🔴 ÖZNE, GÖREVDE VERİLENDEN FARKLI ÇIKTI — ölçüldü (d-m13-once.json):
+   Görevdeki taban «Fit donör antrenorler-v1: kırıntı ALTI → h1 ÜSTÜ = 114px»
+   diyor. O 114px BOŞLUK DEĞİL: arasında bir eleman var. Ölçüm `arada` alanıyla
+   gösterdi — `.lib-crumb` (y=128) ile `h1` (y=262) arasında `span.eyebrow`
+   (y=223,h=19) duruyor. Yani donörde kırıntı ve eyebrow AYRI iki düğüm ve
+   114px, eyebrow'u İÇİNE ALAN bir mesafe. `.lib-top` sabit yükseklikli
+   (--banner-h-liste:544px) ve içerik dibe yaslı olduğu için o mesafe
+   başlık uzunluğuna göre 105/115/122/176 arasında OYNUYOR (10 tanık) —
+   ritim değil, ARTAN BOŞLUK. Ritim diye ölçülemez.
+
+   DONÖRÜN GERÇEK RİTMİ (10 sayfa · .lib-top · d-m13-once.json):
+     @1440   eyebrow ALTI → h1 ÜSTÜ = 20px   ← 10 tanığın 10'unda AYNI
+             h1 ALTI → açıklama ÜSTÜ = 20px  ← 10 tanığın 10'unda AYNI
+     @390    eyebrow ALTI → h1 ÜSTÜ = 8–9px  · h1 ALTI → açıklama = 9–10px
+     (banner ÜSTÜ → kırıntı ÜSTÜ = 128px @1440 · 96px @390 — sabit, 10/10)
+   Bu 20/9, kanonun `--banner-gap` değerinin TA KENDİSİ:
+     kanon/tokenlar.css:794  --banner-gap:20px
+     kanon/tokenlar.css:981  @≤1024 --banner-gap:18px
+     kanon/tokenlar.css:999  @≤640  --banner-gap:9px
+   Ritim tokenla ifade edildi; sabit px yazılmadı.
+
+   GOURMET'İN ÖLÇÜLEN HÂLİ:
+     mekan-bul'da AYRI kırıntı düğümü YOK (0 eşleşme: crumb/breadcrumb/kırıntı).
+     Kırıntı işini `.eyebrow` görüyor — görevdeki şerh doğrulandı.
+       @1440  eyebrow→h1 = 12px (donör 20)  ·  h1→açıklama = 11px (donör 20)
+       @390   eyebrow→h1 = 12px (donör 8–9) ·  h1→açıklama = 10px (donör 9–10)
+     Kaynak: mekan-bul.css:70 `.ke-head .eyebrow{margin-bottom:13px}` ve
+             mekan-bul.css:110 `.ke-head .lead{margin-top:10px}` — ikisi de
+             sabit px, medya kapısı YOK, yani dar ekranda da değişmiyor.
+
+   ⚠ `--banner-gap` BU SAYFADA >1024'te TANIMSIZ. Ağaçta onu :root'ta bildiren
+     `gourmet-ekran.css` mekan-bul'a BAĞLI DEĞİL; bağlı olan `t5b-lead.css` onu
+     yalnız @≤1024 ve @≤640 medya bloklarında bildiriyor. Ölçümle doğrulandı:
+     @1440 okunan değer BOŞ, @390 okunan değer "9px". Çıplak `var(--banner-gap)`
+     yazmak @1440'ta özelliği başlangıç değerine çekerdi ("tanımsız var()
+     başlangıca çeker" — kayıtlı ders). O yüzden TABAN değer burada, kanonun
+     kendi :root değeriyle (20px) bildirildi. Dar ekranda `t5b-lead.css`in
+     `#pageMain` bildirimi ARADA duran ata olduğu için MİRAS yoluyla kazanır
+     (18px @≤1024 · 9px @≤640) — özgüllük değil, yakınlık belirler.
+
+   ⚠ Görevdeki «--banner-crumb-ofset kanon 96 ↔ Gastro 128 çelişkisi» BU SAYFAYI
+     ETKİLEMİYOR: `gourmet-ekran.css:872` o ofseti `:where(body[data-fit-hero-kind])`
+     kapısıyla ve `.ke-hero`yu İÇERMEYEN bir liste ile veriyor; mekan-bul'un
+     body'sinde `data-fit-hero-kind` yok, `gourmet-ekran.css` de yüklü değil.
+     Banner üstü payı ata `section.ke-top` veriyor (padding-top 128px @1440 —
+     donörle birebir; @390 74px, donör 96px → 22px fark). Bu AYRI EKSEN,
+     ölçüldü ve raporlandı, DOKUNULMADI (tek eksen düzeltmesi ders).
+
+   ⚠ `.ke-hero-media` üzerindeki satır içi `background-image:none` benim ürünüm
+     değil; ölçümü etkilemiyor — o düğüm `position:absolute;inset:0`, akış
+     dışında, ritmin hiçbir kalemine komşu değil (ölçümde `arada` boş çıktı). */
+body[data-t5d-d="mekan-bul"]{
+  /* TABAN — kanon :root değeri (tokenlar.css:794). Dar ekranı t5b-lead.css'in
+     #pageMain bildirimi miras yoluyla üstlenir; burada tekrar edilmedi. */
+  --banner-gap: 20px;
+}
+body[data-t5d-d="mekan-bul"] .ke-hero .ke-head .eyebrow{ margin-bottom: var(--banner-gap); }
+body[data-t5d-d="mekan-bul"] .ke-hero .ke-head .lead{ margin-top: var(--banner-gap); }

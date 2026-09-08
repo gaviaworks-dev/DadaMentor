@@ -1,0 +1,61 @@
+/* T5D · GOURMET — kulvar A · SAYFA CSS'İ DEĞİL, KULVAR DOSYASI.
+   Bu dosyayı YALNIZ ajan A yazar. Değerler kanon tokenlarından.
+   Sayfaya <style> ve satır içi style YASAK — kural buraya yazılır.
+   KAPSAM: iki kuralın da çapası `go-odemelerim.html`e ÖZGÜ bir kimlik
+   (`#ftModal` · `#od-pane-abonelik`+`#odAbone`). Ölçüldü: Gourmet
+   ağacındaki 148 HTML içinde `id="ftModal"` 1 dosyada, `id="odAbone"`
+   1 dosyada geçiyor. Sızıntı ölçümü: rapor/gourmet-t5d/a-sizinti.json */
+
+/* ═══ MADDE 4 · fatura penceresi header'ın ALTINDA kalıyordu ══════════
+   ÖLÇÜLDÜ (rapor/gourmet-t5d/a-m4-once.json):
+     #ftModal   position:fixed · z-index:98
+     ATASI #pageMain  position:relative · z-index:2  → YIĞIN BAĞLAMI.
+     98 o bağlamın İÇİNDE kalıyor; header (fixed · z-index:60 · gövde
+     düzeyinde) pencerenin ÜSTÜNDE kalıyor.
+     Kanıt: modal açıkken elementFromPoint(panel üstü) → DIV.nav-item
+     (header'ın gezinme kalemi), modalın kendi düğümü DEĞİL.
+   DONÖR: Fit'te aynı pencere `<body>`nin DOĞRUDAN çocuğu (ölçüldü:
+     gövde çocukları fbOverlay·fbModal·fdOverlay·fdModal·ftOverlay·ftModal),
+     yani hiç yığın bağlamına girmiyor.
+   🔴 MARKUP'I DONÖRDEKİ YERE TAŞIMADIM — GEREKÇE ÖLÇÜLDÜ
+      (rapor/gourmet-t5d/a-m4-secenek.json): pencereyi gövdeye taşıyınca
+      1020 düğümün 1012'sinin hesaplanmış stili değişiyor — panel
+      640→520px, `.fb-head`in sticky'si düşüyor, alan yüksekliği
+      44→40px, kart zemini kayboluyor. Sebep: Gourmet'in ortak CSS'i
+      kuralları `#pageMain` altına çapalamış (`#pageMain, #pageMain *`
+      sıfırlaması dâhil); donörün ağacı o çapayı taşımıyor. Taşımak
+      kusuru düzeltmez, BÜYÜTÜR.
+   ÇÖZÜM: yığın bağlamını yalnız pencere AÇIKKEN bırak.
+     `z-index:auto` `#pageMain`i bağlam olmaktan çıkarır; `#ftModal`in
+     kendi 98'i ve `#ftOverlay`in 97'si KÖK bağlama çıkar, header'ın
+     60'ını yener. Sayısal kat değeri YAZMADIM: `--kat-modal` Gourmet'te
+     TANIMSIZ (ölçüldü: boş dize), yazsaydım çıplak sayı olurdu.
+   SONRA ÖLÇÜM (a-m4-secenekB2.json): modal düğümlerinde değişen stil 0,
+     elementFromPoint dört noktada da modalın kendi düğümünü döndürüyor,
+     perde yığında header'ın ÜSTÜNDE.
+   ÖZGÜLLÜK: `:has()` en özgül argümanının ağırlığını alır →
+     (2 kimlik,1 sınıf,1 etiket); `#pageMain{z-index:2}` (1 kimlik) yenilir. */
+body:has(#ftModal.show) #pageMain{ z-index: auto; }
+
+/* ═══ MADDE 5 · abonelik kartı ile altındaki kart YAPIŞIK ════════════
+   ÖLÇÜLDÜ (rapor/gourmet-t5d/a-m5-kapi-once.json · 1440 ve 390):
+     Gourmet  .paket-karti → .kart.odeme   =  0px
+     Fit      .paket-karti → .kart.odeme   = 18px
+     Aynı panodaki öbür çiftler iki markada da 18px. Yani yapışık olan
+     TEK yer bu; "bütün kartlar yapışık" değil.
+   🔴 İLK İKİ ÖLÇÜMÜM ÖZNEYİ KAÇIRDI: boşlukları KABA GÖRE grupluyordum,
+      oysa bu iki kart kardeş DEĞİL — `.paket-karti` bir `#odAbone`
+      sarmalayıcısının içinde, `.kart.odeme` `.od-sec`in doğrudan çocuğu.
+   KÖK: donörde o karta satır içi `style="margin-top:18px"` yazılmış
+     (CDP ile kazanan kural soruldu: Fit'te inlineStyle margin-top:18px).
+     Gourmet kopyasında satır içi style kural gereği çıkarılmış, yerine
+     kural yazılmamış → `#pageMain, #pageMain *{margin:0}` sıfırlaması
+     kalıyor → 0px.
+   ⚠ KAYNAKTA ZATEN BİR DENEME VAR ve ÖLÜ:
+     `gourmet-ortak.css:1600  #pageMain .paket-karti + .kart.odeme`
+     — `+` KARDEŞLİK ister, oysa araya `#odAbone` giriyor. Kural hiç
+     eşleşmiyor. Bu yüzden aynı seçiciyi tekrar yazmak işe yaramazdı;
+     çapa sarmalayıcının kendisi olmalı.
+   DEĞER: kardeş ritmiyle aynı kanon tokenı — `--bosluk-18` (18px,
+     `#pageMain` üzerinde tanımlı; ölçüldü). Sabit px yazılmadı. */
+#pageMain #od-pane-abonelik #odAbone + .kart.odeme{ margin-top: var(--bosluk-18); }

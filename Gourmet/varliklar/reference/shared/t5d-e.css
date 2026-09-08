@@ -1,0 +1,72 @@
+/* T5D · GOURMET — kulvar E · SAYFA CSS'İ DEĞİL, KULVAR DOSYASI.
+   Bu dosyayı YALNIZ ajan E yazar. Değerler kanon tokenlarından.
+   Sayfaya <style> ve satır içi style YASAK — kural buraya yazılır.
+
+   MADDE 2 · "Profil alt sekmeleri kanona uymuyor, UI bozuk".
+
+   ── E-2a · KAYDIRMA İPUCU (sekme şeridi) ───────────────────────────
+   ÖLÇÜLDÜ — rapor/gourmet-t5d/e-1-once.json (10 Gourmet + 12 Fit profil
+   sayfası × 1440/390, `?auth=1`, geçişler kapalı):
+
+     `.sekmeler` üçünü BİRDEN taşıyor: `overflow-x:auto` +
+     `scrollbar-width:none` + `::-webkit-scrollbar{display:none}`.
+     Yani taşma KASITLI gizleniyor ama kullanıcıya "daha fazla var"
+     ipucu bırakılmıyor. Ölçüm: `::after`/`::before` içeriği `none`,
+     `data-scroll-fade` yok, görünür kaydırma çubuğu yok
+     (offsetHeight − clientHeight = 2 = yalnız 1px+1px kenarlık).
+     Taşma (kabın KENDİ scrollWidth − clientWidth'i; documentElement
+     DEĞİL — `overflow-x:clip` onu sağırlaştırır):
+       @1440  go-kesif-tercihlerim 329 (2 kalem kap dışında)
+              go-etkinliklerim      84 (1 kalem kap dışında)
+       @390   10 profil sayfasının HEPSİ:  93 … 1007
+
+   ⚠ Bu Gourmet SAPMASI DEĞİL: donör Fit'te de aynı üçlü var ve Fit de
+     @1440'ta taşıyor (fit-hareket-profilim 480, fit-antrenorum 145 —
+     ikisi de lead'in 8 sayfalık Fit nüfusunun DIŞINDA kalmıştı).
+     Şerit geometrisi ortak 6 sayfada Gourmet ↔ Fit birebir aynı.
+     Buradaki kural donöre göre bir FAZLALIK'tır ve raporda öyle
+     bildirilmiştir; markaya taşınması lead'in kararıdır.
+
+   Deposun KENDİ tek-kaynak deseni bu kök nedeni zaten adlandırıyor
+   (varliklar/reference/shared/scroll-affordance.css başlığı: aynı
+   `overflow-x:auto` + gizli çubuk kombinasyonu). O dosya hiçbir profil
+   sayfasına bağlı değil ve `data-scroll-fade` MARKUP ister — markup
+   bana kapalı. Bu yüzden aynı niyet, markupsuz kurulur:
+
+   KLASİK "scroll shadow" — ek eleman yok, JS yok, DÜZEN ETKİSİ YOK.
+   Şeridin `scrollWidth`/`clientWidth`i değişmez, kalem kutuları
+   kıpırdamaz; yani ölçüm aracını bozmaz ("ölçüm aracı ölçtüğünü
+   değiştirir" dersine karşı bilerek seçildi). İki katman çifti:
+     · ÖRTÜ katmanları `background-attachment:local` → içerikle
+       birlikte kayar. scrollLeft 0 iken gölgenin tam üstünü örter →
+       taşma yokken hiçbir şey çizilmez (sahte pozitif YOK); şerit
+       kaydırılınca örtü kayıp gider ve gölge açığa çıkar.
+     · GÖLGE katmanları `scroll` → şeridin kutusuna sabit kalır.
+   YENİ RENK İCAT EDİLMEDİ: örtü şeridin KENDİ zemini `--kagit`,
+   gölge deponun var olan çizgi-vurgu tokenı `--cizgi-vurgu`
+   (#dddddd; `--cizgi` = #ECECEC daha soluktu, `--cizgi-vurgu-koyu` bu ağaçta TANIMSIZ — üçü de ölçüldü). Ölçü
+   tokenları da ÖLÇÜLDÜ: `--bosluk-32` bu ağaçta TANIMSIZ, kullanılırsa
+   `background-size` tümüyle geçersiz olup `auto`ya düşüyor ve kural
+   sessizce ölüyor ("tanımsız var() başlangıca çeker"). Katman sırası
+   önemlidir: örtüler listede ÖNCE = üstte.
+
+   Özgüllük: taban kural `#pageMain .sekmeler{background:var(--kagit)}`
+   KISAYOL bildirimi (1,1,0) ve `background-image`i sıfırlıyor. Bu
+   dosya 23. sırada, `gourmet-ortak.css` 2./ 4. sırada yükleniyor;
+   aynı (1,1,0) özgüllükte SONRA geldiği için uzun bildirimlerim
+   kazanır. `.sekmeler.ortali` (1,2,0) zemin bildirmiyor, çakışma yok.
+   `#pageMain` seçicide kullanılmıştır — satır içi style DEĞİLDİR. */
+
+#pageMain .sekmeler {
+  background-color: var(--kagit);
+  background-image:
+    linear-gradient(to right, var(--kagit) var(--bosluk-16), transparent),
+    linear-gradient(to left,  var(--kagit) var(--bosluk-16), transparent),
+    linear-gradient(to right, var(--cizgi-vurgu), transparent),
+    linear-gradient(to left,  var(--cizgi-vurgu), transparent);
+  background-position: left center, right center, left center, right center;
+  background-repeat: no-repeat;
+  background-size: var(--bosluk-24) 100%, var(--bosluk-24) 100%,
+                   var(--bosluk-14) 100%, var(--bosluk-14) 100%;
+  background-attachment: local, local, scroll, scroll;
+}

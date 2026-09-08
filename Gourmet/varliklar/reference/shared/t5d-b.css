@@ -1,0 +1,55 @@
+/* T5D · GOURMET — kulvar B · SAYFA CSS'İ DEĞİL, KULVAR DOSYASI.
+   Bu dosyayı YALNIZ ajan B yazar. Değerler kanon tokenlarından.
+   Sayfaya <style> ve satır içi style YASAK — kural buraya yazılır.
+
+   ÇAPA: bütün kurallar `body:has(#ntfSaat)` ile go-hesabim.html'e bağlıdır.
+   `#ntfSaat` Gourmet ağacında YALNIZ go-hesabim.html'de geçer (ölçüldü:
+   `grep -l id="ntfSaat" *.html` → tek dosya), yani kural 148 sayfanın
+   geri kalanına inmez. Sızıntı ayrıca ölçülür (b-sizinti.json). */
+
+/* ══ MADDE 8 · #bildirim · «Hatırlatma saati» satırı ═══════════════════
+   Donör (Fit · fit-hesabim.html:19770) aynı satırdaki saat girdisini
+   satır içi `style="width:140px;flex:none"` ile daraltıyor. Gourmet
+   türetilirken bu satır içi style düşmüş: girdi `.ayar-satir`ın flex
+   akışında satırın tamamına yayılıyordu (ÖLÇÜLDÜ @1440: 698px · @390:
+   300px · donör her iki genişlikte de 140px).
+   140px kanon tokenı DEĞİL, donörün render DOM'undan ölçülmüş sabittir;
+   kanonun aynı satır için yazdığı kardeş kural da aynı biçimde sabit
+   yazıyor (gourmet-ortak.css:800 → `.ayar-satir .alan-secim{width:220px;
+   flex:0 0 auto}`) — `.alan-girdi` karşılığı hiç yazılmamış. */
+body:has(#ntfSaat) #pageMain #bildirim .ayar-satir .alan-girdi[type="time"]{
+  width: 140px;      /* donörden ölçüldü — token yok, kanon kardeşi de sabit */
+  flex: 0 0 auto;
+}
+
+/* Donörde `.ayar-liste` satır içi `style="margin-top:8px;border-top:1px
+   solid var(--line)"` taşıyor: 7×2 kanal matrisinden SONRA gelen ve
+   sözleşme §1.4 gereği matrisin DIŞINDA duran «kapatılamaz» satırları
+   matristen ayıran çizgi (donörün kendi yorumu, fit-hesabim.html:19752).
+   Gourmet'te bu da düşmüş; liste matrise sıfır boşlukla ve ayraçsız
+   yapışıyordu (ÖLÇÜLDÜ @1440: önceki kardeşle boşluk -0.01px · donör
+   7.99px). Değerler kanon tokenlarından: --bosluk-8 = 8px,
+   --cizgi-1 solid --cizgi = 1px solid #ECECEC. */
+body:has(#ntfSaat) #pageMain #bildirim .kart-govde > .ayar-liste{
+  margin-top: var(--bosluk-8);
+  border-top: var(--cizgi-1) solid var(--cizgi);
+}
+
+/* ══ MADDE 9 · «Veri ve Hesap Yönetimi» sekmesi · .fp-grid kart boyu ═══
+   Kanonun kart kardeş boşluğu (#pageMain .fp-card + .fp-card{margin-top:
+   var(--bosluk-16)} · gourmet-ortak.css:1110 ve :1605) ızgaraların İÇİNDE
+   sıfırlanmak zorunda. Ortak kanon bunu iki listede de `.fp-card` yazarak
+   yapıyor (dm-profil.css:319 karşılığı · gourmet-ekran.css:860). Gourmet
+   çevirisinde sıfırlayıcı kuralın İKİNCİ :is() listesi kırpılmış:
+     gourmet-ortak.css:1116 → `.fp-grid > :is(.kart,.fp-card,.ozet-karti)
+                               + :is(.kart,.ozet-karti)`   ← .fp-card YOK
+     gourmet-ortak.css:1119 → `… + :is(.kart,.olcer)`      ← .fp-card YOK
+   Sonuç: `.fp-grid`in ikinci `.fp-card`ı 16px aşağı itiliyor; ızgara
+   `align-items:stretch` olduğu için kart aynı alt hizaya yetişmek üzere
+   16px KISA kalıyordu (ÖLÇÜLDÜ @1440 · Gourmet: y 745/761 · h 459.86 vs
+   443.86 · fark 16 — donör Fit: y 767/767 · h 419.06 = 419.06 · fark 0).
+   Yapılan iş yeni kural yazmak değil, kanonun KAPSAMINI tamamlamak;
+   bu yüzden değer de kanonun kendi sıfırlayıcısıyla birebir aynı. */
+body:has(#ntfSaat) #pageMain .fp-grid > .fp-card + .fp-card{
+  margin-top: 0px;
+}
