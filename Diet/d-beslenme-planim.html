@@ -17,6 +17,7 @@
 <link data-t4="d" rel="stylesheet" href="varliklar/reference/shared/dm-diet-d.css">
 <link data-t4="e" rel="stylesheet" href="varliklar/reference/shared/dm-diet-e.css">
 <link data-t5="lead" rel="stylesheet" href="varliklar/reference/shared/dm-diet-t5.css">
+<link data-t5d="b" rel="stylesheet" href="varliklar/reference/shared/dm-diet-t5d-b.css">
 </head>
 <body data-brand="diet" data-verified="1"><a class="atlama-baglantisi" href="#pageMain">İçeriğe atla</a>
 
@@ -187,6 +188,26 @@
      ve hiçbir yere gönderim yapmıyor.
      Biçimi `dd-shell.css`in `.fb-*` kitinden geliyor (zaten gömülü);
      kanon bu katmana henüz girmedi, §27 yalnız tipografiyi aldı. -->
+<!-- ══ PROGRAM DÖKÜMÜ PENCERESİ · #bpDokModal ═══════════════════════════
+     Kalıp `d-odemelerim.html#fdModal` (fatura belgesi penceresi) ile birebir:
+     `.fb-overlay` + `.fb-modal` + `.fb-panel` + `.fb-head`/`.fb-close`/`.fb-body`,
+     açılışta `.show`, ESC · dış tıklama · kapat düğmesi.
+     İÇERİK kaynağı sayfadaki `<tr id="bpDok*" hidden>` satırlarıdır — satırlar
+     SİLİNMEDİ, artık satır içinde açılmıyor, pencereye taşınıyor. -->
+<div class="fb-overlay" id="bpDokOverlay"></div>
+<div class="fb-modal" id="bpDokModal" role="dialog" aria-modal="true" aria-labelledby="bpDokBaslik">
+  <div class="fb-panel">
+    <div class="fb-head">
+      <div>
+        <h3 id="bpDokBaslik">Program dökümü</h3>
+        <p id="bpDokAlt">Tamamlanan programın gün, öğün ve uyum dökümü.</p>
+      </div>
+      <button class="fb-close" id="bpDokKapat" type="button" aria-label="Kapat"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
+    </div>
+    <div class="fb-body" id="bpDokGovde"></div>
+  </div>
+</div>
+
 <div data-revize="d7" class="fb-overlay" id="fbOverlay"></div>
 <div class="fb-modal" id="fbModal" role="dialog" aria-modal="true" aria-label="Görüş Bildir">
   <div class="fb-panel">
@@ -1232,7 +1253,7 @@
                 <td><span class="no">Dengeli Beslenme<small>Genel düzen · 7 günlük döngü</small></span></td>
                 <td>28 gün</td><td class="tarih">1 Haz – 28 Haz 2026</td>
                 <td><span class="durum-hapi cozulen"><i class="fa-solid fa-circle-check" aria-hidden="true"></i> %92</span></td>
-                <td><button class="dugme satir" type="button" data-ayrinti="bpDokDengeli" data-ayrinti-grup="bpDokum" aria-expanded="false" aria-controls="bpDokDengeli">Dökümü aç</button></td>
+                <td><button class="dugme satir" type="button" data-bp-dokum="bpDokDengeli" aria-haspopup="dialog">Dökümü aç</button></td>
               </tr>
               <tr id="bpDokDengeli" hidden>
                 <td colspan="5">
@@ -1253,7 +1274,7 @@
                 <td><span class="no">Öğrenci Programı<small>Pratik ve ekonomik öğünler</small></span></td>
                 <td>14 gün</td><td class="tarih">10 May – 23 May 2026</td>
                 <td><span class="durum-hapi cozulen"><i class="fa-solid fa-circle-check" aria-hidden="true"></i> %88</span></td>
-                <td><button class="dugme satir" type="button" data-ayrinti="bpDokOgrenci" data-ayrinti-grup="bpDokum" aria-expanded="false" aria-controls="bpDokOgrenci">Dökümü aç</button></td>
+                <td><button class="dugme satir" type="button" data-bp-dokum="bpDokOgrenci" aria-haspopup="dialog">Dökümü aç</button></td>
               </tr>
               <tr id="bpDokOgrenci" hidden>
                 <td colspan="5">
@@ -1273,7 +1294,7 @@
                 <td><span class="no">Seyahat Haftası<small>Dışarıda yeme düzeni</small></span></td>
                 <td>7 gün</td><td class="tarih">14 Nis – 20 Nis 2026</td>
                 <td><span class="durum-hapi bekleyen"><i class="fa-solid fa-circle-half-stroke" aria-hidden="true"></i> %71</span></td>
-                <td><button class="dugme satir" type="button" data-ayrinti="bpDokSeyahat" data-ayrinti-grup="bpDokum" aria-expanded="false" aria-controls="bpDokSeyahat">Dökümü aç</button></td>
+                <td><button class="dugme satir" type="button" data-bp-dokum="bpDokSeyahat" aria-haspopup="dialog">Dökümü aç</button></td>
               </tr>
               <tr id="bpDokSeyahat" hidden>
                 <td colspan="5">
@@ -1293,7 +1314,7 @@
                 <td><span class="no">Protein Ağırlıklı<small>Yüksek protein dağılımı</small></span></td>
                 <td>21 gün</td><td class="tarih">3 Mar – 23 Mar 2026</td>
                 <td><span class="durum-hapi cozulen"><i class="fa-solid fa-circle-check" aria-hidden="true"></i> %95</span></td>
-                <td><button class="dugme satir" type="button" data-ayrinti="bpDokProtein" data-ayrinti-grup="bpDokum" aria-expanded="false" aria-controls="bpDokProtein">Dökümü aç</button></td>
+                <td><button class="dugme satir" type="button" data-bp-dokum="bpDokProtein" aria-haspopup="dialog">Dökümü aç</button></td>
               </tr>
               <tr id="bpDokProtein" hidden>
                 <td colspan="5">
@@ -2706,5 +2727,6 @@ function modalKur(modalId, ortuId, kapatId){
 <script src="varliklar/reference/shared/dd-kabuk.js"></script>
 <script data-t4="d" src="varliklar/reference/shared/dm-diet-d.js"></script>
 <script data-t4="e" src="varliklar/reference/shared/dm-diet-e.js"></script>
+<script data-t5d="b" src="varliklar/reference/shared/dm-diet-t5d-b.js"></script>
 </body>
 </html>
