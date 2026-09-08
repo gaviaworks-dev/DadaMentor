@@ -2698,20 +2698,28 @@ html:has(> body.panel-acik){ overflow:hidden; }
 .yetkili[data-marka="fit"]     .panel-marka{ --marka-kelime-oran:3.9182; }
 .yetkili[data-marka="gastro"]  .panel-marka{ --marka-kelime-oran:4.9472; }
 .yetkili[data-marka="diet"]    .panel-marka{ --marka-kelime-oran:4.7345; }
-/* 🔴 GOURMET'İN KUTUSU KARDEŞLERİYLE AYNI YERİ KAPLASIN — ölçüldü.
-   Boy dört markada da `.yetkili`nin 20px'i; genişlik kelime markasının
-   kendi oranından geliyor ve "dadagourmet" en uzun sözcük:
-       fit 78px · diet 95px · gastro 120px · gourmet 114px
-   Paylaşılan "dada" parçası zaten eşit basılıyordu (diet 93.8 ↔ gourmet
-   93.7px), yani kusur optik değil YERLEŞİMSEL: kutu bandı kalabalık
-   gösteriyordu. Beyar kararı — Gourmet, Diet'in ayak izine çekildi.
-   Boy oradan TÜRETİLDİ, seçilmedi:  20px × 4.7345 / 5.6835 = 16.66px
-   → kutu 94.7px, Diet'in 94.69px'iyle birebir.
-   ⚠ Yalnız `[data-marka="gourmet"]` kapsamında; öteki üç markaya
-     dokunmaz. */
+/* 🔴 GOURMET'İN HARFLERİ KARDEŞLERİNKİ KADAR BÜYÜK OLSUN — künye yazıyor.
+   İlk denemem TERSİNE gitti (kutuyu Diet'in genişliğine çekip küçülttüm);
+   Beyar "daha da küçültmüşsün" dedi ve haklıydı. Sebebi ölçülebilir:
+
+   Kelime markalarının dördü de kutusunu tam dolduruyor (mürekkep/viewBox
+   ≈ 1.00, ölçüldü). Ama "dadagourmet"te `g` ALT UZANTISI var, "dadadiet"te
+   ve "dadafit"te YOK. Aynı kutu yüksekliğinde alt uzantılı sözcüğün harf
+   GÖVDESİ küçük kalır — kutu eşit, harf değil.
+
+   Telafi bu depoda zaten TANIMLI ve Gastro'ya uygulanmış, Gourmet'e hiç
+   uygulanmamış:
+     kanon/varlik/dadagourmet-kelime-olcu.json
+       optikKatsayi        GOURMET 0.8406 · GASTRO 0.8348 · DIET 1.0096 · FIT 1.0
+       kutuYuksekligi.header 28.55   ( = 24 / 0.8406 )
+     kanon/markalar/gastro.css:602   :root{ --marka-kelime-h:29px }  ( ≈ 24 / 0.8348 )
+
+   Admin tabanı `.yetkili`de 20px; Gourmet'in karşılığı 20 / 0.8406 = 23.79px.
+   Sayı seçilmedi, künyenin katsayısından TÜRETİLDİ.
+   ⚠ Yalnız `[data-marka="gourmet"]` kapsamında; öteki üç markaya dokunmaz. */
 .yetkili[data-marka="gourmet"] .panel-marka{
   --marka-kelime-oran:5.6835;
-  --marka-kelime-h:calc(20px * 4.7345 / 5.6835);
+  --marka-kelime-h:calc(20px / 0.8406);
 }
 .yetkili .panel-marka::before{
   content:""; display:block;
