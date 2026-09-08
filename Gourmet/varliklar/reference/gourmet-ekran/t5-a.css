@@ -1,0 +1,234 @@
+/* =====================================================================
+   T5 · GOURMET — kulvar A · SAYFA CSS'İ DEĞİL, KULVAR DOSYASI.
+   Bu dosyayı YALNIZ ajan A yazar. Değerler kanon tokenlarından.
+   Sayfaya <style> ve satır içi style YASAK — kural buraya yazılır.
+   ---------------------------------------------------------------------
+   T5/madde 2 · NİÇİN BU DOSYA DOLDU
+   ---------------------------------------------------------------------
+   ÖLÇÜLDÜ (hesaplanmış değer, grep değil — `a-go-kural-olc.mjs`):
+   `go-arama.html?q=…` sonuç kartları TAMAMEN KURALSIZDI.
+
+       kalem            KOPYA (önce)          DONÖR (deneme/fit-arama)
+       .sonuc-izgara    display:block          display:grid · 4 kolon
+       .sonuc-kart      display:inline         display:flex · beyaz kart
+                        arka plan yok          16px yuvarlak · kenarlık
+       .sonuc-gorsel    24.8px                 158px · cover
+       .sonuc-rozet     static · 16px          absolute · hap · 11px
+       .sonuc-govde     padding 0              15/16/17px
+       .sonuc-git       display:inline         flex · margin-top:auto
+
+   KÖK NEDEN — `KOPYALAMA-KURALI` EKSİ ÜÇÜNCÜ MADDE, kural 4:
+   *"KAYNAĞIN SAYFA <style> BLOĞU DA KURALDIR. Kabuk dosyasında olmayan
+   her kural sessizce düşer."* Önceki tur `go-arama.html`i donörün
+   MARKUP'ı + MOTORU ile üretti, donörün SAYFA STİLİNİ almadı; 20 sınıf
+   kuralsız kaldı ve ölçüm bunu görmedi çünkü elemanlar YERİNDEYDİ.
+
+   Aşağıdaki kurallar `deneme/fit-arama.html`in sayfa <style> bloğundan
+   BİREBİR alındı (yeniden yazılmadı, sadeleştirilmedi). Kullanılmayan
+   varyantlar (`.sonuc-kart.kisi` · `.sonuc-avatar` — Gourmet'te kişi
+   kartı yok) ALINMADI; §5 ve §6 CANLI donörden (dadagourmet.com
+   /gourmet-ara · `varliklar/reference/gourmet-arama/arama.css`) gelir.
+   ===================================================================== */
+
+
+/* =====================================================================
+   §1 · TOKENLER — donörün KENDİ bildirimleri, Gourmet katmanında yoktu
+   ---------------------------------------------------------------------
+   ÖLÇÜLDÜ (`a-go-token.mjs`): aşağıdaki dokuz token Gourmet'in yüklediği
+   hiçbir stil dosyasında TANIMLI DEĞİL. Tanımsız `var()` özelliği
+   başlangıç değerine çeker (kayıtlı ders) — yani kuralı taşımak
+   yetmezdi, tokeni de taşımak gerekiyordu.
+   🔴 YENİ DEĞER İCAT EDİLMEDİ: dokuzunun da değeri donörün kendi
+   bildirimidir (`deneme/fit-arama.html`). Üçü ayrıca CANLI Gourmet
+   arama sayfasının kendi CSS'iyle birebir örtüşüyor:
+     --metin-ucuncul  #c7c7c7   ← arama.css `.rd-crumb i` · `.sr-rrow .go`
+     --kart-perde     rgba(33,30,22,…) ← canlı `.px-veil` ile aynı aile
+     --cam-zemin-2    rgba(255,255,255,.95) ← `.pf-tabbar` .93 kardeşi
+   Kapsam `#pageMain`: kabuğa sızmaz, yalnız gövde okur.
+   ===================================================================== */
+#pageMain{
+  --aralik-vurgu:.04em;
+  --bosluk-17:17px;
+  --cam-zemin-2:rgba(255,255,255,.95);
+  --kart-perde:linear-gradient(180deg, rgba(33,30,22,0) 55%, rgba(20,18,12,.34) 100%);
+  --metin-ucuncul:#c7c7c7;
+  --satir-sik:1.45;
+  --satir-sik-2:1.25;
+  --yazi-10:10px;
+  --yazi-34:34px;
+}
+
+
+/* =====================================================================
+   §2 · ARAMA SONUÇ KARTLARI — donörün sayfa stilinden birebir
+   ===================================================================== */
+.sonuc-izgara{display:grid; grid-template-columns:repeat(4,1fr); gap:var(--bosluk-24);}
+.sonuc-kart{position:relative; display:flex; flex-direction:column;
+  background:var(--kagit); border:var(--cizgi-1) solid var(--cizgi);
+  border-radius:var(--yuvarlak-lg); overflow:hidden;}
+.sonuc-kart:hover{box-shadow:var(--golge-md);}
+.sonuc-gorsel{position:relative; height:158px; background-size:cover; background-position:center;}
+.sonuc-gorsel::after{content:""; position:absolute; inset:0; background:var(--kart-perde);}
+/* Görselsiz sonuç yüzeyi — ikon, fotoğraf değil. */
+.sonuc-yuzey{position:relative; height:120px; display:grid; place-items:center;
+  background:var(--aksan-yikama-2); color:var(--aksan); font-size:var(--yazi-34);}
+.sonuc-rozet{position:absolute; top:11px; left:11px; z-index:2;
+  display:inline-flex; align-items:center; gap:var(--bosluk-6);
+  padding:var(--bosluk-5) var(--bosluk-11); border-radius:var(--yuvarlak-hap);
+  font-size:var(--yazi-11); font-weight:var(--agirlik-kalin);
+  background:var(--cam-zemin-2); color:var(--aksan-koyu);}
+.sonuc-rozet i{font-size:var(--yazi-10);}
+.sonuc-yuzey .sonuc-rozet{background:var(--kagit); box-shadow:var(--golge-sm);}
+.sonuc-govde{display:flex; flex-direction:column; flex:1; padding:var(--bosluk-15) var(--bosluk-16) var(--bosluk-17);}
+.sonuc-govde h4{font-size:var(--yazi-16); font-weight:var(--agirlik-kalin);
+  letter-spacing:var(--aralik-sik); line-height:var(--satir-baslik-2);
+  margin-bottom:var(--bosluk-6);
+  display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;}
+.sonuc-kart:hover .sonuc-govde h4{color:var(--aksan-koyu);}
+.sonuc-govde p{font-size:var(--yazi-12-5); font-weight:var(--agirlik-govde);
+  line-height:var(--satir-sik); color:var(--metin-ikincil);
+  text-align:left; text-align-last:auto;
+  display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;}
+.sonuc-git{margin-top:auto; padding-top:var(--bosluk-13);
+  display:inline-flex; align-items:center; gap:var(--bosluk-7);
+  font-size:var(--yazi-12-5); font-weight:var(--agirlik-kalin); color:var(--aksan-koyu);}
+.sonuc-git i{font-size:var(--yazi-10);}
+.sonuc-kart:hover .sonuc-git{transform:translateX(3px);}
+
+
+/* =====================================================================
+   §3 · ÖNERİ (autocomplete) KALEMLERİ — donörün sayfa stilinden birebir
+   ⚠ `.arama-oneri` panelinin KENDİSİ `gourmet-ekran.css`te zaten tanımlı;
+     ikinci kez yazılmadı (aynı seçiciyi iki dosyada tanımlamak deponun
+     kendi şerhinin yasakladığı desen).
+   ===================================================================== */
+.oneri-grup{display:flex; align-items:center; gap:var(--bosluk-8);
+  padding:var(--bosluk-6) var(--bosluk-12) var(--bosluk-7);
+  font-size:var(--yazi-11-5); font-weight:var(--agirlik-kalin);
+  letter-spacing:var(--aralik-vurgu); text-transform:uppercase;
+  color:var(--murekkep-yumusak);}
+.oneri-grup:not(:first-child){margin-top:var(--bosluk-8); padding-top:var(--bosluk-15);
+  border-top:var(--cizgi-1) solid var(--cizgi);}
+.oneri-grup i{font-size:var(--yazi-11); color:var(--aksan);}
+.oneri-temizle{margin:-9px -8px -9px auto; display:inline-flex; align-items:center;
+  min-height:38px; padding:0 var(--bosluk-8);
+  font-family:inherit; font-size:var(--yazi-11-5); font-weight:var(--agirlik-orta);
+  letter-spacing:normal; text-transform:none;
+  color:var(--murekkep-yumusak); background:none; border:none;
+  border-radius:var(--yuvarlak-sm); cursor:pointer;}
+.oneri-temizle:hover{color:var(--aksan-koyu); background:var(--aksan-yikama-2);}
+.oneri-temizle:focus-visible{outline:2px solid var(--aksan-koyu); outline-offset:1px;}
+.oneri-kalem{position:relative; display:flex; align-items:center; gap:var(--bosluk-13);
+  padding:var(--bosluk-10) var(--bosluk-12);
+  border-radius:var(--yuvarlak-md); color:inherit; text-decoration:none;}
+/* Sol vurgu çubuğu — seçili kalemi renkten BAĞIMSIZ olarak da işaretler. */
+.oneri-kalem::before{content:""; position:absolute; left:0; top:6px; bottom:6px; width:3px;
+  border-radius:var(--yuvarlak-hap); background:transparent;}
+.oneri-kalem:hover,
+.oneri-kalem.etkin{background:var(--aksan-yikama-2);}
+.oneri-kalem:hover::before,
+.oneri-kalem.etkin::before{background:var(--aksan-koyu);}
+.oneri-kalem:hover .oneri-baslik,
+.oneri-kalem.etkin .oneri-baslik{color:var(--aksan-koyu);}
+.oneri-ikon{flex:none; width:38px; height:38px; border-radius:var(--yuvarlak-sm);
+  background:var(--zemin); border:var(--cizgi-1) solid var(--cizgi);
+  display:grid; place-items:center; color:var(--murekkep-yumusak);
+  font-size:var(--yazi-15); background-size:cover; overflow:hidden;}
+.oneri-govde{min-width:0; flex:1;}
+.oneri-baslik{display:block; font-size:var(--yazi-15); font-weight:var(--agirlik-orta);
+  line-height:var(--satir-sik-2); color:var(--murekkep);
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+.oneri-baslik mark{background:none; color:var(--aksan); font-weight:var(--agirlik-kalin); padding:0;}
+.oneri-alt{display:block; margin-top:1px;
+  font-size:var(--yazi-12); font-weight:var(--agirlik-govde); color:var(--metin-ikincil);
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+.oneri-rozet{flex:none; display:inline-flex; align-items:center; gap:var(--bosluk-5);
+  padding:var(--bosluk-4) var(--bosluk-9); border-radius:var(--yuvarlak-hap);
+  font-size:var(--yazi-11); font-weight:var(--agirlik-kalin);
+  background:var(--aksan-yikama-2); color:var(--aksan-koyu);
+  border:var(--cizgi-1) solid var(--aksan-cizgi);}
+.oneri-rozet i{font-size:9.5px;}
+/* Sorgu satırı — "<q> için ara". İkonu dolu aksan, çünkü bu bir EYLEM,
+   bir sonuç değil. */
+.oneri-kalem.sorgu .oneri-ikon{background:var(--aksan); border-color:var(--aksan); color:var(--kagit);}
+.oneri-bos{padding:var(--bosluk-18) var(--bosluk-14); text-align:center;
+  font-size:var(--yazi-13-5); font-weight:var(--agirlik-govde); color:var(--metin-ikincil);
+  text-align-last:auto;}
+
+
+/* =====================================================================
+   §4 · SON ARAMA SATIRI — donörün sayfa stilinden birebir
+   (`.son-arama` kabı `gourmet-ekran.css`te zaten var; satır yoktu.)
+   ===================================================================== */
+.son-arama-satir{display:flex; align-items:center; gap:var(--bosluk-12);
+  padding:var(--bosluk-12) var(--bosluk-4);
+  border-bottom:var(--cizgi-1) solid var(--cizgi);
+  font-size:var(--yazi-14); font-weight:var(--agirlik-govde); color:var(--murekkep-yumusak);}
+.son-arama-satir:last-child{border-bottom:none;}
+.son-arama-satir>i:first-child{color:var(--metin-ikincil); font-size:var(--yazi-13); flex:none; width:18px; text-align:center;}
+.son-arama-satir .terim{min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+.son-arama-satir .ok{margin-left:auto; flex:none; font-size:var(--yazi-11); color:var(--metin-ucuncul);}
+.son-arama-satir:hover{color:var(--aksan-koyu);}
+.son-arama-satir:hover .ok{color:var(--aksan); transform:translateX(3px);}
+
+
+/* =====================================================================
+   §5 · SON ARAMALAR — BOŞ/MİSAFİR HÂLİ  (CANLI donör kalemi)
+   ---------------------------------------------------------------------
+   CANLI `dadagourmet.com/gourmet-ara` misafirde de sütunu BASAR:
+       <div class="sr-recent">
+         <p class="muted">Son aramalarını görmek için giriş yap.</p>
+         <button class="btn btn-ghost" data-lg-gate>Giriş Yap</button>
+       </div>
+   Üretilen kopya bu hâli hiç taşımamış, sütunu satır içi `display:none`
+   ile TAMAMEN gizliyordu → misafir iki kolon yerine tek kolon görüyordu.
+   Kural canlı donörün `.sr-recent` kalıbından; ölçü kanon tokenlarından.
+   ===================================================================== */
+.son-arama-bos{display:flex; flex-direction:column; align-items:flex-start;
+  gap:var(--bosluk-13); padding:var(--bosluk-12) var(--bosluk-4) 0;}
+.son-arama-bos p{margin:0; font-size:var(--yazi-14); font-weight:var(--agirlik-govde);
+  color:var(--metin-ikincil); line-height:var(--satir-govde);
+  text-align:left; text-align-last:auto;}
+
+
+/* =====================================================================
+   §6 · KARMA PANO BLOK BAŞLIĞI  (CANLI donör kalemi)
+   ---------------------------------------------------------------------
+   CANLI arama sayfası "Tümü" panosunu TÜRE GÖRE BLOKLARA ayırır ve her
+   bloğa kompakt bir başlık + sayaç + "Tamamını Gör" bağı koyar
+   (`gourmet-arama/arama.css` → `.sr-block` · `.srb-head`, kendi şerhi:
+   *"karma bölüm başlığı — koleksiyon .coldex-head dili"*). Üretilen
+   kopyada "Tümü" DÜMDÜZ tek ızgaraydı: 40 kalem türsüz akıyordu.
+   Aşağısı o kuralın kanon adları ve tokenlarıyla yazılmış hâli.
+   ===================================================================== */
+.sonuc-blok+.sonuc-blok{margin-top:var(--bosluk-8);}
+.sonuc-blok-basi{display:flex; align-items:center; justify-content:space-between;
+  gap:var(--bosluk-14); margin:var(--bosluk-34) 0 var(--bosluk-18);}
+.sonuc-blok:first-child .sonuc-blok-basi{margin-top:var(--bosluk-8);}
+.sonuc-blok-basi h2{margin:0; font-size:var(--yazi-20);
+  display:inline-flex; align-items:center; gap:var(--bosluk-10);}
+.sonuc-blok-basi h2 i{color:var(--aksan); font-size:var(--yazi-15);}
+.sonuc-blok-basi h2 .sonuc-blok-sayi{font-size:var(--yazi-13);
+  color:var(--metin-ikincil); font-weight:var(--agirlik-govde);}
+.sonuc-blok-basi a{font-size:var(--yazi-13); font-weight:var(--agirlik-kalin);
+  color:var(--aksan-koyu); display:inline-flex; align-items:center;
+  gap:var(--bosluk-7); white-space:nowrap;}
+.sonuc-blok-basi a i{font-size:var(--yazi-11); transition:transform var(--sure-cabuk) var(--yumusama);}
+.sonuc-blok-basi a:hover i{transform:translateX(3px);}
+
+
+/* =====================================================================
+   §7 · DAR EKRAN — donörün kendi kırılımları (birebir)
+   ⚠ ≤640'ta ızgara DEĞİL yatay kaydırıcı: kaynak `display:flex` +
+     `overflow:auto` yapıyor ve kartı 280px'te sabitliyor.
+   ===================================================================== */
+@media (max-width:1024px){
+  .sonuc-izgara{grid-template-columns:1fr 1fr;}
+}
+@media (max-width:640px){
+  .sonuc-izgara{display:flex; gap:var(--bosluk-14);
+    padding:0 0 var(--bosluk-6); overflow:auto;}
+  .sonuc-kart{max-width:280px; flex-shrink:0;}
+  .sonuc-blok-basi{margin:var(--bosluk-24) 0 var(--bosluk-13);}
+  .sonuc-blok-basi h2{font-size:var(--yazi-17);}
+}

@@ -1,0 +1,137 @@
+/* ═══════════════════════════════════════════════════════════════════════
+   T5 · GOURMET — kulvar E · SAYFA CSS'İ DEĞİL, KULVAR DOSYASI.
+   Bu dosyayı YALNIZ ajan E yazar. Değerler kanon tokenlarından.
+   Sayfaya <style> ve satır içi style YASAK — kural buraya yazılır.
+   Yüklenme sırası: t5-b · t5-c · t5-d'den SONRA (bu bir güç değil sorumluluk;
+   aşağıdaki tek kural bir BİLEŞEN kuralı değil, TOKEN KADEMESİ tamamlamasıdır —
+   C ve D'nin yazdığı hiçbir seçiciyi ezmez).
+
+   ─────────────────────────────────────────────────────────────────────
+   MADDE 7-2 / 7-5 · PROFİL MODÜLÜNÜN TOKEN KADEMESİ EKSİK
+   ─────────────────────────────────────────────────────────────────────
+   🔴 ÖLÇÜLDÜ — rapor/t5/e-go-donor.json, üç kardeşin 15 sayfası × 3 genişlik,
+   render edilmiş DOM'da `getComputedStyle(:root/#pageMain)`:
+
+       genişlik      --bolum-nefes   --bolum-nefes-sik
+       1440            74px             32px      Fit · Gastro · Diet · Gourmet
+       1024            74px             26px      Fit · Gastro · Diet
+       390             44px             22px      Fit · Gastro · Diet
+       1024            74px             32px   🔴 GOURMET
+       390             74px             32px   🔴 GOURMET
+
+   Kök: Gourmet kanonun `tokenlar.css`ini YÜKLEMİYOR. Profil modülünün
+   tokenları iki yerel çıkarımda DÜZ tanımlı, kademesiz:
+       varliklar/reference/shared/dm-profil.css:90,95        `:root`     (5 marka sayfası)
+       varliklar/reference/gourmet-ortak/gourmet-ortak.css:51,52 `#pageMain` (5 ortak sayfa)
+   Kanonun kendi kademesi (kanon/tokenlar.css:975-989) üretim sırasında
+   düşmüş: `--bolum-nefes-sik` 32/26/22 · `--bolum-nefes` 74/44.
+
+   Ölçülen bedel (rapor/t5/e-kapi-once.json · 2249 ölçüt · 🔴 178, hepsi bu):
+       .fit-pane > .kap:first-child               üst nefes  @390  32px ↔ donör 22px
+       .modul-govde > .fit-pane:not([hidden]) > :last-child
+                                                  alt nefes  @390  32px ↔ donör 22px
+       .zebra içi .bolum                          nefes      @390  32px ↔ donör 22px
+   Yani "sayfa sonunda alt boşluk" DAR EKRANDA donörden 10px fazla — beş
+   marka sayfasının 34 sekmesinde ve beş ortak sayfanın 34 sekmesinde.
+
+   DEĞER İCAT EDİLMEDİ: 26 · 22 · 44 kanon `tokenlar.css`in kendi kademesi,
+   üçü de üç kardeşte RENDER EDİLMİŞ hâlde ölçüldü.
+
+   ⚠ NÜFUS — `:has(.modul-govde)` bir süsleme değil KAPSAM KAPISI:
+   `.modul-govde` Gourmet ağacının 147 sayfasından TAM ON'unda var
+   (`grep -l modul-govde` = madde 7'nin on öznesi, birebir). Guard olmadan
+   kural, aynı tokenları `:root`ta düz tanımlayan `gourmet-ekran.css`in
+   dokuz sistem ekranını da (404 · bakım · bildirimler · çevrimdışı ·
+   403 · 500 · giriş · arama · oturum-süresi) değiştirirdi; onlar bu
+   maddenin öznesi DEĞİL. O dokuz sayfadaki aynı kademe eksiği raporda
+   "kaynakta kusur" olarak BİLDİRİLDİ, düzeltilmedi.
+
+   ⚠ ÖZGÜLLÜK — "sonra yüklenmek" TEK BAŞINA yetmez, hesaplandı:
+       dm-profil.css      `:root`                        (0,1,0)
+       bu dosya           `:root:has(.modul-govde)`      (0,2,0)  ✅ kazanır
+       gourmet-ortak.css  `#pageMain`                    (1,0,0)
+       bu dosya           `#pageMain:has(.modul-govde)`  (1,1,0)  ✅ kazanır
+   İkisi de yazıldı çünkü İKİ YAPI var: marka beşlisinde token `:root`ta,
+   ortak beşlide `#pageMain`de. Tek seçici yazılsaydı diğer aile SESSİZCE
+   eski değerde kalırdı ("Kaynağın kuralı zaten bildirilmiş" dersi).
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* 🔴 İKİ TOKEN, ÇÜNKÜ İKİ AİLE VAR — birincisini yazıp durmak SESSİZ BİR
+   KARIŞIK DURUM üretti ve ölçümle yakalandı ("Donörün paketi yüklü değil"):
+       marka beşlisi (dm-profil.css) → `--bolum-nefes-sik` tüketir
+       ortak beşli  (gourmet-ortak.css:362
+                     `#pageMain .modul-govde .fit-pane > section`)
+                                      → `--sec-pad-sm` tüketir
+   Yalnız `--bolum-nefes-sik` yazıldığında `go-odemelerim@390` panelinin
+   ÜSTÜ 32px (eski `--sec-pad-sm`), ALTI 22px (yeni değer) oldu: bir kusuru
+   kapatırken bir asimetri açtım. İki token da aynı kademeye çekildi.
+   ÖLÇÜLDÜ (probe6): `--sec-pad-sm` Fit·Gastro'da 32/26/22 · Gourmet'te 32/32/32.
+
+   ⚠ `--sec-pad` (74/44) Gourmet'te HİÇ TANIMLI DEĞİL ve tek tüketicisi
+   `#pageMain .sec{padding:var(--sec-pad) 0}` — ağaçta `.sec` sınıflı
+   ELEMAN YOK (ölçüldü: beş ortak sayfanın beşinde de 0). Öznesi olmayan
+   bir kurala token yazmak "olmayan elemanın çifti" olurdu; YAZILMADI,
+   raporda ölü referans olarak bildirildi. */
+
+/* ─────────────────────────────────────────────────────────────────────
+   AYNI KÖK, İKİNCİ NÜFUS · 9 SİSTEM EKRANI  (lead kararı, 2026-09-08)
+   ---------------------------------------------------------------------
+   İlk turda bu dokuz ekranı KAPSAM DIŞI bırakmıştım (madde 7'nin öznesi
+   profil sayfalarıydı) ve raporda açık kalem yazmıştım. Lead ölçüp
+   kapatılmasına karar verdi: görev ölçütü *"bölüm arası boşluklar donörle
+   ±4px"* diyor ve sayfa tipi ayırmıyor.
+
+   🔴 ÖLÇÜLDÜ — rapor/t5/e-go-sistem.json · 9 ekran × 4 marka × 3 genişlik,
+   render DOM (`getComputedStyle`), TÜKETİCİ ELEMANIN kendi dolgusu:
+
+       eleman                              @1440 (dört marka)   @390 donör   @390 GOURMET
+       .bolum.dikis.bant-ustunde  (404)        74 / 74            44 / 44      74 / 74  🔴
+       .bolum.bildirim-govde  (bildirimler)    32 / 74            22 / 44      32 / 74  🔴
+       .bolum.arama-pop  (arama)               74 / 74            44 / 44      74 / 74  🔴
+   Fit · Gastro · Diet üçü de aynı; sapan tek marka Gourmet. Kök yine
+   `gourmet-ekran.css:73,74`de kademesiz duran aynı iki token.
+
+   ⚠ NÜFUS SORULDU, İKİ ÖN KOŞUL DA ÖLÇÜLDÜ (lead'in şartı):
+   1. **Başka ailede tüketici YOK.** Bu iki token ağacın tamamında (build
+      varlıkları ve sayfa içi `<style>` dahil) yalnız ÜÇ dosyada tanımlı ve
+      yalnız o üç dosyada tüketiliyor: `dm-profil.css` (5) ·
+      `gourmet-ortak.css` (5) · `gourmet-ekran.css` (9). Üç küme KESİŞMİYOR
+      (5+5+9 = 19) ve **bu üçünü yüklemeyen hiçbir sayfa `.bolum` sınıfı
+      kullanmıyor** — yani kalan 128 sayfada ne tanım ne tüketici var, global
+      blok oralarda ATIL. (Tanımsız bir tokena değer vermek 0'ı 44'e
+      çevirebilirdi; o risk ölçülerek elendi.)
+   2. **Tüketicilerin hepsi `#pageMain` İÇİNDE.** Dokuz ekranın dokuzunda da
+      `#pageMain` dışında tüketici **0** (Diet'te 1 var, Gourmet'te yok) —
+      `#pageMain` seçicisi kapsamın tamamını taşıyor.
+
+   ⚠ `--sec-pad-sm` GLOBAL BLOĞA KONMADI: tek tüketicisi
+   `gourmet-ortak.css:362 #pageMain .modul-govde .fit-pane > section` ve o
+   zaten aşağıdaki `:has(.modul-govde)` bloğunun kapsamında. `--sec-pad` ise
+   hiç yazılmadı — tüketicisinin (`.sec`) ağaçta öznesi yok.
+
+   ⚠ ÖZGÜLLÜK: global `#pageMain` (1,0,0), `gourmet-ekran.css`in `:root`unu
+   (0,1,0) yener; `gourmet-ortak.css`in `#pageMain`i ile EŞİT ve bu dosya
+   sonra yüklendiği için kazanır. Aşağıdaki `:has(.modul-govde)` blokları
+   (1,1,0) daha özgül olduğu için yerinde duruyor — aynı değeri söylüyorlar,
+   çelişki yok; profil ailesinin `:root` dalını da onlar taşıyor.
+   ───────────────────────────────────────────────────────────────────── */
+@media (max-width: 1024px) { #pageMain { --bolum-nefes-sik: 26px; } }
+@media (max-width: 640px)  { #pageMain { --bolum-nefes-sik: 22px; --bolum-nefes: 44px; } }
+
+@media (max-width: 1024px) {
+  :root:has(.modul-govde),
+  #pageMain:has(.modul-govde) {
+    --bolum-nefes-sik: 26px;   /* kanon/tokenlar.css:978 — kaynağın --sec-pad-sm ara kademesi */
+    --sec-pad-sm: 26px;        /* Fit·Gastro @1024 ölçüldü */
+    /* --bolum-nefes 74px KALIR: kaynak bu kademede onu değiştirmiyor (kanon şerhi) */
+  }
+}
+
+@media (max-width: 640px) {
+  :root:has(.modul-govde),
+  #pageMain:has(.modul-govde) {
+    --bolum-nefes: 44px;       /* kanon/tokenlar.css:987 — kaynak ≤640: --sec-pad:44px */
+    --bolum-nefes-sik: 22px;   /* kanon/tokenlar.css:988 — kaynak ≤640: --sec-pad-sm:22px */
+    --sec-pad-sm: 22px;        /* Fit·Gastro @390 ölçüldü */
+  }
+}

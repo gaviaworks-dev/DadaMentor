@@ -1,0 +1,124 @@
+/* ══════════════════════════════════════════════════════════════════════
+   T5 · GOURMET PUBLIC · KULVAR D — KURAL KATMANI
+   Bu dosyayı YALNIZ ajan D yazar. Bağını LEAD attı (beş sayfa:
+   go-mekanlarim · go-etkinliklerim · go-listelerim ·
+   go-kesif-tercihlerim · go-isletmelerim). Değerler kanon tokenlarından.
+   Sayfaya <style> ve satır içi style YASAK — kural buraya yazılır.
+
+   İÇİNDE NE VAR
+     1 · SAYFALAMA (madde 8) — kural GOURMET'İN KENDİ dosyasından
+         BİREBİR kopyalandı, türetilmedi:
+             kaynak: varliklar/reference/gourmet-ortak/gourmet-ortak.css
+                     satır 1158–1159 · 1203–1206 · 1346/1350 (≤640) ·
+                     1545–1546
+         🔴 NEDEN KOPYA: beş sayfanın hiçbiri `gourmet-ortak.css`i
+            YÜKLEMİYOR (ölçüldü: `<head>`de on iki CSS bağı var, o yok).
+            Kural bildirilmiş ama sayfaya ULAŞMIYOR — "donörün paketi
+            yüklü değil" tuzağı. Çarpışma yok: bu beş sayfada ikinci bir
+            `.pagi` bildirimi mevcut değil.
+         ⚠ LEAD'E ÖNERİ (bu turda YAPILMADI): tek kaynak istenirse
+            `gourmet-ortak.css` beş sayfaya bağlanır ve bu blok silinir.
+            Bağ atmak lead'in kulvarı olduğu için burada kopyalandı.
+         ⚠ `var(--bosluk-32)` KULLANILMADI — ölçüldü, bu beş sayfada
+            TANIMSIZ (boş dize döner). Tanımsız var() kuralı elemez,
+            özelliği başlangıç değerine düşürür. Kaynak da 32px/6px'i
+            düz sayı yazıyor; olduğu gibi alındı.
+
+     2 · SAYFA AYAĞI — sayfalamayı taşıyan `.kart-alt`ın kendi kuralı.
+     3 · SIRALAMA KİPİ — `Sıralamayı Değiştir` açınca doğan ▲▼ düğmeleri.
+   ══════════════════════════════════════════════════════════════════════ */
+
+/* ── 1 · SAYFALAMA — gourmet-ortak.css'ten BİREBİR ───────────────────── */
+#pageMain .pagi{display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 40px; flex-wrap: wrap;}
+#pageMain .pagi-note{width: 100%; text-align: center; font-size: 12.5px; color: var(--muted); font-weight: 500; margin-top: 6px;}
+#pageMain .sayfa-dugme{min-width: 44px; height: 44px; padding: 0 var(--bosluk-13); display: inline-flex; align-items: center; justify-content: center; font-family: inherit; font-size: var(--yazi-14); font-weight: var(--agirlik-kalin); color: var(--murekkep); background: var(--kagit); border: var(--cizgi-1) solid var(--cizgi); border-radius: var(--yuvarlak-md); cursor: pointer; transition: var(--sure) var(--yumusama);}
+#pageMain .sayfa-dugme:hover:not([disabled]):not(.aktif){border-color: var(--aksan); color: var(--aksan-koyu);}
+#pageMain .sayfa-dugme.aktif{background: var(--aksan); border-color: var(--aksan); color: var(--kagit); cursor: default;}
+#pageMain .sayfa-dugme[disabled]{opacity: 0.4; pointer-events: none;}
+#pageMain .sayfa-dugme:focus-visible{outline: var(--odak-kalinlik) solid var(--odak-renk); outline-offset: var(--odak-ofset);}
+#pageMain .sayfa-dugme.ok i{font-size: var(--yazi-12);}
+
+/* ── 2 · SAYFA AYAĞI ─────────────────────────────────────────────────
+   Sayfalama, listeyi SARAN kartın ayağında durur — donörün kipi
+   (`go-cozum-merkezi.html` → `div.kart-alt > nav.pagi#tkPagi`). Diet T4
+   §9-3'ün dersi: "sayfalama son kartın altında" ölçütü donörde çürür,
+   ata "son kart" sayılamaz. Ayak, eylem ayağının ALTINDA ve kartın
+   son GÖRÜNÜR akış çocuğudur.
+   `.pagi`nin kendi `margin-top:40px`i ayağın nefesine binmesin diye
+   ayak içinde sıfırlanır; ayrım çizgisini `.kart-alt` kendi verir. */
+#pageMain .kart-alt.sayfa-ayagi{display: block;}
+#pageMain .kart-alt.sayfa-ayagi > .pagi{margin-top: 0;}
+
+/* ══ 2b · 🔴 `[hidden]` GERİ ALINIYOR — KAYNAKTA KUSUR, ÖLÇÜLDÜ ══════
+   Ağacın `display` bildirimleri `[hidden]{display:none}`i EZİYOR:
+     seçici                        özgüllük   [hidden]
+     #pageMain .kart-alt           (1,1,0)  >  (0,1,0)   → EZER
+     #pageMain .bos-durum          (1,1,0)  >  (0,1,0)   → EZER
+     #pageMain .dugme              (1,1,0)  >  (0,1,0)   → EZER
+     #pageMain .kalem-satiri       (1,1,0)  >  (0,1,0)   → EZER
+   Ölçüldü (`scripts/olcum/t5/d-go-hiddensinav.mjs` + `-hidden2.mjs`):
+   dokuz bileşenin ALTISINDA `el.hidden = true` EKRANDA HİÇBİR ŞEY
+   DEĞİŞTİRMİYOR. `.fit-pane` ve `.kart` çalışıyor (o yüzden sekmeler
+   doğru görünüyor ve kusur bugüne kadar görünmedi).
+
+   ⚠ GÜNCELLEME (aynı tur, ölçüldü): ajan B `t5-b.css §6`ya GENEL bir
+     `[hidden]{display:none}` kuralı yazdı ve dosyası benimkinden ÖNCE
+     yükleniyor. O kural ÇIPLAK sınıf bildirimlerini (`.sekme` · `.rozet`
+     · `.dugme` · `.alt-not` · `.kalem-satiri`) kurtardı — ölçüldü, dokuz
+     bileşenden altısı yeşile döndü. Ama `#pageMain .x` biçiminde
+     bildirilen ÜÇÜ (`.kart-alt` · `.bos-durum` · `.pagi`) hâlâ (1,1,0)
+     ile (0,1,0)'ı ezdiği için ayakta kalıyor. Aşağıdaki blok
+     B'nin kuralının YERİNE değil, ONUN YETİŞEMEDİĞİ üç bileşen için.
+     Olumsuz sınama O10: blok devre dışı bırakılınca 11. satır ÇİZİLİYOR
+     ve boş durum satırların üstünde duruyor.
+
+   İKİ CANLI KUSUR ÜRETİYORDU:
+     1 · `dm-profil.js` satır eklerken `bosDurum.hidden = true` yazıyor;
+         boş durum EKRANDA KALIYOR ve satırların üstünde duruyordu.
+     2 · sayfalamanın gizlediği 11. satır ÇİZİLMEYE DEVAM EDİYORDU —
+         kapı "1. sayfada 10 satır" derken ekranda 11 vardı.
+         🔴 Kapının kendi kusuruydu da: `hasAttribute('hidden')` ile
+            sayıyordu, yani SORDUĞU SORUYU ölçüyordu. Ölçüt artık
+            HESAPLANMIŞ görünürlüğe bağlı.
+   🔴 KAYNAK DÜZELTİLMEDİ (dm-profil.css ÜRETİLEN dosya, build CSS
+      lead'in kulvarı). Kural bu kulvarın dosyasında, YALNIZ D'nin
+      dokunduğu bileşenler için, `!important`sız (özgüllükle) yazıldı.
+      Kanon önerisi raporda. */
+#pageMain .fp-list .kalem-satiri[hidden],
+#pageMain .fp-list .bos-durum[hidden],
+#pageMain .fp-list .dm-durum-govde[hidden],
+#pageMain .kalem-satiri .ks-tasi[hidden],
+#pageMain .kart .kart-alt[hidden],
+#pageMain .kart .fpx-durum[hidden],
+#pageMain .kart .pagi[hidden]{display: none;}
+
+/* ── 3 · SIRALAMA KİPİ ───────────────────────────────────────────────
+   `Sıralamayı Değiştir` listeye `.sira-kipi` ekler; taşıma düğmeleri
+   O ZAMAN görünür. Kapalıyken `hidden` NİTELİĞİ taşırlar — kanonun
+   `[hidden]` kuralı tek yetkili, ikinci bir gizleme kuralı yazılmadı. */
+#pageMain .fp-list .ks-tasi{min-width: 32px; height: 32px; padding: 0; margin-left: 4px;}
+
+@media (max-width: 640px){
+  #pageMain .pagi{gap: 6px; margin-top: 32px;}
+  #pageMain .sayfa-dugme{min-width: 40px; height: 40px; font-size: var(--yazi-13); padding: 0 var(--bosluk-10);}
+
+  /* ── 4 · 🔴 @390 SATIR KARTI TAŞIRIYORDU — GÖRÜNTÜ YAKALADI ────────
+     Ölçüldü (`d-go-390.mjs`, 11 satır tohumlu, 390px):
+       .kalem-satiri  w=464   (flex · nowrap)
+       .fp-list       w=464
+       .kart          w=466   ← 358'lik kolonun 108px DIŞINA taşıyor
+       #pageMain      clientWidth 390 · scrollWidth 498
+     Kök: `.kalem-satiri{display:flex;flex-wrap:nowrap}` ve `.ks-uc`
+     `flex:0 0 auto` — üç düğme (61+120+84=265) hiç daralmıyor, satırın
+     en-küçük-içeriği 461px'e çakılıyor.
+     🔴 KAPININ KENDİ KUSURU DA BURADA: "yatay taşma 0" ölçütü
+        `documentElement.scrollWidth - clientWidth` soruyordu ve 0
+        dönüyordu — üstteki kaydırılan ata KIRPIYOR, taşma bir ALT
+        katmanda duruyor ("taşma ölçümü ata zincirinde yapılır").
+        Ölçüt `#pageMain` ve kart↔satır kenarına bağlandı.
+     🔴 KAYNAK (dm-profil.css, ÜRETİLEN dosya) DÜZELTİLMEDİ; kural
+        yalnız ≤640'ta, bu kulvarın dosyasında. Kanon önerisi raporda.
+     ⚠ Kusur listeler BOŞKEN görünmüyordu: satır hiç doğmuyordu. */
+  #pageMain .fp-list .kalem-satiri{flex-wrap: wrap;}
+  #pageMain .fp-list .kalem-satiri > .ks-uc{flex: 1 1 100%; text-align: left;}
+}

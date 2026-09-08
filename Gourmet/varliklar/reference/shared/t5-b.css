@@ -1,0 +1,193 @@
+/* T5 · GOURMET — kulvar B · SAYFA CSS'İ DEĞİL, KULVAR DOSYASI.
+   Bu dosyayı YALNIZ ajan B yazar. Değerler kanon tokenlarından.
+   Sayfaya <style> ve satır içi style YASAK — kural buraya yazılır.
+
+   KAPSAM: madde 3 (kabuk: üst bant · header/logo) + madde 4 (Görüş Bildir).
+   Her kuralın yanında ÖLÇÜLEN gerekçe var; gerekçesiz kural yok.
+   Yükleme sırası: gourmet-*.css → dm-kabuk.css → kanon-alt-cubuk.css →
+   BU DOSYA → t5-{a,c,d,e}.css → bottom-clearance/govde-hizasi.
+   Bu dosya kabuğun CSS'inden SONRA yüklendiği için eşit özgüllük yeter;
+   yine de kazanan kural CDP ile ayrıca doğrulandı (b-go-kazanan.mjs). */
+
+/* ══════════════════════════════════════════════════════════════════
+   1 · KANON TOKENI — kenar sekmesinin üst konumu
+   kanon/tokenlar.css:659 `--kenar-sekmesi-ust:272px` Gourmet'in ağacında
+   TANIMSIZ (Gourmet kanon/tokenlar.css yüklemiyor). Tanımsız var() kuralı
+   elemez, özelliği başlangıç değerine düşürür (kayıtlı ders) — o yüzden
+   token burada kanonun KENDİ değeriyle tanımlanıyor, uydurulmuyor.
+   ══════════════════════════════════════════════════════════════════ */
+:root { --kenar-sekmesi-ust: 272px; }
+
+/* ══════════════════════════════════════════════════════════════════
+   2 · GÖRÜŞ BİLDİR — dikey konum donörle birebir
+   ÖLÇÜLEN (1440×900, render DOM):
+     Fit/fit-hesabim   üst 199,9 · sağ 0
+     Gastro/anasayfa   üst 199,9 · sağ 0
+     Diet/anasayfa     üst 199,9 · sağ 0
+     Gourmet 146/146   üst 306,1 · sağ 0      Δ +106,2  🔴
+   KÖK (CDP CSS.getMatchedStylesForNode ile KAZANAN kural):
+     Gourmet  .feedback-tab{top:42%}                → 900×0,42 = 378px
+     donör    .kenar-sekmesi{top:clamp(140px,
+                var(--kenar-sekmesi-ust),calc(100dvh - 140px))} → 272px
+   Yani donörde kanonun kenar-sekmesi kuralı KAZANIYOR, Gourmet'te o kural
+   sayfaya HİÇ ulaşmıyor. Yüzde yerine donörün kendi ifadesi yazılıyor:
+   sabit piksel kopyalamak dar/uzun ekranda donörden ayrılırdı.
+   `right` zaten 0 — dokunulmuyor (ölçüldü, kusur değil).
+   ══════════════════════════════════════════════════════════════════ */
+.feedback-tab.kenar-sekmesi {
+  top: clamp(140px, var(--kenar-sekmesi-ust), calc(100dvh - 140px));
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   3 · ÜST SİYAH BANT — kilitli marka kalemleri
+   Bu blok LEAD'in markup reçetesiyle birlikte iş görür (docs/t5-ajan-b-
+   recete.md · adım B1): bant Fit'in sırasına/sayısına getirilirken
+   `bs-akademi` · `bs-store` · `is-soon` · `sr-lock` adları Gourmet'e ilk
+   kez giriyor ve Gourmet CSS'inde KARŞILIĞI YOK (grep: 0 kural).
+   Kural yazılmazsa iki yeni kalem "kilitli" görünmez, canlı marka sanılır.
+   Değerler donörden ÖLÇÜLDÜ (CDP kazanan kural, Fit/fit-arama):
+     .bs-item.is-soon      color rgba(233,226,214,.26) · cursor not-allowed
+     .bs-item.is-soon i    color rgba(233,226,214,.26)
+     .bs-item .sr-lock     8.5px · rgba(233,226,214,.42) · margin-left 1px
+   ══════════════════════════════════════════════════════════════════ */
+.bs-item.is-soon        { color: rgba(233, 226, 214, .26); cursor: not-allowed; }
+.bs-item.is-soon i      { color: rgba(233, 226, 214, .26); }
+.bs-item .sr-lock       { font-size: 8.5px; color: rgba(233, 226, 214, .42); margin-left: 1px; }
+
+/* Kilitli iki kalemin marka yuvaları — Fit'ten ölçüldü (--bs-c).
+   `--bs-ic` donörde color-mix(in srgb, X 63%, #fff) ile üretiliyor; burada
+   AYNI karışımın düz altılığı yazıldı, çünkü color-mix'in hesaplanan değeri
+   `color(srgb …)` biçiminde 0–1 döner ve kontrast araçlarını bozar
+   (kayıtlı ders). Karışım doğrulandı: #003C71 → rgb(94,132,166). */
+.bs-akademi { --bs-c: #003C71; --bs-bg: rgba(0,60,113,.22);  --bs-bd: rgba(0,60,113,.5);  --bs-ic: #5E84A6; }
+.bs-store   { --bs-c: #9A6900; --bs-bg: rgba(154,105,0,.22); --bs-bd: rgba(154,105,0,.5); --bs-ic: #BFA05E; }
+
+/* karar · KARDEŞ MARKA RENGİ ÜÇ TANIKLA DÜZELTİLDİ.
+   ÖLÇÜLEN: bantta DadaDiet ve DadaFit rozetleri Gourmet'te İKİSİ DE YEŞİL
+   (#4ecb91 · #3fd089) — yan yana ayırt edilemiyor ve DadaFit'in kimliği
+   maviyken yeşil basılıyor. Fit · Gastro · Diet ağaçlarının ÜÇÜ DE aynı
+   değeri veriyor: diet #009A44 · fit #0093D0. Kanon değil, üç kardeş
+   markanın canlı ağacı hakem (görev §3 "markalar kazanır").
+   `--bs-ic` yine 63%+#fff karışımının düz altılığı. */
+.bs-diet { --bs-c: #009A44; --bs-bg: rgba(0,154,68,.22);  --bs-bd: rgba(0,154,68,.5);  --bs-ic: #5EBF89; }
+.bs-fit  { --bs-c: #0093D0; --bs-bg: rgba(0,147,208,.22); --bs-bd: rgba(0,147,208,.5); --bs-ic: #5EBBE1; }
+
+/* ══════════════════════════════════════════════════════════════════
+   4 · HEADER LOGO RENGİ — kimlik sayfalarındaki muafiyet KALDIRILDI
+   Kural: saydam header → beyaz logo · solid header → marka moru.
+   Gourmet'in kendi CSS'i bir muafiyet taşıyor:
+     body.dg-auth .header.at-top .gourmet-word-mark{color:var(--tomato-deep)}
+   ve o muafiyet üç kimlik sayfasında (giris · kayit · sifremi-unuttum)
+   logoyu OKUNAMAZ yapıyor.
+
+   PİKSELDEN ÖLÇÜLDÜ (logo kutusunun ekran görüntüsü · mürekkep↔zemin WCAG):
+     Gourmet/giris · kayit · sifremi-unuttum   mor    1.49 : 1   🔴
+     Gourmet/go-giris (aynı aile, muafiyetsiz) beyaz  12.58 : 1  ✅
+     Gourmet/anasayfa                          beyaz  12.64 : 1  ✅
+     DONÖR Fit/fit-giris (aynı muafiyet)       mavi    3.83 : 1
+     DONÖR Fit/fit-arama                       beyaz   8.97 : 1
+
+   Muafiyet donörde İŞE YARIYOR çünkü Fit'in markası açık mavi (#0093D0).
+   Gourmet'in markası koyu mor (#5f226b) ve aynı muafiyet aynı koyu bandın
+   üstünde oranı 1.49'a düşürüyor — muafiyetin KENDİ AMACINI yok ediyor.
+   Bu yüzden muafiyet Gourmet'te dördüncü sayfaya (go-giris) TAŞINMADI,
+   üç sayfada KALDIRILDI. Sonuç: "saydam → beyaz" kuralı 146/146 sayfada
+   istisnasız; kimlik sayfalarının oranı 1.49 → 12.58.
+   ⚠ Bu, görevin ölçüt metnindeki "giriş/kayıt her zaman renkli"
+   maddesinden SAPMADIR; gerekçe muafiyet değil, yukarıdaki ÖLÇÜM.
+   Beyar aksini derse tek satır silinerek geri alınır.
+   Özgüllük donörünkiyle EŞİT (0,4,1) · bu dosya sonra yükleniyor.
+   ══════════════════════════════════════════════════════════════════ */
+body.dg-auth .header.at-top .gourmet-word-mark { color: #fff; }
+
+/* ══════════════════════════════════════════════════════════════════
+   5 · GÖRÜŞ BİLDİR BAŞARI PANELİNİN İŞARETİ — marka rengine çekildi
+   Panel `t5-b.js` tarafından gönderim anında üretiliyor (kip D, gerekçe
+   betiğin başında). Gövdesinin CSS'i Gourmet'te ZATEN tanımlı
+   (`.fb-success`, `.fb-success .ok/h4/p`, `.btn-ghost`) — kural yazılmadı.
+   Tek istisna dairenin rengi. ÖLÇÜLEN:
+     Gourmet  .fb-success .ok  zemin #eaf7f0 · metin var(--green) #3BB77E
+     DONÖR Fit                 zemin marka yıkaması · metin MARKA (mavi)
+     DONÖR Diet                zemin saydam     · metin MARKA (koyu yeşil)
+   Yani donörlerde daire MARKANIN rengini taşıyor; Gourmet'te "başarı
+   yeşili" duruyor ve o yeşil Gourmet'in markası DEĞİL. Üstelik panelin
+   metni "gönderilmedi" diyor — yeşil onay dairesi metnin tersini söylüyor.
+   Değerler Gourmet'in kendi tokenlarından (uydurma yok).
+   ⚠ BİLDİRİLDİ, DEĞİŞTİRİLMEDİ: dairenin ÖLÇÜSÜ Gourmet'te 62×62,
+   iki donörde de 56×56. Ölçü değişikliği bu maddenin kapsamı dışı.
+   ══════════════════════════════════════════════════════════════════ */
+.fb-success .ok { background: var(--tomato-tint); color: var(--tomato-dark); }
+
+/* ══════════════════════════════════════════════════════════════════
+   6 · GLOBAL `[hidden]` KURALI — kabuk katmanının eksiği
+   ÖLÇÜLEN (24 sayfa · `scripts/olcum/t5/go-hidden-sinif.mjs`):
+     Gastro   `[hidden]{display:none}` VAR (dm-p3-a.css · dm-p4-a.css)
+     Diet     VAR
+     Gourmet  global kural 24 sayfanın 24'ünde YOK  🔴
+   Sonuç: `hidden` niteliği taşıyan ama yazar kuralı `display` veren her
+   eleman GÖRÜNÜR kalıyor — yazar kuralı UA'nın `[hidden]{display:none}`
+   varsayılanını yener. Sızan iki eleman ölçüldü:
+     go-bildirimler  #ntUndo  .geri-al  display:flex  1176×52
+     mekan-bul       #mbDistBar .dist-bar display:flex 922×51
+   `#ntUndo` bir YALAN YÜZEY: açılışta boş metinli bir "geri alma" şeridi
+   ve hiçbir şey yapmayan bir "Geri al" düğmesi gösteriyor; şerit ancak bir
+   silmeden SONRA doğmalı. Donörlerde `display:none`.
+
+   🔴 `!important` YAZILMADI — ÖLÇÜLDÜ, GEREKMİYOR.
+   Lead donörün `!important`lı biçimini önerdi; sınandı: `t5-b.css` sayfa
+   ailesi CSS'lerinden (gourmet-ekran.css · mekan-bul.css) SONRA yükleniyor
+   ve özgüllükler EŞİT (`[hidden]` 0,1,0 ↔ `.geri-al` 0,1,0), eşitlikte
+   sonra yüklenen kazanıyor. `!important`sız hâlle sızan **2 → 0**.
+   Gastro'nun kendi satırı da `!important`SIZ (`dm-p3-a.css`); yalnız
+   Diet'in bir kopyasında var. Gereksiz `!important` yazmamak, ileride
+   `hidden`ı CSS ile ezmek isteyen bir kulvarı kırmamak demek.
+   ⚠ Ajan D'nin sürücüsü `hidden` niteliğini EKLEYİP KALDIRARAK çalışıyor
+   (`nav.hidden = …`, `kart.hidden = false`), CSS ile ezmiyor — ölçüldü,
+   bu kural onu bozmaz, tersine `t5-d.css §2b`nin eleman-eleman yazdığı
+   yedi seçicilik yamanın genel hâli.
+   YAN ETKİ ÖLÇÜLDÜ: 26 sayfada görünür eleman sayımı önce/sonra
+   karşılaştırıldı — kaybolan tek şey sızan iki eleman.
+   ══════════════════════════════════════════════════════════════════ */
+[hidden]{ display: none; }
+
+/* ══════════════════════════════════════════════════════════════════
+   7 · `.tb-lang-note` — donörün kuralı Gourmet'te hiç yok
+   🔴 ÖNCE ÖZNE DÜZELTİLDİ. İlk karşılaştırma dört markada da SAYFANIN İLK
+   `.tb-lang-note`unu alıyordu; donörde o ÜST BANDIN dil menüsünde,
+   Gourmet'te ÇEKMECEDE. Farklı kaptaki iki örneği karşılaştırmak
+   "denetimin öznesi kayar" hatasıdır. Her örnek ayrı ayrı bulundu:
+     Fit    2 örnek: topbar>.tb-lang-menu  ve  drawer>.drawer-lang-list
+     Diet   2 örnek: aynı ikisi
+     Gastro 1 örnek: yalnız topbar
+     Gourmet 1 örnek: yalnız drawer   (üst bantta dil seçici HİÇ YOK)
+   Karşılaştırılabilir çift = ÇEKMECEDEKİ örnek. Fit ve Diet'in çekmece
+   örneği birebir aynı; Gourmet ikisinden de ayrılıyor:
+     donör    display:flex · 11.5px · gap 8px · rgb(86,81,74) · dolgu 9/10
+     Gourmet  display:block · 16px  · gap normal · rgb(33,30,22) · dolgu 0
+   Kural CDP `CSS.getMatchedStylesForNode` ile KAZANAN bildirimden alındı.
+
+   🔴 YUVA TAKASI ZORUNLU (devir §2): donörün ikon kuralı `var(--fit-deep)`
+   kullanıyor ve o token Gourmet'te TANIMSIZ. Tanımsız var() kuralı elemez,
+   özelliği kalıtıma düşürür — kusuru düzeltmez büyütür (kayıtlı ders).
+   Gourmet'in kendi marka tokeni yazıldı.
+
+   ⚠ DÜRÜST ŞERH — bu değişiklik BUGÜN GÖRÜNMÜYOR. Ölçüldü: çekmecedeki
+   dil listesi DÖRT MARKANIN HİÇBİRİNDE açılmıyor; `.drawer-lang-toggle`a
+   gerçek tıklamadan sonra `aria-expanded` üç markada da `false` kalıyor ve
+   liste `display:none` duruyor. Yani kural, bugün ulaşılamayan bir elemanı
+   donörle hizalıyor. Ölü tetikleyici AYRI bir kusur ve dört markada da var
+   → raporda parite kalemi. Kural yine de yazıldı: iki satır, tek eleman,
+   sıfır risk; tetikleyici onarıldığı gün yüzey doğru doğar.
+   ══════════════════════════════════════════════════════════════════ */
+.tb-lang-note{
+  display: flex; align-items: flex-start; gap: 8px;
+  padding: 9px 10px; margin: 6px 2px 2px;
+  border-radius: var(--radius-sm);
+  font-size: 11.5px; font-weight: 500; line-height: 1.45;
+  color: var(--slate-2);
+}
+.tb-lang-note i{ flex: 0 0 auto; margin-top: 2px; font-size: 11px; color: var(--tomato-dark); }
+/* Donörde çekmecedeki örnek ayrı bir marj alıyor (üst banttaki 6/2/2,
+   çekmecedeki 2/0/0). İlk yazımda bu kaçmıştı ve Gourmet üst bandın
+   marjını alıyordu — ölçüm yakaladı, donör CDP ile yeniden soruldu. */
+.drawer-lang-list .tb-lang-note{ margin: 2px 0 0; }

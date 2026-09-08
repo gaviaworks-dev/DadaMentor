@@ -1,0 +1,47 @@
+/* T5 · GOURMET — kulvar C · SAYFA CSS'İ DEĞİL, KULVAR DOSYASI.
+   Bu dosyayı YALNIZ ajan C yazar. Değerler kanon tokenlarından.
+   Sayfaya <style> ve satır içi style YASAK — kural buraya yazılır.
+
+   NOT (kayda geçsin): bu şerhin ilk sürümünde kanon satırını alıntılarken
+   içinde bir yorum KAPANIŞI geçiyordu. CSS yorumları İÇ İÇE GEÇMEZ: o
+   kapanış dış yorumu erkenden bitirdi, kalan metin seçici sanıldı ve
+   aşağıdaki @media bloğu SESSİZCE YUTULDU. Ölçüm gösterdi:
+   `document.styleSheets[t5-c].cssRules.length = 0`, --kap-yan hâlâ 32px.
+   Dosya diskte ve HTTP'de doğruydu; kaybolan şey KURALIN KENDİSİYDİ.
+   Bu yüzden aşağıda yorum kapanışı içeren hiçbir alıntı yok. */
+
+/* ---------------------------------------------------------------------
+   C1 · @<=640 SAYFA KABININ YAN DOLGUSU — kanonun KENDİ kademesi
+
+   OLCULDU (390 · ?auth=1 · taze baglam · her sekmeye tiklanmis):
+     Gastro / Fit :  #pageMain .kap  padding-inline = 16px -> kart 358 = cubuk 358 (fark 0)
+     Gourmet      :  #pageMain .kap  padding-inline = 32px -> kart 326 (fark -32)
+     ozneler      :  go-odemelerim T1 "Hizmet / Uzman Odemeleri" (3 kart)
+                     go-paketlerim T0 "Mevcut Paketim"           (1 kart)
+
+   KOK — turetilmedi, kaynak satiriyla okundu:
+     kanon/tokenlar.css:943-945 -> @media (max-width:640px) icinde
+       :root{ --kap-yan: var(--kap-yan-dar) }   yani 16px
+     Gourmet kabugu tokeni TANIMLIYOR ama dar kademeyi HIC yazmamis:
+       gourmet-ortak.css:112   #pageMain{ --kap-yan: 32px }
+       gourmet-ortak.css:419   #pageMain .kap{ padding-inline: var(--kap-yan) }
+       gourmet-ortak.css:1267  @media (max-width:640px) icinde
+                               #pageMain .wrap{ padding: 0 16px }
+     Yani yalniz `.wrap` TASIYAN kaplar kurtuluyor; class="kap" (wrap'siz)
+     32px'te kaliyor. Kusur eksik bir KURAL degil, eksik KAPSAM.
+
+   OZGULLUK YAZILI — sessiz degil: #pageMain = (1,0,0), gourmet-ortak.css:112
+     ile TAM ESIT; t5-c.css o dosyadan SONRA yukleniyor (bes sayfada da
+     olculdu) -> kazanir. `:root` yazilsaydi KAYBEDERDI: token #pageMain
+     uzerinde yeniden bildirildigi icin daha yakin ata kazanir.
+
+   DEGER 16px — kanon `--kap-yan-dar` (kanon/tokenlar.css:658). Token ADI
+     Gourmet'te TANIMSIZ (dosyada 0 gecis, olculdu); var(--kap-yan-dar)
+     yazilsaydi kural ELENMEZ, ozellik baslangic degerine duserdi ve dolgu
+     0 olurdu — kusuru buyuturdu. O yuzden sayi yazildi, kaynagi burada.
+
+   YENI AD ACILMADI, MARKUP'A DOKUNULMADI, YENI RENK YAZILMADI.
+   --------------------------------------------------------------------- */
+@media (max-width:640px){
+  #pageMain{ --kap-yan:16px; }
+}
