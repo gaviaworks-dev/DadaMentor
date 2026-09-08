@@ -1,0 +1,366 @@
+/* =====================================================================
+   PANEL GİRİŞ KAPISI — GOURMET ADMIN PROTOTİPİ KOPYASI
+   ---------------------------------------------------------------------
+   Donör:      DadaFit full-stack · `/yonetim/giris`
+               `public/donor/panel-giris.css`
+   Damga:      md5 2f197677471c61b226fd5b446a40e4fd · 2026-09-08 21:53
+   ⚠ Donör kulvarı bu dosya alınırken CANLI olarak üzerinde çalışıyordu
+     (aynı gün 21:53'te marka yuvası dört marka için kanona çevrildi).
+     Bu yüzden sürüm damgalandı: aşağısı o damganın kopyasıdır, sonraki
+     donör değişiklikleri buraya kendiliğinden gelmez.
+   Kulvar:     T6d · Gourmet admin · `deneme/admin-gourmet/_ortak/`
+
+   Donörün kendi şerhleri KORUNDU — onun ölçümleri ve gerekçeleri
+   silinmedi. Bu kulvarın eklediği tek ayrım aşağıda, kendi başlığıyla.
+
+   🔴 BU DOSYA KANON DEĞİLDİR ve `kanon/*`e DOKUNMAZ.
+   `bilesenler.css` ve `admin.css` donörün şerhindeki gerekçeyle
+   yüklenmiyor (`.fk-input`·`.fk-field`·`.fk-pass`·`.btn` ad çakışması).
+   Yüklenen: `tokenlar.css` + `markalar/gourmet.css` + bu dosya.
+
+   ── GOURMET NE GETİRİYOR: YALNIZ LOGO VE RENK ────────────────────────
+   Renk zaten token: donörün `--tomato` ailesi burada `var(--marka)`
+   ailesine bağlı, `markalar/gourmet.css` yüklenince kapı Gourmet moruna
+   (#742982 · Pantone 259 C) döner. Tek bir renk sayısı yazılmadı.
+   Logo: `kanon/varlik/dadagourmet-kelime.svg`, HTML'e satır içi gömülü —
+   donörün marka yuvası şerhinin istediği gibi (`<img>` SVG'yi yalıtır,
+   `currentColor` çözülmez, logo siyah düşerdi).
+   ===================================================================== */
+
+.sa-gate-screen{
+  /* Donör adları → kanon token'ları. Eşleme TEK YERDE dursun ki
+     denetlenebilsin; kurallar aşağıda yalnız bu yerel adları okur. */
+  --pg-marka:var(--marka);
+  --pg-marka-koyu:var(--marka-koyu);
+  --pg-marka-derin:var(--marka-koyu-2);
+  --pg-murekkep:var(--murekkep);
+  --pg-murekkep-2:var(--murekkep-yumusak);
+  --pg-donuk:var(--yer-tutucu);
+  --pg-cizgi:var(--cizgi);
+  --pg-krem-2:var(--krem-2);
+  --pg-kagit:var(--kagit);
+  --pg-tehlike:var(--tehlike);
+  --pg-tehlike-koyu:var(--tehlike-koyu);
+  /* Donör `--ctl-h`; kanonda denetim yüksekliği token'ı yok. */
+  --pg-denetim-h:48px;
+  /* Donörden korunan iki değer — yukarıdaki şerh. */
+  --pg-zemin:#16130d;
+  --pg-derinlik:rgba(0,96,114,.15);
+}
+
+/* ── YAZI YÜZÜ ─────────────────────────────────────────────────────
+   🔴 BUNU PARİTE YAKALADI (tuzak #8'in aynısı: "iki taraf da eksikse kapı
+   yeşil yalan söyler" — burada TEK taraf eksikti ve kapı KIRMIZI söyledi).
+
+   `tokenlar.css` `--yazi-yuzu:"Gilroy",…` diyor ama BİLEREK sıfır
+   `@font-face` taşıyor (kendi şerhi, satır 711); yüzü sayfalar bildiriyor
+   ve türetilmiş prototip ekranları onu `kanon/gomulu/*.css` içinde base64
+   gömülü taşıyor. Bu ekran o dosyaların hiçbirini yüklemiyor, dolayısıyla
+   Gilroy HİÇ yüklenmiyordu: donör Gilroy ile, biz sistem yüzüyle
+   ölçülüyorduk. Ölçülen bedel — aynı metinler, farklı genişlik:
+       `.sg-pill` "Yönetim"   92,5 ↔ 99,2   (+6,7)
+       `.btn`     "Giriş Yap" 150,9 ↔ 156,2 (+5,3)
+       `p`        42ch        357,2 ↔ 367,5 (+10,3)
+
+   Bildirimler donörünkiyle BİREBİR aynı (aynı üç dosya, aynı ağırlıklar);
+   yalnız adres bizim depomuzdaki kopyaya bakıyor.
+   ⚠ Adres `public/dump/…` altında — depoda İZLENEN tek Gilroy kopyası bu.
+   Kanonik bir font yolu açmak `public/kanon/*`e dokunmayı gerektirir ve
+   bu kulvarın dışında; lead'e bildirildi. */
+/* ═══ BU KOPYANIN TEK AYRIMI · DONÖRÜN DÖRT `@font-face`İ YOK ═══
+   Atlanmadı, ÖLÇÜLDÜ. Donör (full-stack) Gilroy'u kendi
+   `public/dump/fit-prototip/…` kopyasından bildiriyor. Bu ekran Gourmet
+   admin PROTOTİPİNİN içinde yaşıyor; orada tarayıcıda ölçüldü
+   (`document.fonts`, admin-genel-bakis.html):
+
+     yüklü yüz : yalnız Font Awesome (10 kayıt)
+     Gilroy    : 0 `@font-face`
+     çizilen   : `--yazi-yuzu` zincirinin yedeği (system-ui)
+
+   Panelin 86 ekranının hiçbiri Gilroy yüklemiyor — `tokenlar.css` bunu
+   bilerek yapıyor (kendi şerhi, satır 711). Bildirimi buraya yazmak GİRİŞ
+   ekranını Gilroy ile, arkasındaki PANELİ sistem yüzüyle çizerdi: aynı
+   ürünün iki yüzü, kapıda bir yüz içeride başka bir yüz.
+
+   Ayrıca adres iki kökte birden çözülmüyor — kayıtlı "önizleme kökü ≠
+   üretim kökü" tuzağı:
+     yerel  önizleme kökü ~/Revenge      → dump/gourmet/varliklar/fonts/gilroy/
+     yayın  /DadaMentor/                 → Gourmet/varliklar/fonts/gilroy/
+   Bu CSS `…/admin/_ortak/` altında ve tek göreli yol ikisini birden
+   veremez.
+
+   Yüz `--yazi-yuzu` zincirinden gelir; panelin geri kalanıyla AYNI. */
+
+
+/* ── TABAN — donörün kendi sıfırlaması ─────────────────────────────── */
+/* 🔴 ÖZGÜLLÜK DONÖRDEKİYLE AYNI KALMALI — parite bunu yakaladı.
+   İlk yazım bu blokları `.sa-gate-screen` altına almıştı ("sızmasın" diye).
+   Özgüllük (0,0,1)'den (0,1,1)'e çıkınca sıfırlama, sıfırladığı BİLEŞENİ
+   ezdi ve iki ölçüm bozuldu:
+     `.sa-gate-screen button` (0,1,1) > `.btn` (0,1,0)
+        → `font:inherit` kazandı, düğme 800 yerine 500 ağırlıkta çizildi
+     `.sa-gate-screen :focus-visible` (0,2,0) > `.fk-input` (0,1,0)
+        → odaktaki (autofocus) girdi 12px yerine 8px yuvarlaklık aldı
+   Donörde bu kurallar ÇIPLAK seçici; bileşenler onları normal yoldan
+   eziyor. Bu tabaka yalnız bu ekranda yükleniyor, sızacak başka sayfa yok. */
+*{ box-sizing:border-box; }
+body, h1, p{ margin:0; padding:0; }
+img{ display:block; max-width:100%; }
+button, input{ font:inherit; color:inherit; }
+button{ cursor:pointer; background:none; border:0; }
+a{ color:inherit; text-decoration:none; }
+:focus-visible{
+  outline:3px solid color-mix(in srgb, var(--pg-marka) 55%, transparent);
+  outline-offset:2px; border-radius:var(--yuvarlak-sm);
+}
+
+/* ── KAPI ZEMİNİ ───────────────────────────────────────────────────── */
+body.sa-gate-screen{
+  margin:0;
+  min-height:100vh;
+  display:flex; align-items:center; justify-content:center;
+  padding:32px 20px;
+  font-family:var(--yazi-yuzu);
+  font-weight:var(--agirlik-govde);
+  line-height:var(--satir-govde);
+  color:var(--pg-murekkep);
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+  overflow-x:hidden;
+  background:
+    radial-gradient(720px 480px at 12% -8%, color-mix(in srgb, var(--pg-marka) 16%, transparent), transparent 60%),
+    radial-gradient(620px 460px at 100% 112%, var(--pg-derinlik), transparent 62%),
+    var(--pg-zemin);
+}
+
+/* ── KART ──────────────────────────────────────────────────────────── */
+.sa-gate{
+  width:min(560px, 100%);
+  background:var(--pg-kagit);
+  border:1px solid var(--pg-cizgi);
+  border-radius:var(--yuvarlak-xl);
+  box-shadow:var(--golge-lg);
+  padding:34px 34px 26px;
+}
+
+/* ── ÜST SATIR — marka işareti + panel hapı ────────────────────────── */
+.sa-gate-top{ display:flex; align-items:center; gap:12px; margin-bottom:22px; }
+/* 🔴 MARKA YUVASI — dört markanın giriş sayfası için KANON.
+   Marka yalnız LOGO ve RENK getirir; bu blokta hiçbir marka adı geçmez.
+
+   ── NEDEN KARE KUTU DEĞİL ─────────────────────────────────────────────
+   Donörün işaret kutusu 34×34·r10 dolu bir kareydi ve logosu tek renk bir
+   siluetti. Bizde basılan şey KELİME MARKASI: `public/kanon/varlik/`
+   sayıldı, kelime markası dört markanın DÖRDÜNDE de var, işaret yalnız
+   İKİSİNDE (fit · diet). Kareye kurulan bir kanon Gastro ve Gourmet'te
+   logosuz bir giriş sayfası bırakırdı. Kelime markası geniş bir dikdörtgen
+   (oranlar 3.9:1 ↔ 5.7:1) ve bir kareye sığmaz.
+
+   ── SATIR YÜKSEKLİĞİ KORUNDU ──────────────────────────────────────────
+   Yuva hâlâ 34px yüksek, yani `.sa-gate-top` satırının ölçüsü DEĞİŞMEDİ;
+   değişen yalnız yuvanın genişliği ve içindeki logonun türü. Donörden
+   ölçülen kutu yüksekliğini kaybetmemek için logo 22px'e oturtuluyor.
+
+   ── RENK ──────────────────────────────────────────────────────────────
+   Dört kelime markasının dördü de `fill="currentColor"` taşıyor ve
+   hiçbirinde sabit renk yok (ölçüldü: 4/4 · 0). Bu yüzden logo satır içine
+   gömülü basılıyor ve rengi buradan, `--pg-marka` (→ `--marka`) üstünden
+   alıyor. `<img>` olsaydı SVG yalıtılır, `currentColor` çözülmez ve logo
+   siyah düşerdi. */
+.sa-gate-top .sg-mark{
+  height:34px; flex:0 0 auto;
+  display:inline-flex; align-items:center;
+  color:var(--pg-marka);
+}
+.sa-gate-top .sg-mark svg{ height:22px; width:auto; display:block; }
+/* Logo dosyası yoksa markanın adı basılır — boş kutu bırakılmaz. */
+.sa-gate-top .sg-mark-ad{
+  font-size:15px; font-weight:var(--agirlik-kalin);
+  letter-spacing:-.01em; color:var(--pg-marka);
+}
+.sa-gate-top .sg-pill{
+  margin-left:auto;
+  display:inline-flex; align-items:center; gap:6px;
+  font-size:10.5px; font-weight:var(--agirlik-kalin);
+  letter-spacing:.1em; text-transform:uppercase;
+  color:var(--pg-murekkep-2);
+  background:var(--pg-krem-2);
+  border:1px solid var(--pg-cizgi);
+  padding:5px 11px; border-radius:var(--yuvarlak-hap);
+}
+
+/* ── BAŞLIK BLOĞU ──────────────────────────────────────────────────── */
+.sa-gate-head{ margin-bottom:22px; }
+.eyebrow{
+  display:inline-flex; align-items:center; gap:8px;
+  font-weight:var(--agirlik-ekstra); text-transform:uppercase;
+  color:var(--pg-marka);
+}
+.eyebrow::before{
+  content:""; flex:0 0 auto;
+  width:26px; height:2px; background:currentColor;
+  border-radius:var(--yuvarlak-sm);
+}
+.sa-gate-head .eyebrow{
+  font-size:11px; font-weight:var(--agirlik-kalin);
+  letter-spacing:.16em; margin-bottom:9px;
+}
+.sa-gate-head h1{
+  font-size:27px; font-weight:var(--agirlik-kalin);
+  letter-spacing:var(--aralik-baslik); line-height:1.08;
+  color:var(--pg-murekkep);
+}
+.sa-gate-head p{
+  font-size:13.5px; color:var(--pg-donuk);
+  margin-top:8px; max-width:42ch; line-height:var(--satir-govde);
+}
+
+/* ── FORM KİTİ ─────────────────────────────────────────────────────── */
+.fk-form{ display:grid; gap:16px; }
+.fk-field{ display:grid; gap:8px; }
+.fk-label{
+  font-weight:var(--agirlik-ekstra); font-size:.9rem;
+  color:var(--pg-murekkep-2); letter-spacing:-.01em;
+}
+.fk-label .req{ color:var(--pg-marka); margin-left:2px; }
+.fk-input{
+  width:100%; min-height:var(--pg-denetim-h);
+  padding:12px 16px;
+  background:var(--pg-kagit); color:var(--pg-murekkep);
+  border:1px solid var(--pg-cizgi); border-radius:var(--yuvarlak-md);
+  font-weight:var(--agirlik-govde);
+  transition:border-color .2s var(--yumusama), box-shadow .2s var(--yumusama);
+}
+.fk-input::placeholder{ color:color-mix(in srgb, var(--pg-donuk) 80%, transparent); }
+.fk-input:hover{ border-color:color-mix(in srgb, var(--pg-murekkep) 18%, var(--pg-cizgi)); }
+.fk-input:focus{
+  outline:none; border-color:var(--pg-marka);
+  box-shadow:0 0 0 3px color-mix(in srgb, var(--pg-marka) 16%, transparent);
+}
+/* Donörün kendi hata değiştiricisi (`…is-error{border-color:var(--danger)}`);
+   yeni bir bileşen açılmadı, var olan kip DadaFit tehlikesine bağlandı. */
+.fk-input.is-error{ border-color:var(--pg-tehlike); }
+
+.fk-pass{ position:relative; }
+.fk-pass .fk-input{ padding-right:48px; }
+.fk-eye{
+  position:absolute; right:6px; top:50%; transform:translateY(-50%);
+  width:40px; height:40px;
+  display:inline-flex; align-items:center; justify-content:center;
+  color:var(--pg-donuk); border-radius:var(--yuvarlak-sm);
+}
+.fk-eye:hover{ color:var(--pg-murekkep); background:var(--pg-krem-2); }
+
+.fk-cbx{
+  display:flex; align-items:flex-start; gap:12px;
+  font-size:.95rem; color:var(--pg-murekkep-2); line-height:1.5;
+}
+.fk-cbx input[type="checkbox"]{
+  appearance:none; flex:0 0 auto;
+  width:22px; height:22px; margin-top:1px;
+  border:1.5px solid color-mix(in srgb, var(--pg-murekkep) 30%, var(--pg-cizgi));
+  border-radius:6px; background:var(--pg-kagit);
+  transition:all .15s var(--yumusama);
+}
+.fk-cbx input[type="checkbox"]:checked{
+  border-color:var(--pg-marka);
+  background-color:var(--pg-marka);
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14'%3E%3Cpath fill='none' stroke='%23fff' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round' d='M2.5 7.5l3 3 6-6.5'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;
+  background-position:center center;
+}
+
+/* ── DÜĞME ─────────────────────────────────────────────────────────── */
+.btn{
+  display:inline-flex; align-items:center; justify-content:center; gap:8px;
+  min-height:var(--pg-denetim-h);
+  padding:12px 32px;
+  border-radius:var(--yuvarlak-md);
+  font-weight:var(--agirlik-ekstra); letter-spacing:-.01em;
+  transition:background .2s var(--yumusama), color .2s var(--yumusama),
+             border-color .2s var(--yumusama), transform .05s var(--yumusama);
+}
+.btn:active{ transform:translateY(1px); }
+.btn--primary{ background:var(--pg-marka-koyu); color:#fff; }
+.btn--primary:hover{ background:var(--pg-marka-derin); }
+
+/* ── ŞERİT — donörün `.sa-flash` bileşeni ──────────────────────────── */
+/* Donörde tanımlı: `.sa-flash` (başarı) + `.is-note` kipi. Bu ekranda
+   hiçbir şerit basılmıyor, dolayısıyla HATA KİPİ donörde YOK. Yeni bir
+   bileşen uydurulmadı: donörün KENDİ formülü (`color-mix` %12 zemin /
+   %30 kenar / koyu metin) DadaFit'in tehlike ailesine uygulandı. */
+.sa-flash{
+  display:flex; align-items:flex-start; gap:8px;
+  padding:12px 16px;
+  border-radius:var(--yuvarlak-md);
+  font-weight:var(--agirlik-kalin); font-size:.9rem;
+  margin-bottom:16px;
+}
+.sa-flash.is-error{
+  background:color-mix(in srgb, var(--pg-tehlike) 12%, var(--pg-kagit));
+  border:1px solid color-mix(in srgb, var(--pg-tehlike) 30%, var(--pg-cizgi));
+  color:var(--pg-tehlike-koyu);
+}
+.sa-flash i{ margin-top:3px; flex:0 0 auto; }
+.sa-flash b{ font-weight:var(--agirlik-ekstra); }
+
+/* ── ALT ŞERİT ─────────────────────────────────────────────────────── */
+.sa-gate-foot{
+  display:flex; align-items:center; gap:9px;
+  margin-top:22px; padding-top:18px;
+  border-top:1px solid var(--pg-cizgi);
+  font-size:12px; color:var(--pg-donuk);
+}
+.sa-gate-foot i{ color:var(--pg-murekkep-2); }
+.sa-gate-foot form{ margin-left:auto; }
+.sa-gate-foot button{
+  font:inherit; font-weight:var(--agirlik-kalin);
+  color:var(--pg-marka-koyu);
+  background:none; border:none; cursor:pointer; padding:0;
+}
+.sa-gate-foot button:hover{ text-decoration:underline; }
+
+/* ═══ BU KOPYANIN İKİNCİ AYRIMI · DÖNÜŞ BAĞI HER GENİŞLİKTE BÜTÜN ═══
+   Donör bu kuralı YALNIZ 520 altına koymuştu ve gerekçesini yazmıştı:
+   "Kalan tek müdahale DENETİMLERİN KIRILMAMASI: metin satır içinde
+   sarmaya devam eder, bağ ve düğme bütün kalır."
+
+   Aynı gerekçe bizde HER genişlikte geçerli, çünkü marka adı daha uzun:
+   donörün bağı "DadaFit'e dön" (13 karakter), bizimki "DadaGourmet'e dön"
+   (17). Ölçüldü — kuralı taşımadan önce:
+
+     1440px   bağ 2 satır (37px) · şerit 56px
+      900px   bağ 2 satır (37px) · şerit 56px
+      390px   bağ 1 satır (19px) · şerit 75px   ← donörün kuralı burada koşuyor
+
+   Yani donörün kendi kuralı bizde ters çalışıyordu: dar ekranda bağ
+   bütün, GENİŞ ekranda ikiye bölünüyordu. Kural bir kırılıma değil bağın
+   KENDİSİNE ait; medya sorgusundan çıkarıldı, aynı bildirim tabana taşındı.
+   Donörde etkisi yok (onun bağı zaten tek satır).
+   ⚠ `white-space` yalnız BAĞ ve DÜĞMEye verilir; şeridin cümlesi
+   sarmaya devam eder — donörün "metin satır içinde sarmaya devam eder"
+   kararı korunur. */
+.sa-gate-foot a,
+.sa-gate-foot button{ white-space:nowrap; }
+
+/* ── 520 ALTI — donörün kendi kırılımı ─────────────────────────────── */
+@media (max-width:520px){
+  .sa-gate{ padding:26px 20px 22px; }
+  .sa-gate-head h1{ font-size:23px; }
+
+  /* eklendi: — DONÖRDE YOK, ÖLÇÜM GEREKTİRDİ.
+     Donörün alt şeridi tek satırlık kısa bir cümle taşıyor ("Bu kapı
+     yönetim hesapları içindir.") ve sarma ihtiyacı doğmuyor. Bizim
+     şeridimizde üç değil DÖRT kalem var: ikon + onaylı uzun metin +
+     "DadaFit'e dön" + yetkisiz hâlde "Başka hesapla gir" formu.
+     390'da ölçüldü: iki denetim de kelime ortasından kırılıyordu
+     ("Başka / hesapla / gir" üç satır).
+
+     🔴 İLK DENEME GERİ ALINDI — ÖLÇÜM REDDETTİ. `flex-wrap:wrap`
+     eklemek her kalemi kendi satırına attı ve şerit 37,6 → 110,8'e
+     çıktı; okunurluk düzelmedi, kutu üç katına bindi. Kalan tek
+     müdahale DENETİMLERİN KIRILMAMASI: metin satır içinde sarmaya
+     devam eder (donörün kendi davranışı), bağ ve düğme bütün kalır. */
+  .sa-gate-foot a,
+  .sa-gate-foot button{ white-space:nowrap; }
+}
