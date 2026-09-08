@@ -1,21 +1,151 @@
-<!DOCTYPE html><html lang="tr" class="reveal-ready"><head>
+<!DOCTYPE html><html lang="tr"><head>
     <meta charset="utf-8">
     <meta name="robots" content="noindex, nofollow">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="0OJnhazVPu5NF9ux42UKlSX5RNTmdamKS1shu0gE">
     
-        <title>Semizotu kaç kalori? 100 gramda 22 kalori · DadaDiet</title>
+        <title>Süreye Göre Programlar — Kaç Günlük? · DadaDiet</title>
     
-                <meta name="description" content="Semizotunun 100 gramı 22 kalori, 2,64 g protein ve 1,59 g lif içeriyor. Yeşillikler arasında nerede durduğunu künyeli tabloda birlikte gör. Lif payı 1,59 gram.">
+                    
+            <link rel="canonical" href="sureye-gore.html">
                 
-            <link rel="canonical" href="besin__semizotu.html">
-                
-                    <link rel="alternate" hreflang="tr" href="besin__semizotu.html">
-                            <link rel="alternate" hreflang="x-default" href="besin__semizotu.html">
+                    <link rel="alternate" hreflang="tr" href="sureye-gore.html">
+                            <link rel="alternate" hreflang="x-default" href="sureye-gore.html">
             <link rel="shortcut icon" type="image/x-icon" href="varliklar/favicon.ico">
     <link rel="stylesheet" href="varliklar/fontawesome/css/all.min.css">
     <link rel="stylesheet" href="varliklar/reference/diet/css/dd-shell.css">
     <style>
+/* ===== SAYFA CSS — kabuk CSS'i assets/css/dd-shell.css'te ===== */
+/* T5 STICKY FIX (faz6, page-local): kok overflow-x hidden body-yi scroll-container yapip position:sticky panelleri kiriyor; clip yatayi keser ama overflow-y visible kalir -> sticky calisir. */
+html,body{overflow-x:clip}
+
+/* =====================================================================
+   F10 — DİYET LİSTELERİ (research m6) · landing hero + program kartları
+   Takip araçları = app işi → web'de TANITIM dili
+   ===================================================================== */
+
+/* ---- HERO: koyu band (liste hero dili) — yeşil sağlık aksanı ---- */
+.dl-top{
+  position:relative;padding-top:112px;
+  background-image:linear-gradient(90deg,rgba(18,28,22,.94),rgba(20,32,25,.74)),
+    url('varliklar/_dis/images.unsplash.com/photo-1512621776951-a57141f2eefd.avif');
+  background-size:cover;background-position:center;
+}
+
+.dl-top .wrap{position:relative}
+.dl-top .rd-crumb{color:#bcd0c4}
+.dl-top .rd-crumb a{color:#bcd0c4}
+.dl-top .rd-crumb a:hover{color:#99d7b4}
+.dl-top .rd-crumb i{color:rgba(255,255,255,.4)}
+.dl-top .rd-crumb b{color:#fff}
+.rd-crumb{display:flex;align-items:center;flex-wrap:wrap;gap:9px;padding:18px 0 14px;font-size:13px;font-weight:500}
+.rd-crumb i{font-size:9px}
+.dl-hero{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:44px;align-items:end;padding:10px 0 44px}
+.dl-hero .eyebrow{color:#99d7b4}
+.dl-hero .eyebrow::before{background:var(--green)}
+.dl-hero h1{color:#fff;font-size:44px;margin:14px 0 12px;letter-spacing:-.03em;text-shadow:0 2px 24px rgba(0,0,0,.25)}
+.dl-hero h1 .accent{color:#7fcca1;white-space:nowrap}
+.dl-hero .lead{color:#e3ede7;font-weight:500;font-size:15.5px;max-width:560px;text-shadow:0 1px 14px rgba(0,0,0,.3)}
+.dl-stats{display:flex;flex-direction:column;gap:16px;padding-left:38px;border-left:1px solid rgba(255,255,255,.18)}
+.dl-stats .st b{display:block;font-size:29px;font-weight:700;color:#fff;letter-spacing:-.02em;line-height:1.1}
+.dl-stats .st span{font-size:12.5px;color:#9fb7a8;font-weight:500}
+
+/* ---- FİLTRE ÇİPLERİ (facet-lite) ---- */
+.dl-filter{background:var(--bg-white);border-bottom:1px solid var(--line);position:sticky;top:112px;z-index:40}
+/* Sol sabit eksen etiketi ("Hedef:" / "Yaşam Biçimi:" / …) 2026-08-17'de
+   KALKTI (Beyar kararı). Ölçülen gerekçe: besin kütüphanesinin çip şeridi
+   (.tst-tabwrap > .pf-tabs, foods/index.blade.php:174-183) sol etiket
+   TAŞIMIYOR ve iki sayfa arasındaki TEK yapısal fark buydu — "Tümü" her
+   ikisinde de var ve her ikisinde de tek filtre sıfırlama yolu.
+   Eksen adı ekrandan düşerken erişilebilirlikten düşmüyor: şeridin
+   aria-label'ı ("Hedef filtresi" vb.) yerinde duruyor.
+   Etiket gidince onun için ayrılmış sol iç boşluk (14px) da gitti; kap
+   dört yandan 4px oldu, .pf-tabs'ın padding'iyle birebir aynı. */
+.dl-fbar{justify-content:center;display:flex;flex-wrap:wrap;align-items:center;gap:4px;padding:4px;width:fit-content;max-width:100%;margin:16px auto;background:var(--bg);border:1px solid var(--line);border-radius:var(--radius-md)}
+.dl-fbar::-webkit-scrollbar{display:none}
+/* İkonlu "Tümü" için hizalama — besin kütüphanesindeki .pf-tabs .dt'nin
+   (besin-kutuphanesi-v1.css:36) inline-flex + gap:8px kalıbı, birebir. */
+.dl-fchip{flex:none;display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:var(--muted);background:transparent;border:0;padding:9px 14px;border-radius:var(--radius-sm);cursor:pointer;transition:.18s var(--ease);white-space:nowrap}
+.dl-fchip:hover{color:var(--tomato-deep);background:rgba(0,154,68,.08)}
+.dl-fchip.active{background:var(--tomato-deep);border-color:var(--tomato-deep);color:#fff}
+/* Eksen menüden seçilir; sayfada yalnız gelen eksenin çip satırı durur.
+   .dl-fbar display:flex olduğu için [hidden] açıkça yazılmalıdır. */
+.dl-fbar[hidden]{display:none}
+
+/* ---- PROGRAM KARTLARI ---- */
+.prog-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:26px}
+.prog-card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);overflow:hidden;display:flex;flex-direction:column;cursor:pointer;transition:.3s var(--ease)}
+.prog-card:hover{transform:translateY(-6px);border-color:#dcdcdc;box-shadow:var(--sh-md)}
+.prog-media{position:relative;height:185px;background-size:cover;background-position:center}
+.prog-media::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(33,30,22,0) 50%,rgba(20,18,12,.55))}
+.prog-cat{position:absolute;top:13px;left:13px;z-index:2;background:rgba(255,255,255,.94);color:var(--slate);font-size:11.5px;font-weight:700;padding:6px 12px;border-radius:var(--radius-sm);letter-spacing:.02em}
+.prog-cat.green{background:var(--tomato-deep);color:#fff}
+.prog-dur{position:absolute;bottom:13px;left:13px;z-index:2;display:inline-flex;align-items:center;gap:6px;background:rgba(20,18,12,.72);color:#fff;font-size:11.5px;font-weight:700;padding:6px 11px;border-radius:var(--radius-sm);backdrop-filter:blur(4px)}
+.prog-body{padding:20px;display:flex;flex-direction:column;flex:1}
+.prog-body h3{font-size:19px;margin-bottom:9px;letter-spacing:-.01em}
+.prog-card:hover .prog-body h3{color:var(--green-deep)}
+.prog-body p{font-size:13.5px;color:var(--muted);font-weight:500;line-height:1.55;margin-bottom:16px}
+.prog-tags{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
+.prog-tag{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--slate-2);background:#E3F4EA;border:1px solid #c9ead8;padding:6px 11px;border-radius:var(--radius-sm)}
+.prog-tag i{color:var(--green);font-size:11px}
+.prog-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:auto;padding-top:16px;border-top:1px solid var(--line)}
+.prog-foot .meals{font-size:12.5px;color:var(--muted);font-weight:500}
+.prog-foot .go{display:inline-flex;align-items:center;gap:7px;color:var(--green-deep);font-weight:700;font-size:13.5px}
+.prog-card:hover .prog-foot .go i{transform:translateX(3px)}
+.prog-foot .go i{transition:.2s var(--ease)}
+
+/* ---- CTA BANDI (ücretsiz ön değerlendirme + diyetisyen eşleştirme) ----
+   R27: telefon maketi + mağaza düğmeleri + "Yakında" rozeti KOMPLE KALKTI
+   (Beyar kararı C3, 2026-08-24). İki sütunlu `.app-grid` tek sütuna indi;
+   `.app-intro` artık bandın tek içerik kapsayıcısı. --}}
+.app-band{background:var(--slate);border-radius:var(--radius-xl);padding:46px;color:#fff;position:relative;overflow:hidden}
+.app-band::before{content:"";position:absolute;top:-80px;left:-60px;width:280px;height:280px;border-radius:var(--radius-circle);background:radial-gradient(circle,rgba(0,154,68,.32),transparent 70%)}
+.app-intro{position:relative;max-width:640px}
+.app-band .eyebrow{color:#99d7b4}
+.app-band .eyebrow::before{background:var(--green)}
+.app-band h2{color:#fff;font-size:30px;margin:13px 0 12px;letter-spacing:-.02em}
+.app-band .lead{color:#b9c6d1;font-weight:500;font-size:15px;margin-bottom:24px}
+.app-feats{display:flex;flex-direction:column;gap:14px;margin-bottom:28px}
+.app-feat{display:flex;align-items:center;gap:13px;font-size:14.5px;font-weight:500;color:#e3ede7}
+.app-feat .fi{flex:none;width:38px;height:38px;border-radius:var(--radius-md);background:rgba(0,154,68,.16);border:1px solid rgba(0,154,68,.3);display:grid;place-items:center;color:#99d7b4;font-size:15px}
+.btn-green{background:var(--tomato-deep);color:#fff}
+.btn-green:hover{background:var(--green-deep);transform:translateY(-2px)}
+
+/* ---- responsive ---- */
+@media(max-width:1024px){
+  .dl-hero{grid-template-columns:1fr;align-items:start;gap:22px;padding-bottom:34px}
+  .dl-stats{flex-direction:row;gap:34px;padding-left:0;border-left:none;padding-top:18px;border-top:1px solid rgba(255,255,255,.18)}
+  .dl-filter{top:62px}
+  .prog-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:640px){
+  .dl-hero h1{font-size:29px}
+  .dl-hero .lead{font-size:14.5px}
+  .dl-stats{gap:12px}
+  .dl-stats .st{flex:1}
+  .dl-stats .st b{font-size:20px}
+  .prog-grid{grid-template-columns:1fr;gap:18px}
+  .app-band{padding:28px}
+  .app-band h2{font-size:24px}
+}
+
+/* saglik-dropdown: scoped health chrome */
+/* diğer dropdown/mega aktif-item (turuncu kanon, underline gizli) */
+.dropdown:not(.dropdown-health) a.active{background:var(--tomato-tint)}
+.dropdown a.active::after,.mega-cats a.active::after{display:none}
+.mega-cats a.active{background:var(--tomato-tint)}
+.nav a[href="saglik-hub-v1.html"]:hover{color:var(--green);background:rgba(0,154,68,.10)}
+
+/* ---- SAYFALAMA (KOL 1, 2026-08-15 — lead devri, "sessiz kesme" kusuru).
+   Bu sayfa `$programs->links()`i HİÇ çağırmıyordu: controller `paginate(12)`
+   yapıyor ama görünüm hiçbir sayfa bağlantısı basmıyordu — 12'den sonraki
+   programlara ULAŞILAMIYORDU (görünüm tutarsızlığı değil, sessiz kesme;
+   KOL 8'in SearchController'da bulduğuyla aynı sınıf). Kural transferi kaynağı:
+   `resources/views/diet/dietitians/index.blade.php:212-219`
+   (diyetisyen-dizin-v1.css'ten BİREBİR — .pagi/.pg/.pg-dots/.pagi-note),
+   Diet'in tek kanonik sayfalama deseni (`diet/_p/pagination.blade.php`). ---- */
+</style>
+<style>
 .reh-note{display:flex;gap:14px;align-items:flex-start;margin-top:30px;background:var(--tomato-tint);border:1px solid #bae4cc;border-radius:var(--radius-lg);padding:18px 20px}
 .reh-note>i{color:var(--tomato-deep);font-size:18px;margin-top:2px;flex:none}
 .reh-note p{font-size:14px;color:var(--slate-2);font-weight:500;line-height:1.6}
@@ -23,58 +153,20 @@
 .reh-note p a:hover{text-decoration:underline}
 </style>
 <style>
-.pf-disclaimer{background:var(--tomato-tint);border-top:1px solid rgba(0,154,68,.25)}
-.pf-disclaimer .wrap{display:flex;gap:14px;align-items:flex-start;padding-top:22px;padding-bottom:22px}
-.pf-disclaimer i{color:var(--tomato-deep);font-size:17px;margin-top:2px;flex:none}
-.pf-disclaimer p{font-size:13.5px;color:var(--slate-2);font-weight:500;line-height:1.65;max-width:960px}
-.pf-disclaimer b{color:var(--slate);font-weight:700}
+.reh-note-lg{margin-top:26px;padding:24px 26px}
+.reh-note-lg .btn{margin-top:14px}
 </style>
-<style>
-/* Kaynak künyesi bloğu — prototipte karşılığı YOK, Beyar kararı A ile eklendi.
-   Yalnız var olan token'lar kullanılır (tokens/kabuk CSS'i), yeni renk/radius
-   icat edilmez (component-token.md §6). Sayfa CSS'ine dokunmaz. */
-.dd-sources{margin-top:28px;padding-top:18px;border-top:1px solid var(--line)}
-.dd-sources h3{font-size:14px;font-weight:800;color:var(--slate);margin:0 0 10px}
-.dd-sources ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
-.dd-sources li{display:flex;align-items:flex-start;gap:8px;font-size:12.5px;line-height:1.55;color:var(--muted)}
-.dd-sources li i{color:var(--green);font-size:11px;margin-top:4px;flex:none}
-.dd-sources a{color:var(--green-deep);font-weight:700;text-decoration:none}
-.dd-sources a:hover{text-decoration:underline}
-.dd-sources b{color:var(--slate-2);font-weight:700}
-.dd-src-portion,.dd-src-date{display:inline-block;margin-left:6px}
-.dd-src-date{opacity:.8}
-</style>
-    <link rel="stylesheet" href="varliklar/reference/diet/css/pages/besin-kutuphanesi-v1.css">
-    
-        
-            
-    <style>
-    .qa{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);overflow:hidden;transition:border-color .25s var(--ease),box-shadow .25s var(--ease)}
-    .qa-ico{flex:none;width:34px;height:34px;border-radius:var(--radius-md);background:var(--tomato-tint);color:var(--tomato-deep);display:grid;place-items:center;font-size:14px}
-    .qa-car{margin-left:auto;flex:none;font-size:12px;color:var(--muted);transition:transform .25s var(--ease)}
-    .dd-sources-fold{margin-top:40px}
-    .dd-sources-fold>summary{list-style:none;cursor:pointer}
-    .dd-sources-fold>summary::-webkit-details-marker{display:none}
-    .dd-sources-fold[open]{border-color:rgba(0,154,68,.4);box-shadow:var(--sh-sm)}
-    .dd-sources-fold[open]>summary{border-bottom:1px solid var(--line)}
-    .dd-sources-fold[open] .qa-car{transform:rotate(180deg);color:var(--tomato-deep)}
-    .dd-sources-fold .qa-body{padding:0 22px 20px}
-    .dd-sources-fold .qa-body .dd-sources{margin-top:0;padding-top:0;border-top:0}
-    .dd-sources-fold .qa-body .dd-sources h3{display:none}
-    @media (max-width:640px){.dd-sources-fold{margin-top:30px}}
-    </style>
-    
-    
 <link rel="stylesheet" href="varliklar/reference/shared/dd-kabuk.css">
 <link data-t5d="tok" rel="stylesheet" href="../kanon/tokenlar.css">
 <link data-t5d="tok" rel="stylesheet" href="../kanon/markalar/diet.css">
 <link rel="stylesheet" href="../kanon/alt-cubuk.css">
 <link data-t4="b" rel="stylesheet" href="varliklar/reference/shared/dm-diet-b.css">
 <link data-t4="e" rel="stylesheet" href="varliklar/reference/shared/dm-diet-e.css">
+<link data-t5d="f" rel="stylesheet" href="varliklar/reference/shared/dm-diet-t5d-f.css">
 <link data-t5d="g" rel="stylesheet" href="varliklar/reference/shared/dm-diet-t5d-g.css">
 </head>
 
-<body data-banner="detay" data-brand="diet" data-nav="beslenme">
+<body data-brand="diet" data-nav="programlar" data-banner="liste">
 
 <!-- ===== TOP UTILITY BAR ===== -->
 <div class="topbar ust-bant">
@@ -519,126 +611,357 @@
     window.DD_AUTH = {"auth":false,"roles":[],"verified":false,"level":0,"hasData":false,"hasProgram":false,"name":null,"handle":null,"avatarUrl":null};
     window.DD_ASSETS = "https:\/\/dadadiet.com\/reference\/diet\/";
     window.DD_STATS = {"foods":"399","programs":"15"};
-    window.DD_LANG = {"current":"tr","currentLabel":"TR","currentName":"T\u00fcrk\u00e7e","menuLabel":"Dil se\u00e7imi","options":[{"code":"en","label":"EN","name":"English","href":"\/en\/food\/purslane","switchLabel":"Siteyi English dilinde g\u00f6r\u00fcnt\u00fcle"}],"sozluk":{"soon":"Yak\u0131nda","kapat":"Kapat","girisYap":"Giri\u015f Yap","dil":"Dil","populer":"Pop\u00fcler","markaEtiketi":"DadaDiet \u2014 Sa\u011fl\u0131kl\u0131 Ya\u015fam","markaDunyalari":"DadaMentor d\u00fcnyalar\u0131","tbBesinDegeri":":sayi besin de\u011feri","tbBesinDegerleri":"Besin de\u011ferleri","megaBesininDegeri":":sayi besinin de\u011feri","megaBesinlerinDegeri":"Besinlerin de\u011feri","navAraclar":"Sa\u011fl\u0131k Ara\u00e7lar\u0131","navTumAraclar":"T\u00fcm Sa\u011fl\u0131k Ara\u00e7lar\u0131","navHesaplayicilar":"Hesaplay\u0131c\u0131lar","navHesaplayicilarAlt":"BK\u0130, kalori, su, makro, porsiyon","navTestler":"Testler","navTestlerAlt":"Al\u0131\u015fkanl\u0131\u011f\u0131n\u0131 birka\u00e7 soruda \u00f6l\u00e7","navBeslenme":"Beslenme","navRehber":"Beslenme Rehberi","navRehberAlt":"Dengeli tabak, \u00f6\u011f\u00fcn, porsiyon","navKutuphane":"Besin K\u00fct\u00fcphanesi","navIpuclari":"Beslenme \u0130pu\u00e7lar\u0131","navIpuclariAlt":"K\u0131sa, uygulanabilir yaz\u0131lar","navKacKalori":"Ka\u00e7 Kalori?","navKacKaloriAlt":"Porsiyon kar\u015f\u0131l\u0131klar\u0131 ve alternatifler","navPufNoktalari":"Diyetin P\u00fcf Noktalar\u0131","navPufNoktalariAlt":"Mutfakta i\u015fe yarayan pratik bilgiler","navTarifler":"Sa\u011fl\u0131kl\u0131 Tarifler","navTariflerAlt":"Sa\u011fl\u0131k odakl\u0131 tarif koleksiyonu","megaRehberRozet":"Rehber","megaRehberBaslik":"Dengeli bir tabak nas\u0131l kurulur?","navProgramlar":"Programlar","navProgramBul":"Program Bul","navProgramBulAlt":"Be\u015f soruyla e\u015fle\u015ftirme","navHedefeGore":"Hedefe G\u00f6re","navHedefeGoreAlt":"Kilo ver, dengelen, kas yap","navYasamBicimi":"Ya\u015fam Bi\u00e7imine G\u00f6re","navYasamBicimiAlt":"Aile, \u00f6\u011frenci, sporcu, bitkisel","navTercih":"Beslenme Tercihine G\u00f6re","navTercihAlt":"Akdeniz, bitkisel, y\u00fcksek protein","navIhtiyac":"\u0130htiyac\u0131na G\u00f6re","navIhtiyacAlt":"Ekonomik, pratik, tok tutan","navSure":"S\u00fcreye G\u00f6re","navSureAlt":"Ka\u00e7 g\u00fcn, g\u00fcnde ne kadar vakit","navDiyetisyenler":"Diyetisyenler","navDiyetisyen":"Diyetisyen","aramaAria":"DadaDiet i\u00e7eri\u011finde ara","planim":"Plan\u0131m","hesabim":"Hesab\u0131m","menuAria":"Men\u00fc","amGunlukTakip":"G\u00fcnl\u00fck Takip","amProgramim":"Program\u0131m","amPrograminiBul":"Program\u0131n\u0131 Bul","amIlerlemem":"\u0130lerlemem","amAlisveris":"Al\u0131\u015fveri\u015f Listem","amUzman":"Uzman Deste\u011fim","amKaydettiklerim":"Kaydettiklerim","amSaglikProfilim":"Sa\u011fl\u0131k Profilim","amAbonelik":"Aboneli\u011fim ve \u00d6demelerim","amHesapAyarlar":"Hesap ve Ayarlar","amDestekMerkezi":"Destek Merkezi","amCikis":"\u00c7\u0131k\u0131\u015f","amGrupGunluk":"G\u00fcnl\u00fck Kullan\u0131m","amGrupDestek":"\u0130\u00e7erik ve Uzman Deste\u011fi","amGrupHesap":"\u00dcyelik ve Hesap","drawerAria":"Mobil men\u00fc","drawerKapat":"Men\u00fcy\u00fc kapat","bottomNavAria":"Mobil alt navigasyon","fbTabAria":"G\u00f6r\u00fc\u015f Bildir \u2014 \u00f6neri ve \u015fikayet","fbBaslik":"G\u00f6r\u00fc\u015f Bildir","fbAciklama":"\u00d6nerin, \u015fikayetin veya sorun \u2014 hepsine kulak veriyoruz.","fbKonuSec":"Konu se\u00e7","fbKonuOneri":"\u00d6nerim var","fbKonuSoru":"Bir sorum var","fbKonuSorun":"Teknik sorun","fbKonuIhlal":"\u0130hlal bildirimi","fbKonuPuan":"Puan ver","fbIlgiliAlan":"\u0130lgili alan","fbDiger":"Di\u011fer","fbOneriPh":"\u00d6nerini anlat *","fbEpostaOps":"E-posta adresin (opsiyonel)","fbSoruKonusu":"Sorunun konusu *","fbOptUyelikHesap":"\u00dcyelik \u0026 Hesap","fbOptDiyetisyenRandevu":"Diyetisyen randevusu","fbSoruPh":"Sorunu yaz *","fbEpostaCevap":"E-posta adresin (cevap i\u00e7in) *","fbNerede":"Sorunu nerede ya\u015fad\u0131n? *","fbOptAnasayfa":"Anasayfa","fbOptArama":"Arama \/ Dolapta Ne Var?","fbOptUyelikGiris":"\u00dcyelik \u0026 Giri\u015f","fbOptMobil":"Mobil uygulama","fbSorunPh":"Sorunu k\u0131saca anlat \u2014 ne yapt\u0131n, ne oldu? *","fbEkranGoruntusu":"Ekran g\u00f6r\u00fcnt\u00fcs\u00fc ekle","fbOpsiyonel":"(opsiyonel)","fbIhlalLink":"\u0130hlal i\u00e7eren sayfan\u0131n linki *","fbIhlalTuru":"\u0130hlal t\u00fcr\u00fc *","fbOptTelif":"Telif hakk\u0131","fbOptUygunsuz":"Uygunsuz i\u00e7erik","fbOptSpam":"Spam \/ yan\u0131lt\u0131c\u0131 i\u00e7erik","fbAciklamaPh":"A\u00e7\u0131klama *","fbEpostaZorunlu":"E-posta adresin *","fbPuanSoru":"DadaDiet deneyimini nas\u0131l puanlars\u0131n?","fbPuan":"Puan","fbPuan1":"\u00c7ok k\u00f6t\u00fc","fbPuan2":"K\u00f6t\u00fc","fbPuan3":"\u0130dare eder","fbPuan4":"\u0130yi","fbPuan5":"Harika","fbPuanPh":"Eklemek istedi\u011fin bir \u015fey var m\u0131? (opsiyonel)","fbKvkkBelge":"KVKK Ayd\u0131nlatma Metni","fbKvkkOnay":":belge\u0027ni okudum, onayl\u0131yorum.","fbGonder":"G\u00f6nder","fbBasariBaslik":"G\u00f6r\u00fc\u015f\u00fcn bize ula\u015ft\u0131","fbBasariMetin":"Te\u015fekk\u00fcrler! Ekibimiz en k\u0131sa s\u00fcrede inceleyip gerekirse e-posta ile d\u00f6n\u00fc\u015f yapacak.","fbHata429":"\u00c7ok s\u0131k g\u00f6nderdin. Biraz bekleyip yeniden dene.","fbHataGenel":"G\u00f6r\u00fc\u015f\u00fcn g\u00f6nderilemedi. L\u00fctfen yeniden dene.","fbHataUc":"G\u00f6r\u00fc\u015f g\u00f6nderme ucu bu sayfada tan\u0131ml\u0131 de\u011fil.","fbHataOturum":"Oturum bilgin tazelenmeli \u2014 sayfay\u0131 yenileyip yeniden dene.","fbHataAg":"G\u00f6r\u00fc\u015f\u00fcn g\u00f6nderilemedi. Ba\u011flant\u0131n\u0131 kontrol edip yeniden dene.","cookieAria":"\u00c7erez bilgilendirmesi","cookieMetin":"Bu sitede yaln\u0131z gerekli \u00e7erezler kullan\u0131l\u0131yor: oturum ve g\u00fcvenlik. G\u00f6r\u00fcn\u00fcm ve form tercihlerin taray\u0131c\u0131n\u0131n kendi yerel depolamas\u0131nda kal\u0131r. Zorunlu \u00e7erezler d\u0131\u015f\u0131ndaki kategoriler varsay\u0131lan olarak kapal\u0131d\u0131r ve onay\u0131n olmadan \u00e7al\u0131\u015ft\u0131r\u0131lmaz; bug\u00fcn Platform\u0027da bu kategorilerden hi\u00e7biri kullan\u0131lm\u0131yor.","cookiePolitika":"\u00c7erez Politikas\u0131","cookieKabul":"Anlad\u0131m","lgAria":"Giri\u015f gerekli","lgBaslik":"Bu i\u015flem i\u00e7in giri\u015f yap","lgAciklama":"Kaydetmek, yorum yapmak ve takip etmek i\u00e7in DadaDiet hesab\u0131na giri\u015f yapman gerekiyor.","lgAnaSayfa":"Ana sayfaya d\u00f6n","mpAria":"DadaMentor asistan","mpMiniLbl":"Ment\u00f6r","mpOnline":"\u00e7evrimi\u00e7i","mpBubble":"Bug\u00fcn sana nas\u0131l yard\u0131mc\u0131 olay\u0131m?","mpKucult":"Paneli k\u00fc\u00e7\u00fclt","mpBuyut":"Paneli b\u00fcy\u00fct","toTop":"Ba\u015fa d\u00f6n"}};
+    window.DD_LANG = {"current":"tr","currentLabel":"TR","currentName":"T\u00fcrk\u00e7e","menuLabel":"Dil se\u00e7imi","options":[{"code":"en","label":"EN","name":"English","href":"\/en\/programs","switchLabel":"Siteyi English dilinde g\u00f6r\u00fcnt\u00fcle"}],"sozluk":{"soon":"Yak\u0131nda","kapat":"Kapat","girisYap":"Giri\u015f Yap","dil":"Dil","populer":"Pop\u00fcler","markaEtiketi":"DadaDiet \u2014 Sa\u011fl\u0131kl\u0131 Ya\u015fam","markaDunyalari":"DadaMentor d\u00fcnyalar\u0131","tbBesinDegeri":":sayi besin de\u011feri","tbBesinDegerleri":"Besin de\u011ferleri","megaBesininDegeri":":sayi besinin de\u011feri","megaBesinlerinDegeri":"Besinlerin de\u011feri","navAraclar":"Sa\u011fl\u0131k Ara\u00e7lar\u0131","navTumAraclar":"T\u00fcm Sa\u011fl\u0131k Ara\u00e7lar\u0131","navHesaplayicilar":"Hesaplay\u0131c\u0131lar","navHesaplayicilarAlt":"BK\u0130, kalori, su, makro, porsiyon","navTestler":"Testler","navTestlerAlt":"Al\u0131\u015fkanl\u0131\u011f\u0131n\u0131 birka\u00e7 soruda \u00f6l\u00e7","navBeslenme":"Beslenme","navRehber":"Beslenme Rehberi","navRehberAlt":"Dengeli tabak, \u00f6\u011f\u00fcn, porsiyon","navKutuphane":"Besin K\u00fct\u00fcphanesi","navIpuclari":"Beslenme \u0130pu\u00e7lar\u0131","navIpuclariAlt":"K\u0131sa, uygulanabilir yaz\u0131lar","navKacKalori":"Ka\u00e7 Kalori?","navKacKaloriAlt":"Porsiyon kar\u015f\u0131l\u0131klar\u0131 ve alternatifler","navPufNoktalari":"Diyetin P\u00fcf Noktalar\u0131","navPufNoktalariAlt":"Mutfakta i\u015fe yarayan pratik bilgiler","navTarifler":"Sa\u011fl\u0131kl\u0131 Tarifler","navTariflerAlt":"Sa\u011fl\u0131k odakl\u0131 tarif koleksiyonu","megaRehberRozet":"Rehber","megaRehberBaslik":"Dengeli bir tabak nas\u0131l kurulur?","navProgramlar":"Programlar","navProgramBul":"Program Bul","navProgramBulAlt":"Be\u015f soruyla e\u015fle\u015ftirme","navHedefeGore":"Hedefe G\u00f6re","navHedefeGoreAlt":"Kilo ver, dengelen, kas yap","navYasamBicimi":"Ya\u015fam Bi\u00e7imine G\u00f6re","navYasamBicimiAlt":"Aile, \u00f6\u011frenci, sporcu, bitkisel","navTercih":"Beslenme Tercihine G\u00f6re","navTercihAlt":"Akdeniz, bitkisel, y\u00fcksek protein","navIhtiyac":"\u0130htiyac\u0131na G\u00f6re","navIhtiyacAlt":"Ekonomik, pratik, tok tutan","navSure":"S\u00fcreye G\u00f6re","navSureAlt":"Ka\u00e7 g\u00fcn, g\u00fcnde ne kadar vakit","navDiyetisyenler":"Diyetisyenler","navDiyetisyen":"Diyetisyen","aramaAria":"DadaDiet i\u00e7eri\u011finde ara","planim":"Plan\u0131m","hesabim":"Hesab\u0131m","menuAria":"Men\u00fc","amGunlukTakip":"G\u00fcnl\u00fck Takip","amProgramim":"Program\u0131m","amPrograminiBul":"Program\u0131n\u0131 Bul","amIlerlemem":"\u0130lerlemem","amAlisveris":"Al\u0131\u015fveri\u015f Listem","amUzman":"Uzman Deste\u011fim","amKaydettiklerim":"Kaydettiklerim","amSaglikProfilim":"Sa\u011fl\u0131k Profilim","amAbonelik":"Aboneli\u011fim ve \u00d6demelerim","amHesapAyarlar":"Hesap ve Ayarlar","amDestekMerkezi":"Destek Merkezi","amCikis":"\u00c7\u0131k\u0131\u015f","amGrupGunluk":"G\u00fcnl\u00fck Kullan\u0131m","amGrupDestek":"\u0130\u00e7erik ve Uzman Deste\u011fi","amGrupHesap":"\u00dcyelik ve Hesap","drawerAria":"Mobil men\u00fc","drawerKapat":"Men\u00fcy\u00fc kapat","bottomNavAria":"Mobil alt navigasyon","fbTabAria":"G\u00f6r\u00fc\u015f Bildir \u2014 \u00f6neri ve \u015fikayet","fbBaslik":"G\u00f6r\u00fc\u015f Bildir","fbAciklama":"\u00d6nerin, \u015fikayetin veya sorun \u2014 hepsine kulak veriyoruz.","fbKonuSec":"Konu se\u00e7","fbKonuOneri":"\u00d6nerim var","fbKonuSoru":"Bir sorum var","fbKonuSorun":"Teknik sorun","fbKonuIhlal":"\u0130hlal bildirimi","fbKonuPuan":"Puan ver","fbIlgiliAlan":"\u0130lgili alan","fbDiger":"Di\u011fer","fbOneriPh":"\u00d6nerini anlat *","fbEpostaOps":"E-posta adresin (opsiyonel)","fbSoruKonusu":"Sorunun konusu *","fbOptUyelikHesap":"\u00dcyelik \u0026 Hesap","fbOptDiyetisyenRandevu":"Diyetisyen randevusu","fbSoruPh":"Sorunu yaz *","fbEpostaCevap":"E-posta adresin (cevap i\u00e7in) *","fbNerede":"Sorunu nerede ya\u015fad\u0131n? *","fbOptAnasayfa":"Anasayfa","fbOptArama":"Arama \/ Dolapta Ne Var?","fbOptUyelikGiris":"\u00dcyelik \u0026 Giri\u015f","fbOptMobil":"Mobil uygulama","fbSorunPh":"Sorunu k\u0131saca anlat \u2014 ne yapt\u0131n, ne oldu? *","fbEkranGoruntusu":"Ekran g\u00f6r\u00fcnt\u00fcs\u00fc ekle","fbOpsiyonel":"(opsiyonel)","fbIhlalLink":"\u0130hlal i\u00e7eren sayfan\u0131n linki *","fbIhlalTuru":"\u0130hlal t\u00fcr\u00fc *","fbOptTelif":"Telif hakk\u0131","fbOptUygunsuz":"Uygunsuz i\u00e7erik","fbOptSpam":"Spam \/ yan\u0131lt\u0131c\u0131 i\u00e7erik","fbAciklamaPh":"A\u00e7\u0131klama *","fbEpostaZorunlu":"E-posta adresin *","fbPuanSoru":"DadaDiet deneyimini nas\u0131l puanlars\u0131n?","fbPuan":"Puan","fbPuan1":"\u00c7ok k\u00f6t\u00fc","fbPuan2":"K\u00f6t\u00fc","fbPuan3":"\u0130dare eder","fbPuan4":"\u0130yi","fbPuan5":"Harika","fbPuanPh":"Eklemek istedi\u011fin bir \u015fey var m\u0131? (opsiyonel)","fbKvkkBelge":"KVKK Ayd\u0131nlatma Metni","fbKvkkOnay":":belge\u0027ni okudum, onayl\u0131yorum.","fbGonder":"G\u00f6nder","fbBasariBaslik":"G\u00f6r\u00fc\u015f\u00fcn bize ula\u015ft\u0131","fbBasariMetin":"Te\u015fekk\u00fcrler! Ekibimiz en k\u0131sa s\u00fcrede inceleyip gerekirse e-posta ile d\u00f6n\u00fc\u015f yapacak.","fbHata429":"\u00c7ok s\u0131k g\u00f6nderdin. Biraz bekleyip yeniden dene.","fbHataGenel":"G\u00f6r\u00fc\u015f\u00fcn g\u00f6nderilemedi. L\u00fctfen yeniden dene.","fbHataUc":"G\u00f6r\u00fc\u015f g\u00f6nderme ucu bu sayfada tan\u0131ml\u0131 de\u011fil.","fbHataOturum":"Oturum bilgin tazelenmeli \u2014 sayfay\u0131 yenileyip yeniden dene.","fbHataAg":"G\u00f6r\u00fc\u015f\u00fcn g\u00f6nderilemedi. Ba\u011flant\u0131n\u0131 kontrol edip yeniden dene.","cookieAria":"\u00c7erez bilgilendirmesi","cookieMetin":"Bu sitede yaln\u0131z gerekli \u00e7erezler kullan\u0131l\u0131yor: oturum ve g\u00fcvenlik. G\u00f6r\u00fcn\u00fcm ve form tercihlerin taray\u0131c\u0131n\u0131n kendi yerel depolamas\u0131nda kal\u0131r. Zorunlu \u00e7erezler d\u0131\u015f\u0131ndaki kategoriler varsay\u0131lan olarak kapal\u0131d\u0131r ve onay\u0131n olmadan \u00e7al\u0131\u015ft\u0131r\u0131lmaz; bug\u00fcn Platform\u0027da bu kategorilerden hi\u00e7biri kullan\u0131lm\u0131yor.","cookiePolitika":"\u00c7erez Politikas\u0131","cookieKabul":"Anlad\u0131m","lgAria":"Giri\u015f gerekli","lgBaslik":"Bu i\u015flem i\u00e7in giri\u015f yap","lgAciklama":"Kaydetmek, yorum yapmak ve takip etmek i\u00e7in DadaDiet hesab\u0131na giri\u015f yapman gerekiyor.","lgAnaSayfa":"Ana sayfaya d\u00f6n","mpAria":"DadaMentor asistan","mpMiniLbl":"Ment\u00f6r","mpOnline":"\u00e7evrimi\u00e7i","mpBubble":"Bug\u00fcn sana nas\u0131l yard\u0131mc\u0131 olay\u0131m?","mpKucult":"Paneli k\u00fc\u00e7\u00fclt","mpBuyut":"Paneli b\u00fcy\u00fct","toTop":"Ba\u015fa d\u00f6n"}};
     window.DD_FEATURED = {"href":"https:\/\/dadadiet.com\/program\/dengeli-beslenme","title":"Akdeniz Tipi Beslenme \u2014 7 g\u00fcnl\u00fck","cover":"https:\/\/images.unsplash.com\/photo-1540420773420-3366772f4999?w=700"};
 </script>
 
 <main class="page-main" id="pageMain" style="margin-bottom: 612px;">
-    
-<section class="nb-top">
+    <!-- SAYFA İÇERİĞİ — F10: DİYET LİSTELERİ (research m6) -->
+
+<!-- ===== HERO ===== -->
+<section class="below-header dl-top">
   <div class="wrap">
     <nav class="rd-crumb" aria-label="Sayfa yolu">
-    <a href="anasayfa.html"><i class="fa-solid fa-house"></i></a>
-            <i class="fa-solid fa-chevron-right"></i>
-                    <a href="beslenme.html">Beslenme</a>
-                    <i class="fa-solid fa-chevron-right"></i>
-                    <a href="besin-kutuphanesi.html">Besin Kütüphanesi</a>
-                    <i class="fa-solid fa-chevron-right"></i>
-                    <b>Semizotu</b>
-            </nav>
-    <span class="eyebrow"><i class="fa-solid fa-carrot"></i> Sebzeler</span>    <h1>Semizotu</h1>
-    <p class="lead">Çiğ semizotu. Yağ satırı ölçülen yeşillikler içinde en aşağıda duranıdır; protein satırı ise görece yukarıda kalır. Yoğurtlu salatada yaygındır.</p>
+      <a href="anasayfa.html"><i class="fa-solid fa-house"></i></a>
+      <i class="fa-solid fa-chevron-right"></i>
+      <a href="programlar.html">Diyet Listeleri</a>
+      <i class="fa-solid fa-chevron-right"></i>
+      <b>Süreye Göre</b>
+    </nav>
+    <div class="dl-hero">
+      <div class="dl-main">
+        <span class="eyebrow"><i class="fa-regular fa-calendar"></i> Süreye Göre</span>
+        <h1>Süreye göre <span class="accent">hazır programlar</span></h1>
+        <p class="lead">Kaç günlük olduğuna göre programlar. Şu an listedeki 12 programın 12'si de 7 günlük.</p>
+      </div>
+      <div class="dl-stats">
+        <div class="st"><b>12</b><span>Program</span></div>
+        <div class="st"><b>1</b><span>Süre seçeneği</span></div>
+        <div class="st"><b>7</b><span>Program uzunluğu</span></div>
+      </div>
+    </div>
+    </div>
   </div>
 </section>
 
-<section class="sec" style="background:var(--bg-white)">
+<!-- ===== FİLTRE — TEK EKSEN, ADRESTEN =====
+     Kullanıcı ekseni menüden seçerek gelir; sayfada ikinci bir seçim yoktur.
+     ?hedef=<deger> → yalnız hedef çip satırı  (menüdeki "Hedefe Göre" kalemi)
+     ?yasam=<deger> → yalnız yaşam biçimi çip satırı
+     parametresiz    → hedef ekseni varsayılan. -->
+<div class="dl-filter">
   <div class="wrap">
-    
-    
-    <div class="nd-head">
-      <div class="nd-fig" style="display:grid;place-items:center;background:linear-gradient(180deg,#E3F4EA,#c9ead8);color:var(--green-deep);font-size:40px"><i class="fa-solid fa-carrot"></i></div>
-      <div class="nd-info">
-        <span class="nd-cat">Sebzeler</span>        
-        <h2>Semizotu</h2>
-        <p>Çiğ semizotu. Yağ satırı ölçülen yeşillikler içinde en aşağıda duranıdır; protein satırı ise görece yukarıda kalır. Yoğurtlu salatada yaygındır.</p>
-      </div>
-      <div class="nd-kcal"><b>22</b><span>kcal / 100 g</span></div>
+    <div class="dl-fbar" id="dlSure" data-eksen="sure" role="group" aria-label="Süre filtresi">
+      <button class="dl-fchip active" type="button" data-val="tumu"><i class="fa-solid fa-border-all"></i> Tümü</button>
+      <button class="dl-fchip" type="button" data-val="7-gunluk">7 günlük</button>
     </div>
-
-    <div class="nd-grid">
-      <div class="macro-card">
-        <h3>Besin Değerleri <span class="muted" style="font-weight:500;font-size:12.5px">· 100 g başına</span></h3>
-        <table class="nut-table">
-          <thead><tr><th>Besin Ögesi</th><th>100 g</th></tr></thead>
-          <tbody>
-            <tr class="row-hl"><th>Enerji</th><td>22 kcal</td></tr>
-            <tr><th>Protein</th><td>2.64 g</td></tr>
-            <tr><th>Yağ</th><td>0.12 g</td></tr>
-            <tr><th>Karbonhidrat</th><td>1.77 g</td></tr>
-            <tr><th>Lif</th><td>1.59 g</td></tr>                                              </tbody>
-        </table>
-      </div>
-
-            <div class="macro-card">
-        <h3>Makro Dağılımı <span class="muted" style="font-weight:500;font-size:12.5px">(100 g)</span></h3>
-        <div class="macro-bar">
-          <span class="mp" style="width:58%"></span><span class="mc" style="width:39%"></span><span class="mf" style="width:3%"></span>
-        </div>
-        <div class="macro-legend">
-          <div class="macro-leg"><span class="sw p"></span> Protein <span><b>2.64 g</b><b>%58</b></span></div>
-          <div class="macro-leg"><span class="sw c"></span> Karbonhidrat <span><b>1.77 g</b><b>%39</b></span></div>
-          <div class="macro-leg"><span class="sw f"></span> Yağ <span><b>0.12 g</b><b>%3</b></span></div>
-        </div>
-        <div class="macro-note"><i class="fa-solid fa-circle-info"></i> Yüzdeler enerjiye katkıya göre hesaplanmıştır. Günlük ihtiyaç kişiye göre değişir.</div>
-      </div>
-    </div>
-
-    
-
-        
-    
-        
-    
-
-    
-    <div style="margin-top:46px">
-      <div class="sec-head reveal in">
-        <div>
-          <h2>Bu besinle uyumlu tarifler</h2>
-          <p class="lead">Dengeli tabaklar için denenmiş, sağlık odaklı tarif önerileri.</p>
-        </div>
-        <div class="sec-tools"><a class="see-all" href="../Gastro/tarifler.html" target="_blank" rel="noopener">Dada Gastro’da tarifleri gör <i class="fa-solid fa-arrow-right"></i></a></div>
-      </div>
-
-      
-          </div>
-
-    
-            <details class="qa dd-sources-fold">
-      <summary class="qa-head" aria-expanded="false">
-        <span class="qa-ico"><i class="fa-solid fa-book" aria-hidden="true"></i></span>
-        Kaynaklar
-        <i class="fa-solid fa-chevron-down qa-car" aria-hidden="true"></i>
-      </summary>
-      <div class="qa-body">
-        <div class="dd-sources">
-    <h3>Kaynaklar</h3>
-    <ul>
-                                <li>
-                <i class="fa-solid fa-book" aria-hidden="true"></i>
-                <span>
-                                            <span data-kaynak-yok="https://turkomp.tarimorman.gov.tr/food-semizotu-228">TürKomp — Ulusal Gıda Kompozisyon Veri Tabanı</span>
-                                                                <b>08.01.0059</b>
-                                                                <span class="dd-src-portion">100 g yenilebilir kısım</span>
-                                                                                    <span class="dd-src-date">erişim: 2026-08-15</span>
-                                    </span>
-            </li>
-            </ul>
+  </div>
 </div>
-      </div>
-    </details>
-      </div>
-</section>
 
-
-<section class="pf-disclaimer" aria-label="Tıbbi bilgilendirme">
+<section class="sec" style="background:var(--bg-white);padding-top:42px">
   <div class="wrap">
-    <i class="fa-solid fa-circle-info"></i>
-    <p>Bu sayfadaki içerik genel bilgilendirme amaçlıdır; <b>tıbbi teşhis veya tedavi yerine geçmez.</b> Kişiye özel beslenme planı yalnızca <b>yetkili bir diyetisyen</b> tarafından hazırlanır. Gebelik, kronik hastalık, düzenli ilaç kullanımı, çocuk beslenmesi veya klinik bir durum varsa plana başlamadan önce <b>hekim ve diyetisyen kontrolü zorunludur.</b></p>
+    
+  <div class="hr-note">
+    <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+    <p><b>Süre ekseninin şu an tek değeri var.</b>
+      Listedeki 12 programın 12'si de <b>7 günlük</b>; farklı uzunlukta bir program
+      henüz tanımlı değil, o yüzden süzgeçte tek seçenek görünüyor.
+      Menüde geçen “günde ne kadar vakit” ölçüsü de program verisinde
+      tutulmuyor — hazırlık süresi alanı yok, uydurulmadı.</p>
+  </div>
+
+    <div class="prog-grid">
+            <a class="prog-card" data-sure="7-gunluk" href="program__dengeli-beslenme.html" data-hedef="dengeli" data-yasam="genel" data-tercih="akdeniz dengeli" data-ihtiyac="lifli">
+  <div class="prog-media" style="background-image:url('varliklar/_dis/images.unsplash.com/photo-1540420773420-3366772f4999.jpg')">
+    
+    <span class="prog-cat green">Dengeli Beslenme</span>    <span class="prog-dur"><i class="fa-regular fa-calendar"></i> 7 günlük</span>
+  </div>
+  <div class="prog-body">
+    <h3>Akdeniz Tipi Beslenme</h3>
+    <p>Zeytinyağı, sebze, balık ve baklagil ağırlıklı; kalbe dost dengeli haftalık menü.</p>
+    
+    <div class="prog-tags">
+      <span class="prog-tag"><i class="fa-solid fa-fire"></i> ~1.500–1.700 kcal</span>      <span class="prog-tag"><i class="fa-solid fa-signal"></i> Orta</span>    </div>
+    
+    <div class="prog-foot">
+      <span class="meals">35 öğün planı</span>
+      <span class="go">İncele <i class="fa-solid fa-arrow-right"></i></span>
+    </div>
+  </div>
+</a>
+            <a class="prog-card" data-sure="7-gunluk" href="program__detoks.html" data-hedef="detoks" data-yasam="genel" data-tercih="vejetaryen" data-ihtiyac="pratik-ogun lifli">
+  <div class="prog-media" style="background-image:url('varliklar/_dis/images.unsplash.com/photo-1467453678174-768ec283a940.avif')">
+    
+    <span class="prog-cat green">Detoks</span>    <span class="prog-dur"><i class="fa-regular fa-calendar"></i> 7 günlük</span>
+  </div>
+  <div class="prog-body">
+    <h3>Hafif Detoks Programı</h3>
+    <p>Sebze çorbaları ve smoothie ağırlıklı, az işlenmiş öğünlerden kurulu kısa bir başlangıç programı.</p>
+    
+    <div class="prog-tags">
+      <span class="prog-tag"><i class="fa-solid fa-fire"></i> ~1.100–1.300 kcal</span>      <span class="prog-tag"><i class="fa-solid fa-signal"></i> Orta</span>    </div>
+    
+    <div class="prog-foot">
+      <span class="meals">35 öğün planı</span>
+      <span class="go">İncele <i class="fa-solid fa-arrow-right"></i></span>
+    </div>
+  </div>
+</a>
+            <a class="prog-card" data-sure="7-gunluk" href="program__oruc.html" data-hedef="oruc" data-yasam="genel" data-tercih="dengeli ev-yemekleri" data-ihtiyac="pratik-ogun tok-tutan">
+  <div class="prog-media" style="background-image:url('varliklar/_dis/images.unsplash.com/photo-1490818387583-1baba5e638af.avif')">
+    
+    <span class="prog-cat green">Aralıklı Oruç</span>    <span class="prog-dur"><i class="fa-regular fa-calendar"></i> 7 günlük</span>
+  </div>
+  <div class="prog-body">
+    <h3>16:8 Aralıklı Oruç</h3>
+    <p>8 saatlik öğün penceresine uygun, dengeli ve doyurucu iki haftalık örnek menü.</p>
+    
+    <div class="prog-tags">
+      <span class="prog-tag"><i class="fa-solid fa-fire"></i> ~1.600–1.800 kcal</span>      <span class="prog-tag"><i class="fa-solid fa-signal"></i> Orta</span>    </div>
+    
+    <div class="prog-foot">
+      <span class="meals">35 öğün planı</span>
+      <span class="go">İncele <i class="fa-solid fa-arrow-right"></i></span>
+    </div>
+  </div>
+</a>
+            <a class="prog-card" data-sure="7-gunluk" href="program__ogrenci.html" data-hedef="dengeli" data-yasam="ogrenci" data-tercih="" data-ihtiyac="ekonomik pratik-ogun tok-tutan">
+  <div class="prog-media" style="background-image:url('varliklar/_dis/images.unsplash.com/photo-1547592180-85f173990554.jpg')">
+    
+    <span class="prog-cat">Dengeli Beslenme</span>    <span class="prog-dur"><i class="fa-regular fa-calendar"></i> 7 günlük</span>
+  </div>
+  <div class="prog-body">
+    <h3>Öğrenci Dostu Menü</h3>
+    <p>Sınırlı bütçe ve zamana uygun; hızlı hazırlanan, doyurucu pratik öğünler.</p>
+    
+    <div class="prog-tags">
+      <span class="prog-tag"><i class="fa-solid fa-fire"></i> ~1.600–1.800 kcal</span>      <span class="prog-tag"><i class="fa-solid fa-signal"></i> Orta</span>    </div>
+    
+    <div class="prog-foot">
+      <span class="meals">35 öğün planı</span>
+      <span class="go">İncele <i class="fa-solid fa-arrow-right"></i></span>
+    </div>
+  </div>
+</a>
+            <a class="prog-card" data-sure="7-gunluk" href="program__protein.html" data-hedef="protein" data-yasam="sporcu" data-tercih="yuksek-protein ev-yemekleri" data-ihtiyac="tok-tutan">
+  <div class="prog-media" style="background-image:url('varliklar/_dis/images.unsplash.com/photo-1512852939750-1305098529bf.jpg')">
+    
+    <span class="prog-cat">Yüksek Protein</span>    <span class="prog-dur"><i class="fa-regular fa-calendar"></i> 7 günlük</span>
+  </div>
+  <div class="prog-body">
+    <h3>Yüksek Proteinli Plan</h3>
+    <p>Kas koruyan ve tok tutan, antrenman günlerine uygun protein ağırlıklı menü.</p>
+    
+    <div class="prog-tags">
+      <span class="prog-tag"><i class="fa-solid fa-fire"></i> ~1.800–2.000 kcal</span>      <span class="prog-tag"><i class="fa-solid fa-signal"></i> Orta</span>    </div>
+    
+    <div class="prog-foot">
+      <span class="meals">35 öğün planı</span>
+      <span class="go">İncele <i class="fa-solid fa-arrow-right"></i></span>
+    </div>
+  </div>
+</a>
+            <a class="prog-card" data-sure="7-gunluk" href="program__seker.html" data-hedef="seker" data-yasam="genel" data-tercih="" data-ihtiyac="tok-tutan lifli">
+  <div class="prog-media" style="background-image:url('varliklar/_dis/images.unsplash.com/photo-1505576399279-565b52d4ac71.jpg')">
+    
+    <span class="prog-cat">Şekersiz</span>    <span class="prog-dur"><i class="fa-regular fa-calendar"></i> 7 günlük</span>
+  </div>
+  <div class="prog-body">
+    <h3>Düşük Şeker Programı</h3>
+    <p>Rafine şeker ve şekerli içecek öne çıkmayan; tam tahıl, sebze ve lif ağırlıklı doyurucu bir hafta.</p>
+    
+    <div class="prog-tags">
+      <span class="prog-tag"><i class="fa-solid fa-fire"></i> ~1.450–1.650 kcal</span>      <span class="prog-tag"><i class="fa-solid fa-signal"></i> Orta</span>    </div>
+    
+    <div class="prog-foot">
+      <span class="meals">35 öğün planı</span>
+      <span class="go">İncele <i class="fa-solid fa-arrow-right"></i></span>
+    </div>
+  </div>
+</a>
+            <a class="prog-card" data-sure="7-gunluk" href="program__seyahat-haftasi.html" data-hedef="dengeli" data-yasam="seyahat" data-tercih="akdeniz" data-ihtiyac="pratik-ogun">
+  <div class="prog-media" style="background-image:url('varliklar/_dis/images.unsplash.com/photo-1476224203421-9ac39bcb3327.jpg')">
+    
+    <span class="prog-cat">Dengeli Beslenme</span>    <span class="prog-dur"><i class="fa-regular fa-calendar"></i> 7 günlük</span>
+  </div>
+  <div class="prog-body">
+    <h3>Seyahat Haftası</h3>
+    <p>Mutfağı olmayan bir hafta: öğünler otel kahvaltısından, lokanta tabağından ve çantada taşınan basit kalemlerden kurulur.</p>
+    
+    <div class="prog-tags">
+      <span class="prog-tag"><i class="fa-solid fa-fire"></i> ~1.700–1.900 kcal</span>      <span class="prog-tag"><i class="fa-solid fa-signal"></i> Kolay</span>    </div>
+    
+    <div class="prog-foot">
+      <span class="meals">35 öğün planı</span>
+      <span class="go">İncele <i class="fa-solid fa-arrow-right"></i></span>
+    </div>
+  </div>
+</a>
+            <span class="prog-card" data-sure="7-gunluk" data-hedef="kas" data-yasam="sporcu" data-tercih="yuksek-protein" data-ihtiyac="tok-tutan" data-kaynak-yok="https://dadadiet.com/program/kas-yap">
+  <div class="prog-media" style="background-image:url('varliklar/_dis/images.unsplash.com/photo-1546069901-ba9599a7e63c.jpg')">
+    
+    <span class="prog-cat">Kas Yap</span>    <span class="prog-dur"><i class="fa-regular fa-calendar"></i> 7 günlük</span>
+  </div>
+  <div class="prog-body">
+    <h3>Antrenman Günü Düzeni</h3>
+    <p>Antrenman gününün saatlerine göre kurulmuş yedi gün: öğünler güne yayılır, seans öncesi ve sonrası ara öğünler tahıl ile protein taşır.</p>
+    
+    <div class="prog-tags">
+      <span class="prog-tag"><i class="fa-solid fa-fire"></i> ~2.000–2.200 kcal</span>      <span class="prog-tag"><i class="fa-solid fa-signal"></i> Orta</span>    </div>
+    
+    <div class="prog-foot">
+      <span class="meals">35 öğün planı</span>
+      <span class="go">İncele <i class="fa-solid fa-arrow-right"></i></span>
+    </div>
+  </div>
+</span>
+            <span class="prog-card" data-sure="7-gunluk" data-hedef="dengeli" data-yasam="yogun-calisan" data-tercih="ev-yemekleri" data-ihtiyac="pratik-ogun tok-tutan" data-kaynak-yok="https://dadadiet.com/program/yogun-tempo">
+  <div class="prog-media" style="background-image:url('varliklar/_dis/images.unsplash.com/photo-1504674900247-0877df9cc836.jpg')">
+    
+    <span class="prog-cat">Dengeli Beslenme</span>    <span class="prog-dur"><i class="fa-regular fa-calendar"></i> 7 günlük</span>
+  </div>
+  <div class="prog-body">
+    <h3>Yoğun Tempo</h3>
+    <p>Tek tencere, tek fırın tepsisi ve dolu bir dondurucu üzerine kurulu yedi gün. Her akşam yemeği ertesi gün ısıtılmak üzere pişer.</p>
+    
+    <div class="prog-tags">
+      <span class="prog-tag"><i class="fa-solid fa-fire"></i> ~1.750–1.950 kcal</span>      <span class="prog-tag"><i class="fa-solid fa-signal"></i> Orta</span>    </div>
+    
+    <div class="prog-foot">
+      <span class="meals">35 öğün planı</span>
+      <span class="go">İncele <i class="fa-solid fa-arrow-right"></i></span>
+    </div>
+  </div>
+</span>
+            <span class="prog-card" data-sure="7-gunluk" data-hedef="dengeli" data-yasam="evden-calisan" data-tercih="ev-yemekleri" data-ihtiyac="ekonomik" data-kaynak-yok="https://dadadiet.com/program/evden-calisma">
+  <div class="prog-media" style="background-image:url('varliklar/_dis/images.unsplash.com/photo-1473093226795-af9932fe5856.jpg')">
+    
+    <span class="prog-cat">Dengeli Beslenme</span>    <span class="prog-dur"><i class="fa-regular fa-calendar"></i> 7 günlük</span>
+  </div>
+  <div class="prog-body">
+    <h3>Evden Çalışma Menüsü</h3>
+    <p>Beş öğünün belirli saatlere oturduğu, her tabağın tek tavada ya da tencerede kısa sürede taze piştiği yedi günlük ev menüsü.</p>
+    
+    <div class="prog-tags">
+      <span class="prog-tag"><i class="fa-solid fa-fire"></i> ~1.650–1.850 kcal</span>      <span class="prog-tag"><i class="fa-solid fa-signal"></i> Kolay</span>    </div>
+    
+    <div class="prog-foot">
+      <span class="meals">35 öğün planı</span>
+      <span class="go">İncele <i class="fa-solid fa-arrow-right"></i></span>
+    </div>
+  </div>
+</span>
+            <a class="prog-card" data-sure="7-gunluk" href="program__glutensiz-hafta.html" data-hedef="dengeli" data-yasam="genel" data-tercih="glutensiz" data-ihtiyac="lifli">
+  <div class="prog-media" style="background-image:url('varliklar/_dis/images.unsplash.com/photo-1466637574441-749b8f19452f.jpg')">
+    
+    <span class="prog-cat">Dengeli Beslenme</span>    <span class="prog-dur"><i class="fa-regular fa-calendar"></i> 7 günlük</span>
+  </div>
+  <div class="prog-body">
+    <h3>Glütensiz Hafta</h3>
+    <p>Buğday, arpa ve çavdar geçmeyen yedi günlük örnek menü; tahılın yerini pirinç, karabuğday, mısır ve baklagiller alır.</p>
+    
+    <div class="prog-tags">
+      <span class="prog-tag"><i class="fa-solid fa-fire"></i> ~1.600–1.800 kcal</span>      <span class="prog-tag"><i class="fa-solid fa-signal"></i> Orta</span>    </div>
+    
+    <div class="prog-foot">
+      <span class="meals">35 öğün planı</span>
+      <span class="go">İncele <i class="fa-solid fa-arrow-right"></i></span>
+    </div>
+  </div>
+</a>
+            <span class="prog-card" data-sure="7-gunluk" data-hedef="dengeli" data-yasam="ofis" data-tercih="dengeli" data-ihtiyac="pratik-ogun ise-goturulebilir" data-kaynak-yok="https://dadadiet.com/program/ofis-ogunleri">
+  <div class="prog-media" style="background-image:url('varliklar/_dis/images.unsplash.com/photo-1494859802809-d069c3b71a8a.jpg')">
+    
+    <span class="prog-cat">Dengeli Beslenme</span>    <span class="prog-dur"><i class="fa-regular fa-calendar"></i> 7 günlük</span>
+  </div>
+  <div class="prog-body">
+    <h3>Ofis Öğünleri</h3>
+    <p>Öğle ve ara öğünleri akşamdan hazırlanan, çantada taşınan ve ısıtılmadan yenen bir hafta; kahvaltı ile akşam yemeği evde sıcak kurulur.</p>
+    
+    <div class="prog-tags">
+      <span class="prog-tag"><i class="fa-solid fa-fire"></i> ~1.550–1.750 kcal</span>      <span class="prog-tag"><i class="fa-solid fa-signal"></i> Kolay</span>    </div>
+    
+    <div class="prog-foot">
+      <span class="meals">35 öğün planı</span>
+      <span class="go">İncele <i class="fa-solid fa-arrow-right"></i></span>
+    </div>
+  </div>
+</span>
+          </div>
+    <nav class="pagi" aria-label="Sayfalama">
+                    <span class="pg arrow" disabled="" aria-hidden="true"><i class="fa-solid fa-angles-left" aria-hidden="true"></i></span>
+            <span class="pg arrow" disabled="" aria-hidden="true"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i></span>
+                                                        <span class="pg active" aria-current="page">1</span>
+                                                            <span class="pg" disabled aria-disabled="true" data-veri-yok>2</span>
+                                        <span class="pg arrow" disabled aria-disabled="true" data-veri-yok aria-label="Sonraki sayfa"><i class="fa-solid fa-chevron-right" aria-hidden="true"></i></span>
+            <span class="pg arrow" disabled aria-disabled="true" data-veri-yok aria-label="Son sayfa"><i class="fa-solid fa-angles-right" aria-hidden="true"></i></span>
+                            <span class="pagi-note">
+                                    15 program · sayfa 1 / 2
+                            </span>
+            
+              <span class="pagi-note" data-veri-notu>Bu prototipte yalnız ilk sayfanın verisi var</span>
+            </nav>
   </div>
 </section>
 
-</main><!-- /.page-main -->
+` ile kapanıyordu. Blade `--}}` gördüğü
+     için kendi yorumunu KAPATMIYOR (açılışı ``ı HTML yorumu kapatıcısı SAYMIYOR. Sonuç: yorum bir sonraki
+     `--&gt;`e kadar sürüyordu ve o kapatıcı `</main><!-- /.page-main -->`
+     satırındaydı.
+
+     Yutulanlar ÖLÇÜLDÜ: bu CTA bandı + tıbbi bilgilendirme şeridi (557px
+     içerik) hiç render edilmiyordu, VE `` de yorumun içinde kalıyordu.
+     `` kaybolunca `.footer` DOM'da `#pageMain`in ÇOCUĞU oluyordu;
+     `#pageMain`in `z-index:2`si bir yığın bağlamı kurduğu için içerideki
+     `z-index:1` footer, main'in kendi içeriğini ÖRTÜYORDU. Belirti buydu:
+     `/programlar?hedef=tumu` gibi adreslerde kartlar "render olmuyor"
+     sanılıyordu — kartlar oradaydı, footer'ın altında kalıyordu.
+
+     Ölçüm (yorum kapatıcısı düzeltilince):
+       footer #pageMain içinde   true  -&gt; false
+       #pageMain içindeki section   2  -&gt; 3
+       main yüksekliği          2566px -&gt; 3123px
+       son kartın merkezinde    footer -&gt; kartın kendi çocuğu
+
+     ⚠ Sunucu HTML'i DOĞRU basıyordu; bozulma tarayıcı ayrıştırıcısında
+     oluyordu. Yani "HTTP 200 ve gövde dolu" bu kusuru görmez.
+
+     🔴 R27 — YENİDEN TASARLANDI (Beyar kararı C3, 2026-08-24). Eskisi bir
+     mobil uygulama tanıtımıydı: telefon maketi + "İndir App Store/Google
+     Play" düğmeleri + kartın dışına taşan "Yakında" rozeti — uygulama
+     yayında değilken yayında olmayan bir şeye çağrı yapıyordu (proje kuralı
+     zaten "Yakında" rozetini yasaklar). Grid'in görsel yarısı ve mağaza
+     düğmeleri KOMPLE KALKTI; yerine hizmete (uygulamaya değil) yönlendiren
+     TEK eylemli bir bant geldi. Hedef `diet.wizard.general` — ücretsiz ön
+     değerlendirme sihirbazı; sonuçlarından biri doğrulanmış bir
+     diyetisyenle eşleştirmedir (bkz. `wizard/general.blade.php` "Uzman
+     desteği almak" seçeneği), yani tek düğme iki hedefi de kapsar. --}}
+<section class="sec" style="background:var(--bg-cream)">
+  <div class="wrap">
+    <div class="app-band">
+      <div class="app-intro">
+        <span class="eyebrow"><i class="fa-solid fa-clipboard-check"></i> Ücretsiz Ön Değerlendirme</span>
+        <h2>Sana uygun programı birlikte bulalım</h2>
+        <p class="lead">Birkaç soruyla hedefine en uygun programı öneriyoruz; istersen seni doğrulanmış bir diyetisyenle eşleştiriyoruz.</p>
+        <div class="app-feats">
+          <div class="app-feat"><span class="fi"><i class="fa-solid fa-list-check"></i></span> Hedefine göre kişiselleştirilmiş program önerisi</div>
+          <div class="app-feat"><span class="fi"><i class="fa-solid fa-user-doctor"></i></span> İstersen doğrulanmış bir diyetisyenle eşleş</div>
+          <div class="app-feat"><span class="fi"><i class="fa-solid fa-clock"></i></span> İki dakikada tamamlanır, tamamen ücretsizdir</div>
+        </div>
+        <a class="btn btn-green" href="bana-uygun-olani-bul.html">Bana Uygun Olanı Bul <i class="fa-solid fa-arrow-right"></i></a>
+      </div>
+    </div>
+    
+            <div class="reh-note reh-note-lg">
+  <i class="fa-solid fa-circle-info"></i>
+  <div>
+    <p><b>Genel bilgi notu.</b> Bu içerik genel beslenme okuryazarlığını desteklemek amacıyla hazırlanmıştır; <b>tıbbi teşhis veya tedavi yerine geçmez</b>, kişisel beslenme tavsiyesi niteliği taşımaz. Kişiye özel plan yalnızca <b>yetkili bir diyetisyen</b> tarafından hazırlanır; gebelik, kronik hastalık, düzenli ilaç kullanımı, çocuk beslenmesi veya klinik bir durum varsa plana başlamadan önce <b>hekim ve diyetisyen kontrolü zorunludur</b>. Sağlık durumuna ve bireysel gereksinimlerine özel bir plan için bir diyetisyene danış.</p>
+    <a class="btn btn-primary" href="diyetisyenler.html">Diyetisyen Bul <i class="fa-solid fa-arrow-right"></i></a>
+  </div>
+</div>
+  </div>
+</section>
+<!-- /.page-main -->
 
 
 
@@ -763,17 +1086,61 @@
 
 
 <script>
-/* "Kaynaklar" katlanır bloğu — native <details>/<summary> zaten klavyeyle
-   açılır/kapanır ve ekran okuyucuya açık/kapalı durumunu bildirir; burada
-   yazılan tek şey `aria-expanded`i `<summary>`e AÇIKÇA yazmak (erişilebilirlik
-   maddesi bunu istiyor), durumun kendisini bu script KURMUYOR. */
+/* ===== SAYFA JS — program filtresi: TEK EKSEN, adresten =====
+   Ekseni menü belirler, sayfada geçiş kontrolü yoktur. Görünen tek çip satırı
+   gelinen eksenindir; süzme o eksenin seçili değeriyle yapılır.
+   ?hedef=<deger> → hedef ekseni   (menüdeki "Hedefe Göre" kalemi)
+   ?yasam=<deger> → yaşam ekseni   (menüdeki "Yaşam Biçimine Göre" kalemi)
+   parametresiz   → hedef ekseni; deger "tumu" olabilir. */
 (function(){
-  var d=document.querySelector('.dd-sources-fold');
-  if(!d)return;
-  var s=d.querySelector('summary');
-  var sync=function(){s.setAttribute('aria-expanded',d.open?'true':'false');};
-  sync();
-  d.addEventListener('toggle',sync);
+  var p=new URLSearchParams(location.search);
+  /* Eksen sırası controller'daki `match` ile AYNI olmak zorunda: sunucu
+     `?ihtiyac=` gördüğünde onu seçiyorsa, JS de onu seçmeli. İki taraf
+     ayrışırsa sunucu bir ekseni süzerken sayfa başka bir çip satırını
+     açık gösterir (2026-08-16, dört eksen dilimi). */
+  /* Bu ekranın TEK ekseni süre; sürücü donörle aynı, yalnız eksen adı değişti. */
+  var eksen='sure';
+  var bar=document.querySelector('.dl-fbar[data-eksen="'+eksen+'"]');
+  if(!bar)return;
+  var cards=Array.prototype.slice.call(document.querySelectorAll('.prog-card'));
+
+  // yalnız gelinen eksenin çip satırı durur, diğeri gizlenir
+  document.querySelectorAll('.dl-fbar').forEach(function(b){ b.hidden = b!==bar; });
+
+  function apply(val){
+    cards.forEach(function(c){
+      var on = val==='tumu' ||
+               (c.getAttribute('data-'+eksen)||'').split(/\s+/).indexOf(val)>-1;
+      c.style.display = on?'':'none';
+    });
+  }
+  var chips=Array.prototype.slice.call(bar.querySelectorAll('.dl-fchip'));
+  function select(val){
+    var hit=null;
+    chips.forEach(function(x){ if(x.getAttribute('data-val')===val)hit=x; });
+    if(!hit)return false;
+    chips.forEach(function(x){x.classList.remove('active')});
+    hit.classList.add('active');
+    apply(val);
+    return true;
+  }
+
+  chips.forEach(function(c){
+    c.addEventListener('click',function(){
+      var val=c.getAttribute('data-val');
+      select(val);
+      history.replaceState(null,'','?'+eksen+'='+val);
+    });
+  });
+
+  // adresten filtreyi seçili aç
+  var v=p.get(eksen);
+  if(v&&select(v)){
+    var f=document.querySelector('.dl-filter');
+    if(f)window.requestAnimationFrame(function(){
+      window.scrollTo({top:f.getBoundingClientRect().top+window.pageYOffset-120,behavior:'smooth'});
+    });
+  }
 })();
 </script>
 
@@ -782,4 +1149,5 @@
 <script src="varliklar/reference/diet/js/dd-shell.js"></script>
 <script src="varliklar/reference/shared/dd-kabuk.js"></script>
 <script data-t4="e" src="varliklar/reference/shared/dm-diet-e.js"></script>
+<script data-t5d="f" src="varliklar/reference/shared/dm-diet-t5d-f.js"></script>
 </body></html>

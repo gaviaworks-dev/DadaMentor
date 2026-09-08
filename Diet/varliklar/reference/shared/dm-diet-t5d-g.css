@@ -81,3 +81,30 @@
     font-size: var(--yazi-14);
   }
 }
+
+/* =====================================================================
+   ROL G · İKİNCİ KALEM — `.hr-note`un TOKEN YUVALARI
+   ---------------------------------------------------------------------
+   Bileşen deponun kendi dürüst not kutusu ve kuralı HER sayfada yüklü
+   (`dd-kabuk.css`). Ama kural üç değeri `--fit-tint` / `--fit-line` /
+   `--fit-deep`ten okuyor ve o üçü `dd-kabuk.css:6`da `:root`a DEĞİL kabuk
+   elemanlarına bildirilmiş (`.topbar,header,#drawer,…,.to-top`). Not
+   `<main>` içinde yaşadığı için hiçbirini miras almıyor:
+
+       ölçüldü   background  rgba(0,0,0,0)   ← var() tanımsız, saydama düştü
+                 border      0px none        ← geçersiz var() bildirimi düşürdü
+                 ikon        #211E16         ← --fit-deep yok, metin rengine düştü
+
+   Kural elenmiyor, DEĞER ulaşmıyor — token maddesinin bileşen katmanındaki
+   aynısı. Seçici YENİDEN TANIMLANMIYOR (kanonun "sayfaya ezme kuralı yazma"
+   maddesi): yalnız bileşenin kendi istediği üç yuva, bileşenin ÜSTÜNDE
+   dolduruluyor. Değerler uydurulmadı — kanonun kardeş not bileşeni
+   `.bilgi-notu` (bilesenler.css §) tam bu üç tokeni kullanıyor ve satır içi
+   kanon kopyası taşıyan sayfalarda #eaf7f0 / #cdeadd / #1c7a4e olarak
+   ÇİZİLİYOR; ölçülen değerlerle birebir aynı yuvalar bağlandı.
+   ===================================================================== */
+.hr-note {
+  --fit-tint: var(--aksan-yikama);
+  --fit-line: var(--aksan-cizgi);
+  --fit-deep: var(--aksan-koyu);
+}
