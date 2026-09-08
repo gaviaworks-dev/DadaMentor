@@ -42,11 +42,6 @@
     s.scrollIntoView({ block: 'nearest' });
   }
 
-  var MAKET =
-    '<b>Maket giriş.</b> Bu prototipte kimlik doğrulanmaz — alanları ' +
-    'doldurup “Giriş Yap”a bastığında kapı seni doğrudan panele geçirir. ' +
-    'Gerçek doğrulama full-stack uygulamada çalışır.';
-
   /* 🔴 ÇIKIŞ "OTURUMU KAPATTIM" DEMEZ.
      Panelin hesap menüsündeki "Çıkış yap" bu kapıya `?cikis=1` ile gelir.
      Statik ağaçta oturum servisi yok, dolayısıyla KAPATILAN BİR OTURUM DA
@@ -66,9 +61,15 @@
     if (!form || form.dataset.prototipBound) return;
     form.dataset.prototipBound = '1';
 
-    /* kapı ne olduğunu AÇILIŞTA söyler; çıkışla gelindiyse onu söyler */
-    var cikisla = /(?:^|[?&])cikis=1(?:&|$)/.test(location.search);
-    serit(form, cikisla ? CIKIS : MAKET, 'is-note');
+    /* 🔴 AÇILIŞTAKİ "MAKET GİRİŞ" ŞERİDİ KALDIRILDI (Beyar, 2026-09-08).
+       Kapının maket olduğunu artık ALANLARIN KENDİSİ söylüyor: e-posta ve
+       şifre demo değerleriyle dolu geliyor (public prototipin kendi kalıbı,
+       `Gourmet/giris.html`). Dolu bir demo şifresi zaten "burada kimlik
+       doğrulanmıyor" demektir; üstüne bir de bildirim şeridi basmak aynı
+       şeyi iki kez söylemekti.
+       Çıkış notu KALIYOR: o, kullanıcının yaptığı bir eyleme verilen cevap
+       ve varsayılan ekranı kalabalıklaştırmıyor. */
+    if (/(?:^|[?&])cikis=1(?:&|$)/.test(location.search)) serit(form, CIKIS, 'is-note');
 
     form.addEventListener('submit', function (e) {
       e.preventDefault();      /* tarayıcı doğrulaması bu noktada GEÇMİŞTİR */
