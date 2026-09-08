@@ -1,0 +1,21 @@
+/* DadaDiet T5D · makale gövdesinde giriş paragrafı ile bölüm başlığı arası.
+   Kusur: `.reh-article > p.lead` ile onu izleyen `.sec-head` arasında boşluk
+   **0px** — yapışık duruyorlardı. 8 sayfada ölçüldü (ipucu 4 · kaç-kalori 4),
+   1440 ve 390'da aynı.
+
+   🔴 BU ÇİFTİN DONÖRÜ YOK — ölçüldü, uydurulmadı:
+     · `.sec-head` Fit ve Gastro'da HİÇ geçmiyor (45'er sayfa örneklendi, 0 ölçüm)
+     · Donörün "giriş paragrafı → sonraki bölüm" örneklemi gürültülü
+       (Fit 7 ölçüm; 3× -103px, 2× -127px — üst üste binen kaplar)
+     · Diet ağacının tamamında `.sec-head` yalnız 12 kez ölçülüyor ve
+       0px dışındaki değerler tek bir kanona oturmuyor: 74 · 44 · 38
+   Bu yüzden değer, T5 devrinde DONÖRDEN ölçülmüş ve belgelenmiş bölüm ritmine
+   bağlandı: `bolum-bas`→blok 34px @1440 · 24px @390. Kanon tokenı kullanıldı,
+   yeni sayı uydurulmadı. Ölçütün "donörle ±4px" kısmının öznesi olmadığı
+   raporda açıkça yazılıyor. */
+
+.reh-article > p.lead + .sec-head { margin-top: var(--bosluk-34); }
+
+@media (max-width: 640px) {
+  .reh-article > p.lead + .sec-head { margin-top: var(--bosluk-24); }
+}
