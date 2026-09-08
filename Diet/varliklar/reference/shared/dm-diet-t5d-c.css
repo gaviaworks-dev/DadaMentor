@@ -1,0 +1,36 @@
+/* DadaDiet T5D · liste çubuğu — arama banner'dan çıkıp içerik alanının ilk
+   bloğuna, süzgeç şeridiyle AYNI SATIRA taşındı.
+   Donör kipi: Gastro `tarifler.html .lst-bar` — banner ALTINDA, flex,
+   gap 16px, `align-items:center` (ölçüldü: y=703, banner 0→552).
+   Fit'in liste ekranlarında SAYFA DÜZEYİ arama YOK (yalnız süzgeç açılırının
+   içinde `.ff-search`); Fit'in ARAMA sayfası aramayı hero'da tutuyor — bu
+   yüzden `arama.html`/`d-arama.html` kapsam dışı, onlar donörle uyumlu.
+   Kanon tokenları; satır içi style ve sayfa <style> yok. */
+
+.nb-listbar {
+  display: flex;
+  align-items: center;
+  gap: var(--bosluk-16);
+  margin-bottom: var(--bosluk-16);
+  flex-wrap: wrap;      /* sığdığı sürece TEK SATIR (donör kipi), sığmayınca sarar */
+}
+.nb-listbar .nb-searchbar { flex: 0 0 360px; margin: 0; }
+/* 🔴 `flex-basis:auto` ŞERİDİN İÇERİK GENİŞLİĞİNİ taban yapıyor ve `wrap`
+   ile birlikte @1440'ta bile satırı kırıyordu (ölçüldü: şerit y=608'e düştü).
+   `flex-basis:0` + `min-width:0` şeridin daralmasına izin verir; taşan
+   kategoriler şeridin KENDİ İÇİNDE kayar. */
+.nb-listbar .tst-tabwrap  { flex: 1 1 0; min-width: 0; margin: 0; overflow-x: auto; }
+
+/* 🔴 İKİ SAPMA DA ÖLÇÜLEREK ELENDİ:
+   (a) İlk hâlim 900px altında YIĞIYORDU — donör yığmıyor (Gastro `.lst-bar`
+       @1440 `row·center` · @390 `row·flex-start`), uydurma sapmaydı.
+   (b) Donörün kipini harfiyen taşıyınca arama @390'da **68px**'e sıkıştı ve
+       kullanılamaz oldu. Donörün çubuğunda metin girdisi yok, kompakt sayaç
+       ve ikon düğmeleri var; aynı kural farklı içerikte aynı sonucu vermiyor.
+   Çözüm ikisinin arası ve donörle çelişmiyor: `flex-wrap:wrap` — sığdığı
+   sürece TEK SATIR, sığmayınca sarar. @1440 tek satır, @390 arama tam genişlik. */
+@media (max-width: 900px) {
+  .nb-listbar { align-items: flex-start; gap: var(--bosluk-12); }
+  .nb-listbar .nb-searchbar { flex: 1 1 240px; min-width: 0; }
+  .nb-listbar .tst-tabwrap  { flex: 1 1 100%; overflow-x: auto; }
+}
