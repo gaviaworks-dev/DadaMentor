@@ -286,7 +286,7 @@
                 <label class="acilir-kalem"><input type="checkbox" checked><span>Son kontrol</span></label>
               </div>
             </div>
-            <button class="dugme hayalet kucuk" type="button" data-yetki="disa-aktar" data-eylem="calistir" data-ad="Dışa aktar"><i class="fa-solid fa-file-export" aria-hidden="true"></i>Dışa aktar</button>
+            <button class="dugme hayalet kucuk" type="button" data-yetki="disa-aktar" data-eylem="disa-aktar"><i class="fa-solid fa-file-export" aria-hidden="true"></i>Dışa aktar</button>
             <span class="suzgec-sayac"><b>9</b> bileşen</span>
           </div>
         </div>
@@ -298,9 +298,9 @@
         <div class="toplu-islem" hidden>
           <b><span data-rol="secim-sayisi">0</span> kayıt seçildi</b>
           <div class="eylem-satiri">
-            <button class="dugme hayalet kucuk" type="button" data-eylem="calistir" data-ad="Yeniden kontrol et">Yeniden kontrol et</button>
-            <button class="dugme hayalet kucuk" type="button" data-eylem="toplu-islem">Sessize al</button>
-            <button class="dugme hayalet kucuk" type="button">Bakım kaydı oluştur</button>
+            <button class="dugme hayalet kucuk" type="button" data-eylem="toplu-islem" data-baslik="Yeniden kontrol et" data-hedefler="Yeniden kontrol et">Yeniden kontrol et</button>
+            <button class="dugme hayalet kucuk" type="button" data-eylem="toplu-islem" data-baslik="Sessize al" data-hedefler="Sessize al">Sessize al</button>
+            <button class="dugme hayalet kucuk" type="button" data-eylem="toplu-islem" data-baslik="Bakım kaydı oluştur" data-hedefler="Bakım kaydı oluştur">Bakım kaydı oluştur</button>
           </div>
         </div>
           <div class="tablo-kap gomulu">
@@ -421,6 +421,47 @@
           <p>Süzgeci genişlet ya da aramayı değiştir.</p>
           <button class="dugme hayalet" type="button" data-eylem="suzgec-temizle">Süzgeci temizle</button>
         </div>
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         SERVİS DETAYI — MARKUP'TA BİLDİRİLMİŞ YAN PANEL (kit §5b).
+         🔴 Dokuz "servis detayını aç" düğmesi `data-eylem="panel-ac"`
+            diyordu ama `data-hedef` taşımıyordu ve sayfada açılacak bir
+            panel YOKTU: `duzAc` kaldırılınca dokuzu birden SESSİZCE öldü.
+            Kit artık satırdan panel sentezlemiyor — ve doğrusu bu; panel
+            `thead` başlıklarını alan adı sayıp veriyi bozuyordu. Hedef
+            burada BİLDİRİLİYOR.
+         ⚠ MAKET SINIRI: panel tek bir bileşenin ölçümünü gösteriyor ve
+           bunu KENDİSİ SÖYLÜYOR; satır başına ayrı içerik sunucu
+           verisidir, uydurulmadı.
+         ═══════════════════════════════════════════════════════════════ -->
+    <div class="kart panel" id="sdServis" hidden>
+      <div class="kart-bas">
+        <h2 class="kart-baslik"><i class="fa-solid fa-server" aria-hidden="true"></i> Servis detayı — Uygulama / API</h2>
+        <div class="eylem-satiri">
+          <span class="rozet olumlu"><i class="fa-solid fa-circle-check" aria-hidden="true"></i> Çalışıyor</span>
+          <button class="dugme hayalet" type="button" data-eylem="panel-kapat" data-hedef="sdServis">
+            <i class="fa-solid fa-xmark" aria-hidden="true"></i> Kapat</button>
+        </div>
+      </div>
+      <div class="kart-govde">
+        <dl class="kunye">
+          <div><dt>Yanıt süresi</dt><dd>142 ms</dd></div>
+          <div><dt>Hata oranı</dt><dd>%0,02</dd></div>
+          <div><dt>Son kontrol</dt><dd>04.09.2026 09:18</dd></div>
+          <div><dt>Bileşen</dt><dd>Uygulama / API</dd></div>
+        </dl>
+        <div class="alan-yardim"><span>Panel <b>seçili bileşenin</b> ölçümünü gösterir.
+          Bileşenin geçmişi için satırdaki <b>loga git</b> düğmesini kullan.</span></div>
+      </div>
+      <div class="kart-ayagi">
+        <div class="eylem-satiri">
+          <button class="dugme hayalet" type="button" data-eylem="calistir" data-ad="Uygulama / API — yeniden kontrol et">
+            <i class="fa-solid fa-rotate-right" aria-hidden="true"></i> Yeniden kontrol et</button>
+          <a class="dugme hayalet" href="admin-log.html"><i class="fa-solid fa-list" aria-hidden="true"></i> İlgili loga git</a>
+        </div>
+      </div>
+    </div>
+
         <div class="bos-durum kart-ici yetkisiz" hidden data-durum="yetkisiz">
           <span class="bos-ikon"><i class="fa-solid fa-lock" aria-hidden="true"></i></span>
           <h3>Bu modüle erişimin yok</h3>
