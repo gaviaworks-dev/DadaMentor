@@ -2698,7 +2698,21 @@ html:has(> body.panel-acik){ overflow:hidden; }
 .yetkili[data-marka="fit"]     .panel-marka{ --marka-kelime-oran:3.9182; }
 .yetkili[data-marka="gastro"]  .panel-marka{ --marka-kelime-oran:4.9472; }
 .yetkili[data-marka="diet"]    .panel-marka{ --marka-kelime-oran:4.7345; }
-.yetkili[data-marka="gourmet"] .panel-marka{ --marka-kelime-oran:5.6835; }
+/* 🔴 GOURMET'İN KUTUSU KARDEŞLERİYLE AYNI YERİ KAPLASIN — ölçüldü.
+   Boy dört markada da `.yetkili`nin 20px'i; genişlik kelime markasının
+   kendi oranından geliyor ve "dadagourmet" en uzun sözcük:
+       fit 78px · diet 95px · gastro 120px · gourmet 114px
+   Paylaşılan "dada" parçası zaten eşit basılıyordu (diet 93.8 ↔ gourmet
+   93.7px), yani kusur optik değil YERLEŞİMSEL: kutu bandı kalabalık
+   gösteriyordu. Beyar kararı — Gourmet, Diet'in ayak izine çekildi.
+   Boy oradan TÜRETİLDİ, seçilmedi:  20px × 4.7345 / 5.6835 = 16.66px
+   → kutu 94.7px, Diet'in 94.69px'iyle birebir.
+   ⚠ Yalnız `[data-marka="gourmet"]` kapsamında; öteki üç markaya
+     dokunmaz. */
+.yetkili[data-marka="gourmet"] .panel-marka{
+  --marka-kelime-oran:5.6835;
+  --marka-kelime-h:calc(20px * 4.7345 / 5.6835);
+}
 .yetkili .panel-marka::before{
   content:""; display:block;
   height:var(--marka-kelime-h);
