@@ -1,0 +1,109 @@
+/* =====================================================================
+   DadaDiet · T5D kulvarı · ROL P — DİYETİSYEN SOHBETİ YÜZEN DÜĞMESİ
+   ---------------------------------------------------------------------
+   Donör: DadaFit `#msjFab.msj-fab`. Ölçüldü, 66 Fit ekranının 62'sinde
+   var; taşımayan dördü maket dizini · giriş · oturum-süresi-doldu ve
+   mesaj yüzeyinin KENDİSİ.
+
+   HESAPLANMIŞ DEĞERLER (canlı Fit, `fit-hesabim.html`, kaydırılmış):
+       @1440   54×54 · sağ 22 · alt 22  · yuvarlak 16 · z 73
+               gölge rgba(33,30,22,.16) 0 8px 20px
+               `.to-top` 54×54 · alt 92           → aralarında 16px
+       @390    54×54 · sağ 16 · alt 85
+               `.to-top` 48×48 · alt 148
+               `.bottom-nav` alt 14, yüksekliği 64 → üstü 78
+   Fit'in kendi şerhi (`fit-mesaj.css`) aynı sayıları veriyor ve dar
+   ekranda 85'in nav ile başa-dön arasına EŞİT 7px pay bıraktığını
+   ölçmüş. Sayı uydurulmadı, ikisi de aynı yeri gösteriyor.
+
+   🔴 54 mü 56 mı — ÇÖZÜLDÜ, kanon kazanıyor. `fit-mesaj.css` hâlâ
+   56×56 yazıyor ama kanon `bilesenler.css` §S16 onu 54'e çekmiş
+   (Beyar kararı: "sağ alt FAB'ı böyle uzun olmasın, 'yukarı çık' FAB'ı
+   ile eş olsun"). Canlı Fit 54 ölçüyor, yani kanon zaten kazanıyor.
+
+   🔴 ÖZGÜLLÜK — `:where()` ile SIFIRA indirildi. Diet ağacının 42
+   sayfası `kanon/bilesenler.css`i yüklüyor, 118'i yüklemiyor. Kanonun
+   kendi `.msj-fab` kuralı (0,1,0) genişlik/yükseklik/dolgu/yuvarlaklık
+   bildiriyor. Buradaki kural (0,0,0) olduğu için kanon HER ZAMAN
+   kazanır — bu dosya kanonu maskeleyemez, yalnız kanonun bulunmadığı
+   sayfalarda aynı değeri sağlar. (Kabuk ↔ kanon eşit özgüllük
+   çarpışmasının bilinen çözümü.)
+
+   🔴 YENİ RENK · YENİ ÖLÇÜ ÜRETİLMEDİ. Konum sayıları dışında her değer
+   kanon tokeni; konum sayıları da donörün ölçülmüş değerleri.
+
+   ⚠ BU DOSYA PANELİ KAPSAMAZ. Donörün sağdan açılan paneli (420×100dvh,
+   `#msjPanel` + `#msjOrtu`) bu turda YAPILMADI ve sebebi ölçüldü:
+   Diet'in yazışma içeriği `d-diyetisyenim.html` içinde STATİK markup
+   (18 balon, "3 kişi · 13 mesaj") ve arkasında Fit'in `fit-mesaj.js`i
+   gibi bir veri modülü YOK. Paneli 158 sayfaya açmak ya o markup'ı 158
+   kez çoğaltmayı ya da Diet için bir depo şeması UYDURMAYI gerektirirdi.
+   Düğme bu yüzden yüzeyin kendisine götürüyor — yalan yüzey basmıyor.
+   ===================================================================== */
+
+:where(#msjFab.msj-fab) {
+  position: fixed;
+  right: var(--bosluk-22);
+  bottom: var(--bosluk-22);
+  z-index: var(--kat-sohbet-dugme);
+  width: 54px;
+  height: 54px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  color: var(--kagit);
+  background: var(--marka-koyu);
+  border: 0;
+  border-radius: var(--yuvarlak-lg);
+  box-shadow: var(--golge-yuzen);
+  cursor: pointer;
+  transition: background var(--sure) var(--yumusama),
+              transform var(--sure) var(--yumusama);
+}
+:where(#msjFab.msj-fab) i { font-size: var(--yazi-18); flex: none; }
+#msjFab.msj-fab:hover { background: var(--aksan-koyu-2); transform: translateY(-2px); }
+#msjFab.msj-fab:focus-visible {
+  outline: var(--odak-kalinlik) solid var(--odak-renk);
+  outline-offset: var(--odak-ofset);
+}
+#msjFab.msj-fab[hidden] { display: none; }
+
+/* Kabuğun "ekranda en fazla bir sabit alt şerit" kuralı — çerez şeridi
+   açıkken düğme çekilir (donörün `.msj-cerez` kipiyle aynı iş). */
+#msjFab.msj-fab.msj-cerez { display: none; }
+
+/* ── BAŞA DÖN DÜĞMESİ YER AÇAR ────────────────────────────────────────
+   Diet'in `.to-top`u alt 24'te (@1440) ve alt 94'te (@390) duruyor;
+   FAB'ın üst kenarı 76 olduğu için ÇAKIŞIRLARDI (kanon §S16 bu çakışmayı
+   Fit'te 20 sayfada 54×47px olarak ölçmüştü). Donörün kendi istifine
+   çekiliyor. Kural YALNIZ FAB'ın basıldığı sayfada geçerli: `:has()`
+   sayesinde düğmenin olmadığı ekranlarda başa-dön yerinden oynamıyor.
+   ⚠ `body:has(#msjFab)` özgüllüğü (1,0,1)'e çıkarır ve kabuğun
+   `.to-top` kuralını (0,1,0) sıra fark etmeksizin yener — burada
+   İSTENEN bu, çünkü kabuk FAB'ın varlığını bilmiyor. */
+body:has(#msjFab) .to-top { bottom: 92px; }
+
+@media (max-width: 640px) {
+  :where(#msjFab.msj-fab) {
+    right: var(--bosluk-16);
+    bottom: calc(85px + env(safe-area-inset-bottom, 0px));
+  }
+  body:has(#msjFab) .to-top {
+    bottom: calc(148px + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :where(#msjFab.msj-fab) { transition: background var(--sure-hizli) linear; }
+  #msjFab.msj-fab:hover { transform: none; }
+}
+
+/* Ekran okuyucuya söylenen, ekranda yer kaplamayan cümle — kanon §20'nin
+   `.yalniz-okuyucu`su bu ağacın çoğu sayfasında yüklü değil, o yüzden
+   kuralın kendisi burada ve yine `:where()` ile sıfır özgüllükte. */
+:where(#msjFab .yalniz-okuyucu) {
+  position: absolute; width: 1px; height: 1px;
+  overflow: hidden; clip-path: inset(50%); white-space: nowrap;
+}
