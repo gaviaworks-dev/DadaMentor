@@ -1,0 +1,32 @@
+/* T5B · GOURMET — kulvar E · SAYFA CSS'İ DEĞİL, KULVAR DOSYASI.
+   Bu dosyayı YALNIZ ajan E yazar. Değerler kanon tokenlarından.
+   Sayfaya <style> ve satır içi style YASAK — kural buraya yazılır. */
+
+/* ══════════════════════════════════════════════════════════════════════
+   1 · mekanlar.html · YAYINDAKİ MEKÂN KARTININ GÖRSELİ
+   ----------------------------------------------------------------------
+   Donörün kendi kartları görseli satır içi `style="background-image:..."`
+   ile basıyor. Kulvar kuralı satır içi `style`i yasakladığı için görsel
+   `data-t5be-gorsel` kancasıyla BURADAN geliyor. Dosya adları donörün
+   konsept rayındaki görsellerin AYNISI (mekanlar.html · subcat şeridi):
+     9741 = Yöresel Lezzet Noktası · 9737 = Sokak Lezzetleri Noktası
+   ⚠ YOL: bu dosya varliklar/reference/shared/ içinde; medya iki üst
+     dizinde. `url()` CSS dosyasına göre çözülür, sayfaya göre DEĞİL.
+   ══════════════════════════════════════════════════════════════════════ */
+.mkl-card .bg[data-t5be-gorsel="9741"]{background-image:url("../../medya/9741.webp");}
+.mkl-card .bg[data-t5be-gorsel="9737"]{background-image:url("../../medya/9737.webp");}
+
+/* ══════════════════════════════════════════════════════════════════════
+   2 · KALEM SATIRI · DURUM GÖVDESİ — donör kusurunun kapsanması
+   ----------------------------------------------------------------------
+   ÖLÇÜLDÜ: `dm-profil.css`te `.kalem-satiri{display:flex}` (nowrap) ama
+   `.dm-durum-govde{grid-column:1/-1}` GRID varsayıyor. Flex kapsayıcıda
+   `grid-column` hiçbir şey yapmaz; gövde açıldığında satırın İÇİNE, dördüncü
+   flex kalemi olarak sıkışıyor ve satırı yatayda eziyor.
+   Donör kipi korunuyor (gövde yine satırın kendi kutusunda), yalnız kap
+   sarmaya açılıyor ve gövde tam satır genişliği alıyor.
+   🔴 `#pageMain` ile özgüllük: kanon `dm-profil.css`ten SONRA yüklenmiyor
+      olabilir; eşit özgüllükte sıraya güvenmek kuralı sessizce öldürür.
+   ══════════════════════════════════════════════════════════════════════ */
+#pageMain .fp-list .kalem-satiri{flex-wrap:wrap;}
+#pageMain .fp-list .kalem-satiri > .dm-durum-govde{flex:1 1 100%;}

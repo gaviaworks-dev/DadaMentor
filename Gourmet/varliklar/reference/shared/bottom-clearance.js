@@ -100,6 +100,48 @@
         setLift(el, Math.round(natural.bottom - bottom));
     }
 
+
+    /* ══════════════════════════════════════════════════════════════════
+       T5C · K18 — SÖZLEŞME DENETİMİ  (Gourmet kopyasına özel)
+
+       ŞERH · BU DOSYA GASTRO KOPYASINDAN BİLEREK AYRILDI.
+       Bu düzeltmeden hemen önce iki kopya BAYT BAYT AYNIYDI:
+           Gourmet == Gastro   md5 b9fcbe573041f2f81e3f6445307d7f6e (8157 B)
+           Diet · Fit          dosya YOK
+       Aşağıdaki koruma o özdeşliği kasten bozar. **Kopyaları "ayrışmış"
+       görüp senkronize etmeyin** — senkronizasyon bu düzeltmeyi sessizce
+       geri alır ve kusur kimse fark etmeden döner.
+
+       GASTRO'NUN BU KORUMAYA NEDEN İHTİYACI YOK (ölçüldü):
+       Gastro damgayı yalnız `button.to-top`a basıyor — 889 sayfa, sayfa
+       başına 1 — ve o eleman `position:fixed`. Sözleşme orada zaten
+       sağlanıyor. Gourmet mekanizmayı YAPIŞKAN bir kaba genişletti
+       (`aside.lst-side` ailesi, 67 eleman / 34 sayfa) ve ihlal oradan
+       doğdu. Kardeş kopyanın kararı Beyar'ındır; bu tur ona dokunmadı.
+
+       KORUMA YENİ BİR KURAL DEĞİL — bu dosyanın KENDİ yazılı varsayımının
+       denetlenmesi. Dosyanın başlığı aynen şunu söylüyor:
+         "Hepsi `position:fixed` olduğundan `getBoundingClientRect()`
+          scroll'dan bağımsız viewport koordinatı döner"
+       `.lst-side` @≥1025'te `sticky`; dikdörtgeni kaydırmayla geziyor,
+       yerleştirici sahte çakışma ölçüyor ve paneli kısıyor. Ölçüldü:
+         etkinlikler@1440  scrollY=0 → maxH 746px
+                           scrollY=2615 → maxH 639px  🔴 kalıcı, oturmuş
+                           scrollY=4877 → maxH 746px
+       Katılımcı konum denetimi: bottom-nav · yg-fab · ke-toast ·
+       cookie-banner · to-top · evd-actbar HEPSİ `fixed`; sözleşmeyi
+       ihlal eden TEK eleman `.lst-side`.
+
+       NEDEN MARKUP'TAN SÖKÜLMEDİ (ölçüldü, denendi, geri alındı):
+       Aynı eleman @≤1024'te `fixed` olup `bottom:var(--bc-lift, 0px)`
+       okuyor — orada mekanizma gerçek iş yapıyor. Öznitelik sökülünce
+       @1440 düzeliyor ama @390'da çekmecenin dayanağı gidiyor. Aynı düğüm
+       iki kipte yaşadığı için ayrım markup'ta yapılamaz; doğru katman bu.
+       ══════════════════════════════════════════════════════════════════ */
+    function _bcSabitMi(el) {
+        return getComputedStyle(el).position === 'fixed';
+    }
+
     function apply() {
         var clears = document.querySelectorAll('[data-bc-clear]');
         if (!clears.length) return;
@@ -124,6 +166,10 @@
             .map(function (b) { return b.getBoundingClientRect(); });
         clears.forEach(function (el) {
             if (el.hasAttribute('data-bc-bar')) return; // Aşama 1'de zaten işlendi.
+            /* SÖZLEŞME: yalnız `fixed` katılımcı yerleştirilir. `sticky` düğümün
+               dikdörtgeni kaydırmayla gezer ve sahte çakışma ölçtürür. Lift
+               açıkça 0'a çekiliyor: bakılı satır içi değer varsa o da nötrlenir. */
+            if (!_bcSabitMi(el)) { setLift(el, 0); return; }
             settle(el, allBarRectsNow);
         });
     }

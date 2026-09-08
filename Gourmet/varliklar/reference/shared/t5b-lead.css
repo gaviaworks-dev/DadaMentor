@@ -1,0 +1,55 @@
+/* T5B · GOURMET — LEAD kulvarı · SAYFA CSS'İ DEĞİL, KULVAR DOSYASI.
+   Bu dosyayı YALNIZ lead yazar. Değerler kanon tokenlarından BİREBİR.
+
+   K14 · kanon token katmanının DAR EKRAN DALI. Kaynak satırlar:
+     kanon/tokenlar.css:975-983   @media (max-width:1024px) :root
+     kanon/tokenlar.css:985-1000  @media (max-width:640px)  :root
+     kanon/tokenlar.css:943-945   §14 MOBİL KAP
+   Gourmet token katmanı yalnız masaüstü kademesini taşıyordu; @1000 ve
+   @390'da masaüstü değerleri donuyordu (ölçüldü: 447 özne · 123 kırmızı).
+
+   İKİ SEÇİCİ BİRDEN yazılır, çünkü tüketici katman üçe bölünmüş:
+     gourmet-ekran.css:18   :root       9 sayfa
+     dm-profil.css:31       :root       5 sayfa
+     gourmet-ortak.css:17   #pageMain   5 sayfa
+   ID (1,0,0) :root'u (0,1,0) yener. Yalnız :root yazmak son beş sayfada
+   sessizce kaybederdi. Bu dosya üçünden de SONRA yüklenir (bağ </head>
+   önüne yazılır, ölçüldü) — eşit özgüllükte sonra yüklenen kazanır.
+
+   --kap-yan: kanon var(--kap-yan-dar) diyor; o ad Gourmet ağacında
+   TANIMSIZ (ölçüldü). Tanımsız var() kuralı elemez, özelliği başlangıç
+   değerine düşürür ve dolguyu 0 yapardı. Kanonun kendi sayısı yazıldı:
+   kanon/tokenlar.css:658 --kap-yan-dar:16px.
+
+   Yeni ad açılmadı, markup'a dokunulmadı, yeni renk yazılmadı.
+   Sayfaya style ve satır içi style yok. */
+
+/* ── ARA KADEME (max-width:1024) — kanon/tokenlar.css:975-983 ───────── */
+@media (max-width:1024px){
+  :root,
+  #pageMain{
+    --hero-gap:9px;             /* kanon:977 */
+    --bolum-nefes-sik:26px;     /* kanon:978 */
+    --banner-h-liste:607px;     /* kanon:979 */
+    --banner-h-detay:617px;     /* kanon:980 */
+    --banner-gap:18px;          /* kanon:981 */
+    /* --bolum-nefes 74 KALIR — kanon bu kademede onu değiştirmiyor */
+  }
+}
+
+/* ── DAR EKRAN (max-width:640) — kanon/tokenlar.css:985-1000 + §14 ──── */
+@media (max-width:640px){
+  :root,
+  #pageMain{
+    --bolum-nefes:44px;         /* kanon:987 — kaynak ≤640 sec-pad:44px */
+    --bolum-nefes-sik:22px;     /* kanon:988 — kaynak ≤640 sec-pad-sm:22px */
+    --banner-h-liste:587px;     /* kanon:991 — dar ekranda BÜYÜR, ölçülmüş */
+    --banner-h-detay:726px;     /* kanon:992 */
+    --hero-ust:33px;            /* kanon:996 — hero ritmi dar ekranda tersine döner */
+    --hero-alt:34px;            /* kanon:997 */
+    --hero-gap:8px;             /* kanon:998 */
+    --banner-gap:9px;           /* kanon:999 */
+    --kabuk-h:63px;             /* kanon:1000 — ≤640 üst bant gizli */
+    --kap-yan:16px;             /* kanon §14 (943-945) + kanon:658 kap-yan-dar */
+  }
+}

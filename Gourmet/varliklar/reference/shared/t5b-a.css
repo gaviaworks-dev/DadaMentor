@@ -1,0 +1,159 @@
+/* T5B · GOURMET — kulvar A · SAYFA CSS'İ DEĞİL, KULVAR DOSYASI.
+   Bu dosyayı YALNIZ ajan A yazar. Değerler kanon tokenlarından.
+   Sayfaya <style> ve satır içi style YASAK — kural buraya yazılır. */
+
+/* ═══════════════════════════════════════════════════════════════
+   MADDE 1 · FOOTER YERLEŞİMİ
+   ───────────────────────────────────────────────────────────────
+   Kanon kuralı (Gastro/portal-DQfW7by7.css, ÖLÇÜLDÜ — aynı kod tabanı):
+     @media(min-width:641px){
+       .footer.orange{position:fixed;left:0;right:0;bottom:0;z-index:1}
+       .page-main{position:relative;z-index:2;background:var(--bg)}
+     }
+   Gourmet/gourmet-qbE8oPSY.css'te AYNI blok şöyle çıkmış:
+     @media(min-width:1025px){
+       .footer.orange{...;z-index:-1}          ← 1 yerine -1
+       .page-main{position:relative;background:var(--bg)}  ← z-index:2 DÜŞMÜŞ
+   Yani çift birlikte bozulmuş: page-main'in yığın bağlamı düşünce
+   footer gövdenin ÜSTÜNE binerdi; onu telafi etmek için footer -1'e
+   itilmiş. Doğrusu ikisini birden kanona döndürmek.
+   ⚠ z-index:1'i page-main'in z-index:2'si OLMADAN yazmak footer'ı
+     içeriğin üstüne çıkarır — ikisi tek kalem, ayrılmaz.
+   Ölçüldü @1440: Fit 1 · Gastro 1 · Diet 1 · Gourmet -1.
+   (min-width:1025 → 641 kırılımı BU turda değiştirilmedi — 641–1024
+    arasında Gourmet footer'ı `static`; kırılımı taşımak 148 sayfada
+    düzen değişikliğidir. LEAD'E kalemi olarak raporlandı.) */
+@media (min-width: 1025px){
+  footer.footer.orange{ z-index: 1 }
+  main.page-main{ position: relative; z-index: 2; background: var(--bg) }
+}
+
+/* MADDE 1 · footer'ın satır içi `padding-bottom` DONMASI
+   ───────────────────────────────────────────────────────────────
+   ÖLÇÜLDÜ: 126/145 Gourmet sayfasında <footer> `style="padding-bottom:
+   119px"` taşıyor; 19 sayfa taşımıyor. Satır içi style zaten YASAK ve
+   burada değeri de yanlış:
+     kanon (Gourmet'in KENDİ CSS'i · Gastro · Fit · Diet, ölçüldü)
+       ≥641px : padding-bottom 0                → footer 547.3px
+       ≤640px : calc(86px + env(safe-area…))    → footer 1152px
+     satır içi 119px ise İKİ genişlikte de sabit kalıyor:
+       @1440 footer 666.3px (+119)  @390 footer 1185px (+33)
+   Sonuç: footer yüksekliği sayfadan sayfaya değişiyor (666.3 / 547.3),
+   ölçüt "bütün sayfalarda aynı" düşüyordu; @390'da da parite kırıktı.
+   Satır içi style'ı ancak `!important` ezer — sökülmesi LEAD'in
+   enjektör adımı, rapordaki nüfus listesi ölçümle verildi.
+   `[style]` süzgeci: yalnız donmuş değeri taşıyanı ezer, temiz 19
+   sayfaya hiç dokunmaz; satır içi sökülünce bu kural kendiliğinden
+   öznesiz kalır (idempotent). */
+@media (min-width: 641px){
+  footer.footer.orange[style]{ padding-bottom: 0 !important }
+}
+@media (max-width: 640px){
+  footer.footer.orange[style]{
+    padding-bottom: calc(86px + env(safe-area-inset-bottom, 0px)) !important;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   MADDE 8 · YUKARI-ÇIK FAB — tıklama ulaşmıyordu
+   ───────────────────────────────────────────────────────────────
+   ÖLÇÜLDÜ (elementsFromPoint + getComputedStyle, 1440×900):
+     Gourmet  #toTop → pointer-events: none · nokta yığınında YOK
+     Gastro   #toTop → pointer-events: auto · yığının 2. öğesi
+     Fit      #toTop → pointer-events: auto · yığının 2. öğesi
+   Sebep MARKUP: Gourmet'te <button id="toTop"> `<div id="fbModal"
+   class="fb-modal">`in İÇİNE yuvalanmış; kapalı geri-bildirim kipi
+   `pointer-events:none` ve bu özellik KALITILIR. Gastro'da düğme
+   doğrudan <body> çocuğu.
+   Düğme boyanıyor, sürücüsü de bağlı (JS .click() scrollY'yi 0 yapıyor)
+   — yalnız FARE tıklaması ulaşmıyordu: playwright click 6/6 Gourmet
+   sayfasında zaman aşımı, 5/5 donör sayfasında scrollY=0.
+   Kalıtılan değeri düğmenin kendisinde açıkça geri vermek yeterli.
+   Yuvalamanın kendisi markup kusuru → LEAD'E kalemi. */
+#toTop{ pointer-events: auto }
+
+/* ═══════════════════════════════════════════════════════════════
+   MADDE 5 · LOGO İSTİSNASI — giriş/kayıt ekranında logo RENKLİ
+   ───────────────────────────────────────────────────────────────
+   Kural Gourmet'te ZATEN VAR (gourmet-qbE8oPSY.css + dm-kabuk.css):
+     body.dg-auth .header.at-top .gourmet-word-mark{color:var(--tomato-deep)}
+   Donör de aynı deseni taşıyor (Fit/fit-giris, ölçüldü):
+     .kabuk-basi.tepede .fit-word-mark{color:var(--kagit)}
+     body[data-fit-page="giris"] .header.at-top .fit-word-mark{color:var(--marka)}
+     → piksel: fit-giris rgb(0,147,208) · fit-arama rgb(255,255,255)
+
+   🔴 ÖNCEKİ TURUN `t5-b.css`i (satır 101) aynı seçiciyi `#fff` ile
+   EŞİT ÖZGÜLLÜKTE (0,4,1) yeniden bildirip sonra yüklendiği için
+   istisnayı öldürüyordu — ölçüldü: giris/kayit/sifremi-unuttum'da
+   logo pikseli rgb(255,255,255).
+   t5-b.css'in gerekçesi kendi şerhinde yazılı ve KONTRAST ölçümüne
+   dayanıyor (marka #5f226b koyu bandın üstünde 1.49:1). Bu turun
+   görev metni istisnayı KANON ilan ediyor. Karar lead'in — kural
+   kanona döndürüldü, kontrast ölçümü raporda LEAD'E kalemi olarak
+   sayıyla verildi.
+   Yükleme sırası: t5-b.css (7) → t5b-a.css (9). Özgüllük eşit,
+   sonra yüklenen kazanır. */
+body.dg-auth .header.at-top .gourmet-word-mark{ color: var(--tomato-deep) }
+
+/* ═══════════════════════════════════════════════════════════════
+   MADDE 2 · BANNER KANONU
+   ───────────────────────────────────────────────────────────────
+   🔴 ÖLÇÜT ÖZNESİ DÜZELTİLDİ (lead'in ağaç taraması + kendi ölçümüm):
+   `px-band` ailesi Fit'te HİÇ YOK. Fit: `kapak` 12 ekran + `arama-hero` 1.
+   `px-band` ailesinin yaşadığı tek kardeş marka GASTRO (pf-banner 177 ·
+   lst-top 34 · lg-top 27 · art-hero 16 · tb-top 13). Bu yüzden:
+     · `kapak` ve `arama-hero`  → donör FİT
+     · `px-band` içerik bandı   → donör GASTRO
+   Ölçüldü @1440 · kapak: Fit 280 = Gastro 280 = Gourmet 280 ✓ dokunulmadı.
+   ═══════════════════════════════════════════════════════════════ */
+
+/* M2-a · `arama-hero` @390 — kök neden TOKEN, kural değil (donör FİT)
+   Kural üç markada da aynı (Fit/fit-arama'nın kendi şerhi):
+     .arama-hero{padding:calc(var(--kabuk-h-dar) + var(--hero-ust)) 0 var(--bosluk-24)}
+                   @1440                      @390
+     --hero-ust  Fit 15 · Gastro 15 · Go 15 │ Fit 33 · Gastro 33 · Go 15 🔴
+     padding-top     128 · 128 · 128        │     96 ·      96 ·     78 🔴
+   Gourmet ≤640px kırılımında tokeni tazelemiyor, masaüstü değeri kalıyor.
+   ⚠ Token marka genelinde tanımlı — kök değeri değiştirmek `.bant` ve
+     öteki hero'ları da oynatır. Değer BANDIN KENDİSİNE kapsandı. */
+@media (max-width: 640px){
+  .arama-hero{ --hero-ust: 33px }
+}
+
+/* M2-b · `ke-top px-band` içerik bandı @1440 — donör GASTRO `lst-top px-band`
+   Ölçüldü: tipografi zaten birebir (h1 44px · lh 49.28 · fw 700).
+   Tek fark dolgu:
+     Gastro/tarifler  .lst-top.px-band  pt 128 · pb 48 · min-height 552 · h 552
+     Gourmet          .ke-top.px-band   pt 128 · pb  0 · min-height 544 · h 544 🔴
+
+   🔴 ÖZNE DARALTILDI — ilk yazımım 3 sayfayı BOZDU, kapı yakaladı:
+   `.ke-top.px-band` sınıfını İKİ AYRI bileşen taşıyor. Ölçüldü:
+     LİSTE bandı  (mekanlar · gurme-lezzetler · …)  çocukları `.ke-head`
+                  + `.ke-hero` VAR · h1 44px · min-height 544 · pb 0
+     HERO bandı   (anasayfa · kesfet · index)       o çocuklar YOK
+                  · h1 68px · min-height 922 · pb 22px
+   Sınıfa yazınca hero bandı da eşleşti ve anasayfanın hero'su
+   922 → 613.9px'e ÇÖKTÜ. Ayırt edici uydurulmadı, DOM'dan ölçüldü:
+   liste bandının `.ke-head`i var, hero bandının yok.
+   ⚠ `:has()` özgüllüğü yükseltir (kayıtlı ders) — burada istenen etki:
+     kural yerleşik (0,2,0) kuralın üstünde kalmalı. */
+@media (min-width: 1025px){
+  section.ke-top.px-band:has(.ke-head){ padding-bottom: 48px; min-height: 552px }
+}
+
+/* M2-c · `ke-head h1` @390 — KURAL SIRASI kusuru
+   Gourmet'te AYNI iki kural sayfadan sayfaya FARKLI SIRADA yazılmış
+   (CDP `getMatchedStylesForNode` ile ölçüldü — CSSOM taraması eşleşeni
+   gösterir, KAZANANI değil):
+     mekanlar.html        @(max-width:640px){27px}  SONRA  @(max-width:1024px){33px}
+                          → 390'da ikisi de eşleşir, özgüllük eşit,
+                            SONRAKİ kazanır → 33px 🔴
+     gurme-lezzetler.html @1024{33px}  SONRA  @640{27px}                  → 27px ✅
+     etkinlikler.html     aynı doğru sıra                                 → 27px ✅
+   Donör tek ölçekte: Gastro `.lst-hero h1` @640 → 29px, 1024 adımı YOK.
+   Gourmet'in kendi ≤640 kanonu 27px (3 ekranın 2'sinde kazanıyor).
+   Sıra tartışmasını bitirmek için değer sonra yeniden bildiriliyor;
+   böylece hangi sayfada hangi sırada yazıldığı ölçüte etki etmez. */
+@media (max-width: 640px){
+  .ke-head h1{ font-size: 40px }   /* öznesi zaten `.ke-head` — hero bandında yok */
+}

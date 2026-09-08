@@ -1,0 +1,124 @@
+/* ═══════════════════════════════════════════════════════════════════════
+   T5B · GOURMET — KULVAR D · SAYFA CSS'İ DEĞİL, KULVAR DOSYASI.
+   Bu dosyayı YALNIZ ajan D yazar. Değerler kanon tokenlarından.
+   Sayfaya <style> ve satır içi style YASAK — kural buraya yazılır.
+
+   🔴 KAPSAM: bu dosya 148 Gourmet sayfasına bağlı. Kurallar bu yüzden
+      YALNIZ kulvarın öznelerine kapsanmıştır (`.kt-suzgec` · `.kt-aralik`
+      · `.rozet-karti`), çıplak kanon sınıfına ( `.alan` · `.alan-secim` )
+      DEĞİL. Çıplak yazılsaydı kardeş kulvarların ekranlarındaki aynı
+      adlı markup'ı da boyardı — "kesişimsizlik dosya içinde sağlanmaz".
+   ═══════════════════════════════════════════════════════════════════════ */
+
+
+/* ═══ 1 · ROZET İPUCU · DOKUNMATİKTE TEK DOKUNUŞ ═══════════════════════
+   AÇIK KALEM · `go-rozetlerim` — 50 rozet düğmesi gerçek <button> ama
+   sürücüsü yoktu (ölçüldü 2026-09-08: `data-rozet` 50, JS referansı 0;
+   12 denetim TEMİZ sayfada tıklandı, 12/12 DOM'u değiştirmedi).
+
+   DONÖR — `Diet/d-rozetlerim.html`, sayfa içi 4. betik ("ROZET İPUCU —
+   DOKUNMATİKTE TEK DOKUNUŞ"): `.rozet-karti` → `.ipucu-acik` takası.
+   Ölçüldü: Diet'te tıklama sınıfı `rozet-karti kilitli` →
+   `rozet-karti kilitli ipucu-acik` yapıyor. Kip BUDUR, yeniden yazılmadı.
+   Fit ve Gastro'da özne yok — donör paritesi değil, Diet'ten TAŞIMA.
+
+   🔴 NEDEN KURAL DA GEREKTİ (ölçüldü, varsayılmadı):
+   Diet CSSOM'unda `ipucu-acik` seçicisi 1 (kanon `bilesenler.css:5160`).
+   Gourmet CSSOM'unda 0 — kanon `bilesenler.css` bu ağaca bağlı DEĞİL,
+   rozet kuralları `gourmet-ortak.css`e `#pageMain` ön ekiyle kopyalanmış.
+   Sürücü tek başına taşınsaydı sınıf eklenir, balon AÇILMAZDI: yapısal
+   ölçüt yeşil, ekran ölü.
+
+   🔴 ÖZGÜLLÜK: taban kural `#pageMain .rozet-ipucu` (1,1,0) balonu
+   `visibility:hidden; opacity:0` yapıyor. Çıplak `.rozet-karti.ipucu-acik
+   .rozet-ipucu` (0,3,0) olurdu ve ID'ye KAYBEDERDİ — "sonra yüklenmek"
+   yalnız EŞİT özgüllükte kazandırır. `#pageMain` ön ekiyle (1,3,0) hover
+   kuralının (`#pageMain .rozet-karti:hover .rozet-ipucu`, satır 497) tam
+   dengi; t5b-d.css gourmet-ortak.css'ten SONRA yüklendiği için kazanır.
+   Bildiren yalnız bu iki özellik — hover kuralının bildirdiğinin aynısı;
+   `transform`/`pointer-events` tabandan gelir, dokunulmadı.            */
+#pageMain .rozet-karti.ipucu-acik .rozet-ipucu{
+  opacity:1;
+  visibility:visible;
+}
+
+
+/* ═══ 2 · MADDE 14 · SEÇİM YÜZEYLERİ ══════════════════════════════════
+   `go-kesif-tercihlerim` — açılır süzgeç ve aralık kaydırıcısı için.
+   🔴 ÖLÇÜLDÜ 2026-09-08: Gourmet'in yüklü CSS'inde `.alan`,
+   `.alan-etiket`, `.alan-secim`, `.aralik-girdi` seçicisi **0 kural**
+   (CSSOM taraması, 1440·390). Yani bu kanon bileşenleri bu ağaçta
+   ÇİZİMSİZ doğuyordu — kural yazmak "kapsam tamamlamak"tır, ikinci
+   bildirim değil. Değerler kanon `bilesenler.css`ten birebir:
+     `.alan` 475 · `.alan-etiket` 478 · `.alan-girdi,.alan-secim` 494
+     · `.alan-secim` 516 · `.aralik-girdi` 6715                        */
+
+#pageMain .kt-suzgec,
+#pageMain .kt-aralik{
+  margin-bottom:var(--bosluk-22);            /* kanon `.alan` */
+}
+
+#pageMain .kt-suzgec .alan-etiket,
+#pageMain .kt-aralik .alan-etiket{           /* kanon `.alan-etiket` */
+  display:flex; align-items:baseline; gap:var(--bosluk-7);
+  font-size:var(--yazi-14); font-weight:var(--agirlik-kalin);
+  color:var(--murekkep); margin-bottom:var(--bosluk-9);
+}
+
+#pageMain .kt-suzgec .alan-secim{            /* kanon `.alan-girdi,.alan-secim` */
+  width:100%; min-height:44px;               /* WCAG 2.5.5 — kanon ölçüsü */
+  font-family:inherit; font-size:var(--yazi-14);
+  font-weight:var(--agirlik-govde); color:var(--murekkep);
+  background:var(--zemin);
+  border:var(--cizgi-1) solid var(--cizgi);
+  border-radius:var(--yuvarlak-md);
+  padding:var(--bosluk-13) var(--bosluk-40) var(--bosluk-13) var(--bosluk-15);
+  outline:none;
+  transition:border-color var(--sure) var(--yumusama),
+             box-shadow  var(--sure) var(--yumusama);
+  /* kanon `.alan-secim` (516) — açılır ok */
+  appearance:none; -webkit-appearance:none; cursor:pointer;
+  background-repeat:no-repeat;
+  background-position:right var(--bosluk-15) center;
+  background-size:auto;
+  /* 🔴 KAYNAKTA BİLDİRİLEN KUSUR: kanon bu glifi `--secim-ok` tokenıyla
+     verir; o token Gourmet ağacında TANIMSIZ (ölçüldü). `var(--secim-ok)`
+     yazılsaydı kural elenmez, `background-image` BAŞLANGIÇ değerine
+     (`none`) düşerdi — `appearance:none` ile birlikte OKSUZ bir açılır
+     kutu doğardı ve ölçüm bunu görmezdi. Kanonun kendi glifi
+     (`tokenlar.css:58`) burada BİREBİR yazıldı; tokenı `:root`a eklemek
+     148 sayfayı ve kardeş kulvarları etkilerdi — LEAD'E kalem. */
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%237E7E7E' stroke-width='1.6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+}
+#pageMain .kt-suzgec .alan-secim:focus{      /* kanon `.alan-secim:focus` */
+  border-color:var(--aksan);
+  /* kanon `--golge-halka` = `0 0 0 3px var(--aksan-yikama)` (tokenlar 833);
+     o token da bu ağaçta tanımsız, kanonun AÇILIMI yazıldı. */
+  box-shadow:0 0 0 3px var(--aksan-yikama);
+}
+
+#pageMain .kt-aralik .aralik-girdi{          /* kanon `.aralik-girdi` (6715) */
+  width:100%;
+  accent-color:var(--aksan);
+  /* 🔴 `max-width` kanonda YOK ve eklenmesinin gerekçesi ölçüldü: kanonun
+     kendi kullanım yeri `.yakinlastir` (dar kırpma kolonu), burası ise
+     kartın tam genişliği — 1440'ta üç kademelik denetim 1073px'e yayılıp
+     bir uçtan diğerine sürüklenmesi gereken bir kulvar oluyordu.
+     Ölçü rastgele değil: aynı karttaki üç çipin kapladığı şerit
+     (`₺ · Ekonomik` … `₺₺₺ · Üst Segment`) ~355px; kaydırıcı o şeritle
+     hizalanır. Dar ekranda `width:100%` zaten daha küçüktür, kural
+     değişmez. */
+  max-width:360px;
+}
+#pageMain .kt-aralik .aralik-girdi:focus-visible{
+  outline:var(--cizgi-1) solid var(--aksan);
+  outline-offset:var(--bosluk-4);
+}
+
+/* Sayaç şeridi kartın doğrudan çocuğu değil, `.alan` içinde — dm-profil
+   `.kart-sayac` kuralının kart yatay dolgusu burada tekrar etmesin. */
+#pageMain .kt-suzgec .kart-sayac,
+#pageMain .kt-aralik .kart-sayac{
+  padding-left:0; padding-right:0;
+  margin-bottom:0;
+}

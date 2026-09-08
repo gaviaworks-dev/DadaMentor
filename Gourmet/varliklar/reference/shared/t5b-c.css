@@ -1,0 +1,202 @@
+/* T5B · GOURMET — kulvar C · SAYFA CSS'İ DEĞİL, KULVAR DOSYASI.
+   Bu dosyayı YALNIZ ajan C yazar. Değerler kanon tokenlarından.
+   Sayfaya <style> ve satır içi style YASAK — kural buraya yazılır.
+   Yükleme sırası: gurme-lezzetler.css (satır 25) → t5b-c.css (satır 36).
+   Yine de HİÇBİR kural "sonra yüklendiği için" kazanmıyor: her seçici
+   donörünkinden bir sınıf DAHA ÖZGÜL (0,3,0 vs 0,2,0). Sıra bozulsa
+   bile kural ayakta kalır. */
+
+/* =====================================================================
+   MADDE 3 · BANNERDAN İÇERİK ALANINA TAŞINAN ARAMA (gurme-lezzetler)
+   Markup değişmedi: form OLDUĞU GİBİ .ke-top içinden alınıp
+   #keListMain > .ke-filter-wrap > .wrap içine, .ke-filter-bar ÖNÜNE
+   kondu. Sınıf adı (`searchcard ke-hero-search`) DEĞİŞTİRİLMEDİ —
+   ölçüm sonucu: içerik alanında duran bir `.searchcard` için ne
+   Gourmet'te ne Fit/Gastro'da donör sınıfı VAR (Gastro'nun içerik-alanı
+   araması `.sec-tools.sef-search`, farklı bir bileşen: search-row/
+   buton yok). Ad uydurulmadı; LEAD'e açık kalem olarak bildirildi.
+
+   Kalan iş görsel: `.ke-hero-search` derisi KOYU banner için yazılmış
+   (yarı saydam beyaz + `0 24px 60px rgba(10,9,6,.4)` gölge + blur).
+   İçerik yüzeyi `.ke-filter-wrap{background:var(--bg-white)}` yani BEYAZ;
+   o gölge orada leke gibi duruyor. Yeni değer icat edilmedi — aynı
+   stylesheet'in beyaz yüzeydeki kanonik kart deseni birebir alındı:
+     .form-card{background:var(--paper);border:1px solid var(--line);
+                border-radius:var(--radius-lg);box-shadow:var(--sh-sm)}
+   (gurme-lezzetler.css §55). Yalnız yüzeye bağlı üç özellik değişiyor;
+   padding/max-width/border/radius donörden AYNEN kalıyor.
+   ⚠ `--paper` = `--bg-white` = #fff: kart beyaz yüzeyde kenarlığı ve
+   `--sh-sm` ile ayrışıyor, iç girdi `--bg`(#f9f9f9) ile okunuyor. */
+.ke-filter-wrap .searchcard.ke-hero-search{
+  background:var(--paper);
+  box-shadow:var(--sh-sm);
+  -webkit-backdrop-filter:none;
+  backdrop-filter:none;
+  margin-top:0;
+  margin-bottom:22px;   /* .ke-filter-bar{margin-bottom:22px} ile aynı ritim */
+}
+@media (max-width:640px){
+  .ke-filter-wrap .searchcard.ke-hero-search{margin-bottom:16px}
+}
+
+/* =====================================================================
+   MADDE 6 · SÜZGEÇ RAYI ↔ SIRALAMA SEKMELERİ · DİKEY MERKEZ
+   ÖLÇÜLDÜ (rapor/gourmet-t5b/c-hiza.json, ÖNCE):
+     P1 kutu merkezi   .ke-filter ↔ .disc-tabs        = 0.00px  ✔
+     P2 içerik merkezi .chip      ↔ .dt               = 3.00px  ✘ (390: 2px)
+     P3 metin merkezi  chip metni ↔ dt metni          = 2.84px  ✘ (390: 2.11px)
+   KÖK: `.ke-filter-bar{align-items:center}` KUTULARI hizalıyor, ama
+   `.ke-filter`in padding'i ASİMETRİK — `padding-bottom:6px`, üstü 0
+   (640px altında 4px). Kutu merkezi içerik merkezinin 3px (mobilde 2px)
+   ALTINDA kalıyor; `.disc-tabs` ise simetrik `padding:4px` taşıdığı için
+   içeriği kutu merkezinde. Fark = pb/2 — ölçülen 3.00/2.00 ile birebir.
+   ÇÖZÜM: padding'i simetrik yap. `padding-bottom` kaydırma oluğu için
+   var, SİLİNMİYOR; üste aynısı ekleniyor. Yeni sayı icat edilmedi —
+   6px ve 4px donörün kendi değerleri. */
+.ke-filter-wrap .ke-filter-bar .ke-filter{padding-top:6px}
+@media (max-width:640px){
+  .ke-filter-wrap .ke-filter-bar .ke-filter{padding-top:4px}
+}
+
+/* =====================================================================
+   MADDE 7 · İÇ İÇE SCROLL — ölçülen 41 kaptan GERÇEK kusur olan 2'si
+   ÖLÇÜLDÜ (rapor/gourmet-t5b/c-tasma-once.json · 296/296 sayfa):
+     32x .lg-side      yasal yan menü      → donör: gourmet-yasal.css §85
+      5x .lst-side     liste yan paneli    → donör: etkinlikler/mekan-liste.css
+      1x .sheet-body   alt sayfa (modal)   → donör: mekan-liste.css §242
+      1x textarea      form alanı          → tarayıcı davranışı
+      2x #ntChips      bildirim çip rayı   → 🔴 İSTENMEYEN
+   İlk dördü donörün KENDİ bileşenleri (kaynak dosyaları yukarıda);
+   T5/T5B kitinin eklediği iç scroll = 0. Beşincisi kusur:
+   `.cipler.ortali{overflow-x:auto}` (gourmet-ortak.css §1725) yalnız
+   YATAY eksen bildiriyor; CSS kuralına göre bir eksen `auto` iken diğeri
+   `visible` ise o eksen de `auto`'ya HESAPLANIR. Sonuç: 34px'lik çip
+   rayı 39px içerik taşıdığı için 5px'lik gizli DİKEY kaydırıcıya
+   dönüşüyor ve imleç rayın üstündeyken tekerleği yutuyor — sayfa
+   "takılıyor". Dikey eksen açıkça kapatılıyor (yatay ray korunur).
+   Özgüllük: donör `#pageMain .cipler.ortali` = (1,2,0);
+   buradaki (1,3,0) — sıraya değil özgüllüğe dayanıyor. */
+#pageMain .cipler.ortali.tek-satir{overflow-y:hidden}
+
+/* =====================================================================
+   MADDE 7 · YATAY TAŞMA — 296 ölçümde tek kırmızı: `_ekranlar@390`
+   `<code>` etiketleri `white-space:nowrap` (sayfanın kendi <style>'ı,
+   satır 22) ve dosya adları bölünemediği için 390px'te gövde 706px'e
+   çıkıyor (tanık A: BODY sw=706 cw=390). Sayfa kendi metninde
+   "sitenin parçası değildir; maket gezintisi içindir" diyor ve
+   noindex,nofollow taşıyor — ürün ekranı DEĞİL; yine de taşıma
+   ölçütü onu da kapsadığı için düzeltiliyor. Yalnız dar ekranda
+   sarmaya izin veriliyor; masaüstünde nowrap korunuyor.
+   `.kap code` = (0,1,1) > sayfanın `code` = (0,0,1). */
+@media (max-width:640px){
+  .kap code{white-space:normal;overflow-wrap:anywhere}
+}
+
+/* =====================================================================
+   T5C · K1 · `art-hero` DETAY BANDI — 16 sayfa (gurme-lezzetler__*)
+   ---------------------------------------------------------------------
+   KÖK NEDEN (CDP `getMatchedStylesForNode` ile KAZANAN kural okundu —
+   CSSOM taraması eşleşeni gösterir, kazananı değil):
+   Donörün bandı bir BODY ÖZNİTELİĞİNE bağlı. Gastro
+   `dm-hero.css:233-238`:
+       body[data-fit-hero-kind="detay"] .art-hero{ padding-top:128px }
+       body[data-fit-hero-kind="detay"] .art-hero > .wrap{ padding-top:0 }
+       body[data-fit-hero-kind="detay"] .art-hero > .wrap > *
+         > [class*="crumb"]{ padding-top:0; padding-bottom:0; font-size:13px }
+   Gourmet body'lerinde `data-fit-hero-kind` HİÇ YOK — ölçüldü: 0/148
+   sayfa (Gastro'da 911/911). Yani donörün üç kurallık ailesi Gourmet'te
+   TAMAMEN ÖLÜ. Kusur token eksikliği ya da kural sırası değil,
+   ÖZNİTELİK YOKLUĞUdur; bu yüzden düzeltme sınıf kancasına bağlanıyor.
+
+   KAZANAN kural zinciri (ölçüldü):
+     donör @1440  .art-hero=calc(var(--header-offset)+var(--sp-6)) →
+                  .art-hero=112px → body[...] .art-hero=128px   KAZANAN 128px
+     donör @390   + @(max-width:640px) .art-hero=62px, ama öznitelik
+                  kuralı (0,2,1) medya kapısı taşımıyor          KAZANAN 128px
+     Gourmet@1440 .below-header=112px · .art-hero=112px          KAZANAN 112px
+     Gourmet@390  + @(max-width:640px) .art-hero=62px            KAZANAN  62px
+
+   ÖLÇÜLEN FARK (16/16 sayfa, iki genişlikte de aynı):
+       bant padding-top   @1440 112 ↔ donör 128   @390  62 ↔ donör 128
+       bant padding-bottom      0 ↔ 0                    0 ↔ 0
+       h1 font-size       @1440  50 ↔ 44          @390  30 ↔ 30
+       kırıntı ofseti     @1440 136 ↔ 128         @390  78 ↔ 128
+   Kırıntı ofsetindeki fazlalığın kaynağı ölçüldü: `.wrap` kendi
+   `padding-top`unu taşıyor (24px / 16px) ve @390'da kırıntının kendi
+   `padding-top`u 14px. Kanonun ilkesi bunu açıkça yasaklar
+   (`kanon/hero.css`): "ofset YALNIZ bandın padding-top'undan gelir;
+   kırıntının ve aradaki kapların kendi dikey dolgusu 0."
+
+   🔴 KAPI ZİNCİRİ: kapı `else if` kullanıyor — pt kırmızıyken h1 HİÇ
+   sorulmuyor. Yalnız pt düzeltilseydi kırmızı 16→16 KALIR, sadece
+   h1'e kayardı. Bu yüzden pt ve h1 BİRLİKTE düzeltiliyor.
+
+   🔴 `var()` KULLANILMADI, LİTERAL YAZILDI. Ölçüldü: bu 16 sayfada
+   `--sp-6` · `--sp-7` · `--header-offset` · `--banner-crumb-ofset`
+   TANIMSIZ (computed değer boş; Gastro'da tanımlı). Kanon token dalı
+   indikten SONRA yeniden ölçüldü, hâlâ tanımsız — bu nüfus token
+   tüketicisi değil. Tanımsız `var()` kuralı elemez, özelliği başlangıç
+   değerine düşürür; yazılsaydı kusuru düzeltmez BÜYÜTÜRDÜ.
+   Değerler uydurulmadı: 128px, 0 ve clamp(30px,3.5vw,44px) donörün
+   ölçülen/bildirilen kendi sayılarıdır.
+
+   🔴 ALTERNATİF ELENDİ — ÖLÇÜLDÜ, bir sonraki tur yeniden düşünmesin.
+   "Doğrusu body'ye `data-fit-hero-kind` eklemek" akla gelir; İKİ sebeple
+   işe yaramaz:
+     ① Gourmet'in kendi aile kuralı (`gourmet-ekran.css:872`)
+        `:where(body[data-fit-hero-kind]) :is(.lib-top,.bant,.cp-top,
+        .kp-top,.chl-hero,.pd-hero,.fs-top,.ol-top,.ed-top,.arama-hero,
+        .giris-hero)` — seçici listesinde `.art-hero` YOK (sayıldı: 0).
+     ② O dosya bu 16 sayfanın HİÇBİRİNDE yüklü değil — ölçüldü: 148
+        sayfanın yalnız 9'unda (go-404 · go-arama · go-bakim · go-bildirimler
+        · go-cevrimdisi · go-giris · go-hata-403 · go-hata-500 ·
+        go-oturum-suresi-doldu), `gurme-lezzetler__*` sayısı 0/16.
+   Öznitelik eklense bile kural ne eşleşir ne yüklenir. Kuralın buraya
+   yazılması bu yüzden doğru yol.
+
+   KANCA: `body.pg-gurme-lezzetler-detay` — ölçüldü: 16 sayfanın
+   16'sında var, başka HİÇBİR Gourmet sayfasında yok (0/132).
+   ÖZGÜLLÜK sıraya dayanmıyor: her seçici donörünkinden bir sınıf daha
+   özgül — (0,2,1) vs `.art-hero` (0,1,0) ve `@640 .art-hero` (0,1,0);
+   h1'de (0,2,2) vs `.art-hero h1` (0,1,1). Yükleme sırası bozulsa da
+   kurallar ayakta kalır.
+
+   ⚠ AÇIK KALEM (LEAD'e bildirildi, Beyar kararı): @390'da donör 128px
+   ölçüyor ama KANON `--banner-crumb-ofset:96px` diyor
+   (`kanon/hero.css:146`). Gastro'nun `.art-hero` kuralı medya kapısı
+   taşımadığı için mobilde 128'de kalmış. Ölçüt donöre bağlı olduğu
+   için 128 yazıldı; çelişki sessizce kapatılmadı, BİLDİRİLDİ. */
+body.pg-gurme-lezzetler-detay .art-hero{ padding-top:128px; }
+body.pg-gurme-lezzetler-detay .art-hero > .wrap{ padding-top:0; }
+body.pg-gurme-lezzetler-detay .art-hero > .wrap > [class*="crumb"],
+body.pg-gurme-lezzetler-detay .art-hero > .wrap > * > [class*="crumb"]{
+  padding-top:0; padding-bottom:0; font-size:13px;
+}
+body.pg-gurme-lezzetler-detay .art-hero h1{ font-size:clamp(30px,3.5vw,44px); }
+
+/* =====================================================================
+   T5C · K2 · `lst-top` BANDININ ALT DOLGUSU — 7 sayfa
+   ---------------------------------------------------------------------
+   KÖK NEDEN: Gourmet'te `.lst-top` için `padding-bottom` bildiren kural
+   HİÇ YOK. CDP ile ölçüldü: aday sayısı 0, kazanan yok — özellik
+   başlangıç değerinde (0px) kalıyor. Donörde
+   (`Gastro/en__mutfak-sirlari`) `.lst-top{ padding-bottom:var(--sp-7) }`
+   = 48px, İKİ GENİŞLİKTE DE (donörün kuralı medya kapısı taşımıyor).
+   Ölçülen: pt 128/74 donörle AYNI · h1 44/28-30 ↔ donör 44/29 (fark ≤1,
+   eşik >1) · TEK sapma pb: 0 ↔ 48, yedi sayfanın yedisinde.
+
+   🔴 `var(--sp-7)` YAZILAMAZ: ölçüldü, bu sayfalarda `--sp-7` TANIMSIZ
+   (Gourmet'te tanımı `gourmet-form-kit.css:35`te var ama bu sayfalara
+   yüklenmiyor). Yazılsaydı özellik 0'da kalır, kusur DÜZELMEZDİ.
+   48px donörün ölçülen değeridir.
+
+   NÜFUS KARARI: kapının O2 öznesi 1 sayfa (`sss` — kapının banner
+   seçicisi yalnız `.px-band` taşıyanı yakalıyor), ama `.lst-top`
+   taşıyan Gourmet sayfası 148'de 7 ve YEDİSİ DE pb=0. Donörün kuralı
+   `.lst-top` ailesinin tamamını kapsıyor; yalnız `sss`e daraltmak
+   KAPIYI BOYAMAK olur ve altı kardeş sayfa donöre aykırı kalırdı.
+   Yedisine de iniyor; yedisi de ÖNCE→SONRA ölçülüp raporlanıyor.
+
+   ÖZGÜLLÜK: `.below-header.lst-top` = (0,2,0). Rakip bildirim yok;
+   sıraya değil özgüllüğe dayanıyor. Özne 148 sayfada 7, ölçüldü. */
+.below-header.lst-top{ padding-bottom:48px; }

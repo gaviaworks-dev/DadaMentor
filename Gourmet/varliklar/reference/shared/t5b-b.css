@@ -1,0 +1,64 @@
+/* =====================================================================
+   T5B · GOURMET — KULVAR B (sistem ekranları) · SAYFA CSS'İ DEĞİL
+   Bu dosyayı YALNIZ ajan B yazar. Değerler kanon tokenlarından.
+   Sayfaya <style> ve satır içi style YASAK — kural buraya yazılır.
+   ---------------------------------------------------------------------
+   🔴 BU TURDA KURAL YAZILMADI — ve bu bir eksiklik değil, ÖLÇÜM SONUCU.
+      Kulvarın beş ekranında (go-arama · go-404 · go-hata-500 ·
+      go-cevrimdisi · go-bakim) bulunan kusurların HİÇBİRİ bu dosyanın
+      kapsamında çözülmüyor. Aşağıda hangi kusurun neden BURAYA
+      yazılmadığı tek tek yazılıdır; "ölçmedim" ile "kural gerekmedi"
+      ayrımı böyle korunur.
+
+   ── B1 · @≤640 TOKEN DALI YOK (kök neden, dört ekranın hepsinde) ─────
+   ÖLÇÜLDÜ (`b-token.mjs`, dört marka × iki genişlik):
+       token                @1440 (dört marka)   @390 Fit/Gastro/Diet   @390 GOURMET
+       --kap-yan            32px                 16px                   32px  🔴
+       --kabuk-h            113px                63px                   113px 🔴
+       --hero-ust           15px                 33px                   15px  🔴
+       --hero-alt           46px                 34px                   46px  🔴
+       --banner-h-liste     544px                587px                  544px 🔴
+   Sonuç (`b-sistem.mjs` @390, DÖRT sistem ekranının dördünde de aynı):
+       .bant dolgu 78/46 · min-height 544 · yükseklik 416 · düğme 326px
+       donör       96/34 · min-height 587 · yükseklik 491 · düğme 358px
+   Kazanan kural CDP ile okundu (`b-kural.mjs`): kural METNİ üç markada
+   AYNI (`.bant{padding:calc(var(--kabuk-h)+var(--hero-ust)) 0 var(--hero-alt)}`);
+   fark yalnız TOKEN DEĞERİNDE. Gourmet'in token katmanı
+   (`gourmet-ekran/gourmet-ekran.css`) kanon `tokenlar.css`in
+   `@media(max-width:640px){:root{…}}` dalını HİÇ taşımıyor.
+   ⛔ BURAYA YAZILMADI: bu dosya 148 sayfanın HEPSİNDE yüklü. Buraya
+      `:root` token bildirimi yazmak dört kardeş kulvarın (A·C·D·E) @390
+      ölçümlerini tur ortasında kaydırırdı. LEAD KALEMİ.
+
+   ── B2 · GÖRÜŞ BİLDİR — üç kalem, üçü de MARKUP (145–148 sayfa) ─────
+   ÖLÇÜLDÜ (`b-modal.mjs`, 14 Gourmet + 4 donör sayfa × iki genişlik):
+     a) `#fbForm action="https://dadagourmet.com/geri-bildirim"` (140 sayfa)
+        `#moForm action="https://dadagourmet.com/mekan-oner"`    (145 sayfa)
+        `#lkModal data-set-url="https://dadagourmet.com/konum/sec"` (145)
+        Donör (Fit·Gastro·Diet): `<form id="fbForm">` — action YOK, 0 dış adres.
+     b) `.fb-success` Gourmet'te 0/148 sayfa; Fit 23/66 · Gastro 910/913 ·
+        Diet 157/159. Gönderim onayı yüzeyi hiç yok.
+     c) `#moOverlay` ve `#lkOverlay` `#fbModal`ın İÇİNDE (donörde `<body>`
+        çocuğu). Kanıt: `#moOverlay.show` verildiğinde kendi opacity 1 ·
+        visibility visible okunuyor ama ETKİN (ata zinciri çarpımı)
+        opaklık 0 — kapalı `#fbOverlay` opacity:0 üstte. Yani iki modal
+        her tek-özellik ölçümüne "açık" görünür, ekranda ASLA çizilmez.
+   ⛔ BURAYA YAZILMADI: üçü de markup; CSS ile ne action silinir, ne
+      olmayan yüzey yaratılır, ne iç içe düğüm dışarı taşınır. LEAD/ENJEKTÖR.
+
+   ── B3 · `.fb-tab` mekanizma farkı — KUSUR DEĞİL, ölçüldü ────────────
+       Gourmet: writing-mode horizontal-tb + rotate(90°) · pad 15/24/17 ·
+                radius 0 0 16 16   → kutu 52.1 × 143.7 @ (1387.9, 200.1)
+       Donör  : writing-mode vertical-rl + translate · pad 24/16 ·
+                radius 16 0 0 16   → kutu 52.1 × 144.2 @ (1387.9, 199.9)
+   Dönme, yuvarlaklığı da döndürüyor: iki tasarım da SOL kenarı yuvarlıyor.
+   Görsel sonuç 0.5px içinde eşit. Kural yazmak 148 sayfada gereksiz
+   değişiklik olurdu — YAZILMADI, farkın kaydı burada.
+
+   ── B4 · `.sonuc-*` — geçen turun kusuru KAPANMIŞ, ölçüldü ───────────
+   Kurallar `gourmet-ekran/t5-a.css`te (kardeş kulvar, salt okuma).
+   Sorgulu koşumda (`?q=a`) ölçüldü: kart flex · #fff · 16px · 1px kenarlık,
+   görsel 158px, yüzey 120px, gövde 15/16/17, git padding-top 13px —
+   Fit · Gastro · Diet ile birebir. İKİNCİ KEZ YAZILMADI: aynı seçiciyi
+   iki dosyada bildirmek deponun kendi şerhinin yasakladığı desen.
+   ===================================================================== */
