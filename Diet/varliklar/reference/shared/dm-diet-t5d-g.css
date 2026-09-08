@@ -1,0 +1,83 @@
+/* =====================================================================
+   DadaDiet · T5D kulvarı · ROL G — BANNER ALT BAŞLIĞININ (`p.lead`) EĞRİSİ
+   ---------------------------------------------------------------------
+   BANNER KANONU maddesinin kapanmayan tek kalemi. Kulvar B (`dm-diet-b.css`)
+   rol A'nın ÜST DOLGUSUNU ve H1 ÖLÇEĞİNİ kapatmıştı; alt başlık kapsam
+   dışındaydı ve 103 sayfada donörün eğrisini tutmuyordu.
+
+   ── ÖLÇÜT DONÖRDEN OKUNDU, kanon metninden değil ─────────────────────
+   Donörün banner ailesi (Fit `.lib-top` 33 sayfa · `.bant` 6 sayfa),
+   `p.lib-sub` / `p.bant-alt`, üç kademede ölçüldü:
+
+       ≥901      641–900     ≤640
+       15.5px    15.5px      14px          ← lead
+       42px      31px        25px          ← h1 (kulvar B kapattı)
+
+   Yani lead YALNIZ ≤640'ta düşüyor ve tek adım iniyor. Diet'in KENDİ
+   `.bant .bant-alt`ı (7 sayfa) ve `sayfa-govde`nin bant altı (6 sayfa)
+   bu eğriyi zaten tutuyordu — dokunulmadı, kanıt oldular.
+
+   ── KAPSANAN AİLELER (ölçülen ÖNCE değeri · sayfa) ───────────────────
+     .reh-hero            26   16    → 16    → 16      ✗ hiç düşmüyor
+     .reh-hero-article    22   16    → 16    → 16      ✗  (.reh-hero kapsar)
+     .dl-top              12   15.5  → 15.5  → 14.5    ✗ dar kademe yanlış
+     .tst-top             10   15.5  → 15.5  → 15.5    ✗ hiç düşmüyor
+     .calc-top            10   15.5  → 15.5  → 15.5    ✗ hiç düşmüyor
+     .nb-top              10   16    → 16    → 16      ✗ hiç düşmüyor
+     .tb-top               8   16.5  → 16.5  → 15      ✗ taban da yanlış
+     .wzp-top              3   15.5  → 15.5  → 14.5    ✗ dar kademe yanlış
+     .ol-top               1   16    → 16    → 14.5    ✗
+     .lst-top              1   15.5  → 15.5  → 14.5    ✗
+                        ────
+                         103 sayfa
+
+   ── KAPSAM DIŞI BIRAKILANLAR — her biri gerekçeli ────────────────────
+     .arama-hero (1) + arama.html  `p.arama-giris` 15.5/15.5/15.5.
+        Donörün KENDİ `.arama-hero`su da 15.5/15.5/15.5 ölçüldü. Donörle
+        birebir olan bir değeri "kanona uysun" diye BOZMUYORUM.
+     .bant (7) · sayfa-govde (6)   `p.bant-alt` zaten 15.5/15.5/14 ✓
+     .sh-top (2)                   ROL B (anasayfa/hub). Donörü `.lib-top`
+        değil `.df-top` ve onun eğrisi başka (16 → 14.5 → 12.8). Rol A'nın
+        kuralına katmak yanlış eşleme olurdu; §AÇIK KALEM'de bildirildi.
+     .modul-govde (16) · .zebra (1) `p.kimlik-giris` 14.5 sabit —
+        donör `.fp-profil` de 14.5/14.5/14.5 ✓
+     .giris-hero · .au-top · bildirimler  13.5 sabit — donör `.giris-hero`
+        de 13.5/13.5/13.5 ✓
+     .lg-top (10) · .pf-top (7)    Bu bantlarda `p.lead` HİÇ YOK. Donörün
+        `.pf-top`u lead TAŞIYOR (14.5/14.5/13.5). Eksik ELEMAN'dır, eksik
+        değer değil — kopyalama kuralı gereği DÜZELTİLMEDİ, bildirildi.
+
+   ── ÖZGÜLLÜK ─────────────────────────────────────────────────────────
+   Yenilen bildirimlerin hepsi (0,2,0): `.reh-hero .lead` · `.tst-head
+   .lead` · `.tb-top .lead` (CDP `getMatchedStylesForNode` ile KAZANAN
+   kural okundu, CSSOM taramasıyla değil). Buradaki seçiciler de (0,2,0)
+   ve bu dosya `</head>`ten hemen önce, sayfanın kendi `<style>`ı ve
+   dm-diet-b/e'den SONRA yükleniyor. Eşit özgüllük + geç kaynak = kazanır.
+   Değer TOKENDEN gelir; ham px yazılmaz.
+   ===================================================================== */
+
+.reh-hero .lead,
+.dl-top .lead,
+.tst-top .lead,
+.calc-top .lead,
+.nb-top .lead,
+.tb-top .lead,
+.wzp-top .lead,
+.ol-top .lead,
+.lst-top .lead {
+  font-size: var(--yazi-15-5);
+}
+
+@media (max-width: 640px) {
+  .reh-hero .lead,
+  .dl-top .lead,
+  .tst-top .lead,
+  .calc-top .lead,
+  .nb-top .lead,
+  .tb-top .lead,
+  .wzp-top .lead,
+  .ol-top .lead,
+  .lst-top .lead {
+    font-size: var(--yazi-14);
+  }
+}
